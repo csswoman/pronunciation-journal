@@ -91,6 +91,7 @@ vi.mock('@/lib/exercises/generators/reorder-ai', () => ({
 
 vi.mock('@/lib/essential-words/client-fetch', () => ({
   fetchEssentialWordsForDay: vi.fn().mockResolvedValue([]),
+  fetchEssentialWordsForAnchors: vi.fn().mockResolvedValue([]),
 }))
 
 vi.mock('@/lib/practice/daily-plan/reader-targets', () => ({

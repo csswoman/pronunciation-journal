@@ -21,6 +21,8 @@ import { enqueue } from '@/lib/sync/sync-manager'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { recordPracticeErrorRecurrence } from './error-recurrence-sync'
+import { evidenceModalityForExercise } from './resolve-attribution'
+import { recordChunkEvidence } from '@/lib/chunk-of-day/evidence'
 import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 import type {
   PracticeAnswer,
@@ -188,6 +190,14 @@ export async function savePracticeAnswer(
       await enqueueTopicSRSUpdate(userId, normalizedTopic, grade)
     }
   })
+
+  if (isAnswered && answer.isCorrect && answer.sourceRef?.source === 'chunks') {
+    await recordChunkEvidence(
+      userId,
+      answer.sourceRef.id,
+      evidenceModalityForExercise(answer),
+    ).catch(() => undefined)
+  }
 
   const epPayload = answer.exercisePayload as {
     errorPattern?: ErrorPatternId

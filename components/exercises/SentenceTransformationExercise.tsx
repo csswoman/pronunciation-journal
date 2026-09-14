@@ -49,8 +49,12 @@ export function SentenceTransformationExercise({
     }
 
     if (!navigator.onLine) {
-      if (exercise.referenceAnswer) {
-        return setError(`Sin conexión. Respuesta de referencia: ${exercise.referenceAnswer}`)
+      const answers = [
+        ...(exercise.referenceAnswer ? [exercise.referenceAnswer] : []),
+        ...(exercise.acceptedAnswers ?? []),
+      ]
+      if (answers.length > 0) {
+        return setError(`Sin conexión. Respuesta de referencia: ${answers[0]}`)
       }
       return setError('Necesitas conexión para corregir esta transformación.')
     }

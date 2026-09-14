@@ -31,6 +31,10 @@ export function stepMeta(step: DailyStep): string {
   if (cardCount > 0) {
     parts.push(`${cardCount} ${cardCount === 1 ? 'palabra' : 'palabras'}`)
   }
+  const chunkCount = step.chunks?.length ?? 0
+  if (chunkCount > 0) {
+    parts.push(`${chunkCount} ${chunkCount === 1 ? 'chunk' : 'chunks'}`)
+  }
   if (step.readerPassage) parts.push('lectura')
   return parts.join(' · ')
 }

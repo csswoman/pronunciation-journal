@@ -11,7 +11,7 @@
 //   <PracticeSession />     — ejercicios del paso (sesión sagrada: sin hints ni chrome extra)
 // </DailyStepSession>
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PracticeSession from '@/components/practice/PracticeSession'
 import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
 import { PhonemeLessonIntro } from '@/components/phoneme-practice/PhonemeLessonIntro'
@@ -21,8 +21,11 @@ import { GrammarRuleCard } from '@/components/daily/GrammarRuleCard'
 import { DailyReaderStep } from '@/components/daily/DailyReaderStep'
 import { DailyThreadStrip } from '@/components/daily/DailyThreadStrip'
 import { EdDrillSession } from '@/components/pronunciation/ed-drills/EdDrillSession'
+import { ChunkStudyPanel } from '@/components/practice/chunks/ChunkStudyPanel'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { logDailyStepEvent } from '@/lib/practice/daily-plan/analytics'
 import type { DailyStep } from '@/lib/practice/types'
 
 interface Props {
@@ -49,6 +52,7 @@ export default function DailyStepSession({
   onComplete,
   onExit,
 }: Props) {
+  const { user } = useAuth()
   const isReader = step.kind === 'reader'
   const threadHints = getThreadHintsForStep(allSteps, stepIndex)
 
@@ -63,7 +67,22 @@ export default function DailyStepSession({
   const showGrammarIntro =
     step.kind === 'grammar_focus' && !!step.grammarRule
 
-  const [started, setStarted] = useState(!showable && !showFalseFriendsIntro && !showGrammarIntro)
+  const showChunkIntro = step.kind === 'chunk_intro' && (step.chunks?.length ?? 0) > 0
+  const [started, setStarted] = useState(!showable && !showFalseFriendsIntro && !showGrammarIntro && !showChunkIntro)
+
+  useEffect(() => {
+    void logDailyStepEvent('daily_step_started', step, user?.id).catch(() => undefined)
+  }, [step, user?.id])
+
+  const handleStepComplete = useCallback(() => {
+    void logDailyStepEvent('daily_step_completed', step, user?.id, step.exercises.length).catch(() => undefined)
+    onComplete()
+  }, [onComplete, step, user?.id])
+
+  const handleStepExit = useCallback((completedExercises = 0) => {
+    void logDailyStepEvent('daily_step_exited', step, user?.id, completedExercises).catch(() => undefined)
+    onExit()
+  }, [onExit, step, user?.id])
 
   const sessionChrome = !isReader ? <ActiveSessionChrome /> : null
 
@@ -72,7 +91,17 @@ export default function DailyStepSession({
       <div className="mx-auto flex w-full flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {sessionChrome}
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
-        <WordIntroStep cards={step.studyCards ?? []} onComplete={onComplete} />
+        <WordIntroStep cards={step.studyCards ?? []} onComplete={handleStepComplete} />
+      </div>
+    )
+  }
+
+  if (!started && showChunkIntro && step.chunks) {
+    return (
+      <div className="mx-auto flex w-full max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
+        {sessionChrome}
+        {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
+        <ChunkStudyPanel chunks={step.chunks} onStart={() => setStarted(true)} />
       </div>
     )
   }
@@ -84,7 +113,7 @@ export default function DailyStepSession({
       <div className="mx-auto flex w-full max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {sessionChrome}
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
-        <EdDrillSession onComplete={onComplete} />
+        <EdDrillSession onComplete={handleStepComplete} />
       </div>
     )
   }
@@ -94,8 +123,8 @@ export default function DailyStepSession({
       <DailyReaderStep
         passage={step.readerPassage}
         threadHints={threadHints}
-        onComplete={onComplete}
-        onExit={onExit}
+        onComplete={handleStepComplete}
+        onExit={() => handleStepExit()}
       />
     )
   }
@@ -158,8 +187,8 @@ export default function DailyStepSession({
       initialIndex={initialExerciseIndex ?? 0}
       onSessionComplete={() => undefined}
       onExit={(result) => {
-        if (result.results.length >= step.exercises.length) onComplete()
-        else onExit()
+        if (result.results.length >= step.exercises.length) handleStepComplete()
+        else handleStepExit(result.results.length)
       }}
     />
   )

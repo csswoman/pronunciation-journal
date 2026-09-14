@@ -17,8 +17,13 @@ export function isExactTransformation(
   exercise: SentenceTransformationExercise,
   answer: string,
 ): boolean {
-  if (!exercise.referenceAnswer) return false
-  return normalize(exercise.referenceAnswer) === normalize(answer)
+  const normalized = normalize(answer)
+  const candidates = [
+    ...(exercise.referenceAnswer ? [exercise.referenceAnswer] : []),
+    ...(exercise.acceptedAnswers ?? []),
+  ]
+  if (candidates.length === 0) return false
+  return candidates.some((candidate) => normalize(candidate) === normalized)
 }
 
 export async function getCachedTransformations(cacheKey: string): Promise<SentenceTransformationExercise[] | null> {

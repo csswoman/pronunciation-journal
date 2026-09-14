@@ -4,6 +4,14 @@ const DIFFICULTY_TO_CEFR: Record<number, CEFRLevel> = {
   1: 'A1', 2: 'A2', 3: 'B1', 4: 'B2', 5: 'C1',
 };
 
+/**
+ * `raw: 0` (word_bank's insert default for a word saved without a rated
+ * difficulty — dictionary lookup, AI Coach, any non-curated source) is not in
+ * DIFFICULTY_TO_CEFR and silently resolves to the 'B1' fallback below, same
+ * as an actually-unknown value. Callers that need to distinguish "no rating"
+ * from "rated B1" must guard with `entry.difficulty ? normalizeCEFR(...) : undefined`
+ * before calling this — never pass a possibly-zero difficulty straight through.
+ */
 export function normalizeCEFR(raw: string | number): CEFRLevel {
   if (typeof raw === 'number') {
     return DIFFICULTY_TO_CEFR[raw] ?? 'B1';

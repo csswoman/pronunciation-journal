@@ -13,6 +13,9 @@ export function targetRefsForStep(
     return [primaryTarget ?? `sound:${step.ipa ?? primarySound?.id ?? step.id}`]
   }
   if (step.kind === 'word_intro') return (step.featuredWords ?? []).map((word) => `exposure:word:${word}`)
+  if (step.kind === 'chunk_intro' || step.kind === 'chunk_review') {
+    return (step.chunks ?? []).map((chunk) => `chunk:${chunk.id}`)
+  }
   if (step.kind === 'word_review') return step.exercises.map((exercise) => `word-meaning:${exercise.sourceRef?.id ?? exercise.contentId}`)
   if (step.kind === 'context_practice') {
     return step.exercises.map((exercise) => `word-context:${exercise.sourceRef?.id ?? exercise.contentId}`)
@@ -43,6 +46,7 @@ export function reasonForStep(
   // El paso solo se construye cuando hay accuracy baja en un cluster, así que
   // su presencia YA es evidencia de error: no hay rama 'variety' para él.
   if (step.kind === 'ed_cluster_drill') return 'recent_error'
+  if (step.kind === 'chunk_intro') return 'chunk_new'
   if (options.hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target'
   if (step.kind === 'study_deck' || step.kind === 'reader' || step.kind === 'immersion_lesson') return 'route_next'
   if (step.kind === 'word_review' && options.hasSavedOrFamiliar) return 'saved_intent'
@@ -71,6 +75,7 @@ const PEDAGOGICAL_KIND_ORDER: Record<string, number> = {
   context_practice: 4,
   word_intro: 5,
   word_review: 5,
+  chunk_intro: 5,
   chunk_review: 5,
   written_production: 6,
   spoken_production: 6,

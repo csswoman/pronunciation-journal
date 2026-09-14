@@ -7,6 +7,9 @@ import type {
 const REASON_PRIORITY: Record<DailySelectionReason, number> = {
   due: 0,
   verification_due: 0,
+  // Preserve one new communicative thread after the genuinely due work. The
+  // current builder caps due candidates before this can displace all novelty.
+  chunk_new: 1,
   // The grammar slot outranks everything except genuinely due SRS work:
   // its whole purpose is to stop phonetics from silently evicting grammar.
   grammar_slot: 1,

@@ -9,6 +9,7 @@ import type { TrackedItem, TrackingItem, TrackedKind } from './types'
 import { getTarget, targetId } from '@/lib/pronunciation/targets/registry'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import { resolveLessonHref } from '@/lib/courses/curriculumIndex'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 
 export type TrackingReviewSource =
   | { item: TrackingItem; word: WordBankEntry }
@@ -55,6 +56,8 @@ export interface TrackingReviewQueue {
 
 export interface BuildTrackingReviewQueueOptions {
   resolvePhrase?: (trackedItem: TrackedItem) => CanonicalPhraseReviewTarget | null
+  /** Nivel del alumno: sin él el corrector de producción cae en su default A2–B2. */
+  level?: CEFRLevel
 }
 
 export type TrackedPhraseResolution =
@@ -162,7 +165,7 @@ export function buildTrackingReviewQueue(
       }
       const contextual = generateSentenceContextExercises([wordEntry], [wordEntry])
       const spoken = contextual.length === 0
-        ? generateSpokenProductionFromWordBank([word], 1).exercises.map((exercise) => ({
+        ? generateSpokenProductionFromWordBank([word], 1, [], options.level).exercises.map((exercise) => ({
             ...exercise,
             sourceRef: { source: 'word_bank' as const, id: word.id },
           }))

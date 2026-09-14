@@ -79,6 +79,7 @@ vi.mock('@/lib/essential-words/client-fetch', () => ({
       source_ref: null,
       synonyms: null,
     })),
+  fetchEssentialWordsForAnchors: async () => [],
 }))
 
 import { buildDailyPlan } from '../daily-plan/index'

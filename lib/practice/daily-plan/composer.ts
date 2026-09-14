@@ -1,4 +1,4 @@
-import { fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
+import { fetchEssentialWordsForAnchors, fetchEssentialWordsForDay } from '@/lib/essential-words/client-fetch'
 import { db } from '@/lib/db'
 import { getAllSounds } from '@/lib/phoneme-practice/queries'
 import { dominantTopicLabel } from '@/lib/practice/topic-labels'
@@ -16,6 +16,7 @@ import {
 import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
+import { biasWordsByChunkAnchors } from './chunk-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
 import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { candidate, selectDailyCandidates } from './policy'
@@ -41,7 +42,7 @@ import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
 import { buildImmersionLessonStep } from './immersion-step'
 import { buildEdClusterDrillStep } from './ed-drill-step'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
-import { loadDueChunkReviewStep } from '@/lib/chunk-of-day/queries'
+import { loadDailyChunkIntroStep, loadDueChunkReviewStep, loadPronunciationDifficultyChunkStep, markPronunciationDifficultyRouted } from '@/lib/chunk-of-day/queries'
 
 export {
   buildReviewPlan,
@@ -86,7 +87,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     localLearningState,
     completedLessons,
     wordIndex,
-    dueChunkStep,
   ] = await Promise.all([
     getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
@@ -97,26 +97,24 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     db.learningState.get(userId).catch(() => null),
     readCompletedLessons().catch(() => []),
     getWordCategoryIndex(),
-    loadDueChunkReviewStep(userId, 'daily').catch(() => null),
   ])
 
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
   const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
+  const learnerLevel = normalizeCEFR(activeLevel ?? 'A1')
+  const dueChunkStep = await loadDueChunkReviewStep(userId, 'daily', learnerLevel).catch(() => null)
 
   const dailyWordSelection = selectDailyReviewWords({
     newWords,
     dueWords,
     savedOrFamiliarWords,
     limit: WORD_REVIEW_WORD_COUNT,
-    learnerLevel: activeLevel ? normalizeCEFR(activeLevel) : undefined,
+    learnerLevel: activeLevel ? learnerLevel : undefined,
   })
   let reviewWords = dailyWordSelection.words
   const hasWordBank = reviewWords.length > 0
-
-  if (reviewWords.length === 0) {
-    reviewWords = await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
-  }
+  const needsEssentialFallback = reviewWords.length === 0
   const completedLessonIds = new Set(completedLessons.map((lesson) => `${lesson.courseSlug}:${lesson.lessonSlug}`))
   const diagnosticTarget = await resolveDiagnosticPrescriptionTarget(userId, allSounds).catch(() => null)
 
@@ -128,6 +126,29 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
 
   const repairConstraints = constraintIdsForDuePatterns(aiState?.errorRecurrence)
+
+  // Due work stays first, but it only reduces chunk novelty (3 → 2 → 1);
+  // it does not turn the normal daily plan into a review-only session.
+  const dueChunkIntro = await loadDailyChunkIntroStep(
+    userId,
+    learnerLevel,
+    dueWords.length + dueSounds.length + (dueChunkStep ? 1 : 0),
+  ).catch(() => null)
+  const dailyThreadChunks = [
+    ...(dueChunkStep?.chunks ?? []),
+    ...(dueChunkIntro?.chunks ?? []),
+  ]
+  if (needsEssentialFallback) {
+    const anchoredWords = await fetchEssentialWordsForAnchors(
+      dailyThreadChunks.flatMap((chunk) => chunk.contentGraph.anchors.map((anchor) => anchor.id)),
+      WORD_REVIEW_WORD_COUNT,
+    ).catch(() => [])
+    reviewWords = anchoredWords.length > 0
+      ? anchoredWords
+      : await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
+  }
+  reviewWords = biasWordsByChunkAnchors(reviewWords, dailyThreadChunks)
+  const pronunciationChunkStep = await loadPronunciationDifficultyChunkStep(userId, learnerLevel, allSounds).catch(() => null)
 
   const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
   const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear())
@@ -155,7 +176,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     wordIndex,
   })
 
-  let steps: DailyStep[] = [...(dueChunkStep ? [dueChunkStep] : []), ...candidateSteps]
+  let steps: DailyStep[] = [
+    ...(dueChunkStep ? [dueChunkStep] : []),
+    ...(dueChunkIntro ? [dueChunkIntro] : []),
+    ...(pronunciationChunkStep ? [pronunciationChunkStep] : []),
+    ...candidateSteps,
+  ]
   const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0 || dueChunkStep !== null
 
   if (hasDueSrs) {
@@ -270,11 +296,28 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
 
   const totalExercises = dedupedFinalSteps.reduce((sum, s) => sum + s.exercises.length, 0)
+  for (const step of dedupedFinalSteps) {
+    if (step.pronunciationDifficultyWordId) {
+      await markPronunciationDifficultyRouted(userId, step.pronunciationDifficultyWordId).catch(() => undefined)
+    }
+  }
+  const contentMix = dedupedFinalSteps.reduce((mix, step) => {
+    if (step.kind === 'chunk_intro' || step.kind === 'chunk_review') {
+      mix.chunkActions += step.exercises.length + (step.chunks?.length ?? 0)
+    } else if (step.kind === 'word_intro' || step.kind === 'word_review' || step.kind === 'context_practice'
+      || step.kind === 'phoneme_focus' || step.kind === 'minimal_pairs' || step.kind === 'listening') {
+      mix.wordOrSoundActions += step.exercises.length + (step.studyCards?.length ?? 0)
+    } else {
+      mix.otherActions += step.exercises.length
+    }
+    return mix
+  }, { chunkActions: 0, wordOrSoundActions: 0, otherActions: 0 })
 
   return {
     steps: sortStepsByPedagogicalProgression(dedupedFinalSteps),
     totalExercises,
     isNewUser: !hasWordBank && !hasProgress,
     arc,
+    contentMix,
   }
 }

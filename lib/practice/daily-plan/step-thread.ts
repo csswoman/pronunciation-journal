@@ -10,6 +10,7 @@ export type StepThreadHint = {
 
 const THREAD_STEP_KINDS = new Set<DailyStepKind>([
   'word_intro',
+  'chunk_intro',
   'word_review',
   'context_practice',
   'reader',
@@ -19,8 +20,28 @@ function normalizeWord(word: string): string {
   return word.trim().toLowerCase()
 }
 
+function wordForChunkAnchor(
+  chunk: NonNullable<DailyStep['chunks']>[number],
+  index: number,
+): string {
+  const anchor = chunk.contentGraph.anchors[index]
+  if (anchor?.owner === 'essential_words' && anchor.id.startsWith('c1k:')) {
+    return normalizeWord(anchor.id.slice('c1k:'.length))
+  }
+  const highlight = chunk.contentGraph.highlights[index]
+  return highlight ? normalizeWord(chunk.contentGraph.text.slice(highlight.start, highlight.end)) : ''
+}
+
 /** Words featured in a vocab/reader step (for thread detection). */
 export function extractFeaturedWords(step: DailyStep): string[] {
+  // Prefer the stable Essential Word ID for chunk bridges: an authored anchor
+  // may point at the lemma "go" while the visible marked form is "going".
+  if ((step.kind === 'chunk_intro' || step.kind === 'chunk_review') && step.chunks) {
+    return step.chunks.flatMap((chunk) => chunk.contentGraph.anchors
+      .map((_, index) => wordForChunkAnchor(chunk, index))
+      .filter(Boolean))
+  }
+
   if (step.featuredWords?.length) {
     return step.featuredWords.map(normalizeWord)
   }
