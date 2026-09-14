@@ -3,6 +3,7 @@ import { ipaFromLessonTitle } from "@/lib/sound-lab/display";
 import { getCanonicalSound } from "@/lib/sounds/inventory";
 import { MASTERY_DISPLAY_THRESHOLD } from "@/lib/phoneme-practice/mastery-pct";
 import { getSpanishContrast, type SpanishContrastLevel } from "@/lib/sounds/spanish-contrast";
+import type { SoundsWorkspaceTab } from "./SoundsWorkspaceTabs";
 
 export const ALL_GROUP_SECTIONS = [
   { id: "vowel", title: "Vocales" },
@@ -29,6 +30,28 @@ export const CONTRAST_GROUP_SECTIONS = [
 ] as const;
 
 export type SoundLabGrouping = "impact" | "type";
+
+const WORKSPACE_HEADER_COPY: Record<Exclude<SoundsWorkspaceTab, "sounds">, {
+  kicker: string;
+  title: string;
+  subtitle: string;
+}> = {
+  path: {
+    kicker: "Práctica · Ruta",
+    title: "Ruta de pronunciación",
+    subtitle: "De sonidos a frases reales. Un paso claro a la vez.",
+  },
+  "minimal-pairs": {
+    kicker: "Práctica · Pares mínimos",
+    title: "Entrenamiento de pares mínimos",
+    subtitle: "Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés.",
+  },
+  intonation: {
+    kicker: "Práctica · Entonación",
+    title: "Entrenador de entonación",
+    subtitle: "Practica el ritmo, la melodía y el tono natural del inglés hablado.",
+  },
+};
 
 export function getLessonSectionId(lesson: Lesson): string {
   return getCanonicalSound(ipaFromLessonTitle(lesson.title) ?? "")?.type ?? "consonant";
@@ -102,6 +125,20 @@ export function headerStatsLine(
     return `1 sonido listo para practicar${contextHint}`;
   }
   return `${totalCount} sonidos listos para practicar${contextHint}`;
+}
+
+export function soundLabHeaderCopy(
+  tab: SoundsWorkspaceTab,
+  inProgressCount: number,
+  totalCount: number,
+  groupBy: SoundLabGrouping,
+) {
+  if (tab !== "sounds") return WORKSPACE_HEADER_COPY[tab];
+  return {
+    kicker: "Práctica",
+    title: "Laboratorio de sonidos",
+    subtitle: headerStatsLine(inProgressCount, totalCount, groupBy),
+  };
 }
 
 export function continueCtaLabel(lesson: Lesson | null): string {

@@ -70,6 +70,10 @@ import {
   saveEssentialWordsSessionDraft,
   type EssentialWordsSessionDraft,
 } from "@/lib/essential-words/session-draft";
+import {
+  declareEssentialWordKnown,
+  reportEssentialWordPronunciationDifficulty,
+} from "@/lib/essential-words/learner-state-queries";
 
 export type { EssentialWordsPhase, EssentialWordsSessionSummary } from "@/lib/essential-words/session-model";
 export type { EssentialWordsStats } from "@/lib/essential-words/session-loader";
@@ -739,6 +743,7 @@ export function useEssentialWordsSession() {
   const omitWord = useCallback(() => {
     if (!planState || !currentStep || currentStep.kind !== "expose") return;
     const wordId = essentialWordId(currentStep.word.word.toLowerCase());
+    if (user?.id) void declareEssentialWordKnown(user.id, wordId).catch(() => undefined);
     let verificationMode: EssentialWordMode = modeHasData(currentStep.word, 'cloze_sentence')
       ? 'cloze_sentence'
       : 'speak_sentence';
@@ -757,7 +762,14 @@ export function useEssentialWordsSession() {
     persistDraft(nextPlanState);
     if (nextPlanState.pending.length === 0) { void finishSession(); return; }
     setPhase(nextPlanState.pending[0]?.kind === "exposure" ? "study" : "speak");
-  }, [planState, currentStep, finishSession, persistDraft, removeCurrentAndAdvance, syncPlanState]);
+  }, [planState, currentStep, finishSession, persistDraft, removeCurrentAndAdvance, syncPlanState, user?.id]);
+
+  const markPronunciationDifficulty = useCallback(() => {
+    if (!currentStep) return;
+    const wordId = essentialWordId(currentStep.word.word.toLowerCase());
+    if (user?.id) void reportEssentialWordPronunciationDifficulty(user.id, wordId).catch(() => undefined);
+    startSpeak();
+  }, [currentStep, startSpeak, user?.id]);
 
   const keepSnooze = useCallback(async (word: string) => {
     if (skillModeRef.current) {
@@ -913,6 +925,7 @@ export function useEssentialWordsSession() {
     startSpeak,
     beginSession,
     omitWord,
+    markPronunciationDifficulty,
     submitGrade,
     reload,
     learnMore,

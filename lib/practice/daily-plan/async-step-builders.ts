@@ -127,10 +127,10 @@ export async function buildReaderStep(
   srsRows: ReaderTargetRow[],
   online: boolean,
 ): Promise<DailyStep | null> {
-  const targets = pickTargets(srsRows)
+  const level = await resolveReaderLevel(userId)
+  const targets = pickTargets(srsRows, level)
   if (!targets) return null
 
-  const level = await resolveReaderLevel(userId)
   const passage = await resolveReaderPassage({
     userId,
     targets,

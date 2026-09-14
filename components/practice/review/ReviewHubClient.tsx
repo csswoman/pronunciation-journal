@@ -1,19 +1,39 @@
 'use client'
 
+// Planned structure:
+// <ReviewHubClient>
+//   <ReviewSessionRunner (deferred, active when user launches review)>
+//   <PageDashboardBanner (momentum alert or all-clear banner)>
+//   <PageDashboardMain (failed sentences, weak words, due vocabulary, sounds, topics, lessons, actions)>
+//   <PageDashboardRail (SRS history, SRS vault)>
+// </ReviewHubClient>
+
+import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { WordStrengthBars } from '@/components/vocabulary/words/WordStrengthBars'
 import { getWordStrength } from '@/lib/word-bank/strength'
-import { useReviewSession } from '@/hooks/useReviewSession'
-import { ReviewSessionLauncher } from '@/components/practice/review/ReviewSessionLauncher'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
 import { ReviewLessonSection } from '@/components/practice/review/ReviewLessonSection'
 import { ReviewHubActions } from '@/components/practice/review/ReviewHubActions'
 import { SrsHistoryPanel } from '@/components/practice/review/SrsHistoryPanel'
 import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
 import type { ReviewHubSummary } from '@/lib/review/types'
+import type { ReviewSessionAction } from './ReviewSessionRunner'
+
+const ReviewSessionRunner = dynamic(
+  () => import('./ReviewSessionRunner').then((m) => m.ReviewSessionRunner),
+  {
+    loading: () => (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-base/80 backdrop-blur-xs text-fg-muted font-caption">
+        Cargando sesión…
+      </div>
+    ),
+  },
+)
 
 interface Props {
   summary: ReviewHubSummary
@@ -32,22 +52,22 @@ function overdueLabel(daysOverdue: number): string {
 }
 
 export function ReviewHubClient({ summary }: Props) {
-  const { state, sessionKey, startReview, startFailedItem, startTopic, advanceStep, exitSession } =
-    useReviewSession()
+  const [activeSession, setActiveSession] = useState<ReviewSessionAction | null>(null)
+  const isSessionActive = activeSession !== null
   const { counts } = summary
-  const canStart = summary.canStartReview && state.phase !== 'loading'
+  const canStart = summary.canStartReview && !isSessionActive
   const showMomentum =
-    state.phase === 'idle' && summary.canStartReview && counts.reviewable > 0
-  const showAllClear = state.phase === 'idle' && summary.nothingDue
+    !isSessionActive && summary.canStartReview && counts.reviewable > 0
+  const showAllClear = !isSessionActive && summary.nothingDue
 
   return (
     <>
-      <ReviewSessionLauncher
-        state={state}
-        sessionKey={sessionKey}
-        onStepComplete={advanceStep}
-        onExit={exitSession}
-      />
+      {activeSession ? (
+        <ReviewSessionRunner
+          action={activeSession}
+          onExit={() => setActiveSession(null)}
+        />
+      ) : null}
 
       <div className="page-dashboard">
         {showMomentum || showAllClear ? (
@@ -84,164 +104,172 @@ export function ReviewHubClient({ summary }: Props) {
         ) : null}
 
         <div className="page-dashboard__main">
-        <ReviewSectionCard
-          title="Oraciones fallidas"
-          count={counts.failedSentences}
-          emptyMessage="Sin errores recientes en dictados u oraciones."
-        >
-          <ul className="flex flex-col gap-2">
-            {summary.failedSentences.slice(0, 4).map((item) => (
-              <li
-                key={item.contentId}
-                className="flex items-start justify-between gap-3 font-body-sm text-fg-secondary"
-              >
-                <div className="min-w-0">
-                  <span className="text-fg">{item.label}</span>
-                  <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
-                  {!item.drillable ? <span className="ml-2 font-caption text-fg-subtle">· solo historial</span> : null}
-                </div>
-                {item.drillable && state.phase !== 'loading' ? (
+          <ReviewSectionCard
+            title="Oraciones fallidas"
+            count={counts.failedSentences}
+            emptyMessage="Sin errores recientes en dictados u oraciones."
+          >
+            <ul className="flex flex-col gap-2">
+              {summary.failedSentences.slice(0, 4).map((item) => (
+                <li
+                  key={item.contentId}
+                  className="flex items-start justify-between gap-3 font-body-sm text-fg-secondary"
+                >
+                  <div className="min-w-0">
+                    <span className="text-fg">{item.label}</span>
+                    <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
+                    {!item.drillable ? <span className="ml-2 font-caption text-fg-subtle">· solo historial</span> : null}
+                  </div>
+                  {item.drillable && !isSessionActive ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="shrink-0 text-primary"
+                      onClick={() => setActiveSession({ type: 'failed_item', item })}
+                      data-cuelume-press="press"
+                      data-cuelume-release="release"
+                    >
+                      Practicar
+                    </Button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </ReviewSectionCard>
+
+          <ReviewSectionCard
+            title="Palabras débiles"
+            count={counts.weakWords}
+            emptyMessage="Ninguna palabra en aprendizaje — muy bien."
+          >
+            <ul className="flex flex-col gap-3">
+              {summary.weakWords.slice(0, 4).map((w) => (
+                <li key={w.id} className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-base font-medium text-fg">{w.text}</p>
+                    {w.translation ? <p className="font-body-sm text-fg-muted">{w.translation}</p> : null}
+                  </div>
+                  <WordStrengthBars strength={getWordStrength(w)} size={14} />
+                </li>
+              ))}
+            </ul>
+          </ReviewSectionCard>
+
+          <ReviewSectionCard
+            title="Vocabulario pendiente"
+            count={counts.dueWords}
+            emptyMessage="Nada de vocabulario para hoy."
+          >
+            <ul className="flex flex-col gap-2">
+              {summary.dueWords.slice(0, 4).map((w) => (
+                <li key={w.id} className="font-body-sm text-fg">
+                  {w.text}
+                  {w.ipa ? <span className="font-ipa ml-2 text-primary">{formatIpa(w.ipa)}</span> : null}
+                </li>
+              ))}
+            </ul>
+            {counts.dueWords > 0 ? (
+              <Link href="/words" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
+                Ver léxico →
+              </Link>
+            ) : null}
+          </ReviewSectionCard>
+
+          <ReviewSectionCard
+            title="Sonidos pendientes"
+            count={counts.soundsDue}
+            emptyMessage="Ningún contraste de fonema pendiente hoy."
+          >
+            <ul className="flex flex-col gap-2">
+              {summary.soundsDue.slice(0, 4).map((s) => (
+                <li key={`${s.soundId}-${s.ipa}`} className="font-body-sm text-fg">
+                  <span className="font-ipa text-primary">{formatIpa(s.ipa)}</span>
+                  {s.example ? <span className="ml-2 text-fg-secondary">{s.example}</span> : null}
+                  <span className="ml-2 font-caption text-fg-muted">{overdueLabel(s.daysOverdue)}</span>
+                </li>
+              ))}
+            </ul>
+            {counts.soundsDue > 0 ? (
+              <Link href="/practice/sounds" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
+                Laboratorio de sonidos →
+              </Link>
+            ) : null}
+          </ReviewSectionCard>
+
+          <ReviewSectionCard
+            title="Conceptos pendientes"
+            count={counts.dueTopics}
+            emptyMessage="Nada de gramática pendiente hoy."
+          >
+            <ul className="flex flex-col gap-2">
+              {summary.dueTopics.slice(0, 4).map((t) => (
+                <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
+                  {t.topic}
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="shrink-0 text-primary"
-                    onClick={() => startFailedItem(item)}
-                    data-cuelume-press="press"
-                    data-cuelume-release="release"
+                    onClick={() => setActiveSession({ type: 'topic', topic: t.topic })}
                   >
                     Practicar
                   </Button>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </ReviewSectionCard>
+                </li>
+              ))}
+            </ul>
+          </ReviewSectionCard>
 
-        <ReviewSectionCard
-          title="Palabras débiles"
-          count={counts.weakWords}
-          emptyMessage="Ninguna palabra en aprendizaje — muy bien."
-        >
-          <ul className="flex flex-col gap-3">
-            {summary.weakWords.slice(0, 4).map((w) => (
-              <li key={w.id} className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-base font-medium text-fg">{w.text}</p>
-                  {w.translation ? <p className="font-body-sm text-fg-muted">{w.translation}</p> : null}
-                </div>
-                <WordStrengthBars strength={getWordStrength(w)} size={14} />
-              </li>
-            ))}
-          </ul>
-        </ReviewSectionCard>
-
-        <ReviewSectionCard
-          title="Vocabulario pendiente"
-          count={counts.dueWords}
-          emptyMessage="Nada de vocabulario para hoy."
-        >
-          <ul className="flex flex-col gap-2">
-            {summary.dueWords.slice(0, 4).map((w) => (
-              <li key={w.id} className="font-body-sm text-fg">
-                {w.text}
-                {w.ipa ? <span className="font-ipa ml-2 text-primary">{formatIpa(w.ipa)}</span> : null}
-              </li>
-            ))}
-          </ul>
-          {counts.dueWords > 0 ? (
-            <Link href="/words" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
-              Ver léxico →
-            </Link>
-          ) : null}
-        </ReviewSectionCard>
-
-        <ReviewSectionCard
-          title="Sonidos pendientes"
-          count={counts.soundsDue}
-          emptyMessage="Ningún contraste de fonema pendiente hoy."
-        >
-          <ul className="flex flex-col gap-2">
-            {summary.soundsDue.slice(0, 4).map((s) => (
-              <li key={`${s.soundId}-${s.ipa}`} className="font-body-sm text-fg">
-                <span className="font-ipa text-primary">{formatIpa(s.ipa)}</span>
-                {s.example ? <span className="ml-2 text-fg-secondary">{s.example}</span> : null}
-                <span className="ml-2 font-caption text-fg-muted">{overdueLabel(s.daysOverdue)}</span>
-              </li>
-            ))}
-          </ul>
-          {counts.soundsDue > 0 ? (
-            <Link href="/practice/sounds" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
-              Laboratorio de sonidos →
-            </Link>
-          ) : null}
-        </ReviewSectionCard>
-
-        <ReviewSectionCard
-          title="Conceptos pendientes"
-          count={counts.dueTopics}
-          emptyMessage="Nada de gramática pendiente hoy."
-        >
-          <ul className="flex flex-col gap-2">
-            {summary.dueTopics.slice(0, 4).map((t) => (
-              <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
-                {t.topic}<Button type="button" variant="ghost" size="sm" onClick={() => startTopic(t.topic)}>Practicar</Button>
-              </li>
-            ))}
-          </ul>
-        </ReviewSectionCard>
-
-        <ReviewSectionCard
-          title="Conceptos débiles"
-          count={counts.weakTopics}
-          emptyMessage="Ningún concepto en aprendizaje."
-        >
-          <ul className="flex flex-col gap-2">
-            {summary.weakTopics.slice(0, 4).map((t) => (
-              <li key={t.id} className="font-body-sm text-fg">{t.topic}</li>
-            ))}
-          </ul>
-        </ReviewSectionCard>
-
-        <ReviewLessonSection
-          lessons={summary.dueLessons}
-          count={counts.dueLessons}
-        />
-
-        <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
-          <div className="min-w-0">
-            <h3 className="text-body-sm font-semibold text-fg">Contenido guardado</h3>
-            <p className="text-caption text-fg-muted">Repasa las palabras y frases de tu lista personal</p>
-          </div>
-          <Link
-            href="/tracking"
-            className="focus-ring inline-flex h-9 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken px-3.5 text-caption font-semibold text-fg transition-colors hover:bg-surface-raised hover:border-border-default"
+          <ReviewSectionCard
+            title="Conceptos débiles"
+            count={counts.weakTopics}
+            emptyMessage="Ningún concepto en aprendizaje."
           >
-            Ver guardadas →
-          </Link>
-        </div>
+            <ul className="flex flex-col gap-2">
+              {summary.weakTopics.slice(0, 4).map((t) => (
+                <li key={t.id} className="font-body-sm text-fg">{t.topic}</li>
+              ))}
+            </ul>
+          </ReviewSectionCard>
 
-        <ReviewHubActions
-          phase={state.phase}
-          canStart={canStart}
-          hadReviewableItems={counts.reviewable > 0}
-          reviewableCount={counts.reviewable}
-          onStartReview={startReview}
-          onRetry={startReview}
-        />
+          <ReviewLessonSection
+            lessons={summary.dueLessons}
+            count={counts.dueLessons}
+          />
 
-        {!summary.canStartReview && state.phase === 'idle' && !summary.nothingDue ? (
-          <p className="font-body-sm text-center text-fg-muted animate-fadeIn">
-            {counts.failedSentences > 0 && counts.reviewable === 0
-              ? 'Hay errores en el historial, pero nada listo para repasar hoy. Sigue con tu plan diario.'
-              : 'Nada listo para un repaso completo ahora. Practica en el plan diario para generar nuevos ítems.'}
-          </p>
-        ) : null}
+          <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
+            <div className="min-w-0">
+              <h3 className="text-body-sm font-semibold text-fg">Contenido guardado</h3>
+              <p className="text-caption text-fg-muted">Repasa las palabras y frases de tu lista personal</p>
+            </div>
+            <Link
+              href="/tracking"
+              className="focus-ring inline-flex h-9 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken px-3.5 text-caption font-semibold text-fg transition-colors hover:bg-surface-raised hover:border-border-default"
+            >
+              Ver guardadas →
+            </Link>
+          </div>
+
+          <ReviewHubActions
+            phase={isSessionActive ? 'loading' : 'idle'}
+            canStart={canStart}
+            hadReviewableItems={counts.reviewable > 0}
+            reviewableCount={counts.reviewable}
+            onStartReview={() => setActiveSession({ type: 'review' })}
+            onRetry={() => setActiveSession({ type: 'review' })}
+          />
+
+          {!summary.canStartReview && !isSessionActive && !summary.nothingDue ? (
+            <p className="font-body-sm text-center text-fg-muted animate-fadeIn">
+              {counts.failedSentences > 0 && counts.reviewable === 0
+                ? 'Hay errores en el historial, pero nada listo para repasar hoy. Sigue con tu plan diario.'
+                : 'Nada listo para un repaso completo ahora. Practica en el plan diario para generar nuevos ítems.'}
+            </p>
+          ) : null}
         </div>
 
         <aside className="page-dashboard__rail" aria-label="Historial SRS">
           <SrsHistoryPanel groups={summary.srsHistory} />
-          {state.phase === 'idle' ? <SrsVault /> : null}
+          {!isSessionActive ? <SrsVault /> : null}
         </aside>
       </div>
     </>

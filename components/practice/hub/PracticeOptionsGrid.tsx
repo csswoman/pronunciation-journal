@@ -21,6 +21,7 @@ import ReaderCard from './ReaderCard'
 import CourseCard from './CourseCard'
 import GamesSection from './GamesSection'
 import ReferenceSection from './ReferenceSection'
+import ChunksCard from './ChunksCard'
 
 // span = columns occupied on DESKTOP (4-col grid). Tablet CSS caps this at 2.
 const PRACTICE_CARD_SPANS = {
@@ -34,6 +35,7 @@ const PRACTICE_CARD_SPANS = {
   reader: 1,
   course: 1,
   reference: 1,
+  chunks: 1,
 } as const
 
 interface PracticeOptionsGridProps {
@@ -73,6 +75,9 @@ export default function PracticeOptionsGrid({
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.decks}>
         <DecksCard data={hubData.decks} />
+      </div>
+      <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.chunks}>
+        <ChunksCard />
       </div>
       <div className="practice-hub__masonry-item" data-span={PRACTICE_CARD_SPANS.soundQuiz}>
         <SoundQuizWidget />

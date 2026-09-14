@@ -49,7 +49,7 @@ Complemento operativo de `CLAUDE.md`.
 Módulos activos (`lib/*/queries.ts`):
 
 ```text
-ai-practice/    courses/        decks/          essential-words/
+ai-practice/    chunk-of-day/   courses/        decks/          essential-words/
 focus/          home/           immersion/      journal/
 learning-focus/ phoneme-practice/ practice/      progress/
 sounds/         tracking/       users/          word-bank/

@@ -88,4 +88,28 @@ describe("HomeHeroCard", () => {
     // Contextual placement hint inside plan
     expect(screen.getByRole("link", { name: /prueba de nivel/i })).toBeInTheDocument();
   });
+
+  it("calls onStartStep when clicking on a step item in the list", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const onStartStep = vi.fn();
+    const steps = [
+      makeStep({ id: "s-1", title: "Sonido del día" }),
+      makeStep({ id: "s-2", title: "Lectura en contexto", kind: "reader" }),
+    ];
+    render(
+      <HomeHeroCard
+        steps={steps}
+        getStepStatus={statusMap({})}
+        completedCount={0}
+        allDone={false}
+        onStartStep={onStartStep}
+      />
+    );
+
+    const stepButton = screen.getByRole("button", { name: /Lectura en contexto/i });
+    expect(stepButton).toBeInTheDocument();
+    fireEvent.click(stepButton);
+
+    expect(onStartStep).toHaveBeenCalledWith(steps[1]);
+  });
 });

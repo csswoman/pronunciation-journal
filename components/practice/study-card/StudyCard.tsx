@@ -33,6 +33,8 @@ interface Props {
   contextLine?: string
   /** Deferred verification: skip in-block practice, verify near session end. */
   onOmit?: () => void
+  /** Self-report only: keeps pronunciation support separate from word knowledge. */
+  onPronunciationDifficulty?: () => void
   /** Copy for the low-emphasis skip action. */
   omitLabel?: string
   /** Immediate archive ("Ya la sé"). Prefer onOmit for essential-words first-look. */
@@ -48,6 +50,7 @@ export function StudyCard({
   variant = 'default',
   contextLine,
   onOmit,
+  onPronunciationDifficulty,
   // "Sáltala" prometía omitir y luego se verificaba igualmente. El claim abre
   // una comprobación corta, por eso el copy no promete saltarse la palabra.
   omitLabel = 'Ya conozco esta palabra',
@@ -171,14 +174,27 @@ export function StudyCard({
 
       <PracticeActionBar className={immersive ? undefined : 'max-w-sm'}>
         <PracticeContinueButton onClick={onContinue}>{continueLabel}</PracticeContinueButton>
-        {onOmit ? (
-          <button
-            type="button"
-            onClick={onOmit}
-            className="mt-1 inline-flex min-h-11 min-w-11 self-center items-center justify-center rounded-lg border-none bg-transparent px-3 py-2 text-body-sm font-normal text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
-          >
-            {omitLabel}
-          </button>
+        {onOmit || onPronunciationDifficulty ? (
+          <div className="mt-1 flex flex-col items-center">
+            {onOmit ? (
+              <button
+                type="button"
+                onClick={onOmit}
+                className="inline-flex min-h-11 min-w-11 self-center items-center justify-center rounded-lg border-none bg-transparent px-3 py-2 text-body-sm font-normal text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+              >
+                {omitLabel}
+              </button>
+            ) : null}
+            {onPronunciationDifficulty ? (
+              <button
+                type="button"
+                onClick={onPronunciationDifficulty}
+                className="inline-flex min-h-11 min-w-11 self-center items-center justify-center rounded-lg border-none bg-transparent px-3 py-2 text-body-sm font-normal text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+              >
+                Me cuesta pronunciarla
+              </button>
+            ) : null}
+          </div>
         ) : null}
         {!onOmit && onArchive ? <ArchiveConfirmAction onArchive={onArchive} /> : null}
       </PracticeActionBar>

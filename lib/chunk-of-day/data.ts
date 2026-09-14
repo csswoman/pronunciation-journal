@@ -6000,5 +6000,1085 @@ export const CHUNKS_OF_THE_DAY: ChunkItem[] = [
         "es": "¡Hasta la próxima, cuídense!"
       }
     ]
+  },
+  {
+    "id": "301-for-here-or-to-go",
+    "chunk": "For here or to go?",
+    "ipa": "/fɔːr hɪr ɔːr tuː ɡoʊ/",
+    "meaning": "¿Para comer aquí o para llevar?",
+    "example": "Hi! For here or to go today?",
+    "example_translation": "¡Hola! ¿Para comer aquí o para llevar hoy?",
+    "category": "Food & Preferences",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "A medium latte, please.",
+        "es": "Un latte mediano, por favor."
+      },
+      {
+        "en": "For here or to go?",
+        "es": "¿Para comer aquí o para llevar?"
+      }
+    ]
+  },
+  {
+    "id": "302-to-go-please",
+    "chunk": "To go, please.",
+    "ipa": "/tuː ɡoʊ pliːz/",
+    "meaning": "Para llevar, por favor.",
+    "example": "Can I have two coffees? To go, please.",
+    "example_translation": "¿Me da dos cafés? Para llevar, por favor.",
+    "category": "Food & Preferences",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Is this order for here?",
+        "es": "¿Esta orden es para comer aquí?"
+      },
+      {
+        "en": "No, to go, please.",
+        "es": "No, para llevar, por favor."
+      }
+    ]
+  },
+  {
+    "id": "303-can-i-get-a",
+    "chunk": "Can I get a...",
+    "ipa": "/kæn aɪ ɡɛt ə/",
+    "meaning": "¿Me da un/a...? / ¿Puedo pedir un/a...?",
+    "example": "Can I get a glass of water, please?",
+    "example_translation": "¿Me da un vaso de agua, por favor?",
+    "category": "Food & Preferences",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Hi, what can I get started for you?",
+        "es": "Hola, ¿qué le puedo ir sirviendo?"
+      },
+      {
+        "en": "Can I get a black coffee, please?",
+        "es": "¿Me da un café negro, por favor?"
+      }
+    ]
+  },
+  {
+    "id": "304-keep-the-change",
+    "chunk": "Keep the change.",
+    "ipa": "/kiːp ðə tʃeɪndʒ/",
+    "meaning": "Quédese con el cambio / guarde el cambio.",
+    "example": "Here's twenty dollars, keep the change.",
+    "example_translation": "Aquí tiene veinte dólares, quédese con el cambio.",
+    "category": "Food & Preferences",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Your total is eight dollars.",
+        "es": "Su total son ocho dólares."
+      },
+      {
+        "en": "Here is a ten, keep the change.",
+        "es": "Aquí tiene diez, quédese con el cambio."
+      }
+    ]
+  },
+  {
+    "id": "305-where-is-the-restroom",
+    "chunk": "Where is the restroom?",
+    "ipa": "/wɛr ɪz ðə ˈrɛstruːm/",
+    "meaning": "¿Dónde está el baño?",
+    "example": "Excuse me, where is the restroom?",
+    "example_translation": "Disculpe, ¿dónde está el baño?",
+    "category": "Asking For & Offering Help",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Excuse me, where is the restroom?",
+        "es": "Disculpe, ¿dónde está el baño?"
+      },
+      {
+        "en": "It's down the hall to your right.",
+        "es": "Está al final del pasillo a su derecha."
+      }
+    ]
+  },
+  {
+    "id": "306-i-m-just-looking-thanks",
+    "chunk": "I'm just looking, thanks.",
+    "ipa": "/aɪm dʒʌst ˈlʊkɪŋ θæŋks/",
+    "meaning": "Solo estoy mirando, gracias.",
+    "example": "Can I help you? - I'm just looking, thanks.",
+    "example_translation": "¿Le ayudo en algo? - Solo estoy mirando, gracias.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Hi there! Are you finding everything okay?",
+        "es": "¡Hola! ¿Encuentra todo bien?"
+      },
+      {
+        "en": "I'm just looking, thanks.",
+        "es": "Solo estoy mirando, gracias."
+      }
+    ]
+  },
+  {
+    "id": "307-have-a-nice-day",
+    "chunk": "Have a nice day!",
+    "ipa": "/hæv ə naɪs deɪ/",
+    "meaning": "¡Que tenga un buen día!",
+    "example": "Thank you for shopping with us, have a nice day!",
+    "example_translation": "Gracias por comprar con nosotros, ¡que tenga un buen día!",
+    "category": "Closing a Conversation",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Here is your receipt.",
+        "es": "Aquí tiene su recibo."
+      },
+      {
+        "en": "Thank you! Have a nice day!",
+        "es": "¡Gracias! ¡Que tenga un buen día!"
+      }
+    ]
+  },
+  {
+    "id": "308-you-too",
+    "chunk": "You too!",
+    "ipa": "/juː tuː/",
+    "meaning": "¡Igualmente! / ¡Tú también!",
+    "example": "Have a wonderful weekend! - You too!",
+    "example_translation": "¡Que tengas un excelente fin de semana! - ¡Igualmente!",
+    "category": "Closing a Conversation",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Have a great day!",
+        "es": "¡Que tengas un gran día!"
+      },
+      {
+        "en": "You too!",
+        "es": "¡Igualmente!"
+      }
+    ]
+  },
+  {
+    "id": "309-i-ll-be-right-back",
+    "chunk": "I'll be right back.",
+    "ipa": "/aɪl biː raɪt bæk/",
+    "meaning": "Ya vuelvo enseguida / No tardo nada.",
+    "example": "Hold on a second, I'll be right back.",
+    "example_translation": "Espera un segundo, ya vuelvo enseguida.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Where are you going?",
+        "es": "¿A dónde vas?"
+      },
+      {
+        "en": "Just grabbing some water, I'll be right back.",
+        "es": "Solo voy por agua, ya vuelvo enseguida."
+      }
+    ]
+  },
+  {
+    "id": "310-just-a-second",
+    "chunk": "Just a second.",
+    "ipa": "/dʒʌst ə ˈsɛkənd/",
+    "meaning": "Un segundo / Solo un momento.",
+    "example": "Just a second, let me check my bag.",
+    "example_translation": "Un segundo, déjame revisar mi bolsa.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Are you ready to go?",
+        "es": "¿Estás listo para irnos?"
+      },
+      {
+        "en": "Just a second, I'm finding my keys.",
+        "es": "Un segundo, estoy buscando mis llaves."
+      }
+    ]
+  },
+  {
+    "id": "311-no-worries",
+    "chunk": "No worries.",
+    "ipa": "/noʊ ˈwɜːriz/",
+    "meaning": "No te preocupes / No hay problema.",
+    "example": "Sorry for being late! - No worries, we just started.",
+    "example_translation": "¡Perdón por llegar tarde! - No te preocupes, acabamos de empezar.",
+    "category": "Apologizing & Explaining",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "I'm so sorry I forgot your book.",
+        "es": "Lamento mucho haber olvidado tu libro."
+      },
+      {
+        "en": "No worries, bring it tomorrow.",
+        "es": "No te preocupes, tráelo mañana."
+      }
+    ]
+  },
+  {
+    "id": "312-see-you-tomorrow",
+    "chunk": "See you tomorrow!",
+    "ipa": "/siː juː təˈmɔːroʊ/",
+    "meaning": "¡Nos vemos mañana!",
+    "example": "Great job today, see you tomorrow!",
+    "example_translation": "Gran trabajo hoy, ¡nos vemos mañana!",
+    "category": "Closing a Conversation",
+    "tag": "Future",
+    "example_dialogue": [
+      {
+        "en": "I'm heading out for the day.",
+        "es": "Ya me retiro por hoy."
+      },
+      {
+        "en": "Goodnight! See you tomorrow!",
+        "es": "¡Buenas noches! ¡Nos vemos mañana!"
+      }
+    ]
+  },
+  {
+    "id": "313-what-time-is-it",
+    "chunk": "What time is it?",
+    "ipa": "/wʌt taɪm ɪz ɪt/",
+    "meaning": "¿Qué hora es?",
+    "example": "Excuse me, what time is it right now?",
+    "example_translation": "Disculpe, ¿qué hora es ahora mismo?",
+    "category": "Common Present Questions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "What time is it?",
+        "es": "¿Qué hora es?"
+      },
+      {
+        "en": "It is a quarter past three.",
+        "es": "Son las tres y cuarto."
+      }
+    ]
+  },
+  {
+    "id": "314-how-much-is-this",
+    "chunk": "How much is this?",
+    "ipa": "/haʊ mʌtʃ ɪz ðɪs/",
+    "meaning": "¿Cuánto cuesta esto?",
+    "example": "Excuse me, how much is this shirt?",
+    "example_translation": "Disculpe, ¿cuánto cuesta esta camisa?",
+    "category": "Common Present Questions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "How much is this?",
+        "es": "¿Cuánto cuesta esto?"
+      },
+      {
+        "en": "That is twelve dollars plus tax.",
+        "es": "Son doce dólares más impuestos."
+      }
+    ]
+  },
+  {
+    "id": "315-i-don-t-know",
+    "chunk": "I don't know.",
+    "ipa": "/aɪ doʊnt noʊ/",
+    "meaning": "No lo sé / No sé.",
+    "example": "Where is the library? - I don't know, I'm new here.",
+    "example_translation": "¿Dónde está la biblioteca? - No lo sé, soy nuevo aquí.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Do you know what time the bus comes?",
+        "es": "¿Sabes a qué hora pasa el autobús?"
+      },
+      {
+        "en": "Sorry, I don't know.",
+        "es": "Disculpa, no lo sé."
+      }
+    ]
+  },
+  {
+    "id": "316-take-your-time",
+    "chunk": "Take your time.",
+    "ipa": "/teɪk jʊr taɪm/",
+    "meaning": "Tómate tu tiempo / Sin prisas.",
+    "example": "No rush, take your time deciding.",
+    "example_translation": "Sin prisa, tómate tu tiempo para decidir.",
+    "category": "Asking For & Offering Help",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "I'm still looking at the menu.",
+        "es": "Todavía estoy mirando el menú."
+      },
+      {
+        "en": "Take your time, no rush at all.",
+        "es": "Tómate tu tiempo, no hay ninguna prisa."
+      }
+    ]
+  },
+  {
+    "id": "317-come-on-in",
+    "chunk": "Come on in!",
+    "ipa": "/kʌm ɑːn ɪn/",
+    "meaning": "¡Pasa! / ¡Adelante!",
+    "example": "Hey! Come on in, make yourself at home.",
+    "example_translation": "¡Hey! ¡Pasa, siéntete como en tu casa!",
+    "category": "Breaking the Ice",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Hi Sarah, am I too early?",
+        "es": "Hola Sarah, ¿llegué muy temprano?"
+      },
+      {
+        "en": "Not at all, come on in!",
+        "es": "¡Para nada, pasa adelante!"
+      }
+    ]
+  },
+  {
+    "id": "318-nice-to-see-you",
+    "chunk": "Nice to see you!",
+    "ipa": "/naɪs tuː siː juː/",
+    "meaning": "¡Qué gusto verte! / ¡Me da gusto verte!",
+    "example": "Hey Alex, so nice to see you!",
+    "example_translation": "¡Hola Alex, qué gusto verte!",
+    "category": "Breaking the Ice",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Good morning, David!",
+        "es": "¡Buenos días, David!"
+      },
+      {
+        "en": "Hey! Nice to see you!",
+        "es": "¡Hey! ¡Qué gusto verte!"
+      }
+    ]
+  },
+  {
+    "id": "319-it-s-not-worth-the-hassle",
+    "chunk": "It's not worth the hassle.",
+    "ipa": "/ɪts nɑːt wɜːrθ ðə ˈhæsəl/",
+    "meaning": "No vale la pena la molestia / el lío.",
+    "example": "I was going to return it, but it's not worth the hassle.",
+    "example_translation": "Iba a devolverlo, pero no vale la pena la molestia.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Should we dispute the five-dollar fee?",
+        "es": "¿Deberíamos reclamar el cargo de cinco dólares?"
+      },
+      {
+        "en": "Honestly, it's not worth the hassle.",
+        "es": "Honestamente, no vale la pena el lío."
+      }
+    ]
+  },
+  {
+    "id": "320-i-m-on-the-fence-about-it",
+    "chunk": "I'm on the fence about it.",
+    "ipa": "/aɪm ɑːn ðə fɛns əˈbaʊt ɪt/",
+    "meaning": "Estoy indeciso al respecto / no me decido.",
+    "example": "Are you taking the job? - I'm still on the fence about it.",
+    "example_translation": "¿Aceptarás el trabajo? - Todavía estoy indeciso al respecto.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Have you decided whether to move?",
+        "es": "¿Ya decidiste si te vas a mudar?"
+      },
+      {
+        "en": "Not yet, I'm on the fence about it.",
+        "es": "Aún no, estoy indeciso al respecto."
+      }
+    ]
+  },
+  {
+    "id": "321-let-s-call-it-a-day",
+    "chunk": "Let's call it a day.",
+    "ipa": "/lɛts kɔːl ɪt ə deɪ/",
+    "meaning": "Demos por terminado el día / Dejémoslo por hoy.",
+    "example": "We've made good progress, let's call it a day.",
+    "example_translation": "Avanzamos bien, demos por terminado el día.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "It's already past seven in the evening.",
+        "es": "Ya son pasadas las siete de la noche."
+      },
+      {
+        "en": "You're right, let's call it a day.",
+        "es": "Tienes razón, dejémoslo por hoy."
+      }
+    ]
+  },
+  {
+    "id": "322-i-need-to-get-my-act-together",
+    "chunk": "I need to get my act together.",
+    "ipa": "/aɪ niːd tuː ɡɛt maɪ ækt təˈɡɛðər/",
+    "meaning": "Tengo que ponerme las pilas / organizarme bien.",
+    "example": "Exams are next week, I need to get my act together.",
+    "example_translation": "Los exámenes son la próxima semana, tengo que ponerme las pilas.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "You've been missing deadlines lately.",
+        "es": "Has estado incumpliendo entregas últimamente."
+      },
+      {
+        "en": "I know, I really need to get my act together.",
+        "es": "Lo sé, en verdad necesito ponerme las pilas."
+      }
+    ]
+  },
+  {
+    "id": "323-that-s-a-whole-different-ballgame",
+    "chunk": "That's a whole different ballgame.",
+    "ipa": "/ðæts ə hoʊl ˈdɪfrənt ˈbɔːlɡeɪm/",
+    "meaning": "Eso es un asunto completamente distinto / harina de otro costal.",
+    "example": "Writing code is easy, but managing clients is a whole different ballgame.",
+    "example_translation": "Escribir código es fácil, pero gestionar clientes es un asunto completamente distinto.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "We built the prototype, now we need to scale it.",
+        "es": "Construimos el prototipo, ahora debemos escalarlo."
+      },
+      {
+        "en": "That's a whole different ballgame.",
+        "es": "Eso es un asunto completamente diferente."
+      }
+    ]
+  },
+  {
+    "id": "324-to-make-matters-worse",
+    "chunk": "To make matters worse,...",
+    "ipa": "/tuː meɪk ˈmætərz wɜːrs/",
+    "meaning": "Para empeorar las cosas,...",
+    "example": "To make matters worse, our flight was cancelled.",
+    "example_translation": "Para empeorar las cosas, nuestro vuelo fue cancelado.",
+    "category": "Useful Connectors",
+    "tag": "Past",
+    "example_dialogue": [
+      {
+        "en": "Our tire blew out on the highway.",
+        "es": "Se nos ponchó una llanta en la autopista."
+      },
+      {
+        "en": "And to make matters worse, it began to pour.",
+        "es": "Y para empeorar las cosas, comenzó a diluviar."
+      }
+    ]
+  },
+  {
+    "id": "325-i-m-taking-it-with-a-grain-of-salt",
+    "chunk": "I'm taking it with a grain of salt.",
+    "ipa": "/aɪm ˈteɪkɪŋ ɪt wɪð ə ɡreɪn əv sɔːlt/",
+    "meaning": "Me lo tomo con reservas / con pinzas.",
+    "example": "He promises big things, but I'm taking it with a grain of salt.",
+    "example_translation": "Él promete grandes cosas, pero me lo tomo con reservas.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Did you hear that rumor about the merger?",
+        "es": "¿Oíste ese rumor sobre la fusión?"
+      },
+      {
+        "en": "Yes, but I'm taking it with a grain of salt.",
+        "es": "Sí, pero me lo tomo con reservas."
+      }
+    ]
+  },
+  {
+    "id": "326-we-re-on-the-same-page",
+    "chunk": "We're on the same page.",
+    "ipa": "/wɪr ɑːn ðə seɪm peɪdʒ/",
+    "meaning": "Estamos en la misma sintonía / de acuerdo.",
+    "example": "I'm glad to see that we're on the same page regarding the goals.",
+    "example_translation": "Me alegra ver que estamos en la misma sintonía respecto a los objetivos.",
+    "category": "Agreeing & Disagreeing",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "I think we should focus on customer retention.",
+        "es": "Creo que deberíamos enfocarnos en la retención de clientes."
+      },
+      {
+        "en": "Definitely, we're on the same page.",
+        "es": "Sin duda, estamos en la misma sintonía."
+      }
+    ]
+  },
+  {
+    "id": "327-don-t-jump-the-gun",
+    "chunk": "Don't jump the gun.",
+    "ipa": "/doʊnt dʒʌmp ðə ɡʌn/",
+    "meaning": "No te apresures / No te adelantes a los hechos.",
+    "example": "We don't have the final numbers yet, don't jump the gun.",
+    "example_translation": "Aún no tenemos los números finales, no te apresures.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Should I announce the product launch today?",
+        "es": "¿Debería anunciar el lanzamiento del producto hoy?"
+      },
+      {
+        "en": "Don't jump the gun, wait for approval.",
+        "es": "No te adelantes, espera la aprobación."
+      }
+    ]
+  },
+  {
+    "id": "328-let-s-keep-each-other-in-the-loop",
+    "chunk": "Let's keep each other in the loop.",
+    "ipa": "/lɛts kiːp iːtʃ ˈʌðər ɪn ðə luːp/",
+    "meaning": "Mantengámonos informados mutuamente / al tanto.",
+    "example": "Great talking with you, let's keep each other in the loop.",
+    "example_translation": "Un gusto hablar contigo, mantengámonos al tanto mutuamente.",
+    "category": "Work & Daily Life",
+    "tag": "Future",
+    "example_dialogue": [
+      {
+        "en": "I'll let you know as soon as the client responds.",
+        "es": "Te avisaré en cuanto responda el cliente."
+      },
+      {
+        "en": "Sounds good, let's keep each other in the loop.",
+        "es": "Me parece bien, mantengámonos al tanto mutuamente."
+      }
+    ]
+  },
+  {
+    "id": "329-it-completely-blew-my-mind",
+    "chunk": "It completely blew my mind.",
+    "ipa": "/ɪt kəmˈpliːtli bluː maɪ maɪnd/",
+    "meaning": "Me voló la cabeza / Me dejó atónito.",
+    "example": "The special effects in that movie completely blew my mind.",
+    "example_translation": "Los efectos especiales de esa película me volaron la cabeza por completo.",
+    "category": "Opinions & Reactions",
+    "tag": "Past",
+    "example_dialogue": [
+      {
+        "en": "How was the science exhibition?",
+        "es": "¿Qué tal estuvo la exposición de ciencias?"
+      },
+      {
+        "en": "It completely blew my mind!",
+        "es": "¡Me dejó atónito por completo!"
+      }
+    ]
+  },
+  {
+    "id": "330-i-wouldn-t-hold-my-breath",
+    "chunk": "I wouldn't hold my breath.",
+    "ipa": "/aɪ ˈwʊdənt hoʊld maɪ brɛθ/",
+    "meaning": "Yo no me haría ilusiones / No esperaría sentado.",
+    "example": "They said they'd reply today, but I wouldn't hold my breath.",
+    "example_translation": "Dijeron que responderían hoy, pero yo no me haría ilusiones.",
+    "category": "Predictions & Hopes",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Do you think the train will arrive on time?",
+        "es": "¿Crees que el tren llegue a tiempo?"
+      },
+      {
+        "en": "Given the snow, I wouldn't hold my breath.",
+        "es": "Con la nieve, yo no me haría ilusiones."
+      }
+    ]
+  },
+  {
+    "id": "331-cut-to-the-chase",
+    "chunk": "Cut to the chase.",
+    "ipa": "/kʌt tuː ðə tʃeɪs/",
+    "meaning": "Ve al grano / Al grano.",
+    "example": "We don't have much time, so let's cut to the chase.",
+    "example_translation": "No tenemos mucho tiempo, así que vayamos al grano.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "I have a detailed background to share first...",
+        "es": "Tengo un contexto detallado que compartir primero..."
+      },
+      {
+        "en": "Could you cut to the chase? We have another meeting soon.",
+        "es": "¿Podrías ir al grano? Tenemos otra reunión pronto."
+      }
+    ]
+  },
+  {
+    "id": "332-he-threw-me-under-the-bus",
+    "chunk": "He threw me under the bus.",
+    "ipa": "/hiː θruː miː ˈʌndər ðə bʌs/",
+    "meaning": "Me echó la culpa a mí / Me vendió ante los demás.",
+    "example": "When the client complained, he threw me under the bus.",
+    "example_translation": "Cuando el cliente se quejó, me echó la culpa a mí.",
+    "category": "Work & Daily Life",
+    "tag": "Past",
+    "example_dialogue": [
+      {
+        "en": "Why did the manager blame you for the delay?",
+        "es": "¿Por qué el gerente te culpó a ti por el retraso?"
+      },
+      {
+        "en": "Because my teammate threw me under the bus.",
+        "es": "Porque mi compañero me echó la culpa a mí."
+      }
+    ]
+  },
+  {
+    "id": "333-it-s-a-blessing-in-disguise",
+    "chunk": "It's a blessing in disguise.",
+    "ipa": "/ɪts ə ˈblɛsɪŋ ɪn dɪsˈɡaɪz/",
+    "meaning": "No hay mal que por bien no venga / Es un mal que resultó favorable.",
+    "example": "Losing that job was painful, but it was a blessing in disguise.",
+    "example_translation": "Perder ese empleo fue doloroso, pero fue un bien disfrazado de mal.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "They rejected my initial proposal.",
+        "es": "Rechazaron mi propuesta inicial."
+      },
+      {
+        "en": "Trust me, it might be a blessing in disguise.",
+        "es": "Créeme, podría ser un bien disfrazado de mal."
+      }
+    ]
+  },
+  {
+    "id": "334-i-m-snowed-under-with-work",
+    "chunk": "I'm snowed under with work.",
+    "ipa": "/aɪm snoʊd ˈʌndər wɪð wɜːrk/",
+    "meaning": "Estoy sepultado / tapadísimo de trabajo.",
+    "example": "I can't take on new tasks, I'm snowed under with work.",
+    "example_translation": "No puedo asumir nuevas tareas, estoy tapadísimo de trabajo.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Can you help review these twenty files?",
+        "es": "¿Puedes ayudarme a revisar estos veinte archivos?"
+      },
+      {
+        "en": "I wish I could, but I'm snowed under with work.",
+        "es": "Ojalá pudiera, pero estoy tapadísimo de trabajo."
+      }
+    ]
+  },
+  {
+    "id": "335-that-hits-close-to-home",
+    "chunk": "That hits close to home.",
+    "ipa": "/ðæt hɪts kloʊs tuː hoʊm/",
+    "meaning": "Eso me toca muy de cerca / me cala hondo.",
+    "example": "Her speech about layoffs hits very close to home.",
+    "example_translation": "Su discurso sobre los despidos me toca muy de cerca.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "The article discusses the struggles of small businesses.",
+        "es": "El artículo trata sobre las dificultades de los pequeños negocios."
+      },
+      {
+        "en": "Wow, that really hits close to home for me.",
+        "es": "Vaya, eso de verdad me toca muy de cerca."
+      }
+    ]
+  },
+  {
+    "id": "336-let-s-sleep-on-it",
+    "chunk": "Let's sleep on it.",
+    "ipa": "/lɛts sliːp ɑːn ɪt/",
+    "meaning": "Consultémoslo con la almohada / Pensemos con calma hasta mañana.",
+    "example": "It's a big decision, let's sleep on it before answering.",
+    "example_translation": "Es una gran decisión, consultémoslo con la almohada antes de responder.",
+    "category": "Plans & Intentions",
+    "tag": "Future",
+    "example_dialogue": [
+      {
+        "en": "Should we make an offer on that apartment tonight?",
+        "es": "¿Hacemos una oferta por ese departamento esta noche?"
+      },
+      {
+        "en": "Let's sleep on it and talk in the morning.",
+        "es": "Consultémoslo con la almohada y hablemos por la mañana."
+      }
+    ]
+  },
+  {
+    "id": "337-at-the-end-of-the-day",
+    "chunk": "At the end of the day,...",
+    "ipa": "/æt ði ɛnd əv ðə deɪ/",
+    "meaning": "A fin de cuentas / Al final del día,...",
+    "example": "At the end of the day, customer satisfaction is what matters most.",
+    "example_translation": "Al fin de cuentas, la satisfacción del cliente es lo que más importa.",
+    "category": "Useful Connectors",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "There are so many competing opinions on this project.",
+        "es": "Hay tantas opiniones contradictorias en este proyecto."
+      },
+      {
+        "en": "At the end of the day, we need to focus on results.",
+        "es": "A fin de cuentas, debemos enfocarnos en los resultados."
+      }
+    ]
+  },
+  {
+    "id": "338-for-what-it-s-worth",
+    "chunk": "For what it's worth,...",
+    "ipa": "/fɔːr wʌt ɪts wɜːrθ/",
+    "meaning": "Si te sirve de algo / Por si de algo vale,...",
+    "example": "For what it's worth, I think you made the right call.",
+    "example_translation": "Si te sirve de algo, creo que tomaste la decisión correcta.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "I'm really questioning my presentation skills.",
+        "es": "De verdad estoy dudando de mis habilidades para exponer."
+      },
+      {
+        "en": "For what it's worth, I found your talk very inspiring.",
+        "es": "Por si de algo sirve, tu charla me pareció muy inspiradora."
+      }
+    ]
+  },
+  {
+    "id": "339-let-s-read-between-the-lines",
+    "chunk": "Let's read between the lines.",
+    "ipa": "/lɛts riːd bɪˈtwiːn ðə laɪnz/",
+    "meaning": "Leamos entre líneas / Analicemos el trasfondo.",
+    "example": "Their official statement is vague, let's read between the lines.",
+    "example_translation": "Su comunicado oficial es vago, leamos entre líneas.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "They said they are restructuring operations.",
+        "es": "Dijeron que están reestructurando operaciones."
+      },
+      {
+        "en": "Let's read between the lines — layoffs are coming.",
+        "es": "Leamos entre líneas — se avecinan despidos."
+      }
+    ]
+  },
+  {
+    "id": "340-it-goes-without-saying-that",
+    "chunk": "It goes without saying that...",
+    "ipa": "/ɪt ɡoʊz wɪðˈaʊt ˈseɪɪŋ ðæt/",
+    "meaning": "Está de más decir que... / Ni qué decir tiene que...",
+    "example": "It goes without saying that confidentiality is strictly required.",
+    "example_translation": "Está de más decir que la confidencialidad es estrictamente obligatoria.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Are we sharing this roadmap publicly?",
+        "es": "¿Compartiremos esta hoja de ruta públicamente?"
+      },
+      {
+        "en": "No, it goes without saying that this is internal only.",
+        "es": "No, está de más decir que esto es de uso exclusivamente interno."
+      }
+    ]
+  },
+  {
+    "id": "341-with-all-due-respect",
+    "chunk": "With all due respect,...",
+    "ipa": "/wɪð ɔːl duː rɪˈspɛkt/",
+    "meaning": "Con el debido respeto,...",
+    "example": "With all due respect, I disagree with that interpretation.",
+    "example_translation": "Con el debido respeto, discrepo con esa interpretación.",
+    "category": "Agreeing & Disagreeing",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "We should cancel the contract immediately.",
+        "es": "Deberíamos rescindir el contrato inmediatamente."
+      },
+      {
+        "en": "With all due respect, that could expose us to litigation.",
+        "es": "Con el debido respeto, eso podría exponernos a litigios."
+      }
+    ]
+  },
+  {
+    "id": "342-all-things-considered",
+    "chunk": "All things considered,...",
+    "ipa": "/ɔːl θɪŋz kənˈsɪdərd/",
+    "meaning": "Considerándolo todo / Tomando todo en cuenta,...",
+    "example": "All things considered, the merger was a major success.",
+    "example_translation": "Tomando todo en cuenta, la fusión fue un gran éxito.",
+    "category": "Useful Connectors",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "The transition had some minor roadblocks.",
+        "es": "La transición tuvo algunos pequeños tropiezos."
+      },
+      {
+        "en": "True, but all things considered, we did exceptionally well.",
+        "es": "Cierto, pero considerándolo todo, nos fue excepcionalmente bien."
+      }
+    ]
+  },
+  {
+    "id": "343-that-remains-to-be-seen",
+    "chunk": "That remains to be seen.",
+    "ipa": "/ðæt rɪˈmeɪnz tuː biː siːn/",
+    "meaning": "Eso está por verse.",
+    "example": "Will the new strategy pay off? That remains to be seen.",
+    "example_translation": "¿Dará frutos la nueva estrategia? Eso está por verse.",
+    "category": "Predictions & Hopes",
+    "tag": "Future",
+    "example_dialogue": [
+      {
+        "en": "They claim this policy will eliminate errors completely.",
+        "es": "Afirman que esta política eliminará los errores por completo."
+      },
+      {
+        "en": "Well, that remains to be seen.",
+        "es": "Bueno, eso está por verse."
+      }
+    ]
+  },
+  {
+    "id": "344-don-t-take-it-at-face-value",
+    "chunk": "Don't take it at face value.",
+    "ipa": "/doʊnt teɪk ɪt æt feɪs ˈvæljuː/",
+    "meaning": "No te lo tomes al pie de la letra / No lo des por bueno sin investigar.",
+    "example": "Inspect the claims carefully, don't take it at face value.",
+    "example_translation": "Inspecciona las afirmaciones con cuidado, no te lo tomes al pie de la letra.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Their competitor published glowing reviews online.",
+        "es": "Su competidor publicó reseñas elogiosas en internet."
+      },
+      {
+        "en": "Be careful, don't take it at face value.",
+        "es": "Ten cuidado, no te lo tomes al pie de la letra."
+      }
+    ]
+  },
+  {
+    "id": "345-let-s-not-lose-sight-of",
+    "chunk": "Let's not lose sight of...",
+    "ipa": "/lɛts nɑːt luːz saɪt əv/",
+    "meaning": "No perdamos de vista...",
+    "example": "Amid all these discussions, let's not lose sight of our core mission.",
+    "example_translation": "En medio de todas estas discusiones, no perdamos de vista nuestra misión central.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Should we redesign the logo and color palette?",
+        "es": "¿Deberíamos rediseñar el logo y la paleta de colores?"
+      },
+      {
+        "en": "Let's not lose sight of the budget constraints.",
+        "es": "No perdamos de vista las restricciones presupuestarias."
+      }
+    ]
+  },
+  {
+    "id": "346-suffice-it-to-say",
+    "chunk": "Suffice it to say,...",
+    "ipa": "/səˈfaɪs ɪt tuː seɪ/",
+    "meaning": "Baste decir que...",
+    "example": "Suffice it to say, the audit revealed several discrepancies.",
+    "example_translation": "Baste decir que la auditoría reveló varias discrepancias.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Past",
+    "example_dialogue": [
+      {
+        "en": "Did the negotiation go as smoothly as expected?",
+        "es": "¿La negociación transcurrió tan fluida como se esperaba?"
+      },
+      {
+        "en": "Suffice it to say, we had to make major concessions.",
+        "es": "Baste decir que tuvimos que hacer concesiones mayúsculas."
+      }
+    ]
+  },
+  {
+    "id": "347-to-put-things-into-perspective",
+    "chunk": "To put things into perspective,...",
+    "ipa": "/tuː pʊt θɪŋz ˈɪntuː pərˈspɛktɪv/",
+    "meaning": "Para poner las cosas en perspectiva,...",
+    "example": "To put things into perspective, our market share grew by forty percent.",
+    "example_translation": "Para poner las cosas en perspectiva, nuestra cuota de mercado creció un cuarenta por ciento.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "We had a tough quarter with supply chains.",
+        "es": "Tuvimos un trimestre difícil con las cadenas de suministro."
+      },
+      {
+        "en": "To put things into perspective, we still outperformed competitors.",
+        "es": "Para poner las cosas en perspectiva, aun así superamos a los competidores."
+      }
+    ]
+  },
+  {
+    "id": "348-it-leaves-a-lot-to-be-desired",
+    "chunk": "It leaves a lot to be desired.",
+    "ipa": "/ɪt liːvz ə lɑːt tuː biː dɪˈzaɪərd/",
+    "meaning": "Deja mucho que desear.",
+    "example": "The quality of the final deliverable leaves a lot to be desired.",
+    "example_translation": "La calidad del entregable final deja mucho que desear.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "What did you think of the vendor's report?",
+        "es": "¿Qué te pareció el informe del proveedor?"
+      },
+      {
+        "en": "Frankly, it leaves a lot to be desired.",
+        "es": "Francamente, deja mucho que desear."
+      }
+    ]
+  },
+  {
+    "id": "349-in-hindsight",
+    "chunk": "In hindsight,...",
+    "ipa": "/ɪn ˈhaɪndsaɪt/",
+    "meaning": "Visto en retrospectiva / En retrospectiva,...",
+    "example": "In hindsight, we should have launched the campaign earlier.",
+    "example_translation": "En retrospectiva, debimos haber lanzado la campaña más temprano.",
+    "category": "Talking About Experiences",
+    "tag": "Past",
+    "example_dialogue": [
+      {
+        "en": "The initial marketing rollout felt a bit rushed.",
+        "es": "El despliegue inicial de marketing se sintió algo apresurado."
+      },
+      {
+        "en": "In hindsight, we should have waited another month.",
+        "es": "En retrospectiva, debimos haber esperado otro mes."
+      }
+    ]
+  },
+  {
+    "id": "350-let-s-circle-back-to-that-later",
+    "chunk": "Let's circle back to that later.",
+    "ipa": "/lɛts ˈsɜːrkəl bæk tuː ðæt ˈleɪtər/",
+    "meaning": "Retomemos ese punto más adelante / Volvamos a eso luego.",
+    "example": "That's an important topic, let's circle back to that later.",
+    "example_translation": "Es un tema importante, retomemos ese punto más adelante.",
+    "category": "Work & Daily Life",
+    "tag": "Future",
+    "example_dialogue": [
+      {
+        "en": "Should we discuss the licensing agreement right now?",
+        "es": "¿Discutimos el acuerdo de licencias ahora mismo?"
+      },
+      {
+        "en": "Let's circle back to that later in the agenda.",
+        "es": "Retomemos ese punto más adelante en la agenda."
+      }
+    ]
+  },
+  {
+    "id": "351-let-s-play-devil-s-advocate",
+    "chunk": "Let's play devil's advocate.",
+    "ipa": "/lɛts pleɪ ˈdɛvəlz ˈædvəkət/",
+    "meaning": "Hagamos de abogado del diablo / Pongámonos en la postura contraria.",
+    "example": "To test our hypothesis, let's play devil's advocate.",
+    "example_translation": "Para poner a prueba nuestra hipótesis, hagamos de abogado del diablo.",
+    "category": "Work & Daily Life",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Everyone seems convinced this plan is foolproof.",
+        "es": "Todos parecen convencidos de que este plan es infalible."
+      },
+      {
+        "en": "Let's play devil's advocate and find the weak spots.",
+        "es": "Hagamos de abogado del diablo y encontremos los puntos débiles."
+      }
+    ]
+  },
+  {
+    "id": "352-i-have-mixed-feelings-about-it",
+    "chunk": "I have mixed feelings about it.",
+    "ipa": "/aɪ hæv mɪkst ˈfiːlɪŋz əˈbaʊt ɪt/",
+    "meaning": "Tengo sentimientos encontrados al respecto.",
+    "example": "I have mixed feelings about moving to another department.",
+    "example_translation": "Tengo sentimientos encontrados sobre mudarme a otro departamento.",
+    "category": "Opinions & Reactions",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Are you excited about the team restructuring?",
+        "es": "¿Estás emocionado por la reestructuración del equipo?"
+      },
+      {
+        "en": "I have mixed feelings about it, to be honest.",
+        "es": "Tengo sentimientos encontrados al respecto, para ser sincero."
+      }
+    ]
+  },
+  {
+    "id": "353-that-s-easier-said-than-done",
+    "chunk": "That's easier said than done.",
+    "ipa": "/ðæts ˈiːziər sɛd ðæn dʌn/",
+    "meaning": "Eso es más fácil decirlo que hacerlo.",
+    "example": "Rebuilding our database is definitely easier said than done.",
+    "example_translation": "Reconstruir nuestra base de datos es definitivamente más fácil decirlo que hacerlo.",
+    "category": "Agreeing & Disagreeing",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "We should just rebuild the entire architecture.",
+        "es": "Deberíamos simplemente reconstruir toda la arquitectura."
+      },
+      {
+        "en": "That's easier said than done, trust me.",
+        "es": "Eso es más fácil decirlo que hacerlo, créeme."
+      }
+    ]
+  },
+  {
+    "id": "354-it-boils-down-to",
+    "chunk": "It boils down to...",
+    "ipa": "/ɪt bɔɪlz daʊn tuː/",
+    "meaning": "Todo se reduce a...",
+    "example": "Ultimately, it boils down to effective communication.",
+    "example_translation": "En última instancia, todo se reduce a una comunicación efectiva.",
+    "category": "Giving Reasons & Explanations",
+    "tag": "Present",
+    "example_dialogue": [
+      {
+        "en": "Why did the two departments fail to collaborate?",
+        "es": "¿Por qué los dos departamentos no lograron colaborar?"
+      },
+      {
+        "en": "It boils down to a fundamental lack of trust.",
+        "es": "Todo se reduce a una falta fundamental de confianza."
+      }
+    ]
   }
 ];

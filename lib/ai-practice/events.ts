@@ -1,6 +1,6 @@
 "use client";
 
-import { db, type AnalyticsEventName } from "@/lib/db";
+import { db } from "@/lib/db";
 
 export type EventPayloads = {
   exercise_shown:        { exerciseType: string; topic: string; conversationId?: number };
@@ -15,7 +15,7 @@ export type EventPayloads = {
   session_ended:         { mode: string; exercisesCompleted: number; correctRate: number; durationMs: number };
 };
 
-export async function logEvent<N extends AnalyticsEventName>(
+export async function logEvent<N extends keyof EventPayloads>(
   name: N,
   payload: EventPayloads[N],
   userId?: string | null,

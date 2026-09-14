@@ -40,8 +40,13 @@ export function buildWordExercises(words: EssentialWord[]): GenericExercise[] {
         answer: word.word,
         options: shuffle([word.word, ...distractors]),
         hints: {
-          level1: `Empieza con "${word.word.charAt(0).toUpperCase()}"`,
-          level2: `La palabra es: ${word.word}`,
+          // El significado antes que el deletreo: saltar de "empieza con X" a
+          // entregar la palabra no deja ningún escalón donde el alumno piense.
+          level1: word.meaning
+            ? `Significado: ${word.meaning}`
+            : `Empieza con "${word.word.charAt(0).toUpperCase()}" (${word.word.length} letras)`,
+          level2: `Empieza con "${word.word.charAt(0).toUpperCase()}" (${word.word.length} letras)`,
+          level3: `La palabra es: ${word.word}`,
         },
       }
       return [ex]

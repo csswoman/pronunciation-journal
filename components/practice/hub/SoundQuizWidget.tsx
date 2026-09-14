@@ -10,7 +10,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from '@/components/icons'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { cn } from '@/lib/cn'
 import { getIllustration } from '@/lib/illustrations/registry'
 import SoundMicroQuiz, { type SoundCategory } from './SoundMicroQuiz'

@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import SoundLabPage from "@/components/phoneme-practice/SoundLabPage";
+import { getSoundLabPhraseCandidates } from "@/lib/sound-lab/recommended-phrase-candidates";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 
 export default async function SoundsPage() {
   const user = isSupabaseConfigured() ? await getSupabaseServerUser() : null;
+  const phraseCandidates = getSoundLabPhraseCandidates();
 
   return (
     <Suspense
@@ -17,7 +19,7 @@ export default async function SoundsPage() {
         </div>
       }
     >
-      <SoundLabPage userId={user?.id} />
+      <SoundLabPage userId={user?.id} phraseCandidates={phraseCandidates} />
     </Suspense>
   );
 }

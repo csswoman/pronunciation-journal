@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getThreadHintsForStep, extractFeaturedWords } from '../step-thread'
 import type { DailyStep } from '@/lib/practice/types'
+import type { LearningChunk } from '@/lib/chunk-of-day/types'
 
 function vocabStep(
   kind: DailyStep['kind'],
@@ -17,6 +18,21 @@ function vocabStep(
     exercises: [],
     estMinutes: 2,
     featuredWords: words,
+  }
+}
+
+function anchoredGoingChunk(): LearningChunk {
+  return {
+    id: 'going', chunk: "I'm going to...", ipa: '', meaning: '', example: '', category: '',
+    learning: {
+      cefr: 'A1', communicativeFunction: '', secondaryFunctions: [], register: 'neutral', patternType: 'fixed',
+      coreText: '', template: null, slots: [], acceptedAnswers: [], recognitionCueEs: '', productionCueEs: '',
+      practiceAnswer: '', confidence: 'high', reviewFlags: [],
+    },
+    contentGraph: {
+      text: "I'm going to...", highlights: [{ start: 4, end: 9 }],
+      anchors: [{ owner: 'essential_words', id: 'c1k:go' }], pronunciationTargetIds: [],
+    },
   }
 }
 
@@ -38,6 +54,16 @@ describe('extractFeaturedWords', () => {
       studyCards: [{ word: 'Cat', meaning: 'gato' }],
     }
     expect(extractFeaturedWords(step)).toEqual(['cat'])
+  })
+
+  it('uses the authored Essential Word anchor instead of an inflected visible form', () => {
+    const step: DailyStep = {
+      kind: 'chunk_intro', id: 'chunk', title: 'Chunk', subtitle: '', icon: 'Messages', exercises: [], estMinutes: 2,
+      featuredWords: ['going'],
+      chunks: [anchoredGoingChunk()],
+    }
+
+    expect(extractFeaturedWords(step)).toEqual(['go'])
   })
 })
 
@@ -88,6 +114,20 @@ describe('getThreadHintsForStep', () => {
         fromStepTitle: 'Intro',
         fromStepKind: 'word_intro',
       },
+    ])
+  })
+
+  it('connects an inflected chunk form with its anchored Essential Word', () => {
+    const steps: DailyStep[] = [
+      {
+        kind: 'chunk_intro', id: 'chunk', title: 'Chunk', subtitle: '', icon: 'Messages', exercises: [], estMinutes: 2,
+        chunks: [anchoredGoingChunk()],
+      },
+      vocabStep('word_intro', 'wi', 'Word', ['go']),
+    ]
+
+    expect(getThreadHintsForStep(steps, 1)).toEqual([
+      { word: 'go', fromStepTitle: 'Chunk', fromStepKind: 'chunk_intro' },
     ])
   })
 })

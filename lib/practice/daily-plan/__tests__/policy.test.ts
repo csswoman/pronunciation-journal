@@ -23,6 +23,13 @@ describe('daily candidate policy', () => {
     expect(selected.map((entry) => entry.id)).toEqual(['due', 'weak', 'route', 'saved', 'variety'])
   })
 
+  it('keeps a new chunk thread immediately after genuinely due work', () => {
+    const selected = selectDailyCandidates([
+      step('variety', 'variety'), step('chunk', 'chunk_new'), step('due', 'due'),
+    ], { limit: 3 })
+    expect(selected.map((entry) => entry.id)).toEqual(['due', 'chunk', 'variety'])
+  })
+
   it('dedupes targets and caps saved intent without displacing due work', () => {
     const selected = selectDailyCandidates([
       step('saved-1', 'saved_intent'), step('due', 'due', 'same'), step('saved-same', 'saved_intent', 'same'),

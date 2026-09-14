@@ -33,14 +33,14 @@ describe('exercise capabilities', () => {
     }))
   })
 
-  it('enforces B3 surface policy: match_pairs and sentence_dictation in free_practice only, multiple_choice in diagnostic', () => {
+  it('enforces B3 surface policy: match_pairs and sentence_dictation in free_practice only, authored multiple_choice in daily plans and diagnostics', () => {
     expect(isExerciseAvailableOnSurface('match_pairs', 'daily_plan')).toBe(false)
     expect(isExerciseAvailableOnSurface('match_pairs', 'free_practice')).toBe(true)
 
     expect(isExerciseAvailableOnSurface('sentence_dictation', 'daily_plan')).toBe(false)
     expect(isExerciseAvailableOnSurface('sentence_dictation', 'free_practice')).toBe(true)
 
-    expect(isExerciseAvailableOnSurface('multiple_choice', 'daily_plan')).toBe(false)
+    expect(isExerciseAvailableOnSurface('multiple_choice', 'daily_plan')).toBe(true)
     expect(isExerciseAvailableOnSurface('multiple_choice', 'diagnostic')).toBe(true)
 
     expect(isExerciseAvailableOnSurface('fill_blank', 'daily_plan')).toBe(true)
@@ -61,4 +61,3 @@ describe('exercise capabilities', () => {
     expect(EXERCISE_CAPABILITIES.reader).toMatchObject({ evaluator: 'exposure', dbId: null, writesAnswerHistory: false })
   })
 })
-

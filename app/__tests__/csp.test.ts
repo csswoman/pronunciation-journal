@@ -25,17 +25,14 @@ describe("Content-Security-Policy Configuration", () => {
     expect(proxyContent).toContain("form-action 'self'");
   });
 
-  it("uses per-request nonce plus theme-init sha256, without headers() in root layout", () => {
+  it("uses a per-request nonce so Next can authorize its inline RSC payloads", () => {
     expect(proxyContent).toMatch(
       /script-src 'self' 'nonce-\$\{nonce\}' 'sha256-\$\{THEME_INIT_SCRIPT_SHA256\}' 'strict-dynamic'/,
     );
     expect(proxyContent).toContain('requestHeaders.set("x-nonce", nonce)');
     expect(proxyContent).toContain("THEME_INIT_SCRIPT");
-    // Performance: root layout must stay static-capable (Next CSP guide).
-    expect(layoutContent).not.toMatch(/from ["']next\/headers["']/);
-    expect(layoutContent).not.toMatch(/\bawait headers\(\)/);
-    expect(layoutContent).not.toMatch(/headers\(\)\.get/);
-    expect(layoutContent).not.toContain("nonce={nonce}");
+    expect(layoutContent).toContain('from "next/server"');
+    expect(layoutContent).toContain("await connection()");
     expect(layoutContent).toContain("THEME_INIT_SCRIPT");
   });
 

@@ -83,7 +83,7 @@ export const EXERCISE_CAPABILITIES = {
   multiple_choice: capability('multiple_choice', {
     status: 'active', producerIds: ['grammar_deck_quiz', 'false_friends', 'connected_speech_quiz'],
     renderer: 'generic', evaluator: 'local', modality: 'recognition', sources: ['grammar_deck', 'false_friends', 'text_fragments'],
-    surfaces: ['diagnostic'], selectable: true, writesAnswerHistory: true,
+    surfaces: ['daily_plan', 'diagnostic'], selectable: true, writesAnswerHistory: true,
   }),
   reader: capability('reader', {
     status: 'active', producerIds: ['daily_reader'], renderer: 'reader', evaluator: 'exposure', modality: 'exposure', sources: ['reader'],
@@ -171,4 +171,3 @@ export function validateExerciseCapabilities(
   }
   return issues
 }
-

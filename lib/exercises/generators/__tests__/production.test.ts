@@ -18,6 +18,11 @@ function entry(overrides: Partial<WordBankEntry> = {}): WordBankEntry {
     source: 'manual',
     status: 'ready',
     srs_status: 'learning',
+    // A vetted rating (B1) by default — an unset/zero difficulty is exactly
+    // the "unvetted word" case isSafeForFreeProduction exists to filter, so
+    // tests not exercising that specifically need a real rating or they
+    // silently return an empty pool. See isSafeForFreeProduction (production.ts).
+    difficulty: 3,
     created_at: '',
     updated_at: '',
     ...overrides,
@@ -62,8 +67,11 @@ describe('generateSpokenProductionFromWordBank', () => {
 })
 
 describe('generateSpokenProductionFromWordBank level filtering', () => {
+  // difficulty: 1 (A1-rated) — free production at A1/A2 excludes words with no
+  // vetted difficulty (see isSafeForFreeProduction in production.ts), so an
+  // unrated fixture would silently empty the pool these tests exercise.
   const words = Array.from({ length: 4 }, (_, i) =>
-    entry({ id: `wb-${i}`, text: `word${i}` }),
+    entry({ id: `wb-${i}`, text: `word${i}`, difficulty: 1 }),
   )
 
   it('never hands an A1 learner a constraint above their level', () => {

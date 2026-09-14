@@ -30,7 +30,9 @@ export function ErrorCorrectionExercise({
     setDone(true)
     onResult(correct, answer, 0, {
       feedback: {
-        immediate: correct ? 'Correcto.' : 'Revisa la corrección.',
+        immediate: correct
+          ? 'Encontraste y corregiste el error.'
+          : 'Esa no es la corrección. Compara tu versión con la correcta.',
         correction: exercise.correctSentence,
         explanation: exercise.explanation,
         canRetry: !correct,

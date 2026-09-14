@@ -1,6 +1,7 @@
 import type { EssentialWord, CefrLevel } from './types'
 import { MAX_CHUNKS } from './types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { fetchCatalogIndex, fetchChunks } from './client'
 
 /** Essential-word details retained while the entry is adapted for generic practice. */
 export type EssentialWordPresentationMetadata = Pick<EssentialWord, 'rank' | 'pos' | 'cefr_level'>
@@ -105,4 +106,26 @@ export async function fetchEssentialWordsForDay(day: number, count: number): Pro
   }
 
   return filterAndRotate(collected, day, count).map(coreWordToWordBankEntry)
+}
+
+/**
+ * Resolves only explicit `c1k:` anchors to their authored entries. This is a
+ * daily-plan bridge, not a spelling lookup: absent, malformed or unavailable
+ * anchor IDs simply produce no candidates so the caller can keep its fallback.
+ */
+export async function fetchEssentialWordsForAnchors(
+  anchorIds: readonly string[],
+  count: number,
+): Promise<EssentialWordBankEntry[]> {
+  const requested = Array.from(new Set(anchorIds.filter((id) => id.startsWith('c1k:')))).slice(0, count)
+  if (requested.length === 0) return []
+
+  const catalogIndex = await fetchCatalogIndex()
+  const chunkById = new Map(catalogIndex.map((entry) => [`c1k:${entry.word.toLowerCase()}`, entry.chunk]))
+  const entries = await fetchChunks(requested.flatMap((id) => chunkById.get(id) ?? []))
+
+  return requested.flatMap((id) => {
+    const entry = entries.get(id)
+    return entry ? [coreWordToWordBankEntry(entry)] : []
+  })
 }

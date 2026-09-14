@@ -25,7 +25,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
     phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats,
     sessionProgress, sessionPreview, isResume, previewLoading, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
-    startSpeak, beginSession, omitWord, submitGrade, reload, learnMore, archiveWord,
+    startSpeak, beginSession, omitWord, markPronunciationDifficulty, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
     sessionSize, setSessionSize, discardSession, pauseAndPersistSession, startLeechReview,
   } = useEssentialWordsSession()
@@ -184,6 +184,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
               contextLine={studyContext}
               onContinue={startSpeak}
               onOmit={omitWord}
+              onPronunciationDifficulty={markPronunciationDifficulty}
             />
           ) : null}
           {!studying && current ? (

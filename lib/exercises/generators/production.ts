@@ -35,13 +35,46 @@ function toSkipped(entry: WordBankEntry, reasons: EligibilityReason[]): SkippedE
   return { entryId: entry.id, text: entry.text, reasons }
 }
 
-function baseFields(entry: WordBankEntry) {
+/**
+ * True when a word has no real difficulty rating: `entry.difficulty` is `0`
+ * (the Supabase insert default for words the user saved via the dictionary
+ * lookup, AI Coach, or a domain lexicon — never curated seed vocabulary) or
+ * missing entirely. Free production forces the model to combine this word
+ * with a grammar constraint in an original sentence, so a word with no
+ * vetted level is a real risk at A1/A2: a technical or niche term (e.g. a
+ * programming-glossary word saved out of curiosity) can slip in and produce
+ * an unanswerable prompt — "how often do you use 'declarative'?" — that a
+ * beginner has no way to interpret as their own failure to solve.
+ * Higher levels keep the word: the same prompt is merely odd, not blocking.
+ */
+function hasUnvettedDifficulty(entry: WordBankEntry): boolean {
+  return !entry.difficulty
+}
+
+/**
+ * Free production is unsafe for words with no vetted CEFR level at A1/A2 —
+ * see hasUnvettedDifficulty. An UNKNOWN learner level is treated the same as
+ * A1/A2, not as "no restriction": `cefrEstimate` defaults to B1 as soon as
+ * `learningState` is persisted, so `undefined` here almost never means "an
+ * established intermediate/advanced learner" — it means the very first
+ * session, before that state exists yet. That is exactly the moment an
+ * unanswerable prompt does the most damage (first impression), so silence on
+ * level must not be read as permission.
+ */
+function isSafeForFreeProduction(entry: WordBankEntry, learnerLevel?: CEFRLevel): boolean {
+  if (learnerLevel && learnerLevel !== 'A1' && learnerLevel !== 'A2') return true
+  return !hasUnvettedDifficulty(entry)
+}
+
+function baseFields(entry: WordBankEntry, learnerLevel?: CEFRLevel) {
   return {
     sourceRef: {
       source: entry.source === 'core1k' ? ('core1k' as const) : ('word_bank' as const),
       id: entry.id,
     },
-    level: entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined,
+    // El nivel del alumno manda sobre la dificultad SRS de la palabra: sin él,
+    // el corrector cae en su default "A2–B2" y juzga a un A1 con vara alta.
+    level: learnerLevel ?? (entry.difficulty ? normalizeCEFR(entry.difficulty) : undefined),
     targetItem: entry.text,
     targetMeaning: entry.meaning ?? undefined,
     targetIpa: entry.ipa ?? undefined,
@@ -52,11 +85,12 @@ function baseFields(entry: WordBankEntry) {
 export function generateWrittenProductionFromWordBank(
   entries: WordBankEntry[],
   count: number,
+  level?: CEFRLevel,
 ): GenerationResult<WrittenProductionExercise> {
   const skipped: SkippedEntry[] = []
   const usable = entries.filter((entry) => {
     const { eligible } = assessWordBankEntry(entry, 'written_production')
-    return eligible
+    return eligible && isSafeForFreeProduction(entry, level)
   })
 
   const exercises: WrittenProductionExercise[] = []
@@ -74,7 +108,7 @@ export function generateWrittenProductionFromWordBank(
       type: 'written_production',
       exerciseType: { domain: 'vocabulary', mode: 'write', variant: 'sentence' },
       taskPrompt: WRITTEN_PROMPTS[idx](entry.text),
-      ...baseFields(entry),
+      ...baseFields(entry, level),
     })
   }
 
@@ -95,7 +129,7 @@ export function generateSpokenProductionFromWordBank(
   const skipped: SkippedEntry[] = []
   const usable = entries.filter((entry) => {
     const { eligible } = assessWordBankEntry(entry, 'spoken_production')
-    return eligible
+    return eligible && isSafeForFreeProduction(entry, level)
   })
 
   if (usable.length === 0) {
@@ -122,7 +156,7 @@ export function generateSpokenProductionFromWordBank(
       exerciseType: { domain: 'vocabulary', mode: 'speak', variant: 'sentence' },
       taskPrompt: constraint.promptEs(entry.text),
       constraint,
-      ...baseFields(entry),
+      ...baseFields(entry, level),
     })
   }
 

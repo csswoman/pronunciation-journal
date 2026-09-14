@@ -13,6 +13,8 @@ import { cn } from '@/lib/cn'
 import type { FillBlankExercise as FillBlankExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
+import { ListenButton } from '@/components/ui/ListenButton'
+import { speak } from '@/lib/phoneme-practice/tts'
 
 interface Props {
   exercise: FillBlankExerciseType
@@ -95,6 +97,13 @@ export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) 
 
   return (
     <div className="flex w-full flex-col gap-6">
+      {exercise.audioText ? (
+        <ListenButton
+          onPlay={() => speak(exercise.audioText!)}
+          label="Escuchar la oración"
+          aria-label="Escuchar la oración completa antes de completar"
+        />
+      ) : null}
       <SentencePrompt parts={parts} answer={exercise.answer} selected={selected} answerState={state} />
       <OptionGrid
         options={exercise.options}

@@ -5,7 +5,7 @@ import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
 
 // ── Source references ──────────────────────────────────────────────────────
 
-export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items' | 'grammar_deck' | 'focus_content'
+export type ExerciseSource = 'words' | 'text_fragments' | 'word_bank' | 'core1k' | 'lexicon' | 'false_friends' | 'tracked_items' | 'grammar_deck' | 'focus_content' | 'chunks'
 
 export interface ExerciseSourceRef {
   source: ExerciseSource
@@ -58,6 +58,8 @@ export interface FillBlankExercise extends BaseGenericExercise {
   hint?: string
   /** Progressive hints: level1 = first letter, level2 = definition, level3 = translation. */
   hints?: { level1: string; level2: string; level3?: string }
+  /** Optional authored or deterministic model text for a listening-first prompt. */
+  audioText?: string
 }
 
 // Sentence dictation ────────────────────────────────────────────────────────
@@ -72,6 +74,8 @@ export interface SentenceDictationExercise extends BaseGenericExercise {
   targetWord?: string
   /** English meaning/definition of the target word. */
   targetMeaning?: string
+  /** Authored variants that are equivalent to the reference sentence. */
+  acceptedAnswers?: string[]
 }
 
 // Match pairs ───────────────────────────────────────────────────────────────
@@ -145,6 +149,8 @@ export interface MultipleChoiceExercise extends BaseGenericExercise {
   answerIndex: number
   /** Shown after answering — explains why the correct answer is right. */
   explanation?: string
+  /** Optional authored or deterministic model text for a listening-first prompt. */
+  audioText?: string
 }
 
 export interface ErrorCorrectionExercise extends BaseGenericExercise {
@@ -168,6 +174,7 @@ export interface SentenceTransformationExercise extends BaseGenericExercise {
   sourceSentence: string
   instruction: string
   referenceAnswer?: string
+  acceptedAnswers?: string[]
 }
 
 export interface TranslationEsEnExercise extends BaseGenericExercise {

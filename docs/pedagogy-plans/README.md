@@ -8,6 +8,26 @@ Cada plan aquí ataca un **eslabón pedagógico roto**, no una mejora cosmética
 
 Promedio de la auditoría: **~49/100**. Hechos estos tres eslabones, la app salta a los 70s reales.
 
+## Roadmap chunk-first
+
+El contrato vigente prioriza chunks, escucha y habla desde A1. Consulta
+[`chunk-first-learning.md`](../architecture/chunk-first-learning.md) para las
+reglas completas. Las tareas nuevas están separadas para permitir entregas y
+validaciones independientes.
+
+| # | Tarea | Estado | Depende de |
+|---|---|---|---|
+| 10 | [Conectar chunks, palabras y sonidos](10-chunk-content-graph.md) | Implementado, piloto A1 de 25 chunks | Ninguna |
+| 11 | [Componer un hilo diario con novedad y repaso](11-daily-plan-chunk-thread.md) | Implementada localmente | 10 |
+| 12 | [Graduar ejercicios por nivel CEFR](12-cefr-exercise-ladder.md) | Implementación inicial | 10; informa 11 |
+| 13 | [Separar conocimiento, escucha, uso y pronunciación](13-multidimensional-learning-state.md) | Implementada localmente | 10 |
+| 14 | [Enrutar dificultades de pronunciación](14-pronunciation-difficulty-routing.md) | Implementación inicial | 10 y 13 |
+| 15 | [Validar el piloto A1 y el progreso](15-a1-chunk-pilot-and-progress.md) | Implementación inicial | 10 a 14 |
+
+Orden recomendado: 10, después 13, luego 11 y 12, después 14, y por último 15.
+El trabajo editorial del piloto puede comenzar en paralelo después de cerrar el
+contrato de contenido de la tarea 10.
+
 ---
 
 ## Estado de implementación (actualizado 2026-06-20)

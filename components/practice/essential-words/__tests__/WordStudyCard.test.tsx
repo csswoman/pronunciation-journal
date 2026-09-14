@@ -22,6 +22,7 @@ describe('WordStudyCard', () => {
         contextLine="Palabra nueva · bloque 1 de 1"
         onContinue={vi.fn()}
         onOmit={vi.fn()}
+        onPronunciationDifficulty={vi.fn()}
       />,
     )
 
@@ -62,6 +63,7 @@ describe('WordStudyCard', () => {
         }}
         onContinue={vi.fn()}
         onOmit={vi.fn()}
+        onPronunciationDifficulty={vi.fn()}
       />,
     )
 

@@ -13,7 +13,7 @@
 // </CsShadowPhraseExercise>
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Mic, MicOff } from '@/components/icons'
+import { Loader2, Mic, MicOff } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
@@ -102,10 +102,14 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   }, [onResult, evalFailed])
 
   const isListening = status === 'listening'
+  const isTranscribing = status === 'processing'
   const isDone = status === 'done'
   const isError = status === 'error'
   const isNetworkShadowing = isError && errorCode === 'network'
   const isShadowing = !isSupported || isNetworkShadowing || evalFailed
+  // Transcribir y puntuar son dos fases distintas para nosotros, pero para el
+  // estudiante son una sola espera: "la IA está trabajando con mi audio".
+  const isBusy = isTranscribing || isScoring
 
   return (
     <div className="layout-stack-loose w-full items-center">
@@ -126,19 +130,45 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
           <button
             type="button"
             onClick={isListening ? stop : start}
-            disabled={isDone || isScoring}
-            aria-label={isListening ? 'Detener grabación' : 'Grabar mi voz'}
+            disabled={isDone || isBusy}
+            aria-label={
+              isListening ? 'Detener grabación' : isBusy ? 'Procesando tu respuesta' : 'Grabar mi voz'
+            }
             className={cn(
-              'flex h-20 w-20 items-center justify-center rounded-full border-none text-on-primary transition-all focus-ring disabled:opacity-40 cursor-pointer',
-              isListening
-                ? 'bg-error shadow-[0_0_0_14px_color-mix(in_oklch,var(--error)_18%,transparent)]'
-                : 'bg-primary shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_35%,transparent)]',
+              'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-all duration-200 focus-ring disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
+              // Grabar es el estado deseado, no una alarma: acento del dominio
+              // de pronunciación en vez del rojo de error, igual que en
+              // SpokenProductionControls.
+              isListening && 'bg-[var(--c-pronunciacion)] hover:opacity-90 active:scale-95',
+              isBusy && 'bg-[var(--c-pronunciacion)]/70 disabled:opacity-100',
+              !isListening && !isBusy && 'bg-[var(--c-pronunciacion)] hover:opacity-90 active:scale-95',
             )}
           >
-            {isListening ? <MicOff size={28} /> : <Mic size={28} />}
+            {isBusy ? (
+              <Loader2 size={26} className="animate-spin" />
+            ) : isListening ? (
+              <MicOff size={26} />
+            ) : (
+              <Mic size={26} />
+            )}
           </button>
-          <p className="m-0 text-caption tracking-wider text-fg-subtle">
-            {isListening ? 'Escuchando… toca para parar' : isScoring ? 'Analizando…' : 'Toca para hablar'}
+          <p className="m-0 text-body-md font-semibold text-fg" role="status" aria-live="polite">
+            {isListening
+              ? 'Escuchando… habla en voz alta'
+              : isTranscribing
+                ? 'Escuchando lo que dijiste…'
+                : isScoring
+                  ? 'Analizando tu respuesta…'
+                  : 'Toca para hablar'}
+          </p>
+          <p className="m-0 text-caption text-fg-subtle">
+            {isListening
+              ? 'Toca el botón cuando termines'
+              : isTranscribing
+                ? 'Convirtiendo tu audio en texto. No cierres esta pantalla.'
+                : isScoring
+                  ? 'Comprobando tu pronunciación'
+                  : 'Escucha el modelo y repítelo en inglés'}
           </p>
         </div>
       )}

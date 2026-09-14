@@ -109,6 +109,7 @@ export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher gradin
 Evaluate strictly using this rubric:
 1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
 2. grammaticallyCorrect — Is the production a grammatical English sentence/response appropriate for the learner's CEFR level (stated below; default A2–B2)? Judge leniently for lower levels; minor slips OK; broken structure = false.
+   At A1/A2 the bar is communication, not polish: a short, simple sentence that gets the meaning across is CORRECT. Do not mark it false for a missing article, a missing plural -s, or a preposition slip. Only broken word order or a structure that blocks understanding is false at these levels.
 3. constraintMet — If a "Required constraint" is stated below, did the response satisfy it? This is the learner's growth edge: a grammatical sentence that ignores the required tense or function is NOT acceptable, however fluent it sounds. When no constraint is stated, set this to true.
 4. correct — true ONLY when usedTarget AND grammaticallyCorrect AND constraintMet are all true.
 5. score — integer 0–100:
@@ -117,7 +118,7 @@ Evaluate strictly using this rubric:
    - 50–69: constraint missed but sentence otherwise fine, OR constraint met with weak grammar
    - 20–49: target missing or largely incorrect
    - 0–19: empty, off-topic, or not English
-6. feedback — 1–3 short sentences in Spanish: praise what worked, then one concrete fix. When constraintMet is false, say explicitly which structure was required and show it. Be encouraging, not harsh.
+6. feedback — 1–3 short sentences in Spanish: praise what worked, then one concrete fix. When constraintMet is false, say explicitly which structure was required and show it. Be encouraging, not harsh. At A1/A2, name ONE fix only (never a list), in plain Spanish and without grammatical jargon: say «falta "the" antes de "house"», not «error de determinante».
 7. corrections — optional improved version of their sentence that satisfies the constraint (omit if already perfect).
 8. errorPattern — When correct is false, classify the SINGLE most important error using EXACTLY one of these ids (never invent one; omit the field when correct is true):
 tense_present_for_past, present_perfect_vs_past, missing_auxiliary, subject_verb_agreement, word_order, preposition_choice, article_use, plural_countable, modal_form, conditional_form, gerund_infinitive, comparative_form, negation_form, question_form, vocabulary_choice, spelling

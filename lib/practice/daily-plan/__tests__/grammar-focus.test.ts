@@ -3,7 +3,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { beforeAll, afterAll, vi } from 'vitest'
 import { buildGrammarFocusStep } from '@/lib/practice/daily-plan/grammar-focus'
-import type { WordBankEntry } from '@/lib/word-bank/types'
 
 const realFetch = globalThis.fetch
 
@@ -23,32 +22,13 @@ afterAll(() => {
   globalThis.fetch = realFetch
 })
 
-function entry(i: number): WordBankEntry {
-  return {
-    id: `w${i}`,
-    text: `word${i}`,
-    meaning: `meaning ${i}`,
-    example: `I really enjoyed the word${i} last summer.`,
-    ipa: null,
-    difficulty: 3,
-    source: 'word_bank',
-    srs_status: 'review',
-  } as unknown as WordBankEntry
-}
-
-const words = Array.from({ length: 6 }, (_, i) => entry(i))
-
 describe('buildGrammarFocusStep', () => {
   it('returns null without a deck slug', async () => {
-    expect(await buildGrammarFocusStep(null, words)).toBeNull()
-  })
-
-  it('returns null when there are no usable words', async () => {
-    expect(await buildGrammarFocusStep('b1-segundo-condicional', [])).toBeNull()
+    expect(await buildGrammarFocusStep(null)).toBeNull()
   })
 
   it('builds a step carrying the deck rule', async () => {
-    const step = await buildGrammarFocusStep('a2-presente-perfecto-experiencias', words)
+    const step = await buildGrammarFocusStep('a2-presente-perfecto-experiencias')
     expect(step).not.toBeNull()
     expect(step!.kind).toBe('grammar_focus')
     expect(step!.title).toContain('Estructura:')
@@ -57,46 +37,30 @@ describe('buildGrammarFocusStep', () => {
     expect(step!.grammarRule!.rows.length).toBeGreaterThan(0)
   })
 
-  it('produces spoken production exercises, never reorder', async () => {
-    const step = await buildGrammarFocusStep('b1-segundo-condicional', words)
+  it('produces only exercises authored from the deck rule, never word-bank production', async () => {
+    const step = await buildGrammarFocusStep('a1-ingles-principiantes', 'daily', 'A1')
     expect(step).not.toBeNull()
     const types = step!.exercises.map((ex) =>
       ex.payload.kind === 'generic' ? ex.payload.data.type : 'other',
     )
-    expect(types).toContain('spoken_production')
-    expect(types).not.toContain('reorder_words')
+    expect(types).toEqual(['multiple_choice', 'multiple_choice', 'multiple_choice'])
+    const first = step!.exercises[0]!.payload
+    expect(first.kind).toBe('generic')
+    if (first.kind === 'generic' && first.data.type === 'multiple_choice') {
+      expect(first.data.question).toContain('I')
+      expect(first.data.options).not.toContain('dependency array')
+      expect(first.data.level).toBe('A1')
+    }
   })
 
-  it('applies the deck constraint to its exercises', async () => {
-    const step = await buildGrammarFocusStep('b1-segundo-condicional', words)
-    const first = step!.exercises.find((ex) => ex.payload.kind === 'generic')
-    expect(first).toBeDefined()
-    const data = (first!.payload as { data: { constraint?: { id: string } } }).data
-    expect(data.constraint?.id).toBe('second_conditional')
-  })
-
-  it('prioritizes repairConstraints over the deck constraint', async () => {
-    const step = await buildGrammarFocusStep(
-      'b1-segundo-condicional',
-      words,
-      'daily',
-      ['past_simple_narrative'],
-    )
-    expect(step).not.toBeNull()
-    const first = step!.exercises.find((ex) => ex.payload.kind === 'generic')
-    expect(first).toBeDefined()
-    const data = (first!.payload as { data: { constraint?: { id: string } } }).data
-    expect(data.constraint?.id).toBe('past_simple_narrative')
-  })
-
-  it('falls back gracefully when deck has no spoken constraint (e.g. passive voice)', async () => {
-    const step = await buildGrammarFocusStep('b1-voz-pasiva-consejos', words)
+  it('works for a deck without a spoken-production constraint', async () => {
+    const step = await buildGrammarFocusStep('b1-voz-pasiva-consejos')
     expect(step).not.toBeNull()
     expect(step!.kind).toBe('grammar_focus')
     expect(step!.exercises.length).toBeGreaterThan(0)
   })
 
   it('survives an unknown deck slug without throwing', async () => {
-    await expect(buildGrammarFocusStep('does-not-exist', words)).resolves.toBeNull()
+    await expect(buildGrammarFocusStep('does-not-exist')).resolves.toBeNull()
   })
 })

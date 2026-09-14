@@ -36,9 +36,11 @@ export default defineConfig({
     include: ["**/__tests__/**/*.test.{ts,tsx}"],
     exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
-    // Cap forks under coverage so workers finish booting before the 90s timeout.
-    // Instrumentation slows simulation suites; 5s default timeouts flake under coverage.
-    ...(isCoverage ? { maxWorkers: 4, testTimeout: 30_000 } : {}),
+    // Cap forks to prevent worker startup timeouts. On Windows and high-core machines,
+    // unbounded parallelism spawns dozens of Node processes simultaneously, saturating I/O
+    // and hitting Vitest's 60s worker-start timeout ("Failed to start forks worker").
+    maxWorkers: Math.min(4, Math.max(1, os.availableParallelism?.() ?? os.cpus().length)),
+    ...(isCoverage ? { testTimeout: 30_000 } : {}),
     // Node 22+ warns when localStorage is touched without a persistence file.
     execArgv: [
       `--localstorage-file=${path.join(os.tmpdir(), "vitest-localstorage")}`,

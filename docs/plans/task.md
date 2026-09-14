@@ -51,3 +51,10 @@
 | Plan 113 - Task 4 | Cablear `useDailySessionRunner` y takeover full-bleed en `HomeLayout.tsx`, `HomeCommandGrid.tsx` y `HomeDailyCard.tsx` | Completed |
 | Plan 113 - Task 5 | Actualizar tests de Home (`HomeDailyCard`, `HomeCommandGrid`) asegurando eliminación de `router.push('/daily?step=')` | Completed |
 | Plan 113 - Task 6 | Verificación final con `pnpm type-check`, `pnpm lint` y suite de tests relacionados | Completed |
+| Plan 001 | Medir correctamente la carga inicial del cliente (diferenciar chunks diferidos/iniciales en analyze-bundle) | Completed |
+| Plan 002 | Aislar preferencias UI del esquema Dexie (last-practice-mode en localStorage) | Completed |
+| Plan 003 | Mantener el compositor diario fuera del hub inicial (defer composer en useDailyPlan) | Completed |
+| Plan 004 | Reducir Review según atribución real de módulos cliente | Completed |
+| Refinement 1 | Restaurar presupuesto separado y holgado para publishedChunksGzipKB en bundle-budget.json | Completed |
+| Refinement 2 | Validación de red con prueba Playwright que registre JS en navegación fría | Completed |
+| Refinement 3 | Evitar doble invocación en ReviewSessionRunner bajo React Strict Mode con ref y test | Completed |

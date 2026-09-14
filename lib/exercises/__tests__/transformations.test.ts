@@ -23,10 +23,20 @@ describe('isExactTransformation', () => {
     expect(isExactTransformation(exercise, 'she is too tired to work')).toBe(false)
   })
 
-  it('returns false when referenceAnswer is missing', () => {
+  it('accepts answers matching acceptedAnswers list', () => {
+    const withAccepted: SentenceTransformationExercise = {
+      ...exercise,
+      acceptedAnswers: ['She is not energetic enough to work.'],
+    }
+    expect(isExactTransformation(withAccepted, 'she is not energetic enough to work')).toBe(true)
+    expect(isExactTransformation(withAccepted, 'SHE IS NOT ENERGETIC ENOUGH TO WORK.')).toBe(true)
+  })
+
+  it('returns false when referenceAnswer is missing and acceptedAnswers is empty', () => {
     const withoutRef: SentenceTransformationExercise = {
       ...exercise,
       referenceAnswer: undefined,
+      acceptedAnswers: [],
     }
     expect(isExactTransformation(withoutRef, 'any answer')).toBe(false)
   })

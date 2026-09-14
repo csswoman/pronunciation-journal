@@ -47,6 +47,11 @@ describe('FillBlankExercise', () => {
     expect(screen.getByRole('button', { name: 'eats' })).toBeInTheDocument()
   })
 
+  it('shows a model-listening control only when the exercise provides audio text', () => {
+    render(<FillBlankExercise exercise={{ ...sampleExercise, audioText: 'I eat apples every morning.' }} onResult={onResultMock} />)
+    expect(screen.getByRole('button', { name: 'Escuchar la oración completa antes de completar' })).toBeInTheDocument()
+  })
+
   it('handles selecting the correct answer', () => {
     render(<FillBlankExercise exercise={sampleExercise} onResult={onResultMock} />)
 

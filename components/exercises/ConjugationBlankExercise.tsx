@@ -43,8 +43,22 @@ function getHintData(exercise: Exercise, hintCount: number) {
     return { hint: hintText, level, maxLevel }
   }
 
+  // Sin pista redactada, la letra sola no enseña nada: para un principiante lo
+  // útil es qué forma se pide. El deletreo llega después, como último recurso.
+  if (exercise.lemma) {
+    const maxLevel = 2
+    const level = Math.min(hintCount, maxLevel)
+    return {
+      hint: level === 1
+        ? `Conjuga "${exercise.lemma}" para que encaje con el sujeto y el tiempo de la oración.`
+        : `Conjuga "${exercise.lemma}". ${letterClue}`.trim(),
+      level,
+      maxLevel,
+    }
+  }
+
   return {
-    hint: letterClue || (exercise.lemma ? `Forma del verbo "${exercise.lemma}".` : 'Revisa la conjugación del verbo.'),
+    hint: letterClue || 'Fíjate en el sujeto y en el tiempo verbal que pide la oración.',
     level: 1,
     maxLevel: 1,
   }

@@ -9,5 +9,6 @@ export async function fetchReaderTargetRows(): Promise<ReaderTargetRow[]> {
     word: w.text,
     status: w.srs_status ?? 'new',
     nextReview: w.next_review_at ?? '',
+    difficulty: w.difficulty ?? undefined,
   }))
 }

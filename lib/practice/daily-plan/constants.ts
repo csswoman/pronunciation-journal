@@ -27,7 +27,7 @@ export const WORD_INTRO_MAX_CARDS = 5
  * We allow at most 2 pronunciation steps per session, split into two separate
  * buckets (1 perception + 1 production):
  * - Perception: minimal_pairs, listening (max 1)
- * - Production: phoneme_focus, connected_speech (max 1)
+ * - Production: phoneme_focus, connected_speech, ed_cluster_drill (max 1)
  *
  * This ensures perception and production do not starve each other, aligning with
  * the focus on hearing and replicating sounds.
@@ -44,6 +44,7 @@ export const PERCEPTION_KINDS: readonly DailyStep['kind'][] = [
 export const PRODUCTION_KINDS: readonly DailyStep['kind'][] = [
   'phoneme_focus',
   'connected_speech',
+  'ed_cluster_drill',
 ]
 
 /** Keep at most 1 perception and 1 production pronunciation step, order preserved. */

@@ -12,6 +12,8 @@ import type { MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/lib
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
 import { MultipleChoiceBase } from '@/components/exercises/MultipleChoiceBase'
+import { ListenButton } from '@/components/ui/ListenButton'
+import { speak } from '@/lib/phoneme-practice/tts'
 
 interface Props {
   exercise: MultipleChoiceExerciseType
@@ -53,6 +55,14 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
       <p className="text-body-lg font-medium text-fg leading-snug">
         {exercise.question}
       </p>
+
+      {exercise.audioText ? (
+        <ListenButton
+          onPlay={() => speak(exercise.audioText!)}
+          label="Escuchar el modelo"
+          aria-label="Escuchar el chunk antes de responder"
+        />
+      ) : null}
 
       <MultipleChoiceBase
         options={options}

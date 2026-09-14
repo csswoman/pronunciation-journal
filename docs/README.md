@@ -9,6 +9,7 @@ diseño y planes de producto.
 | Documento | Descripción |
 |-----------|-------------|
 | [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, Plan diario, Repaso y Progreso |
+| [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
@@ -67,6 +68,7 @@ contexto histórico y no reemplazan esas dos fuentes.
 | Documento | Descripción |
 |-----------|-------------|
 | [Planes pedagógicos](pedagogy-plans/README.md) | Índice de propuestas para nuevas superficies y secuencias de aprendizaje |
+| [Roadmap chunk-first](pedagogy-plans/README.md#roadmap-chunk-first) | Seis tareas separadas para llevar el contrato pedagógico al producto |
 | [Phoneme redesign plan](phoneme-redesign-plan.md) | Plan de rediseño para la experiencia fonética |
 
 ## Especificaciones y planes

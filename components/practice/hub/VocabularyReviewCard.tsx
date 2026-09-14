@@ -5,7 +5,7 @@
 //   (progress bar + learned/ahead counts, or an "Empieza aquí" empty state)
 
 import Link from 'next/link'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { getIllustration } from '@/lib/illustrations/registry'
 
 const Illustration = getIllustration('domainVocabulary')

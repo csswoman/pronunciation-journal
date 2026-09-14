@@ -10,7 +10,7 @@
 // </HomeHeroStepList>
 
 import Link from "next/link";
-import { Check, Lock } from "@/components/icons";
+import { ArrowRight, Check, Lock } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
 import {
@@ -26,6 +26,7 @@ interface HomeHeroStepListProps {
   needsPlacement?: boolean;
   needsPronunciation?: boolean;
   isExpanded?: boolean;
+  onStartStep?: (step: DailyStep) => void;
 }
 
 export default function HomeHeroStepList({
@@ -35,6 +36,7 @@ export default function HomeHeroStepList({
   needsPlacement = false,
   needsPronunciation = false,
   isExpanded = true,
+  onStartStep,
 }: HomeHeroStepListProps) {
   const visibleSteps = isExpanded ? steps : steps.slice(0, 2);
 
@@ -46,32 +48,34 @@ export default function HomeHeroStepList({
           const isDone = status === "done" || status === "resolved";
           const isCurrent = idx === activeStepIndex;
 
-          return (
-            <li
-              key={step.id}
+          const rowClass = cn(
+            "group flex w-full items-center justify-between gap-3.5 rounded-xl px-3.5 py-2.5 text-body-sm text-left transition-all duration-150",
+            isCurrent
+              ? "bg-primary/5 border border-primary/20 text-fg shadow-2xs hover:bg-primary/10"
+              : isDone
+                ? "text-fg-muted/80 bg-transparent opacity-85"
+                : "text-fg bg-surface-sunken/30 hover:bg-surface-sunken/60 border border-transparent focus-ring press-feedback cursor-pointer"
+          );
+
+          const stepNumber = (
+            <span
               className={cn(
-                "flex items-center justify-between gap-3.5 rounded-xl px-3.5 py-2.5 text-body-sm transition-all duration-150",
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold select-none transition-colors",
                 isCurrent
-                  ? "bg-primary/5 border border-primary/20 text-fg shadow-2xs"
+                  ? "bg-surface border-2 border-primary/30 text-primary shadow-xs"
                   : isDone
-                    ? "text-fg-muted/80 bg-transparent opacity-85 hover:opacity-100"
-                    : "text-fg bg-surface-sunken/30 hover:bg-surface-sunken/60 border border-transparent"
+                    ? "bg-success/10 border border-success/20 text-success"
+                    : "bg-surface border border-border-subtle/80 text-fg-muted group-hover:border-primary/40 group-hover:text-primary"
               )}
             >
+              {idx + 1}
+            </span>
+          );
+
+          const content = (
+            <>
               <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                {/* Cuadrado redondeado con el número de paso tal cual el diseño */}
-                <span
-                  className={cn(
-                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold select-none transition-colors",
-                    isCurrent
-                      ? "bg-surface border-2 border-primary/30 text-primary shadow-xs"
-                      : isDone
-                        ? "bg-success/10 border border-success/20 text-success"
-                        : "bg-surface border border-border-subtle/80 text-fg-muted"
-                  )}
-                >
-                  {idx + 1}
-                </span>
+                {stepNumber}
 
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className={cn("truncate font-semibold text-fg", isDone && "line-through opacity-75")}>
@@ -105,9 +109,47 @@ export default function HomeHeroStepList({
                     <span className="font-caption tabular-nums text-fg-muted select-none">
                       {step.estMinutes} min
                     </span>
+                    <ArrowRight
+                      size={16}
+                      aria-hidden
+                      className={cn(
+                        "shrink-0 transition-transform duration-150 group-hover:translate-x-0.5",
+                        isCurrent ? "text-primary" : "text-fg-muted group-hover:text-primary"
+                      )}
+                    />
                   </div>
                 )}
               </div>
+            </>
+          );
+
+          if (isDone) {
+            return (
+              <li key={step.id} className={rowClass}>
+                {content}
+              </li>
+            );
+          }
+
+          if (step.href) {
+            return (
+              <li key={step.id}>
+                <Link href={step.href} className={rowClass}>
+                  {content}
+                </Link>
+              </li>
+            );
+          }
+
+          return (
+            <li key={step.id}>
+              <button
+                type="button"
+                className={rowClass}
+                onClick={() => onStartStep?.(step)}
+              >
+                {content}
+              </button>
             </li>
           );
         })}

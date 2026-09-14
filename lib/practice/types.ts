@@ -14,6 +14,7 @@ import type { ReaderPassage } from '@/lib/practice/reader/types'
 import type { MissionLaunch } from '@/lib/ai-practice/missions/launch'
 import type { ExerciseErrorCode } from '@/lib/exercises/error-taxonomy'
 import type { WarmupShadowPhrase } from '@/lib/exercises/generators/warmup'
+import type { LearningChunk } from '@/lib/chunk-of-day/types'
 
 // Slugs mapped from `exercise_types` rows in Supabase.
 // Keep in sync with supabase/migrations/20260329230300_seed_exercise_types.sql.
@@ -203,10 +204,14 @@ export type DailyStepKind =
   | 'mission'          // transferencia oral con target/source/step exactos
   | 'grammar_focus'    // regla + producción restringida desde un mazo de gramática
   | 'immersion_lesson' // video de EngVid del nivel del usuario (catálogo en Supabase)
+  | 'ed_cluster_drill' // escalera de -ed y clusters finales (solo con evidencia de error)
+  | 'chunk_intro'      // hilo nuevo de expresiones relacionadas: noticing → escucha → uso
+  | 'chunk_review'     // repaso espaciado de una expresión frecuente completa
 
 export type DailySelectionReason =
   | 'due'
   | 'verification_due'
+  | 'chunk_new'
   | 'grammar_slot'
   | 'recent_error'
   | 'weak_target'
@@ -234,6 +239,10 @@ export type DailyStep = {
   estMinutes: number
   /** Solo para 'word_intro': tarjetas de presentación (no evaluadas, no escriben answer_history). */
   studyCards?: StudyCardModel[]
+  /** Solo para 'chunk_intro': expresiones completas mostradas antes de los ejercicios. */
+  chunks?: LearningChunk[]
+  /** Solo para una propuesta de pronunciación: señal que la originó, sin ser evidencia. */
+  pronunciationDifficultyWordId?: string
   /** Solo para 'concept' y 'study_deck': a dónde lleva la lectura. */
   href?: string
   /** Solo para 'phoneme_focus': IPA del sonido que se practica (para mostrar intro). */
@@ -248,6 +257,13 @@ export type DailyStep = {
   selection?: DailySelectionMetadata
   /** Exact oral handoff for mission steps. */
   missionLaunch?: MissionLaunch
+  /** Solo para 'ed_cluster_drill': qué cluster se corrige y con qué evidencia. */
+  edClusterDrill?: {
+    cluster: string
+    itemId: string
+    /** Accuracy previa del cluster (0-1) que justificó insertar el paso. */
+    accuracy: number
+  }
   /** Unscored shadowing phrases played before the step's first free production. */
   warmupPhrases?: WarmupShadowPhrase[]
   /** Solo para 'grammar_focus': regla mostrada antes de los ejercicios de producción del paso. */
@@ -290,6 +306,12 @@ export type DailyPlan = {
   isNewUser: boolean
   /** Narrative framing for opening banner + closing recap. Optional: cached plans predate it. */
   arc?: SessionArc
+  /** Audit-only action mix; it describes planned work, never learner mastery. */
+  contentMix?: {
+    chunkActions: number
+    wordOrSoundActions: number
+    otherActions: number
+  }
 }
 
 export type PracticeSubmitHandler = (

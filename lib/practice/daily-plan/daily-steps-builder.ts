@@ -4,6 +4,7 @@ import type { DailyStep } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { normalizeFalseFriendsLevel } from '@/lib/false-friends/data'
+import { normalizeCEFR } from '@/lib/exercises/cefr'
 import {
   buildConnectedSpeechStep,
   buildFalseFriendsStep,
@@ -26,7 +27,6 @@ import {
   buildWordIntroStep,
   buildWordReviewStep,
 } from './step-builders'
-import type { SpeechConstraintId } from '@/lib/exercises/speech-constraints'
 import type { CefrLevelId } from '@/lib/courses/types'
 import type { UserLearningState } from '@/lib/ai-practice/learning-state'
 
@@ -44,7 +44,6 @@ export interface BuildDailyCandidateStepsParams {
   aiState: UserLearningState | null
   savedOrFamiliarWordIds: Set<string>
   wordIndex: WordCategoryIndex
-  repairConstraints: SpeechConstraintId[]
 }
 
 export async function buildDailyCandidateSteps(
@@ -67,7 +66,6 @@ export async function buildDailyCandidateSteps(
     aiState,
     savedOrFamiliarWordIds,
     wordIndex,
-    repairConstraints,
   } = params
 
   const newSteps: DailyStep[] = []
@@ -116,9 +114,8 @@ export async function buildDailyCandidateSteps(
   const grammarDeckSlug = lessonDeckSlug ?? weakDeckSlug ?? DEFAULT_GRAMMAR_DECK
   const grammarStep = await buildGrammarFocusStep(
     grammarDeckSlug,
-    reviewWords,
     'daily',
-    repairConstraints,
+    studyDeckActiveLevel ? normalizeCEFR(studyDeckActiveLevel) : undefined,
   )
   const sentenceSource = lessonDeckSlug ?? weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
 

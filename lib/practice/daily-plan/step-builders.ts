@@ -86,14 +86,15 @@ export function buildWordReviewStep(
   const dictations = isExerciseAvailableOnSurface('sentence_dictation', targetSurface)
     ? generateSentenceDictationFromWordBank(words, 2)
     : []
+  const learnerLevel = activeLevel ? normalizeCEFR(activeLevel) : undefined
   const reorders = isExerciseAvailableOnSurface('reorder_words', targetSurface)
-    ? generateReorderWordsFromWordBank(words, 1)
+    ? generateReorderWordsFromWordBank(words, 1, learnerLevel)
     : []
   const matchPairs = isExerciseAvailableOnSurface('match_pairs', targetSurface)
     ? generateMatchPairsFromWordBank(words, 1)
     : []
   const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)
-    ? generateWrittenProductionFromWordBank(productionWords, 1)
+    ? generateWrittenProductionFromWordBank(productionWords, 1, learnerLevel)
     : { exercises: [] }
   // Guarantee one Rodeo (circumlocution) and one spoken tense-transform slot
   // per session — otherwise these two constraints only show up by random
@@ -101,7 +102,6 @@ export function buildWordReviewStep(
   // Constraints above the learner's level are dropped inside the generator,
   // forced slots included: asking an A1 learner for circumlocution or a
   // second conditional is not a challenge, it is an unanswerable prompt.
-  const learnerLevel = activeLevel ? normalizeCEFR(activeLevel) : undefined
   const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
     ? generateSpokenProductionFromWordBank(
         productionWords,

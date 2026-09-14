@@ -9,7 +9,7 @@
 //   <CardIllustration />  hand-drawn watermark, bottom-right
 
 import Link from 'next/link'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
 import type { PracticeHubRecommendedData } from '@/lib/practice/hub-data-types'
 import { getIllustration } from '@/lib/illustrations/registry'

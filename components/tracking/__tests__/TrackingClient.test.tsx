@@ -22,6 +22,9 @@ vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("@/hooks/useTracking", () => ({
   useTracking: () => trackingState.value,
 }));
+vi.mock("@/hooks/useUserPreferences", () => ({
+  useUserPreferences: () => ({ preferences: null }),
+}));
 vi.mock("@/components/layout/PageLayout", () => ({ default: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }));
 vi.mock("@/components/layout/PageHeader", () => ({ default: ({ title }: { title: string }) => <h1>{title}</h1> }));
 vi.mock("@/components/tracking/TrackingEmptyState", () => ({ TrackingEmptyState: () => <p>Vacío</p> }));

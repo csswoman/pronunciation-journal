@@ -112,7 +112,8 @@ export function SentenceDictationExercise({ exercise, onResult, hintCount = 0 }:
 
   function handleSubmit() {
     if (state !== 'idle' || !input.trim()) return
-    const isCorrect = normalize(input) === normalize(exercise.sentence)
+    const accepted = [exercise.sentence, ...(exercise.acceptedAnswers ?? [])]
+    const isCorrect = accepted.some((answer) => normalize(input) === normalize(answer))
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect()
     else playWrong()

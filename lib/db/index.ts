@@ -18,6 +18,7 @@ import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
 import type { FocusSprint, FocusContent } from '../focus/types';
+import type { UserEdClusterProgress } from '../pronunciation/ed-drills/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -73,7 +74,10 @@ export type AnalyticsEventName =
   | "auto_next_triggered"
   | "time_to_first_exercise"
   | "session_started"
-  | "session_ended";
+  | "session_ended"
+  | "daily_step_started"
+  | "daily_step_completed"
+  | "daily_step_exited";
 
 export interface AnalyticsEvent {
   id?: number;
@@ -294,6 +298,38 @@ export interface EssentialWordProgressRecord {
   attempts: number;
 }
 
+/**
+ * A learner's self-report for an Essential Word. It deliberately does not
+ * duplicate the skill engine's evidence or FSRS schedules: those stay in
+ * LearningItem and AttemptLog records.
+ */
+export interface EssentialWordLearnerSignalRecord {
+  /** Primary key: `${userId}:${wordId}`. */
+  id: string;
+  wordId: string;
+  userId: string;
+  familiarity: "unknown" | "self-declared";
+  declaredKnownAt?: string;
+  pronunciationDifficulty: "none" | "self-reported";
+  pronunciationDifficultyAt?: string;
+  /** Proposal cadence only; it is not pronunciation evidence. */
+  pronunciationLastRoutedAt?: string;
+  updatedAt: string;
+}
+
+/** Local, modality-separated evidence for a chunk; activity never enters here. */
+export interface ChunkEvidenceRecord {
+  /** Primary key: `${userId}:${chunkId}`. */
+  id: string;
+  userId: string;
+  chunkId: string;
+  recognitionDays: string[];
+  listeningDays: string[];
+  useDays: string[];
+  pronunciationDays: string[];
+  updatedAt: string;
+}
+
 /** Device-local, account-scoped snapshot of an unfinished Essential Words session. */
 export interface EssentialWordSessionDraftRecord {
   /** One active draft per account. */
@@ -402,6 +438,8 @@ class PronunciationDB extends Dexie {
   srsEntityState!: Table<SRSEntityStateRecord, string>;
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   essentialWordProgress!: Table<EssentialWordProgressRecord, string>;
+  essentialWordLearnerSignals!: Table<EssentialWordLearnerSignalRecord, string>;
+  chunkEvidence!: Table<ChunkEvidenceRecord, string>;
   essentialWordSessionDrafts!: Table<EssentialWordSessionDraftRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
@@ -416,6 +454,7 @@ class PronunciationDB extends Dexie {
   focusSprints!: Table<FocusSprint, string>;
   focusContent!: Table<FocusContent, string>;
   immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
+  userEdClusterProgress!: Table<UserEdClusterProgress, string>;
 
 
   constructor() {
@@ -668,6 +707,20 @@ class PronunciationDB extends Dexie {
     // vio cada usuario, para que el plan diario no repita una hasta agotar el nivel.
     this.version(38).stores({
       immersionLessonProgress: 'key, userId, lessonId, [userId+watched]',
+    });
+    // v39: progreso por cluster de -ed / clusters finales (Ed Ladder Drill).
+    this.version(39).stores({
+      userEdClusterProgress: 'id, userId, cluster, [userId+cluster], unlockedLevel, lastPracticedAt',
+    });
+    // v40: self-reported familiarity/pronunciation signals. They remain
+    // separate from scored evidence and SRS state so a claim cannot imply
+    // mastery or erase evidence from another modality.
+    this.version(40).stores({
+      essentialWordLearnerSignals: 'id, userId, wordId, [userId+wordId], updatedAt',
+    });
+
+    this.version(41).stores({
+      chunkEvidence: 'id, userId, chunkId, [userId+chunkId], updatedAt',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

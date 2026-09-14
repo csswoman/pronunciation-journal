@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import GamesSection from '../GamesSection'
 
-vi.mock('@/lib/db', () => ({
+vi.mock('@/lib/practice/last-practice-mode', () => ({
   setLastPracticeMode: vi.fn(),
 }))
 

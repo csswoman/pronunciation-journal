@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <DailyThreadStrip>
-//   heading + list of thread hint chips
+//   label + list of thread hint chips (compact horizontal strip)
 // </DailyThreadStrip>
 
 import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
@@ -27,19 +27,21 @@ export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripPr
   return (
     <div
       className={cn(
-        embedded
-          ? 'rounded-md border border-border-subtle bg-surface-sunken/60 px-3 py-3'
-          : 'rounded-lg border border-border-subtle bg-surface-sunken/60 px-3 py-2.5',
+        'rounded-xl border border-border-default bg-surface-raised px-3.5 py-2.5 shadow-xs flex flex-wrap items-center gap-2.5 transition-colors',
+        embedded && 'border-border-subtle bg-surface-sunken px-3 py-2 shadow-none',
       )}
     >
-      <p className="font-label mb-2 text-fg">Te tocan hoy</p>
-      <ul className="flex flex-wrap gap-1.5" aria-label="Palabras de pasos anteriores">
+      <span className="font-label text-caption text-fg shrink-0 flex items-center gap-1.5">
+        <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+        Te tocan hoy
+      </span>
+      <ul className="flex flex-wrap items-center gap-1.5" aria-label="Palabras de pasos anteriores">
         {visible.map((hint) => {
           const ipa = formatIpaDisplay(hint.ipa)
           return (
             <li
               key={hint.word}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-raised px-2 py-1"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-sunken px-2.5 py-1 transition-colors"
             >
               <span className="font-body-sm font-medium capitalize text-fg">{hint.word}</span>
               {ipa ? (
@@ -49,7 +51,7 @@ export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripPr
           )
         })}
         {overflow > 0 ? (
-          <li className="inline-flex items-center rounded-md px-1.5 py-1 font-caption text-fg-muted">
+          <li className="inline-flex items-center rounded-md border border-border-subtle bg-surface-sunken px-2 py-0.5 font-caption font-mono text-fg-muted">
             +{overflow}
           </li>
         ) : null}

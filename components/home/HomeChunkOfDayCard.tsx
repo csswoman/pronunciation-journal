@@ -17,7 +17,8 @@ import { Bookmark, BookmarkCheck, MessageCircle, RefreshCw, Volume2 } from "@/co
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { useChunkOfDay } from "@/hooks/useChunkOfDay";
-import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { saveTrackedItem } from "@/lib/tracking/queries";
 import { speakText } from "@/lib/speech/synthesis";
 import { formatChunkCategory } from "@/lib/chunk-of-day/categories";
 import { chunkExample } from "@/lib/chunk-of-day/types";
@@ -53,6 +54,7 @@ function saveLabel(state: SaveState): string {
 /** Phrase focus — card matches editorial visual language and clear hierarchy. */
 export default function HomeChunkOfDayCard() {
   const { chunk, loading, shuffle } = useChunkOfDay();
+  const { user } = useAuth();
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [isRotating, setIsRotating] = useState(false);
 
@@ -61,15 +63,10 @@ export default function HomeChunkOfDayCard() {
   }, [chunk?.id]);
 
   async function handleSave() {
-    if (!chunk || saveState === "saving" || saveState === "saved") return;
+    if (!chunk || !user || saveState === "saving" || saveState === "saved") return;
     setSaveState("saving");
     try {
-      const entry = await quickAddWord({
-        text: chunk.chunk,
-        context: `${chunk.meaning} · Example: "${chunk.example}"`,
-        source: "manual",
-      });
-      await toggleFavorite(entry.id, true);
+      await saveTrackedItem({ userId: user.id, kind: "phrase", ref: `chunk:${chunk.id}`, title: chunk.chunk, payload: { text: chunk.chunk, context: `${chunk.meaning} · Example: "${chunk.example}"`, source: "chunk_catalog", chunkId: chunk.id } });
       setSaveState("saved");
     } catch {
       setSaveState("error");
