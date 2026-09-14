@@ -18,6 +18,9 @@ import { useSoundLabWorkspace } from "@/hooks/useSoundLabWorkspace";
 import { SoundLabFocusBanner } from "./SoundLabFocusBanner";
 import { SoundLabDetailDialog } from "./SoundLabDetailDialog";
 import { SoundsWorkspaceTabs } from "./SoundsWorkspaceTabs";
+import { SoundLabRecommendedPractice } from "./SoundLabRecommendedPractice";
+import type { SoundLabPhraseCandidate } from "@/lib/sound-lab/recommended-phrase";
+import { useSoundLabPhraseRecommendation } from "@/hooks/useSoundLabPhraseRecommendation";
 
 const MinimalPairsWorkspace = dynamic(() => import("./MinimalPairsWorkspace"), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando pares mínimos…</div>,
@@ -37,11 +40,11 @@ const IPAReferenceDialog = dynamic(
 import {
   buildLessonSections,
   continueCtaLabel,
-  headerStatsLine,
   lessonMatchesSearch,
   matchesFocus,
   matchesHardFilter,
   matchesProgressFilter,
+  soundLabHeaderCopy,
   type SoundLabGrouping,
   type SoundLabProgressFilter,
 } from "./sound-lab-page-helpers";
@@ -52,9 +55,10 @@ import {
 
 interface SoundLabPageProps {
   userId?: string;
+  phraseCandidates: SoundLabPhraseCandidate[];
 }
 
-export default function SoundLabPage({ userId }: SoundLabPageProps) {
+export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageProps) {
   const router = useRouter();
   const { allLessons, soundProgressMap, inProgressCount, heroLesson, isLoading } =
     useSoundLabData();
@@ -117,6 +121,10 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     return buildLessonSections(filtered, groupBy);
   }, [filtered, groupBy]);
 
+  const phraseRecommendation = useSoundLabPhraseRecommendation(
+    phraseCandidates, heroLesson.lesson, soundProgressMap,
+  );
+
   function handleResume() {
     if (!heroLesson.lesson?.href) return;
     router.push(heroLesson.lesson.href);
@@ -135,24 +143,17 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
     ? soundProgressMap.get(selectedPhoneme.symbol)
     : undefined;
 
-  const headerKicker = isPathView ? "Práctica · Ruta" : isMinimalPairsView ? "Práctica · Pares mínimos" : isIntonationView ? "Práctica · Entonación" : "Práctica";
-  const headerTitle = isPathView ? "Ruta de pronunciación" : isMinimalPairsView ? "Entrenamiento de pares mínimos" : isIntonationView ? "Entrenador de entonación" : "Laboratorio de sonidos";
-
-  const headerSubtitle = isPathView
-    ? "De sonidos a frases reales. Un paso claro a la vez."
-    : isMinimalPairsView
-      ? "Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés."
-      : isIntonationView
-        ? "Practica el ritmo, la melodía y el tono natural del inglés hablado."
-        : headerStatsLine(inProgressCount, CANONICAL_SOUND_COUNT, groupBy);
+  const header = soundLabHeaderCopy(
+    activeTab, inProgressCount, CANONICAL_SOUND_COUNT, groupBy,
+  );
 
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
       <header className="sound-lab__page-header">
         <PageHeader
-          kicker={headerKicker}
-          title={headerTitle}
-          subtitle={headerSubtitle}
+          kicker={header.kicker}
+          title={header.title}
+          subtitle={header.subtitle}
           actions={
             <SoundsWorkspaceTabs
               activeTab={activeTab}
@@ -161,6 +162,15 @@ export default function SoundLabPage({ userId }: SoundLabPageProps) {
             />
           }
         />
+
+        {isSoundsView && phraseRecommendation ? (
+          <SoundLabRecommendedPractice
+            recommendation={phraseRecommendation}
+            onStart={() => router.push(
+              `/practice/chunks?chunk=${encodeURIComponent(phraseRecommendation.id)}&focus=pronunciation`,
+            )}
+          />
+        ) : null}
 
         {isSoundsView ? (
           <SoundLabFilterRow

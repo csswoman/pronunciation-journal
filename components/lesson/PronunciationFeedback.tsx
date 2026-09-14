@@ -68,10 +68,20 @@ export default function PronunciationFeedback({
               <p className="mb-0 mt-2 text-body-sm font-semibold text-fg">
                 Repite una vez para reunir más evidencia.
               </p>
-            ) : null}
+            ) : (
+              <p className="mb-0 mt-2 text-body-sm font-semibold text-fg">
+                Sin sonidos que corregir por ahora — buen dominio de esta frase.
+              </p>
+            )}
           </>
         ) : (
-          <p className="m-0 text-body-sm font-semibold text-fg">Siguiente práctica</p>
+          // Copy accionable desactivada por flag: no inventar contenido — al
+          // menos nombrar el resultado real en vez de un texto vacío fijo.
+          <p className="m-0 text-body-sm font-semibold text-fg">
+            {accuracy >= 80
+              ? 'Buena pronunciación en esta frase.'
+              : 'Hay sonidos por practicar en esta frase.'}
+          </p>
         )}
       </section>
 
