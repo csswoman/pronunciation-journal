@@ -5,7 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { shouldForwardRootOAuthToCallback } from "@/lib/auth/oauth-identity";
 import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
 
-/** Hash for the static theme boot script in `app/layout.tsx` (keeps root layout static). */
+/** Hash for the theme boot script in `app/layout.tsx`. */
 const THEME_INIT_SCRIPT_SHA256 = createHash("sha256")
   .update(THEME_INIT_SCRIPT)
   .digest("base64");
@@ -23,9 +23,9 @@ function createContentSecurityPolicy(nonce: string): string {
     "media-src 'self' https: data: blob:",
     "font-src 'self'",
     "worker-src 'self'",
-    // Scripts: nonce for Next SSR bootstraps + sha256 for the static theme-init inline script.
-    // The layout does NOT call headers() for a nonce — that would force every route dynamic.
-    // Never allow 'unsafe-inline' for scripts in production.
+    // The root layout is dynamically rendered so Next can apply this nonce to
+    // its inline RSC payloads and framework scripts. The hash also keeps the
+    // blocking theme script independently verifiable.
     `script-src 'self' 'nonce-${nonce}' 'sha256-${THEME_INIT_SCRIPT_SHA256}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
     // Styles: keep 'unsafe-inline' — runtime style attributes and CSS tooling still need it.
     // A style nonce alone would ignore unsafe-inline in modern browsers and break them.

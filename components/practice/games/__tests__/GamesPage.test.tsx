@@ -5,7 +5,7 @@ import GameCard from '../GameCard'
 import UpcomingGamesPanel from '../UpcomingGamesPanel'
 import { PRACTICE_GAMES, UPCOMING_GAMES } from '@/lib/practice/practice-games'
 
-vi.mock('@/lib/db', () => ({
+vi.mock('@/lib/practice/last-practice-mode', () => ({
   setLastPracticeMode: vi.fn(),
 }))
 

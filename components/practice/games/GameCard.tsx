@@ -5,7 +5,7 @@
 
 import Link from 'next/link'
 import { ArrowRight, CloudRain, Grid2x2 } from '@/components/icons'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import type { PracticeGame } from '@/lib/practice/practice-games'
 
 /** Icons live here, not in the data module, which stays free of JSX. */

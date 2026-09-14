@@ -12,7 +12,7 @@ import { ArrowRight, Flame } from '@/components/icons'
 import HomeSpeakPrompt from '@/components/home/HomeSpeakPrompt'
 import { resolveRecommendedMode } from '@/lib/practice/practice-modes'
 import type { SessionArc } from '@/lib/practice/types'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 
 interface Props {
   stepCount: number

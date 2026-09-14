@@ -9,7 +9,7 @@
 
 import Link from 'next/link'
 import { Sparkles, Waves, Layers, ArrowRight } from '@/components/icons'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import PracticeCategoryLane from './PracticeCategoryLane'
 import { PRACTICE_CATEGORIES } from '@/lib/practice/practice-categories'
 

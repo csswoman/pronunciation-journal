@@ -9,7 +9,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-vi.mock("@/lib/db", () => ({ setLastPracticeMode: vi.fn() }));
+vi.mock("@/lib/practice/last-practice-mode", () => ({ setLastPracticeMode: vi.fn() }));
 
 import VocabularyReviewCard from "../VocabularyReviewCard";
 

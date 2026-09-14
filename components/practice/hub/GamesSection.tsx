@@ -9,7 +9,7 @@
 
 import Link from 'next/link'
 import { ArrowRight, CloudRain, Grid2x2 } from '@/components/icons'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { getIllustration } from '@/lib/illustrations/registry'
 import { PRACTICE_GAMES, UPCOMING_GAMES } from '@/lib/practice/practice-games'
 

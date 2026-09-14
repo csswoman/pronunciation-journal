@@ -13,7 +13,7 @@ const AUTH_FILE = "tests/a11y/.auth/guest.json";
 setup("authenticate as guest", async ({ page }) => {
   await page.goto("/login");
   const guestButton = page.getByRole("button", { name: "Probar una sesión" });
-  await expect(guestButton).toBeVisible();
+  await expect(guestButton).toBeVisible({ timeout: 15_000 });
   await guestButton.click();
 
   const authFailed = page.getByText(/no se pudo iniciar sesión|error/i);

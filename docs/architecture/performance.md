@@ -4,57 +4,54 @@ This document records the project's performance boundaries, measurement
 baseline, and architectural rules. Implementation work is tracked separately
 in [`plans/README.md`](../../plans/README.md).
 
-Last measured: 2026-08-18 at commit `eb033385` (bundle budget re-baseline).
+Last measured: 2026-09-14 (Plan 001: semántica de carga inicial vs total publicado).
 
 ## Baseline
 
 Environment:
 
-- Next.js 16.2.9 with Turbopack production build
-- React 19.2.7
+- Next.js 16.3.3 with Turbopack production build
+- React 19.2.8
 - Project runtime requirement: Node.js 24.x
 
 Verification baseline:
 
-- Production compilation: 11.2 seconds
-- TypeScript phase: 16.5 seconds
-- Static generation: 91 pages in about 1.6 seconds
-- Tests: 151 files, 925 tests, all passing
 - Bundle analysis: `pnpm analyze:bundle` → `bundle-summary.json` (CI enforces `pnpm analyze:bundle:check`)
 
-### Client JavaScript (Turbopack build, re-baselined 2026-08-18)
+### Client JavaScript (Turbopack build, re-baselined 2026-09-14)
 
 Metrics from `scripts/analyze-bundle.mjs` (gzip via Node zlib, same machine as build):
 
-| Metric | Raw | Gzip |
-|---|---:|---:|
-| Root main entry (`build-manifest.json` root + polyfills) | 555 KB | 168 KB |
-| Eager `static/chunks/*.js` (111 files) | 5,209 KB | 1,531 KB |
-| Deferred chunks (excluded from budget) | 3,832 KB | 939 KB |
+| Metric | Raw | Gzip | CI Status |
+|---|---:|---:|---|
+| Root main entry (`build-manifest.json` root + polyfills) | 538 KB | 166 KB | Enforced (budget 168 KB) |
+| Max Initial Route (`maxRouteGzipKB`, heaviest route) | ~1,200 KB | 361 KB | Enforced (budget 575 KB) |
+| Published `static/chunks/*.js` (`publishedChunksGzipKB`, 177 files) | 7,884 KB | 2,376 KB | Enforced loose safety rail (budget 2,550 KB) |
+| Deferred chunks (CMUdict dictionary probe) | 3,832 KB | 939 KB | Excluded from published total |
 
-`allChunksGzipKB` counts **eagerly-loaded chunks only**. Chunks that exist solely
-behind an `await import(...)` are reported separately as `deferredChunksGzipKB`
-and excluded, so the budget tracks what users actually download on first load
-rather than total build output.
+#### Metric Semantics
 
-Currently one chunk is deferred: `cmu-pronouncing-dictionary` (~939 KB gzip), the
-full CMUdict, lazy-loaded by `lib/pronunciation/phonemes.ts` for phoneme scoring.
-It is detected by content probe (Turbopack chunk names are content-hashed). If the
-probe stops matching, `analyze-bundle.mjs` fails CI rather than silently counting
-the dictionary against the budget — update the probe in that case.
-
-> July 23, 2026: the previous 1,868 KB budget included the lazy dictionary, so
-> it was ~940 KB looser than it looked. Correcting the measurement produced a
-> 1,275 KB eager baseline (82 chunks). August 18, 2026: that eager total grew to
-> 1,531 KB (111 chunks) after essential-words, global search, and curriculum
-> work; the dictionary remains deferred.
+- **Initial Route Payload (`maxRouteGzipKB` / `routes[].gzipKB`)**: The union of client chunks
+  actually required for a route's first client render, extracted from each route's
+  `page_client-reference-manifest.js` (`clientModules`). Dynamic imports (`next/dynamic` /
+  `react-loadable`) and deferred runtime modules are not bundled in initial route chunks.
+  CI strictly enforces this budget.
+- **Published Total (`publishedChunksGzipKB` / `allChunksGzipKB`)**: The sum of all emitted
+  client chunk files written to `.next/static/chunks/*.js` (excluding deferred dictionary payloads).
+  Subject to a loose safety rail budget (2,550 KB + 10% tolerance → 2,805 KB) to detect silent
+  global code regressions while allowing legitimate chunk-splitting improvements.
+- **Deferred Chunks (`deferredChunksGzipKB`)**: Large modules loaded only on demand via
+  lazy evaluation (`await import(...)`), currently `cmu-pronouncing-dictionary` (~939 KB gzip).
+  Content probes in `analyze-bundle.mjs` ensure the vendor payload does not accidentally slip
+  into initial chunks.
 
 CI budgets (`scripts/bundle-budget.json`, +10% tolerance):
 
-| Metric | Budget gzip |
-|---|---:|
-| `rootMainGzipKB` | 168 KB |
-| `allChunksGzipKB` | 1,531 KB |
+| Metric | Budget gzip | Threshold (+10%) |
+|---|---:|---:|
+| `rootMainGzipKB` | 168 KB | 184.8 KB |
+| `maxRouteGzipKB` | 575 KB | 632.5 KB |
+| `publishedChunksGzipKB` | 2,550 KB | 2,805.0 KB |
 
 Historical route-level gzip totals (pre-Turbopack baseline, 2026-06-21) remain
 below for trend comparison only — re-measure per-route after adding route-level
@@ -173,3 +170,5 @@ A performance PR should satisfy all applicable checks:
 | 2026-06-21 | local | Bound phoneme session datasets to target + confusable sounds | Sound practice no longer calls `getAllWords()`; session words are fetched with `sound_id IN (...)` and grouped in one pass; review/daily plans batch multi-sound minimal-pair reads and assemble per-sound datasets without nested `allSounds.map(...allWords.filter(...))` |
 | 2026-07-23 | `83b0e7d0` | Exclude lazy CMUdict from `allChunksGzipKB` | Eager total 1,275 KB gzip (82 chunks); deferred dictionary 939 KB gzip |
 | 2026-08-18 | `eb033385` | Re-baseline after feature growth (essential-words, search, curriculum) | Eager total 1,531 KB gzip (111 chunks); root main still 168 KB gzip; CMUdict still deferred |
+| 2026-09-14 | `HEAD` | Plan 001: Medición de carga inicial por ruta vs total publicado | CI bloquea en `maxRouteGzipKB` (558.4 KB / límite 575 KB) y `rootMainGzipKB` (165.9 KB / límite 168 KB); total publicado (2,388.8 KB) se registra como diagnóstico. |
+| 2026-09-14 | `HEAD` | Plan 003 y 004: Defer daily composer y reducción de /practice/review | `/daily` mantiene compositor diferido (279.7 KB). `/practice/review` reduce de 558.4 KB (21 chunks) a 149.6 KB (10 chunks, −73.2% de peso). Máxima ruta global baja a 360.9 KB (`assessment/pronunciation`). |

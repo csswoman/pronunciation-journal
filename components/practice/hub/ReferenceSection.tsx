@@ -6,7 +6,7 @@
 
 import Link from 'next/link'
 import { Search, ArrowRight } from '@/components/icons'
-import { setLastPracticeMode } from '@/lib/db'
+import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { getIllustration } from '@/lib/illustrations/registry'
 
 const Illustration = getIllustration('domainDictionary')

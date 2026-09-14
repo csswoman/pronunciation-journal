@@ -16,7 +16,7 @@ vi.mock('@/lib/word-bank/queries', () => ({
   countWordsDueForReviewClient: vi.fn(async () => 5),
 }))
 
-vi.mock('@/lib/db', () => ({
+vi.mock('@/lib/practice/last-practice-mode', () => ({
   getLastPracticeMode: vi.fn(async () => null),
   setLastPracticeMode: vi.fn(),
 }))

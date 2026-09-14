@@ -1,6 +1,7 @@
 import "./globals.css";
 import "./markdown.css";
 import { Andika, DM_Sans, DM_Mono } from "next/font/google";
+import { connection } from "next/server";
 import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
 
 // Body + UI + headings — DM Sans
@@ -28,16 +29,16 @@ const andika = Andika({
 });
 
 /**
- * Root layout stays free of next/headers dynamic APIs so routes that can
- * be static or CDN-cached are not forced dynamic by a per-request CSP nonce.
- * The theme boot script is authorized via a sha256 hash in `proxy.ts` CSP
- * (see Next.js CSP guide: nonce-based CSP requires dynamic rendering).
+ * A nonce-based CSP requires request-time rendering so Next can add the nonce
+ * to its inline RSC payloads and framework scripts. This preserves a strict
+ * production CSP without permitting arbitrary inline scripts.
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await connection();
   // Font variable *classes* stay on <body> so React never owns <html className>
   // and cannot wipe a pre-paint `.dark` from the blocking theme script.
   // Family names are also mirrored onto :root so tokens.css composites
@@ -59,7 +60,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="English Journal" />
         {/* Raw blocking script (not next/script): runs while HTML parses, before paint.
-            Authorized by script-src sha256 hash in proxy CSP — not a layout nonce. */}
+            Authorized by its sha256 hash and the request nonce in proxy CSP. */}
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}

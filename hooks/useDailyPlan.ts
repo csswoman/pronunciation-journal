@@ -13,7 +13,7 @@ import {
 import { localizeDailyPlanSubtitles } from '@/lib/daily/localize-step-copy'
 import { recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
-import { buildDailyPlan, DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan'
+import { DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan/constants'
 import { requiredPracticeSteps } from '@/lib/practice/daily-plan/step-completion'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
 import { candidate, selectDailyCandidates } from '@/lib/practice/daily-plan/policy'
@@ -116,6 +116,9 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         if (changed) saveCachedDailyPlan(user.id, localized)
         return
       }
+      // El constructor reúne generadores, catálogos y queries de práctica. La
+      // pantalla sólo lo necesita cuando no existe el plan diario en caché.
+      const { buildDailyPlan } = await import('@/lib/practice/daily-plan/composer')
       const built = await buildDailyPlan(user.id)
       const finalPlan = applyPlan(built, lesson, user.id)
       saveCachedDailyPlan(user.id, finalPlan)
