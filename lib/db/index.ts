@@ -74,7 +74,10 @@ export type AnalyticsEventName =
   | "auto_next_triggered"
   | "time_to_first_exercise"
   | "session_started"
-  | "session_ended";
+  | "session_ended"
+  | "daily_step_started"
+  | "daily_step_completed"
+  | "daily_step_exited";
 
 export interface AnalyticsEvent {
   id?: number;
@@ -309,6 +312,21 @@ export interface EssentialWordLearnerSignalRecord {
   declaredKnownAt?: string;
   pronunciationDifficulty: "none" | "self-reported";
   pronunciationDifficultyAt?: string;
+  /** Proposal cadence only; it is not pronunciation evidence. */
+  pronunciationLastRoutedAt?: string;
+  updatedAt: string;
+}
+
+/** Local, modality-separated evidence for a chunk; activity never enters here. */
+export interface ChunkEvidenceRecord {
+  /** Primary key: `${userId}:${chunkId}`. */
+  id: string;
+  userId: string;
+  chunkId: string;
+  recognitionDays: string[];
+  listeningDays: string[];
+  useDays: string[];
+  pronunciationDays: string[];
   updatedAt: string;
 }
 
@@ -421,6 +439,7 @@ class PronunciationDB extends Dexie {
   srsRatingEvents!: Table<SRSRatingEventRecord, string>;
   essentialWordProgress!: Table<EssentialWordProgressRecord, string>;
   essentialWordLearnerSignals!: Table<EssentialWordLearnerSignalRecord, string>;
+  chunkEvidence!: Table<ChunkEvidenceRecord, string>;
   essentialWordSessionDrafts!: Table<EssentialWordSessionDraftRecord, string>;
   pronunciationAssessments!: Table<PronunciationAssessmentRecord, string>;
   pronunciationFeedbackEvidence!: Table<PronunciationFeedbackEvidenceRecord, string>;
@@ -698,6 +717,10 @@ class PronunciationDB extends Dexie {
     // mastery or erase evidence from another modality.
     this.version(40).stores({
       essentialWordLearnerSignals: 'id, userId, wordId, [userId+wordId], updatedAt',
+    });
+
+    this.version(41).stores({
+      chunkEvidence: 'id, userId, chunkId, [userId+chunkId], updatedAt',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
