@@ -231,10 +231,14 @@ function reorderFeedback(
   isCorrect: boolean,
 ): PedagogicalFeedback {
   return {
-    immediate: isCorrect ? 'El orden es correcto.' : 'Usaste todas las palabras, pero el orden no es el correcto.',
+    // Abre reconociendo lo que el alumno sí logró: al llegar aquí ya colocó
+    // todas las fichas, y solo falta el orden. La explicación evita
+    // metalenguaje ("sujeto", "verbo principal"), que en A1 añade una segunda
+    // cosa que aprender encima de la que falló.
+    immediate: isCorrect ? 'El orden es correcto.' : 'Casi. Tienes todas las palabras, solo falta acomodarlas.',
     explanation: isCorrect
       ? undefined
-      : 'El orden de las palabras comunica el sentido de la oración. Empieza por el sujeto, sigue con el verbo principal y después completa la idea.',
+      : 'En inglés el orden casi siempre es: quién hace la acción → qué hace → el resto de la idea.',
     expectedAnswer: exercise.sentence,
     correction: exercise.sentence,
     tip: 'Lee la oración en voz alta. Si suena como una pregunta o un fragmento, revisa primero el sujeto y el verbo.',
