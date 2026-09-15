@@ -140,15 +140,38 @@ function buildChunkIntroStep(chunks: LearningChunk[], learnerLevel: CEFRLevel): 
   }
 }
 
+const CEFR_ORDER: readonly CEFRLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+/**
+ * Pool de chunks del nivel, ampliado al siguiente nivel cuando el actual ya no
+ * tiene material sin ver.
+ *
+ * Con 36 chunks A1 en el catálogo, un alumno constante agota su nivel en
+ * semanas. Sin esta ampliación `selectNewChunkThread` devolvía `[]` y el plan
+ * se quedaba sin contenido nuevo en silencio: el slot reservado volvía al pool
+ * general y la sesión pasaba a ser 100% repaso sin decir por qué.
+ */
+export function chunkPoolForLevel(
+  catalog: readonly LearningChunk[],
+  level: CEFRLevel,
+  seenIds: ReadonlySet<string>,
+): LearningChunk[] {
+  for (let index = CEFR_ORDER.indexOf(level); index < CEFR_ORDER.length; index++) {
+    const pool = filterChunksForLevel(catalog, CEFR_ORDER[index])
+    if (pool.some((chunk) => !seenIds.has(chunk.id))) return pool
+  }
+  return filterChunksForLevel(catalog, CEFR_ORDER[CEFR_ORDER.length - 1])
+}
+
 export async function loadDailyChunkIntroStep(
   userId: string,
   level: CEFRLevel,
   dueActionCount: number,
 ): Promise<DailyStep | null> {
-  const eligible = filterChunksForLevel(LEARNING_CHUNKS, level)
   const rows = await db.srsData.where('userId').equals(userId).toArray()
   const seenIds = new Set(rows.filter((row) => row.wordId.startsWith('chunk:'))
     .map((row) => row.wordId.slice('chunk:'.length)))
+  const eligible = chunkPoolForLevel(LEARNING_CHUNKS, level, seenIds)
   return buildChunkIntroStep(selectNewChunkThread(
     eligible,
     seenIds,

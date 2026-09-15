@@ -119,6 +119,10 @@ export async function buildDailyCandidateSteps(
   )
   const sentenceSource = lessonDeckSlug ?? weakDeckSlug ?? (dayOfYear() % 2 === 0 ? 'lesson' : 'grammar-deck')
 
+  // Reorder boards are capped by learner level, so every reorder-producing
+  // step needs the level — not just the ones that pick content by difficulty.
+  const learnerLevel = studyDeckActiveLevel ? normalizeCEFR(studyDeckActiveLevel) : undefined
+
   const allSteps = [...newSteps]
 
   if (allSteps.length < DAILY_PLAN_STEP_COUNT) {
@@ -127,13 +131,13 @@ export async function buildDailyCandidateSteps(
     if (alternateStep) {
       allSteps.push(alternateStep)
     } else {
-      const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
+      const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic, learnerLevel)
       if (sentenceStep) allSteps.push(sentenceStep)
     }
   }
 
   if (allSteps.length < DAILY_PLAN_STEP_COUNT) {
-    const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic)
+    const sentenceStep = await buildSentenceBuilderStep(sentenceSource, weakTopic, learnerLevel)
     if (sentenceStep) allSteps.push(sentenceStep)
   }
 

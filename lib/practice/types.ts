@@ -212,6 +212,7 @@ export type DailySelectionReason =
   | 'due'
   | 'verification_due'
   | 'chunk_new'
+  | 'word_new'
   | 'grammar_slot'
   | 'recent_error'
   | 'weak_target'

@@ -2,6 +2,7 @@ import { fromGenericExercise } from '@/lib/practice/adapters'
 import { generateMatchPairsFromChunks } from '@/lib/exercises/generators/match-pairs'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { GenericExercise } from '@/lib/exercises/types'
+import { fitsReorderLength } from '@/lib/exercises/utils'
 import type { PracticeContext, PracticeExercise } from '@/lib/practice/types'
 import type { LearningChunk } from './types'
 import { chunkCefrSupport, type ChunkCefrSupport } from './cefr-ladder'
@@ -73,7 +74,17 @@ function clozeExercise(target: LearningChunk, catalog: readonly LearningChunk[])
   }
 }
 
-function reconstructionExercise(target: LearningChunk): GenericExercise {
+/**
+ * Null when the chunk's sentence is too long to reorder at `learnerLevel`:
+ * an 8-token board tests working memory rather than the chunk itself, so the
+ * stage is skipped and the remaining stages carry the chunk.
+ */
+function reconstructionExercise(
+  target: LearningChunk,
+  learnerLevel?: CEFRLevel,
+): GenericExercise | null {
+  if (!fitsReorderLength(target.learning.practiceAnswer, learnerLevel)) return null
+
   const tokens = target.learning.practiceAnswer.split(/\s+/)
     .sort((left, right) => hash(`${target.id}:${left}`) - hash(`${target.id}:${right}`))
   return {
@@ -162,7 +173,9 @@ export function buildChunkExercises(
   const generic = chunks.flatMap((chunk, index) => [
     recognitionExercise(chunk, catalog),
     ...(support.stages.includes('cloze') ? [clozeExercise(chunk, catalog)] : []),
-    ...(support.stages.includes('reconstruction') ? [reconstructionExercise(chunk)] : []),
+    ...(support.stages.includes('reconstruction')
+      ? [reconstructionExercise(chunk, learnerLevel)].filter((exercise) => exercise !== null)
+      : []),
     ...(support.stages.includes('substitution') ? [substitutionExercise(chunk)].filter((exercise) => exercise !== null) : []),
     ...(support.stages.includes('microdialogue') ? [microdialogueExercise(chunk)].filter((exercise) => exercise !== null) : []),
     ...(support.allowFullDictation ? [dictationExercise(chunk)] : []),

@@ -1,6 +1,7 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
-import { exerciseId, isLikelySentence, pick, tokenize } from '@/lib/exercises/utils'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
+import { exerciseId, fitsReorderLength, isLikelySentence, pick, tokenize } from '@/lib/exercises/utils'
 import { isLikelyEnglish, shuffleDistinct } from './primitives'
 
 const MIN_TOKENS = 4
@@ -75,14 +76,16 @@ export async function fetchFragmentsForDeck(
 export function generateReorderFromFragments(
   fragments: TextFragment[],
   count: number,
-  options: { preserveOrder?: boolean } = {},
+  options: { preserveOrder?: boolean; learnerLevel?: CEFRLevel } = {},
 ): ReorderWordsExercise[] {
   const usable = fragments.filter((f) => {
     // Some seeded `text_fragments` carry notation rows (e.g. "going to → gonna")
     // mislabeled as sentences. Reject anything that isn't a real sentence so it
     // never becomes a nonsensical reorder board.
     if (!isLikelySentence(f.content)) return false
-    return tokenize(f.content).length >= MIN_TOKENS
+    if (tokenize(f.content).length < MIN_TOKENS) return false
+    // A1/A2 learners stall on long boards: cap the sentence, not the topic.
+    return fitsReorderLength(f.content, options.learnerLevel)
   })
 
   // preserveOrder=true keeps a caller-supplied ordering (e.g. SRS-due first);

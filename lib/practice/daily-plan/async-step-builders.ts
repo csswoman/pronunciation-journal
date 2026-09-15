@@ -5,6 +5,7 @@ import { fetchTextFragments, generateReorderFromFragments } from '@/lib/exercise
 import { generateReorderAI } from '@/lib/exercises/generators/reorder-ai'
 import { fetchFalseFriendsForDay, toFalseFriendIntro } from '@/lib/false-friends/data'
 import type { CefrLevel } from '@/lib/false-friends/types'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import { orderFragmentsByDue } from '@/lib/practice/fragment-priority'
 import type { DailyStep } from '@/lib/practice/types'
@@ -77,6 +78,7 @@ export async function buildFalseFriendsStep(
 export async function buildSentenceBuilderStep(
   source: string | null = null,
   weakTopic?: string,
+  learnerLevel?: CEFRLevel,
 ): Promise<DailyStep | null> {
   let exercises: ReturnType<typeof dedupeByContentId> = []
 
@@ -84,9 +86,10 @@ export async function buildSentenceBuilderStep(
     try {
       const aiExercises = await generateReorderAI(
         weakTopic,
-        'B1',
+        learnerLevel ?? 'B1',
         SENTENCE_BUILDER_EXERCISE_COUNT,
         source ?? undefined,
+        learnerLevel,
       )
       exercises = dedupeByContentId(aiExercises.map((ex) => fromGenericExercise(ex, 'daily')))
     } catch {
@@ -102,6 +105,7 @@ export async function buildSentenceBuilderStep(
     exercises = dedupeByContentId(
       generateReorderFromFragments(prioritized, SENTENCE_BUILDER_EXERCISE_COUNT, {
         preserveOrder: true,
+        learnerLevel,
       }).map((ex) => fromGenericExercise(ex, 'daily')),
     )
   }

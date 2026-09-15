@@ -47,6 +47,9 @@ export function reasonForStep(
   // su presencia YA es evidencia de error: no hay rama 'variety' para él.
   if (step.kind === 'ed_cluster_drill') return 'recent_error'
   if (step.kind === 'chunk_intro') return 'chunk_new'
+  // Presentar vocabulario nuevo es material nuevo, no relleno: con reason
+  // 'variety' (la última prioridad) nunca entraba en el plan.
+  if (step.kind === 'word_intro') return 'word_new'
   if (options.hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target'
   if (step.kind === 'study_deck' || step.kind === 'reader' || step.kind === 'immersion_lesson') return 'route_next'
   if (step.kind === 'word_review' && options.hasSavedOrFamiliar) return 'saved_intent'

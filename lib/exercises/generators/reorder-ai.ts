@@ -1,6 +1,7 @@
 import { getAccessToken } from '@/lib/auth/session'
 import { generateReorderFromFragments, type TextFragment } from './reorder-from-fragments'
 import type { ReorderWordsExercise } from '@/lib/exercises/types'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 
 /**
  * Generates reorder-words exercises using Gemini-generated sentences.
@@ -11,12 +12,16 @@ import type { ReorderWordsExercise } from '@/lib/exercises/types'
  * @param level    CEFR level string (e.g. "A2", "B1")
  * @param count    Number of exercises to generate (default 8)
  * @param deckSlug Optional: grammar deck slug to tag sentences with
+ * @param learnerLevel Optional: caps reorder board length for A1/A2 learners.
+ *                     The model is asked for `level` sentences but doesn't
+ *                     reliably respect length, so the cap is enforced locally.
  */
 export async function generateReorderAI(
   topic: string,
   level = 'B1',
   count = 8,
   deckSlug?: string,
+  learnerLevel?: CEFRLevel,
 ): Promise<ReorderWordsExercise[]> {
   const accessToken = await getAccessToken()
 
@@ -34,6 +39,6 @@ export async function generateReorderAI(
   }
 
   const { fragments } = (await res.json()) as { fragments: TextFragment[] }
-  const exercises = generateReorderFromFragments(fragments, count)
+  const exercises = generateReorderFromFragments(fragments, count, { learnerLevel })
   return exercises.map((ex) => ({ ...ex, topic }))
 }
