@@ -2,115 +2,168 @@
 
 // Planned structure:
 // <ReorderWordsExercise>
-//   <AnswerSlots />  — dashed drop zone where selected chips appear
-//   <WordBank />     — tray of available word chips
-//   <CheckButton />  — full-width primary CTA
+//   <OrderRule />       — the English word-order pattern, in Spanish
+//   <AnswerSlots />     — drop zone where placed chips appear, reorderable
+//     <ReorderWordChip />  — word chip, draggable / clickable
+//   <WordBank />        — tray of available word chips, a drop zone too
+//   <CheckButton />     — full-width primary CTA
 // </ReorderWordsExercise>
 
-import { useState, useEffect, useRef } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
 import type { ReorderWordsExercise as ReorderWordsExerciseType } from '@/lib/exercises/types'
 import { useUISounds } from '@/hooks/useUISounds'
 import { gradeReorder } from '@/lib/exercises/grade-reorder'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
+import { useChipDrag, type DropTarget } from '@/hooks/useChipDrag'
+import { ReorderWordChip } from './ReorderWordChip'
+import {
+  answerText,
+  createBoard,
+  isComplete,
+  moveChip,
+  toggleChip,
+  type BoardChip,
+  type BoardState,
+  type BoardZone,
+} from '@/lib/exercises/reorder-board'
 
 interface Props {
   exercise: ReorderWordsExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
+  onResult: (
+    isCorrect: boolean,
+    userAnswer: string,
+    timeMs: number,
+    extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> },
+  ) => void
   focusUi?: boolean
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong'
-interface Chip {
-  key: string
-  word: string
-}
 
-function makeChips(tokens: string[]): Chip[] {
-  return tokens.map((word, i) => ({ key: `${word}-${i}`, word }))
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+/** Smooth FLIP layout animation when chips change position or zone. */
+function useFLIPLayout(deps: unknown[]) {
+  const prevRectsRef = useRef<Map<string, DOMRect>>(new Map())
+
+  useIsoLayoutEffect(() => {
+    if (typeof document === 'undefined') return
+
+    const chipEls = Array.from(document.querySelectorAll<HTMLElement>('[data-chip-key]'))
+    const nextRects = new Map<string, DOMRect>()
+
+    chipEls.forEach((el) => {
+      const key = el.dataset.chipKey
+      if (!key) return
+
+      const currentRect = el.getBoundingClientRect()
+      nextRects.set(key, currentRect)
+
+      const prevRect = prevRectsRef.current.get(key)
+      if (prevRect) {
+        const dx = prevRect.left - currentRect.left
+        const dy = prevRect.top - currentRect.top
+
+        if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+          el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`
+          el.style.transition = 'none'
+
+          const onTransitionEnd = (e: TransitionEvent) => {
+            if (e.propertyName === 'transform') {
+              el.style.transform = ''
+              el.style.transition = ''
+              el.removeEventListener('transitionend', onTransitionEnd)
+            }
+          }
+          el.addEventListener('transitionend', onTransitionEnd)
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              el.style.transition = 'transform 240ms cubic-bezier(0.2, 0, 0, 1)'
+              el.style.transform = 'translate3d(0, 0, 0)'
+            })
+          })
+        }
+      }
+    })
+
+    prevRectsRef.current = nextRects
+  }, deps)
 }
 
 export function ReorderWordsExercise({ exercise, onResult }: Props) {
-  const [bank, setBank] = useState<Chip[]>(() => makeChips(exercise.tokens))
-  const [answer, setAnswer] = useState<Chip[]>([])
+  const [board, setBoard] = useState<BoardState>(() => createBoard(exercise.tokens))
   const [state, setState] = useState<AnswerState>('idle')
-  const startMs = useRef(Date.now())
+  const [startMs, setStartMs] = useState(() => Date.now())
   const { playTap, playCorrect, playWrong } = useUISounds()
 
+  useFLIPLayout([board])
+
   useEffect(() => {
-    setBank(makeChips(exercise.tokens))
-    setAnswer([])
+    setBoard(createBoard(exercise.tokens))
     setState('idle')
-    startMs.current = Date.now()
+    setStartMs(Date.now())
   }, [exercise.id, exercise.tokens])
 
-  function moveToAnswer(chip: Chip) {
-    if (state !== 'idle') return
+  const locked = state !== 'idle'
+
+  function handleTap(key: string) {
+    if (locked) return
     playTap()
-    setBank((b) => b.filter((c) => c.key !== chip.key))
-    setAnswer((a) => [...a, chip])
+    setBoard((b) => toggleChip(b, key))
   }
 
-  function moveToBank(chip: Chip) {
-    if (state !== 'idle') return
-    setAnswer((a) => a.filter((c) => c.key !== chip.key))
-    setBank((b) => [...b, chip])
+  function handleDrop(key: string, target: DropTarget) {
+    if (locked) return
+    playTap()
+    setBoard((b) => moveChip(b, key, target.zone, target.index))
   }
+
+  const drag = useChipDrag({ onDrop: handleDrop, onTap: handleTap, disabled: locked })
 
   function handleCheck() {
-    if (state !== 'idle' || answer.length === 0) return
-    const userAnswer = answer.map((c) => c.word).join(' ')
+    if (locked || !isComplete(board)) return
+    const userAnswer = answerText(board)
     const isCorrect = gradeReorder(userAnswer, exercise.sentence)
     setState(isCorrect ? 'correct' : 'wrong')
-    if (isCorrect) playCorrect(); else playWrong()
-    onResult(isCorrect, userAnswer, Date.now() - startMs.current, {
+    if (isCorrect) playCorrect()
+    else playWrong()
+    onResult(isCorrect, userAnswer, Date.now() - startMs, {
       feedback: buildPedagogicalFeedback(exercise, isCorrect, userAnswer),
     })
   }
 
-  const canCheck =
-    state === 'idle' && answer.length === exercise.tokens.length && bank.length === 0
+  const canCheck = state === 'idle' && isComplete(board)
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {/* Answer Slots Area */}
-      <div
-        className={cn(
-          'min-h-20 flex flex-wrap items-center gap-2.5 rounded-2xl border-2 border-dashed p-4 transition-all',
-          answer.length === 0 ? 'border-border-default bg-surface-sunken/30 justify-center' : 'border-primary bg-primary-soft/20',
-        )}
-        aria-label="Tu respuesta"
-      >
-        {answer.length === 0 ? (
-          <span className="text-body-sm text-fg-subtle">
-            Toca las palabras de abajo para colocarlas aquí en orden
-          </span>
-        ) : (
-          answer.map((chip) => (
-            <WordChip
-              key={chip.key}
-              chip={chip}
-              variant="placed"
-              done={state !== 'idle'}
-              onClick={moveToBank}
-            />
-          ))
-        )}
-      </div>
+      <p className="text-body-sm leading-relaxed text-fg-muted">
+        En inglés el orden casi siempre es:{' '}
+        <strong className="font-semibold text-fg">
+          quién hace la acción → qué hace → el resto de la idea
+        </strong>
+        .
+      </p>
 
-      {/* Available Word Bank Tray */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 py-2" aria-label="Palabras disponibles">
-        {bank.map((chip) => (
-          <WordChip
-            key={chip.key}
-            chip={chip}
-            variant="bank"
-            done={state !== 'idle'}
-            onClick={moveToAnswer}
-          />
-        ))}
-      </div>
+      <DropZone
+        zone="answer"
+        chips={board.answer}
+        empty="Toca o arrastra las palabras de abajo para colocarlas aquí en orden"
+        variant="placed"
+        locked={locked}
+        drag={drag}
+      />
+
+      <DropZone
+        zone="bank"
+        chips={board.bank}
+        empty=""
+        variant="bank"
+        locked={locked}
+        drag={drag}
+      />
 
       {state === 'idle' && (
         <Button
@@ -133,27 +186,61 @@ export function ReorderWordsExercise({ exercise, onResult }: Props) {
   )
 }
 
-interface ChipProps {
-  chip: Chip
+interface DropZoneProps {
+  zone: BoardZone
+  chips: BoardChip[]
+  empty: string
   variant: 'bank' | 'placed'
-  done: boolean
-  onClick: (chip: Chip) => void
+  locked: boolean
+  drag: ReturnType<typeof useChipDrag>
 }
 
-function WordChip({ chip, variant, done, onClick }: ChipProps) {
+function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) {
+  const isAnswer = zone === 'answer'
+  const isDropZoneActive = drag.dropTarget?.zone === zone
+  const targetIndex = isDropZoneActive ? drag.dropTarget?.index ?? -1 : -1
+
   return (
-    <button
-      type="button"
-      onClick={() => onClick(chip)}
-      disabled={done}
+    <div
+      data-drop-zone={zone}
+      onPointerMove={drag.onPointerMove}
+      onPointerUp={drag.onPointerUp}
+      onPointerCancel={drag.onPointerCancel}
       className={cn(
-        'rounded-xl border px-4 py-2.5 text-body-md font-medium transition-all duration-150 select-none focus-ring',
-        !done && variant === 'bank' && 'bg-surface-sunken/60 border-border-default text-fg hover:border-primary/60 hover:bg-surface-sunken cursor-pointer active:scale-95 shadow-xs',
-        !done && variant === 'placed' && 'bg-primary text-on-primary border-primary hover:bg-error hover:border-error cursor-pointer active:scale-95 shadow-xs font-semibold',
-        done && 'cursor-default opacity-70 border-border-subtle bg-surface-sunken text-fg-muted',
+        'flex flex-wrap items-center gap-2.5 rounded-2xl p-4 transition-all duration-200',
+        isAnswer && 'min-h-20 border-2 border-dashed',
+        isAnswer && chips.length === 0 && 'border-border-default bg-surface-sunken/30 justify-center',
+        isAnswer && chips.length > 0 && 'border-primary bg-primary-soft/20',
+        !isAnswer && 'justify-center py-2',
+        isDropZoneActive && 'ring-2 ring-primary/50',
+        'select-none',
       )}
+      style={{ touchAction: 'none' }}
+      aria-label={isAnswer ? 'Tu respuesta' : 'Palabras disponibles'}
     >
-      {chip.word}
-    </button>
+      {isAnswer && chips.length === 0 && targetIndex < 0 && (
+        <span className="text-body-sm text-fg-subtle">{empty}</span>
+      )}
+      {chips.map((chip, index) => (
+        <Fragment key={chip.key}>
+          {targetIndex === index && (
+            <div className="h-10 w-12 rounded-xl border-2 border-dashed border-primary bg-primary-soft/40 animate-pulse transition-all shrink-0" />
+          )}
+          <ReorderWordChip
+            chip={chip}
+            index={index}
+            variant={variant}
+            locked={locked}
+            isDragging={drag.draggingKey === chip.key}
+            dragOffset={drag.draggingKey === chip.key ? drag.dragOffset : null}
+            onPointerDown={(e) => drag.onPointerDown(chip.key, e)}
+            onClick={(e) => drag.handleClick(chip.key, e)}
+          />
+        </Fragment>
+      ))}
+      {targetIndex >= chips.length && (
+        <div className="h-10 w-12 rounded-xl border-2 border-dashed border-primary bg-primary-soft/40 animate-pulse transition-all shrink-0" />
+      )}
+    </div>
   )
 }
