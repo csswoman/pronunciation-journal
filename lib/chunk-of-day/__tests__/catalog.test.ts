@@ -41,11 +41,19 @@ describe('chunk learning catalog', () => {
   it('builds a progressive session attributed to chunks', () => {
     const selected = LEARNING_CHUNKS.slice(0, 2)
     const exercises = buildChunkExercises(selected, LEARNING_CHUNKS, 'practice')
+    // One form↔meaning board opens the session and covers both chunks at once,
+    // so the learner meets today's expressions before being asked to recall them.
     expect(exercises.map((exercise) => exercise.slug)).toEqual([
+      'match_pairs',
       'multiple_choice', 'reorder_words', 'translation_es_en', 'sentence_dictation', 'written_production', 'spoken_production',
       'multiple_choice', 'reorder_words', 'translation_es_en', 'sentence_dictation',
     ])
-    expect(exercises.every((exercise) => exercise.sourceRef?.source === 'chunks')).toBe(true)
+    // Every attributable exercise names its chunk. match_pairs is the sole
+    // exception by design: it grades one group answer, so crediting it to any
+    // single chunk's SRS would corrupt that chunk's schedule.
+    expect(exercises.filter((exercise) => exercise.slug !== 'match_pairs')
+      .every((exercise) => exercise.sourceRef?.source === 'chunks')).toBe(true)
+    expect(exercises.find((exercise) => exercise.slug === 'match_pairs')?.sourceRef).toBeUndefined()
   })
 
   it('keeps every authored bridge structurally valid', () => {

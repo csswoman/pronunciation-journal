@@ -47,3 +47,26 @@ describe('daily word review respects the learner level', () => {
     expect(withoutLevel).toContain('rodeo_circumlocution')
   })
 })
+
+describe('daily word review keeps the word-bank match-pairs board off the plan', () => {
+  const pairWords = Array.from({ length: 6 }, (_, i) =>
+    makeWordBankEntry({ id: `p${i}`, text: `word${i}`, meaning: `meaning ${i}` }),
+  )
+
+  function matchPairsCount(step: ReturnType<typeof buildWordReviewStep>): number {
+    return (step?.exercises ?? []).filter(
+      (ex) => ex.payload.kind === 'generic' && ex.payload.data.type === 'match_pairs',
+    ).length
+  }
+
+  it('emits no word↔definition board on the daily plan', () => {
+    // B3, scoped by source: the bank-sourced board replayed the same entries
+    // every day. On the daily plan only the chunk board runs, built from the
+    // expressions actually introduced today.
+    expect(matchPairsCount(buildWordReviewStep(pairWords, 'daily'))).toBe(0)
+  })
+
+  it('still offers it in free practice, where the learner chose the drill', () => {
+    expect(matchPairsCount(buildWordReviewStep(pairWords, 'practice'))).toBeGreaterThan(0)
+  })
+})

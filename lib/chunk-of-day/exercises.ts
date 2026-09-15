@@ -1,4 +1,5 @@
 import { fromGenericExercise } from '@/lib/practice/adapters'
+import { generateMatchPairsFromChunks } from '@/lib/exercises/generators/match-pairs'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { GenericExercise } from '@/lib/exercises/types'
 import type { PracticeContext, PracticeExercise } from '@/lib/practice/types'
@@ -151,6 +152,13 @@ export function buildChunkExercises(
   learnerLevel: CEFRLevel = 'C1',
 ): PracticeExercise[] {
   const support = chunkCefrSupport(learnerLevel)
+  // Form ↔ meaning recognition opens the step: the board shows today's chunks
+  // together, which is what makes new material legible as new. Filler is level
+  // capped so a board never previews expressions above the learner.
+  const matchPairs = generateMatchPairsFromChunks(
+    chunks,
+    filterChunksForLevel(catalog, learnerLevel),
+  )
   const generic = chunks.flatMap((chunk, index) => [
     recognitionExercise(chunk, catalog),
     ...(support.stages.includes('cloze') ? [clozeExercise(chunk, catalog)] : []),
@@ -160,7 +168,10 @@ export function buildChunkExercises(
     ...(support.allowFullDictation ? [dictationExercise(chunk)] : []),
     ...(index === 0 ? productionExercises(chunk, support.responseFreedom) : []),
   ])
-  return generic.map((exercise) => fromGenericExercise(exercise, context))
+  return [
+    ...matchPairs.map((exercise) => fromGenericExercise(exercise, context)),
+    ...generic.map((exercise) => fromGenericExercise(exercise, context)),
+  ]
 }
 
 export function filterChunksForLevel(chunks: readonly LearningChunk[], level: CEFRLevel): LearningChunk[] {

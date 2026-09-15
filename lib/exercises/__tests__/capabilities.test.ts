@@ -33,9 +33,17 @@ describe('exercise capabilities', () => {
     }))
   })
 
-  it('enforces B3 surface policy: match_pairs and sentence_dictation in free_practice only, authored multiple_choice in daily plans and diagnostics', () => {
-    expect(isExerciseAvailableOnSurface('match_pairs', 'daily_plan')).toBe(false)
+  it('enforces B3 surface policy: match_pairs is chunk-sourced on daily plans, sentence_dictation stays free_practice only, authored multiple_choice in daily plans and diagnostics', () => {
+    // B3 retired the word_bank match-pairs board from the daily plan: drawn
+    // from the existing bank, it replayed the same entries forever and tested
+    // meaning before the learner had met it. The chunk board is the opposite
+    // case — it opens the chunk step with today's new expressions and their
+    // meanings visible, so it is first encounter, not recall. The policy is
+    // therefore scoped by source, not by slug.
+    expect(isExerciseAvailableOnSurface('match_pairs', 'daily_plan')).toBe(true)
+    expect(EXERCISE_CAPABILITIES.match_pairs.sources).toContain('chunks')
     expect(isExerciseAvailableOnSurface('match_pairs', 'free_practice')).toBe(true)
+    expect(isExerciseAvailableOnSurface('match_pairs', 'review')).toBe(false)
 
     expect(isExerciseAvailableOnSurface('sentence_dictation', 'daily_plan')).toBe(false)
     expect(isExerciseAvailableOnSurface('sentence_dictation', 'free_practice')).toBe(true)

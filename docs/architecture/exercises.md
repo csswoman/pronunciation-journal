@@ -296,9 +296,27 @@ Reproduce el audio de una oración o palabra. El usuario la transcribe en un tex
 Conectar elementos de la columna izquierda con los de la derecha. Los de la derecha están mezclados.
 
 - Fuentes y pares:
+  - `chunks`: expresión ↔ significado en español
   - `word_bank`: palabra ↔ significado/traducción
   - `words` (fonemas): palabra ↔ símbolo IPA
 - Grupos de 4 pares por ejercicio
+
+**Superficies (política B3, acotada por fuente):**
+
+| Fuente | `daily_plan` | `free_practice` |
+| - | - | - |
+| `chunks` | Sí | Sí |
+| `word_bank` / `words` | No | Sí |
+
+B3 retiró del plan diario el tablero de `word_bank`: se construía sobre el banco
+existente, así que repetía las mismas entradas día tras día y evaluaba
+significado antes de que el alumno se encontrara con la palabra. El tablero de
+`chunks` es el caso contrario — abre el paso de chunks con las expresiones
+introducidas hoy y su significado a la vista, así que es primer encuentro, no
+recuperación. Por eso la política se acota por fuente, no por slug.
+
+El tablero de chunks no lleva `sourceRef`: califica una respuesta de grupo, y
+atribuirla a un solo chunk corrompería su programación SRS.
 - Interacción: tap izquierda → tap derecha para crear la conexión; tap en un elemento ya colocado lo devuelve al banco
 - Sin drag & drop (tap-to-select, funciona en móvil)
 - Validación: al pulsar "Check", cada par se evalúa individualmente; correcto solo si todos aciertan

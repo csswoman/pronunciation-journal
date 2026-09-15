@@ -5,7 +5,7 @@ import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { shouldOfferMission } from './mission-cadence'
-import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
+import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, RESERVED_CHUNK_NEW_SLOTS, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchDueReviewWords,
   fetchDueSounds,
@@ -245,6 +245,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     selectDailyCandidates(candidates, {
       limit: DAILY_PLAN_STEP_COUNT,
       availableCapabilities: new Set(['network', 'microphone', 'speech_recognition']),
+      // One slot always introduces new material, however large the review backlog.
+      reservedChunkNewSlots: RESERVED_CHUNK_NEW_SLOTS,
     }),
   )
 
