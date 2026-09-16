@@ -182,6 +182,39 @@
           ]
         }
       ]
+    },
+    {
+      "id": "ps-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave del presente simple antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Afirmativo",
+              "value": "Añade -s / -es solo con he / she / it."
+            },
+            {
+              "key": "2. Negativo",
+              "value": "Usa don't / doesn't + verbo en forma base."
+            },
+            {
+              "key": "3. Preguntas",
+              "value": "Usa Do / Does + sujeto + verbo en forma base."
+            },
+            {
+              "key": "4. Uso principal",
+              "value": "Expresa rutinas, hábitos y verdades generales."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "Escribe una rutina diaria propia usando la 3ª persona (ej. 'My friend works at...')."
+      }
     }
   ],
   "quiz": [

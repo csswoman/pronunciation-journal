@@ -138,21 +138,12 @@
     {
       "id": "a1-there-is-there-are-mistakes",
       "tag": "Error frecuente",
-      "title": "Evita estos dos calcos",
-      "lede": "El español usa 'hay' o confunde con 'tener'. En inglés la existencia exige there is / there are.",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
           "lines": [
-            {
-              "variant": "bad",
-              "text": "In my house have three rooms."
-            },
-            {
-              "variant": "good",
-              "text": "In my house there are three rooms.",
-              "note": "existencia → there are (nunca 'have')"
-            },
             {
               "variant": "bad",
               "text": "There is two cars in the garage."
@@ -160,14 +151,43 @@
             {
               "variant": "good",
               "text": "There are two cars in the garage.",
-              "note": "dos o más → there are"
+              "note": "plural exige there are"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-there-is-there-are-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "There is + a/an",
+              "value": "Singular (There is a car)"
+            },
+            {
+              "key": "There is + some",
+              "value": "Incontable (There is some water)"
+            },
+            {
+              "key": "There are + plural",
+              "value": "Plural (There are five books)"
+            },
+            {
+              "key": "Preguntas",
+              "value": "Is there...? / Are there...?"
             }
           ]
         }
       ],
       "tip": {
-        "label": "Contracción oral:",
-        "body": "Al hablar, casi siempre se dice There's para singular ('There's a problem'). El plural no se contrae: there are."
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],

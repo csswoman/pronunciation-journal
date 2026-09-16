@@ -8,6 +8,51 @@
   },
   "cards": [
     {
+      "id": "a1-pronombres-sujeto-concept",
+      "tag": "Idea central",
+      "title": "Pronombres: qué expresa",
+      "lede": "Ya puedes usar I, you, he, she, it, we y they como sujeto de una oración.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "I",
+              "value": "yo · I am a student.",
+              "highlights": [
+                "I"
+              ]
+            },
+            {
+              "key": "you",
+              "value": "tú / usted / ustedes · You are here.",
+              "highlights": [
+                "You"
+              ]
+            },
+            {
+              "key": "he / she / it",
+              "value": "él / ella / objeto o animal · She works.",
+              "highlights": [
+                "She"
+              ]
+            },
+            {
+              "key": "we / they",
+              "value": "nosotros / ellos · They live here.",
+              "highlights": [
+                "They"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Objetivo:",
+        "body": "reconocer el patrón y usarlo en frases propias."
+      }
+    },
+    {
       "id": "a1-pronombres-sujeto-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
@@ -100,8 +145,8 @@
     {
       "id": "a1-pronombres-sujeto-mistakes",
       "tag": "Error frecuente",
-      "title": "Nunca omitas el sujeto",
-      "lede": "En español el sujeto suele ser tácito ('Llueve', 'Es una buena idea'). En inglés el pronombre es OBLIGATORIO.",
+      "title": "Evita este calco",
+      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
       "blocks": [
         {
           "type": "pairs",
@@ -113,32 +158,43 @@
             {
               "variant": "good",
               "text": "It is raining today.",
-              "note": "clima → siempre 'It'"
+              "note": "el sujeto 'It' es obligatorio para el clima"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-pronombres-sujeto-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave para este patrón.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Sujeto obligatorio",
+              "value": "Nunca omitas el pronombre en inglés (ej. It is warm, no Is warm)."
             },
             {
-              "variant": "bad",
-              "text": "Is a good idea."
+              "key": "Mayúscula",
+              "value": "El pronombre 'I' (yo) siempre se escribe en mayúscula."
             },
             {
-              "variant": "good",
-              "text": "It is a good idea.",
-              "note": "opiniones y hechos → siempre 'It'"
+              "key": "You",
+              "value": "Sirve tanto para singular (tú/usted) como para plural (ustedes)."
             },
             {
-              "variant": "bad",
-              "text": "Is my best friend."
-            },
-            {
-              "variant": "good",
-              "text": "He is my best friend.",
-              "note": "personas → He / She obligatorio"
+              "key": "It",
+              "value": "Reemplaza cosas, animales, lugares o clima en singular."
             }
           ]
         }
       ],
       "tip": {
-        "label": "Regla de oro:",
-        "body": "Toda oración afirmativa en inglés necesita un sujeto explícito antes del verbo. Además, 'I' (yo) SIEMPRE se escribe en mayúscula."
+        "label": "Práctica:",
+        "body": "escribe una frase personal con el patrón."
       }
     }
   ],

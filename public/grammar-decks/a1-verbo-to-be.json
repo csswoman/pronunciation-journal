@@ -215,6 +215,39 @@
           ]
         }
       ]
+    },
+    {
+      "id": "to-be-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba los usos clave del verbo to be antes de continuar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "1. Formas",
+              "value": "I am, he/she/it is, you/we/they are."
+            },
+            {
+              "key": "2. Negación",
+              "value": "Añade not después del verbo (I'm not, isn't, aren't)."
+            },
+            {
+              "key": "3. Pregunta",
+              "value": "Invierte el orden: verbo + sujeto (Are you...? / Is she...?)."
+            },
+            {
+              "key": "4. Usos clave",
+              "value": "Edad, origen, descripciones y estados (am 25, is from, are hungry)."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Práctica:",
+        "body": "Di tres frases sobre ti usando I am (edad, origen y profesión)."
+      }
     }
   ],
   "quiz": [
