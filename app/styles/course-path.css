@@ -1221,6 +1221,14 @@
   border-color: color-mix(in srgb, var(--primary) 28%, var(--border-subtle));
 }
 
+.course-path__lesson-group--done {
+  border-color: color-mix(in oklch, var(--success) 35%, var(--border-subtle));
+}
+
+.course-path__lesson-group--partial {
+  border-color: color-mix(in oklch, var(--primary) 40%, var(--border-subtle));
+}
+
 .course-path__lesson-group-summary {
   display: flex;
   align-items: center;
@@ -1229,6 +1237,7 @@
   color: var(--text-secondary);
   cursor: pointer;
   list-style: none;
+  transition: background var(--transition-fast);
 }
 
 .course-path__lesson-group-summary::-webkit-details-marker {
@@ -1237,6 +1246,22 @@
 
 .course-path__lesson-group-summary:hover {
   background: var(--surface-sunken);
+}
+
+.course-path__lesson-group--done .course-path__lesson-group-summary {
+  background: color-mix(in oklch, var(--success) 20%, var(--surface-raised));
+}
+
+.course-path__lesson-group--done .course-path__lesson-group-summary:hover {
+  background: color-mix(in oklch, var(--success) 26%, var(--surface-raised));
+}
+
+.course-path__lesson-group--partial .course-path__lesson-group-summary {
+  background: color-mix(in oklch, var(--primary) 20%, var(--surface-raised));
+}
+
+.course-path__lesson-group--partial .course-path__lesson-group-summary:hover {
+  background: color-mix(in oklch, var(--primary) 26%, var(--surface-raised));
 }
 
 .course-path__lesson-group-summary:focus-visible {
@@ -1257,13 +1282,13 @@
 }
 
 .course-path__group-icon-box--done {
-  background: color-mix(in srgb, var(--success) 16%, transparent);
+  background: color-mix(in oklch, var(--success) 28%, transparent);
   color: var(--success);
 }
 
 .course-path__group-icon-box--partial {
-  background: color-mix(in srgb, var(--primary) 16%, transparent);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary, #ffffff);
 }
 
 .course-path__group-icon-box--unstarted {
@@ -1363,11 +1388,11 @@
 }
 
 .course-path__lesson--current {
-  background: color-mix(in srgb, var(--primary) 10%, var(--surface-raised));
+  background: color-mix(in oklch, var(--primary) 14%, var(--surface-raised));
 }
 
 .course-path__lesson--current:hover {
-  background: color-mix(in srgb, var(--primary) 15%, var(--surface-raised));
+  background: color-mix(in oklch, var(--primary) 20%, var(--surface-raised));
 }
 
 .course-path__lesson:last-child {
@@ -1401,6 +1426,63 @@
 .course-path__num-circle--current {
   border-color: var(--primary);
   color: var(--primary);
+  background: var(--primary-soft);
+}
+
+/* ── Lesson spine (connecting line + node column) ───────────── */
+
+.course-path__spine-body {
+  padding-bottom: var(--space-2);
+}
+
+.course-path__spine-item {
+  position: relative;
+}
+
+.course-path__spine-node-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.course-path__spine-line {
+  width: 2px;
+  flex: 1;
+  min-height: var(--space-4);
+  margin-top: 2px;
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+.course-path__lesson--done .course-path__spine-line {
+  background: color-mix(in oklch, var(--success) 45%, var(--border-subtle));
+}
+
+.course-path__spine-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  padding: 0.5rem 1.125rem;
+  background: var(--primary);
+  color: var(--on-primary, #ffffff);
+  font-size: var(--text-size-body-sm);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.course-path__spine-continue:hover {
+  background: var(--primary-hover);
+  transform: translateX(2px);
+}
+
+.course-path__spine-continue:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .course-path__num {
@@ -1667,14 +1749,6 @@
   background: var(--primary-soft);
   border-color: var(--primary);
   color: var(--primary);
-}
-
-.course-path__lesson--current {
-  background: var(--primary-soft);
-}
-
-.course-path__lesson--current:not(.course-path__lesson--locked):hover {
-  background: var(--primary-soft);
 }
 
 .course-path__lt,

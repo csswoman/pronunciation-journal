@@ -4,7 +4,7 @@
  *   - GroupIconBox (rounded icon square with status-driven colors)
  *   - GroupHeading (title + meta line with status text)
  *   - GroupChevron (expand/collapse indicator)
- *   - LessonGroupBody (list of CoursePathLessonRow items)
+ *   - LessonGroupBody (spine-connected list of CoursePathLessonRow items)
  */
 
 import { Fragment } from "react";
@@ -12,6 +12,7 @@ import { BookOpen, ChevronRight, HelpCircle, MicVocal, User } from "@/components
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import { cn } from "@/lib/cn";
 import type { CoursePathLesson, CoursePathLevel, LessonProgressState } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 export type LessonWithState = CoursePathLesson & { state: LessonProgressState };
 
@@ -24,6 +25,7 @@ interface CoursePathLessonGroupProps {
   onToggle: (id: string, open: boolean) => void;
   completed?: boolean;
   downloadedIds?: ReadonlySet<string>;
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
 function getGroupIcon(title: string) {
@@ -44,6 +46,7 @@ export default function CoursePathLessonGroup({
   onToggle,
   completed,
   downloadedIds,
+  topicImmersionMap,
 }: CoursePathLessonGroupProps) {
   const totalCount = lessons.length;
   const completedCount = lessons.filter((lesson) => lesson.state === "done").length;
@@ -60,22 +63,23 @@ export default function CoursePathLessonGroup({
 
   return (
     <details
+      id={id}
       className={cn("course-path__lesson-group", `course-path__lesson-group--${statusClass}`)}
       open={open}
-      onToggle={(event) => onToggle(id, event.currentTarget.open)}
+      onToggle={(e) => onToggle(id, e.currentTarget.open)}
     >
       <summary className="course-path__lesson-group-summary">
-        <div className={cn("course-path__group-icon-box", `course-path__group-icon-box--${statusClass}`)} aria-hidden="true">
+        <span className={cn("course-path__group-icon-box", `course-path__group-icon-box--${statusClass}`)} aria-hidden="true">
           <GroupIcon size={20} className="course-path__group-icon" />
-        </div>
+        </span>
         <span className="course-path__lesson-group-heading">
           <span className="course-path__lesson-group-title">{title}</span>
           <span className="course-path__lesson-group-meta">
             {totalCount} {totalCount === 1 ? "lección" : "lecciones"} ·{" "}
             {isFullyDone && (
-              <span className="course-path__meta-status course-path__meta-status--done">completado</span>
+              <span className="course-path__meta-status course-path__meta-status--done">completada</span>
             )}
-            {isInProgress && (
+            {!isFullyDone && isInProgress && (
               <span className="course-path__meta-status course-path__meta-status--partial">
                 {completedCount} {completedCount === 1 ? "completada" : "completadas"}
               </span>
@@ -87,8 +91,8 @@ export default function CoursePathLessonGroup({
         </span>
         <ChevronRight className="course-path__lesson-group-chevron" size={16} aria-hidden />
       </summary>
-      <div className="course-path__lesson-group-body">
-        {lessons.map((lesson) => {
+      <div className="course-path__lesson-group-body course-path__spine-body">
+        {lessons.map((lesson, index) => {
           const showSubgroup = Boolean(lesson.subgroup && lesson.subgroup !== lastSubgroup);
           if (lesson.subgroup) {
             lastSubgroup = lesson.subgroup;
@@ -104,6 +108,8 @@ export default function CoursePathLessonGroup({
                 lesson={lesson}
                 levelId={levelId}
                 isDownloaded={downloadedIds?.has(`${levelId}:${lesson.number}`)}
+                immersionLesson={lesson.slug ? topicImmersionMap?.[lesson.slug] : undefined}
+                isLast={index === lessons.length - 1}
               />
             </Fragment>
           );

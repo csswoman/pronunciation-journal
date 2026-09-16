@@ -13,6 +13,7 @@ import { BookOpen, ChevronRight } from "@/components/icons";
 import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import type { DerivedUnitView } from "@/lib/courses/progress";
 import type { CoursePathTrackId } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 interface CoursePathOptionalCardProps {
   unit: DerivedUnitView;
@@ -20,6 +21,7 @@ interface CoursePathOptionalCardProps {
   isOpen: boolean;
   onToggle: (id: string, open: boolean) => void;
   downloadedIds: Set<string>;
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
 export default function CoursePathOptionalCard({
@@ -28,6 +30,7 @@ export default function CoursePathOptionalCard({
   isOpen,
   onToggle,
   downloadedIds,
+  topicImmersionMap,
 }: CoursePathOptionalCardProps) {
   const optId = `${unit.unit.id}-optional-card`;
   const totalCount = unit.unit.lessons.length;
@@ -65,6 +68,7 @@ export default function CoursePathOptionalCard({
             lesson={lesson}
             levelId={levelId}
             isDownloaded={downloadedIds.has(`${levelId}:${lesson.number}`)}
+            immersionLesson={lesson.slug ? topicImmersionMap?.[lesson.slug] : undefined}
           />
         ))}
       </div>

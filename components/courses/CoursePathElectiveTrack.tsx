@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { CoursePathLevel } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 import { countPriorityLessons } from "@/lib/courses/buildCurriculum";
 import CoursePathLevelPanel from "@/components/courses/CoursePathLevelPanel";
 import {
@@ -14,9 +15,10 @@ import {
 interface CoursePathElectiveTrackProps {
   level: CoursePathLevel;
   defaultOpen?: boolean;
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
-export default function CoursePathElectiveTrack({ level, defaultOpen }: CoursePathElectiveTrackProps) {
+export default function CoursePathElectiveTrack({ level, defaultOpen, topicImmersionMap }: CoursePathElectiveTrackProps) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const nPriority = countPriorityLessons(level);
   const totalCourses = level.units.flatMap((u) => u.lessons).length;
@@ -49,7 +51,7 @@ export default function CoursePathElectiveTrack({ level, defaultOpen }: CoursePa
 
       <div className="course-path__ruta-body-wrap">
         <div className="course-path__ruta-body">
-          <CoursePathLevelPanel level={level} compactHead hideAside />
+          <CoursePathLevelPanel level={level} compactHead hideAside topicImmersionMap={topicImmersionMap} />
         </div>
       </div>
     </div>

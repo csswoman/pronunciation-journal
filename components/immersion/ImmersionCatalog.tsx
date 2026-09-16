@@ -9,17 +9,20 @@
 //   <EmptyCatalogState /> (Shown when no lessons match filters)
 // </ImmersionCatalog>
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Search, Timer } from '@/components/icons';
-import Badge from '@/components/ui/Badge';
-import type { ImmersionLesson, ImmersionLevel, ImmersionTopic, ImmersionProgressMap } from '@/lib/immersion/types';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { Search } from '@/components/icons';
+import { ListPagination } from '@/components/ui/ListPagination';
+import { ImmersionLessonCard } from '@/components/immersion/ImmersionLessonCard';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import type { ImmersionLesson, ImmersionLevel, ImmersionProgressMap } from '@/lib/immersion/types';
 
 interface ImmersionCatalogProps {
   lessons: ImmersionLesson[];
   progressMap?: ImmersionProgressMap;
 }
+
+const PAGE_SIZE_DESKTOP = 6;
+const PAGE_SIZE_MOBILE = 4;
 
 const LEVEL_LABELS: Record<ImmersionLevel, string> = {
   A2: 'A2 • Elemental',
@@ -29,41 +32,134 @@ const LEVEL_LABELS: Record<ImmersionLevel, string> = {
 
 const LEVEL_ORDER: ImmersionLevel[] = ['A2', 'B1', 'C1'];
 
-const TOPIC_LABELS: Record<ImmersionTopic, string> = {
-  speaking: 'Speaking & Fluidez',
-  'connected-speech': 'Connected Speech',
-  pronunciation: 'Pronunciación',
-  intonation: 'Entonación',
-  conversation: 'Conversación',
-  vocabulary: 'Vocabulario',
-};
+function matchesTopic(lesson: ImmersionLesson, targetTopic: string): boolean {
+  if (targetTopic === 'all') return true;
+
+  const topic = lesson.topic;
+  const canonical = lesson.metadata?.canonicalTopic ?? '';
+  const title = lesson.title.toLowerCase();
+  const summary = lesson.summary.toLowerCase();
+
+  if (targetTopic === 'connected-speech') {
+    return (
+      topic === 'connected-speech' ||
+      canonical === 'connected-speech' ||
+      canonical === 'reductions' ||
+      canonical.startsWith('cs-') ||
+      title.includes('connected speech') ||
+      title.includes('elision') ||
+      title.includes('reduction') ||
+      summary.includes('connected speech') ||
+      summary.includes('elision') ||
+      summary.includes('reduction')
+    );
+  }
+
+  if (targetTopic === 'intonation') {
+    return (
+      topic === 'intonation' ||
+      canonical === 'intonation' ||
+      canonical.includes('entonacion') ||
+      title.includes('intonation') ||
+      summary.includes('intonation')
+    );
+  }
+
+  if (targetTopic === 'pronunciation') {
+    return (
+      topic === 'pronunciation' ||
+      canonical.includes('pronunciacion') ||
+      title.includes('pronunciation') ||
+      title.includes('accent') ||
+      title.includes('sound')
+    );
+  }
+
+  if (targetTopic === 'speaking') {
+    return (
+      topic === 'speaking' ||
+      topic === 'conversation' ||
+      title.includes('speak') ||
+      title.includes('talk') ||
+      summary.includes('speaking')
+    );
+  }
+
+  if (targetTopic === 'vocabulary') {
+    return (
+      topic === 'vocabulary' ||
+      title.includes('vocab') ||
+      title.includes('words') ||
+      summary.includes('vocabulary')
+    );
+  }
+
+  return topic === targetTopic || canonical === targetTopic;
+}
 
 export function ImmersionCatalog({ lessons, progressMap = {} }: ImmersionCatalogProps) {
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedTopic, setSelectedTopic] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [layoutReady, setLayoutReady] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const isSmUp = useMediaQuery('(min-width: 640px)');
+  const pageSize = layoutReady && !isSmUp ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP;
+
+  useEffect(() => {
+    setLayoutReady(true);
+  }, []);
+
   const availableLevels = LEVEL_ORDER.filter((level) =>
     lessons.some((lesson) => lesson.level === level),
   );
-  const [selectedTopic, setSelectedTopic] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const filteredLessons = lessons.filter((lesson) => {
-    if (selectedLevel !== 'all' && lesson.level !== selectedLevel) return false;
-    if (selectedTopic !== 'all' && lesson.topic !== selectedTopic) return false;
+  const filteredLessons = useMemo(() => {
+    return lessons.filter((lesson) => {
+      if (selectedLevel !== 'all' && lesson.level !== selectedLevel) return false;
+      if (!matchesTopic(lesson, selectedTopic)) return false;
 
-    const prog = progressMap[lesson.id];
-    const status = prog?.status ?? 'not_started';
-    if (selectedStatus !== 'all' && status !== selectedStatus) return false;
+      const prog = progressMap[lesson.id];
+      const status = prog?.status ?? 'not_started';
+      if (selectedStatus !== 'all' && status !== selectedStatus) return false;
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const matchTitle = lesson.title.toLowerCase().includes(q);
-      const matchTeacher = lesson.teacher.toLowerCase().includes(q);
-      const matchSummary = lesson.summary.toLowerCase().includes(q);
-      return matchTitle || matchTeacher || matchSummary;
-    }
-    return true;
-  });
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchTitle = lesson.title.toLowerCase().includes(q);
+        const matchTeacher = lesson.teacher.toLowerCase().includes(q);
+        const matchSummary = lesson.summary.toLowerCase().includes(q);
+        return matchTitle || matchTeacher || matchSummary;
+      }
+      return true;
+    });
+  }, [lessons, progressMap, selectedLevel, selectedTopic, selectedStatus, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredLessons.length / pageSize));
+
+  const paginatedLessons = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredLessons.slice(start, start + pageSize);
+  }, [filteredLessons, currentPage, pageSize]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedLevel, selectedTopic, selectedStatus, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    listRef.current?.scrollIntoView?.({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -133,98 +229,25 @@ export function ImmersionCatalog({ lessons, progressMap = {} }: ImmersionCatalog
           <p className="mt-1 text-body-sm text-fg-muted">Prueba cambiando el nivel, tema o filtro de progreso.</p>
         </div>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredLessons.map((lesson) => {
-            const prog = progressMap[lesson.id];
-            const isCompleted = prog?.status === 'completed';
-            const isInProgress = prog?.status === 'in_progress';
-
-            return (
-              <Link
+        <div ref={listRef} className="flex flex-col gap-6">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {paginatedLessons.map((lesson) => (
+              <ImmersionLessonCard
                 key={lesson.id}
-                href={`/practice/immersion/${lesson.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised transition-all hover:border-primary/50 hover:shadow-md focus-ring"
-              >
-                {/* Video Thumbnail */}
-                <div className="relative aspect-video w-full overflow-hidden bg-surface-sunken">
-                  <Image
-                    src={`https://img.youtube.com/vi/${lesson.youtubeVideoId}/hqdefault.jpg`}
-                    alt={lesson.title}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-surface-tooltip/10 transition-opacity group-hover:bg-surface-tooltip/5" />
+                lesson={lesson}
+                progress={progressMap[lesson.id]}
+              />
+            ))}
+          </div>
 
-                  {/* Duration Badge */}
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-surface-base/90 px-2.5 py-0.5 text-tiny font-mono font-medium text-fg shadow-xs backdrop-blur-xs border border-border-subtle">
-                    <Timer className="size-3 text-fg-muted" />
-                    <span>{lesson.durationMinutes} min</span>
-                  </div>
-
-                  {/* Level & Status Badges */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
-                    <Badge
-                      label={lesson.level}
-                      variant="neutral"
-                      size="sm"
-                    />
-                    {isCompleted && (
-                      <Badge
-                        label="Completada"
-                        variant="success"
-                        size="sm"
-                      />
-                    )}
-                    {isInProgress && (
-                      <Badge
-                        label="En progreso"
-                        variant="warning"
-                        size="sm"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="flex flex-1 flex-col justify-between p-5">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-tiny font-semibold text-primary uppercase tracking-wider font-mono">
-                        {TOPIC_LABELS[lesson.topic]}
-                      </span>
-                      <span className="text-tiny text-fg-muted font-medium">
-                        Teacher {lesson.teacher}
-                      </span>
-                    </div>
-
-                    <h3 className="font-semibold text-fg line-clamp-2 group-hover:text-primary transition-colors">
-                      {lesson.title}
-                    </h3>
-
-                    <p className="text-body-sm text-fg-muted line-clamp-2">
-                      {lesson.summary}
-                    </p>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="mt-4 flex items-center justify-between border-t border-border-default/60 pt-3 text-tiny">
-                    <span className="text-fg-muted">
-                      {isCompleted && prog?.quizScore != null
-                        ? `Quiz ${prog.quizScore}% • ${lesson.keyVocabulary.length} palabras`
-                        : `${lesson.keyVocabulary.length} palabras • ${lesson.timestamps.length} puntos`}
-                    </span>
-
-                    <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-tiny font-semibold text-primary group-hover:bg-primary-soft transition-colors">
-                      <span>{isCompleted ? 'Repasar' : isInProgress ? 'Continuar' : 'Estudiar'}</span>
-                      <ArrowRight className="size-3.5" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+          <ListPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredLessons.length}
+            pageSize={pageSize}
+            onPageChange={handlePageChange}
+            ariaLabel="Paginación de lecciones de inmersión"
+          />
         </div>
       )}
     </div>

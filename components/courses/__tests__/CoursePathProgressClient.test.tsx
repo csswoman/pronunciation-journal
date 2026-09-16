@@ -83,7 +83,7 @@ describe("CoursePathProgressClient", () => {
 
     await waitFor(() => {
       expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
-      expect(screen.getByText("Continuar")).toBeInTheDocument();
+      expect(screen.getAllByText("Continuar").length).toBeGreaterThan(0);
       expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
     });
@@ -173,7 +173,7 @@ describe("CoursePathProgressClient", () => {
 
     await waitFor(() => {
       // Completed unit state
-      expect(screen.getAllByText(/completado/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/completada/i).length).toBeGreaterThan(0);
       // Partial unit state (group in progress)
       expect(screen.getAllByText(/completadas/i).length).toBeGreaterThan(0);
       // Unstarted unit state
@@ -209,10 +209,10 @@ describe("CoursePathProgressClient", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Después de C1: rutas opcionales")).toBeInTheDocument();
+      expect(screen.getByText("Rutas opcionales y especializadas")).toBeInTheDocument();
     });
 
-    const electivesSection = screen.getByText("Después de C1: rutas opcionales").closest(".course-path__c1-electives");
+    const electivesSection = screen.getByText("Rutas opcionales y especializadas").closest(".course-path__c1-electives");
     const mainColumn = document.querySelector(".course-path__client-main");
     expect(mainColumn).toContainElement(electivesSection as HTMLElement);
   });

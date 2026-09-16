@@ -34,9 +34,16 @@ describe('andamiaje CEFR de chunks', () => {
   })
 
   it('adds an audio model to chunk recognition while keeping a valid text fallback', () => {
-    const exercise = buildChunkExercises(LEARNING_CHUNKS.slice(0, 1), LEARNING_CHUNKS, 'practice', 'A1')[0]!
-    expect(exercise.payload).toMatchObject({ kind: 'generic', data: { type: 'multiple_choice', audioText: LEARNING_CHUNKS[0]!.chunk } })
-    expect(buildChunkExercises(LEARNING_CHUNKS.slice(0, 1), LEARNING_CHUNKS, 'practice', 'A1')[1]!.payload)
+    // Located by type, not by index: the step's opening exercise changes with
+    // pedagogy (the match-pairs board now precedes recognition) and that must
+    // not read as a regression in the audio model itself.
+    const built = buildChunkExercises(LEARNING_CHUNKS.slice(0, 1), LEARNING_CHUNKS, 'practice', 'A1')
+    const byType = (type: string) => built.find(
+      (entry) => entry.payload.kind === 'generic' && entry.payload.data.type === type,
+    )!
+    expect(byType('multiple_choice').payload)
+      .toMatchObject({ kind: 'generic', data: { type: 'multiple_choice', audioText: LEARNING_CHUNKS[0]!.chunk } })
+    expect(byType('fill_blank').payload)
       .toMatchObject({ kind: 'generic', data: { type: 'fill_blank', audioText: LEARNING_CHUNKS[0]!.learning.practiceAnswer } })
   })
 

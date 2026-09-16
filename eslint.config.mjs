@@ -65,6 +65,7 @@ const MAX_LINES_ALLOWLIST = [
   "scripts/grammar-pattern-deck-specs-a2.ts",
   "scripts/grammar-pattern-deck-specs-b1-b2.ts",
   "scripts/grammar-pattern-deck-specs-c1-c2.ts",
+  "scripts/sync-engvid-lessons.ts",
 ];
 
 const SUPABASE_CLIENT_IMPORT = {

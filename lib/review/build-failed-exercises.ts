@@ -11,6 +11,7 @@ import {
 } from '@/lib/exercises/generators/reorder-from-fragments'
 import { generateReorderWordsFromWordBank } from '@/lib/exercises/generators/reorder-words'
 import { generateSentenceDictationFromWordBank } from '@/lib/exercises/generators/sentence-dictation'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { ExerciseSourceRef, GenericExercise, SentenceDictationExercise } from '@/lib/exercises/types'
 import { exerciseId } from '@/lib/exercises/utils'
 import { fromGenericExercise } from '@/lib/practice/adapters'
@@ -53,24 +54,29 @@ async function fetchFragmentById(id: string) {
 function exerciseFromWordBank(
   word: WordBankEntry,
   slug: string,
+  learnerLevel?: CEFRLevel,
 ): GenericExercise | null {
   if (slug === 'fill_blank') {
     const { exercises } = generateFillBlankFromWordBank([word], 1)
     if (exercises[0]) return exercises[0]
   }
   if (slug === 'reorder_words') {
-    const exercises = generateReorderWordsFromWordBank([word], 1)
+    const exercises = generateReorderWordsFromWordBank([word], 1, learnerLevel)
     if (exercises[0]) return exercises[0]
   }
   const dictations = generateSentenceDictationFromWordBank([word], 1)
   if (dictations[0]) return dictations[0]
-  const reorders = generateReorderWordsFromWordBank([word], 1)
+  // Reorder is the last resort: when the sentence is too long for the learner
+  // the generator returns nothing and the item is skipped, rather than
+  // handing a beginner an 8-chip board.
+  const reorders = generateReorderWordsFromWordBank([word], 1, learnerLevel)
   return reorders[0] ?? null
 }
 
 async function exerciseFromTextFragment(
   item: FailedSentenceItem,
   ref: { source: string; id: string },
+  learnerLevel?: CEFRLevel,
 ): Promise<GenericExercise | null> {
   const fragId = ref.id
   const sourceRef: ExerciseSourceRef = { source: 'text_fragments', id: fragId }
@@ -88,9 +94,11 @@ async function exerciseFromTextFragment(
     if (!fragment) return item.phrase ? makeDictation(item.phrase, item.contentId, sourceRef) : null
 
     if (item.slug === 'reorder_words') {
-      const exercises = generateReorderFromFragments([fragment], 1)
+      const exercises = generateReorderFromFragments([fragment], 1, { learnerLevel })
       if (exercises[0]) return exercises[0]
     }
+    // Too long to reorder at this level? Fall through to dictation, which
+    // keeps the sentence in review without the working-memory load.
     return makeDictation(fragment.content, item.contentId, { source: 'text_fragments', id: fragment.id })
   }
 
@@ -98,7 +106,7 @@ async function exerciseFromTextFragment(
     const deckSlug = fragId.slice('grammar-deck:'.length)
     const fragments = await fetchFragmentsForDeck(deckSlug, 20)
     if (item.slug === 'reorder_words' && fragments.length > 0) {
-      const exercises = generateReorderFromFragments(fragments, 1)
+      const exercises = generateReorderFromFragments(fragments, 1, { learnerLevel })
       if (exercises[0]) return exercises[0]
     }
     if (item.phrase) return makeDictation(item.phrase, item.contentId, sourceRef)
@@ -112,7 +120,7 @@ async function exerciseFromTextFragment(
   if (fragId.startsWith('lesson:')) {
     const fragments = await fetchTextFragments(fragId, 20)
     if (item.slug === 'reorder_words' && fragments.length > 0) {
-      const exercises = generateReorderFromFragments(fragments, 1)
+      const exercises = generateReorderFromFragments(fragments, 1, { learnerLevel })
       if (exercises[0]) return exercises[0]
     }
     if (item.phrase) return makeDictation(item.phrase, item.contentId, sourceRef)
@@ -130,12 +138,13 @@ async function exerciseFromTextFragment(
 export async function buildGenericExerciseForFailedItem(
   item: FailedSentenceItem,
   word?: WordBankEntry,
+  learnerLevel?: CEFRLevel,
 ): Promise<GenericExercise | null> {
-  if (word) return exerciseFromWordBank(word, item.slug)
+  if (word) return exerciseFromWordBank(word, item.slug, learnerLevel)
 
   const ref = parseContentRef(item.contentId)
   if (ref?.source === 'text_fragments') {
-    return exerciseFromTextFragment(item, ref)
+    return exerciseFromTextFragment(item, ref, learnerLevel)
   }
 
   if (item.phrase) {
@@ -152,8 +161,9 @@ export async function buildFailedExerciseForItem(
   item: FailedSentenceItem,
   word?: WordBankEntry,
   context: PracticeContext = 'review',
+  learnerLevel?: CEFRLevel,
 ): Promise<PracticeExercise | null> {
-  const generic = await buildGenericExerciseForFailedItem(item, word)
+  const generic = await buildGenericExerciseForFailedItem(item, word, learnerLevel)
   if (!generic) return null
   return fromGenericExercise(generic, context)
 }
@@ -161,6 +171,7 @@ export async function buildFailedExerciseForItem(
 export async function buildFailedSentencesMixStep(
   items: FailedSentenceItem[],
   context: PracticeContext = 'review',
+  learnerLevel?: CEFRLevel,
 ): Promise<DailyStep | null> {
   const drillable = items.filter((item) => item.drillable)
   if (drillable.length === 0) return null
@@ -172,7 +183,7 @@ export async function buildFailedSentencesMixStep(
   const exercises: PracticeExercise[] = []
   for (const item of drillable) {
     const word = item.wordBankId ? wordMap.get(item.wordBankId) : undefined
-    const exercise = await buildFailedExerciseForItem(item, word, context)
+    const exercise = await buildFailedExerciseForItem(item, word, context, learnerLevel)
     if (exercise) exercises.push(exercise)
   }
 

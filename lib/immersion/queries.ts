@@ -5,6 +5,7 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import type {
   ImmersionLesson,
+  ImmersionLessonMetadata,
   ImmersionLevel,
   ImmersionQuizQuestion,
   ImmersionTeacher,
@@ -29,10 +30,11 @@ interface ImmersionLessonRow {
   key_vocabulary: KeyVocabularyItem[]
   target_phrases: TargetPhraseItem[]
   quiz: ImmersionQuizQuestion[]
+  metadata?: ImmersionLessonMetadata
 }
 
 const SELECT_COLUMNS =
-  'id, slug, youtube_video_id, title, teacher, teacher_channel_url, level, topic, duration_minutes, summary, timestamps, key_vocabulary, target_phrases, quiz'
+  'id, slug, youtube_video_id, title, teacher, teacher_channel_url, level, topic, duration_minutes, summary, timestamps, key_vocabulary, target_phrases, quiz, metadata'
 
 function toLesson(row: ImmersionLessonRow): ImmersionLesson {
   return {
@@ -50,6 +52,7 @@ function toLesson(row: ImmersionLessonRow): ImmersionLesson {
     keyVocabulary: row.key_vocabulary,
     targetPhrases: row.target_phrases,
     quiz: row.quiz,
+    metadata: row.metadata ?? {},
   }
 }
 
@@ -76,14 +79,46 @@ export async function fetchImmersionLessonBySlug(slug: string): Promise<Immersio
 }
 
 /**
+ * Busca una lección de inmersión asociada a un tema canónico de la Ruta.
+ * Prioriza relación 'exact', luego 'related'.
+ */
+export async function fetchImmersionLessonForTopic(
+  topicSlug: string,
+): Promise<ImmersionLesson | null> {
+  const client = getSupabaseBrowserClient()
+  const { data, error } = await client
+    .from('immersion_lessons')
+    .select(SELECT_COLUMNS)
+    .filter('metadata->>canonicalTopic', 'eq', topicSlug)
+    .limit(10)
+
+  if (error || !data || data.length === 0) return null
+  const lessons = (data as unknown as ImmersionLessonRow[]).map(toLesson)
+  const exact = lessons.find((l) => l.metadata?.relation === 'exact')
+  if (exact) return exact
+  const related = lessons.find((l) => l.metadata?.relation === 'related')
+  if (related) return related
+  return lessons[0] ?? null
+}
+
+/**
  * Candidata para el paso "immersion_lesson" del plan diario: una lección del
  * nivel del usuario, evitando las que ya vio. Sin match de nivel, cede a la
  * lección más corta disponible en vez de dejar el paso vacío.
+ * Si se indica `preferTopic`, prioriza una lección vinculada a dicho tema.
  */
 export async function fetchImmersionLessonForDay(
   level: ImmersionLevel,
   excludeIds: Set<string>,
+  preferTopic?: string,
 ): Promise<ImmersionLesson | null> {
+  if (preferTopic) {
+    const topicMatch = await fetchImmersionLessonForTopic(preferTopic).catch(() => null)
+    if (topicMatch && !excludeIds.has(topicMatch.id)) {
+      return topicMatch
+    }
+  }
+
   const client = getSupabaseBrowserClient()
 
   const { data, error } = await client
@@ -111,3 +146,53 @@ export async function fetchImmersionLessonForDay(
   const fallback = ((fallbackData ?? []) as unknown as ImmersionLessonRow[]).map(toLesson)
   return fallback.find((lesson) => !excludeIds.has(lesson.id)) ?? fallback[0] ?? null
 }
+
+const TOPIC_ALIASES: Record<string, string[]> = {
+  'connected-speech': ['cs-linking', 'cs-reductions', 'cs-elision', 'cs-assimilation'],
+  reductions: ['cs-reductions'],
+  intonation: ['c1-entonacion-actitud-cortesia', 'c1-prosodia-thought-groups-foco-nuclear'],
+  pronunciacion: ['a1-pronunciacion-basica', 'b2-pronunciacion-intermedia', 'c1-pronunciacion-avanzada'],
+}
+
+/**
+ * Devuelve un mapa con todas las lecciones de inmersión indexadas por canonicalTopic
+ * para componentes de cliente.
+ * Prioriza relación 'exact' sobre 'related'.
+ */
+export async function fetchTopicImmersionMap(): Promise<Record<string, ImmersionLesson>> {
+  const client = getSupabaseBrowserClient()
+  const { data, error } = await client
+    .from('immersion_lessons')
+    .select(SELECT_COLUMNS)
+    .not('metadata->>canonicalTopic', 'is', null)
+
+  if (error || !data) return {}
+
+  const lessons = (data as unknown as ImmersionLessonRow[]).map(toLesson)
+  const map: Record<string, ImmersionLesson> = {}
+
+  for (const lesson of lessons) {
+    const topic = lesson.metadata?.canonicalTopic
+    if (!topic) continue
+
+    const targetTopics = [topic, ...(TOPIC_ALIASES[topic] ?? [])]
+
+    for (const t of targetTopics) {
+      const existing = map[t]
+      if (!existing) {
+        map[t] = lesson
+        continue
+      }
+
+      const isExact = lesson.metadata?.relation === 'exact'
+      const existingIsExact = existing.metadata?.relation === 'exact'
+      if (isExact && !existingIsExact) {
+        map[t] = lesson
+      }
+    }
+  }
+
+  return map
+}
+
+

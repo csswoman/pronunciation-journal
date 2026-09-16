@@ -31,6 +31,7 @@ interface GrammarStudyDeckBodyProps {
     backHref?: string;
     backLabel?: string;
     relatedLinks?: GrammarRelatedLink[];
+    immersionLesson?: import("@/lib/immersion/types").ImmersionLesson | null;
   };
   doneState: {
     reviewedCount: number;
@@ -166,6 +167,7 @@ export function GrammarStudyDeckBody({
           practiceLoading={practiceLoading}
           practiceError={practiceError}
           relatedLinks={relatedLinks}
+          immersionLesson={identity.immersionLesson}
           onStartSentencePractice={onStartSentencePractice}
           onRestart={onRestart}
         />
@@ -190,6 +192,7 @@ export function GrammarStudyDeckBody({
         currentIndex={index}
         reviewed={reviewed}
         onSelectCard={handlers.onGoTo}
+        immersionLesson={identity.immersionLesson}
       />
     </div>
   );

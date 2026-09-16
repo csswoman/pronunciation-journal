@@ -90,7 +90,12 @@ export function buildWordReviewStep(
   const reorders = isExerciseAvailableOnSurface('reorder_words', targetSurface)
     ? generateReorderWordsFromWordBank(words, 1, learnerLevel)
     : []
-  const matchPairs = isExerciseAvailableOnSurface('match_pairs', targetSurface)
+  // Free practice only. On the daily plan the word↔definition board drew from
+  // the existing bank, so it replayed the same entries day after day while new
+  // material never appeared; there the chunk board (buildChunkExercises) runs
+  // instead, tied to the expressions actually introduced today.
+  const matchPairs = targetSurface === 'free_practice'
+    && isExerciseAvailableOnSurface('match_pairs', targetSurface)
     ? generateMatchPairsFromWordBank(words, 1)
     : []
   const writtenProduction = isExerciseAvailableOnSurface('written_production', targetSurface)

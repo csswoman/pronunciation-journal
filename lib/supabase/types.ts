@@ -605,6 +605,7 @@ export type Database = {
           id: string
           key_vocabulary: Json
           level: string
+          metadata: Json
           quiz: Json
           slug: string
           summary: string
@@ -623,6 +624,7 @@ export type Database = {
           id: string
           key_vocabulary?: Json
           level: string
+          metadata?: Json
           quiz?: Json
           slug: string
           summary: string
@@ -641,6 +643,7 @@ export type Database = {
           id?: string
           key_vocabulary?: Json
           level?: string
+          metadata?: Json
           quiz?: Json
           slug?: string
           summary?: string

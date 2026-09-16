@@ -1,3 +1,5 @@
+import type { CEFRLevel } from '@/lib/exercises/cefr'
+
 /** Shuffle an array in-place (Fisher-Yates) and return it. */
 export function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -72,6 +74,28 @@ export function isLikelySentence(text: string): boolean {
 
   // A real sentence has at least two words.
   return tokenize(trimmed).length >= 2
+}
+
+/**
+ * Longest sentence a learner at `level` should be asked to reorder.
+ *
+ * Reordering a long sentence tests working memory, not grammar — at A1/A2 that
+ * makes it frustrating rather than instructive. The item's own difficulty
+ * rating doesn't catch this: an easy word or chunk can still sit in a long
+ * example sentence, so this caps the SENTENCE, independent of its rated level.
+ *
+ * `undefined` (learner level unknown) applies no cap, preserving the behaviour
+ * of callers that never had a level to pass.
+ */
+export function maxReorderTokensForLevel(level?: CEFRLevel): number {
+  if (level === 'A1') return 5
+  if (level === 'A2') return 7
+  return Number.POSITIVE_INFINITY
+}
+
+/** True when `sentence` is short enough to reorder at `level`. */
+export function fitsReorderLength(sentence: string, level?: CEFRLevel): boolean {
+  return tokenize(sentence).length <= maxReorderTokensForLevel(level)
 }
 
 export { hasEnoughContext } from '@/lib/exercises/eligibility'

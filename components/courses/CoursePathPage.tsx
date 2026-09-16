@@ -17,13 +17,16 @@ import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevelId } from "@/lib/courses/types";
 
+import type { ImmersionLesson } from "@/lib/immersion/types";
+
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
 interface CoursePathPageProps {
   levelParam?: string;
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
-export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
+export default function CoursePathPage({ levelParam, topicImmersionMap }: CoursePathPageProps) {
   const requestedLevel = parseCefrLevelId(levelParam);
   const selectedLevelId = requestedLevel ?? DEFAULT_LEVEL;
   const hasExplicitLevel = requestedLevel !== null;
@@ -63,6 +66,7 @@ export default function CoursePathPage({ levelParam }: CoursePathPageProps) {
               level={selectedLevel}
               compactHead
               electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
+              topicImmersionMap={topicImmersionMap}
             />
           </section>
         </div>

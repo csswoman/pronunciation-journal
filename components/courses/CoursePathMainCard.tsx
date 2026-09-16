@@ -10,6 +10,7 @@
 import CoursePathLessonGroup, { type LessonWithState } from "@/components/courses/CoursePathLessonGroup";
 import type { DerivedUnitView } from "@/lib/courses/progress";
 import type { CoursePathTrackId } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 interface CoursePathMainCardProps {
   unit: DerivedUnitView;
@@ -19,6 +20,7 @@ interface CoursePathMainCardProps {
   expandedGroups: Record<string, boolean>;
   onToggle: (id: string, open: boolean) => void;
   downloadedIds: Set<string>;
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
 function groupPendingLessons(lessons: LessonWithState[]): Array<{ group: string; lessons: LessonWithState[] }> {
@@ -42,6 +44,7 @@ export default function CoursePathMainCard({
   expandedGroups,
   onToggle,
   downloadedIds,
+  topicImmersionMap,
 }: CoursePathMainCardProps) {
   const pendingGroups = groupPendingLessons(
     unit.lessons.filter((lesson: LessonWithState) => {
@@ -65,6 +68,7 @@ export default function CoursePathMainCard({
             open={expandedGroups[id] ?? (hasCurrentLesson || index === 0)}
             onToggle={onToggle}
             downloadedIds={downloadedIds}
+            topicImmersionMap={topicImmersionMap}
           />
         );
       })}
@@ -81,6 +85,7 @@ export default function CoursePathMainCard({
             onToggle={onToggle}
             completed
             downloadedIds={downloadedIds}
+            topicImmersionMap={topicImmersionMap}
           />
         );
       })()}

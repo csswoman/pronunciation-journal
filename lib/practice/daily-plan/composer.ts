@@ -5,7 +5,7 @@ import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { shouldOfferMission } from './mission-cadence'
-import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, WORD_REVIEW_WORD_COUNT } from './constants'
+import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, MAX_DUE_STEPS, RESERVED_CHUNK_NEW_SLOTS, WORD_REVIEW_WORD_COUNT } from './constants'
 import {
   fetchDueReviewWords,
   fetchDueSounds,
@@ -127,12 +127,14 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
 
   const repairConstraints = constraintIdsForDuePatterns(aiState?.errorRecurrence)
 
-  // Due work stays first, but it only reduces chunk novelty (3 → 2 → 1);
-  // it does not turn the normal daily plan into a review-only session.
+  // Solo los chunks due recortan la novedad de chunks. Contar aquí palabras y
+  // sonidos due hacía que 6 palabras pendientes —trivial tras dos semanas—
+  // dejaran el plan en 1 chunk nuevo permanente: el repaso de vocabulario
+  // apagaba la introducción de expresiones.
   const dueChunkIntro = await loadDailyChunkIntroStep(
     userId,
     learnerLevel,
-    dueWords.length + dueSounds.length + (dueChunkStep ? 1 : 0),
+    dueChunkStep ? 1 : 0,
   ).catch(() => null)
   const dailyThreadChunks = [
     ...(dueChunkStep?.chunks ?? []),
@@ -149,9 +151,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   }
   reviewWords = biasWordsByChunkAnchors(reviewWords, dailyThreadChunks)
   const pronunciationChunkStep = await loadPronunciationDifficultyChunkStep(userId, learnerLevel, allSounds).catch(() => null)
-
-  const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
-  const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear())
 
   // Paso correctivo: solo aparece con evidencia de error en algún cluster de -ed.
   // Compite por el único slot de producción, no se añade encima.
@@ -175,6 +174,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     savedOrFamiliarWordIds: dailyWordSelection.savedOrFamiliarIds,
     wordIndex,
   })
+
+  const preferImmersionTopic = weakTopic ?? (studyDeckStep?.id ? studyDeckStep.id.replace(/^study_deck:/, '') : undefined)
+  const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
+  const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear(), preferImmersionTopic)
 
   let steps: DailyStep[] = [
     ...(dueChunkStep ? [dueChunkStep] : []),
@@ -245,6 +248,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     selectDailyCandidates(candidates, {
       limit: DAILY_PLAN_STEP_COUNT,
       availableCapabilities: new Set(['network', 'microphone', 'speech_recognition']),
+      // Slots that always introduce new material, however large the backlog.
+      reservedChunkNewSlots: RESERVED_CHUNK_NEW_SLOTS,
+      // Review stays first in priority, but it stops being the whole session.
+      maxDueSteps: MAX_DUE_STEPS,
     }),
   )
 

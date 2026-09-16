@@ -6,6 +6,7 @@ import { getLessonByNumber, parseCoursePathTrackId } from "@/lib/courses/curricu
 import type { CefrLevel } from "@/lib/essential-words/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
+import { fetchServerImmersionLessonForTopic } from "@/lib/immersion/server-queries";
 
 interface PageProps {
   params: Promise<{ n: string }>;
@@ -54,6 +55,10 @@ export default async function CourseStudyPage({ params, searchParams }: PageProp
         ? getDerivedRelated(trackId, lesson.slug, 3)
         : [];
 
+  const immersionLesson = lesson.slug
+    ? await fetchServerImmersionLessonForTopic(lesson.slug).catch(() => null)
+    : null;
+
   return (
     <GrammarStudyDeck
       deck={deck}
@@ -65,6 +70,7 @@ export default async function CourseStudyPage({ params, searchParams }: PageProp
       deckSlug={lesson.slug}
       cefrLevel={cefrLevel}
       relatedLinks={relatedLinks}
+      immersionLesson={immersionLesson}
     />
   );
 }

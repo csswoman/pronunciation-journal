@@ -184,48 +184,36 @@
       ]
     },
     {
-      "id": "ps-adverbs",
-      "tag": "Adverbios",
-      "title": "Adverbios de frecuencia",
-      "lede": "Dicen cada cuánto. Van antes del verbo principal, pero después de to be.",
+      "id": "ps-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba las reglas clave del presente simple antes de continuar.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "always",
-              "value": "siempre · I always study at night.",
-              "highlights": [
-                "always study"
-              ]
+              "key": "1. Afirmativo",
+              "value": "Añade -s / -es solo con he / she / it."
             },
             {
-              "key": "usually",
-              "value": "normalmente · She usually walks.",
-              "highlights": [
-                "usually walks"
-              ]
+              "key": "2. Negativo",
+              "value": "Usa don't / doesn't + verbo en forma base."
             },
             {
-              "key": "sometimes",
-              "value": "a veces · They sometimes travel.",
-              "highlights": [
-                "sometimes travel"
-              ]
+              "key": "3. Preguntas",
+              "value": "Usa Do / Does + sujeto + verbo en forma base."
             },
             {
-              "key": "never",
-              "value": "nunca · He never eats meat.",
-              "highlights": [
-                "never eats"
-              ]
+              "key": "4. Uso principal",
+              "value": "Expresa rutinas, hábitos y verdades generales."
             }
           ]
         }
       ],
       "tip": {
-        "label": "Posición:",
-        "body": "antes del verbo (I always work) pero después de to be (I am always late)."
+        "label": "Práctica:",
+        "body": "Escribe una rutina diaria propia usando la 3ª persona (ej. 'My friend works at...')."
       }
     }
   ],

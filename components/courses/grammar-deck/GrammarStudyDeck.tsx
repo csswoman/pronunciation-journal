@@ -32,6 +32,8 @@ interface GrammarStudyDeckProps {
   cefrLevel?: CefrLevel;
   /** Server-derived related links; overrides deck.related when present */
   relatedLinks?: GrammarRelatedLink[];
+  /** Recommended immersion lesson (canonical / related) */
+  immersionLesson?: import("@/lib/immersion/types").ImmersionLesson | null;
 }
 
 export default function GrammarStudyDeck({
@@ -44,6 +46,7 @@ export default function GrammarStudyDeck({
   deckSlug,
   cefrLevel,
   relatedLinks,
+  immersionLesson,
 }: GrammarStudyDeckProps) {
   const total = deck.cards.length;
 
@@ -185,6 +188,7 @@ export default function GrammarStudyDeck({
             backHref,
             backLabel,
             relatedLinks,
+            immersionLesson,
           }}
           doneState={{
             reviewedCount,

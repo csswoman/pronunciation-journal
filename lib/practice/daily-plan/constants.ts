@@ -3,6 +3,24 @@ import type { DailyStep } from '@/lib/practice/types'
 /** Cuántos pasos tiene la diaria. */
 export const DAILY_PLAN_STEP_COUNT = 5
 
+/**
+ * Slots de la diaria reservados a material NUEVO (chunk_intro).
+ *
+ * Sin esta reserva, una cola de repasos pendientes ocupa los 5 slots y el plan
+ * deja de presentar contenido nuevo: el alumno repasa siempre lo mismo y nunca
+ * avanza. El slot vuelve al pool general si no hay chunks nuevos disponibles.
+ */
+export const RESERVED_CHUNK_NEW_SLOTS = 3
+
+/**
+ * Tope de pasos de repaso (`due`) por sesión.
+ *
+ * Sin tope, una cola de repasos pendientes ocupa todos los slots que la reserva
+ * no protege y la sesión se vuelve "siempre lo mismo". El repaso sigue siendo
+ * lo primero que entra: solo deja de ser lo único.
+ */
+export const MAX_DUE_STEPS = 2
+
 /** Cuántas palabras del word_bank intentamos traer para el paso de repaso. */
 export const WORD_REVIEW_WORD_COUNT = 6
 

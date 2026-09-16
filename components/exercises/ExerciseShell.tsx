@@ -11,6 +11,7 @@
 import { useEffect } from 'react'
 import type React from 'react'
 import { cn } from '@/lib/cn'
+import { feedbackSeverity } from '@/lib/exercises/error-taxonomy'
 import Button from '@/components/ui/Button'
 import {
   PracticeActionBar,
@@ -180,6 +181,15 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   )
 }
 
+const SEVERITY_STYLES = {
+  correct: { box: 'border-success-border bg-success-soft', title: 'text-success', icon: '✓' },
+  // Amber, not red: the learner produced the right material in the wrong
+  // arrangement. Red here reads as "everything is wrong" and contradicts a
+  // message that opens with "you have all the words".
+  partial: { box: 'border-warning-border bg-warning-soft', title: 'text-warning-value', icon: '!' },
+  error: { box: 'border-error-border bg-error-soft', title: 'text-error', icon: '✗' },
+} as const
+
 function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const { isCorrect, feedback } = result
   // Sin `immediate` el banner sólo puede nombrar el resultado; la respuesta
@@ -188,39 +198,43 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'No es correcto. Revisa la respuesta esperada.')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
   const isIpa = expected ? expected.includes('/') : false
+  const severity = feedbackSeverity(isCorrect, feedback?.errorCode)
+  const styles = SEVERITY_STYLES[severity]
 
   return (
     <div
       className={cn(
         'flex flex-col gap-3 rounded-lg border px-4 py-4 text-body-sm transition-all',
-        isCorrect
-          ? 'border-success-border bg-success-soft text-success'
-          : 'border-error-border bg-error-soft text-error',
+        styles.box,
       )}
     >
-      <p className="flex items-center gap-2.5 font-semibold">
-        <span aria-hidden>{isCorrect ? '✓' : '✗'}</span>
+      {/* Only the heading carries the state colour: tinting the whole box
+          turns every supporting line into part of the alarm. */}
+      <p className={cn('flex items-center gap-2.5 font-semibold', styles.title)}>
+        <span aria-hidden>{styles.icon}</span>
         <span>{status}</span>
       </p>
-      {feedback?.explanation && (
-        <p className="leading-relaxed text-fg">{feedback.explanation}</p>
-      )}
+      {/* The correct answer leads: it is what the learner needs most, and
+          burying it under the explanation makes the box read as a wall. */}
       {!isCorrect && expected && (
         <p className="leading-relaxed text-fg">
           <span className="font-semibold">Respuesta esperada: </span>
           <span className={cn(isIpa && 'font-ipa font-medium')}>{expected}</span>
         </p>
       )}
-      {!isCorrect && feedback?.tip && (
-        <p className="leading-relaxed text-fg-muted">
-          <span className="font-semibold text-fg">Pista: </span>
-          <span>{feedback.tip}</span>
-        </p>
+      {feedback?.explanation && (
+        <p className="leading-relaxed text-fg">{feedback.explanation}</p>
       )}
       {!isCorrect && feedback?.example && feedback.example !== expected && (
         <p className="leading-relaxed text-fg-muted">
           <span className="font-semibold text-fg">Ejemplo: </span>
           <span>{feedback.example}</span>
+        </p>
+      )}
+      {!isCorrect && feedback?.tip && (
+        <p className="leading-relaxed text-fg-subtle">
+          <span className="font-semibold">Pista: </span>
+          <span>{feedback.tip}</span>
         </p>
       )}
     </div>

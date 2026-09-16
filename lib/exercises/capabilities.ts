@@ -66,9 +66,11 @@ export const EXERCISE_CAPABILITIES = {
     surfaces: ['free_practice'], selectable: true, writesAnswerHistory: true,
   }),
   match_pairs: capability('match_pairs', {
-    status: 'active', producerIds: ['word_bank_match_pairs', 'sound_lab_match_pairs'],
-    renderer: 'generic', evaluator: 'local', modality: 'recognition', sources: ['word_bank', 'core1k', 'words'],
-    surfaces: ['free_practice'], selectable: true, writesAnswerHistory: true,
+    status: 'active', producerIds: ['word_bank_match_pairs', 'sound_lab_match_pairs', 'chunk_match_pairs'],
+    renderer: 'generic', evaluator: 'local', modality: 'recognition', sources: ['word_bank', 'core1k', 'words', 'chunks'],
+    // daily_plan carries the chunk board only: word↔definition pairs stay off
+    // the daily plan, where they re-showed the same bank entries forever.
+    surfaces: ['daily_plan', 'free_practice'], selectable: true, writesAnswerHistory: true,
   }),
   reorder_words: capability('reorder_words', {
     status: 'active', producerIds: ['word_bank_reorder', 'fragment_reorder', 'fragment_mixed', 'sound_example_reorder'],

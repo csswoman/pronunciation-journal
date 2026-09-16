@@ -15,6 +15,8 @@ import { RotateCcw, ArrowRight, BookOpen, LayoutList } from "@/components/icons"
 import ConceptFeedbackSelector from "@/components/courses/ConceptFeedbackSelector";
 import { getIllustration } from "@/lib/illustrations/registry";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
+import { RecommendedImmersionCard } from "./RecommendedImmersionCard";
 
 interface DeckDoneScreenProps {
   deck: GrammarStudyDeckData;
@@ -29,6 +31,7 @@ interface DeckDoneScreenProps {
   practiceError: boolean;
   /** Overrides deck.related — allows server-derived fallback links */
   relatedLinks?: GrammarStudyDeckData["related"];
+  immersionLesson?: ImmersionLesson | null;
   onStartSentencePractice: () => void;
   onRestart: () => void;
 }
@@ -44,6 +47,7 @@ export function DeckDoneScreen({
   practiceLoading,
   practiceError,
   relatedLinks,
+  immersionLesson,
   onStartSentencePractice,
   onRestart,
 }: DeckDoneScreenProps) {
@@ -123,6 +127,13 @@ export function DeckDoneScreen({
             </span>
             <ArrowRight size={18} className="shrink-0" aria-hidden />
           </button>
+        </div>
+      )}
+
+      {/* 3.5. Recommended immersion lesson (canonical / related) */}
+      {immersionLesson && (
+        <div className="w-full max-w-xl self-center">
+          <RecommendedImmersionCard lesson={immersionLesson} />
         </div>
       )}
 

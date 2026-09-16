@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { generateMatchPairsFromWordBank } from '../match-pairs'
+import { generateMatchPairsFromChunks, generateMatchPairsFromWordBank } from '../match-pairs'
+import type { LearningChunk } from '@/lib/chunk-of-day/types'
 import { makeWordBankEntry } from '@/lib/exercises/__tests__/fixtures/word-bank-entry'
 
 function makePairEntry(
@@ -70,5 +71,74 @@ describe('generateMatchPairsFromWordBank', () => {
     expect(exercise.type).toBe('match_pairs')
     expect(exercise.pairs).toHaveLength(2)
     expect(exercise.pairs.map((p) => p.left).sort()).toEqual(['cache', 'queue'])
+  })
+})
+
+function makeChunk(id: string, chunk: string, meaning: string): LearningChunk {
+  return {
+    id,
+    chunk,
+    ipa: '',
+    meaning,
+    example: '',
+    category: 'social',
+    learning: {
+      cefr: 'A1',
+      communicativeFunction: 'greeting',
+      secondaryFunctions: [],
+      register: 'neutral',
+      patternType: 'fixed',
+      coreText: chunk,
+      template: null,
+      slots: [],
+      acceptedAnswers: [],
+      recognitionCueEs: '',
+      productionCueEs: '',
+      practiceAnswer: chunk,
+      confidence: 'high',
+      reviewFlags: [],
+    },
+    contentGraph: { text: chunk, highlights: [], anchors: [], pronunciationTargetIds: [] },
+  }
+}
+
+describe('generateMatchPairsFromChunks', () => {
+  it('returns no board when fewer than 2 usable pairs exist', () => {
+    expect(generateMatchPairsFromChunks([makeChunk('a', 'hi there', 'hola')])).toHaveLength(0)
+  })
+
+  it('always keeps every target chunk on the board', () => {
+    const targets = [makeChunk('t1', 'how is it going', 'que tal'), makeChunk('t2', 'see you', 'nos vemos')]
+    const filler = Array.from({ length: 10 }, (_, i) => makeChunk(`f${i}`, `filler ${i}`, `relleno ${i}`))
+    const [exercise] = generateMatchPairsFromChunks(targets, filler)
+    const ids = exercise.pairs.map((p) => p.id)
+    expect(ids).toContain('t1')
+    expect(ids).toContain('t2')
+  })
+
+  it('tops a single-target day up with filler so a real board still appears', () => {
+    const [exercise] = generateMatchPairsFromChunks(
+      [makeChunk('t1', 'how is it going', 'que tal')],
+      [makeChunk('f1', 'see you', 'nos vemos'), makeChunk('f2', 'take care', 'cuidate')],
+    )
+    expect(exercise.pairs.length).toBeGreaterThanOrEqual(2)
+    expect(exercise.pairs.map((p) => p.id)).toContain('t1')
+  })
+
+  it('never repeats a chunk that is already a target as filler', () => {
+    const target = makeChunk('t1', 'how is it going', 'que tal')
+    const [exercise] = generateMatchPairsFromChunks([target], [target, makeChunk('f1', 'see you', 'nos vemos')])
+    const ids = exercise.pairs.map((p) => p.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('pairs the expression with its Spanish meaning and carries no sourceRef', () => {
+    const [exercise] = generateMatchPairsFromChunks([
+      makeChunk('t1', 'how is it going', 'que tal'),
+      makeChunk('t2', 'see you', 'nos vemos'),
+    ])
+    expect(exercise.sourceRef).toBeUndefined()
+    const pair = exercise.pairs.find((p) => p.id === 't1')
+    expect(pair).toEqual({ id: 't1', left: 'how is it going', right: 'que tal' })
   })
 })

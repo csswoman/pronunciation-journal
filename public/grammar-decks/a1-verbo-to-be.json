@@ -217,40 +217,36 @@
       ]
     },
     {
-      "id": "to-be-there",
-      "tag": "Estructura",
-      "title": "There is / There are = hay",
-      "titleItalic": [
-        "There is",
-        "There are"
-      ],
-      "lede": "Para decir que algo existe usas there + to be. Cambia con singular o plural.",
+      "id": "to-be-reference",
+      "tag": "Referencia rápida",
+      "title": "Guía rápida de uso",
+      "lede": "Comprueba los usos clave del verbo to be antes de continuar.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "There is",
-              "value": "+ singular · There is a problem.",
-              "highlights": [
-                "There is a problem."
-              ],
-              "hint": "hay un problema"
+              "key": "1. Formas",
+              "value": "I am, he/she/it is, you/we/they are."
             },
             {
-              "key": "There are",
-              "value": "+ plural · There are two cats.",
-              "highlights": [
-                "There are two cats."
-              ],
-              "hint": "hay dos gatos"
+              "key": "2. Negación",
+              "value": "Añade not después del verbo (I'm not, isn't, aren't)."
+            },
+            {
+              "key": "3. Pregunta",
+              "value": "Invierte el orden: verbo + sujeto (Are you...? / Is she...?)."
+            },
+            {
+              "key": "4. Usos clave",
+              "value": "Edad, origen, descripciones y estados (am 25, is from, are hungry)."
             }
           ]
         }
       ],
       "tip": {
-        "label": "Contracción:",
-        "body": "There's (singular) es muy común al hablar. El plural no se contrae: there are."
+        "label": "Práctica:",
+        "body": "Di tres frases sobre ti usando I am (edad, origen y profesión)."
       }
     }
   ],
@@ -265,13 +261,13 @@
       "explain": "La primera persona del singular 'I' se combina con 'am'."
     },
     {
-      "q": "They ___ at home yesterday evening.",
+      "q": "My sister ___ 20 years old.",
       "options": [
-        "were",
-        "was"
+        "is",
+        "has"
       ],
       "answer": 0,
-      "explain": "'They' en pasado de to be requiere 'were'."
+      "explain": "En inglés la edad se expresa siempre con to be ('is'), nunca con have."
     },
     {
       "q": "___ she your new classmate?",

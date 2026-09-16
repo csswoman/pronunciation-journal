@@ -807,3 +807,65 @@ ${input.description}
 
 Map this description to the closest catalog topics.`
 }
+
+// ── Immersion: Clasificación Semántica de Relevancia Temática ──
+
+export const IMMERSION_TOPIC_RELEVANCE_SYSTEM_PROMPT = `You are an expert ESL curriculum coordinator evaluating the pedagogical relevance of real English video lessons (from engVid) with respect to a canonical Route topic in an English learning application.
+
+You only receive observable metadata for the video: title, official description, published categories, and detected level. You do NOT have a transcript. Never invent claims about what happens in the video.
+
+Classify the pedagogical relation into EXACTLY ONE of these 5 categories:
+- "exact": The video primarily and directly teaches the core grammar point, structure, or skill defined in the canonical topic.
+- "related": The video teaches a closely connected structure within the same grammatical or functional domain, or uses the target concept as a secondary component.
+- "complementary": The video provides contextual immersion, natural conversation, or vocabulary practice that reinforces the topic without directly teaching its core rules.
+- "irrelevant": The video teaches a completely different, unrelated grammatical point or topic.
+- "needs_review": The metadata is too brief, ambiguous, or inconclusive to verify the pedagogical relationship.
+
+Rules:
+- Output valid JSON only, no markdown fences, no extra text.
+- "relevance": one of ["exact", "related", "complementary", "irrelevant", "needs_review"].
+- "confidence": number between 0.0 and 1.0.
+- "reason": concise explanation in Spanish (max 160 chars) explaining why the video matches this category based ONLY on observable signals.
+
+Format:
+{
+  "relevance": "exact" | "related" | "complementary" | "irrelevant" | "needs_review",
+  "confidence": 0.95,
+  "reason": "Explicación concisa en español..."
+}`
+
+export function buildImmersionTopicRelevanceUserPrompt(input: {
+  canonicalTopic: {
+    title: string
+    slug?: string
+    description?: string
+    keywords?: string
+    level?: string
+  }
+  candidateVideo: {
+    title: string
+    description: string
+    categories: string[]
+    level: string
+  }
+}): string {
+  const cats = input.candidateVideo.categories.length > 0
+    ? input.candidateVideo.categories.join(', ')
+    : 'unspecified'
+
+  return `CANONICAL ROUTE TOPIC:
+- Title: ${input.canonicalTopic.title}
+- Slug: ${input.canonicalTopic.slug ?? 'none'}
+- Level: ${input.canonicalTopic.level ?? 'unspecified'}
+- Keywords: ${input.canonicalTopic.keywords ?? 'none'}
+- Description: ${input.canonicalTopic.description ?? 'none'}
+
+CANDIDATE VIDEO (Observable metadata):
+- Title: ${input.candidateVideo.title}
+- Level: ${input.candidateVideo.level}
+- Published Categories: ${cats}
+- Description: ${input.candidateVideo.description || 'No description provided'}
+
+Classify the pedagogical relationship strictly using only the observable evidence.`
+}
+

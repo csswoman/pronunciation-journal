@@ -86,6 +86,28 @@ describe('ImmersionCatalog', () => {
 
     expect(screen.getAllByText(new RegExp(`Teacher ${firstLesson.teacher}`, 'i')).length).toBeGreaterThan(0);
   });
+
+  it('paginates lessons properly when total count exceeds page size', () => {
+    const manyLessons: ImmersionLesson[] = Array.from({ length: 10 }, (_, i) => ({
+      ...FIXTURE_LESSONS[0],
+      id: `lesson-${i + 1}`,
+      slug: `lesson-${i + 1}`,
+      title: `Lesson Title ${i + 1}`,
+    }));
+
+    render(<ImmersionCatalog lessons={manyLessons} />);
+
+    // Page 1 should show initial page items and pagination controls
+    expect(screen.getByText('Lesson Title 1')).toBeInTheDocument();
+    expect(screen.getByText(/Página 1 de/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Página siguiente/i })).toBeInTheDocument();
+
+    // Click next page
+    const nextBtn = screen.getByRole('button', { name: /Página siguiente/i });
+    fireEvent.click(nextBtn);
+
+    expect(screen.getByText(/Página 2 de/i)).toBeInTheDocument();
+  });
 });
 
 describe('LessonStudyPanel', () => {

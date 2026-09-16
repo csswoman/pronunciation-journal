@@ -30,6 +30,31 @@ describe('daily candidate policy', () => {
     expect(selected.map((entry) => entry.id)).toEqual(['due', 'chunk', 'variety'])
   })
 
+  it('reserves a slot for new chunks so a review backlog cannot fill the plan', () => {
+    // Regression: with 5 due steps and limit 5 the learner never saw new
+    // material again — the plan became review-only and progress stalled.
+    const selected = selectDailyCandidates([
+      step('due-1', 'due'), step('due-2', 'due'), step('due-3', 'due'),
+      step('due-4', 'due'), step('due-5', 'due'), step('chunk', 'chunk_new'),
+    ], { limit: 5, reservedChunkNewSlots: 1 })
+    expect(selected.map((entry) => entry.id)).toContain('chunk')
+    expect(selected).toHaveLength(5)
+  })
+
+  it('returns reserved slots to the general pool when no new chunk exists', () => {
+    const selected = selectDailyCandidates([
+      step('due-1', 'due'), step('due-2', 'due'), step('due-3', 'due'),
+    ], { limit: 3, reservedChunkNewSlots: 1 })
+    expect(selected.map((entry) => entry.id)).toEqual(['due-1', 'due-2', 'due-3'])
+  })
+
+  it('keeps priority order even when a reserved slot was used', () => {
+    const selected = selectDailyCandidates([
+      step('variety', 'variety'), step('chunk', 'chunk_new'), step('due', 'due'),
+    ], { limit: 3, reservedChunkNewSlots: 1 })
+    expect(selected.map((entry) => entry.id)).toEqual(['due', 'chunk', 'variety'])
+  })
+
   it('dedupes targets and caps saved intent without displacing due work', () => {
     const selected = selectDailyCandidates([
       step('saved-1', 'saved_intent'), step('due', 'due', 'same'), step('saved-same', 'saved_intent', 'same'),
