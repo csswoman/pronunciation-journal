@@ -4,13 +4,21 @@ export type LoadingWord = { text: string; ipa: string | null }
 
 export const FALLBACK_WORDS: LoadingWord[] = [
   { text: 'thought',       ipa: '/θɔːt/' },
-  { text: 'through',       ipa: '/θruː/' },
-  { text: 'though',        ipa: '/ðoʊ/' },
-  { text: 'world',         ipa: '/wɜːrld/' },
-  { text: 'clothes',       ipa: '/kloʊðz/' },
-  { text: 'comfortable',   ipa: '/ˈkʌmftərbəl/' },
   { text: 'rhythm',        ipa: '/ˈrɪðəm/' },
-  { text: 'pronunciation', ipa: '/prəˌnʌnsiˈeɪʃən/' },
+  { text: 'squirrel',      ipa: '/ˈskwɜːrəl/' },
+  { text: 'comfortable',   ipa: '/ˈkʌmftərbəl/' },
   { text: 'thoroughly',    ipa: '/ˈθɜːrəli/' },
-  { text: 'particularly',  ipa: '/pərˈtɪkjʊlərli/' },
+  { text: 'pronunciation', ipa: '/prəˌnʌnsiˈeɪʃən/' },
+  { text: 'subtle',        ipa: '/ˈsʌtəl/' },
+  { text: 'schedule',      ipa: '/ˈskɛdʒuːl/' },
+  { text: 'phenomenon',    ipa: '/fəˈnɑːmɪnɑːn/' },
+  { text: 'acoustic',      ipa: '/əˈkuːstɪk/' },
+  { text: 'articulation',  ipa: '/ɑːrˌtɪkjʊˈleɪʃən/' },
+  { text: 'clothes',       ipa: '/kloʊðz/' },
+  { text: 'choir',         ipa: '/ˈkwaɪər/' },
+  { text: 'mischievous',   ipa: '/ˈmɪstʃɪvəs/' },
+  { text: 'fluency',       ipa: '/ˈfluːənsi/' },
+  { text: 'synecdoche',    ipa: '/sɪˈnɛkdəki/' },
 ]
+
+
