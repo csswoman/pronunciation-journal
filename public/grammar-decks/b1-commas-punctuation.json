@@ -1,0 +1,77 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Escritura",
+    "title": "Uso correcto de la coma",
+    "titleEmphasis": "puntuación clara",
+    "goal": "Dominar los 4 casos principales donde la coma es obligatoria u opcional en inglés."
+  },
+  "cards": [
+    {
+      "id": "b1-commas-punctuation-concept",
+      "tag": "Idea central",
+      "title": "Los 4 usos esenciales de la coma",
+      "lede": "La coma ayuda a estructurar oraciones y evitar ambigüedades en la lectura.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Cláusula introductoria",
+              "value": "After the meeting, we grabbed lunch.",
+              "highlights": [","]
+            },
+            {
+              "key": "Conjunción coordinante",
+              "value": "I wanted to go, but it started raining.",
+              "highlights": [","]
+            },
+            {
+              "key": "Elementos en lista",
+              "value": "We bought apples, oranges, and bananas.",
+              "highlights": [","]
+            },
+            {
+              "key": "Información no esencial",
+              "value": "My brother, who lives in London, is a doctor.",
+              "highlights": [","]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-commas-punctuation-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita el 'Comma Splice'",
+      "lede": "No mezcles dos oraciones independientes solo con una coma sin conjunción.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I love coffee, I drink it every morning."
+            },
+            {
+              "variant": "good",
+              "text": "I love coffee, so I drink it every morning.",
+              "note": "Añade una conjunción (so, and) o usa punto y coma / punto."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which sentence has correct comma usage?",
+      "options": [
+        "Although it was raining, we enjoyed the walk.",
+        "Although it was raining we enjoyed the walk."
+      ],
+      "answer": 0,
+      "explain": "Las cláusulas dependientes introductorias requieren una coma después de ellas."
+    }
+  ]
+}

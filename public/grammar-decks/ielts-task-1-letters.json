@@ -1,0 +1,45 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Exámenes · IELTS General",
+    "title": "Redacción de Cartas para IELTS Task 1",
+    "titleEmphasis": "formal, semi-formal & informal letters",
+    "goal": "Dominar las tres estructuras de carta requeridas en el examen IELTS General."
+  },
+  "cards": [
+    {
+      "id": "ielts-task-1-letters-concept",
+      "tag": "Idea central",
+      "title": "Tipos de cartas en IELTS Task 1",
+      "lede": "Adapta el saludo y la despedida según el destinatario exigido por la consigna.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Carta Formal (Desconocido)",
+              "rule": "Dear Sir/Madam, ... Yours faithfully,",
+              "examples": ["Complaints, official requests to organizations"]
+            },
+            {
+              "label": "Carta Informal (Amigo)",
+              "rule": "Dear John, ... Best wishes, / Warmly,",
+              "examples": ["Invitations, personal advice, news"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What sign-off should be paired with 'Dear Sir/Madam' in a formal IELTS letter?",
+      "options": [
+        "Yours faithfully",
+        "Best wishes"
+      ],
+      "answer": 0,
+      "explain": "Cuando no se conoce el nombre del destinatario (Dear Sir/Madam), la despedida estándar es 'Yours faithfully'."
+    }
+  ]
+}

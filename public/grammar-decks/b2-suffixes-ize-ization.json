@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Vocabulario",
+    "title": "Sufijos de Transformación (-ize / -ization)",
+    "titleEmphasis": "word family expansion",
+    "goal": "Convertir adjetivos y sustantivos en verbos de acción (-ize) y sustantivos de proceso (-ization)."
+  },
+  "cards": [
+    {
+      "id": "b2-suffixes-ize-ization-concept",
+      "tag": "Idea central",
+      "title": "La familia de palabras -ize / -ization",
+      "lede": "Agrega -ize para indicar 'hacer o convertir en', y -ization para nombrar el proceso.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "global (global)",
+              "value": "globalize (globalizar) → globalization (globalización)",
+              "highlights": ["globalize", "globalization"]
+            },
+            {
+              "key": "organ (órgano/estructura)",
+              "value": "organize (organizar) → organization (organización)",
+              "highlights": ["organize", "organization"]
+            },
+            {
+              "key": "real (real/concreto)",
+              "value": "realize (darse cuenta / concretar) → realization (comprensión/realización)",
+              "highlights": ["realize", "realization"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What noun represents the process of making something digital?",
+      "options": [
+        "digitalization",
+        "digitalism"
+      ],
+      "answer": 0,
+      "explain": "El sufijo de proceso para verbos en -ize es '-ization'."
+    }
+  ]
+}

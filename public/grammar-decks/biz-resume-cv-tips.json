@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Business · Carrera",
+    "title": "Vocabulario para CV y Resumen Profesional",
+    "titleEmphasis": "action verbs & achievement framing",
+    "goal": "Describir logros y responsabilidades usando verbos de impacto en inglés."
+  },
+  "cards": [
+    {
+      "id": "biz-resume-cv-tips-concept",
+      "tag": "Idea central",
+      "title": "Verbos de acción para el CV",
+      "lede": "Sustituye 'was responsible for' por verbos potentes que denoten liderazgo y resultados.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Gestión y liderazgo",
+              "value": "spearheaded, managed, led, coordinated",
+              "highlights": ["spearheaded", "managed"]
+            },
+            {
+              "key": "Optimización y crecimiento",
+              "value": "streamlined, increased, optimized, reduced",
+              "highlights": ["streamlined", "optimized"]
+            },
+            {
+              "key": "Creación y diseño",
+              "value": "developed, designed, implemented, launched",
+              "highlights": ["developed", "launched"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which action verb effectively describes leading a high-priority initiative?",
+      "options": [
+        "Spearheaded",
+        "Was part of"
+      ],
+      "answer": 0,
+      "explain": "'Spearheaded' transmite liderazgo directo y proactividad."
+    }
+  ]
+}

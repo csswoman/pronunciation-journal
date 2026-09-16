@@ -1,0 +1,77 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Business · Emailing",
+    "title": "Redacción de Emails Profesionales",
+    "titleEmphasis": "tone, structure & templates",
+    "goal": "Escribir correos electrónicos de negocios claros, pulidos y con el nivel de cortesía adecuado."
+  },
+  "cards": [
+    {
+      "id": "biz-professional-emails-concept",
+      "tag": "Idea central",
+      "title": "Estructura ejecutiva de un correo",
+      "lede": "Todo email profesional consta de saludo, motivo, cuerpo, llamada a la acción y despedida.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Apertura formal",
+              "value": "Dear [Name], / I hope this email finds you well.",
+              "highlights": ["Dear", "hope this email finds you well"]
+            },
+            {
+              "key": "Propósito claro",
+              "value": "I am writing to inquire about... / I am writing to follow up on...",
+              "highlights": ["writing to inquire", "follow up on"]
+            },
+            {
+              "key": "Adjuntos",
+              "value": "Please find attached the updated report.",
+              "highlights": ["find attached"]
+            },
+            {
+              "key": "Cierre cortés",
+              "value": "Best regards, / Kind regards, / Sincerely,",
+              "highlights": ["Best regards", "Kind regards"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "biz-professional-emails-mistakes",
+      "tag": "Error frecuente",
+      "title": "Frases demasiado informales en entorno corporativo",
+      "lede": "Sustituye expresiones coloquiales por alternativas de negocios estándar.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Send me the file asap."
+            },
+            {
+              "variant": "good",
+              "text": "Could you please send me the file at your earliest convenience?",
+              "note": "'at your earliest convenience' es la alternativa ejecutiva y cortés a 'ASAP'."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is recommended for pointing out an attached document in a business email?",
+      "options": [
+        "Please find attached the requested invoice.",
+        "Look at the file I put here."
+      ],
+      "answer": 0,
+      "explain": "'Please find attached...' es la fórmula estándar y profesional para adjuntos."
+    }
+  ]
+}

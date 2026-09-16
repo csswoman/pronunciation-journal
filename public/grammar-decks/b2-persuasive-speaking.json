@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Comunicación",
+    "title": "Técnicas de Habla Persuasiva",
+    "titleEmphasis": "getting buy-in & persuasion",
+    "goal": "Utilizar estructuras retóricas para convencer, negociar y lograr aceptación de ideas."
+  },
+  "cards": [
+    {
+      "id": "b2-persuasive-speaking-concept",
+      "tag": "Idea central",
+      "title": "Estructuras para presentar una propuesta",
+      "lede": "Utiliza la secuencia Problema → Solución → Beneficio para ganar apoyo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Validación del problema",
+              "value": "As we have noticed recently, our process faces...",
+              "highlights": ["noticed recently"]
+            },
+            {
+              "key": "Propuesta",
+              "value": "What I propose is to automate...",
+              "highlights": ["What I propose is"]
+            },
+            {
+              "key": "Beneficio tangible",
+              "value": "This will allow us to save 5 hours per week.",
+              "highlights": ["allow us to"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is effective for introducing a clear solution to a team?",
+      "options": [
+        "What I propose is that we implement...",
+        "Maybe someone could do something."
+      ],
+      "answer": 0,
+      "explain": "'What I propose is...' transmite convicción y liderazgo en la propuesta."
+    }
+  ]
+}

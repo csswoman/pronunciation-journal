@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Juegos de Palabras",
+    "title": "Adivinanzas Pedagógicas en Inglés",
+    "titleEmphasis": "riddles & language puzzles",
+    "goal": "Desarrollar el razonamiento lateral y la fluidez léxica mediante adivinanzas sencillas."
+  },
+  "cards": [
+    {
+      "id": "a2-riddles-wordplay-concept",
+      "tag": "Idea central",
+      "title": "Adivinanzas y juego conceptual",
+      "lede": "Usa pistas descriptivas para ejercitar el vocabulario activo.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Adivinanza 1",
+              "value": "What has hands, but cannot clap? → A clock.",
+              "highlights": ["hands", "clock"]
+            },
+            {
+              "key": "Adivinanza 2",
+              "value": "What has to be broken before you can use it? → An egg.",
+              "highlights": ["broken", "egg"]
+            },
+            {
+              "key": "Adivinanza 3",
+              "value": "I am tall when I am young, and short when I am old. What am I? → A candle.",
+              "highlights": ["candle"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Riddle: What has a neck but no head?",
+      "options": [
+        "A bottle",
+        "A shoe"
+      ],
+      "answer": 0,
+      "explain": "Una botella ('bottle') tiene cuello ('neck') pero no cabeza."
+    }
+  ]
+}

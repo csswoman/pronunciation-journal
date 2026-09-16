@@ -1,0 +1,83 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A1 · Ortografía",
+    "title": "Reglas de Plurales en Sustantivos",
+    "titleEmphasis": "-s, -es, -ies y plurales irregulares",
+    "goal": "Formar correctamente el plural de cualquier sustantivo en inglés."
+  },
+  "cards": [
+    {
+      "id": "a1-plural-nouns-spelling-concept",
+      "tag": "Idea central",
+      "title": "Reglas principales de plurales",
+      "lede": "Sigue las terminaciones de la palabra para elegir el sufijo correcto.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Regla general (+s)",
+              "value": "book → books / car → cars",
+              "highlights": ["books", "cars"]
+            },
+            {
+              "key": "Terminados en -s, -ch, -sh, -x, -z (+es)",
+              "value": "bus → buses / watch → watches / box → boxes",
+              "highlights": ["buses", "watches", "boxes"]
+            },
+            {
+              "key": "Consonante + y (-ies)",
+              "value": "city → cities / baby → babies",
+              "highlights": ["cities", "babies"]
+            },
+            {
+              "key": "Vocal + y (+s)",
+              "value": "boy → boys / day → days",
+              "highlights": ["boys", "days"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1-plural-nouns-spelling-irregular",
+      "tag": "Excepciones",
+      "title": "Plurales irregulares esenciales",
+      "lede": "Estos sustantivos cambian su raíz al pasar al plural.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "man / woman",
+              "value": "men / women",
+              "highlights": ["men", "women"]
+            },
+            {
+              "key": "child / person",
+              "value": "children / people",
+              "highlights": ["children", "people"]
+            },
+            {
+              "key": "foot / tooth",
+              "value": "feet / teeth",
+              "highlights": ["feet", "teeth"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What is the plural of 'country'?",
+      "options": [
+        "countrys",
+        "countries"
+      ],
+      "answer": 1,
+      "explain": "Termina en consonante + 'y', cambia a '-ies'."
+    }
+  ]
+}

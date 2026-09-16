@@ -1,0 +1,60 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Conversación",
+    "title": "Palabras Acortadas en la Conversación",
+    "titleEmphasis": "informal spoken contractions",
+    "goal": "Reconocer cómo se acortan las palabras comunes en la conversación fluida del día a día."
+  },
+  "cards": [
+    {
+      "id": "b1-shortened-words-spoken-concept",
+      "tag": "Idea central",
+      "title": "Recortes informales comunes",
+      "lede": "En la conversación informal, muchas palabras pierden sílabas finales o iniciales.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "info",
+              "value": "information",
+              "highlights": ["info"]
+            },
+            {
+              "key": "sec",
+              "value": "second (Wait a sec!)",
+              "highlights": ["sec"]
+            },
+            {
+              "key": "app",
+              "value": "application",
+              "highlights": ["app"]
+            },
+            {
+              "key": "specs",
+              "value": "specifications / spectacles",
+              "highlights": ["specs"]
+            },
+            {
+              "key": "temp",
+              "value": "temporary / temperature",
+              "highlights": ["temp"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "In 'Give me a sec', what is 'sec' short for?",
+      "options": [
+        "Second",
+        "Section"
+      ],
+      "answer": 0,
+      "explain": "'sec' es el recorte cotidiano para 'second'."
+    }
+  ]
+}
