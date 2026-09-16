@@ -27,21 +27,26 @@ export async function buildImmersionLessonStep(
   activeLevel: CefrLevelId | undefined,
   watchedLessonIds: Set<string>,
   day: number,
+  preferTopicSlug?: string,
 ): Promise<DailyStep | null> {
   if (!shouldOfferImmersionLesson(day)) return null
 
   const level = cefrToImmersionLevel(activeLevel ?? 'a1')
-  const lesson = await fetchImmersionLessonForDay(level, watchedLessonIds).catch(() => null)
+  const lesson = await fetchImmersionLessonForDay(level, watchedLessonIds, preferTopicSlug).catch(() => null)
   if (!lesson) return null
+
+  const isTopicMatch = Boolean(preferTopicSlug && lesson.metadata?.canonicalTopic === preferTopicSlug)
+  const subtitlePrefix = isTopicMatch ? 'Tema de hoy · ' : ''
 
   return {
     kind: 'immersion_lesson',
     id: `immersion_lesson:${lesson.id}`,
     title: `Inmersión: ${lesson.title}`,
-    subtitle: `${lesson.teacher} · ${lesson.durationMinutes} min · ${lesson.level}`,
+    subtitle: `${subtitlePrefix}${lesson.teacher} · ${lesson.durationMinutes} min · ${lesson.level}`,
     icon: 'Clapperboard',
     exercises: [],
     estMinutes: lesson.durationMinutes,
     href: `/practice/immersion/${lesson.slug}`,
   }
 }
+

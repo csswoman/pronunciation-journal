@@ -152,9 +152,6 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   reviewWords = biasWordsByChunkAnchors(reviewWords, dailyThreadChunks)
   const pronunciationChunkStep = await loadPronunciationDifficultyChunkStep(userId, learnerLevel, allSounds).catch(() => null)
 
-  const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
-  const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear())
-
   // Paso correctivo: solo aparece con evidencia de error en algún cluster de -ed.
   // Compite por el único slot de producción, no se añade encima.
   const edDrillStep = await buildEdClusterDrillStep(userId).catch(() => null)
@@ -177,6 +174,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     savedOrFamiliarWordIds: dailyWordSelection.savedOrFamiliarIds,
     wordIndex,
   })
+
+  const preferImmersionTopic = weakTopic ?? (studyDeckStep?.id ? studyDeckStep.id.replace(/^study_deck:/, '') : undefined)
+  const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
+  const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear(), preferImmersionTopic)
 
   let steps: DailyStep[] = [
     ...(dueChunkStep ? [dueChunkStep] : []),

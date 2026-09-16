@@ -63,6 +63,22 @@ export interface ImmersionQuizQuestion {
   explanation: string;
 }
 
+export type ImmersionTopicRelation =
+  | 'exact'
+  | 'related'
+  | 'complementary'
+  | 'irrelevant'
+  | 'needs_review';
+
+export interface ImmersionLessonMetadata {
+  canonicalTopic?: string;
+  relation?: ImmersionTopicRelation;
+  reason?: string;
+  assignmentType?: 'direct' | 'fallback';
+  confidence?: number;
+  [key: string]: unknown;
+}
+
 export interface ImmersionLesson {
   id: string;
   slug: string;
@@ -78,6 +94,7 @@ export interface ImmersionLesson {
   keyVocabulary: KeyVocabularyItem[];
   targetPhrases: TargetPhraseItem[];
   quiz: ImmersionQuizQuestion[];
+  metadata?: ImmersionLessonMetadata;
 }
 
 export type ImmersionLessonStatus = 'not_started' | 'in_progress' | 'completed';

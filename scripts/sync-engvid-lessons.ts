@@ -32,7 +32,14 @@ import {
   normalizeTopic,
   parseLessonPage,
 } from '../lib/immersion/scrape'
-import type { ImmersionLesson, ImmersionLevel, ImmersionTeacher } from '../lib/immersion/types'
+import type {
+  ImmersionLesson,
+  ImmersionLessonMetadata,
+  ImmersionLevel,
+  ImmersionTeacher,
+} from '../lib/immersion/types'
+import { collectTopicCandidates } from '../lib/immersion/topic-matcher'
+import { getCurriculumTopicSlugs } from '../lib/immersion/canonical-topic'
 
 const TEACHER_CHANNELS: Record<ImmersionTeacher, string> = {
   Adam: 'https://www.youtube.com/@engVidAdam',
@@ -74,9 +81,10 @@ interface ImmersionLessonRow {
   key_vocabulary: Json
   target_phrases: Json
   quiz: Json
+  metadata?: Json
 }
 
-function toRow(lesson: ImmersionLesson): ImmersionLessonRow {
+export function toRow(lesson: ImmersionLesson): ImmersionLessonRow {
   return {
     id: lesson.id,
     slug: lesson.slug,
@@ -92,10 +100,11 @@ function toRow(lesson: ImmersionLesson): ImmersionLessonRow {
     key_vocabulary: lesson.keyVocabulary as unknown as Json,
     target_phrases: lesson.targetPhrases as unknown as Json,
     quiz: lesson.quiz as unknown as Json,
+    metadata: (lesson.metadata ?? {}) as unknown as Json,
   }
 }
 
-function fromRow(row: ImmersionLessonRow): ImmersionLesson {
+export function fromRow(row: ImmersionLessonRow): ImmersionLesson {
   return {
     id: row.id,
     slug: row.slug,
@@ -111,6 +120,7 @@ function fromRow(row: ImmersionLessonRow): ImmersionLesson {
     keyVocabulary: row.key_vocabulary as unknown as ImmersionLesson['keyVocabulary'],
     targetPhrases: row.target_phrases as unknown as ImmersionLesson['targetPhrases'],
     quiz: row.quiz as unknown as ImmersionLesson['quiz'],
+    metadata: (row.metadata ?? {}) as unknown as ImmersionLesson['metadata'],
   }
 }
 
@@ -120,13 +130,17 @@ async function fetchExistingCatalog(
   const { data, error } = await supabase
     .from('immersion_lessons')
     .select(
-      'id, slug, youtube_video_id, title, teacher, teacher_channel_url, level, topic, duration_minutes, summary, timestamps, key_vocabulary, target_phrases, quiz',
+      'id, slug, youtube_video_id, title, teacher, teacher_channel_url, level, topic, duration_minutes, summary, timestamps, key_vocabulary, target_phrases, quiz, metadata',
     )
   if (error) throw error
   return ((data ?? []) as unknown as ImmersionLessonRow[]).map(fromRow)
 }
 
-async function buildLesson(url: string, apiKey: string): Promise<ImmersionLesson | null> {
+export async function buildLesson(
+  url: string,
+  apiKey: string,
+  metadata?: ImmersionLessonMetadata,
+): Promise<ImmersionLesson | null> {
   console.log(`[sync] ${url}`)
 
   const html = await fetchLessonHtml(url)
@@ -176,10 +190,11 @@ async function buildLesson(url: string, apiKey: string): Promise<ImmersionLesson
     keyVocabulary: enrichment.keyVocabulary,
     targetPhrases: enrichment.targetPhrases,
     quiz: enrichment.quiz,
+    metadata: metadata ?? {},
   }
 }
 
-async function upsertLessons(
+export async function upsertLessons(
   supabase: SupabaseClient<Database>,
   lessons: ImmersionLesson[],
 ): Promise<void> {
@@ -190,7 +205,7 @@ async function upsertLessons(
   console.log(`[sync] ${lessons.length} lecciones escritas en Supabase`)
 }
 
-function readFlag(args: string[], name: string): string | undefined {
+export function readFlag(args: string[], name: string): string | undefined {
   const index = args.indexOf(name)
   return index >= 0 ? args[index + 1] : undefined
 }
@@ -266,7 +281,36 @@ async function collectBalanced(
   return urls
 }
 
-async function resolveUrls(args: string[], existingCatalog: ImmersionLesson[]): Promise<string[]> {
+export interface SyncFlags {
+  topic?: string
+  syncLevel?: string
+  allTopics: boolean
+  dryRun: boolean
+  balance: boolean
+  archive: boolean
+  refresh: boolean
+  level?: string
+  page?: string
+  url?: string
+  limit: number
+}
+
+export function parseSyncFlags(args: string[]): SyncFlags {
+  const topic = readFlag(args, '--topic') ?? readFlag(args, '--route-lesson')
+  const syncLevel = readFlag(args, '--sync-level')
+  const allTopics = args.includes('--all-topics') || args.includes('--all-curriculum')
+  const dryRun = args.includes('--dry-run')
+  const balance = args.includes('--balance')
+  const archive = args.includes('--archive')
+  const refresh = args.includes('--refresh')
+  const level = readFlag(args, '--level')
+  const page = readFlag(args, '--page')
+  const url = readFlag(args, '--url')
+  const limit = Number(readFlag(args, '--limit') ?? 10)
+  return { topic, syncLevel, allTopics, dryRun, balance, archive, refresh, level, page, url, limit }
+}
+
+export async function resolveUrls(args: string[], existingCatalog: ImmersionLesson[]): Promise<string[]> {
   const single = readFlag(args, '--url')
   if (single) return [single]
 
@@ -308,21 +352,155 @@ async function resolveUrls(args: string[], existingCatalog: ImmersionLesson[]): 
   return fresh.slice(0, limit)
 }
 
-async function main(): Promise<void> {
+export async function runSync(
+  args: string[],
+  supabaseClient?: SupabaseClient<Database>,
+): Promise<{
+  lessonsProcessed: number
+  dryRun: boolean
+  topic?: string
+}> {
+  const flags = parseSyncFlags(args)
   const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey) {
+
+  if (!apiKey && !flags.dryRun) {
     console.error('[sync] falta GEMINI_API_KEY')
     process.exit(1)
   }
 
-  const supabase = getSupabaseAdmin()
-  const existingCatalog = await fetchExistingCatalog(supabase)
+  const supabase = supabaseClient ?? (flags.dryRun ? null : getSupabaseAdmin())
+  const existingCatalog = supabase ? await fetchExistingCatalog(supabase) : []
+  const knownSlugs = new Set(existingCatalog.map((lesson) => lesson.slug))
 
-  const args = process.argv.slice(2)
+  // ── MODO BATCH POR NIVEL O CURRÍCULUM COMPLETO (--sync-level o --all-topics) ──
+  if (flags.syncLevel || flags.allTopics) {
+    const topicSlugs = getCurriculumTopicSlugs(flags.syncLevel)
+    console.log(`[sync] Iniciando sincronización en lote de ${topicSlugs.length} temas del currículum...`)
+
+    const coveredTopics = new Set<string>()
+    for (const lesson of existingCatalog) {
+      if (lesson.metadata?.canonicalTopic) {
+        coveredTopics.add(lesson.metadata.canonicalTopic)
+      }
+    }
+
+    const unmappedTopics = flags.refresh
+      ? topicSlugs
+      : topicSlugs.filter((slug) => !coveredTopics.has(slug))
+
+    console.log(`[sync] ${coveredTopics.size} temas ya tienen video asignado. ${unmappedTopics.length} temas pendientes por procesar.`)
+
+    let totalProcessed = 0
+    for (const topicSlug of unmappedTopics) {
+      console.log(`\n--------------------------------------------------`)
+      console.log(`[sync] Procesando tema: ${topicSlug}`)
+
+      const subArgs = [
+        '--topic', topicSlug,
+        ...(flags.dryRun ? ['--dry-run'] : []),
+        ...(flags.balance ? ['--balance'] : []),
+        ...(readFlag(args, '--limit') ? ['--limit', String(flags.limit)] : ['--limit', '1']),
+      ]
+
+      const result = await runSync(subArgs, supabase ?? undefined)
+      totalProcessed += result.lessonsProcessed
+    }
+
+    console.log(`\n[sync] Sincronización en lote finalizada. Total de lecciones procesadas: ${totalProcessed}`)
+    return { lessonsProcessed: totalProcessed, dryRun: flags.dryRun }
+  }
+
+  // ── MODO TEMÁTICO (--topic o --route-lesson) ──
+  if (flags.topic) {
+    let fallbackUrls: string[] = []
+    if (flags.balance) {
+      fallbackUrls = await collectBalanced(flags.limit, knownSlugs, Number(flags.page ?? 1))
+    }
+
+    const { canonicalTopic, candidates } = await collectTopicCandidates({
+      topic: flags.topic,
+      limit: flags.limit,
+      apiKey: apiKey ?? '',
+      explicitLevel: flags.level && isImmersionLevel(flags.level) ? (flags.level as ImmersionLevel) : undefined,
+      allowBalanceFallback: flags.balance,
+      knownSlugs,
+      fallbackUrls,
+      onProgress: (msg) => console.log(msg),
+    })
+
+    if (candidates.length === 0) {
+      console.log(`[sync] no se encontraron candidatas relevantes para el tema "${flags.topic}"`)
+      return { lessonsProcessed: 0, dryRun: flags.dryRun, topic: flags.topic }
+    }
+
+    if (flags.dryRun) {
+      console.log('\n=== [sync] MODO DRY-RUN: EVALUACIÓN DE CANDIDATAS ===')
+      console.log(`Tema canónico: ${canonicalTopic.title} (${canonicalTopic.slug}) [Nivel: ${canonicalTopic.level}]`)
+      if (canonicalTopic.description) console.log(`Descripción: ${canonicalTopic.description}`)
+      if (canonicalTopic.keywords) console.log(`Palabras clave: ${canonicalTopic.keywords}`)
+      console.log(`Candidatas seleccionadas: ${candidates.length}/${flags.limit}\n`)
+
+      candidates.forEach((cand, index) => {
+        const badge = `[${cand.relevance.toUpperCase()}]`
+        console.log(`${index + 1}. ${badge} ${cand.title}`)
+        console.log(`   URL: ${cand.url}`)
+        console.log(`   Nivel detectado: ${cand.level} · Tipo: ${cand.assignmentType} · Confianza: ${Math.round(cand.confidence * 100)}%`)
+        console.log(`   Razón pedagógica: ${cand.reason}\n`)
+      })
+
+      console.log('[sync] Dry-run finalizado con éxito: 0 escrituras en Supabase.')
+      return { lessonsProcessed: candidates.length, dryRun: true, topic: flags.topic }
+    }
+
+    if (!apiKey) {
+      console.error('[sync] falta GEMINI_API_KEY para enriquecer lecciones')
+      process.exit(1)
+    }
+
+    const lessons: ImmersionLesson[] = []
+    for (const cand of candidates) {
+      try {
+        const lesson = await buildLesson(cand.url, apiKey, {
+          canonicalTopic: canonicalTopic.slug,
+          relation: cand.relevance,
+          reason: cand.reason,
+          assignmentType: cand.assignmentType,
+          confidence: cand.confidence,
+        })
+        if (lesson) lessons.push(lesson)
+      } catch (err) {
+        console.warn(`  ✗ ${cand.url}: ${(err as Error).message}`)
+      }
+    }
+
+    if (lessons.length === 0) {
+      console.log('[sync] ninguna lección se pudo procesar; catálogo sin cambios')
+      return { lessonsProcessed: 0, dryRun: false, topic: flags.topic }
+    }
+
+    if (supabase) {
+      await upsertLessons(supabase, lessons)
+    }
+    return { lessonsProcessed: lessons.length, dryRun: false, topic: flags.topic }
+  }
+
+  // ── MODO LEGACY (sin --topic ni --route-lesson) ──
   const urls = await resolveUrls(args, existingCatalog)
   if (urls.length === 0) {
     console.log('[sync] no hay lecciones nuevas')
-    return
+    return { lessonsProcessed: 0, dryRun: flags.dryRun }
+  }
+
+  if (flags.dryRun) {
+    console.log('\n=== [sync] MODO DRY-RUN: URLs SELECCIONADAS ===')
+    urls.forEach((url, i) => console.log(`${i + 1}. ${url}`))
+    console.log('[sync] Dry-run finalizado con éxito: 0 escrituras en Supabase.')
+    return { lessonsProcessed: urls.length, dryRun: true }
+  }
+
+  if (!apiKey) {
+    console.error('[sync] falta GEMINI_API_KEY')
+    process.exit(1)
   }
 
   const lessons: ImmersionLesson[] = []
@@ -331,17 +509,24 @@ async function main(): Promise<void> {
       const lesson = await buildLesson(url, apiKey)
       if (lesson) lessons.push(lesson)
     } catch (err) {
-      // Una lección fallida no debe abortar el lote completo.
       console.warn(`  ✗ ${url}: ${(err as Error).message}`)
     }
   }
 
   if (lessons.length === 0) {
     console.log('[sync] ninguna lección se pudo procesar; catálogo sin cambios')
-    return
+    return { lessonsProcessed: 0, dryRun: false }
   }
 
-  await upsertLessons(supabase, lessons)
+  if (supabase) {
+    await upsertLessons(supabase, lessons)
+  }
+  return { lessonsProcessed: lessons.length, dryRun: false }
+}
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2)
+  await runSync(args)
 }
 
 if (process.argv[1]?.includes('sync-engvid-lessons')) {
