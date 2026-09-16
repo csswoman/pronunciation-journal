@@ -1,15 +1,15 @@
 /*
  * Planned subcomponents:
- * - CoursePathLessonRow (single lesson item in group list)
- *   - LessonNumber (01, 02 formatted monospace string)
- *   - StateDot (completion status indicator)
+ * - CoursePathLessonRow (single lesson item in the spine-connected group list)
+ *   - LessonNumber (01, 02 formatted monospace string, or StateDot when done/current)
  *   - LessonMain (title row + keywords subtitle)
  *     - LessonTitleRow (title link + hover save heart button)
  *   - LessonMetaEnd (tag badge + duration)
+ *   - CoursePathContinueCta (promoted "Continuar" pill, current lesson only)
  */
 
 import Link from "next/link";
-import { Check, Play } from "@/components/icons";
+import { ArrowRight, Check, Play } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
@@ -22,6 +22,8 @@ interface CoursePathLessonRowProps {
   levelId: CoursePathTrackId;
   isDownloaded?: boolean;
   immersionLesson?: ImmersionLesson;
+  /** Last row in the group — suppresses the connecting spine segment below the node. */
+  isLast?: boolean;
 }
 
 function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean): { label: string; className: string } {
@@ -41,42 +43,49 @@ export default function CoursePathLessonRow({
   levelId,
   isDownloaded,
   immersionLesson,
+  isLast,
 }: CoursePathLessonRowProps) {
   const href = studyLessonPath(levelId, lesson.number);
   const formattedNum = String(lesson.number).padStart(2, "0");
   const tagInfo = getTagStyle(lesson.tag, lesson.soundLab, lesson.isOptional);
   const durationText = lesson.duration ?? "5 min";
+  const isCurrent = lesson.state === "current";
 
   return (
     <div
       id={lesson.slug ? `lesson-${lesson.slug}` : undefined}
       className={cn(
         "course-path__lesson",
+        "course-path__spine-item",
         lesson.isOptional && "course-path__lesson--optional",
         lesson.state === "done" && "course-path__lesson--done",
-        lesson.state === "current" && "course-path__lesson--current"
+        isCurrent && "course-path__lesson--current",
+        isLast && "course-path__spine-item--last"
       )}
     >
-      <div
-        className={cn(
-          "course-path__num-circle",
-          lesson.state === "done" && "course-path__num-circle--done",
-          lesson.state === "current" && "course-path__num-circle--current"
-        )}
-        role="img"
-        aria-label={
-          lesson.state === "done"
-            ? "Completada"
-            : lesson.state === "current"
-            ? "En progreso: siguiente lección"
-            : "Pendiente"
-        }
-      >
-        {lesson.state === "done" ? (
-          <Check size={12} strokeWidth={2.5} aria-hidden />
-        ) : (
-          <span>{formattedNum}</span>
-        )}
+      <div className="course-path__spine-node-col" aria-hidden="true">
+        <div
+          className={cn(
+            "course-path__num-circle",
+            lesson.state === "done" && "course-path__num-circle--done",
+            isCurrent && "course-path__num-circle--current"
+          )}
+          role="img"
+          aria-label={
+            lesson.state === "done"
+              ? "Completada"
+              : isCurrent
+              ? "En progreso: siguiente lección"
+              : "Pendiente"
+          }
+        >
+          {lesson.state === "done" ? (
+            <Check size={12} strokeWidth={2.5} aria-hidden />
+          ) : (
+            <span>{formattedNum}</span>
+          )}
+        </div>
+        {!isLast && <div className="course-path__spine-line" />}
       </div>
 
       <div className="course-path__lesson-main">
@@ -124,9 +133,15 @@ export default function CoursePathLessonRow({
             </Link>
           </div>
         )}
+        {isCurrent && (
+          <Link href={href} className="course-path__spine-continue">
+            <span>Continuar</span>
+            <ArrowRight size={14} strokeWidth={2.25} aria-hidden />
+          </Link>
+        )}
       </div>
 
-      <span className="course-path__duration">{durationText}</span>
+      {!isCurrent && <span className="course-path__duration">{durationText}</span>}
     </div>
   );
 }

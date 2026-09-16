@@ -4,7 +4,7 @@
  *   - GroupIconBox (rounded icon square with status-driven colors)
  *   - GroupHeading (title + meta line with status text)
  *   - GroupChevron (expand/collapse indicator)
- *   - LessonGroupBody (list of CoursePathLessonRow items)
+ *   - LessonGroupBody (spine-connected list of CoursePathLessonRow items)
  */
 
 import { Fragment } from "react";
@@ -69,7 +69,7 @@ export default function CoursePathLessonGroup({
       onToggle={(e) => onToggle(id, e.currentTarget.open)}
     >
       <summary className="course-path__lesson-group-summary">
-        <span className="course-path__group-icon-box" aria-hidden="true">
+        <span className={cn("course-path__group-icon-box", `course-path__group-icon-box--${statusClass}`)} aria-hidden="true">
           <GroupIcon size={20} className="course-path__group-icon" />
         </span>
         <span className="course-path__lesson-group-heading">
@@ -91,8 +91,8 @@ export default function CoursePathLessonGroup({
         </span>
         <ChevronRight className="course-path__lesson-group-chevron" size={16} aria-hidden />
       </summary>
-      <div className="course-path__lesson-group-body">
-        {lessons.map((lesson) => {
+      <div className="course-path__lesson-group-body course-path__spine-body">
+        {lessons.map((lesson, index) => {
           const showSubgroup = Boolean(lesson.subgroup && lesson.subgroup !== lastSubgroup);
           if (lesson.subgroup) {
             lastSubgroup = lesson.subgroup;
@@ -109,6 +109,7 @@ export default function CoursePathLessonGroup({
                 levelId={levelId}
                 isDownloaded={downloadedIds?.has(`${levelId}:${lesson.number}`)}
                 immersionLesson={lesson.slug ? topicImmersionMap?.[lesson.slug] : undefined}
+                isLast={index === lessons.length - 1}
               />
             </Fragment>
           );
