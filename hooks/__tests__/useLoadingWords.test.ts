@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
-import { useLoadingWords } from '../useLoadingWords'
+import { useLoadingWords, FALLBACK_WORDS } from '../useLoadingWords'
 import * as queries from '@/lib/word-bank/queries'
 
 describe('useLoadingWords', () => {
@@ -13,6 +13,7 @@ describe('useLoadingWords', () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockReturnValue(new Promise(() => {})) // never resolves
     const { result } = renderHook(() => useLoadingWords())
     expect(result.current).toHaveLength(10)
+    expect(result.current.every(w => FALLBACK_WORDS.some(fw => fw.text === w.text))).toBe(true)
   })
 
   it('switches to user words when fetch returns entries', async () => {
@@ -32,9 +33,9 @@ describe('useLoadingWords', () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockResolvedValue([])
     const { result } = renderHook(() => useLoadingWords())
     await waitFor(() => {
-      expect(result.current.some(w => w.text === 'thought')).toBe(true)
+      expect(result.current).toHaveLength(10)
+      expect(result.current.every(w => FALLBACK_WORDS.some(fw => fw.text === w.text))).toBe(true)
     })
-    expect(result.current).toHaveLength(10)
   })
 
   it('keeps fallback on network error', async () => {
@@ -42,7 +43,7 @@ describe('useLoadingWords', () => {
     const { result } = renderHook(() => useLoadingWords())
     await waitFor(() => {
       expect(result.current).toHaveLength(10)
-      expect(result.current.some(w => w.text === 'thought')).toBe(true)
+      expect(result.current.every(w => FALLBACK_WORDS.some(fw => fw.text === w.text))).toBe(true)
     })
   })
 
