@@ -8,44 +8,6 @@
   },
   "cards": [
     {
-      "id": "a1-articulos-basicos-concept",
-      "tag": "Idea central",
-      "title": "Artículos básicos: qué expresa",
-      "lede": "Ya distingues cuándo usar a, an, the o ningún artículo.",
-      "blocks": [
-        {
-          "type": "rules",
-          "rows": [
-            {
-              "key": "a",
-              "value": "sonido consonántico · a book, a house",
-              "highlights": [
-                "a"
-              ]
-            },
-            {
-              "key": "an",
-              "value": "sonido vocálico · an apple, an hour",
-              "highlights": [
-                "an"
-              ]
-            },
-            {
-              "key": "the",
-              "value": "objeto específico o único · the sun, the door",
-              "highlights": [
-                "the"
-              ]
-            }
-          ]
-        }
-      ],
-      "tip": {
-        "label": "Objetivo:",
-        "body": "reconocer el patrón y usarlo en frases propias."
-      }
-    },
-    {
       "id": "a1-articulos-basicos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
@@ -158,36 +120,38 @@
       ]
     },
     {
-      "id": "a1-articulos-basicos-reference",
-      "tag": "Referencia rápida",
-      "title": "Guía rápida de uso",
-      "lede": "Comprueba las reglas clave para este patrón.",
+      "id": "a1-articulos-zero-article",
+      "tag": "Cuándo NO usar the",
+      "title": "Generalizaciones sin artículo",
+      "lede": "En español decimos 'Me gustan los perros', pero en inglés las cosas en general NO llevan 'the'.",
       "blocks": [
         {
-          "type": "rules",
-          "rows": [
+          "type": "pairs",
+          "lines": [
             {
-              "key": "a",
-              "value": "Sonido consonántico inicial (a dog, a university)"
+              "variant": "bad",
+              "text": "I love the animals."
             },
             {
-              "key": "an",
-              "value": "Sonido vocálico inicial (an egg, an hour)"
+              "variant": "good",
+              "text": "I love animals.",
+              "note": "animales en general → sin artículo"
             },
             {
-              "key": "the",
-              "value": "Objeto específico, único o mencionado antes (the sun, the door)"
+              "variant": "bad",
+              "text": "The life is short."
             },
             {
-              "key": "Sin artículo",
-              "value": "Plurales y conceptos generales (I like cats, Water is essential)"
+              "variant": "good",
+              "text": "Life is short.",
+              "note": "conceptos abstractos → sin artículo"
             }
           ]
         }
       ],
       "tip": {
-        "label": "Práctica:",
-        "body": "escribe una frase personal con el patrón."
+        "label": "Regla clave:",
+        "body": "Usa 'the' solo cuando tú y la otra persona saben de cuál objeto o grupo exacto están hablando ('the dogs in my garden')."
       }
     }
   ],

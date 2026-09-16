@@ -182,51 +182,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "ps-adverbs",
-      "tag": "Adverbios",
-      "title": "Adverbios de frecuencia",
-      "lede": "Dicen cada cuánto. Van antes del verbo principal, pero después de to be.",
-      "blocks": [
-        {
-          "type": "rules",
-          "rows": [
-            {
-              "key": "always",
-              "value": "siempre · I always study at night.",
-              "highlights": [
-                "always study"
-              ]
-            },
-            {
-              "key": "usually",
-              "value": "normalmente · She usually walks.",
-              "highlights": [
-                "usually walks"
-              ]
-            },
-            {
-              "key": "sometimes",
-              "value": "a veces · They sometimes travel.",
-              "highlights": [
-                "sometimes travel"
-              ]
-            },
-            {
-              "key": "never",
-              "value": "nunca · He never eats meat.",
-              "highlights": [
-                "never eats"
-              ]
-            }
-          ]
-        }
-      ],
-      "tip": {
-        "label": "Posición:",
-        "body": "antes del verbo (I always work) pero después de to be (I am always late)."
-      }
     }
   ],
   "quiz": [

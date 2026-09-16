@@ -8,51 +8,6 @@
   },
   "cards": [
     {
-      "id": "a1-demostrativos-concept",
-      "tag": "Idea central",
-      "title": "Demostrativos: qué expresa",
-      "lede": "Ya puedes señalar cosas cerca o lejos con this, that, these y those.",
-      "blocks": [
-        {
-          "type": "rules",
-          "rows": [
-            {
-              "key": "this",
-              "value": "singular cerca · this book",
-              "highlights": [
-                "this"
-              ]
-            },
-            {
-              "key": "that",
-              "value": "singular lejos · that car",
-              "highlights": [
-                "that"
-              ]
-            },
-            {
-              "key": "these",
-              "value": "plural cerca · these shoes",
-              "highlights": [
-                "these"
-              ]
-            },
-            {
-              "key": "those",
-              "value": "plural lejos · those houses",
-              "highlights": [
-                "those"
-              ]
-            }
-          ]
-        }
-      ],
-      "tip": {
-        "label": "Objetivo:",
-        "body": "reconocer el patrón y usarlo en frases propias."
-      }
-    },
-    {
       "id": "a1-demostrativos-form",
       "tag": "Forma",
       "title": "La estructura que debes recordar",
@@ -152,8 +107,8 @@
     {
       "id": "a1-demostrativos-mistakes",
       "tag": "Error frecuente",
-      "title": "Evita este calco",
-      "lede": "Compara la versión incorrecta con la forma natural en inglés.",
+      "title": "Cuidado con sustantivos trampa",
+      "lede": "Compara la versión incorrecta con la forma natural. Ojo especial con plurales como 'people'.",
       "blocks": [
         {
           "type": "pairs",
@@ -166,42 +121,49 @@
               "variant": "good",
               "text": "These books are new.",
               "note": "books es plural → exige these"
+            },
+            {
+              "variant": "bad",
+              "text": "This people are waiting."
+            },
+            {
+              "variant": "good",
+              "text": "These people are waiting.",
+              "note": "people es plural irregular → these o those"
             }
           ]
         }
       ]
     },
     {
-      "id": "a1-demostrativos-reference",
-      "tag": "Referencia rápida",
-      "title": "Guía rápida de uso",
-      "lede": "Comprueba las reglas clave para este patrón.",
+      "id": "a1-demostrativos-pronunciation",
+      "tag": "Pronunciación",
+      "title": "This vs These al hablar",
+      "lede": "La diferencia no es solo ortográfica: cambia la vocal y la consonante final.",
       "blocks": [
         {
-          "type": "rules",
-          "rows": [
+          "type": "contrast",
+          "columns": [
             {
-              "key": "Singular + Cerca",
-              "value": "This (Este / Esta / Esto)"
+              "label": "This /ðɪs/ (Singular)",
+              "rule": "Vocal corta relajada /ɪ/ + 's' sorda",
+              "examples": [
+                "This pen sounds like 'thiss'"
+              ]
             },
             {
-              "key": "Singular + Lejos",
-              "value": "That (Ese / Aquel / Eso)"
-            },
-            {
-              "key": "Plural + Cerca",
-              "value": "These (Estos / Estas)"
-            },
-            {
-              "key": "Plural + Lejos",
-              "value": "Those (Esos / Aquellos)"
+              "label": "These /ðiːz/ (Plural)",
+              "rule": "Vocal larga estirada /iː/ + 'z' sonora",
+              "examples": [
+                "These pens sounds like 'theeez'"
+              ]
             }
           ]
         }
       ],
       "tip": {
-        "label": "Práctica:",
-        "body": "escribe una frase personal con el patrón."
+        "label": "Truco oral:",
+        "body": "Alarga la 'ee' y vibra la 'z' final en 'these' para que los nativos nunca confundan si hablas de uno o de varios."
       }
     }
   ],
