@@ -9,17 +9,19 @@
  */
 
 import Link from "next/link";
-import { Check } from "@/components/icons";
+import { Check, Play } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { studyLessonPath } from "@/lib/courses/curriculumIndex";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import { LessonDownloadButton } from "@/components/courses/LessonDownloadButton";
 import type { CoursePathLesson, CoursePathTrackId, LessonProgressState, LessonTag } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 interface CoursePathLessonRowProps {
   lesson: CoursePathLesson & { state: LessonProgressState };
   levelId: CoursePathTrackId;
   isDownloaded?: boolean;
+  immersionLesson?: ImmersionLesson;
 }
 
 function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean): { label: string; className: string } {
@@ -34,7 +36,12 @@ function getTagStyle(tag?: LessonTag, soundLab?: boolean, isOptional?: boolean):
   return { label: "concepto", className: "course-path__tag--concepto" };
 }
 
-export default function CoursePathLessonRow({ lesson, levelId, isDownloaded }: CoursePathLessonRowProps) {
+export default function CoursePathLessonRow({
+  lesson,
+  levelId,
+  isDownloaded,
+  immersionLesson,
+}: CoursePathLessonRowProps) {
   const href = studyLessonPath(levelId, lesson.number);
   const formattedNum = String(lesson.number).padStart(2, "0");
   const tagInfo = getTagStyle(lesson.tag, lesson.soundLab, lesson.isOptional);
@@ -101,6 +108,21 @@ export default function CoursePathLessonRow({ lesson, levelId, isDownloaded }: C
         </div>
         {lesson.keywords && (
           <span className="course-path__lesson-keywords">{lesson.keywords}</span>
+        )}
+        {immersionLesson && (
+          <div className="course-path__immersion-link mt-1.5 flex items-center">
+            <Link
+              href={`/practice/immersion/${immersionLesson.slug}`}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-surface-raised px-2 py-0.5 text-caption font-medium text-fg-muted transition-colors hover:border-accent/40 hover:bg-accent-soft hover:text-accent"
+              title={`Clase en video: ${immersionLesson.title} (${immersionLesson.teacher})`}
+            >
+              <Play size={10} className="fill-current text-accent" aria-hidden />
+              <span>Video: {immersionLesson.teacher} ({immersionLesson.durationMinutes} min)</span>
+              <span className="font-mono text-[10px] text-accent/80">
+                {immersionLesson.metadata?.relation === "exact" ? "· canónico" : "· apoyo"}
+              </span>
+            </Link>
+          </div>
         )}
       </div>
 

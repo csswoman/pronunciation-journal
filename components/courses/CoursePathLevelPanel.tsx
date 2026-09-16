@@ -6,12 +6,14 @@
 
 import CoursePathProgressClient from "@/components/courses/CoursePathProgressClient";
 import type { CoursePathLevel } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 interface CoursePathLevelPanelProps {
   level: CoursePathLevel;
   compactHead?: boolean;
   hideAside?: boolean;
   electiveTracks?: CoursePathLevel[];
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
 export default function CoursePathLevelPanel({
@@ -19,13 +21,15 @@ export default function CoursePathLevelPanel({
   compactHead,
   hideAside,
   electiveTracks,
+  topicImmersionMap,
 }: CoursePathLevelPanelProps) {
   return (
     <CoursePathProgressClient
       level={level}
       compactHead={compactHead}
       hideAside={hideAside}
-      electiveTracks={level.id === "c1" ? electiveTracks : undefined}
+      electiveTracks={electiveTracks}
+      topicImmersionMap={topicImmersionMap}
     />
   );
 }

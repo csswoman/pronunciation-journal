@@ -33,6 +33,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
 import type { CoursePathLevel } from "@/lib/courses/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 import { cn } from "@/lib/cn";
 
 interface CoursePathProgressClientProps {
@@ -40,6 +41,7 @@ interface CoursePathProgressClientProps {
   compactHead?: boolean;
   hideAside?: boolean;
   electiveTracks?: CoursePathLevel[];
+  topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -60,6 +62,7 @@ export default function CoursePathProgressClient({
   compactHead,
   hideAside,
   electiveTracks,
+  topicImmersionMap,
 }: CoursePathProgressClientProps) {
   const loadingWords = useLoadingWords();
   const [completedIds, setCompletedIds] = useState<Set<string> | null>(null);
@@ -260,6 +263,7 @@ export default function CoursePathProgressClient({
                   isOpen={expandedGroups[optId] ?? false}
                   onToggle={handleGroupToggle}
                   downloadedIds={downloadedIds}
+                  topicImmersionMap={topicImmersionMap}
                 />
               );
             }
@@ -274,6 +278,7 @@ export default function CoursePathProgressClient({
                 expandedGroups={expandedGroups}
                 onToggle={handleGroupToggle}
                 downloadedIds={downloadedIds}
+                topicImmersionMap={topicImmersionMap}
               />
             );
           })}
@@ -289,7 +294,7 @@ export default function CoursePathProgressClient({
         <CoursePracticeSuggestions level={level} levelId={level.id} completedIds={completedIds} />
 
         {electiveTracks && electiveTracks.length > 0 && (
-          <CoursePathC1Electives tracks={electiveTracks} />
+          <CoursePathC1Electives tracks={electiveTracks} topicImmersionMap={topicImmersionMap} />
         )}
       </div>
 

@@ -1,14 +1,17 @@
 "use client";
 
-import { Check } from "@/components/icons";
+import Link from "next/link";
+import { Check, Play } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { GrammarStudyCardData } from "@/lib/courses/grammar-deck/types";
+import type { ImmersionLesson } from "@/lib/immersion/types";
 
 interface DeckSidebarRailProps {
   cards: GrammarStudyCardData[];
   currentIndex: number;
   reviewed: Set<string>;
   onSelectCard: (index: number) => void;
+  immersionLesson?: ImmersionLesson | null;
 }
 
 /**
@@ -20,6 +23,7 @@ export default function DeckSidebarRail({
   currentIndex,
   reviewed,
   onSelectCard,
+  immersionLesson,
 }: DeckSidebarRailProps) {
   return (
     <aside className="grammar-deck__rail" aria-label="Tarjetas de esta lección">
@@ -53,6 +57,30 @@ export default function DeckSidebarRail({
           );
         })}
       </nav>
+
+      {immersionLesson && (
+        <div className="mt-4 border-t border-border-subtle pt-3">
+          <span className="grammar-deck__rail-kicker mb-2 block">CLASE EN VIDEO</span>
+          <Link
+            href={`/practice/immersion/${immersionLesson.slug}`}
+            className="flex flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-raised p-3 text-left transition-all hover:border-accent/40 hover:bg-accent-soft/40"
+            title={immersionLesson.title}
+          >
+            <div className="flex items-center gap-2 text-accent">
+              <Play size={14} className="fill-current" aria-hidden />
+              <span className="text-caption font-semibold">
+                {immersionLesson.teacher} · {immersionLesson.durationMinutes} min
+              </span>
+            </div>
+            <p className="line-clamp-2 text-body-sm font-medium leading-snug text-fg">
+              {immersionLesson.title}
+            </p>
+            <span className="font-mono text-[10px] text-accent/90">
+              {immersionLesson.metadata?.relation === "exact" ? "Video canónico" : "Video relacionado"}
+            </span>
+          </Link>
+        </div>
+      )}
     </aside>
   );
 }
