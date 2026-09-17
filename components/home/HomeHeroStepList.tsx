@@ -51,10 +51,10 @@ export default function HomeHeroStepList({
           const rowClass = cn(
             "group flex w-full items-center justify-between gap-3.5 rounded-xl px-3.5 py-2.5 text-body-sm text-left transition-all duration-150",
             isCurrent
-              ? "bg-sky-deep text-ink"
+              ? "pastel-card-row-active text-ink"
               : isDone
                 ? "text-ink-secondary bg-transparent opacity-85"
-                : "text-ink bg-sky-deep/60 hover:bg-sky-deep focus-ring press-feedback cursor-pointer"
+                : "text-ink bg-transparent hover:bg-ink/8 focus-ring press-feedback cursor-pointer"
           );
 
           const stepNumber = (
@@ -65,7 +65,7 @@ export default function HomeHeroStepList({
                   ? "bg-ink text-paper"
                   : isDone
                     ? "bg-success/10 border border-success/20 text-success"
-                    : "bg-sky-deep text-ink-secondary group-hover:text-ink"
+                    : "pastel-card-chip text-ink-secondary group-hover:text-ink"
               )}
             >
               {idx + 1}
@@ -156,9 +156,9 @@ export default function HomeHeroStepList({
 
         {/* Recompensa final: Ejercicios extra bloqueados (solo al expandir) */}
         {isExpanded ? (
-          <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-ink/25 bg-sky-deep/40 px-3.5 py-2.5 text-body-sm text-ink-secondary transition-colors">
+          <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-border-subtle bg-transparent px-3.5 py-2.5 text-body-sm text-ink-secondary transition-colors">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-deep font-mono text-sm font-semibold text-ink-secondary select-none">
+              <span className="pastel-card-chip flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-semibold text-ink-secondary select-none">
                 {steps.length + 1}
               </span>
               <div className="flex flex-col min-w-0 flex-1">
@@ -179,7 +179,7 @@ export default function HomeHeroStepList({
 
       {/* Afinar la ruta contextual dentro del plan del día (solo al expandir) */}
       {isExpanded && (needsPlacement || needsPronunciation) ? (
-        <div className="mt-1 rounded-xl bg-sky-deep/50 px-3.5 py-2.5 text-caption text-ink-secondary">
+        <div className="pastel-card-chip mt-1 rounded-xl px-3.5 py-2.5 text-caption text-ink-secondary">
           <span>¿El nivel no se ajusta a ti? </span>
           {needsPlacement ? (
             <Link

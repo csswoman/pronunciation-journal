@@ -124,6 +124,7 @@ import {
   Undo2 as LucideUndo2,
   User as LucideUser,
   Utensils as LucideUtensils,
+  Video as LucideVideo,
   Volume2 as LucideVolume2,
   VolumeX as LucideVolumeX,
   Waves as LucideWaves,
@@ -255,6 +256,7 @@ export const Tv = createIcon(LucideTv, "Tv");
 export const Undo2 = createIcon(LucideUndo2, "Undo2");
 export const User = createIcon(LucideUser, "User");
 export const Utensils = createIcon(LucideUtensils, "Utensils");
+export const Video = createIcon(LucideVideo, "Video");
 export const Volume2 = createIcon(LucideVolume2, "Volume2");
 export const VolumeX = createIcon(LucideVolumeX, "VolumeX");
 export const Waves = createIcon(LucideWaves, "Waves");

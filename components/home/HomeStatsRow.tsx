@@ -47,12 +47,13 @@ export default function HomeStatsRow({
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {/* Palabras esenciales */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+      {/* Palabras esenciales / Tu Mazo */}
       <Link
         href="/practice/essential-words"
         prefetch={false}
-        className="focus-ring group flex flex-col justify-between gap-3 rounded-3xl bg-coral p-3.5 text-ink transition-transform sm:p-4 hover:-translate-y-px"
+        data-tone="lilac"
+        className="pastel-card focus-ring group flex flex-col justify-between gap-4 rounded-3xl p-4 sm:p-5 transition-transform hover:-translate-y-px"
       >
         {showLiveCount ? (
           <HomeEssentialWordsCount

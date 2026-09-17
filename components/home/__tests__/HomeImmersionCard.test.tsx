@@ -16,19 +16,18 @@ describe("HomeImmersionCard", () => {
 
     fireEvent.click(registerBtn);
 
-    expect(screen.getByRole("button", { name: /^video$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^serie$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^podcast$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^lectura$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /video o serie/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /podcast/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /lectura/i })).toBeInTheDocument();
   });
 
   it("allows selecting category and adjusting time when expanded", () => {
     render(<HomeImmersionCard />);
     fireEvent.click(screen.getByRole("button", { name: /^registrar$/i }));
 
-    const podcastChip = screen.getByRole("button", { name: /^podcast$/i });
+    const podcastChip = screen.getByRole("button", { name: /podcast/i });
     fireEvent.click(podcastChip);
-    expect(podcastChip.className).toContain("bg-primary-soft");
+    expect(podcastChip.className).toContain("border-primary");
 
     const incrementBtn = screen.getByRole("button", { name: /aumentar tiempo/i });
     fireEvent.click(incrementBtn);
