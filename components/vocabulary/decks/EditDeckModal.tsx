@@ -5,17 +5,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { updateDeck, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
-
-const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
-  "#f97316", "#eab308", "#22c55e", "#14b8a6",
-  "#3b82f6", "#06b6d4",
-];
-
-const ICONS = [
-  "📚", "✏️", "🌍", "💼", "🎯", "🔬", "🎨", "🏋️",
-  "🍕", "✈️", "🎵", "💡", "🧠", "📰", "🤝", "🏠",
-];
+import { DECK_COLORS as COLORS, DECK_ICONS as ICONS } from "./deck-palette";
 
 interface EditDeckModalProps {
   deck: DeckListItem;

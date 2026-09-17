@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { addWordsToDeck, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
+import { DECK_COLORS } from "./deck-palette";
 
 interface AddToExistingDeckModalProps {
   wordIds: string[];
@@ -63,7 +64,7 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
               >
                 <div
                   className="w-9 h-9 rounded-lg flex items-center justify-center text-body-lg flex-shrink-0"
-                  style={{ background: deck.color ?? "#6366f1" }}
+                  style={{ background: deck.color ?? DECK_COLORS[0] }}
                 >
                   {deck.icon ?? "📚"}
                 </div>

@@ -8,19 +8,9 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { createDeckWithWords } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { Tables } from "@/lib/supabase/types";
+import { DECK_COLORS as COLORS, DECK_ICONS as ICONS } from "./deck-palette";
 
 type Deck = Tables<"decks">;
-
-const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
-  "#f97316", "#eab308", "#22c55e", "#14b8a6",
-  "#3b82f6", "#06b6d4",
-];
-
-const ICONS = [
-  "📚", "✏️", "🌍", "💼", "🎯", "🔬", "🎨", "🏋️",
-  "🍕", "✈️", "🎵", "💡", "🧠", "📰", "🤝", "🏠",
-];
 
 interface CreateDeckFromWordsModalProps {
   wordIds: string[];

@@ -4,10 +4,10 @@ export function renderInline(text: string): ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|~~[^~]+~~|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g)
   return parts.map((part, index) => {
     if (!part) return null
-    if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) return <strong key={index} className="font-semibold text-[var(--primary)]">{part.slice(2, -2)}</strong>
-    if (part.startsWith('~~') && part.endsWith('~~') && part.length > 4) return <s key={index} className="text-[var(--text-tertiary)]">{part.slice(2, -2)}</s>
-    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) return <code key={index} className="rounded bg-[oklch(0_0_0_/_0.25)] px-1.5 py-0.5 font-mono text-caption text-[var(--primary)]">{part.slice(1, -1)}</code>
-    if ((part.startsWith('*') && part.endsWith('*') && part.length > 2) || (part.startsWith('_') && part.endsWith('_') && part.length > 2)) return <em key={index} className="italic text-[var(--text-primary)]">{part.slice(1, -1)}</em>
+    if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) return <strong key={index} className="font-semibold text-primary">{part.slice(2, -2)}</strong>
+    if (part.startsWith('~~') && part.endsWith('~~') && part.length > 4) return <s key={index} className="text-fg-subtle">{part.slice(2, -2)}</s>
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) return <code key={index} className="rounded bg-surface-sunken/70 px-1.5 py-0.5 font-mono text-caption text-primary">{part.slice(1, -1)}</code>
+    if ((part.startsWith('*') && part.endsWith('*') && part.length > 2) || (part.startsWith('_') && part.endsWith('_') && part.length > 2)) return <em key={index} className="italic text-fg">{part.slice(1, -1)}</em>
     return part
   })
 }
