@@ -36,7 +36,7 @@ function OpenEndedText({ value }: { value: string }) {
   return (
     <>
       {text}
-      <span className="text-fg-muted font-normal" aria-hidden>…</span>
+      <span className="text-ink-secondary font-normal" aria-hidden>…</span>
       <span className="sr-only">(continúa)</span>
     </>
   );
@@ -85,21 +85,21 @@ export default function HomeChunkOfDayCard() {
 
   return (
     <div
-      className="home-sidebar-card relative flex min-h-[220px] h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default border-l-[3px] border-l-primary/75 bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex min-h-[220px] h-full flex-col justify-between gap-4 overflow-hidden rounded-3xl bg-sky p-5 text-ink motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
       {/* Header: Frase del día + Categoría */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center gap-2 shrink-0">
-          <MessageCircle size={16} className="text-primary" aria-hidden />
-          <span id="chunk-of-day-heading" className="whitespace-nowrap font-label text-caption font-bold text-fg">
+          <MessageCircle size={16} className="text-ink" aria-hidden />
+          <span id="chunk-of-day-heading" className="whitespace-nowrap font-label text-caption font-bold text-ink">
             Frase del día
           </span>
         </div>
         {categoryLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full bg-surface-sunken/80 px-3 py-1 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-sky-deep px-3 py-1 font-sans text-caption font-medium text-ink lowercase whitespace-nowrap"
             title={categoryLabel}
           >
             {categoryLabel}
@@ -109,10 +109,10 @@ export default function HomeChunkOfDayCard() {
 
       {loading && (
         <div className="relative z-1 flex flex-col gap-3 py-1" aria-hidden>
-          <div className="h-7 w-3/4 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-1/3 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
-          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-7 w-3/4 animate-pulse rounded bg-sky-deep" />
+          <div className="h-4 w-1/3 animate-pulse rounded bg-sky-deep" />
+          <div className="h-4 w-full animate-pulse rounded bg-sky-deep" />
+          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-sky-deep" />
         </div>
       )}
 
@@ -122,26 +122,26 @@ export default function HomeChunkOfDayCard() {
           <button
             type="button"
             onClick={() => speakText(chunk.chunk)}
-            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
+            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-sky-deep cursor-pointer"
             aria-label={`Escuchar pronunciación de ${chunk.chunk}`}
           >
             <div className="flex items-center justify-between gap-2">
               <span
                 className={cn(
-                  "font-heading font-bold text-fg leading-snug break-words tracking-tight transition-colors group-hover/listen:text-primary",
+                  "font-heading font-bold text-ink leading-snug break-words tracking-tight",
                   getHeroScale(chunk.chunk)
                 )}
               >
                 <OpenEndedText value={chunk.chunk} />
               </span>
-              <div className="shrink-0 rounded-full border border-border-subtle/50 bg-surface-sunken/70 p-2 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+              <div className="shrink-0 rounded-full bg-sky-deep p-2 text-ink">
                 <Volume2 size={16} aria-hidden />
               </div>
             </div>
 
             {chunk.ipa ? (
               <span
-                className="font-ipa text-body-md font-medium text-fg-muted/80 tracking-wide"
+                className="font-ipa text-body-md font-medium text-ink-secondary tracking-wide"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(chunk.ipa)}
@@ -150,7 +150,7 @@ export default function HomeChunkOfDayCard() {
           </button>
 
           {/* Traducción de la frase */}
-          <p className="font-body-md text-fg font-semibold leading-relaxed">
+          <p className="font-body-md text-ink font-semibold leading-relaxed">
             <OpenEndedText value={chunk.meaning} />
           </p>
 
@@ -162,7 +162,7 @@ export default function HomeChunkOfDayCard() {
       )}
 
       {/* Footer de acciones: Guardar (Bookmark) + Otra (Refresh icon) */}
-      <div className="relative z-1 flex items-center gap-2 border-t border-border-subtle/50 pt-3">
+      <div className="relative z-1 flex items-center gap-2 border-t border-ink/15 pt-3">
         <button
           type="button"
           onClick={() => void handleSave()}
@@ -170,11 +170,11 @@ export default function HomeChunkOfDayCard() {
           aria-label={label}
           aria-pressed={saveState === "saved"}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center gap-2 rounded-lg border px-3.5 py-1.5 font-body-sm font-medium transition-colors cursor-pointer",
+            "focus-ring inline-flex min-h-10 items-center gap-2 rounded-lg px-3.5 py-1.5 font-body-sm font-medium transition-colors cursor-pointer",
             saveState === "saved"
-              ? "border-accent/40 bg-accent/10 text-accent font-medium cursor-default"
-              : "border-border-default bg-surface-base text-fg hover:bg-surface-sunken",
-            saveState === "error" && "border-error/40 text-error"
+              ? "bg-ink text-paper cursor-default"
+              : "bg-sky-deep text-ink hover:bg-ink hover:text-paper",
+            saveState === "error" && "text-error"
           )}
         >
           {saveState === "saved" ? (
@@ -189,7 +189,7 @@ export default function HomeChunkOfDayCard() {
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra frase"
-          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border-default bg-surface-base px-3 text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg bg-sky-deep px-3 text-ink transition-colors hover:bg-ink hover:text-paper cursor-pointer"
         >
           <RefreshCw
             size={14}

@@ -45,13 +45,13 @@ function FormattedDefinition({ definition }: { definition: string }) {
     const english = parts.slice(1).join(" — ");
     return (
       <p className="font-body-md leading-relaxed">
-        <span className="font-bold text-fg">{spanish}</span>
-        <span className="text-fg-muted font-normal"> — {english}</span>
+        <span className="font-bold text-ink">{spanish}</span>
+        <span className="text-ink-secondary font-normal"> — {english}</span>
       </p>
     );
   }
   return (
-    <p className="font-body-md text-fg font-semibold leading-relaxed">
+    <p className="font-body-md text-ink font-semibold leading-relaxed">
       {definition}
     </p>
   );
@@ -131,28 +131,28 @@ export default function HomeWordOfDayCard({
 
   return (
     <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
+      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-3xl bg-butter p-5 text-ink motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="word-of-day-heading"
     >
       {/* Header: Palabra del día + Categoría gramatical o vínculo con la sesión */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center gap-2 shrink-0">
-          <BookOpen size={16} className="text-accent" aria-hidden />
-          <span id="word-of-day-heading" className="whitespace-nowrap font-kicker text-fg-subtle">
+          <BookOpen size={16} className="text-ink" aria-hidden />
+          <span id="word-of-day-heading" className="whitespace-nowrap font-kicker text-ink-secondary">
             Palabra del día
           </span>
         </div>
         {inSessionToday ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-3 py-1 font-sans text-caption font-medium text-primary whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-ink px-3 py-1 font-sans text-caption font-medium text-paper whitespace-nowrap"
             title="Aparece en tu sesión de hoy"
           >
             En tu sesión de hoy
           </span>
         ) : posLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full bg-surface-sunken/80 px-3 py-1 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-butter-deep px-3 py-1 font-sans text-caption font-medium text-ink lowercase whitespace-nowrap"
             title={posLabel}
           >
             {posLabel}
@@ -162,17 +162,17 @@ export default function HomeWordOfDayCard({
 
       {loading && (
         <div className="relative z-1 flex flex-col gap-3 py-1" aria-hidden>
-          <div className="h-7 w-3/4 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-1/3 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
-          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-surface-sunken" />
+          <div className="h-7 w-3/4 animate-pulse rounded bg-butter-deep" />
+          <div className="h-4 w-1/3 animate-pulse rounded bg-butter-deep" />
+          <div className="h-4 w-full animate-pulse rounded bg-butter-deep" />
+          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-butter-deep" />
         </div>
       )}
 
       {error && !word && !loading && (
         <div className="animate-state-in relative z-1 flex flex-col items-start gap-2 py-1">
           <p className="font-body-sm text-error">No se pudo cargar la palabra.</p>
-          <Button type="button" variant="ghost" size="md" onClick={() => refresh()}>
+          <Button type="button" variant="ej-outline" size="md" onClick={() => refresh()}>
             Reintentar
           </Button>
         </div>
@@ -184,26 +184,26 @@ export default function HomeWordOfDayCard({
           <button
             type="button"
             onClick={() => speakText(word.word)}
-            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
+            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-butter-deep cursor-pointer"
             aria-label={`Escuchar pronunciación de ${word.word}`}
           >
             <div className="flex items-center justify-between gap-2">
               <span
                 className={cn(
-                  "font-heading font-bold text-fg leading-tight break-words tracking-tight transition-colors group-hover/listen:text-primary",
+                  "font-heading font-bold text-ink leading-tight break-words tracking-tight",
                   getHeroScale(word.word)
                 )}
               >
                 {word.word}
               </span>
-              <div className="shrink-0 rounded-full border border-border-subtle/50 bg-surface-sunken/70 p-2 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
+              <div className="shrink-0 rounded-full bg-butter-deep p-2 text-ink">
                 <Volume2 size={16} aria-hidden />
               </div>
             </div>
 
             {word.ipa ? (
               <span
-                className="font-ipa text-body-md font-medium text-fg-subtle tracking-wide"
+                className="font-ipa text-body-md font-medium text-ink-secondary tracking-wide"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(word.ipa)}
@@ -218,13 +218,13 @@ export default function HomeWordOfDayCard({
 
           {/* Ejemplo estilo card con kicker y audio */}
           {example ? (
-            <HeroTermExample example={example} resetKey={word.word} />
+            <HeroTermExample example={example} resetKey={word.word} tone="butter" />
           ) : null}
         </div>
       )}
 
       {/* Footer de acciones: Guardar (Bookmark) + Otra (Refresh icon) */}
-      <div className="relative z-1 flex items-center gap-2 border-t border-border-subtle/50 pt-3">
+      <div className="relative z-1 flex items-center gap-2 border-t border-ink/15 pt-3">
         <button
           ref={bookmarkRef}
           type="button"
@@ -233,11 +233,11 @@ export default function HomeWordOfDayCard({
           aria-label={label}
           aria-pressed={saveState === "saved"}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center gap-2 rounded-lg border px-3.5 py-1.5 font-body-sm font-medium transition-colors cursor-pointer",
+            "focus-ring inline-flex min-h-10 items-center gap-2 rounded-lg px-3.5 py-1.5 font-body-sm font-medium transition-colors cursor-pointer",
             saveState === "saved"
-              ? "border-accent/40 bg-accent/10 text-accent font-medium cursor-default"
-              : "border-border-default bg-surface-base text-fg hover:bg-surface-sunken",
-            saveState === "error" && "border-error/40 text-error"
+              ? "bg-ink text-paper cursor-default"
+              : "bg-butter-deep text-ink hover:bg-ink hover:text-paper",
+            saveState === "error" && "text-error"
           )}
         >
           {saveState === "saved" ? (
@@ -252,7 +252,7 @@ export default function HomeWordOfDayCard({
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra palabra"
-          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border-default bg-surface-base px-3 text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg bg-butter-deep px-3 text-ink transition-colors hover:bg-ink hover:text-paper cursor-pointer"
         >
           <RefreshCw
             size={14}
