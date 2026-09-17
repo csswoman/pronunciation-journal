@@ -13,7 +13,7 @@ import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
 import { emptyPracticeHubData, type PracticeHubData } from '@/lib/practice/hub-data-types'
-import PracticeHubHeader from './PracticeHubHeader'
+import PracticeHubHeader, { type PracticeFilter } from './PracticeHubHeader'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
 
 interface Props {
@@ -24,6 +24,7 @@ interface Props {
 export default function PracticeHubClient({ fromDaily, serverData }: Props) {
   const { user } = useAuth()
   const hubData = serverData ?? emptyPracticeHubData()
+  const [activeFilter, setActiveFilter] = useState<PracticeFilter>('all')
   const [recommendation, setRecommendation] = useState<RecommendedResult>(() =>
     resolveRecommendedMode({ fromDaily: false, arc: undefined, lastModeId: null }),
   )
@@ -102,7 +103,11 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
 
   return (
     <PageLayout archetype="catalog" className="practice-hub">
-      <PracticeHubHeader fromDaily={fromDaily} />
+      <PracticeHubHeader
+        fromDaily={fromDaily}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+      />
       <div className="flex flex-col gap-5">
         {activityUnavailable && (
           <p role="status" className="font-caption text-fg-muted">
@@ -110,6 +115,7 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
           </p>
         )}
         <PracticeOptionsGrid
+          activeFilter={activeFilter}
           recommendation={recommendation}
           dueCount={dueCount}
           vocabLearnedCount={vocabLearnedCount}

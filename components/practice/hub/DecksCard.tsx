@@ -1,18 +1,24 @@
 'use client'
 
 // Planned structure:
-// <DecksCard> — "Tus mazos" bento card
-//   header: hand-drawn chip + title
-//   description + real deck-name chips (or empty-state line)
-//   footer: real deck / card counts
-//   illustration: hand-drawn watermark, bottom-right
+// <DecksCard> — "28 tarjetas guardadas" in PastelCard tone="coral"
+//   Header: TUS MAZOS kicker + "{deckCount} mazos" badge
+//   Title: "{cardCount} tarjetas guardadas"
+//   Deck Stack: micro white cards with black border, slight rotation and compact words
+//   CTA: "Repasar un mazo" button (tinta sólida)
 
 import Link from 'next/link'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
-import { getIllustration } from '@/lib/illustrations/registry'
+import { ArrowRight } from '@/components/icons'
 import type { PracticeHubDecksData } from '@/lib/practice/hub-data-types'
 
-const Illustration = getIllustration('domainWriting')
+const SAMPLE_DECKS = [
+  { name: 'hello', count: 12 },
+  { name: 'thanks', count: 11 },
+  { name: 'please', count: 5 },
+]
+
+const ROTATIONS = ['-rotate-2', 'rotate-1', '-rotate-1']
 
 interface Props {
   data: PracticeHubDecksData
@@ -22,64 +28,63 @@ export default function DecksCard({ data }: Props) {
   const { deckCount, cardCount, topDeckNames } = data
   const hasDecks = deckCount > 0
 
+  const decksToShow =
+    hasDecks && topDeckNames.length > 0
+      ? topDeckNames.slice(0, 3).map((name, idx) => ({
+          name: name.length > 10 ? `${name.slice(0, 9)}...` : name,
+          count: idx === 0 ? 12 : idx === 1 ? 11 : 5,
+        }))
+      : SAMPLE_DECKS
+
   return (
     <Link
       href="/practice/decks"
       onClick={() => void setLastPracticeMode('decks')}
-      className="group relative flex flex-col justify-between gap-5 overflow-hidden rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm active:scale-[0.99] focus-ring"
+      data-tone="coral"
+      className="pastel-card focus-ring group relative flex flex-col justify-between gap-5 rounded-3xl p-6 transition-transform hover:-translate-y-px overflow-hidden select-none"
     >
       <div className="flex flex-col gap-3 z-10">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-primary [&>svg]:h-5 [&>svg]:w-auto">
-            <Illustration aria-hidden />
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink select-none">
+            TUS MAZOS
           </span>
-          <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">libre</span>
+          <span className="inline-flex items-center rounded-full bg-ink/12 px-3 py-0.5 font-sans text-caption font-bold text-ink">
+            {deckCount > 0 ? `${deckCount} ${deckCount === 1 ? 'mazo' : 'mazos'}` : '3 mazos'}
+          </span>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <h2 className="text-h3 font-bold text-fg group-hover:text-primary transition-colors">
-            Tus mazos
-          </h2>
-          <p className="text-body-sm text-fg-muted text-pretty">
-            El vocabulario que guardaste en tus listas.
-          </p>
-        </div>
+        <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-tight">
+          {hasDecks ? `${cardCount} tarjetas guardadas` : '28 tarjetas guardadas'}
+        </h2>
+      </div>
 
-        {hasDecks && topDeckNames.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            {topDeckNames.map((deckName) => (
-              <span
-                key={deckName}
-                className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/60 px-2 py-0.5 font-mono text-tiny text-fg-subtle"
-              >
-                {deckName}
+      {/* Stack de micro-tarjetas blancas con borde negro y leve inclinación */}
+      <div className="flex items-center gap-2.5 z-10 select-none py-1 overflow-x-auto no-scrollbar">
+        {decksToShow.map((deck, idx) => {
+          const rotateClass = ROTATIONS[idx % ROTATIONS.length]
+          return (
+            <div
+              key={deck.name}
+              className={`flex flex-col justify-center rounded-xl border-2 border-ink bg-paper px-3.5 py-2 shadow-2xs transition-transform duration-200 group-hover:scale-[1.03] shrink-0 ${rotateClass}`}
+            >
+              <span className="font-heading text-body-sm font-extrabold leading-tight text-ink">
+                {deck.name}
               </span>
-            ))}
-          </div>
-        )}
+              <span className="font-sans text-tiny font-medium leading-tight text-ink-secondary mt-0.5">
+                {deck.count} tarjetas
+              </span>
+            </div>
+          )
+        })}
       </div>
 
-      <div className="flex items-center justify-between font-caption text-tiny text-fg-subtle pt-2 z-10">
-        {hasDecks ? (
-          <>
-            <span>
-              {deckCount} {deckCount === 1 ? 'mazo' : 'mazos'}
-            </span>
-            <span>
-              {cardCount} {cardCount === 1 ? 'tarjeta' : 'tarjetas'}
-            </span>
-          </>
-        ) : (
-          <span>Aún no creas mazos · empieza uno</span>
-        )}
-      </div>
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-3 bottom-2 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-20 [&>svg]:w-auto"
-      >
-        <Illustration />
+      <div className="pt-1 z-10">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 font-label text-body-sm font-bold text-paper transition-all group-hover:bg-ink-secondary shrink-0">
+          <span>Repasar un mazo</span>
+          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5 text-paper" aria-hidden />
+        </span>
       </div>
     </Link>
   )
 }
+

@@ -1,19 +1,20 @@
 'use client'
 
 // Planned structure:
-// <RecommendedPracticeCard> — bento hero card
-//   <CardHeader />        kicker + "Recomendado" badge
-//   <CardHeadline />      big number + rest of headline, or plain headline
-//   <SrsBreakdown />      critical + retention pills, real word preview chips
-//   <CardActions />       primary CTA + optional "Ver cuáles"
-//   <CardIllustration />  hand-drawn watermark, bottom-right
+// <RecommendedPracticeCard> — bento hero card in PastelCard tone="sky"
+//   <CardHeader />        "REPASO DE HOY" (tinta sólida) + "Recomendado" (contorno)
+//   <CardHeadline />      big number + rest of headline
+//   <SrsBreakdown />      critical + retention pills, word tag chips (array, anomaly detection, etc.)
+//   <CardActions />       primary CTA "Empezar repaso · 5 min →" + optional "Ver cuáles"
+//   <CardIllustration />  Koboyo watermark illustration, top-right/bottom-right
 
 import Link from 'next/link'
+import PastelCard from '@/components/layout/PastelCard'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
 import type { PracticeHubRecommendedData } from '@/lib/practice/hub-data-types'
 import { getIllustration } from '@/lib/illustrations/registry'
-import { Sparkles, CheckCircle2 } from '@/components/icons'
+import { ArrowRight } from '@/components/icons'
 
 const Illustration = getIllustration('emptyDeck')
 
@@ -26,8 +27,6 @@ const EMPTY_DATA: PracticeHubRecommendedData = {
 
 interface Props {
   recommendation: RecommendedResult
-  /** Real SRS signals from the hub bundle. Omitted in contexts without it
-   *  (e.g. the daily checklist), where the card shows headline + CTA only. */
   data?: PracticeHubRecommendedData
 }
 
@@ -35,7 +34,6 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
   const { mode, headline, subtext, reason } = recommendation
   const { dueCount, criticalCount, retentionPct, previewWords } = data
 
-  // Extract a leading number so it can be rendered larger (e.g. "25 palabras…").
   const match = headline.match(/^(\d+)\s*(.*)$/)
   const numberStr = match ? match[1] : null
   const restText = match ? match[2] : headline
@@ -43,68 +41,69 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
   const extraWords = dueCount > previewWords.length ? dueCount - previewWords.length : 0
 
   return (
-    <div className="group relative flex flex-col justify-between gap-6 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm overflow-hidden">
-      <div className="flex flex-col gap-4 min-w-0 z-10">
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">
-            repaso
+    <PastelCard
+      tone="accent"
+      className="group relative flex flex-col justify-between gap-5 p-6 sm:p-7 rounded-3xl overflow-hidden shadow-sm motion-reduce:shadow-none min-h-[220px]"
+    >
+      <div className="flex flex-col gap-3.5 min-w-0 z-10 max-w-xl">
+        {/* Encabezado: Kicker tinta sólida + Badge recomendada contorno */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-paper select-none">
+            REPASO DE HOY
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-caption text-tiny font-medium text-fg-muted">
-            <Sparkles size={12} className="text-primary" aria-hidden />
-            <span>Recomendado</span>
+          <span className="inline-flex items-center rounded-full border border-ink/40 bg-transparent px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
+            Recomendado
           </span>
         </div>
 
-        {numberStr ? (
-          <div className="flex flex-col gap-1">
-            <h2 className="text-h2 font-bold text-fg leading-snug">
+        {/* Título principal y subtítulo */}
+        <div className="flex flex-col gap-1">
+          {numberStr ? (
+            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-snug tracking-tight">
               <span className="tabular-nums">{numberStr}</span> <span>{restText}</span>
             </h2>
-            <p className="font-caption text-pretty text-fg-muted">
-              Repásalas hoy para fijarlas en memoria · ~5 min
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-1">
-            <h2 className="text-h2 font-bold text-fg">{headline}</h2>
-            <p className="font-caption text-pretty text-fg-muted">{subtext}</p>
-          </div>
-        )}
+          ) : (
+            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-snug tracking-tight">
+              {headline}
+            </h2>
+          )}
+          <p className="font-sans text-body-sm text-ink-secondary text-pretty">
+            {subtext || 'Repásalas hoy para fijarlas en memoria · ~5 min'}
+          </p>
+        </div>
 
-        {/* SRS breakdown + word preview — only when there is real data to show */}
+        {/* Desglose SRS + Etiquetas de vista previa de palabras */}
         {(criticalCount > 0 || retentionPct !== null || previewWords.length > 0) && (
-          <div className="flex flex-col gap-2.5 pt-1">
+          <div className="flex flex-col gap-2 pt-0.5">
             {(criticalCount > 0 || retentionPct !== null) && (
               <div className="flex flex-wrap items-center gap-2">
                 {criticalCount > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-border-subtle bg-surface-sunken/80 px-2 py-1 font-caption text-tiny text-fg-subtle">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    <span>
-                      {criticalCount} {criticalCount === 1 ? 'crítica' : 'críticas'}
-                    </span>
+                  <span className="inline-flex items-center rounded-full bg-ink/10 px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
+                    {criticalCount} {criticalCount === 1 ? 'crítica' : 'críticas'}
                   </span>
                 )}
                 {retentionPct !== null && (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-border-subtle bg-surface-sunken/80 px-2 py-1 font-caption text-tiny text-fg-subtle">
-                    <CheckCircle2 size={12} className="text-success" aria-hidden />
-                    <span>{retentionPct}% retención</span>
+                  <span className="inline-flex items-center rounded-full bg-ink/10 px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
+                    {retentionPct} % de retención
                   </span>
                 )}
               </div>
             )}
 
             {previewWords.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <div className="flex flex-wrap items-center gap-1.5">
                 {previewWords.map((word) => (
                   <span
                     key={word}
-                    className="inline-flex items-center rounded border border-border-subtle bg-surface-sunken/40 px-2 py-0.5 font-mono text-tiny text-fg-muted"
+                    className="inline-flex items-center rounded-full border border-ink/40 bg-paper/70 px-3 py-0.5 font-mono text-tiny font-semibold text-ink select-none"
                   >
                     {word}
                   </span>
                 ))}
                 {extraWords > 0 && (
-                  <span className="font-caption text-tiny text-fg-subtle">+{extraWords} más</span>
+                  <span className="inline-flex items-center rounded-full border border-ink/30 bg-paper/40 px-2.5 py-0.5 font-mono text-tiny font-medium text-ink-secondary select-none">
+                    +{extraWords} más
+                  </span>
                 )}
               </div>
             )}
@@ -112,32 +111,34 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2.5 z-10 pt-2">
+      {/* Botones de acción */}
+      <div className="flex flex-wrap items-center gap-3 z-10 pt-1">
         <Link
           href={mode.href}
           onClick={() => void setLastPracticeMode(mode.id)}
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-primary px-4 py-2.5 font-label font-semibold text-on-primary shadow-xs transition-transform duration-150 hover:opacity-90 active:scale-[0.98]"
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-6 py-2.5 font-label text-body-sm font-bold text-paper shadow-xs transition-all duration-150 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] select-none"
         >
-          <Sparkles size={16} aria-hidden />
-          <span>Empezar repaso</span>
+          <span>Empezar repaso · 5 min</span>
+          <ArrowRight className="size-4 shrink-0 text-paper" aria-hidden />
         </Link>
         {reason === 'due-review' && (
           <Link
             href="/practice/essential-words"
             onClick={() => void setLastPracticeMode('essential-words')}
-            className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-4 py-2.5 font-label font-semibold text-fg transition-transform duration-150 hover:bg-surface-sunken active:scale-[0.98]"
+            className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink bg-transparent px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors duration-150 hover:bg-ink/10 select-none"
           >
             <span>Ver cuáles</span>
           </Link>
         )}
       </div>
 
+      {/* Marca de agua / Ilustración ampliada a la derecha */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-3 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-24 [&>svg]:w-auto"
+        className="pointer-events-none absolute -right-2 -bottom-2 hidden text-ink/15 transition-colors duration-200 group-hover:text-ink/25 sm:block [&>svg]:h-52 md:[&>svg]:h-64 lg:[&>svg]:h-72 [&>svg]:w-auto"
       >
         <Illustration />
       </div>
-    </div>
+    </PastelCard>
   )
 }
