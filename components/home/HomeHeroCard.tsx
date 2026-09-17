@@ -20,7 +20,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, ChevronUp } from "@/components/icons";
-import Badge from "@/components/ui/Badge";
 import PastelCard from "@/components/layout/PastelCard";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
 import {
@@ -119,27 +118,24 @@ export default function HomeHeroCard({
             {/* Header: Kicker de actividad con chip + Métricas de la sesión */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  label={
-                    allDone
-                      ? "Sesión completada"
-                      : isMidSession
-                        ? "Continuar donde lo dejaste"
-                        : "Sesión de hoy"
-                  }
-                  variant={allDone ? "success" : "neutral"}
-                  size="sm"
-                />
+                <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 font-sans text-caption font-bold text-paper select-none">
+                  {allDone
+                    ? "Sesión completada"
+                    : isMidSession
+                      ? "Sesión en curso"
+                      : "Sesión de hoy"}
+                </span>
                 {!allDone ? (
-                  <Badge
-                    label={
-                      isCurrentOptional
-                        ? "Actividad opcional"
-                        : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`
-                    }
-                    variant="neutral"
-                    size="sm"
-                  />
+                  <span className="inline-flex items-center rounded-full border border-ink/40 bg-transparent px-3 py-1 font-sans text-caption font-medium text-ink select-none">
+                    {isCurrentOptional
+                      ? "Actividad opcional"
+                      : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`}
+                  </span>
+                ) : null}
+                {isMidSession && !allDone ? (
+                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-sans text-caption font-bold text-on-primary select-none">
+                    En curso
+                  </span>
                 ) : null}
               </div>
               <h2 className="font-heading text-h1 font-bold text-ink text-balance">

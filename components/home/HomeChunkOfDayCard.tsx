@@ -188,17 +188,20 @@ export default function HomeChunkOfDayCard() {
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra frase"
-          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-2 font-sans text-body-sm font-bold text-ink transition-all hover:bg-ink hover:text-paper cursor-pointer"
+          title="Otra frase"
+          className="focus-ring group relative inline-flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-transparent text-ink transition-all hover:bg-ink/10 hover:scale-105 active:scale-95 cursor-pointer select-none"
         >
           <RefreshCw
-            size={15}
+            size={18}
             className={cn(
-              "transition-transform duration-300",
-              isRotating && "rotate-180"
+              "transition-transform duration-500",
+              isRotating ? "rotate-[360deg] opacity-60" : "group-hover:rotate-45"
             )}
             aria-hidden
           />
-          <span>Otra</span>
+          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 font-sans text-caption font-semibold whitespace-nowrap shadow-xs">
+            Otra frase
+          </span>
         </button>
       </div>
     </PastelCard>

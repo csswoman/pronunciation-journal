@@ -573,26 +573,32 @@
 
 .pastel-card[data-tone="sky"] {
   --card: var(--ej-sky);
+  --card-deep: var(--ej-sky-deep);
 }
 
 .pastel-card[data-tone="accent"] {
   --card: oklch(calc(0.88 + var(--l-shift-base)) calc(0.07 * var(--chroma-boost-base)) var(--hue-base));
+  --card-deep: oklch(calc(0.78 + var(--l-shift-base)) calc(0.10 * var(--chroma-boost-base)) var(--hue-base));
 }
 
 .pastel-card[data-tone="butter"] {
   --card: var(--ej-butter);
+  --card-deep: var(--ej-butter-deep);
 }
 
 .pastel-card[data-tone="coral"] {
   --card: var(--ej-coral);
+  --card-deep: var(--ej-coral-deep);
 }
 
 .pastel-card[data-tone="lilac"] {
   --card: var(--ej-lilac);
+  --card-deep: var(--ej-lilac-deep);
 }
 
 .pastel-card[data-tone="mint"] {
   --card: var(--ej-mint);
+  --card-deep: var(--ej-mint-deep);
 }
 
 /* Internal surfaces — relative layers only, never a -soft/-deep swatch of
@@ -607,7 +613,8 @@
 }
 
 .pastel-card-chip {
-  background: rgb(18 21 28 / 0.08);
+  background: var(--card-deep, rgb(18 21 28 / 0.12));
+  color: var(--ink);
 }
 
 .pastel-card-row-active {

@@ -60,12 +60,12 @@ export default function HomeHeroStepList({
           const stepNumber = (
             <span
               className={cn(
-                "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold select-none transition-colors",
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-sm font-bold select-none transition-colors",
                 isCurrent
                   ? "bg-ink text-paper"
                   : isDone
                     ? "bg-success/10 border border-success/20 text-success"
-                    : "pastel-card-chip text-ink-secondary group-hover:text-ink"
+                    : "bg-ink/10 text-ink-secondary group-hover:text-ink"
               )}
             >
               {idx + 1}
@@ -101,7 +101,9 @@ export default function HomeHeroStepList({
                 ) : (
                   <div className="flex items-center gap-2 shrink-0">
                     {isCurrent ? (
-                      <Badge label="En curso" variant="default" size="sm" />
+                      <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-sans text-caption font-bold text-on-primary select-none">
+                        En curso
+                      </span>
                     ) : null}
                     {step.id === "journal_entry" || step.href === "/journal" ? (
                       <Badge label="Opcional" variant="neutral" size="sm" />
@@ -158,7 +160,7 @@ export default function HomeHeroStepList({
         {isExpanded ? (
           <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-border-subtle bg-transparent px-3.5 py-2.5 text-body-sm text-ink-secondary transition-colors">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-              <span className="pastel-card-chip flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-semibold text-ink-secondary select-none">
+              <span className="bg-ink/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-sm font-semibold text-ink-secondary select-none">
                 {steps.length + 1}
               </span>
               <div className="flex flex-col min-w-0 flex-1">
