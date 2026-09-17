@@ -28,25 +28,25 @@ export default function HomeEssentialWordsBody({
     <>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <BookOpen className="size-4.5 text-primary shrink-0" aria-hidden />
-          <span className="font-label text-body-xs font-medium text-fg-muted">
+          <BookOpen className="size-4.5 text-ink shrink-0" aria-hidden />
+          <span className="font-label text-body-xs font-medium text-ink-secondary">
             Palabras esenciales · {levelKey}
           </span>
         </div>
-        <span className="font-mono text-caption font-semibold tabular-nums text-primary">
+        <span className="font-mono text-caption font-semibold tabular-nums text-ink">
           {progressPct}%
         </span>
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-2">
-          <p className="font-sans text-heading-md font-bold tabular-nums text-fg leading-none">
+          <p className="font-sans text-heading-md font-bold tabular-nums text-ink leading-none">
             {learnedCount}{" "}
-            <span className="font-body-sm font-normal text-fg-muted">
+            <span className="font-body-sm font-normal text-ink-secondary">
               de {totalLevelWords}
             </span>
           </p>
-          <span className="text-caption text-fg-muted">
+          <span className="text-caption text-ink-secondary">
             {learnedCount === 0 ? "Comenzar" : `${totalLevelWords - learnedCount} restantes`}
           </span>
         </div>
@@ -57,10 +57,10 @@ export default function HomeEssentialWordsBody({
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label={`Progreso de palabras esenciales nivel ${levelKey}: ${progressPct}% (${learnedCount} de ${totalLevelWords})`}
-          className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken border border-border-subtle/60"
+          className="h-2 w-full overflow-hidden rounded-full border-[1.5px] border-ink bg-coral-deep"
         >
           <div
-            className="h-full rounded-full bg-primary transition-all duration-500"
+            className="h-full rounded-full bg-ink transition-all duration-500"
             style={{ width: `${progressPct}%` }}
           />
         </div>

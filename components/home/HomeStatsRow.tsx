@@ -52,7 +52,7 @@ export default function HomeStatsRow({
       <Link
         href="/practice/essential-words"
         prefetch={false}
-        className="focus-ring group flex flex-col justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs transition-all hover:border-border-default hover:shadow-sm"
+        className="focus-ring group flex flex-col justify-between gap-3 rounded-3xl bg-coral p-3.5 text-ink transition-transform sm:p-4 hover:-translate-y-px"
       >
         {showLiveCount ? (
           <HomeEssentialWordsCount
