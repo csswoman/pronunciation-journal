@@ -13,9 +13,20 @@ type ButtonVariant =
   // Deprecated mapping aliases for backwards compatibility during migration
   | "outline"
   | "danger"
-  | "ghost-danger";
+  | "ghost-danger"
+  // English Journal design system — pill-shaped variants (see PILL_VARIANTS)
+  | "ej-ink"
+  | "ej-outline"
+  | "ej-neutral"
+  | "ej-butter"
+  | "ej-mint";
 
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "iconLg" | "icon-sm" | "icon-lg";
+
+// Variants from the English Journal design system render as pills (radius-full)
+// instead of the legacy rounded-sm/md shape. Scoped to the new variants only so
+// existing screens keep their current button shape until migrated in Phase 4.
+const PILL_VARIANTS = new Set<ButtonVariant>(["ej-ink", "ej-outline", "ej-neutral", "ej-butter", "ej-mint"]);
 type IconPosition = "left" | "right";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -103,6 +114,32 @@ const variantStyles: Record<ButtonVariant, string> = {
     "active:translate-y-[-1px]"
   ),
 
+  // English Journal design system — pill button, weight 700, gap 10
+  "ej-ink": cn(
+    "bg-ink text-paper",
+    "hover:bg-ink-secondary",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
+  "ej-outline": cn(
+    "bg-transparent text-ink border-2 border-ink",
+    "hover:bg-ej-surface-raised",
+    "active:translate-y-[-1px]"
+  ),
+  "ej-neutral": cn(
+    "bg-ej-field text-ink",
+    "hover:bg-ej-border",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
+  "ej-butter": cn(
+    "bg-butter text-ink",
+    "hover:bg-butter-deep",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
+  "ej-mint": cn(
+    "bg-mint text-ink",
+    "hover:bg-mint-deep",
+    "active:translate-y-[-1px] active:shadow-md"
+  ),
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -114,6 +151,14 @@ const sizeStyles: Record<ButtonSize, string> = {
   "icon-sm": "p-2.5 rounded-full min-h-11 min-w-11",
   iconLg: "p-3.5 rounded-full min-h-12 min-w-12",
   "icon-lg": "p-3.5 rounded-full min-h-12 min-w-12",
+};
+
+// English Journal pill sizing (h-40/44/54, gap-10, weight 700) overrides the
+// rounded-sm/md radius above for PILL_VARIANTS only.
+const pillSizeStyles: Record<"sm" | "md" | "lg", string> = {
+  sm: "px-4 py-2 text-body-sm font-bold rounded-full gap-2.5 h-10",
+  md: "px-5 py-2.5 text-body-md font-bold rounded-full gap-2.5 h-11",
+  lg: "px-7 py-3.5 text-body-lg font-bold rounded-full gap-2.5 h-[54px]",
 };
 
 export default function Button({
@@ -131,6 +176,11 @@ export default function Button({
   ...props
 }: ButtonProps & { "aria-label"?: string }) {
   const isDisabled = disabled || isLoading;
+  const isPill = PILL_VARIANTS.has(variant);
+  const resolvedSizeStyle =
+    isPill && (size === "sm" || size === "md" || size === "lg")
+      ? pillSizeStyles[size]
+      : sizeStyles[size];
 
   const base = cn(
     // Base layout
@@ -140,7 +190,7 @@ export default function Button({
 
     // Variant styles
     variantStyles[variant],
-    sizeStyles[size],
+    resolvedSizeStyle,
 
     // State: disabled
     isDisabled && "opacity-50 cursor-not-allowed pointer-events-none",
