@@ -111,7 +111,7 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 shadow-sm ring-1 ring-border-subtle/50 sm:p-6 motion-reduce:shadow-none">
+      <div className="flex flex-col gap-5 rounded-3xl bg-sky p-5 text-ink sm:p-6 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-4 min-w-0 flex-1">
@@ -119,7 +119,7 @@ export default function HomeHeroCard({
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2.5">
-                  <span className="font-mono text-caption font-semibold tracking-wider uppercase text-primary">
+                  <span className="font-mono text-caption font-semibold tracking-wider uppercase text-ink">
                     {allDone
                       ? "Sesión completada"
                       : isMidSession
@@ -141,7 +141,7 @@ export default function HomeHeroCard({
                     <Badge label="Completado" variant="success" dot size="sm" />
                   )}
                 </div>
-                <h2 className="font-heading text-h2 font-bold text-fg">
+                <h2 className="font-heading text-h2 font-bold text-ink">
                   {allDone ? "¡Todo listo por hoy!" : stepTitle}
                 </h2>
               </div>
@@ -149,7 +149,7 @@ export default function HomeHeroCard({
 
             {/* Subtítulo y Metadatos de la actividad hero */}
             {!allDone && (stepSubtitle || metaText || currentStepMinutes) ? (
-              <p className="-mt-2 font-body-sm text-fg-muted text-pretty">
+              <p className="-mt-2 font-body-sm text-ink-secondary text-pretty">
                 {[
                   stepSubtitle,
                   metaText,
@@ -190,7 +190,7 @@ export default function HomeHeroCard({
 
           {/* Ilustración de lado derecho */}
           <div
-            className="hidden sm:flex shrink-0 items-center justify-center self-center p-2 text-primary opacity-90 transition-opacity hover:opacity-100 [&>svg]:h-28 md:[&>svg]:h-32 [&>svg]:w-auto select-none"
+            className="hidden sm:flex shrink-0 items-center justify-center self-center p-2 text-ink opacity-90 transition-opacity hover:opacity-100 [&>svg]:h-28 md:[&>svg]:h-32 [&>svg]:w-auto select-none"
             aria-hidden="true"
             data-testid="hero-illustration"
           >
@@ -200,7 +200,7 @@ export default function HomeHeroCard({
 
         {/* Lista de actividades: 2 visibles por defecto, expandible a todas */}
         {steps.length > 0 ? (
-          <div className="flex flex-col gap-2 border-t border-border-subtle pt-3">
+          <div className="flex flex-col gap-2 border-t border-ink/15 pt-3">
             <HomeHeroStepList
               steps={steps}
               getStepStatus={getStepStatus}
@@ -216,7 +216,7 @@ export default function HomeHeroCard({
                 type="button"
                 onClick={() => setShowSecondarySteps((prev) => !prev)}
                 aria-expanded={showSecondarySteps}
-                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
+                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-ink-secondary transition-colors hover:text-ink"
               >
                 <span>
                   {showSecondarySteps

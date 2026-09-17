@@ -51,10 +51,10 @@ export default function HomeHeroStepList({
           const rowClass = cn(
             "group flex w-full items-center justify-between gap-3.5 rounded-xl px-3.5 py-2.5 text-body-sm text-left transition-all duration-150",
             isCurrent
-              ? "bg-primary/5 border border-primary/20 text-fg shadow-2xs hover:bg-primary/10"
+              ? "bg-sky-deep text-ink"
               : isDone
-                ? "text-fg-muted/80 bg-transparent opacity-85"
-                : "text-fg bg-surface-sunken/30 hover:bg-surface-sunken/60 border border-transparent focus-ring press-feedback cursor-pointer"
+                ? "text-ink-secondary bg-transparent opacity-85"
+                : "text-ink bg-sky-deep/60 hover:bg-sky-deep focus-ring press-feedback cursor-pointer"
           );
 
           const stepNumber = (
@@ -62,10 +62,10 @@ export default function HomeHeroStepList({
               className={cn(
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-mono text-sm font-bold select-none transition-colors",
                 isCurrent
-                  ? "bg-surface border-2 border-primary/30 text-primary shadow-xs"
+                  ? "bg-ink text-paper"
                   : isDone
                     ? "bg-success/10 border border-success/20 text-success"
-                    : "bg-surface border border-border-subtle/80 text-fg-muted group-hover:border-primary/40 group-hover:text-primary"
+                    : "bg-sky-deep text-ink-secondary group-hover:text-ink"
               )}
             >
               {idx + 1}
@@ -78,15 +78,15 @@ export default function HomeHeroStepList({
                 {stepNumber}
 
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className={cn("truncate font-semibold text-fg", isDone && "line-through opacity-75")}>
+                  <span className={cn("truncate font-semibold text-ink", isDone && "line-through opacity-75")}>
                     {localizeDailyStepTitle(step.title)}
                   </span>
                   {isCurrent ? (
-                    <span className="truncate font-caption font-medium text-primary">
+                    <span className="truncate font-caption font-medium text-ink">
                       Paso actual · {step.subtitle ? localizeDailyStepSubtitle(step.subtitle) : "Por aquí empiezas hoy"}
                     </span>
                   ) : step.subtitle ? (
-                    <span className="truncate font-caption font-normal text-fg-muted">
+                    <span className="truncate font-caption font-normal text-ink-secondary">
                       {localizeDailyStepSubtitle(step.subtitle)}
                     </span>
                   ) : null}
@@ -106,7 +106,7 @@ export default function HomeHeroStepList({
                     {step.id === "journal_entry" || step.href === "/journal" ? (
                       <Badge label="Opcional" variant="neutral" size="sm" />
                     ) : null}
-                    <span className="font-caption tabular-nums text-fg-muted select-none">
+                    <span className="font-caption tabular-nums text-ink-secondary select-none">
                       {step.estMinutes} min
                     </span>
                     <ArrowRight
@@ -114,7 +114,7 @@ export default function HomeHeroStepList({
                       aria-hidden
                       className={cn(
                         "shrink-0 transition-transform duration-150 group-hover:translate-x-0.5",
-                        isCurrent ? "text-primary" : "text-fg-muted group-hover:text-primary"
+                        isCurrent ? "text-ink" : "text-ink-secondary group-hover:text-ink"
                       )}
                     />
                   </div>
@@ -156,22 +156,22 @@ export default function HomeHeroStepList({
 
         {/* Recompensa final: Ejercicios extra bloqueados (solo al expandir) */}
         {isExpanded ? (
-          <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-border-subtle bg-surface-sunken/20 px-3.5 py-2.5 text-body-sm text-fg-muted transition-colors">
+          <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-ink/25 bg-sky-deep/40 px-3.5 py-2.5 text-body-sm text-ink-secondary transition-colors">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-sunken/60 font-mono text-sm font-semibold text-fg-muted border border-border-subtle/50 select-none">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-deep font-mono text-sm font-semibold text-ink-secondary select-none">
                 {steps.length + 1}
               </span>
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="truncate font-medium text-fg-muted">
+                <span className="truncate font-medium text-ink-secondary">
                   Ejercicios extra
                 </span>
-                <span className="truncate font-caption text-fg-muted/80">
+                <span className="truncate font-caption text-ink-secondary">
                   Se desbloquean al completar tu sesión de hoy
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              <Lock size={14} className="text-fg-muted" aria-hidden />
+              <Lock size={14} className="text-ink-secondary" aria-hidden />
             </div>
           </li>
         ) : null}
@@ -179,12 +179,12 @@ export default function HomeHeroStepList({
 
       {/* Afinar la ruta contextual dentro del plan del día (solo al expandir) */}
       {isExpanded && (needsPlacement || needsPronunciation) ? (
-        <div className="mt-1 rounded-xl border border-border-subtle bg-surface-sunken/40 px-3.5 py-2.5 text-caption text-fg-muted">
+        <div className="mt-1 rounded-xl bg-sky-deep/50 px-3.5 py-2.5 text-caption text-ink-secondary">
           <span>¿El nivel no se ajusta a ti? </span>
           {needsPlacement ? (
             <Link
               href="/assessment"
-              className="focus-ring font-medium text-primary underline underline-offset-2 hover:text-primary-hover transition-colors"
+              className="focus-ring font-medium text-ink underline underline-offset-2 hover:opacity-80 transition-opacity"
             >
               Prueba de nivel
             </Link>
@@ -193,7 +193,7 @@ export default function HomeHeroStepList({
           {needsPronunciation ? (
             <Link
               href="/assessment/pronunciation"
-              className="focus-ring font-medium text-primary underline underline-offset-2 hover:text-primary-hover transition-colors"
+              className="focus-ring font-medium text-ink underline underline-offset-2 hover:opacity-80 transition-opacity"
             >
               Diagnóstico oral
             </Link>
