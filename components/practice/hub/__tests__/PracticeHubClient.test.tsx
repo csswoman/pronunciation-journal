@@ -52,9 +52,9 @@ describe('PracticeHubClient', () => {
       expect(screen.getByText(/palabras esperan repaso/i)).toBeInTheDocument()
     })
 
-    expect(screen.getByText('Las 1000 esenciales')).toBeInTheDocument()
-    expect(screen.getByText('Tus mazos')).toBeInTheDocument()
-    expect(screen.getByText('Empezar repaso')).toBeInTheDocument()
+    expect(screen.getByText('Palabras esenciales')).toBeInTheDocument()
+    expect(screen.getByText('TUS MAZOS')).toBeInTheDocument()
+    expect(screen.getByText(/Empezar repaso/)).toBeInTheDocument()
     expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()
     expect(screen.getByText('Habla conectada')).toBeInTheDocument()
     expect(screen.getByText('Entonación')).toBeInTheDocument()

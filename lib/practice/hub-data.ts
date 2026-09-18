@@ -56,7 +56,7 @@ export async function getPracticeHubData(userId: string | null): Promise<Practic
   const [recommended, decks, reader, immersion, course] = await Promise.all([
     loadRecommended(supabase, userId).catch(() => empty.recommended),
     loadDecks(supabase, userId).catch(() => empty.decks),
-    loadReader(supabase).catch(() => empty.reader),
+    loadReader(supabase, userId).catch(() => empty.reader),
     loadImmersion(supabase).catch(() => empty.immersion),
     loadCourse(supabase, userId).catch(() => null),
   ])
@@ -79,6 +79,7 @@ async function loadRecommended(
       .from('word_bank')
       .select('repetitions')
       .eq('user_id', userId)
+      .eq('status', 'ready')
       .not('next_review_at', 'is', null)
       .lte('next_review_at', nowIso),
     supabase
@@ -136,21 +137,28 @@ async function loadDecks(
 
   const decks = (decksResult.data ?? []) as { id: string; name: string }[]
   const deckIds = new Set(decks.map((d) => d.id))
-  const cardCount = ((entriesResult.data ?? []) as { deck_id: string }[]).filter((row) =>
-    deckIds.has(row.deck_id),
-  ).length
+  const entryRows = (entriesResult.data ?? []) as { deck_id: string }[]
+  const cardCounts = new Map<string, number>()
+  for (const row of entryRows) {
+    if (deckIds.has(row.deck_id)) cardCounts.set(row.deck_id, (cardCounts.get(row.deck_id) ?? 0) + 1)
+  }
 
   return {
     deckCount: decks.length,
-    cardCount,
+    cardCount: [...cardCounts.values()].reduce((sum, count) => sum + count, 0),
     topDeckNames: decks.slice(0, 3).map((d) => d.name).filter(Boolean),
+    topDeckCardCounts: decks.slice(0, 3).map((d) => cardCounts.get(d.id) ?? 0),
   }
 }
 
-async function loadReader(supabase: ServerClient): Promise<{ recentWordCount: number }> {
+async function loadReader(
+  supabase: ServerClient,
+  userId: string,
+): Promise<{ recentWordCount: number }> {
   const { count } = await supabase
     .from('word_bank')
     .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
     .eq('status', 'ready')
   return { recentWordCount: count ?? 0 }
 }

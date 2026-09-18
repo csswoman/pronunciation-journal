@@ -69,7 +69,7 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
         setRecommendation(result)
       }
 
-      // Level-scoped vocabulary counts for the "Las 1000 esenciales" card.
+      // Level-scoped vocabulary counts for the essential-words card.
       const studyLevel = isAnonymousUser(user)
         ? readGuestStudyLevel()
         : user

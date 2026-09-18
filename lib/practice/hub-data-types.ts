@@ -21,6 +21,8 @@ export interface PracticeHubDecksData {
   cardCount: number
   /** Up to 3 deck names, newest first. */
   topDeckNames: string[]
+  /** Card counts aligned with `topDeckNames`, when available. */
+  topDeckCardCounts?: number[]
 }
 
 export interface PracticeHubCourseData {

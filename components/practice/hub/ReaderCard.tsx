@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function ReaderCard({ recentWordCount }: Props) {
-  const wordsText = recentWordCount > 0 ? `${recentWordCount} palabras tuyas` : '35 palabras tuyas'
+  const wordsText = recentWordCount > 0 ? `${recentWordCount} palabras tuyas` : 'Sin palabras guardadas'
 
   return (
     <div className="group relative flex flex-col justify-between gap-5 rounded-3xl border border-border-default bg-surface-raised p-5 shadow-sm transition-all duration-200 hover:border-border-strong overflow-hidden select-none">

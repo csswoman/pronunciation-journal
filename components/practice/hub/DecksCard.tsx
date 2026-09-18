@@ -12,12 +12,6 @@ import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { ArrowRight } from '@/components/icons'
 import type { PracticeHubDecksData } from '@/lib/practice/hub-data-types'
 
-const SAMPLE_DECKS = [
-  { name: 'hello', count: 12 },
-  { name: 'thanks', count: 11 },
-  { name: 'please', count: 5 },
-]
-
 const ROTATIONS = ['-rotate-2', 'rotate-1', '-rotate-1']
 
 interface Props {
@@ -25,16 +19,13 @@ interface Props {
 }
 
 export default function DecksCard({ data }: Props) {
-  const { deckCount, cardCount, topDeckNames } = data
+  const { deckCount, cardCount, topDeckNames, topDeckCardCounts = [] } = data
   const hasDecks = deckCount > 0
 
-  const decksToShow =
-    hasDecks && topDeckNames.length > 0
-      ? topDeckNames.slice(0, 3).map((name, idx) => ({
-          name: name.length > 10 ? `${name.slice(0, 9)}...` : name,
-          count: idx === 0 ? 12 : idx === 1 ? 11 : 5,
-        }))
-      : SAMPLE_DECKS
+  const decksToShow = topDeckNames.slice(0, 3).map((name, idx) => ({
+    name: name.length > 10 ? `${name.slice(0, 9)}...` : name,
+    count: topDeckCardCounts[idx],
+  }))
 
   return (
     <Link
@@ -49,12 +40,12 @@ export default function DecksCard({ data }: Props) {
             TUS MAZOS
           </span>
           <span className="inline-flex items-center rounded-full bg-ink/12 px-3 py-0.5 font-sans text-caption font-bold text-ink">
-            {deckCount > 0 ? `${deckCount} ${deckCount === 1 ? 'mazo' : 'mazos'}` : '3 mazos'}
+            {deckCount > 0 ? `${deckCount} ${deckCount === 1 ? 'mazo' : 'mazos'}` : 'Sin mazos'}
           </span>
         </div>
 
         <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-tight">
-          {hasDecks ? `${cardCount} tarjetas guardadas` : '28 tarjetas guardadas'}
+          {hasDecks ? `${cardCount} tarjetas guardadas` : 'Aún no hay tarjetas'}
         </h2>
       </div>
 
@@ -70,9 +61,11 @@ export default function DecksCard({ data }: Props) {
               <span className="font-heading text-body-sm font-extrabold leading-tight text-ink">
                 {deck.name}
               </span>
-              <span className="font-sans text-tiny font-medium leading-tight text-ink-secondary mt-0.5">
-                {deck.count} tarjetas
-              </span>
+              {deck.count !== undefined && (
+                <span className="font-sans text-tiny font-medium leading-tight text-ink-secondary mt-0.5">
+                  {deck.count} {deck.count === 1 ? 'tarjeta' : 'tarjetas'}
+                </span>
+              )}
             </div>
           )
         })}
@@ -87,4 +80,3 @@ export default function DecksCard({ data }: Props) {
     </Link>
   )
 }
-

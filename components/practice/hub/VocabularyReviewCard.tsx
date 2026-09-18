@@ -1,12 +1,12 @@
 'use client'
 
 // Planned structure:
-// <VocabularyReviewCard> — "Las 1000 esenciales" bento card in PastelCard tone="lilac"
+// <VocabularyReviewCard> — "Palabras esenciales" bento card in PastelCard tone="lilac"
 //   Header: REPASO kicker + "{dueCount} pendientes" badge
-//   Title: Las 1000 esenciales
+//   Title: Palabras esenciales
 //   Segmented progress bar + learned/ahead counts
 //   CTA: "Seguir · 4 min" button (tinta sólida)
-//   Watermark: "1000" big text outline
+//   Watermark: scoped catalog total in big outline text
 
 import Link from 'next/link'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
@@ -51,7 +51,7 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
         </div>
 
         <h2 className="font-heading text-h3 font-extrabold text-ink leading-tight">
-          Las 1000 esenciales
+          Palabras esenciales
         </h2>
       </div>
 
@@ -62,7 +62,7 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
             aria-valuenow={progressPct}
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-label={`Progreso de las 1000 esenciales: ${progressPct}% (${learned} de ${totalCount})`}
+            aria-label={`Progreso de palabras esenciales: ${progressPct}% (${learned} de ${totalCount})`}
             className="flex w-full items-center gap-1.5 py-0.5"
           >
             {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => (
@@ -77,25 +77,25 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
           </div>
 
           <div className="flex items-center justify-between font-sans text-caption text-ink-secondary">
-            <span>{isFresh ? 'Comenzar' : `${learned} aprendida${learned === 1 ? '' : 's'}`}</span>
+            <span>{isFresh ? 'Comenzar' : `${learned} estudiada${learned === 1 ? '' : 's'}`}</span>
             <span>{ahead} por delante</span>
           </div>
 
           <div className="pt-1">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-all group-hover:bg-ink-secondary shrink-0">
-              <span>Seguir · 4 min</span>
+              <span>{isFresh ? 'Empieza aquí' : 'Seguir · 4 min'}</span>
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
             </span>
           </div>
         </div>
       )}
 
-      {/* Marca de agua grande de 1000 en contorno (stroke) */}
+      {/* Total real del catálogo filtrado, en contorno (stroke) */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute right-3 bottom-0.5 font-heading text-6xl sm:text-7xl font-black text-transparent select-none transition-opacity opacity-20 group-hover:opacity-35 [-webkit-text-stroke:1.5px_var(--ink)]"
       >
-        1000
+        {hasCounts ? totalCount : ''}
       </span>
     </Link>
   )

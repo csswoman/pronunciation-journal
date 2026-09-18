@@ -21,6 +21,31 @@ interface Props {
 }
 
 export default function CourseCard({ data }: Props) {
+  if (!data) {
+    return (
+      <Link
+        href="/courses"
+        onClick={() => void setLastPracticeMode('courses')}
+        data-tone="sky"
+        className="pastel-card focus-ring group relative flex flex-col justify-between gap-5 rounded-3xl p-5 transition-transform hover:-translate-y-px overflow-hidden select-none"
+      >
+        <div className="flex flex-col gap-3 z-10">
+          <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink select-none">GUIADO</span>
+          <div className="flex flex-col gap-1">
+            <h2 className="font-heading text-h3 font-extrabold text-ink leading-tight">Ruta guiada</h2>
+            <p className="font-sans text-body-sm text-ink-secondary text-pretty">Aún no has empezado una ruta.</p>
+          </div>
+        </div>
+        <div className="pt-1 z-10">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper shrink-0">
+            <span>Ver cursos</span>
+            <ArrowRight className="size-4" aria-hidden />
+          </span>
+        </div>
+      </Link>
+    )
+  }
+
   const progressPct = data?.progressPct ?? 0
   const progressRatio = Math.min(1, Math.max(0, progressPct / 100))
   const activeSegments = progressPct > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 0
@@ -47,9 +72,7 @@ export default function CourseCard({ data }: Props) {
             Ruta guiada
           </h2>
           <p className="font-sans text-body-sm text-ink-secondary text-pretty">
-            {data?.currentUnitTitle || data?.currentLessonTitle
-              ? [data.currentUnitTitle, data.currentLessonTitle].filter(Boolean).join(' · ')
-              : '28 lecciones clave · Cómo estudiar por tu cuenta'}
+            {[data.currentUnitTitle, data.currentLessonTitle].filter(Boolean).join(' · ') || 'Continúa con tu siguiente lección.'}
           </p>
         </div>
       </div>

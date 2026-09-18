@@ -118,7 +118,7 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
           onClick={() => void setLastPracticeMode(mode.id)}
           className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-6 py-2.5 font-label text-body-sm font-bold text-paper shadow-xs transition-all duration-150 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] select-none"
         >
-          <span>Empezar repaso · 5 min</span>
+            <span>{reason === 'due-review' ? 'Empezar repaso · 5 min' : 'Empezar práctica'}</span>
           <ArrowRight className="size-4 shrink-0 text-paper" aria-hidden />
         </Link>
         {reason === 'due-review' && (
