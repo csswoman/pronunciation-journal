@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   buildAssessmentQuestions,
-  buildServerAssessment,
   groupQuestionsByLevel,
   levelPassed,
   scoreAssessment,
 } from "../assessment";
+import { buildServerAssessment } from "../server-assessment";
 
 const quizzes = {
   "a1-verbo-to-be": [{ q: "I ___ ready.", options: ["am", "is"], answer: 0 }],

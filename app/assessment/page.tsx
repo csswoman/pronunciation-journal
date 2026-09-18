@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import AssessmentClient from "@/components/courses/AssessmentClient";
-import { buildServerAssessment } from "@/lib/courses/assessment";
+import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";

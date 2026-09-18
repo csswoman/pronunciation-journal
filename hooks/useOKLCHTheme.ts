@@ -5,24 +5,22 @@ import {
   resolveThemeMode,
   type ThemeMode,
 } from "@/lib/theme/resolve-theme-mode";
-import { applySplitComplementaryVars } from "@/lib/theme/split-complementary";
+import {
+  ACCENT_PRESETS,
+  DEFAULT_ACCENT_ID,
+  isValidAccent,
+  type AccentId,
+} from "@/lib/theme/accent-presets";
 
-const DEFAULT_HUE = 250;
-const STORAGE_HUE_KEY = "theme-hue";
+const STORAGE_ACCENT_KEY = "theme-accent";
 const STORAGE_MODE_KEY = "theme-mode";
 const DARK_MEDIA_QUERY = "(prefers-color-scheme: dark)";
 
-/** What the user asked for. "system" tracks the OS setting live. */
 export type ThemePreference = "light" | "dark" | "system";
 
 type Listener = () => void;
 
-// ── Module-level singleton ──────────────────────────────────────────────────
-// All hook instances share this state, so only one layout effect ever calls
-// applyMode/applyHue — no race conditions between ThemeProvider and any
-// component that also calls useOKLCHTheme().
-
-let _hue: number = DEFAULT_HUE;
+let _accent: AccentId = DEFAULT_ACCENT_ID;
 let _preference: ThemePreference = "system";
 let _mode: ThemeMode = "light";
 let _mounted = false;
@@ -33,16 +31,20 @@ function notify() {
   _listeners.forEach((fn) => fn());
 }
 
-function applyHue(newHue: number) {
-  applySplitComplementaryVars(document.documentElement, newHue);
+function applyAccent(accent: AccentId) {
+  if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-accent", accent);
+  }
 }
 
 function applyMode(newMode: ThemeMode) {
-  document.documentElement.classList.toggle("dark", newMode === "dark");
-  document.documentElement.style.colorScheme = newMode;
+  if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-theme", newMode);
+    document.documentElement.classList.toggle("dark", newMode === "dark");
+    document.documentElement.style.colorScheme = newMode;
+  }
 }
 
-/** Recompute the resolved mode from the current preference + OS setting. */
 function resolveAndApplyMode() {
   const savedMode = _preference === "system" ? null : _preference;
   _mode = resolveThemeMode(savedMode, _mediaQuery?.matches ?? false);
@@ -59,14 +61,11 @@ function initOnce() {
   if (_mounted) return;
   _mounted = true;
 
-  const savedHue = localStorage.getItem(STORAGE_HUE_KEY);
-  if (savedHue) {
-    const parsed = parseInt(savedHue, 10);
-    if (!isNaN(parsed)) {
-      _hue = parsed;
-    }
+  const savedAccent = localStorage.getItem(STORAGE_ACCENT_KEY);
+  if (isValidAccent(savedAccent)) {
+    _accent = savedAccent;
   }
-  applyHue(_hue);
+  applyAccent(_accent);
 
   const savedMode = localStorage.getItem(STORAGE_MODE_KEY);
   _preference = savedMode === "light" || savedMode === "dark" ? savedMode : "system";
@@ -78,36 +77,31 @@ function initOnce() {
 
   notify();
 }
-// ───────────────────────────────────────────────────────────────────────────
 
 export function useOKLCHTheme() {
-  // Local state mirrors the singleton so React re-renders on change
-  const [hue, setHueLocal] = useState<number>(_hue);
+  const [accent, setAccentLocal] = useState<AccentId>(_accent);
   const [preference, setPreferenceLocal] = useState<ThemePreference>(_preference);
   const [mode, setModeLocal] = useState<ThemeMode>(_mode);
   const [mounted, setMounted] = useState(_mounted);
 
-  // useLayoutEffect: re-apply before paint if hydration touched <html>.
   useLayoutEffect(() => {
     const sync = () => {
-      setHueLocal(_hue);
+      setAccentLocal(_accent);
       setPreferenceLocal(_preference);
       setModeLocal(_mode);
       setMounted(_mounted);
     };
     _listeners.add(sync);
-    // Init exactly once across all instances
     initOnce();
     return () => {
       _listeners.delete(sync);
     };
   }, []);
 
-  const setHue = useCallback((newHue: number) => {
-    const clamped = Math.max(0, Math.min(360, newHue));
-    _hue = clamped;
-    applyHue(clamped);
-    localStorage.setItem(STORAGE_HUE_KEY, clamped.toString());
+  const setAccent = useCallback((nextAccent: AccentId) => {
+    _accent = nextAccent;
+    applyAccent(nextAccent);
+    localStorage.setItem(STORAGE_ACCENT_KEY, nextAccent);
     notify();
   }, []);
 
@@ -127,9 +121,25 @@ export function useOKLCHTheme() {
     setPreference(next);
   }, [setPreference]);
 
-  const resetHue = useCallback(() => {
-    setHue(DEFAULT_HUE);
-  }, [setHue]);
+  // Backwards compatibility aliases during migration
+  const hue = 250;
+  const setHue = useCallback(() => {}, []);
+  const resetHue = useCallback(() => setAccent(DEFAULT_ACCENT_ID), [setAccent]);
 
-  return { hue, setHue, resetHue, preference, setPreference, mode, toggleMode, mounted };
+  return {
+    accent,
+    setAccent,
+    preference,
+    setPreference,
+    mode,
+    toggleMode,
+    mounted,
+    // Aliases
+    hue,
+    setHue,
+    resetHue,
+    ACCENT_PRESETS,
+  };
 }
+
+export { useOKLCHTheme as useTheme };

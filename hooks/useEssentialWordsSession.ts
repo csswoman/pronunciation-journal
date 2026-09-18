@@ -277,7 +277,11 @@ export function useEssentialWordsSession() {
 
   const bootstrap = useCallback(async () => {
     const generation = ++requestGenerationRef.current;
-    if (phaseRef.current === 'ready') setPreviewLoading(true);
+    const loadingTimer = setTimeout(() => {
+      if (generation === requestGenerationRef.current && phaseRef.current === 'ready') {
+        setPreviewLoading(true);
+      }
+    }, 150);
     try {
     const storedDraft = user?.id ? await loadEssentialWordsSessionDraft(user.id) : null;
     if (storedDraft) {
@@ -409,6 +413,7 @@ export function useEssentialWordsSession() {
     } catch (error) {
       if (generation === requestGenerationRef.current) throw error;
     } finally {
+      clearTimeout(loadingTimer);
       if (generation === requestGenerationRef.current) setPreviewLoading(false);
     }
   }, [persistPendingLapses, user?.id, clearDraft]);

@@ -19,15 +19,14 @@ import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { getRoute } from '@/lib/essential-words/routes'
 import { exerciseLevelLabel } from '@/lib/essential-words/level-labels'
 import Button from '@/components/ui/Button'
-
-export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
+export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
   const {
     phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats,
     sessionProgress, sessionPreview, isResume, previewLoading, studyContext, sessionSummary,
     strugglingWords, reloadLoading, levels, activeRouteId, setRoute,
     startSpeak, beginSession, omitWord, markPronunciationDifficulty, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
-    sessionSize, setSessionSize, discardSession, pauseAndPersistSession, startLeechReview,
+    sessionSize, setSessionSize, discardSession, pauseAndPersistSession,
   } = useEssentialWordsSession()
   const loadingWords = useLoadingWords()
   const router = useRouter()
@@ -77,6 +76,8 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
       stats={stats}
       speaking={false}
       onExit={() => setExitConfirmOpen(true)}
+      activeRouteId={activeRouteId}
+      onRouteChange={(id) => void setRoute(id)}
     />
   )
 
@@ -122,7 +123,7 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
   if (phase === 'ready') {
     return (
       <>
-        <SessionShell className="min-h-[calc(100dvh-10rem)] max-w-[52rem] gap-space-6 sm:min-h-[calc(100dvh-8rem)] sm:gap-space-8">
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-space-6 sm:gap-space-8">
           {pageHeader}
           {sessionToolbar}
           <SessionReady
@@ -137,9 +138,8 @@ export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: n
             isResume={isResume}
             previewLoading={previewLoading}
             onDiscard={discardSession}
-            onLeechReview={startLeechReview}
           />
-        </SessionShell>
+        </div>
         {exitSheet}
       </>
     )

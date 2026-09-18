@@ -1,675 +1,257 @@
-/* Design Tokens — english-journal
-   3-layer architecture: Primary Scale (dynamic hue), Neutral System (colorless),
-   Semantic Colors (fixed hues, independent of --hue) */
+/* Design Tokens — English Journal
+   3-layer architecture:
+   1. Neutrals (responsive to data-theme="light|dark")
+   2. Fijos + Pastel de contenido (fixed hues across themes)
+   3. Acentos (dynamic data-accent="blue|teal|emerald...")
+*/
 
-:root {
+:root, html[data-theme="light"] {
   color-scheme: light;
   --sidebar-width: 256px;
-  --hue: 250;
 
-  /* Split-complementary: base + editorial (+150) + progress (+210).
-     Boosts are seeded by useOKLCHTheme / THEME_INIT_SCRIPT for muddy hues. */
-  --hue-base: var(--hue);
-  --hue-accent-1: calc(var(--hue) + 150);
-  --hue-accent-2: calc(var(--hue) + 210);
-  --chroma-boost-base: 1;
-  --chroma-boost-accent-1: 1;
-  --chroma-boost-accent-2: 1;
-  --l-shift-base: 0;
-  --l-shift-accent-1: 0;
-  --l-shift-accent-2: 0;
+  /* ── 1. Neutros (Light) ────────────────────────────────────────────────── */
+  --bg:             oklch(0.97 0.006 85);   /* #f6f4ef */
+  --bg-sidebar:     oklch(0.94 0.008 85);   /* #efebe3 */
+  --surface:        oklch(1 0 0);           /* #ffffff */
+  --surface-raised: oklch(0.95 0.007 85);   /* #f1eee7 */
+  --field:          oklch(0.93 0.008 85);   /* #ebe7de */
+  --border:         oklch(0.89 0.010 85);   /* #e2ddd2 */
+  --border-strong:  oklch(0.74 0.015 85);   /* #b9b2a4 */
+  --text-strong:    oklch(0.12 0.010 265);  /* #0a0c11 */
+  --text:           oklch(0.17 0.010 265);  /* #12151c */
+  --text-secondary: oklch(0.29 0.020 265);  /* #2c3445 */
+  --text-muted:     oklch(0.40 0.018 265);  /* #4a5263 */
+  --text-faint:     oklch(0.49 0.015 265);  /* #636a78 */
 
-  /* Motion — durations + easing (one shared scale; no per-component magic) */
+  /* Legacy aliases for compatibility */
+  --text-primary:     var(--text);
+  --text-tertiary:    var(--text-muted);
+  --text-quaternary:  var(--text-faint);
+  --text-disabled:    var(--text-faint);
+  --text-placeholder: var(--text-muted);
+  --border-subtle:    var(--border);
+  --border-default:   var(--border);
+  --border-hover:     var(--border-strong);
+
+  --surface-base:     var(--bg);
+  --surface-sunken:   var(--field);
+  --surface-overlay:  oklch(1 0 0 / 0.96);
+  --surface-tooltip:  var(--text-strong);
+  --surface-code:     var(--field);
+  --card-bg:          var(--surface-raised);
+  --page-bg:          var(--bg);
+
+  --cta-bg:           var(--ink);
+  --cta-fg:           var(--paper);
+  --cta-bg-hover:     var(--ink-secondary);
+}
+
+html[data-theme="dark"], .dark {
+  color-scheme: dark;
+
+  /* ── 1. Neutros (Dark) ─────────────────────────────────────────────────── */
+  --bg:             oklch(0.14 0.015 260);  /* #0d1018 */
+  --bg-sidebar:     oklch(0.16 0.015 260);  /* #11151f */
+  --surface:        oklch(0.18 0.018 260);  /* #141925 */
+  --surface-raised: oklch(0.22 0.020 260);  /* #1b2130 */
+  --field:          oklch(0.21 0.018 260);  /* #1a1f2c */
+  --border:         oklch(0.27 0.022 260);  /* #262d3d */
+  --border-strong:  oklch(0.31 0.025 260);  /* #2f3749 */
+  --text-strong:    oklch(1 0 0);           /* #ffffff */
+  --text:           oklch(0.95 0.008 260);  /* #eef1f7 */
+  --text-secondary: oklch(0.84 0.012 260);  /* #c9cfdb */
+  --text-muted:     oklch(0.74 0.015 260);  /* #aab2c4 */
+  --text-faint:     oklch(0.58 0.018 260);  /* #7c8499 */
+
+  --text-primary:     var(--text);
+  --text-tertiary:    var(--text-muted);
+  --text-quaternary:  var(--text-faint);
+  --text-disabled:    var(--text-faint);
+  --text-placeholder: var(--text-muted);
+  --border-subtle:    var(--border);
+  --border-default:   var(--border);
+  --border-hover:     var(--border-strong);
+
+  --surface-base:     var(--bg);
+  --surface-sunken:   var(--field);
+  --surface-overlay:  oklch(0.18 0.018 260 / 0.96);
+  --surface-tooltip:  var(--surface-raised);
+  --surface-code:     var(--field);
+  --card-bg:          var(--surface-raised);
+  --page-bg:          var(--bg);
+
+  --cta-bg:           var(--paper);
+  --cta-fg:           var(--ink);
+  --cta-bg-hover:     oklch(0.92 0.005 85);
+}
+
+:root {
+  /* ── 2. Fijos (Iguales en ambos temas) ────────────────────────────────── */
+  --ink:           oklch(0.17 0.010 265);  /* #12151c */
+  --ink-secondary: oklch(0.29 0.020 265);  /* #2c3445 */
+  --ink-muted:     oklch(0.40 0.018 265);  /* #4a5263 */
+  --paper:         oklch(1 0 0);           /* #ffffff */
+  --on-accent:     oklch(1 0 0);           /* #ffffff */
+
+  /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
+  /* sky (sesión de hoy, cursos, ruta, lecciones guiadas) */
+  --sky:      oklch(0.85 0.07 250);  /* #b9d3fb */
+  --sky-deep: oklch(0.78 0.10 250);  /* #9ec0f6 */
+  --sky-soft: oklch(0.96 0.02 250);  /* #eaf2fe */
+
+  /* butter (frases, expresiones, lecciones teóricas, hitos) */
+  --butter:      oklch(0.90 0.10 90);   /* #f8e08e */
+  --butter-deep: oklch(0.84 0.13 90);   /* #efd06a */
+  --butter-soft: oklch(0.96 0.04 90);   /* #fdf3cf */
+
+  /* coral (vocabulario, palabras, pronunciación) */
+  --coral:      oklch(0.80 0.08 30);   /* #f7b7a6 */
+  --coral-deep: oklch(0.73 0.11 30);   /* #ee9f8b */
+  --coral-soft: oklch(0.93 0.03 30);   /* #fde4dc */
+
+  /* lilac (progreso, mazos, gramática) */
+  --lilac:      oklch(0.81 0.07 290);  /* #cbbcf5 */
+  --lilac-deep: oklch(0.73 0.10 290);  /* #b1a0ea */
+  --lilac-soft: oklch(0.94 0.02 290);  /* #ece6fd */
+
+  /* mint (inmersión, práctica, registro, racha, Coach) */
+  --mint:      oklch(0.87 0.07 160);  /* #a8e6c9 */
+  --mint-deep: oklch(0.80 0.10 160);  /* #86d6b0 */
+  --mint-soft: oklch(0.96 0.02 160);  /* #e3f6ec */
+
+  /* ── English Journal ej-* aliases ─────────────────────────────────────── */
+  --ej-sky:       var(--sky);
+  --ej-sky-deep:  var(--sky-deep);
+  --ej-sky-soft:  var(--sky-soft);
+  --ej-butter:      var(--butter);
+  --ej-butter-deep: var(--butter-deep);
+  --ej-butter-soft: var(--butter-soft);
+  --ej-coral:      var(--coral);
+  --ej-coral-deep: var(--coral-deep);
+  --ej-coral-soft: var(--coral-soft);
+  --ej-lilac:      var(--lilac);
+  --ej-lilac-deep: var(--lilac-deep);
+  --ej-lilac-soft: var(--lilac-soft);
+  --ej-mint:      var(--mint);
+  --ej-mint-deep: var(--mint-deep);
+  --ej-mint-soft: var(--mint-soft);
+
+  /* ── 4. Feedback (alias de pasteles, NO verde/rojo oscuros) ───────────── */
+  --feedback-correct:      var(--mint);
+  --feedback-correct-soft: var(--mint-soft);
+  --feedback-wrong:        var(--coral);
+  --feedback-wrong-soft:   var(--coral-soft);
+  --feedback-hint:         var(--butter);
+  --feedback-hint-soft:    var(--butter-soft);
+
+  --success:         var(--feedback-correct);
+  --success-soft:    var(--feedback-correct-soft);
+  --error:           var(--feedback-wrong);
+  --error-soft:      var(--feedback-wrong-soft);
+  --warning:         var(--feedback-hint);
+  --warning-soft:    var(--feedback-hint-soft);
+  --info:            var(--sky);
+  --info-soft:       var(--sky-soft);
+
+  /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
+  --accent-blue:    oklch(0.53 0.20 254); /* #2563eb (predeterminado) */
+  --accent-red:     oklch(0.57 0.22 27);  /* #dc2626 */
+  --accent-orange:  oklch(0.55 0.19 38);  /* #c2410c */
+  --accent-amber:   oklch(0.53 0.15 65);  /* #b45309 */
+  --accent-green:   oklch(0.52 0.15 142); /* #15803d */
+  --accent-emerald: oklch(0.50 0.13 165); /* #047857 */
+  --accent-teal:    oklch(0.50 0.11 210); /* #0e7490 */
+  --accent-purple:  oklch(0.48 0.24 285); /* #7c3aed */
+  --accent-pink:    oklch(0.50 0.21 345); /* #be185d */
+
+  /* Default accent = blue */
+  --accent:         var(--accent-blue);
+  --primary:        var(--accent);
+  --primary-hover:  color-mix(in oklch, var(--accent) 85%, black);
+  --primary-soft:   color-mix(in oklch, var(--accent) 15%, var(--surface));
+  --on-primary:     var(--on-accent);
+  --focus-ring:     var(--accent);
+
+  /* ── 6. Motion ─────────────────────────────────────────────────────────── */
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-celebrate: 420ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-expo: var(--ease-out);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  /* Overshoot — the only spring magic number in the system */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── 1. Primary Scale (dynamic identity = hue-base) ───────────────────── */
-  --primary-50:  oklch(calc(0.97 + var(--l-shift-base)) calc(0.02 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-100: oklch(calc(0.93 + var(--l-shift-base)) calc(0.04 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-200: oklch(calc(0.88 + var(--l-shift-base)) calc(0.06 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-300: oklch(calc(0.80 + var(--l-shift-base)) calc(0.10 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-400: oklch(calc(0.72 + var(--l-shift-base)) calc(0.13 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-500: oklch(calc(0.65 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-600: oklch(calc(0.58 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-700: oklch(calc(0.50 + var(--l-shift-base)) calc(0.17 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-800: oklch(calc(0.42 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
-
-  /* Main aliases */
-  --primary:            var(--primary-700);
-  --primary-hover:      var(--primary-800);
-  --primary-soft:       var(--primary-50);
-  --primary-foreground: oklch(1 0 0);
-  --on-primary:         oklch(1 0 0);
-  --focus-ring:         oklch(0.75 0.12 var(--hue-base) / 0.4);
-
-  /* ── 1b. Accent-1 scale (editorial / content highlight, +150°) ───────── */
-  --accent-1-50:  oklch(calc(0.97 + var(--l-shift-accent-1)) calc(0.02 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-100: oklch(calc(0.93 + var(--l-shift-accent-1)) calc(0.04 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-200: oklch(calc(0.88 + var(--l-shift-accent-1)) calc(0.06 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-300: oklch(calc(0.80 + var(--l-shift-accent-1)) calc(0.10 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-400: oklch(calc(0.72 + var(--l-shift-accent-1)) calc(0.13 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-500: oklch(calc(0.65 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-600: oklch(calc(0.58 + var(--l-shift-accent-1)) calc(0.16 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-700: oklch(calc(0.50 + var(--l-shift-accent-1)) calc(0.17 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-800: oklch(calc(0.42 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1:       var(--accent-1-700);
-  --accent-1-hover: var(--accent-1-800);
-  --accent-1-soft:  var(--accent-1-50);
-  --on-accent-1:    oklch(1 0 0);
-
-  /* ── 1c. Accent-2 scale (progress / success states, +210°) ───────────── */
-  --accent-2-50:  oklch(calc(0.97 + var(--l-shift-accent-2)) calc(0.02 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-100: oklch(calc(0.93 + var(--l-shift-accent-2)) calc(0.04 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-200: oklch(calc(0.88 + var(--l-shift-accent-2)) calc(0.06 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-300: oklch(calc(0.80 + var(--l-shift-accent-2)) calc(0.10 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-400: oklch(calc(0.72 + var(--l-shift-accent-2)) calc(0.13 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-500: oklch(calc(0.65 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-600: oklch(calc(0.58 + var(--l-shift-accent-2)) calc(0.16 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-700: oklch(calc(0.50 + var(--l-shift-accent-2)) calc(0.17 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-800: oklch(calc(0.42 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2:       var(--accent-2-700);
-  --accent-2-hover: var(--accent-2-800);
-  --accent-2-soft:  var(--accent-2-50);
-  --on-accent-2:    oklch(1 0 0);
-
-  /* Legacy near-analog accents (kept for older utilities) */
-  --accent-analog-1:   oklch(0.70 0.14 calc(var(--hue-base) + 20));
-  --accent-analog-2:   oklch(0.70 0.14 calc(var(--hue-base) - 20));
-  --accent-complement: oklch(0.70 0.14 calc(var(--hue-base) + 180));
-
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, oklch(0.70 0.15 var(--hue-base)), oklch(0.65 0.15 calc(var(--hue-base) + 30)));
-
-  /* ── 2. Neutral System ───────────────────────────────────────────────── */
-  /* Near-neutral surfaces: identity comes from actions, not a colored canvas. */
-  --bg:           oklch(0.968 0.004 var(--hue));
-  --bg-secondary: oklch(1 0 0);
-  --bg-tertiary:  oklch(0.978 0.004 var(--hue));
-  /* 4 perceptibly-separated steps (~0.16 L apart) so support text reads as a
-     ladder, not one flat mid-gray. secondary carries body prose (≥7:1),
-     tertiary is metadata, quaternary is the faintest label tier. */
-  --fg:               oklch(0.17 0.008 var(--hue));
-  --text-primary:     oklch(0.17 0.008 var(--hue));
-  --text-secondary:   oklch(0.36 0.007 var(--hue));
-  --text-tertiary:    oklch(0.52 0.005 var(--hue));
-  --text-quaternary:  oklch(0.63 0.004 var(--hue));
-  --text-disabled:    oklch(0.75 0.002 var(--hue));
-  --text-placeholder: oklch(0.60 0.003 var(--hue));
-  --border:       oklch(0.918 0.008 var(--hue));
-  --border-hover: oklch(0.850 0.010 var(--hue));
-
-  /* ── "English Journal" neutral aliases (light) ───────────────────────── */
-  --ej-bg:            oklch(0.968 0.006 85);
-  --ej-bg-sidebar:    oklch(0.945 0.008 85);
-  --ej-surface:       var(--paper);
-  --ej-surface-raised: oklch(0.955 0.006 85);
-  --ej-field:         oklch(0.925 0.006 85);
-  --ej-border:        oklch(0.878 0.010 85);
-  --ej-border-strong: oklch(0.73 0.015 85);
-  --ej-text-strong:   var(--ink);
-  --ej-text:          oklch(0.22 0.015 265);
-  --ej-text-secondary: oklch(0.35 0.02 265);
-  --ej-text-muted:    oklch(0.46 0.02 265);
-  --ej-text-faint:    oklch(0.55 0.015 265);
-
-  /* ── 3. Semantic Colors (fixed, independent of hue) ──────────────────── */
-  --success:         oklch(0.70 0.16 145);
-  --success-soft:    oklch(0.92 0.05 145);
-  --success-deco:    oklch(0.80 0.10 145);
-  --success-icon-bg: oklch(0.86 0.07 145);
-  --success-value:   oklch(0.42 0.14 145);
-  --success-border:  oklch(0.60 0.14 145);
-
-  --warning:         oklch(0.46 0.15 85); /* WCAG 2.1 AA compliant (>= 4.5:1 on light backgrounds) */
-  --warning-soft:    oklch(0.95 0.05 85);
-  --warning-deco:    oklch(0.84 0.12 85);
-  --warning-icon-bg: oklch(0.90 0.08 85);
-  --warning-value:   oklch(0.46 0.15 85);
-  --warning-border:  oklch(0.68 0.15 85);
-
-  --error:         oklch(0.65 0.20 25);
-  --error-soft:    oklch(0.93 0.05 25);
-  --error-deco:    oklch(0.82 0.12 25);
-  --error-icon-bg: oklch(0.88 0.08 25);
-  --error-value:   oklch(0.42 0.18 25);
-  --error-border:  oklch(0.55 0.18 25);
-
-  --info:         oklch(0.70 0.12 230);
-  --info-soft:    oklch(0.93 0.04 230);
-  --info-deco:    oklch(0.78 0.08 230);
-  --info-icon-bg: oklch(0.84 0.06 230);
-  --info-value:   oklch(0.42 0.12 230);
-  --info-border:  oklch(0.60 0.10 230);
-
-  /* ── Semantic hover states (proper color, not brightness filter) ──────── */
-  --success-hover: oklch(0.77 0.16 145);
-  --warning-hover: oklch(0.52 0.16 85);
-  --error-hover:   oklch(0.72 0.20 25);
-  --info-hover:    oklch(0.77 0.12 230);
-
-  /* ── Admonition colors ───────────────────────────────────────────────── */
-  --admonitions-color-tip:            oklch(0.70 0.16 145); /* green — same as success */
-  --admonitions-color-warning:        var(--warning);       /* amber / warning */
-  --admonitions-color-caution:        var(--error);         /* red — caution fallback */
-  --admonitions-color-important:      oklch(0.62 0.18 310); /* purple */
-  --admonitions-color-important-soft: oklch(0.92 0.05 310); /* purple soft bg */
-
-  /* ── Stage accent colors ─────────────────────────────────────────────── */
-  --stage-pairs: oklch(0.74 0.14 55); /* warm orange, phoneme pairs stage */
-
-  /* ── Match pairs connection dots ─────────────────────────────────────── */
-  --match-pair-dot-1: oklch(0.65 0.18 25);
-  --match-pair-dot-2: oklch(0.65 0.18 250);
-  --match-pair-dot-3: oklch(0.65 0.18 310);
-  --match-pair-dot-4: oklch(0.65 0.16 145);
-  --match-pair-dot-5: oklch(0.70 0.18 55);
-  --match-pair-dot-6: oklch(0.65 0.16 185);
-
-  /* ── 4. Surfaces — semantic elevation names ──────────────────────────── */
-  --surface-base:    var(--bg);                   /* page background */
-  --surface-raised:  var(--bg-secondary);         /* cards, panels, sidebars */
-  --surface-sunken:  var(--bg-tertiary);          /* inputs, code blocks, inset areas */
-  --surface-overlay:      oklch(1 0 0 / 0.92);         /* modals, popovers */
-  --surface-translucent:  color-mix(in oklch, var(--surface-raised) 70%, transparent); /* glassmorphism containers */
-  --surface-tooltip:      oklch(0.17 0.006 var(--hue)); /* always-dark for tooltip bg */
-  --surface-code:         oklch(0.14 0.005 var(--hue)); /* always-dark for code blocks */
-  --card-bg:          var(--surface-raised);     /* alias for surface-raised */
-
-  /* ── 5. Borders — semantic strength names ────────────────────────────── */
-  --border-subtle:  oklch(0.945 0.004 var(--hue)); /* dividers, faint separators */
-  --border-default: var(--border);        /* standard card/input borders */
-  --border-strong:  oklch(0.878 0.010 var(--hue));     /* emphasized borders, active states */
-  --border-focus:   var(--primary);       /* focus outlines */
-
-  /* ── 6. Scoring / Accuracy aliases ──────────────────────────────────── */
-  --score-excellent:    var(--success);
-  --score-excellent-bg: var(--success-soft);
-  --score-acceptable:   var(--warning);
-  --score-acceptable-bg: var(--warning-soft);
-  --score-poor:         var(--error);
-  --score-poor-bg:      var(--error-soft);
-
-  /* ── 7. Word chip status colors ──────────────────────────────────────── */
-  --word-correct:     var(--success);
-  --word-correct-bg:  var(--success-soft);
-  --word-incorrect:   var(--error);
-  --word-incorrect-bg: var(--error-soft);
-  --word-missing:     var(--warning);
-  --word-missing-bg:  var(--warning-soft);
-  --word-extra:       var(--text-tertiary);
-  --word-extra-bg:    color-mix(in oklch, var(--text-tertiary) 12%, transparent);
-
-  /* ── 8. Overlay / Transparency tokens ───────────────────────────────── */
-  --overlay-subtle:  oklch(1 0 0 / 0.05);
-  --overlay-weak:    oklch(1 0 0 / 0.15);
-  --overlay-light:   oklch(1 0 0 / 0.20);
-  --overlay-medium:  oklch(1 0 0 / 0.50);
-  --overlay-strong:  oklch(1 0 0 / 0.60);
-  --overlay-darker:  oklch(1 0 0 / 0.80);
-  --scrim-weak:      oklch(0 0 0 / 0.15);
-  --scrim-medium:    oklch(0 0 0 / 0.35);
-  --scrim-strong:    oklch(0 0 0 / 0.60);
-
-  /* ── 9. Spacing scale (4pt base) ─────────────────────────────────────── */
-  --space-1:  0.25rem;  /*  4px */
-  --space-2:  0.5rem;   /*  8px */
+  /* ── 7. Escala de Espaciado (4, 8, 12, 16, 20, 22, 24, 28, 40) ────────── */
+  --space-1:  0.25rem;  /* 4px */
+  --space-2:  0.5rem;   /* 8px */
   --space-3:  0.75rem;  /* 12px */
   --space-4:  1rem;     /* 16px */
   --space-5:  1.25rem;  /* 20px */
-  --space-6:  1.5rem;   /* 24px */
+  --space-22: 1.375rem; /* 22px — gap de grid */
+  --space-6:  1.5rem;   /* 24px — padding tarjeta */
+  --space-28: 1.75rem;  /* 28px — tarjeta principal */
   --space-8:  2rem;     /* 32px */
-  --space-10: 2.5rem;   /* 40px */
-  --space-12: 3rem;     /* 48px */
-  --space-16: 4rem;     /* 64px */
-  --space-20: 5rem;     /* 80px */
+  --space-10: 2.5rem;   /* 40px — margen de página */
 
-  /* Layout density — semantic roles for page chrome (mobile-first).
-     Prefer these over ad-hoc gap-6 / p-8 / py-6 in shell surfaces.
-     Desktop bump at 768px / 1024px below. */
-  --layout-page-inline: var(--space-4);       /* page gutters */
-  --layout-page-block: var(--space-4);        /* page top padding */
-  --layout-page-block-end: var(--space-10);   /* page bottom (above nav) */
-  --layout-header-gap: var(--space-2);        /* PageHeader stack */
-  --layout-header-pb: var(--space-4);         /* PageHeader bottom */
-  --layout-header-pb-compact: var(--space-3);
-  --layout-section-gap: var(--space-4);       /* major zones */
-  --layout-stack-tight: var(--space-2);       /* related siblings */
-  --layout-stack: var(--space-3);             /* default stack */
-  --layout-stack-loose: var(--space-4);       /* within-section air */
-  --layout-card-pad: var(--space-4);          /* interactive cards */
-  --layout-card-pad-compact: var(--space-3);
-  /* Page archetypes — canvas (dashboard/catalog) vs focused session column */
-  --layout-canvas-max: 80rem;                 /* ~1280px open hubs */
-  --layout-session-max: 45rem;                /* 720px focused practice/writing */
-  --layout-rail-min: 17rem;
-  --layout-rail-max: 22rem;
+  --layout-page-inline: var(--space-4);
+  --layout-page-block: var(--space-4);
+  --layout-page-block-end: var(--space-10);
+  --layout-header-gap: var(--space-2);
+  --layout-header-pb: var(--space-4);
+  --layout-section-gap: var(--space-5);
+  --layout-stack-tight: var(--space-2);
+  --layout-stack: var(--space-3);
+  --layout-stack-loose: var(--space-4);
+  --layout-card-pad: var(--space-6);
+  --layout-card-pad-compact: var(--space-5);
+  --layout-canvas-max: 80rem;
+  --layout-session-max: 45rem;
 
-  /* ── 10. Border radius scale ─────────────────────────────────────────── */
-  --radius-xs:   4px;
+  /* ── 8. Radios de Borde (6, 12, 14, 20, 28, 999) ─────────────────────── */
+  --radius-xs:   6px;     /* kbd */
   --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   16px;
-  --radius-xl:   20px;
+  --radius-md:   12px;    /* nav, campos */
+  --radius-lg:   14px;    /* filas, tiles */
+  --radius-xl:   20px;    /* insets */
   --radius-2xl:  24px;
-  --radius-3xl:  32px;
-  --radius-full: 9999px;
+  --radius-3xl:  28px;    /* tarjetas */
+  --radius-full: 9999px;  /* botones y chips */
 
-  /* ── 11. Badge soft backgrounds (precomputed to avoid runtime color-mix) ── */
-  --badge-primary-bg:   color-mix(in oklch, var(--primary) 14%, var(--bg-tertiary) 86%);
-  --badge-primary-border: color-mix(in oklch, var(--primary) 22%, transparent);
-  --badge-success-bg:   color-mix(in oklch, var(--success) 14%, var(--bg-tertiary) 86%);
-  --badge-success-border: color-mix(in oklch, var(--success) 22%, transparent);
-  --badge-warning-bg:   color-mix(in oklch, var(--warning) 14%, var(--bg-tertiary) 86%);
-  --badge-warning-border: color-mix(in oklch, var(--warning) 22%, transparent);
-  --badge-error-bg:     color-mix(in oklch, var(--error) 14%, var(--bg-tertiary) 86%);
-  --badge-error-border: color-mix(in oklch, var(--error) 22%, transparent);
-  --badge-info-bg:      color-mix(in oklch, var(--info) 14%, var(--bg-tertiary) 86%);
-  --badge-info-border:  color-mix(in oklch, var(--info) 22%, transparent);
+  /* ── 9. Tipografía ────────────────────────────────────────────────────── */
+  --font-display:  var(--font-display, 'Bricolage Grotesque', sans-serif);
+  --font-sans:     var(--font-body, 'Figtree', sans-serif);
+  --font-ipa:      var(--font-phonetic, 'Noto Sans', sans-serif);
 
-  /* ── 12. Typography scale ────────────────────────────────────────────── */
-  /* Single source of truth for type. Mobile-first fixed rem (product UI).
-     Desktop bumps headings at 768px — no fluid clamp().
-     Families: DM Sans (UI), DM Mono (kickers/code), Andika (IPA via --font-ipa).
-     Ratio ≈ 1.125–1.2 between steps. Prefer text-h* / font-* utilities. */
-  --font-ui:        var(--font-sans);
-  --font-heading:   var(--font-display);
-  /* No dedicated mono/kicker family in the new type system — kickers and
-     "monospace" chrome (IPA counters, code-like labels) fall back to body. */
-  --font-mono-var:  var(--font-sans);
-
-  /* Size ramp — mobile defaults */
-  --text-size-h1: 1.5rem;          /* 24px — rare display / streak heroes */
-  --text-size-h2: 1.375rem;        /* 22px — page titles (PageHeader default) */
-  --text-size-h3: 1.25rem;         /* 20px — compact titles, section heads */
-  --text-size-h4: 1.125rem;        /* 18px — card titles */
-  --text-size-body-lg: 1.0625rem;  /* 17px — lead copy */
-  --text-size-body: 1rem;          /* 16px — body */
-  --text-size-body-sm: 0.875rem;   /* 14px — secondary / subtitles */
-  --text-size-label: 0.875rem;     /* 14px — UI labels, nav */
-  --text-size-caption: 0.8125rem;  /* 13px — metadata */
-  --text-size-kicker: 0.75rem;     /* 12px — mono kickers */
-  --text-size-tiny: 0.75rem;       /* 12px — dense chrome */
-  --text-size-xxs: 0.6875rem;      /* 11px — micro labels only */
-  --text-size-display-word: 1.5rem;
-  --text-size-display-ipa: 1.75rem;
-  --text-size-ipa-hero: 3rem;
-  --text-size-ew-fraction: 2.25rem;   /* 36px — featured progress card metric */
-
-  /* Leading / weight / tracking (shared across breakpoints) */
-  --text-leading-h1: 1.2;
-  --text-leading-h2: 1.25;
-  --text-leading-h3: 1.3;
-  --text-leading-h4: 1.35;
-  --text-leading-body-lg: 1.55;
-  --text-leading-body: 1.55;
-  --text-leading-body-sm: 1.45;
-  --text-leading-label: 1.4;
-  --text-leading-caption: 1.4;
-  --text-leading-kicker: 1.35;
-  --text-leading-tiny: 1.35;
-  --text-leading-display: 1.05;
-
-  /* Weight ladder: 400 body · 500 emphasis · 600 label/h3-h4 · 700 h1-h2.
-     Keep steps ≥100 apart — 550/650 read as "same weight" next to 500/600. */
-  --text-weight-h1: 700;
-  --text-weight-h2: 700;
-  --text-weight-h3: 600;
-  --text-weight-h4: 600;
-  --text-weight-body: 400;
-  --text-weight-medium: 500;
-  --text-weight-label: 600;
-  --text-weight-kicker: 500;
-  --text-weight-tiny: 500;
-
-  --text-tracking-h1: -0.02em;
-  --text-tracking-h2: -0.015em;
-  --text-tracking-h3: -0.01em;
-  --text-tracking-h4: -0.005em;
-  --text-tracking-kicker: 0.06em;
-
-  /* Shorthand composites for .font-h* helpers */
-  --font-h1:      var(--text-weight-h1) var(--text-size-h1) / var(--text-leading-h1) var(--font-sans), sans-serif;
-  --font-h2:      var(--text-weight-h2) var(--text-size-h2) / var(--text-leading-h2) var(--font-sans), sans-serif;
-  --font-h3:      var(--text-weight-h3) var(--text-size-h3) / var(--text-leading-h3) var(--font-sans), sans-serif;
-  --font-h4:      var(--text-weight-h4) var(--text-size-h4) / var(--text-leading-h4) var(--font-sans), sans-serif;
-  --font-body:    var(--text-weight-body) var(--text-size-body) / var(--text-leading-body) var(--font-sans), sans-serif;
-  --font-body-md: var(--text-weight-body) var(--text-size-body) / var(--text-leading-body) var(--font-sans), sans-serif;
-  --font-body-sm: var(--text-weight-body) var(--text-size-body-sm) / var(--text-leading-body-sm) var(--font-sans), sans-serif;
-  --font-caption: var(--text-weight-body) var(--text-size-caption) / var(--text-leading-caption) var(--font-sans), sans-serif;
-  --font-label:   var(--text-weight-label) var(--text-size-label) / var(--text-leading-label) var(--font-sans), sans-serif;
-  --font-kicker:  var(--text-weight-kicker) var(--text-size-kicker) / var(--text-leading-kicker) var(--font-sans), sans-serif;
-  --font-tiny:    var(--text-weight-tiny) var(--text-size-tiny) / var(--text-leading-tiny) var(--font-sans), sans-serif;
-  --font-mono:    var(--text-weight-body) var(--text-size-caption) / var(--text-leading-body) var(--font-sans), sans-serif;
-
-  /* ── 12. Transitions ─────────────────────────────────────────────────── */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* ── 13. Shadows ─────────────────────────────────────────────────────── */
-  --shadow-sm:       0 1px 2px   oklch(0 0 0 / 0.05);
-  --shadow-md:       0 4px 6px   oklch(0 0 0 / 0.07);
-  --shadow-lg:       0 10px 15px oklch(0 0 0 / 0.10);
-  --shadow-xl:       0 20px 25px oklch(0 0 0 / 0.10);
-
-  /* ── 14. Color selection bar ─────────────────────────────────────────── */
-  --color-selection-bar: linear-gradient(to right,
-    oklch(.8 .1 0),   oklch(.8 .1 30),  oklch(.8 .1 60),  oklch(.8 .1 90),
-    oklch(.8 .1 120), oklch(.8 .1 150), oklch(.8 .1 180), oklch(.8 .1 210),
-    oklch(.8 .1 240), oklch(.8 .1 270), oklch(.8 .1 300), oklch(.8 .1 330),
-    oklch(.8 .1 360));
-
-  /* ── Structure aliases (maps abstract names to the neutral system) ───── */
-  --page-bg:         var(--bg);
-  --card-bg:         var(--bg-secondary);
-  --scrollbar-track: var(--bg-secondary);
-  --line-divider:    var(--border);
-  --line-color:      var(--border);
-  --deep-text:       var(--text-primary);
-  --title-active:    var(--primary);
-  --btn-content:     var(--text-primary);
-  --selection-bg:    var(--primary-soft);
-
-  /* ── Button component tokens ─────────────────────────────────────────── */
-  --btn-regular-bg:        var(--bg-secondary);
-  --btn-regular-bg-hover:  var(--bg-tertiary);
-  --btn-regular-bg-active: var(--border);
-  --btn-plain-bg-hover:    var(--bg-secondary);
-
-  /* ── Backward compatibility aliases ──────────────────────────────────── */
-  --secondary:            var(--primary);
-  --secondary-soft:       var(--primary-soft);
-  --color-accent:         var(--primary);
-  --color-accent-hover:   var(--primary-hover);
-  --color-text-on-accent: oklch(1 0 0);
-  --color-text-primary:   var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-
-  /* ── Focus / ring helpers ────────────────────────────────────────────── */
-  --focus-color:  color-mix(in oklch, var(--primary) 35%, transparent);
-  --accent-dim:   color-mix(in oklch, var(--primary) 10%, transparent);
-  --accent-border: color-mix(in oklch, var(--primary) 22%, transparent);
-
-  /* ── CTA — always-contrast actions ──────────────────────────────────── */
-  --cta-bg:              var(--text-primary);
-  --cta-fg:              var(--bg);
-  --cta-bg-hover:        oklch(0.26 0.008 var(--hue));
-
-  /* ── Decorative hue helpers ──────────────────────────────────────────── */
-  --hue-icon-bg: color-mix(in oklch, var(--primary) 12%, transparent);
-
-  /* Fixed-lightness swatches (theme-color pickers) always render mid-tone —
-     the checkmark on top stays white in both light and dark mode. */
-  --on-swatch: oklch(1 0 0);
-
-  /* ── Content-type semantic colors (fixed hues, independent of --hue) ───
-     Text / icon / left-border only — never a card fill. See --primary for
-     the one theme-tied accent (Vocabulario progress card). */
-  --c-vocabulario:   oklch(0.55 0.19 358);
-  --c-chunks:        oklch(0.52 0.15 163);
-  --c-pronunciacion: oklch(0.55 0.15 228);
-  --c-racha:         oklch(0.60 0.15 72);
-
-  /* ── "English Journal" design system — fixed content-pastel palette ────
-     These are independent of --hue: pastel identity comes from content
-     type, never from the user's theme color. ink/paper/on-accent are also
-     fixed across both light and dark. */
-  --ink:            oklch(0.22 0.02 265);
-  --ink-secondary:  oklch(0.32 0.02 265);
-  --ink-muted:      oklch(0.42 0.02 265);
-  --paper:          oklch(1 0 0);
-  --on-accent:      oklch(1 0 0);
-
-  --ej-sky:       oklch(0.82 0.06 250);
-  --ej-sky-deep:  oklch(0.76 0.08 250);
-  --ej-sky-soft:  oklch(0.95 0.02 250);
-
-  --ej-butter:      oklch(0.88 0.11 95);
-  --ej-butter-deep: oklch(0.82 0.13 90);
-  --ej-butter-soft: oklch(0.96 0.04 95);
-
-  --ej-coral:      oklch(0.79 0.10 25);
-  --ej-coral-deep: oklch(0.72 0.12 25);
-  --ej-coral-soft: oklch(0.94 0.04 25);
-
-  --ej-lilac:      oklch(0.80 0.08 295);
-  --ej-lilac-deep: oklch(0.72 0.10 295);
-  --ej-lilac-soft: oklch(0.94 0.03 295);
-
-  --ej-mint:      oklch(0.85 0.09 155);
-  --ej-mint-deep: oklch(0.77 0.11 155);
-  --ej-mint-soft: oklch(0.95 0.03 155);
+  --text-size-hero: 3.75rem;        /* 60px / 60px 800 */
+  --text-size-display: 2.875rem;    /* 46px / 48px 800 */
+  --text-size-headline: 2.25rem;    /* 36px / 37px 800 */
+  --text-size-numeral: 2.125rem;    /* 34px / 36px 800 */
+  --text-size-h1: 2.25rem;
+  --text-size-h2: 1.625rem;
+  --text-size-h3: 1.375rem;
+  --text-size-h4: 1.25rem;
+  --text-size-title: 1.1875rem;    /* 19px / 24px 700 */
+  --text-size-body-lg: 1.0625rem;  /* 17px / 26px 500 */
+  --text-size-body: 0.9375rem;     /* 15px / 22px 400 */
+  --text-size-body-sm: 0.875rem;   /* 14px / 20px 400 */
+  --text-size-label: 0.875rem;     /* 14px / 20px 600 */
+  --text-size-caption: 0.8125rem;  /* 13px / 18px 600 */
+  --text-size-overline: 0.75rem;   /* 12px / 16px 700 0.14em MAYÚSCULAS */
+  --text-size-kicker: 0.75rem;
+  --text-size-tiny: 0.75rem;
+  --text-size-ipa-lg: 1.25rem;     /* 20px / 28px 400 */
+  --text-size-ipa: 1.125rem;       /* 18px / 26px 400 */
+  --text-size-display-word: 2.25rem;
+  --text-size-display-ipa: 2.25rem;
 }
 
-/* Desktop type + layout bump. Matches Tailwind `md` / `lg`. */
-@media (min-width: 768px) {
-  :root {
-    --text-size-h1: 1.875rem;         /* 30px */
-    --text-size-h2: 1.625rem;         /* 26px */
-    --text-size-h3: 1.375rem;         /* 22px */
-    --text-size-h4: 1.25rem;          /* 20px */
-    --text-size-body-lg: 1.125rem;    /* 18px */
-    --text-size-body-sm: 0.9375rem;   /* 15px */
-    --text-size-label: 0.9375rem;     /* 15px */
-    --text-size-caption: 0.875rem;    /* 14px */
-    --text-size-kicker: 0.8125rem;    /* 13px */
-    --text-size-tiny: 0.8125rem;      /* 13px */
-    --text-size-xxs: 0.75rem;         /* 12px */
-    --text-size-display-word: 1.75rem;
-    --text-size-display-ipa: 2.25rem;
-    --text-size-ipa-hero: 4rem;
-    --text-size-ew-fraction: 2.75rem; /* 44px */
-
-    --layout-page-inline: var(--space-6);
-    --layout-page-block: var(--space-6);
-    --layout-page-block-end: var(--space-12);
-    --layout-header-gap: var(--space-3);
-    --layout-header-pb: var(--space-5);
-    --layout-header-pb-compact: var(--space-4);
-    --layout-section-gap: var(--space-5);
-    --layout-stack-loose: var(--space-5);
-    --layout-card-pad: var(--space-5);
-  }
-}
-
-@media (min-width: 1024px) {
-  :root {
-    --layout-page-inline: var(--space-10);
-  }
-}
-
-/* ── Dark Mode ──────────────────────────────────────────────────────────── */
-.dark {
-  color-scheme: dark;
-  /* Primary scale — adapted lightness for dark backgrounds */
-  --primary-50:  oklch(calc(0.18 + var(--l-shift-base)) calc(0.03 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-100: oklch(calc(0.22 + var(--l-shift-base)) calc(0.05 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-200: oklch(calc(0.28 + var(--l-shift-base)) calc(0.07 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-300: oklch(calc(0.35 + var(--l-shift-base)) calc(0.09 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-400: oklch(calc(0.55 + var(--l-shift-base)) calc(0.13 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-500: oklch(calc(0.70 + var(--l-shift-base)) calc(0.14 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-600: oklch(calc(0.63 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-700: oklch(calc(0.55 + var(--l-shift-base)) calc(0.16 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-800: oklch(calc(0.46 + var(--l-shift-base)) calc(0.14 * var(--chroma-boost-base)) var(--hue-base));
-
-  --primary:            var(--primary-500);
-  --primary-hover:      oklch(calc(0.63 + var(--l-shift-base)) calc(0.15 * var(--chroma-boost-base)) var(--hue-base));
-  --primary-soft:       var(--primary-100);
-  --primary-foreground: oklch(0.10 0 0);
-  --on-primary:         oklch(0.10 0 0);
-  --focus-ring:         oklch(0.75 0.12 var(--hue-base) / 0.35);
-
-  /* Accent-1 dark */
-  --accent-1-50:  oklch(calc(0.18 + var(--l-shift-accent-1)) calc(0.03 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-100: oklch(calc(0.22 + var(--l-shift-accent-1)) calc(0.05 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-200: oklch(calc(0.28 + var(--l-shift-accent-1)) calc(0.07 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-300: oklch(calc(0.35 + var(--l-shift-accent-1)) calc(0.09 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-400: oklch(calc(0.55 + var(--l-shift-accent-1)) calc(0.13 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-500: oklch(calc(0.70 + var(--l-shift-accent-1)) calc(0.14 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-600: oklch(calc(0.63 + var(--l-shift-accent-1)) calc(0.15 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-700: oklch(calc(0.55 + var(--l-shift-accent-1)) calc(0.16 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1-800: oklch(calc(0.46 + var(--l-shift-accent-1)) calc(0.14 * var(--chroma-boost-accent-1)) var(--hue-accent-1));
-  --accent-1:       var(--accent-1-500);
-  --accent-1-hover: var(--accent-1-600);
-  --accent-1-soft:  var(--accent-1-100);
-  --on-accent-1:    oklch(0.10 0 0);
-
-  /* Accent-2 dark */
-  --accent-2-50:  oklch(calc(0.18 + var(--l-shift-accent-2)) calc(0.03 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-100: oklch(calc(0.22 + var(--l-shift-accent-2)) calc(0.05 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-200: oklch(calc(0.28 + var(--l-shift-accent-2)) calc(0.07 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-300: oklch(calc(0.35 + var(--l-shift-accent-2)) calc(0.09 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-400: oklch(calc(0.55 + var(--l-shift-accent-2)) calc(0.13 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-500: oklch(calc(0.70 + var(--l-shift-accent-2)) calc(0.14 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-600: oklch(calc(0.63 + var(--l-shift-accent-2)) calc(0.15 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-700: oklch(calc(0.55 + var(--l-shift-accent-2)) calc(0.16 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2-800: oklch(calc(0.46 + var(--l-shift-accent-2)) calc(0.14 * var(--chroma-boost-accent-2)) var(--hue-accent-2));
-  --accent-2:       var(--accent-2-500);
-  --accent-2-hover: var(--accent-2-600);
-  --accent-2-soft:  var(--accent-2-100);
-  --on-accent-2:    oklch(0.10 0 0);
-
-  /* Legacy near-analog accents */
-  --accent-analog-1:   oklch(0.72 0.14 calc(var(--hue-base) + 20));
-  --accent-analog-2:   oklch(0.72 0.14 calc(var(--hue-base) - 20));
-  --accent-complement: oklch(0.72 0.14 calc(var(--hue-base) + 180));
-
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.15 var(--hue-base)), oklch(0.67 0.15 calc(var(--hue-base) + 30)));
-
-  /* Neutral system — near-zero chroma keeps dark surfaces clean */
-  --bg:           oklch(0.120 0.003 var(--hue));
-  --bg-secondary: oklch(0.165 0.003 var(--hue));
-  --bg-tertiary:  oklch(0.210 0.004 var(--hue));
-  --fg:               oklch(0.95 0.003 var(--hue));
-  --text-primary:     oklch(0.94 0.004 var(--hue));
-  --text-secondary:   oklch(0.72 0.004 var(--hue));
-  --text-tertiary:    oklch(0.58 0.003 var(--hue));
-  --text-quaternary:  oklch(0.47 0.003 var(--hue));
-  --text-disabled:    oklch(0.38 0.003 var(--hue));
-  --text-placeholder: oklch(0.50 0.003 var(--hue));
-  --border:       oklch(0.275 0.007 var(--hue));
-  --border-hover: oklch(0.375 0.010 var(--hue));
-
-  /* ── "English Journal" neutral aliases (dark) ────────────────────────── */
-  --ej-bg:            oklch(0.145 0.012 265);
-  --ej-bg-sidebar:    oklch(0.165 0.014 265);
-  --ej-surface:       oklch(0.19 0.014 265);
-  --ej-surface-raised: oklch(0.235 0.014 265);
-  --ej-field:         oklch(0.22 0.014 265);
-  --ej-border:        oklch(0.30 0.016 265);
-  --ej-border-strong: oklch(0.38 0.018 265);
-  --ej-text-strong:   oklch(1 0 0);
-  --ej-text:          oklch(0.95 0.006 265);
-  --ej-text-secondary: oklch(0.82 0.01 265);
-  --ej-text-muted:    oklch(0.70 0.012 265);
-  --ej-text-faint:    oklch(0.58 0.014 265);
-
-  /* Semantic colors — slightly brighter in dark mode */
-  --success:         oklch(0.74 0.16 145);
-  --success-soft:    oklch(0.20 0.06 145);
-  --success-deco:    oklch(0.45 0.12 145);
-  --success-icon-bg: oklch(0.30 0.08 145);
-  --success-value:   oklch(0.65 0.16 145);
-  --success-border:  oklch(0.55 0.14 145);
-
-  --warning:         oklch(0.82 0.17 85);
-  --warning-soft:    oklch(0.20 0.06 85);
-  --warning-deco:    oklch(0.48 0.14 85);
-  --warning-icon-bg: oklch(0.32 0.10 85);
-  --warning-value:   oklch(0.68 0.17 85);
-  --warning-border:  oklch(0.65 0.15 85);
-
-  --error:         oklch(0.70 0.20 25);
-  --error-soft:    oklch(0.20 0.07 25);
-  --error-deco:    oklch(0.45 0.16 25);
-  --error-icon-bg: oklch(0.30 0.12 25);
-  --error-value:   oklch(0.62 0.20 25);
-  --error-border:  oklch(0.55 0.18 25);
-
-  --info:         oklch(0.74 0.12 230);
-  --info-soft:    oklch(0.20 0.05 230);
-  --info-deco:    oklch(0.48 0.10 230);
-  --info-icon-bg: oklch(0.32 0.08 230);
-  --info-value:   oklch(0.65 0.12 230);
-  --info-border:  oklch(0.55 0.10 230);
-
-  /* ── Semantic hover states for dark mode ────────────────────────────── */
-  --success-hover: oklch(0.81 0.16 145);
-  --warning-hover: oklch(0.88 0.17 85);
-  --error-hover:   oklch(0.77 0.20 25);
-  --info-hover:    oklch(0.81 0.12 230);
-
-  /* ── Admonition colors — dark ────────────────────────────────────────── */
-  --admonitions-color-tip:            oklch(0.74 0.16 145);
-  --admonitions-color-warning:        oklch(0.82 0.17 85);
-  --admonitions-color-important:      oklch(0.68 0.18 310);
-  --admonitions-color-important-soft: oklch(0.20 0.06 310);
-
-  /* ── Surfaces — dark overrides ──────────────────────────────────────── */
-  --surface-base:    var(--bg);
-  --surface-raised:  var(--bg-secondary);
-  --surface-sunken:  var(--bg-tertiary);
-  --surface-overlay:     oklch(0.165 0.003 var(--hue) / 0.96);
-  --surface-translucent: color-mix(in oklch, var(--card-bg) 70%, transparent);
-  --surface-tooltip:     oklch(0.26 0.006 var(--hue));
-  --surface-code:    oklch(0.10 0.003 var(--hue));
-
-  /* ── Borders — dark overrides ────────────────────────────────────────── */
-  --border-subtle:  oklch(0.220 0.006 var(--hue));
-  --border-default: var(--border);
-  --border-strong:  oklch(0.440 0.010 var(--hue));
-  --border-focus:   var(--primary);
-
-  /* ── Structure aliases ───────────────────────────────────────────────── */
-  --page-bg:         var(--bg);
-  --card-bg:         var(--bg-secondary);
-  --scrollbar-track: var(--bg-tertiary);
-  --line-divider:    var(--border);
-  --line-color:      var(--border);
-  --deep-text:       var(--text-primary);
-  --title-active:    var(--primary);
-  --btn-content:     var(--text-primary);
-  --selection-bg:    var(--primary-soft);
-
-  /* ── Button component tokens ─────────────────────────────────────────── */
-  --btn-regular-bg:        var(--bg-secondary);
-  --btn-regular-bg-hover:  var(--bg-tertiary);
-  --btn-regular-bg-active: var(--border);
-  --btn-plain-bg-hover:    var(--bg-tertiary);
-
-  /* ── Backward compatibility aliases ──────────────────────────────────── */
-  --secondary:            var(--primary);
-  --secondary-soft:       var(--primary-soft);
-  --color-accent:         var(--primary);
-  --color-accent-hover:   var(--primary-hover);
-  --color-text-on-accent: oklch(0.12 0 0);
-  --color-text-primary:   var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-
-  /* ── Focus / ring helpers ────────────────────────────────────────────── */
-  --focus-color:   color-mix(in oklch, var(--primary) 35%, transparent);
-  --accent-dim:    color-mix(in oklch, var(--primary) 14%, transparent);
-  --accent-border: color-mix(in oklch, var(--primary) 30%, transparent);
-
-  /* ── CTA dark overrides ─────────────────────────────────────────────────
-     In light mode the CTA is ink-on-parchment (near-black on the canvas) so
-     it always contrasts regardless of --hue. Inverting that in dark mode
-     produces a near-white slab that out-glares the content it supports, so
-     dark mode uses a hue-filled primary instead: the action still owns the
-     eye, but it belongs to the learner's theme rather than blinding them. */
-  --cta-bg:       var(--primary);
-  --cta-fg:       var(--on-primary);
-  --cta-bg-hover: var(--primary-hover);
-
-  /* ── Content-type semantic colors — dark (brighter for contrast) ─────── */
-  --c-vocabulario:   oklch(0.70 0.19 358);
-  --c-chunks:        oklch(0.78 0.17 163);
-  --c-pronunciacion: oklch(0.74 0.14 228);
-  --c-racha:         oklch(0.80 0.16 72);
-}
+/* Accent attributes */
+html[data-accent="red"] { --accent: var(--accent-red); }
+html[data-accent="orange"] { --accent: var(--accent-orange); }
+html[data-accent="amber"] { --accent: var(--accent-amber); }
+html[data-accent="green"] { --accent: var(--accent-green); }
+html[data-accent="emerald"] { --accent: var(--accent-emerald); }
+html[data-accent="teal"] { --accent: var(--accent-teal); }
+html[data-accent="blue"] { --accent: var(--accent-blue); }
+html[data-accent="purple"] { --accent: var(--accent-purple); }
+html[data-accent="pink"] { --accent: var(--accent-pink); }

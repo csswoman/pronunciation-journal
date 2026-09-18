@@ -14,7 +14,7 @@ import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
 import { CEFR_LEVELS, type CefrLevel } from "@/lib/essential-words/types";
 import { Check, ChevronDown, Laptop, Moon, Palette, Sun, Target, Volume2 } from "@/components/icons";
 import ContentLevelSelector from "@/components/ui/ContentLevelSelector";
-import { DEFAULT_HUE_PRESET, HUE_PRESETS, matchesHuePreset, swatchColor } from "@/lib/theme/hue-presets";
+import { ACCENT_PRESETS, DEFAULT_ACCENT_ID } from "@/lib/theme/accent-presets";
 
 const APPEARANCE_OPTIONS: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
   { value: "light", label: "Claro", icon: Sun },
@@ -97,7 +97,7 @@ function AccordionRow({
 }
 
 export function QuickSettingsAccordion({ className }: { className?: string } = {}) {
-  const { hue, setHue, preference, setPreference, mounted } = useOKLCHTheme();
+  const { accent, setAccent, preference, setPreference, mounted } = useOKLCHTheme();
   const soundPreference = useUISoundsStore((state) => state.soundPreference);
   const setSoundPreference = useUISoundsStore((state) => state.setSoundPreference);
   const volume = useUISoundsStore((state) => state.volume);
@@ -110,9 +110,9 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
 
   const appearanceLabel = APPEARANCE_OPTIONS.find((option) => option.value === preference)?.label ?? "Auto";
 
-  const activePreset = HUE_PRESETS.find((preset) => matchesHuePreset(hue, preset));
-  const colorValue = activePreset?.label ?? "Personalizado";
-  const colorNote = activePreset === DEFAULT_HUE_PRESET ? "Predeterminado" : null;
+  const activePreset = ACCENT_PRESETS.find((preset) => preset.id === accent);
+  const colorValue = activePreset?.label ?? "Azul";
+  const colorNote = activePreset?.id === DEFAULT_ACCENT_ID ? "Predeterminado" : null;
 
   const percent = Math.round(volume * 100);
   const isMuted = soundPreference === "off";
@@ -167,13 +167,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {HUE_PRESETS.map((preset) => {
-            const isSelected = matchesHuePreset(hue, preset);
+          {ACCENT_PRESETS.map((preset) => {
+            const isSelected = accent === preset.id;
             return (
               <button
-                key={preset.label}
+                key={preset.id}
                 type="button"
-                onClick={() => setHue(preset.hue)}
+                onClick={() => setAccent(preset.id)}
                 aria-label={preset.label}
                 aria-pressed={isSelected}
                 title={preset.label}
@@ -182,13 +182,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                   isSelected ? "scale-110" : "hover:scale-105",
                 )}
                 style={{
-                  backgroundColor: swatchColor(preset),
-                  outline: isSelected ? "2px solid var(--primary)" : undefined,
+                  backgroundColor: preset.hex,
+                  outline: isSelected ? "2px solid var(--accent-600)" : undefined,
                   outlineOffset: isSelected ? "2px" : undefined,
                 }}
               >
                 {isSelected && (
-                  <Check size={15} className="text-(--on-swatch)" aria-hidden strokeWidth={3} />
+                  <Check size={15} className="text-white" aria-hidden strokeWidth={3} />
                 )}
               </button>
             );

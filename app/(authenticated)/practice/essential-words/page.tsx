@@ -12,7 +12,7 @@ export default async function EssentialWordsPage() {
     : 0
 
   return (
-    <PageLayout archetype="session">
+    <PageLayout archetype="catalog">
       <EssentialWordsSession initialStreak={streak} />
     </PageLayout>
   )

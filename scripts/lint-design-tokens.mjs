@@ -106,6 +106,7 @@ const RAW_COLOR_ALLOWLIST = new Set([
   "lib/ai-coach/liquid-orb-seed.ts",
   "lib/lexicon/categories.ts",
   "lib/lexicon/domains.ts",
+  "lib/theme/accent-presets.ts",
   "lib/theme/hue-presets.ts",
 ]);
 

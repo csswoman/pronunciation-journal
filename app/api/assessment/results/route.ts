@@ -3,7 +3,8 @@ import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS
 import { persistAssessmentOutcome } from "@/lib/courses/assessment-queries";
 import { AssessmentResultSchema } from "@/lib/courses/assessment-schema";
 import { logServerError } from "@/lib/api/logging";
-import { buildServerAssessment, scoreAssessment, ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment";
+import { scoreAssessment, ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment";
+import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 import type { CefrLevelId } from "@/lib/courses/types";
 

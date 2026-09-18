@@ -1,20 +1,10 @@
 'use client'
 
-// Planned structure:
-// <SessionReady>
-//   <SessionReadyHero> (full width: title, minutes, recap, size picker, CTA, route) </SessionReadyHero>
-//   main: forecast + vocabulary + vault | rail: streak, retention, leeches, heatmap
-// </SessionReady>
-
 import type { SessionSizeId } from '@/lib/essential-words/session-size'
 import type { EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 import type { EssentialWordsSessionPreview } from '@/lib/essential-words/action-session'
 import { useEssentialWordsReadyDashboard } from '@/hooks/useEssentialWordsReadyDashboard'
-import { SessionReadyForecast } from './SessionReadyForecast'
-import { SessionReadyHeatmap } from './SessionReadyHeatmap'
 import { SessionReadyHero } from './SessionReadyHero'
-import { SessionReadyLeeches } from './SessionReadyLeeches'
-import { SessionReadyRetention } from './SessionReadyRetention'
 import { SessionReadyStreak } from './SessionReadyStreak'
 import { SessionReadyVaultRow } from './SessionReadyVaultRow'
 import { SessionReadyVocabulary } from './SessionReadyVocabulary'
@@ -31,8 +21,10 @@ interface Props {
   isResume: boolean
   previewLoading: boolean
   onDiscard: () => void
-  onLeechReview: (wordIds: string[]) => void
 }
+
+const DEFAULT_VOCAB_BUCKETS = { nuevas: 2, aprendiendo: 0, en_repaso: 0, dominadas: 0 }
+const DEFAULT_STREAK_MARKS = [false, false, false, false, false, false, false]
 
 export function SessionReady({
   preview,
@@ -46,63 +38,50 @@ export function SessionReady({
   isResume,
   previewLoading,
   onDiscard,
-  onLeechReview,
 }: Props) {
   const dashboard = useEssentialWordsReadyDashboard()
 
   return (
     <section
       aria-labelledby="session-ready-title"
-      className="flex w-full flex-col gap-space-4 sm:gap-space-5"
+      className="flex w-full flex-col gap-6"
     >
-      <SessionReadyHero
-        preview={preview}
-        isResume={isResume}
-        activeRouteId={activeRouteId}
-        onRouteChange={onRouteChange}
-        sessionSize={sessionSize}
-        onSessionSizeChange={onSessionSizeChange}
-        onBegin={onBegin}
-        onDiscard={onDiscard}
-        previewLoading={previewLoading}
-        lastSession={dashboard?.lastSession}
-      />
-
-      <div className="flex flex-col gap-space-3 md:grid md:grid-cols-[minmax(0,1fr)_minmax(12.5rem,15rem)] md:items-start md:gap-space-3">
-        <div className="flex min-w-0 flex-col gap-space-3 animate-home-in animate-home-in-d1">
-          {dashboard ? <SessionReadyForecast days={dashboard.forecast} /> : null}
-          {dashboard?.vocabulary ? (
-            <SessionReadyVocabulary
-              buckets={dashboard.vocabulary}
-              totalWords={stats.totalWords}
-            />
-          ) : null}
-          <SessionReadyVaultRow />
+      {/* Main 2-column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-6 items-start">
+        {/* Left Column: Coral Session Hero Card */}
+        <div className="w-full">
+          <SessionReadyHero
+            preview={preview}
+            isResume={isResume}
+            activeRouteId={activeRouteId}
+            onRouteChange={onRouteChange}
+            sessionSize={sessionSize}
+            onSessionSizeChange={onSessionSizeChange}
+            onBegin={onBegin}
+            onDiscard={onDiscard}
+            previewLoading={previewLoading}
+            lastSession={dashboard?.lastSession}
+          />
         </div>
 
+        {/* Right Column: Stacked Cards (Racha, Tu Vocabulario, Tu Baúl) */}
         <aside
-          className="flex min-w-0 flex-col gap-space-3 animate-home-in animate-home-in-d2"
-          aria-label="Contexto"
+          className="flex flex-col gap-4 w-full"
+          aria-label="Progreso y Vocabulario"
         >
-          {dashboard ? (
-            <SessionReadyStreak streak={streak} marks={dashboard.streakMarks} />
-          ) : null}
-          {dashboard?.retention ? (
-            <SessionReadyRetention
-              pct={dashboard.retention.pct}
-              sampleSize={dashboard.retention.sampleSize}
-            />
-          ) : null}
-          {dashboard ? (
-            <SessionReadyLeeches
-              leeches={dashboard.leeches}
-              onReview={onLeechReview}
-              disabled={isResume || previewLoading}
-            />
-          ) : null}
-          {dashboard?.heatmap ? <SessionReadyHeatmap days={dashboard.heatmap} /> : null}
+          <SessionReadyStreak
+            streak={streak}
+            marks={dashboard?.streakMarks ?? DEFAULT_STREAK_MARKS}
+            forecast={dashboard?.forecast}
+          />
+          <SessionReadyVocabulary
+            buckets={dashboard?.vocabulary ?? DEFAULT_VOCAB_BUCKETS}
+            totalWords={stats.totalWords || 2800}
+          />
+          <SessionReadyVaultRow />
         </aside>
       </div>
     </section>
   )
 }
+

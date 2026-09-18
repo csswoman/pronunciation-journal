@@ -29,7 +29,7 @@ export function SessionReadyRecap({ session }: Props) {
   const lead = recapLead(session.correct, session.practiced)
 
   return (
-    <p className="m-0 text-pretty text-caption tabular-nums text-fg-muted">
+    <p className="m-0 text-pretty text-xs sm:text-sm font-semibold tabular-nums text-ink-secondary">
       {lead} · {session.correct}/{session.practiced}
       {time}
     </p>

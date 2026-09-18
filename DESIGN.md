@@ -1,468 +1,197 @@
----
-name: English Journal
-description: A personal pronunciation journal and practice environment for English learners at any level, from beginners to advanced.
-colors:
-  primary: "var(--primary)"
-  primary-hover: "var(--primary-hover)"
-  primary-soft: "var(--primary-soft)"
-  surface-base: "var(--surface-base)"
-  surface-raised: "var(--surface-raised)"
-  surface-sunken: "var(--surface-sunken)"
-  surface-overlay: "oklch(1 0 0 / 0.92)"
-  surface-tooltip: "var(--surface-tooltip)"
-  text-primary: "var(--text-primary)"
-  text-secondary: "var(--text-secondary)"
-  text-tertiary: "var(--text-tertiary)"
-  text-disabled: "var(--text-disabled)"
-  border-subtle: "var(--border-subtle)"
-  border-default: "var(--border-default)"
-  border-strong: "var(--border-strong)"
-  success: "var(--success)"
-  success-soft: "var(--success-soft)"
-  warning: "var(--warning)"
-  warning-soft: "var(--warning-soft)"
-  error: "var(--error)"
-  error-soft: "var(--error-soft)"
-  info: "var(--info)"
-  info-soft: "var(--info-soft)"
-  stage-pairs: "var(--stage-pairs)"
-  stage-dictation: "var(--stage-dictation)"
-  cta-bg: "var(--cta-bg)"
-  cta-fg: "var(--cta-fg)"
-typography:
-  # Mobile-first fixed rem. Desktop bump at 768px lives in app/styles/tokens.css.
-  # Prefer text-h* / font-* utilities — do not invent ad-hoc text-2xl / text-5xl.
-  h1:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1.5rem → 1.875rem (md+)"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "-0.02em"
-  h2:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1.375rem → 1.625rem (md+)"
-    fontWeight: 700
-    lineHeight: 1.25
-    letterSpacing: "-0.015em"
-  h3:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1.25rem → 1.375rem (md+)"
-    fontWeight: 600
-    lineHeight: 1.3
-    letterSpacing: "-0.01em"
-  h4:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1.125rem → 1.25rem (md+)"
-    fontWeight: 600
-    lineHeight: 1.35
-  body:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1rem"
-    fontWeight: 400
-    lineHeight: 1.55
-  body-sm:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.875rem → 0.9375rem (md+)"
-    fontWeight: 400
-    lineHeight: 1.45
-  label:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.875rem → 0.9375rem (md+)"
-    fontWeight: 600
-    lineHeight: 1.4
-  caption:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "0.8125rem → 0.875rem (md+)"
-    fontWeight: 400
-    lineHeight: 1.4
-  kicker:
-    fontFamily: "DM Mono, Fira Code, monospace"
-    fontSize: "0.75rem → 0.8125rem (md+)"
-    fontWeight: 500
-    lineHeight: 1.35
-    letterSpacing: "0.06em"
-  mono:
-    fontFamily: "DM Mono, Fira Code, monospace"
-    fontSize: "0.8125rem → 0.875rem (md+)"
-    fontWeight: 400
-    lineHeight: 1.55
-  display-word:
-    fontFamily: "DM Sans, system-ui, sans-serif"
-    fontSize: "1.5rem → 1.75rem (md+)"
-    fontWeight: 700
-    lineHeight: 1.05
-  display-ipa:
-    fontFamily: "Andika, DM Sans, sans-serif"
-    fontSize: "1.75rem → 2.25rem (md+)"
-    fontWeight: 700
-    lineHeight: 1.05
-rounded:
-  xs: "4px"
-  sm: "8px"
-  md: "12px"
-  lg: "16px"
-  xl: "20px"
-  2xl: "24px"
-  3xl: "32px"
-  full: "9999px"
-spacing:
-  1: "0.25rem"
-  2: "0.5rem"
-  3: "0.75rem"
-  4: "1rem"
-  5: "1.25rem"
-  6: "1.5rem"
-  8: "2rem"
-  10: "2.5rem"
-  12: "3rem"
-  16: "4rem"
-  20: "5rem"
-components:
-  button-primary:
-    backgroundColor: "{colors.cta-bg}"
-    textColor: "{colors.cta-fg}"
-    rounded: "{rounded.md}"
-    padding: "10px 20px"
-  button-primary-hover:
-    backgroundColor: "var(--cta-bg-hover)"
-    textColor: "{colors.cta-fg}"
-  button-secondary:
-    backgroundColor: "{colors.surface-raised}"
-    textColor: "{colors.text-primary}"
-    rounded: "{rounded.md}"
-    padding: "10px 20px"
-  button-secondary-hover:
-    backgroundColor: "{colors.surface-sunken}"
-  button-soft:
-    backgroundColor: "{colors.primary-soft}"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.md}"
-    padding: "10px 20px"
-  button-ghost:
-    backgroundColor: "transparent"
-    textColor: "{colors.text-secondary}"
-    rounded: "{rounded.md}"
-    padding: "10px 20px"
-  chip-default:
-    backgroundColor: "{colors.surface-raised}"
-    textColor: "{colors.text-secondary}"
-    rounded: "{rounded.full}"
-    padding: "4px 12px"
-  chip-selected:
-    backgroundColor: "{colors.primary-soft}"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.full}"
-    padding: "4px 12px"
-  card:
-    backgroundColor: "{colors.surface-raised}"
-    rounded: "{rounded.md}"
-    padding: "16px"
-  input:
-    backgroundColor: "{colors.surface-sunken}"
-    textColor: "{colors.text-primary}"
-    rounded: "{rounded.sm}"
-    padding: "8px 12px"
-  button-pill-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "var(--on-primary)"
-    rounded: "{rounded.full}"
-    padding: "8px 20px"
-  badge-default:
-    backgroundColor: "var(--badge-primary-bg)"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.full}"
-    padding: "2px 8px"
+# Sistema de Diseño — English Journal
+
+## 1. Visión y Principios
+English Journal es un entorno personal de práctica de inglés para hablantes de español. La interfaz transmite calma, legibilidad y sobriedad:
+- **Tres capas de color bien definidas**: Neutros responsivos a la apariencia, pasteles de contenido fijos y un único color de acento personalizable.
+- **Sin colores sueltos**: Todo color, radio, fuente y espaciado proviene estrictamente de los tokens semánticos del sistema.
+- **Tipografía con propósito**: Bricolage Grotesque (display 800) para números y títulos principales; Figtree para UI y lectura; Noto Sans exclusivamente para transcripciones fonéticas IPA.
+- **Contraste garantizado**: Contraste mínimo de 4.5:1 en todo texto (3:1 en texto ≥24px e iconos de controles) tanto en tema claro como oscuro.
+
 ---
 
-# Design System: English Journal
+## 2. Arquitectura de Color: Tres Capas
 
-## 1. Overview
+La aplicación de color se controla mediante atributos en la etiqueta `<html>`:
+```html
+<html data-theme="dark" data-accent="blue">
+```
 
-**Creative North Star: "The Personal Practice Desk"**
+### Capas y comportamiento
+| Capa | ¿Cambia con el acento de tema? | ¿Cambia con claro/oscuro (`data-theme`)? |
+|---|---|---|
+| **Neutros** | No | **Sí** |
+| **Pastel de contenido + Tinta** | No | No |
+| **Acento** | **Sí** | No |
 
-This is a learner's private practice desk, not a product showcase or a metrics dashboard. It opens with the next useful action, then reveals the supporting routes without making them compete. The mood is settled: near-neutral surfaces, unhurried spacing, and no decoration that does not clarify a choice. A beginner and an advanced learner should both feel at home, because the interface does not assume prior knowledge. Phonetic symbols appear naturally alongside plain text, interesting rather than intimidating.
+---
 
-The palette uses near-neutral surfaces with a dynamic primary that follows the learner's active theme. Identity is concentrated in actions and states instead of washing the entire canvas in color. The typography is DM Sans for interface and reading, DM Mono for kickers and technical notation, and Andika for IPA. No decorative serif. The spacing is 8pt, applied with intention: sessions feel spacious, feedback feels close, and the canvas never feels busy.
+### 2.1 Capa 1: Neutros (Tokens responsivos a `data-theme`)
 
-This system explicitly rejects three anti-references established in PRODUCT.md: Duolingo's infantilizing gamification (cartoonish reward loops, owl mascots, hollow celebrations); the generic SaaS dashboard (navy sidebar, white card grids, blue primary buttons, identical spacing everywhere); and corporate language platforms (Rosetta Stone, Babbel, institutional e-learning shells) with their stiff, joyless, compliance-module energy. A learner opening this app should feel like returning to something that belongs to them, not launching a product.
-
-**Key Characteristics:**
-- Warm-neutral surfaces with a hue-tinted primary that feels personal rather than branded
-- Quiet by default: flat surfaces at rest, shadow reserved for state changes and elevation
-- DM Sans as the workhorse for UI and headings; DM Mono for kickers; Andika for IPA glyphs
-- No decorative display serif — phonemes earn presence through size and weight, not a second family
-- Semantic color fixed and culturally legible (green = correct, amber = caution, red = error)
-- Sound and phonetics are first-class content: IPA characters render in the same font as UI text, with identical clarity
-- Entry points that do not require phonetic expertise to begin; depth rewards those who go looking
-
-For operational guidance on color proportion, radius, typography, and visual
-personality, see `docs/design/visual-language.md`.
-
-## 2. Colors: The Hue-Tinted Notebook
-
-The palette is neutral-first with a dynamic primary scale. Every surface carries a whisper of the primary hue (chroma 0.003–0.012), making the app feel coherent even as the user's preferred hue shifts. The primary itself is never decorative: it marks interactive elements, active states, and focus rings, and nothing else.
-
-**Token-to-utility mapping.** In code, reference the Tailwind v4 utilities generated from `app/styles/theme.css`, never raw `var(--…)` arbitrary values. The foreground tokens map: `text-primary` → `text-fg`, `text-secondary` → `text-fg-muted`, `text-tertiary` → `text-fg-subtle` (the `fg-` prefix avoids clashing with Tailwind's `text-base` font-size utility). Primary foreground on a filled button is `text-on-primary`, not `text-white`. Surfaces, borders, and primary use their literal names (`bg-surface-raised`, `border-border-subtle`, `bg-primary`).
-
-### Primary
-- **Adaptive primary** (`--primary`): The single interactive identity color. Its value is resolved from the active `--hue` / `--hue-base` and light/dark mode. Use it on colored CTAs, focus rings, active nav items, selected chips, and the single solid Home CTA (`Empieza aquí` or review-due).
-- **Primary Soft** (`--primary-soft`): Theme-resolved background for soft button variants, selected states, and quiet hover fills. Never use it as decoration.
-- **Accent-1** (`--accent-1`, +150°): Editorial highlight on Home (Palabra / Chunk del día washes and word ink).
-- **Accent-2** (`--accent-2`, +210°): Progress texture on Home (plan segments, Hecho, streak celebration). Does not replace fixed `--success` for exercise correctness.
-### Secondary
-- **Warm Amber** (`oklch(0.74 0.14 55)`): The stage-pairs accent. Applied to the minimal-pairs practice stage. Fixed; does not shift with `--hue`.
-- **Coastal Teal** (`oklch(0.73 0.12 185)`): The stage-dictation accent. Applied to dictation practice stages. Fixed.
-
-### Tertiary
-- **Ink Black (CTA)** (`oklch(0.18 0.008 var(--hue))`): The CTA button background. Uses the primary text color so it always-contrasts against the surface, regardless of hue. Not a semantic color; a contrast strategy.
-
-### Neutral
-- **Quiet Canvas** (`oklch(0.968 0.004 var(--hue))`): Page background. Near-neutral base, darkest surface level in light mode.
-- **Lifted Paper** (`oklch(1 0 0)`): Cards, panels, sidebars. Pure white elevation for raised surfaces on the canvas.
-- **Sunken Stone** (`oklch(0.978 0.004 var(--hue))`): Inputs, code blocks, inset regions inside cards. Slightly recessed fill, lighter than the page background.
-- **Deep Ink** (`oklch(0.18 0.008 var(--hue))`): Primary text. Near-black with a hair of hue.
-- **Faded Ink** (`oklch(0.40 0.006 var(--hue))`): Secondary text, metadata, descriptions.
-- **Ghost Ink** (`oklch(0.49 0.005 var(--hue))`): Tertiary text, timestamps, placeholders.
-- **Hairline** (`oklch(0.945 0.004 var(--hue))`): Subtle borders, dividers.
-- **Standard Rule** (`oklch(0.918 0.008 var(--hue))`): Default card and input borders.
-- **Bold Rule** (`oklch(0.878 0.010 var(--hue))`): Emphasized borders, active states.
-
-**The Active Theme Rule.** The primary color is a variable, not a fixed brand color. Code, documentation, and design reference semantic tokens (`--primary`, `--surface-*`, `--text-*`) rather than a hue value or a hardcoded hex. `250` is only the initial fallback in `useOKLCHTheme`; any saved hue and either color mode are equally valid.
-
-**The Semantic Independence Rule.** Success green (hue 145), warning amber (hue 85), error red (hue 25), and info blue (hue 230) are fixed and do not shift with `--hue`. They carry legible cultural meaning. Never apply the primary color to correctness feedback; always use the fixed semantic colors.
-
-**The One Voice Rule.** The primary color appears on interactive affordances only: buttons, links, active states, focus rings. It does not appear on decorative elements, section backgrounds, or progress bars unless those items are directly interactive.
-
-## 3. Typography
-
-**Display / UI Font:** DM Sans (variable weight 300–700, humanist sans-serif, latin + latin-ext)
-**Mono / kicker font:** DM Mono (400, 500, latin)
-**IPA font:** Andika (`--font-ipa`)
-
-**Character:** DM Sans carries headings, buttons, labels, body, and card titles. DM Mono carries kickers and code. Andika carries IPA glyphs and phonetic transcriptions so those symbols remain legible without turning into decoration. There is no decorative serif in the product.
-
-**Source of truth:** `app/styles/tokens.css` (`--text-size-*`). Tailwind maps in `app/styles/theme.css` (`text-h1`…`text-ipa-hero`). Composite helpers: `.font-h1`…`.font-kicker` in `utilities.css`. Do not hardcode `text-2xl` / `text-5xl` / `clamp()` for UI chrome.
-
-**Strategy:** Mobile-first fixed `rem` scale (product UI). At `min-width: 768px` headings and secondary sizes step up one notch. No fluid type for app chrome.
-
-**UI floor:** 12px mobile / 13px desktop (`--text-size-kicker`, `--text-size-tiny`). Body stays 16px at both breakpoints.
-
-### Hierarchy
-- **h1** (`text-h1`): 1.5 → 1.875rem — rare display, score heroes.
-- **h2** (`text-h2`): 1.375 → 1.625rem — page titles (`PageHeader` default).
-- **h3** (`text-h3`): 1.25 → 1.375rem — compact titles, section heads, exercise prompts.
-- **h4** (`text-h4`): 1.125 → 1.25rem — card titles, phrase prompts.
-- **Body** (`text-body-md` / `.font-body`): 1rem — reading content. Max 65–75ch.
-- **Body small** (`text-body-sm`): 0.875 → 0.9375rem — subtitles, helper text.
-- **Label** (`text-label`): 0.875 → 0.9375rem / 600 — UI labels, nav, buttons.
-- **Caption** (`text-caption`): 0.8125 → 0.875rem — metadata, footnotes.
-- **Kicker** (`.font-kicker`): 0.75 → 0.8125rem DM Mono — section overlines only.
-- **display-word / display-ipa / ipa-hero**: practice content heroes (word face, IPA). Not for page chrome.
-- **Mono** (DM Mono, 400–700, sizes as needed): Kickers and code snippets.
-- **Phoneme** (Andika, sizes as needed): IPA glyphs and phonetic transcriptions.
-
-**The IPA Parity Rule.** IPA symbols render with `font-ipa`/Andika, never in a decorative serif or system fallback. Use DM Mono only for code or an explicitly monospaced notation context.
-
-**The Scale Contract Rule.** Adjacent hierarchy steps must differ by at least 1.25× in font size or 100 in weight. Flat scales look like accidents.
-
-### Layout density
-
-**Source of truth:** `app/styles/tokens.css` (`--layout-*`). Utilities in `utilities.css`: `.page-shell`, `.page-header`, `.layout-stack*`, `.layout-card-pad*`.
-
-Mobile-first denser chrome; desktop opens at `768px` / `1024px`:
-
-| Role | Mobile | md+ | Use |
+| Token | `data-theme="dark"` | `data-theme="light"` | Uso |
 |---|---|---|---|
-| `--layout-page-inline` | 16px | 24 → 40 (lg) | `PageLayout` gutters |
-| `--layout-page-block` | 16px | 24px | page top padding |
-| `--layout-page-block-end` | 40px | 48px | page bottom |
-| `--layout-header-pb` | 16px | 20px | `PageHeader` bottom |
-| `--layout-section-gap` | 16px | 20px | Home zones, major sections |
-| `--layout-stack-tight/stack/loose` | 8 / 12 / 16 | 8 / 12 / 20 | related → within-section |
-| `--layout-card-pad` | 16px | 20px | interactive cards |
+| `--bg` | `#0d1018` | `#f6f4ef` | Fondo principal de la página |
+| `--bg-sidebar` | `#11151f` | `#efebe3` | Fondo de la barra lateral |
+| `--surface` | `#141925` | `#ffffff` | Tarjetas planas, paneles base |
+| `--surface-raised` | `#1b2130` | `#f1eee7` | Tarjetas elevadas, modales, menús |
+| `--field` | `#1a1f2c` | `#ebe7de` | Campos de entrada, recuadros insets |
+| `--border` | `#262d3d` | `#e2ddd2` | Bordes sutiles y divisores |
+| `--border-strong` | `#2f3749` | `#b9b2a4` | Bordes de énfasis y controles |
+| `--text-strong` | `#ffffff` | `#0a0c11` | Títulos principales y máxima jerarquía |
+| `--text` | `#eef1f7` | `#12151c` | Texto del cuerpo principal |
+| `--text-secondary` | `#c9cfdb` | `#2c3445` | Subtítulos y texto descriptivo |
+| `--text-muted` | `#aab2c4` | `#4a5263` | Metadatos y etiquetas secundarias |
+| `--text-faint` | `#7c8499` | `#636a78` | Deshabilitados y leyendas tenues |
 
-Prefer these over ad-hoc `py-6` / `gap-6` / `p-8` on authenticated shell surfaces. Tight grouping for related chrome; section gap only between distinct zones.
+---
 
-## 4. Elevation
+### 2.2 Capa 2: Fijos y Pasteles de Contenido (Iguales en ambos temas)
 
-The system uses tonal layering for structure and shadow for state. Surfaces are flat at rest. Shadow appears only when something is hovered, focused, or physically elevated by user action (a draggable card, a dropdown, a modal). This keeps the resting state quiet and lets the learner focus on content, not chrome.
+#### Fijos (Tinta y Papel)
+* `ink`: `#12151c` (Tinta principal)
+* `ink-secondary`: `#2c3445` (Tinta secundaria)
+* `ink-muted`: `#4a5263` (Tinta atenuada)
+* `paper`: `#ffffff` (Papel blanco puro)
+* `on-accent`: `#ffffff` (Texto sobre botón de acento)
 
-### Surface Layers
-Three background levels create the structural hierarchy without shadows:
-- **Surface Base** (page background, Quiet Canvas): The canvas.
-- **Surface Raised** (cards, panels, sidebars, Lifted Paper): One step lighter than the base; creates visual separation through lightness contrast alone.
-- **Surface Sunken** (inputs, code blocks, Sunken Stone): Slightly darker than the base; recession signals editable or contained regions.
+#### Pastel de contenido
+| Nombre | Base | Deep | Soft | Uso asignado |
+|---|---|---|---|---|
+| **sky** | `#b9d3fb` | `#9ec0f6` | `#eaf2fe` | Sesión de hoy, cursos, rutas, lecciones guiadas |
+| **butter** | `#f8e08e` | `#efd06a` | `#fdf3cf` | Frases, expresiones, lecciones teóricas, hitos |
+| **coral** | `#f7b7a6` | `#ee9f8b` | `#fde4dc` | Vocabulario, palabras, pronunciación |
+| **lilac** | `#cbbcf5` | `#b1a0ea` | `#ece6fd` | Progreso, mazos, gramática |
+| **mint** | `#a8e6c9` | `#86d6b0` | `#e3f6ec` | Inmersión, práctica, registro, racha, Coach |
 
-### Shadow Vocabulary
-- **Ambient** (`0 1px 2px oklch(0 0 0 / 0.05)`): Resting elevation for interactive cards. Whisper-thin; present but not declarative.
-- **Lifted** (`0 4px 6px oklch(0 0 0 / 0.07)`): Hover state for interactive cards, focused inputs. Signals responsiveness.
-- **Elevated** (`0 10px 15px oklch(0 0 0 / 0.10)`): Dropdowns, date pickers, context menus. Structural separation.
-- **Floating** (`0 20px 25px oklch(0 0 0 / 0.10)`): Modals, side panels, command palette. Maximum separation.
-- **Panel Edge** (`-4px 0 24px color-mix(in oklch, var(--fg) 6%, transparent)`): AI coach side panel edge shadow.
+#### Reglas estrictas dentro de `PastelCard`:
+Componente/clase `PastelCard` con `data-tone="sky|butter|coral|lilac|mint"` redefine en su scope:
+* `--text` y `--text-strong` → `ink`
+* `--text-secondary` → `ink-secondary`
+* `--text-muted` y `--text-faint` → `ink-muted`
+* `--border` → `rgb(18 21 28 / 0.15)`
 
-**The Flat-by-Default Rule.** A surface at rest has no shadow or only Ambient. Shadow is a response to state (hover, open, focus), not a decoration. If a surface always has a heavy shadow, the shadow has lost its meaning.
+Superficies internas por capas relativas:
+* `pastel-card-inset` (caja de ejemplo / muestra): `rgb(255 255 255 / 0.55)`
+* `pastel-card-panel` (panel blanco interior): `rgb(255 255 255 / 0.90)`
+* `pastel-card-chip` (chips, pistas de audio): `rgb(18 21 28 / 0.08)`
+* `pastel-card-row-active` (fila activa en panel): `color-mix(in oklch, var(--card) 40%, white)`
 
-## 5. Components
+Prohibido dentro de `PastelCard`: opacidad o alfa en texto, tokens neutros sin remapear o capas translúcidas anidadas.
 
-### Buttons
+---
 
-**Character:** Confident, undecorated, responsive. The primary action button uses ink-on-parchment contrast rather than a colored fill; this keeps the palette restrained and respects the One Voice Rule.
+### 2.3 Capa 3: Acento (`data-accent`)
 
-- **Shape:** Gently curved (12px radius, `--radius-md`)
-- **Primary (CTA):** Dark ink background (`oklch(0.18 0.008 var(--hue))`), warm parchment text. Padding 10px 20px. Hover: slightly lighter dark (`oklch(0.26 0.008 var(--hue))`), `translateY(-1px)`, Lifted shadow.
-- **Secondary:** Surface-raised background, primary text. Hover: sunken background. Used for subordinate actions.
-- **Soft:** Primary-soft background, primary text. Used for contextual confirm actions that should read as "on-brand" but not dominant.
-- **Ghost:** Transparent background, secondary-fg text. Hover: surface-raised fill. Used for tertiary or nav-embedded actions.
-- **Transitions:** 150ms standard easing (`cubic-bezier(0.4, 0, 0.2, 1)`) for color and shadow. 200ms for transform.
-- **Focus:** `--focus-ring` outline (primary at 40% opacity, 2px offset).
+El acento es dinámico y seleccionable por el usuario entre 9 valores predefinidos (todos con contraste ≥ 4.5:1 sobre texto blanco):
+1. `red`: `#dc2626`
+2. `orange`: `#c2410c`
+3. `amber`: `#b45309`
+4. `green`: `#15803d`
+5. `emerald`: `#047857`
+6. `teal`: `#0e7490`
+7. **`blue`: `#2563eb` (predeterminado)**
+8. `purple`: `#7c3aed`
+9. `pink`: `#be185d`
 
-The standard `<Button>` (`components/ui/Button.tsx`) covers form, dialog, and toolbar actions at `rounded-sm`/`rounded-md`. Two pill-shaped siblings handle the lighter in-session affordances:
+**Uso exclusivo del acento:**
+- Botón primario (`Button` `variant="primary"`).
+- Ítem de navegación activo.
+- Tab/segmento activo.
+- Número del paso actual en flujos/steppers.
+- Chip de estado "En curso".
+- Barras de progreso sobre fondo neutro.
+- Anillo de foco (`outline: 3px solid var(--accent)`).
+- Swatch de tema seleccionado.
 
-**Two primary fills, one rule.** Chrome and hubs use ink-on-parchment (`Button` `primary` → `--cta-bg` / `--cta-fg`) so the action contrasts on any `--hue`. Inside a practice session, advance uses hue fill (`PillButton` `primary` → `--primary` / `--on-primary`) so the control belongs to the learner's theme without competing with the page CTA.
+*Nunca usar el acento como fondo de tarjeta ni como texto pequeño sobre fondo oscuro.*
 
-- **`PillButton`** (`components/ui/PillButton.tsx`): fully-rounded action button for practice/session flows. Variants `primary` (hue-filled CTA, advance the session), `outline` (bordered quiet secondary), `quiet` (text-only, lowest emphasis, e.g. archive/dismiss). Sizes `sm`/`md`. Flat at rest, focus-ring and `ease-out-quart` color transition built in. Reach for this, not a hand-rolled `<button className="rounded-full …">`, inside a session.
-- **`ListenButton`** (`components/ui/ListenButton.tsx`): audio-playback affordance built on `PillButton`. `Volume2` icon + optional label (`labeled`, default) or a compact `iconOnly` round control for tight rows. Auto-disables where speech synthesis is unavailable, so callers don't repeat the TTS guard. Use for every "play the model" control.
+---
 
-### Chips / Tags / Badge
+### 2.4 Feedback (Alias de Pasteles)
+El feedback de ejercicios utiliza la paleta pastel y **NUNCA** tonos verdes o rojos oscuros saturados:
+* `feedback-correct`: mint (`#a8e6c9`) · `feedback-correct-soft`: mint-soft (`#e3f6ec`)
+* `feedback-wrong`: coral (`#f7b7a6`) · `feedback-wrong-soft`: coral-soft (`#fde4dc`)
+* `feedback-hint`: butter (`#f8e08e`) · `feedback-hint-soft`: butter-soft (`#fdf3cf`)
 
-- **Style:** Pill-shaped (`--radius-full`) for filters and small badges; `Badge` size `md` uses `--radius-md`.
-- **Component:** `components/ui/Badge` — variants `default` | `success` | `info` | `warning` | `error` | `neutral`. No Tailwind palette (`sky`, `violet`, `emerald`).
-- **Default / selected chips:** Surface-raised + text-secondary; selected uses `--primary-soft` + `--primary`.
-- **Word feedback chips:** Semantic colors only (success/warning/error). Never primary.
+---
 
-### Cards / Containers
+## 3. Tipografía (Google Fonts)
 
-- **Corner Style:** 12px (`--radius-md`, `rounded-md`) on `components/layout/Card`. 16px (`--radius-lg`) only for a true session/hero container, not the default card.
-- **Background:** Surface-raised (Lifted Paper). Never surface-base (would disappear).
-- **Shadow Strategy:** Ambient at rest (`--shadow-sm`). Lifted on hover (`--shadow-md`) for interactive cards. Static content cards: no shadow.
-- **Border:** Subtle border (`--border-subtle`) on cards that sit directly on surface-base. No border when cards sit inside a panel with its own background.
-- **Internal Padding:** `--layout-card-pad` (16px mobile / 20px md+). Compact variant uses `--layout-card-pad-compact`.
-- **Nested cards are prohibited.** A card inside a card has failed to decompose the design.
+* **Bricolage Grotesque 800** → `--font-display` (cifras y títulos principales)
+* **Figtree 400/500/600/700** → `--font-body` (interfaz y lectura general)
+* **Noto Sans 400/500/700** → `--font-phonetic` (EXCLUSIVO para símbolos IPA: `ɪ ə ð ː ˈ`)
 
-### Inputs / Fields
+| Estilo | Familia | Tamaño / LineHeight | Peso | Tracking | Uso |
+|---|---|---|---|---|---|
+| `font-hero` | display | 60px / 60px | 800 | -0.03em | Heroes de puntuación / grandes hitos |
+| `font-display` | display | 46px / 48px | 800 | -0.02em | Títulos de gran tamaño |
+| `font-headline` | display | 36px / 37px | 800 | -0.025em | Encabezados principales de página |
+| `font-numeral` | display | 34px / 36px | 800 | -0.02em | Números destacados y contadores |
+| `font-title` | body | 19px / 24px | 700 | Normal | Títulos de tarjetas y secciones |
+| `font-body-lg` | body | 17px / 26px | 500 | Normal | Texto de lectura destacado |
+| `font-body` | body | 15px / 22px | 400 | Normal | Texto de cuerpo por defecto |
+| `font-body-sm` | body | 14px / 20px | 400 | Normal | Subtítulos y texto descriptivo |
+| `font-caption` | body | 13px / 18px | 600 | Normal | Etiquetas de UI y metadatos |
+| `font-overline` | body | 12px / 16px | 700 | 0.14em, MAYÚSCULAS | Kickers de sección y super-etiquetas |
+| `font-ipa-lg` | phonetic | 20px / 28px | 400 | Normal | Transcripción IPA destacada |
+| `font-ipa` | phonetic | 18px / 26px | 400 | Normal | Transcripción IPA estándar |
 
-- **Style:** Sunken background (surface-sunken), standard border (`--border-default`), 8px radius (`--radius-sm`, `rounded-sm`) on `Input`, `Select`, and `AuthInput`.
-- **Focus:** Border shifts to primary (`--border-focus`), shadow becomes Lifted with primary tint. No glow rings.
-- **Error:** Border shifts to error red (`--error-border`), helper text in error color.
-- **Disabled:** fg-disabled text, border-subtle, cursor not-allowed. No background change.
-- **Placeholder:** fg-placeholder (same token as fg-disabled).
+---
 
-### Navigation
+## 4. Escala de Espaciado, Forma y Tamaños
 
-- **App shell:** Fixed sidebar (256px desktop), bottom navigation bar (mobile). Tab bar is flat, no elevation. On mobile, the bottom nav hides during active practice/assessment sessions so exercises reclaim the viewport; the session header keeps exit. Desktop sidebar stays. Immersion also narrows content max-width.
-- **Nav items:** Ghost-style at rest (transparent bg, text-secondary text). Active state: primary-soft background, primary text, 8px radius.
-- **Hover:** Surface-raised fill, text-primary text, 150ms transition.
-- **Typography:** Label scale (DM Sans 600, 0.9375rem / 15px).
+### Espaciado
+Escala basada en cuadrícula de 4px:
+`4px` · `8px` · `12px` · `16px` · `20px` · **`22px` (gap de cuadrícula)** · **`24px` (padding de tarjeta)** · `28px` (tarjeta principal) · `40px` (margen de página)
 
-### Home Command Center (reference composition)
+### Radios de Borde
+* `6px` (`rounded-xs`): teclas KBD y etiquetas de código.
+* `12px` (`rounded-md`): navegación y campos de formulario.
+* `14px` (`rounded-lg`): filas de lista y tiles.
+* `20px` (`rounded-xl`): recuadros insets.
+* **`28px` (`rounded-3xl`)**: tarjetas contenedoras principales.
+* `999px` (`rounded-full`): botones y chips.
 
-Home is the clearest expression of the product language. It is a command center for today's learning, not a landing-page hero and not a dashboard of equal widgets.
+### Variante Compacta
+Para todo elemento secundario: padding 18–20px, radio 24px, botones 40–44px, título 17–18px. La escala grande (padding 24–28px, radio 28px) se reserva para la tarjeta principal de cada pantalla.
 
-```
-Greeting + quiet retention
-Review due (only when actionable)
-Plan of today                       Suggested practice
-Mini lessons                        Pronunciation / Essential Words / word
-```
+### Tamaños de Controles
+* `40px`: control pequeño / secundario.
+* `44px`: mínimo táctil accesible (md).
+* `54px`: botón CTA de avance principal (lg).
+* `58px`: botón de audio principal.
 
-- Start with a concise, personal greeting. Show retention only when there is a non-zero useful signal; never manufacture empty stats.
-- If review is due, place one full-width review strip before the grid. It owns the primary action until the queue is clear.
-- The daily plan is the main working surface. Supporting cards must lead to a real next route, not restate the same action or become metric tiles.
-- At desktop, use a flexible main column plus a compact 17–22rem aside. Keep the aside sticky only while it helps scanning; collapse to one column below 768px.
-- Keep the Home shell open: maximum content width 80rem, no enclosing page card, and a 20px rhythm between major zones.
+### Sombras
+Las sombras se reservan **únicamente para elementos flotantes** (desplegables, menús, modales, hojas emergentes). Las tarjetas resting no llevan sombra ni bordes de color laterales.
 
-### Page Layout Pattern (canonical authenticated page)
+---
 
-Home is the reference composition. Every sidebar destination (hubs and in-session/detail routes) uses the same shell rules. Full implementation history: `docs/superpowers/specs/2026-07-16-page-layout-pattern-design.md`.
+## 5. Componentes y Tabla de Estados
 
-**Hierarchy**
+### Componentes Base
+* **`Button`**: `primary` (acento), `ink` (sobre pastel), `outline` (1.5px ink), `neutral`, `butter`, `mint`. Máximo un CTA `primary` por zona.
+* **`IconButton`**: `audio` 58px (ink + icono sky), `audio-sm` 34px, `neutral` 48px. `aria-label` en español.
+* **`Chip` / `Badge`**: `ink` (sección), `outline` (contador), `status` (`accent`, "En curso"), tono `-deep` por tarjeta, `neutral`. Radios a 999px.
+* **`PastelCard`**: Tarjeta pastel contenedora con scoping estricto `data-tone`.
+* **`Feedback`**: Componente de veredicto con menta/coral/amarillo, estructura con icono + veredicto + respuesta esperada + explicación. ARIA `status`/`alert`.
+* **`SoundTile`**: Tarjeta de sonido con IPA a 42px en `font-phonetic` 700, color por familia (vocales lila, consonantes azul, sonido del día amarillo), chip de estado y 2 píldoras de muestra.
+* **`Stepper`**: Discos numerados (actual en acento, completado en ink con check, futuro en surface-raised) y barra proporcional.
 
-```
-AppShell → PageLayout → PageHeader → Content
-```
+---
 
-**PageLayout**
+### Tabla Oficial de Estados
+| Estado | Sobre fondo pastel | Sobre fondo neutro |
+|---|---|---|
+| **Reposo** | Transparente + borde 1.5px `ink` | Surface + borde `border-strong` |
+| **Hover** | `rgb(18 21 28 / 0.08)` | Surface-raised |
+| **Pulsado** | `rgb(18 21 28 / 0.14)` | Surface-raised + borde `border-strong` |
+| **Foco** | `outline: 3px solid var(--accent); outline-offset: 2px` | Igual |
+| **Seleccionado / Activado** | Relleno `ink` (o pastel de categoría) + `aria-pressed` + icono relleno | Igual |
+| **Deshabilitado** | `rgb(18 21 28 / 0.10)` + texto `ink-muted` + `cursor: not-allowed` | Surface-raised + text-muted |
 
-- Open canvas: no full-page card wrapper around the route.
-- Outer gutters and vertical rhythm from layout utilities / spacing tokens only.
-- Every authenticated route declares a **page archetype** via `PageLayout archetype`:
-  - `dashboard` — full canvas (`--layout-canvas-max`, 80rem); optional `banner` + `rail` (17–22rem sticky). Home, Progress, Review.
-  - `catalog` — full canvas for grids/lists. Sound Lab, Decks, Mini Lessons, Léxico, Ruta, Pronunciación, IPA, Saved.
-  - `session` — centered column (`--layout-session-max`, 720px). Diario, Essential Words, exercises.
-- Do not invent per-page outer shells or ad-hoc `max-w-*` on the page root.
+---
 
-**PageHeader**
+## 6. Voz e Idioma
 
-- Fixed order: optional kicker → title → optional subtitle → optional actions.
-- Chrome typography: DM Sans / system scales. IPA glyphs: Andika via `font-ipa`.
-- Kicker: `font-kicker` (or system kicker). No ad-hoc `uppercase` + wide tracking eyebrows.
-- Subtitles and UI labels: Spanish. Learning content may stay English. No Spanglish inside one phrase.
-- Variants: `default` (hubs) and `compact` (sessions/detail, optional functional progress). Do not invent new header languages per route.
-
-**CTAs**
-
-- One solid primary action per view/zone. Chrome secondary is raised + border (`Button` `secondary`). Quieter actions use ghost or soft. Session advance uses `PillButton`, not a second ink CTA.
-- Do not repeat the same primary on sibling cards.
-- Review, when due, outranks starting a fresh plan. Otherwise, the plan owns the primary action.
-- Prefer direct Spanish verbs that name the destination: `Repasar palabras`, `Abrir laboratorio`, `Explorar cursos`. Do not use vague labels such as `Continuar` when the destination can be named.
-
-**Sections & cards**
-
-- Flat sections by default. Cards only for interactive units (clickable row, stateful widget, step list).
-- Nested cards prohibited. No decorative icons that only echo the label.
-- Spacing rhythm via tokens (`gap-3` / `gap-4` / `gap-6`). Avoid one-off gaps (`gap-7`).
-- A card contains one job: a small preview plus one clear path forward. Use a kicker, title, short supporting copy, and a quiet arrow/text link only when all four improve scanning.
-- Progress is supporting texture: compact bars, `tabular-nums`, and level rows. Do not turn counts into a large dashboard metric.
-
-**Theme preservation**
-
-- Patterns consume semantic utilities and CSS variables only (`bg-surface-*`, `text-fg*`, `font-*`, spacing scale, `--hue`).
-- User changes to hue or color mode must retheme every conforming page without local hardcodes. Spacing and font tokens must remain equally global.
-
-### Phoneme Cards (Signature Component)
-
-The IPA phoneme card is the most distinctive component in the system. It surfaces a phoneme symbol, its description, and audio/practice affordances.
-
-- **Symbol:** Andika via `font-ipa`, large (`text-ipa-hero` / display IPA). The phoneme is the hero via size, not a serif or a second family.
-- **Background:** Surface-raised with a subtle primary-soft bleed at one edge (not a stripe; a wash).
-- **Stage accent:** When inside a minimal-pairs context, the card uses the stage-pairs amber as its wash; inside dictation, stage-dictation teal.
-- **Actions:** Ghost buttons for audio playback; primary button for practice entry.
-- **Correct/incorrect feedback:** Semantic color fills replace the card background briefly, then fade. Never a stripe.
-
-### Score / Accuracy Display
-
-- **Excellent (≥85%):** Success green, success-soft background.
-- **Acceptable (60–84%):** Warning amber, warning-soft background.
-- **Poor (<60%):** Error red, error-soft background.
-- **Format:** A percentage with a label ("Excellent", "Keep practicing"). Never a hero-metric layout. No big number with gradient accent.
-
-## 6. Do's and Don'ts
-
-### Do:
-- **Do** use `--hue` and `--primary` in code. Never hardcode a hex for the primary color; the system is hue-agnostic by design.
-- **Do** reserve the primary color for interactive affordances only: buttons, links, active nav items, focus rings, selected chips.
-- **Do** use semantic colors (success/warning/error/info) for all correctness and feedback signals. These are fixed and must not shift with `--hue`.
-- **Do** vary spacing for rhythm. Sections that breathe differently feel intentional; uniform padding feels like a template.
-- **Do** use Andika via `font-ipa` / `.font-phoneme` for IPA glyphs and phonetic blocks. Presence comes via size/weight — never a decorative serif or DM Mono.
-- **Do** use the canonical Page Layout Pattern (`AppShell` → `PageLayout` → `PageHeader` → content) on authenticated sidebar routes, including sessions (compact header).
-- **Do** keep UI chrome copy in Spanish; reserve English for learning content.
-- **Do** include `prefers-reduced-motion` media queries for any animation longer than 100ms.
-- **Do** keep latin-ext coverage on UI fonts. IPA must render in Andika (`font-ipa`), never a system fallback or a decorative serif.
-- **Do** pair color feedback with an icon or label. Color alone must never be the only signal for correctness.
-
-### Don't:
-- **Don't** use Duolingo-style gamification patterns: confetti floods, character mascots, hollow streak celebrations, sound effects on every tap. This app respects learners as adults.
-- **Don't** build generic SaaS dashboard layouts: navy sidebar with white card grids and identical spacing everywhere. Every surface should feel considered, not templated.
-- **Don't** use `border-left` greater than 1px as a colored accent stripe on cards, callouts, or list items. Use background tints, full borders, or icons instead.
-- **Don't** use gradient text (`background-clip: text`). Emphasis through weight or size; never decorative gradients.
-- **Don't** put the primary color on progress bars, decorative blobs, or section backgrounds that are not interactive.
-- **Don't** nest cards inside cards. Decompose the design instead.
-- **Don't** wrap an entire page in a single card and then nest more cards inside.
-- **Don't** hide AppShell or invent a chrome-less mode for practice sessions.
-- **Don't** rebuild page headers per route (`PageIntro`, hero eyebrows, custom title fonts) outside the `PageHeader` contract.
-- **Don't** load or use Fraunces (or any decorative serif). The product is DM Sans, DM Mono for kickers, and Andika for IPA.
-- **Don't** invent a second `secondary` (outline CTA) or a Tailwind palette on `Badge`. Use `Button` `secondary` and semantic badge variants.
-- **Don't** use modal dialogs as a first response to user actions. Exhaust inline patterns, progressive disclosure, and side panels before reaching for a modal.
-- **Don't** use hero-metric layouts (big number, small label, gradient accent) for any scoring or progress surface. Progress is felt through texture, not counted in a SaaS dashboard widget.
-- **Don't** hardcode colors in components. All color values must reference design tokens via `var(--token-name)` or Tailwind utility classes that map to tokens.
-- **Don't** use glassmorphism decoratively (blur + semi-transparent card as a default aesthetic). If backdrop-filter is used, it must serve a specific functional purpose.
+* **Español con tuteo**: Toda la interfaz de usuario utiliza español claro, frases cortas y verbos de acción al inicio (`Empezar`, `Practicar`, `Explorar`).
+* **Inglés para contenido de estudio**: Solamente las palabras, frases e IPA de estudio se muestran en inglés, acompañadas de su fonética en `font-phonetic` y su traducción en `ink-muted`.
+* **Formatos limpios**: Símbolos IPA presentados sin barras ni corchetes duplicados.
