@@ -1,7 +1,5 @@
 "use client";
 
-import { Lock } from "@/components/icons";
-import { RATING_CONFIG, previewInterval } from "./study-utils";
 import type { DifficultyKey } from "./StudyDifficultyButtons";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -13,50 +11,58 @@ interface StudyRatingBarProps {
   onRate: (key: DifficultyKey) => void;
 }
 
-export function StudyRatingBar({ flipped, progress, onRate }: StudyRatingBarProps) {
+const RATING_BUTTONS: {
+  key: DifficultyKey;
+  label: string;
+  keyNum: string;
+  bgClass: string;
+}[] = [
+  {
+    key: "again",
+    label: "No me acordé",
+    keyNum: "1",
+    bgClass: "bg-[#f8b4a6] hover:bg-[#f6a190] text-stone-900 border-none",
+  },
+  {
+    key: "hard",
+    label: "Con esfuerzo",
+    keyNum: "2",
+    bgClass: "bg-[#fbe495] hover:bg-[#fad879] text-stone-900 border-none",
+  },
+  {
+    key: "easy",
+    label: "Muy bien",
+    keyNum: "3",
+    bgClass: "bg-[#a3e8ca] hover:bg-[#8ee1bc] text-stone-900 border-none",
+  },
+];
+
+export function StudyRatingBar({ flipped, onRate }: StudyRatingBarProps) {
   return (
-    <div className="border-t border-border-subtle px-4 py-3">
-      {!flipped && (
-        <p className="text-center text-caption mb-3 text-fg-subtle">
-          Rate after seeing the answer
-        </p>
-      )}
-      <div className="grid grid-cols-3 gap-2 max-w-2xl mx-auto">
-        {(Object.entries(RATING_CONFIG) as [DifficultyKey, typeof RATING_CONFIG[DifficultyKey]][]).map(([key, cfg]) => {
-          const timeLabel = previewInterval(progress, cfg.q);
-          const ratingColor = cfg.color;
-          return (
-            <button
-              key={key}
-              onClick={() => flipped && onRate(key)}
-              disabled={!flipped}
-              className="flex flex-col items-center gap-0.5 py-3 px-2 rounded-2xl border transition-all active:scale-95"
-              style={flipped ? {
-                backgroundColor: cfg.bg,
-                borderColor: cfg.border,
-                cursor: "pointer",
-                opacity: 1,
-              } : {
-                backgroundColor: "var(--btn-regular-bg)",
-                borderColor: "var(--line-divider)",
-                cursor: "not-allowed",
-                opacity: 0.7,
-              }}
-            >
-              {flipped ? (
-                <span className="text-body-sm font-bold" style={{ color: ratingColor }}>{cfg.label}</span>
-              ) : (
-                <Lock size={15} className="text-fg-subtle mb-0.5" />
-              )}
-              <span className="text-caption" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
-                {cfg.sublabel}
-              </span>
-              <span className="text-caption font-semibold" style={{ color: flipped ? cfg.color : "var(--text-tertiary)" }}>
-                {flipped ? timeLabel : "—"}
-              </span>
-            </button>
-          );
-        })}
+    <div className="flex flex-col items-center gap-3 pt-4 select-none">
+      <p className="font-sans text-caption font-semibold text-fg-muted">
+        Puntúa después de ver la respuesta
+      </p>
+
+      <div className="flex items-center justify-center gap-3 w-full max-w-xl flex-wrap">
+        {RATING_BUTTONS.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => flipped && onRate(item.key)}
+            disabled={!flipped}
+            className={`focus-ring inline-flex items-center gap-2 rounded-full px-6 py-3 font-sans text-body-sm font-extrabold transition-all active:scale-95 shadow-2xs ${
+              flipped
+                ? `${item.bgClass} cursor-pointer opacity-100`
+                : "bg-surface-sunken text-fg-subtle border border-border-default cursor-not-allowed opacity-50"
+            }`}
+          >
+            <span>{item.label}</span>
+            <span className="flex size-5 items-center justify-center rounded-full bg-black/15 text-stone-900 font-extrabold text-tiny">
+              {item.keyNum}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );

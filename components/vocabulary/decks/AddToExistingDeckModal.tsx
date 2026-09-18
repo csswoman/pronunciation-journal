@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import { H2 } from "@/components/ui/Typography";
 import { addWordsToDeck, type DeckListItem } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
-import { DECK_COLORS } from "./deck-palette";
+import { getDeckIconComponent } from "./deck-palette";
 
 interface AddToExistingDeckModalProps {
   wordIds: string[];
@@ -35,12 +35,12 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-sm mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl layout-card-pad space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-sm rounded-3xl border border-border-default bg-surface-raised p-6 shadow-xl space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <H2 className="font-heading font-bold text-body-lg">Add to deck</H2>
-            <p className="text-caption text-fg-subtle mt-0.5">{wordIds.length} word{wordIds.length !== 1 ? "s" : ""} selected</p>
+            <H2 className="font-heading font-bold text-body-lg">Agregar a mazo</H2>
+            <p className="text-caption text-fg-subtle mt-0.5">{wordIds.length} palabra{wordIds.length !== 1 ? "s" : ""} seleccionada{wordIds.length !== 1 ? "s" : ""}</p>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X size={20} />
@@ -48,32 +48,34 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
         </div>
 
         {decks.length === 0 ? (
-          <p className="text-body-sm text-fg-subtle text-center py-4">No decks yet. Create one first.</p>
+          <p className="text-body-sm text-fg-subtle text-center py-4">No tienes mazos aún. Crea uno primero.</p>
         ) : (
           <div className="space-y-2 max-h-60 overflow-y-auto">
-            {decks.map(deck => (
-              <button
-                key={deck.id}
-                type="button"
-                onClick={() => setSelectedDeckId(deck.id)}
-                className="w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left"
-                style={{
-                  borderColor: selectedDeckId === deck.id ? "var(--primary)" : "var(--line-divider)",
-                  background: selectedDeckId === deck.id ? "color-mix(in oklch, var(--primary) 8%, var(--card-bg))" : "var(--btn-regular-bg)",
-                }}
-              >
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-body-lg flex-shrink-0"
-                  style={{ background: deck.color ?? DECK_COLORS[0] }}
+            {decks.map(deck => {
+              const DeckIconComp = getDeckIconComponent(deck.icon);
+              const isSelected = selectedDeckId === deck.id;
+              return (
+                <button
+                  key={deck.id}
+                  type="button"
+                  onClick={() => setSelectedDeckId(deck.id)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-2xl border transition-all text-left ${
+                    isSelected ? "border-primary bg-surface-sunken" : "border-border-subtle bg-surface-sunken/50 hover:bg-surface-sunken"
+                  }`}
                 >
-                  {deck.icon ?? "📚"}
-                </div>
-                <span className="text-body-sm font-medium text-fg flex-1 truncate">{deck.name}</span>
-                {selectedDeckId === deck.id && (
-                  <Check size={16} className="text-primary shrink-0" />
-                )}
-              </button>
-            ))}
+                  <div
+                    data-tone={deck.color}
+                    className="pastel-card flex size-9 items-center justify-center rounded-xl shrink-0 text-ink shadow-2xs"
+                  >
+                    <DeckIconComp size={18} className="text-ink" />
+                  </div>
+                  <span className="text-body-sm font-medium text-fg flex-1 truncate">{deck.name}</span>
+                  {isSelected && (
+                    <Check size={16} className="text-primary shrink-0" />
+                  )}
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -81,7 +83,7 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
 
         <div className="flex gap-2 pt-1">
           <Button variant="secondary" size="sm" fullWidth onClick={onClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="primary"
@@ -90,10 +92,11 @@ export function AddToExistingDeckModal({ wordIds, decks, onClose, onAdded }: Add
             onClick={() => void handleAdd()}
             disabled={!selectedDeckId || saving || decks.length === 0}
           >
-            {saving ? "Adding…" : "Add to deck"}
+            {saving ? "Agregando..." : "Agregar a mazo"}
           </Button>
         </div>
       </div>
     </div>
   );
 }
+

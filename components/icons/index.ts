@@ -86,6 +86,7 @@ import {
   Minus as LucideMinus,
   Moon as LucideMoon,
   MoreVertical as LucideMoreVertical,
+  Music as LucideMusic,
   Notebook as LucideNotebook,
   Palette as LucidePalette,
   PanelLeftClose as LucidePanelLeftClose,
@@ -218,6 +219,7 @@ export const Minimize2 = createIcon(LucideMinimize2, "Minimize2");
 export const Minus = createIcon(LucideMinus, "Minus");
 export const Moon = createIcon(LucideMoon, "Moon");
 export const MoreVertical = createIcon(LucideMoreVertical, "MoreVertical");
+export const Music = createIcon(LucideMusic, "Music");
 export const Notebook = createIcon(LucideNotebook, "Notebook");
 export const Palette = createIcon(LucidePalette, "Palette");
 export const PanelLeftClose = createIcon(LucidePanelLeftClose, "PanelLeftClose");

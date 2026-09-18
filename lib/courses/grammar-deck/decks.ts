@@ -125,13 +125,19 @@ export function getDecksForTarget(targetId: string): DeckSoundRef[] {
 }
 
 export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'false-friends' | 'other'
+export type DeckTone = 'butter' | 'lilac' | 'mint' | 'coral' | 'sky'
 
 export interface DeckSummary {
   slug: string
   level: DeckLevel
   title: string
+  shortTitle: string
   eyebrow: string
   cardCount: number
+  durationMinutes: number
+  sampleWords: string[]
+  tone: DeckTone
+  iconName: string
   hasQuiz: boolean
   hasSounds: boolean
 }
@@ -150,6 +156,99 @@ function slugToLevel(slug: string): DeckLevel {
   return 'other'
 }
 
+function getDeckToneByTheme(level: DeckLevel, slug: string): DeckTone {
+  const s = slug.toLowerCase()
+  if (level === 'tech' || s.includes('tech') || s.includes('ciberseguridad') || s.includes('program') || s.includes('code')) return 'sky'
+  if (level === 'biz' || s.includes('biz') || s.includes('negocio') || s.includes('email') || s.includes('trabajo') || s.includes('reunion')) return 'lilac'
+  if (level === 'cs' || s.includes('cs') || s.includes('sonido') || s.includes('pronunciacion') || s.includes('audio') || s.includes('escucha')) return 'mint'
+  if (level === 'chunks' || s.includes('chunk') || s.includes('modismo') || s.includes('expresion') || s.includes('colocacion')) return 'coral'
+  if (level === 'false-friends' || s.includes('falso') || s.includes('cognado')) return 'butter'
+  return 'butter'
+}
+
+function cleanShortTitle(fullTitle: string): string {
+  return fullTitle
+    .replace(/^(Tech|Business|Connected Speech|Falsos Cognados|Chunks|A1|A2|B1|B2|C1):\s*/i, '')
+    .replace(/^Inglés para\s+/i, '')
+    .replace(/^Curso de\s+/i, '')
+    .trim()
+}
+
+function extractSampleWords(cards: Record<string, unknown>[]): string[] {
+  const words: string[] = []
+  const seenLower = new Set<string>()
+
+  function addCandidate(str: string) {
+    const trimmed = str.trim()
+    if (!trimmed || trimmed.length > 30) return
+    const lower = trimmed.toLowerCase()
+
+    for (const existing of Array.from(seenLower)) {
+      if (existing === lower) return
+      if (existing.startsWith(lower) || lower.startsWith(existing)) {
+        if (lower.length > existing.length && lower.length < 25) {
+          const idx = words.findIndex((w) => w.toLowerCase() === existing)
+          if (idx !== -1) words[idx] = trimmed
+          seenLower.delete(existing)
+          seenLower.add(lower)
+        }
+        return
+      }
+    }
+
+    seenLower.add(lower)
+    words.push(trimmed)
+  }
+
+  for (const card of cards) {
+    if (words.length >= 3) break
+    const blocks = Array.isArray(card.blocks) ? (card.blocks as Record<string, unknown>[]) : []
+    for (const block of blocks) {
+      if (words.length >= 3) break
+      if (block.type === 'rules' && Array.isArray(block.rows)) {
+        for (const row of block.rows as Record<string, unknown>[]) {
+          if (Array.isArray(row.highlights)) {
+            for (const h of row.highlights) {
+              if (typeof h === 'string') addCandidate(h)
+            }
+          }
+        }
+      } else if (block.type === 'pronunciation' && Array.isArray(block.examples)) {
+        for (const ex of block.examples as Record<string, unknown>[]) {
+          if (typeof ex.text === 'string') addCandidate(ex.text)
+        }
+      } else if (block.type === 'pairs' && Array.isArray(block.lines)) {
+        for (const line of block.lines as Record<string, unknown>[]) {
+          if (line.variant === 'good' && typeof line.text === 'string') addCandidate(line.text)
+        }
+      }
+    }
+  }
+
+  return words.slice(0, 3)
+}
+
+function getIconName(level: DeckLevel, slug: string, title: string): string {
+  const s = `${slug} ${title.toLowerCase()}`
+
+  if (s.includes('deletre') || s.includes('alfabeto') || s.includes('otan') || s.includes('spelling')) return 'headphones'
+  if (level === 'tech' || s.includes('ciberseguridad') || s.includes('program') || s.includes('code') || s.includes('server') || s.includes('tech') || s.includes('standup') || s.includes('pr')) return 'code'
+  if (level === 'biz' || s.includes('negocio') || s.includes('email') || s.includes('trabajo') || s.includes('reunion') || s.includes('job') || s.includes('cliente') || s.includes('oficina')) return 'briefcase'
+  if (s.includes('dinero') || s.includes('precio') || s.includes('compra') || s.includes('finanza') || s.includes('pago') || s.includes('budget') || s.includes('cost')) return 'shopping-bag'
+  if (s.includes('viaje') || s.includes('vuelo') || s.includes('aeropuerto') || s.includes('hotel') || s.includes('ciudad') || s.includes('direccio')) return 'plane'
+  if (s.includes('comida') || s.includes('restaurante') || s.includes('bebida') || s.includes('cafe')) return 'utensils'
+  if (level === 'cs' || s.includes('sonido') || s.includes('pronunciacion') || s.includes('audio') || s.includes('escucha') || s.includes('hablar') || s.includes('soltura')) return 'headphones'
+  if (s.includes('animo') || s.includes('opinion') || s.includes('reaccion') || s.includes('sentimiento') || s.includes('decision') || s.includes('contacto')) return 'message'
+  if (s.includes('cognado') || s.includes('falso') || level === 'false-friends' || s.includes('idiomat') || s.includes('figurad')) return 'languages'
+  if (s.includes('tiempo') || s.includes('hora') || s.includes('fecha') || s.includes('frecuencia') || s.includes('dia')) return 'timer'
+  if (s.includes('comparat') || s.includes('superlat') || s.includes('vs') || s.includes('basico vs') || s.includes('diferencia')) return 'git-compare'
+  if (s.includes('verbo') || s.includes('gramatica') || s.includes('regla') || s.includes('conector') || s.includes('marcador')) return 'layers'
+  if (s.includes('chunk') || level === 'chunks' || s.includes('colocacion') || s.includes('frase')) return 'sparkles'
+  if (s.includes('basico') || s.includes('principiante') || level === 'a1') return 'book-open'
+
+  return 'lightbulb'
+}
+
 export function listAllDecks(): DeckSummary[] {
   let files: string[]
   try {
@@ -165,14 +264,24 @@ export function listAllDecks(): DeckSummary[] {
       const raw = readJson(slug) as Record<string, unknown> | null
       if (!raw) continue
       const meta = (raw.meta ?? {}) as Record<string, string>
-      const cards = Array.isArray(raw.cards) ? raw.cards : []
+      const cards = Array.isArray(raw.cards) ? (raw.cards as Record<string, unknown>[]) : []
       const title = [meta.title, meta.titleEmphasis].filter(Boolean).join(' ') || slug
+      const level = slugToLevel(slug)
+      const cardCount = cards.length
+      const durationMinutes = Math.max(2, Math.round(cardCount * 0.7))
+      const sampleWords = extractSampleWords(cards)
+
       summaries.push({
         slug,
-        level: slugToLevel(slug),
+        level,
         title,
+        shortTitle: cleanShortTitle(title),
         eyebrow: meta.eyebrow ?? '',
-        cardCount: cards.length,
+        cardCount,
+        durationMinutes,
+        sampleWords,
+        tone: getDeckToneByTheme(level, slug),
+        iconName: getIconName(level, slug, title),
         hasQuiz: Array.isArray(raw.quiz) && (raw.quiz as unknown[]).length > 0,
         hasSounds: Array.isArray(raw.sounds) && (raw.sounds as unknown[]).length > 0,
       })
