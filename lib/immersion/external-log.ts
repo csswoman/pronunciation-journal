@@ -46,7 +46,7 @@ export async function logExternalImmersion(
     explicitXp: xpEarned,
     sessionResult: {
       results: [],
-      accuracy: 100,
+      accuracy: 0,
       totalTimeMs: durationMs,
       bySlug: {} as import('@/lib/practice/types').SessionResult['bySlug'],
     },
