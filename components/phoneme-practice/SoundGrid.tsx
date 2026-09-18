@@ -76,7 +76,7 @@ export function SoundGrid({ sounds, accuracyByIpa }: Props) {
               className={`flex flex-col items-center justify-center rounded-xl border py-2 px-1 transition-all active:scale-95 relative group ${tileClass}`}
             >
               <div className="absolute inset-0 rounded-xl bg-black opacity-0 transition-opacity group-hover:opacity-5 pointer-events-none" />
-              <span className={`font-mono font-bold text-body-sm leading-none tracking-tight ${ipaClass}`}>
+              <span className={`font-phonetic font-bold text-body-sm leading-none tracking-tight ${ipaClass}`}>
                 {s.ipa}
               </span>
               <span className={`mt-1 text-tiny font-semibold tabular-nums leading-none ${subClass}`}>
