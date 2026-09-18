@@ -273,8 +273,8 @@
 }
 
 .course-path__aside-card-icon-box--amber {
-  background: color-mix(in oklch, #d97706 18%, transparent);
-  color: #d97706;
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  color: var(--warning);
 }
 
 .course-path__aside-card-heading {

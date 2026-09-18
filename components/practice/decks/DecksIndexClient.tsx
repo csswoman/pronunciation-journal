@@ -1,18 +1,11 @@
 'use client'
 
-// Planned structure:
-// <DecksIndexClient>
-//   <LevelFilterBar />
-//   <SearchInput />
-//   <DeckGrid>
-//     <DeckCard /> × N
-//   </DeckGrid>
-//   <ListPagination />
-// </DecksIndexClient>
-
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { BookOpen, Search } from "@/components/icons"
+import {
+  BookOpen, Search, Code2, Briefcase, Headphones, Sparkles, ShoppingBag,
+  Plane, Utensils, MessageCircle, Languages, Timer, GitCompareArrows, Layers, Lightbulb,
+} from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { ListPagination } from '@/components/ui/ListPagination'
@@ -22,219 +15,234 @@ interface Props {
   decks: DeckSummary[]
 }
 
-/** Desktop fills 5×3 grid rows; mobile stacks taller cards — paginate sooner. */
-const PAGE_SIZE_DESKTOP = 15
+const PAGE_SIZE_DESKTOP = 16
 const PAGE_SIZE_MOBILE = 8
 
-const LEVEL_LABELS: Record<DeckLevel, string> = {
-  a1: 'A1',
-  a2: 'A2',
-  b1: 'B1',
-  b2: 'B2',
-  c1: 'C1',
-  biz: 'Business',
-  tech: 'Tech',
-  cs: 'Connected Speech',
-  chunks: 'Chunks',
-  'false-friends': 'Falsos Cognados',
-  other: 'Other',
-}
+const LEVEL_SCALE: { id: DeckLevel | 'all'; label: string }[] = [
+  { id: 'all', label: 'Todos' },
+  { id: 'a1', label: 'A1' },
+  { id: 'a2', label: 'A2' },
+  { id: 'b1', label: 'B1' },
+  { id: 'b2', label: 'B2' },
+  { id: 'c1', label: 'C1' },
+]
 
-const ALL_LEVELS: DeckLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'biz', 'tech', 'cs', 'chunks', 'false-friends']
+const TOPIC_GROUPS: { id: DeckLevel; label: string }[] = [
+  { id: 'tech', label: 'Tech' },
+  { id: 'biz', label: 'Business' },
+  { id: 'cs', label: 'Connected Speech' },
+  { id: 'chunks', label: 'Chunks' },
+  { id: 'false-friends', label: 'Falsos Cognados' },
+]
+
+const ICON_MAP: Record<string, typeof BookOpen> = {
+  code: Code2, briefcase: Briefcase, 'shopping-bag': ShoppingBag, plane: Plane, utensils: Utensils,
+  headphones: Headphones, message: MessageCircle, sparkles: Sparkles, languages: Languages,
+  timer: Timer, 'git-compare': GitCompareArrows, layers: Layers, 'book-open': BookOpen,
+}
 
 export function DecksIndexClient({ decks }: Props) {
   const [activeLevel, setActiveLevel] = useState<DeckLevel | 'all'>('all')
+  const [activeTopic, setActiveTopic] = useState<DeckLevel | null>(null)
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [layoutReady, setLayoutReady] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
 
   const isSmUp = useMediaQuery('(min-width: 640px)')
-  // SSR + first paint use desktop size to avoid hydration mismatch; mobile size after mount.
   const pageSize = layoutReady && !isSmUp ? PAGE_SIZE_MOBILE : PAGE_SIZE_DESKTOP
 
-  useEffect(() => {
-    setLayoutReady(true)
-  }, [])
+  useEffect(() => { setLayoutReady(true) }, [])
 
-  const availableLevels = useMemo(
-    () => ALL_LEVELS.filter((l) => decks.some((d) => d.level === l)),
-    [decks],
-  )
+  const deckCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: decks.length }
+    for (const d of decks) counts[d.level] = (counts[d.level] || 0) + 1
+    return counts
+  }, [decks])
 
   const filtered = useMemo(() => {
     let result = decks
-    if (activeLevel !== 'all') result = result.filter((d) => d.level === activeLevel)
+    if (activeTopic) result = result.filter((d) => d.level === activeTopic)
+    else if (activeLevel !== 'all') result = result.filter((d) => d.level === activeLevel)
     if (query.trim()) {
       const q = query.toLowerCase()
-      result = result.filter(
-        (d) => d.title.toLowerCase().includes(q) || d.eyebrow.toLowerCase().includes(q),
-      )
+      result = result.filter((d) => d.title.toLowerCase().includes(q) || d.shortTitle.toLowerCase().includes(q) || d.sampleWords.some((w) => w.toLowerCase().includes(q)))
     }
     return result
-  }, [decks, activeLevel, query])
+  }, [decks, activeLevel, activeTopic, query])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const paginated = useMemo(() => filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize), [filtered, currentPage, pageSize])
 
-  const paginated = useMemo(() => {
-    const start = (currentPage - 1) * pageSize
-    return filtered.slice(start, start + pageSize)
-  }, [filtered, currentPage, pageSize])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [activeLevel, query])
-
-  useEffect(() => {
-    setCurrentPage((page) => Math.min(page, totalPages))
-  }, [totalPages])
+  useEffect(() => { setCurrentPage(1) }, [activeLevel, activeTopic, query])
+  useEffect(() => { setCurrentPage((page) => Math.min(page, totalPages)) }, [totalPages])
 
   function handlePageChange(page: number) {
     setCurrentPage(page)
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    listRef.current?.scrollIntoView({
-      behavior: reduceMotion ? 'auto' : 'smooth',
-      block: 'start',
-    })
+    listRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
   }
 
+  const isFiltered = activeLevel !== 'all' || activeTopic !== null || query.trim() !== ''
+
   return (
-    <div className="flex flex-col gap-4 sm:gap-[var(--layout-section-gap)]">
-      <LevelFilterBar
-        levels={availableLevels}
-        active={activeLevel}
-        onChange={setActiveLevel}
+    <div className="flex flex-col gap-6">
+      <FilterToolbar
+        activeLevel={activeLevel}
+        onLevelChange={(lvl) => { setActiveLevel(lvl); setActiveTopic(null) }}
+        activeTopic={activeTopic}
+        onTopicChange={(tpc) => { setActiveTopic(activeTopic === tpc ? null : tpc) }}
+        query={query}
+        onQueryChange={setQuery}
+        counts={deckCounts}
       />
-      <SearchInput value={query} onChange={setQuery} />
+
       {filtered.length === 0 ? (
-        <p className="py-12 text-center text-body-sm text-[var(--text-tertiary)]">
-          No decks match your filter.
-        </p>
+        <div className="py-12 text-center rounded-3xl border border-dashed border-border-default bg-surface-sunken p-8">
+          <p className="font-heading text-body-lg font-bold text-fg">No encontramos mazos</p>
+          <p className="mt-1 text-body-sm text-fg-muted">Prueba cambiar los filtros o el término de búsqueda.</p>
+        </div>
       ) : (
-        <div ref={listRef} className="flex flex-col gap-4">
-          <DeckGrid decks={paginated} />
-          <ListPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={filtered.length}
-            pageSize={pageSize}
-            onPageChange={handlePageChange}
-            ariaLabel="Paginación de mazos"
-          />
+        <div ref={listRef} className="flex flex-col gap-6">
+          {!isFiltered && currentPage === 1 ? (
+            <>
+              <section className="flex flex-col gap-3">
+                <h2 className="font-heading text-body-md font-bold text-fg">Recomendado para ti</h2>
+                <DeckGrid decks={paginated.slice(0, 3)} showLevelBadge={activeLevel === 'all'} featuredFirst />
+              </section>
+              <section className="flex flex-col gap-3">
+                <h2 className="font-heading text-body-md font-bold text-fg border-t border-border-subtle pt-6">Todos los mazos</h2>
+                <DeckGrid decks={paginated.slice(3)} showLevelBadge={activeLevel === 'all'} />
+              </section>
+            </>
+          ) : (
+            <DeckGrid decks={paginated} showLevelBadge={!isFiltered} />
+          )}
+          <ListPagination currentPage={currentPage} totalPages={totalPages} totalItems={filtered.length} pageSize={pageSize} onPageChange={handlePageChange} ariaLabel="Paginación de mazos" />
         </div>
       )}
     </div>
   )
 }
 
-function LevelFilterBar({
-  levels,
-  active,
-  onChange,
+function FilterToolbar({
+  activeLevel, onLevelChange, activeTopic, onTopicChange, query, onQueryChange, counts,
 }: {
-  levels: DeckLevel[]
-  active: DeckLevel | 'all'
-  onChange: (l: DeckLevel | 'all') => void
+  activeLevel: DeckLevel | 'all'; onLevelChange: (l: DeckLevel | 'all') => void; activeTopic: DeckLevel | null; onTopicChange: (t: DeckLevel) => void; query: string; onQueryChange: (q: string) => void; counts: Record<string, number>
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      <FilterChip label="All" active={active === 'all'} onClick={() => onChange('all')} />
-      {levels.map((l) => (
-        <FilterChip
-          key={l}
-          label={LEVEL_LABELS[l]}
-          active={active === l}
-          onClick={() => onChange(l)}
-        />
-      ))}
-    </div>
-  )
-}
-
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn( 'rounded-full border px-3.5 py-2 text-label font-medium transition-colors focus-ring sm:py-1.5 sm:text-caption', active ? 'border-primary bg-primary-soft text-primary' : 'border-border-subtle bg-surface-raised text-fg-muted hover:border-border-hover', )}
-    >
-      {label}
-    </button>
-  )
-}
-
-function SearchInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  return (
-    <div className="relative w-full sm:max-w-sm">
-      <Search
-        size={14}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle"
-        aria-hidden
-      />
-      <input
-        type="search"
-        placeholder="Search decks…"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-border-subtle bg-surface-raised py-2.5 pl-8 pr-3 text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 sm:py-2"
-      />
-    </div>
-  )
-}
-
-function DeckGrid({ decks }: { decks: DeckSummary[] }) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {decks.map((deck) => (
-        <DeckCard key={deck.slug} deck={deck} />
-      ))}
-    </div>
-  )
-}
-
-function DeckCard({ deck }: { deck: DeckSummary }) {
-  return (
-    <Link
-      href={`/practice/decks/${deck.slug}`}
-      className="group flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-4 sm:p-4 transition-colors hover:border-border-hover hover:bg-surface-sunken focus-ring"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <span className="rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 font-kicker font-semibold text-fg-subtle">
-          {LEVEL_LABELS[deck.level] ?? deck.level.toUpperCase()}
-        </span>
-        <div className="flex items-center gap-1.5">
-          {deck.hasSounds && (
-            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-xxs font-medium text-fg-subtle">
-              Sound
-            </span>
-          )}
-          {deck.hasQuiz && (
-            <span className="rounded-full bg-surface-base border border-border-subtle px-2 py-0.5 text-xxs font-medium text-fg-subtle">
-              Quiz
-            </span>
-          )}
+    <div className="flex flex-col gap-3 rounded-3xl border border-border-default bg-surface-raised p-4 shadow-xs">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between border-b border-border-subtle/60 pb-3">
+        <div className="relative w-full lg:w-72 shrink-0">
+          <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-subtle" aria-hidden />
+          <input
+            type="search"
+            placeholder="Buscar mazo o palabra..."
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            className="w-full rounded-2xl border border-border-default bg-surface-sunken py-2 pl-9 pr-3.5 font-sans text-body-sm text-fg placeholder:text-fg-muted transition-all focus:border-border-strong focus:bg-surface-raised focus:outline-none"
+          />
+        </div>
+        <div className="flex items-center gap-1 bg-surface-sunken p-1 rounded-2xl border border-border-subtle overflow-x-auto scrollbar-none">
+          {LEVEL_SCALE.map((lvl) => (
+            <button
+              key={lvl.id}
+              type="button"
+              onClick={() => onLevelChange(lvl.id)}
+              className={cn(
+                'focus-ring inline-flex items-center gap-1 rounded-xl px-3 py-1 font-sans text-caption font-semibold transition-all select-none shrink-0',
+                activeLevel === lvl.id && activeTopic === null ? 'bg-ink text-paper shadow-xs font-bold' : 'text-fg-muted hover:text-fg',
+              )}
+            >
+              <span>{lvl.label}</span>
+              {lvl.id !== 'all' && <span className="font-mono text-tiny opacity-70">{counts[lvl.id] || 0}</span>}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <p className="text-caption text-fg-subtle">{deck.eyebrow}</p>
-        <p className="font-medium text-body-sm leading-snug text-fg group-hover:text-primary transition-colors">
-          {deck.title}
-        </p>
+      <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto scrollbar-none pt-0.5">
+        <span className="font-sans text-tiny font-bold uppercase tracking-wider text-fg-muted mr-1">Temas:</span>
+        {TOPIC_GROUPS.map((item) => {
+          const count = counts[item.id] || 0
+          if (count === 0) return null
+          const isActive = activeTopic === item.id
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onTopicChange(item.id)}
+              className={cn(
+                'focus-ring inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-sans text-caption font-semibold transition-all select-none shrink-0',
+                isActive ? 'bg-ink text-paper shadow-xs font-bold' : 'border border-border-subtle bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',
+              )}
+            >
+              <span>{item.label}</span>
+              <span className={cn('font-mono text-tiny font-bold rounded-full px-1.5 py-0.2', isActive ? 'bg-paper/20 text-paper' : 'bg-surface-raised text-fg-subtle')}>
+                {count}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function DeckGrid({ decks, showLevelBadge, featuredFirst }: { decks: DeckSummary[]; showLevelBadge: boolean; featuredFirst?: boolean }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-row-dense">
+      {decks.map((deck, idx) => (
+        <DeckCard key={deck.slug} deck={deck} showLevelBadge={showLevelBadge} isFeatured={featuredFirst && idx === 0} />
+      ))}
+    </div>
+  )
+}
+
+function DeckCard({ deck, showLevelBadge, isFeatured }: { deck: DeckSummary; showLevelBadge: boolean; isFeatured?: boolean }) {
+  const IconComponent = ICON_MAP[deck.iconName] ?? Lightbulb
+  const displayTitle = deck.shortTitle || deck.title
+  const isCustomCardCount = deck.cardCount !== 6
+
+  return (
+    <Link
+      href={`/practice/decks/${deck.slug}`}
+      className={cn(
+        'group relative flex flex-col justify-between gap-3 rounded-3xl border border-border-default bg-surface-raised p-4.5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md focus-ring select-none min-h-[145px]',
+        isFeatured && 'sm:col-span-2 bg-gradient-to-br from-surface-raised via-surface-raised to-surface-sunken/40 border-border-strong/60',
+      )}
+    >
+      <div className="flex flex-col gap-2.5">
+        <div className="flex items-start justify-between gap-3">
+          <div data-tone={deck.tone} className="pastel-card flex size-10 items-center justify-center rounded-2xl shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+            <IconComponent size={18} className="text-ink" aria-hidden />
+          </div>
+          {showLevelBadge && (
+            <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-mono text-tiny font-bold text-fg-muted uppercase tracking-wider shrink-0">
+              {deck.level.toUpperCase()}
+            </span>
+          )}
+        </div>
+        <h3 className="font-heading text-body-md font-bold text-fg group-hover:text-primary transition-colors leading-snug line-clamp-2">
+          {displayTitle}
+        </h3>
+        {deck.sampleWords.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {deck.sampleWords.slice(0, isFeatured ? 4 : 3).map((word) => (
+              <span key={word} className="inline-flex items-center rounded-md bg-surface-sunken border border-border-subtle/70 px-2 py-0.5 font-mono text-tiny font-medium text-fg-muted">
+                {word}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center gap-1.5 text-fg-subtle">
-        <BookOpen size={13} aria-hidden />
-        <span className="text-caption">{deck.cardCount} cards</span>
+      <div className="flex items-center justify-between pt-2 border-t border-border-subtle/60 text-tiny font-sans text-fg-muted">
+        <span className="font-medium text-fg-subtle">
+          {isCustomCardCount ? `${deck.cardCount} tarjetas · ${deck.durationMinutes} min` : 'Sin empezar'}
+        </span>
       </div>
     </Link>
   )
 }
+

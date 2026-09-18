@@ -46,7 +46,6 @@ export async function fetchRecentFailedSentences(
 
   return rowsToFailedItems(rows, limit, fragments, words)
 }
-
 /** Load word_bank rows referenced by failed sentence items. */
 export async function fetchFailedSentenceWords(
   items: FailedSentenceItem[],
@@ -72,4 +71,97 @@ export async function fetchDueTomorrowCount(userId: string): Promise<number> {
 
   if (error || count == null) return 0
   return count
+}
+
+import { countWordsDueForReviewClient } from '@/lib/word-bank/queries'
+import { countDueChunks } from '@/lib/chunk-of-day/queries'
+import type { AggregatedReviewSummary } from './summary-types'
+
+export async function fetchAggregatedReviewSummaryClient(
+  userId: string,
+): Promise<AggregatedReviewSummary> {
+  const supabase = getSupabaseBrowserClient()
+  const today = new Date().toISOString()
+
+  const getEssentialWordsDueCount = async (): Promise<number> => {
+    try {
+      const { count } = await supabase
+        .from('learning_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('suspended', false)
+        .not('due_at', 'is', null)
+        .lte('due_at', today)
+      return count ?? 0
+    } catch {
+      return 0
+    }
+  }
+
+  const getTopicsDueCount = async (): Promise<number> => {
+    try {
+      const { count } = await supabase
+        .from('topic_srs')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .neq('srs_status', 'new')
+        .lte('next_review_at', today)
+      return count ?? 0
+    } catch {
+      return 0
+    }
+  }
+
+  const [wordsDue, chunksDue, essentialWordsResult, topicsResult] = await Promise.all([
+    countWordsDueForReviewClient(userId).catch(() => 0),
+    countDueChunks(userId).catch(() => 0),
+    getEssentialWordsDueCount(),
+    getTopicsDueCount(),
+  ])
+
+  const totalDue = wordsDue + chunksDue + essentialWordsResult + topicsResult
+  const hasPendingReview = totalDue > 0
+
+  let primaryQueue: AggregatedReviewSummary['primaryQueue'] = null
+  let headline = 'Todo al día'
+  let subtext = 'No tienes repasos pendientes por ahora.'
+
+  if (wordsDue > 0) {
+    primaryQueue = 'words'
+    headline = `${wordsDue} ${wordsDue === 1 ? 'palabra espera' : 'palabras esperan'} repaso`
+    subtext = 'Repasarlas hoy las mantiene en memoria a largo plazo · unos 5 min'
+  } else if (essentialWordsResult > 0) {
+    primaryQueue = 'essential_words'
+    headline = `${essentialWordsResult} palabras esenciales esperan repaso`
+    subtext = 'Afianza vocabulario de alta frecuencia para hablar con soltura.'
+  } else if (topicsResult > 0) {
+    primaryQueue = 'topics'
+    headline = `${topicsResult} temas gramaticales esperan repaso`
+    subtext = 'Refuerza los conceptos antes de que se olviden.'
+  } else if (chunksDue > 0) {
+    primaryQueue = 'chunks'
+    headline = `${chunksDue} expresiones esperan repaso`
+    subtext = 'Recupera chunks para mayor naturalidad.'
+  }
+
+  return {
+    hasPendingReview,
+    totalDue,
+    queueCounts: {
+      failedSentences: 0,
+      weakWords: 0,
+      dueWords: wordsDue,
+      soundsDue: 0,
+      dueTopics: topicsResult,
+      weakTopics: 0,
+      dueLessons: 0,
+      essentialWordsDue: essentialWordsResult,
+      chunksDue,
+      reviewable: totalDue,
+      total: totalDue,
+    },
+    primaryQueue,
+    headline,
+    subtext,
+  }
 }

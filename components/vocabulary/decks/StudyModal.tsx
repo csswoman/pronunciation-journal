@@ -12,6 +12,7 @@ import { StudySessionComplete } from "./StudySessionComplete";
 import { StudyEmptyStates } from "./StudyEmptyStates";
 import { StudyHeader } from "./StudyHeader";
 import { StudyCenterCard } from "./StudyCenterCard";
+import { playCue } from "@/lib/ui-sounds/engine";
 
 interface SessionStats {
   seen: number;
@@ -97,6 +98,10 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
 
   const handleDifficulty = useCallback(async (difficulty: DifficultyKey) => {
     if (!user || !currentCard) return;
+    if (difficulty === "again") playCue("press");
+    else if (difficulty === "hard") playCue("save");
+    else if (difficulty === "easy") playCue("sparkle");
+
     const q = DIFFICULTY_CONFIG[difficulty].q;
     const existing = currentCard.progress ?? {
       id: "", user_id: user.id, entry_id: currentCard.id,
@@ -119,9 +124,29 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
   const handleSkip = useCallback(() => advanceCard(), [advanceCard]);
 
   useEffect(() => {
+    if (phase === "done") {
+      playCue("level-up");
+    }
+  }, [phase]);
+
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
       if (phase !== "studying") return;
-      if (e.code === "Space") { e.preventDefault(); setFlipped((f) => !f); }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleSkip();
+        return;
+      }
+      if (e.code === "Space") {
+        e.preventDefault();
+        playCue("mech-space");
+        setFlipped((f) => !f);
+      }
       if (flipped) {
         if (e.key === "1") handleDifficulty("again");
         if (e.key === "2") handleDifficulty("hard");
@@ -130,7 +155,7 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [phase, flipped, handleDifficulty]);
+  }, [phase, flipped, handleDifficulty, handleSkip, onClose]);
 
   const meanings = Array.isArray(currentCard?.meanings) ? currentCard.meanings : [];
   const firstMeaning = meanings[0] as { partOfSpeech?: string; definitions?: { definition?: string; example?: string }[] } | undefined;
@@ -178,10 +203,9 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`Study session: ${deck.name}`}
-      className="flex flex-col min-h-[calc(100vh-10rem)]"
+      aria-label={`Sesión de estudio: ${deck.name}`}
+      className="flex flex-col min-h-screen max-w-7xl mx-auto w-full gap-6 p-2 sm:p-4 font-sans text-fg select-none"
     >
-
       <StudyHeader
         deckName={deck.name}
         progress={progress}
@@ -192,13 +216,14 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
         onToggleTip={() => setShowTip((v) => !v)}
       />
 
-      {/* Body */}
-      <div className="flex-1 flex gap-4 px-4 pb-2 min-h-0">
+      {/* Body Layout */}
+      <div className="flex-1 flex gap-6 px-2 py-4 min-h-0 items-center justify-between">
         <StudyLeftPanel
           imageUrl={imageUrl}
           imageLoading={imageLoading}
           word={currentCard?.word}
           levelLabel={levelLabel}
+          nextReviewAt={currentCard?.progress?.next_review_at}
           partOfSpeech={firstMeaning?.partOfSpeech}
           tags={currentCard?.tags}
           showTip={showTip}
@@ -208,24 +233,33 @@ export function StudyModal({ deck, onClose }: StudyModalProps) {
           onRemoveImage={handleRemoveImage}
         />
 
-        <StudyCenterCard
-          currentCard={currentCard}
-          levelLabel={levelLabel}
-          firstMeaning={firstMeaning}
-          firstDef={firstDef}
-          flipped={flipped}
-          onFlip={() => setFlipped((f) => !f)}
+        <div className="flex-1 flex flex-col items-center justify-center min-w-0 max-w-xl mx-auto gap-4">
+          <StudyCenterCard
+            currentCard={currentCard}
+            levelLabel={levelLabel}
+            firstMeaning={firstMeaning}
+            firstDef={firstDef}
+            flipped={flipped}
+            onFlip={() => setFlipped((f) => !f)}
+            onSkip={handleSkip}
+          />
+
+          <StudyRatingBar
+            flipped={flipped}
+            progress={currentCard?.progress ?? null}
+            onRate={handleDifficulty}
+          />
+        </div>
+
+        <StudyRightPanel
+          currentIndex={currentIndex}
+          totalCards={queue.length}
+          stats={stats}
+          upcomingCards={upcomingCards}
           onSkip={handleSkip}
+          onClose={onClose}
         />
-
-        <StudyRightPanel stats={stats} upcomingCards={upcomingCards} />
       </div>
-
-      <StudyRatingBar
-        flipped={flipped}
-        progress={currentCard?.progress ?? null}
-        onRate={handleDifficulty}
-      />
     </div>
   );
 }

@@ -8,6 +8,8 @@ type ContentLevelSelectorProps<Level extends string> = {
   getLabel?: (level: Level) => string
   disabled?: boolean
   className?: string
+  /** English Journal design system: pill container on surface, active = accent fill. */
+  variant?: 'default' | 'ej-pill'
 }
 
 /**
@@ -37,11 +39,17 @@ export default function ContentLevelSelector<Level extends string>({
   getLabel = String,
   disabled = false,
   className,
+  variant = 'default',
 }: ContentLevelSelectorProps<Level>) {
   const columns = GRID_COLS[levels.length] ?? 'grid-cols-5'
+  const isPill = variant === 'ej-pill'
 
   return (
-    <div className={cn('grid gap-1', columns, className)} role="group" aria-label={ariaLabel}>
+    <div
+      className={cn('grid gap-1', columns, isPill && 'rounded-full bg-ej-surface p-1', className)}
+      role="group"
+      aria-label={ariaLabel}
+    >
       {levels.map((level) => {
         const selected = value === level
 
@@ -54,10 +62,18 @@ export default function ContentLevelSelector<Level extends string>({
             aria-label={getLabel(level)}
             disabled={disabled}
             className={cn(
-              'focus-ring min-h-9 rounded-sm font-label transition-colors disabled:opacity-60',
-              selected
-                ? 'bg-primary text-on-primary'
-                : 'bg-surface-sunken text-fg-muted hover:text-fg',
+              'focus-ring min-h-9 font-label transition-colors disabled:opacity-60',
+              isPill
+                ? cn(
+                    'rounded-full',
+                    selected ? 'bg-accent text-on-accent' : 'text-ej-text-muted hover:text-ej-text',
+                  )
+                : cn(
+                    'rounded-sm',
+                    selected
+                      ? 'bg-primary text-on-primary'
+                      : 'bg-surface-sunken text-fg-muted hover:text-fg',
+                  ),
             )}
           >
             {getLabel(level)}

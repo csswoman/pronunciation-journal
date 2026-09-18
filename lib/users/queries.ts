@@ -1,5 +1,6 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CefrLevel } from "@/lib/essential-words/types";
+import type { LearnerLevelSource } from "@/lib/learner-level/core";
 import { normalizeInterests, type Interest } from "@/lib/users/interests";
 
 export interface UserPreferences {
@@ -105,11 +106,20 @@ export async function updatePassword(newPassword: string): Promise<void> {
 }
 
 /** Best-effort: persists the local CEFR estimate to user_profiles. */
-export async function syncCefrLevel(userId: string, cefrEstimate: string): Promise<void> {
+export async function syncCefrLevel(
+  userId: string,
+  cefrEstimate: string,
+  source: LearnerLevelSource = "practice_estimate",
+): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase
     .from("user_profiles")
-    .upsert({ id: userId, cefr_level: cefrEstimate }, { onConflict: "id" });
+    .upsert({
+      id: userId,
+      cefr_level: cefrEstimate,
+      cefr_level_source: source,
+      cefr_level_updated_at: new Date().toISOString(),
+    }, { onConflict: "id" });
 
   if (error) throw error;
 }
@@ -123,7 +133,7 @@ export async function syncCefrLevel(userId: string, cefrEstimate: string): Promi
  * re-hydrates on user change only.
  */
 export async function applyManualCefrLevel(userId: string, level: CefrLevel): Promise<void> {
-  await syncCefrLevel(userId, level);
+  await syncCefrLevel(userId, level, "manual");
 
   const [{ db, ensureDbReady }, { getUserLearningState }, { persistLearningState }] =
     await Promise.all([

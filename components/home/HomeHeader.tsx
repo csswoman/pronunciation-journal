@@ -51,12 +51,12 @@ export default function HomeHeader({ streakDays = 0, onOpenTour }: HomeHeaderPro
         ) : null}
 
         {streakDays > 0 ? (
-          <div className="flex shrink-0 items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-raised px-3 py-1.5 shadow-xs">
-            <Flame size={16} className="text-racha" aria-hidden />
-            <span className="font-sans text-body-sm font-bold tabular-nums text-fg">
+          <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-mint px-3 py-1.5">
+            <Flame size={16} className="text-ink" aria-hidden />
+            <span className="font-sans text-body-sm font-bold tabular-nums text-ink">
               {streakDays}
             </span>
-            <span className="font-body-sm text-fg-muted">
+            <span className="font-body-sm text-ink-secondary">
               {streakDays === 1 ? "día de racha" : "días de racha"}
             </span>
           </div>

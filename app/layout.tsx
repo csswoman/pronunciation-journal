@@ -1,28 +1,28 @@
 import "./globals.css";
 import "./markdown.css";
-import { Andika, DM_Sans, DM_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Figtree, Noto_Sans } from "next/font/google";
 import { connection } from "next/server";
 import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
 
-// Body + UI + headings — DM Sans
-const dmSans = DM_Sans({
+// Body + UI — Figtree
+const figtree = Figtree({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
   display: "swap",
 });
 
-// Monospace — kickers, code (not IPA)
-const dmMono = DM_Mono({
-  weight: ["400", "500"],
-  subsets: ["latin"],
-  variable: "--font-mono-var",
+// Display — hero word, page titles, headline cards — Bricolage Grotesque
+const bricolage = Bricolage_Grotesque({
+  weight: ["600", "700", "800"],
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-display",
   display: "swap",
 });
 
-// IPA / phonetic transcription — SIL Andika (literacy + full IPA glyph set)
-const andika = Andika({
-  weight: ["400", "700"],
+// IPA / phonetic transcription — Noto Sans (covers ɪ ə ð ː ˈ)
+const notoSans = Noto_Sans({
+  weight: ["400", "500"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-ipa",
   display: "swap",
@@ -44,8 +44,8 @@ export default async function RootLayout({
   // Family names are also mirrored onto :root so tokens.css composites
   // (--font-body, --font-kicker, …) resolve against DM Sans / Mono / Andika
   // instead of Tailwind's default ui-sans-serif stack on <html>.
-  const fontVars = `${dmSans.variable} ${dmMono.variable} ${andika.variable}`;
-  const rootFontVars = `:root{--font-sans:${dmSans.style.fontFamily};--font-mono-var:${dmMono.style.fontFamily};--font-ipa:${andika.style.fontFamily};}`;
+  const fontVars = `${figtree.variable} ${bricolage.variable} ${notoSans.variable}`;
+  const rootFontVars = `:root{--font-sans:${figtree.style.fontFamily};--font-display:${bricolage.style.fontFamily};--font-ipa:${notoSans.style.fontFamily};}`;
 
   return (
     <html lang="es" suppressHydrationWarning>

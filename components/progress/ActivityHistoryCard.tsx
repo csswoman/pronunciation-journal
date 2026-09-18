@@ -62,8 +62,10 @@ export function ActivityHistoryCard({ sessions, pageSize = DEFAULT_PAGE_SIZE }: 
       count: 0,
     }
     existing.exercises += s.exercisesTotal
-    existing.totalAccuracy += s.accuracyPct
-    existing.count += 1
+    if (s.exercisesTotal > 0) {
+      existing.totalAccuracy += s.accuracyPct
+      existing.count += 1
+    }
     groupedMap.set(s.sourceLabel, existing)
   }
 
@@ -71,13 +73,17 @@ export function ActivityHistoryCard({ sessions, pageSize = DEFAULT_PAGE_SIZE }: 
     id: `cat-${idx}`,
     label: g.label,
     percentage: totalExercises > 0 ? Math.round((g.exercises / totalExercises) * 100) : 0,
-    accuracy: Math.round(g.totalAccuracy / g.count),
+    accuracy: g.count > 0 ? Math.round(g.totalAccuracy / g.count) : undefined,
     exercises: g.exercises,
   }))
 
-  const overallAccuracy = Math.round(
-    sessions.reduce((acc, s) => acc + s.accuracyPct, 0) / sessions.length,
-  )
+  const accuracySessions = sessions.filter((s) => s.exercisesTotal > 0)
+  const overallAccuracy =
+    accuracySessions.length > 0
+      ? Math.round(
+          accuracySessions.reduce((acc, s) => acc + s.accuracyPct, 0) / accuracySessions.length,
+        )
+      : undefined
 
   const effectivePageSize = Math.max(1, pageSize)
   const totalPages = Math.ceil(sessions.length / effectivePageSize)
@@ -111,7 +117,9 @@ export function ActivityHistoryCard({ sessions, pageSize = DEFAULT_PAGE_SIZE }: 
                 <div className="min-w-0">
                   <p className="truncate text-body-sm font-semibold text-fg">{session.sourceLabel}</p>
                   <p className="text-caption text-fg-muted">
-                    {session.exercisesTotal} ejercicios · {session.accuracyPct}% precisión
+                    {session.exercisesTotal > 0
+                      ? `${session.exercisesTotal} ejercicios · ${session.accuracyPct}% precisión`
+                      : 'Sin ejercicios · actividad registrada'}
                   </p>
                 </div>
                 <span className="shrink-0 text-caption text-fg-subtle">{formatWhen(session.completedAt)}</span>

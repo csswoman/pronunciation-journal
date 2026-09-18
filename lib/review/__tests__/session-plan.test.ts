@@ -34,4 +34,13 @@ describe('composeReviewSessionPlan', () => {
       steps: [], totalExercises: 0, nothingDue: true,
     })
   })
+
+  it('places link-only pending lessons after executable exercises', () => {
+    const lesson = { ...step('lesson', 0), href: '/practice/immersion/lesson' }
+    const result = composeReviewSessionPlan(
+      { steps: [lesson, step('words')], totalExercises: 1, nothingDue: false },
+      [step('topic')],
+    )
+    expect(result.steps.map(({ id }) => id)).toEqual(['words', 'topic', 'lesson'])
+  })
 })

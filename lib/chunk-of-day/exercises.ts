@@ -160,7 +160,7 @@ export function buildChunkExercises(
   chunks: readonly LearningChunk[],
   catalog: readonly LearningChunk[],
   context: PracticeContext,
-  learnerLevel: CEFRLevel = 'C1',
+  learnerLevel: CEFRLevel,
 ): PracticeExercise[] {
   const support = chunkCefrSupport(learnerLevel)
   // Form ↔ meaning recognition opens the step: the board shows today's chunks

@@ -37,7 +37,7 @@ Complemento operativo de `CLAUDE.md`.
 `ai-coach`, `ai-practice`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
 `daily`, `db`, `decks`, `degradation`, `essential-words`, `exercises`,
 `false-friends`, `focus`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
-`learning-focus`, `learning-loop`, `lexicon`, `navigation`, `offline`, `phoneme-practice`,
+`learner-level`, `learning-focus`, `learning-loop`, `lexicon`, `navigation`, `offline`, `phoneme-practice`,
 `practice`, `preferences`, `progress`, `pronunciation`, `review`, `search`,
 `security`, `sound-lab`, `sounds`, `speech`, `srs`, `stores`, `supabase`, `sync`,
 `theme`, `tracking`, `ui-sounds`, `users`, `vocabulary`, `word-bank`, `word-of-day`.
@@ -51,7 +51,7 @@ Módulos activos (`lib/*/queries.ts`):
 ```text
 ai-practice/    chunk-of-day/   courses/        decks/          essential-words/
 focus/          home/           immersion/      journal/
-learning-focus/ phoneme-practice/ practice/      progress/
+learner-level/  learning-focus/ phoneme-practice/ practice/      progress/
 sounds/         tracking/       users/          word-bank/
 ```
 

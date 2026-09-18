@@ -3,6 +3,7 @@ import { getDeckBySlug, listAllDecks } from '@/lib/courses/grammar-deck/decks'
 import { getAllMiniLessons } from '@/lib/content/lessons'
 import { loadEssentialWords } from '@/lib/essential-words/data'
 import { essentialWordId } from '@/lib/essential-words/types'
+import { LEARNING_CHUNKS } from '@/lib/chunk-of-day/catalog'
 import { listMissions } from '@/lib/ai-practice/missions/registry'
 import { buildPronunciationPathCurriculum } from '@/lib/pronunciation/path/curriculum'
 import { CONTENT_MAP } from '@/lib/pronunciation/targets/content-map'
@@ -74,6 +75,18 @@ function grammarDeckEntries(): LearningContentManifestEntry[] {
       owners: ['topic_srs', 'activity_sessions'],
     }
   })
+}
+
+function chunkEntries(): LearningContentManifestEntry[] {
+  return LEARNING_CHUNKS.map((chunk) => ({
+    contentId: `chunk:${chunk.id}`,
+    surface: 'chunks',
+    title: chunk.chunk,
+    signals: ['exposure', 'objective_evidence'],
+    targetRefs: [{ namespace: 'chunks', id: chunk.id }],
+    practice: { status: 'objective', adapter: 'chunk_practice' },
+    owners: ['chunk_srs', 'activity_sessions'],
+  }))
 }
 
 async function miniLessonEntries(): Promise<LearningContentManifestEntry[]> {
@@ -216,6 +229,7 @@ export async function buildLearningContentManifest(): Promise<LearningContentMan
     ...grammarDeckEntries(),
     ...await miniLessonEntries(),
     ...essentialWordEntries(),
+    ...chunkEntries(),
     ...pronunciationEntries(),
     ...missionEntries(),
     ...trackingEntries(),
@@ -279,7 +293,7 @@ export function summarizeLearningContentManifest(
   entries: readonly LearningContentManifestEntry[],
 ): Record<LearningSurface, number> {
   const summary = Object.fromEntries([
-    'course_path', 'grammar_deck', 'mini_lesson', 'essential_words',
+    'course_path', 'grammar_deck', 'mini_lesson', 'essential_words', 'chunks',
     'sound_lab', 'pronunciation_path', 'oral_mission', 'tracking',
   ].map((surface) => [surface, 0])) as Record<LearningSurface, number>
   for (const entry of entries) summary[entry.surface] += 1

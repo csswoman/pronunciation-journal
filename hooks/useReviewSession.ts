@@ -6,43 +6,9 @@ import { buildFailedItemStep } from '@/lib/review/build-failed-exercises'
 import { useAuth } from '@/components/auth/AuthProvider'
 import type { DailyStep } from '@/lib/practice/types'
 import type { FailedSentenceItem } from '@/lib/review/types'
-import { fromGenericExercise } from '@/lib/practice/adapters'
-import { cacheTransformations, getCachedTransformations } from '@/lib/exercises/transformations'
-import type { SentenceTransformationExercise } from '@/lib/exercises/types'
-import type { TranslationEsEnExercise } from '@/lib/exercises/types'
-import { cacheTranslations, getCachedTranslations } from '@/lib/exercises/translations'
+import type { ReviewHubSummary } from '@/lib/review/types'
 import { composeReviewSessionPlan } from '@/lib/review/session-plan'
-
-function transformationCacheKey(topic: string) {
-  return `transform:${topic.trim().toLowerCase().replace(/\s+/g, '_')}`
-}
-
-async function getTransformationStep(topic: string): Promise<DailyStep | null> {
-  const cacheKey = transformationCacheKey(topic)
-  let exercises = await getCachedTransformations(cacheKey)
-  if (!exercises && navigator.onLine) {
-    const response = await fetch('/api/gemini/generate-transformations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic, level: 'B1', count: 1 }) })
-    if (!response.ok) return null
-    const body = await response.json() as { exercises: Array<Omit<SentenceTransformationExercise, 'id' | 'type' | 'sourceRef' | 'topic'>> }
-    exercises = body.exercises.map((exercise, index) => ({ ...exercise, id: `${cacheKey}:${index}`, type: 'sentence_transformation' as const, sourceRef: { source: 'text_fragments' as const, id: `generated:${cacheKey}:${index}` }, topic: topic.startsWith('grammar:') ? topic : `grammar:${topic}` }))
-    await cacheTransformations(exercises)
-  }
-  if (!exercises?.length) return null
-  return { id: `${cacheKey}:step`, kind: 'concept', title: 'Transforma la oración', subtitle: topic, icon: 'refresh', exercises: exercises.map((exercise) => fromGenericExercise(exercise, 'review')), estMinutes: 2 }
-}
-
-async function getTranslationStep(topic: string): Promise<DailyStep | null> {
-  const cacheKey = `translation:${topic.trim().toLowerCase().replace(/\s+/g, '_')}`
-  let exercises = await getCachedTranslations(cacheKey)
-  if (!exercises && navigator.onLine) {
-    const response = await fetch('/api/gemini/generate-translations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic, level: 'B1', count: 1 }) })
-    if (!response.ok) return null
-    const body = await response.json() as { exercises: Array<Omit<TranslationEsEnExercise, 'id' | 'type' | 'sourceRef' | 'topic'>> }
-    exercises = body.exercises.map((exercise, index) => ({ ...exercise, id: `${cacheKey}:${index}`, type: 'translation_es_en' as const, sourceRef: { source: 'text_fragments' as const, id: `generated:${cacheKey}:${index}` }, topic: topic.startsWith('grammar:') ? topic : `grammar:${topic}` }))
-    await cacheTranslations(exercises)
-  }
-  return exercises?.length ? { id: `${cacheKey}:step`, kind: 'concept', title: 'Traduce al inglés', subtitle: topic, icon: 'languages', exercises: exercises.map((exercise) => fromGenericExercise(exercise, 'review')), estMinutes: 2 } : null
-}
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 
 export type ReviewSessionPhase =
   | { phase: 'idle' }
@@ -56,13 +22,29 @@ export function useReviewSession() {
   const [state, setState] = useState<ReviewSessionPhase>({ phase: 'idle' })
   const [sessionKey, setSessionKey] = useState(0)
 
-  const startReview = useCallback(async () => {
+  const startReview = useCallback(async (summary: ReviewHubSummary) => {
     if (!user) return
     setState({ phase: 'loading' })
     try {
+      const learnerLevel = await getEffectiveLearnerLevel(user.id)
       const [plan, topicResponse] = await Promise.all([
-        buildReviewPlan(user.id),
-        fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }).catch(() => null),
+        buildReviewPlan(user.id, {
+          failedItems: summary.failedSentences,
+          weakWords: summary.weakWords,
+          dueWords: summary.dueWords,
+          dueSoundIds: summary.soundsDue.map((sound) => sound.soundId),
+          dueLessons: summary.dueLessons,
+          essentialWordsDue: summary.essentialWordsDue,
+          includeChunkReview: true,
+          learnerLevel: learnerLevel.level,
+        }),
+        fetch('/api/review/topics', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            topics: [...summary.dueTopics, ...summary.weakTopics].map(({ topic }) => topic),
+          }),
+        }).catch(() => null),
       ])
       const topicSteps: DailyStep[] = topicResponse?.ok ? (await topicResponse.json()).steps ?? [] : []
       const sessionPlan = composeReviewSessionPlan(plan, topicSteps)
@@ -82,10 +64,6 @@ export function useReviewSession() {
     try {
       const response = await fetch('/api/review/topics', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topic }) })
       const { steps } = response.ok ? await response.json() : { steps: [] }
-      const transformation = await getTransformationStep(topic).catch(() => null)
-      if (transformation) steps.push(transformation)
-      const translation = await getTranslationStep(topic).catch(() => null)
-      if (translation) steps.push(translation)
       if (!steps?.length) return setState({ phase: 'error' })
       setSessionKey((key) => key + 1)
       setState({ phase: 'session', steps, stepIndex: 0 })
@@ -129,6 +107,7 @@ export function useReviewSession() {
   }, [])
 
   return {
+    userId: user?.id ?? null,
     state,
     sessionKey,
     startReview,

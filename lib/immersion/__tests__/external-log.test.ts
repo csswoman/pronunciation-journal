@@ -27,7 +27,7 @@ describe('logExternalImmersion', () => {
       explicitXp: 30,
       sessionResult: expect.objectContaining({
         totalTimeMs: 30 * 60 * 1000,
-        accuracy: 100,
+        accuracy: 0,
       }),
     }))
   })

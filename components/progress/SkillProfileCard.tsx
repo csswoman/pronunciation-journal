@@ -61,12 +61,10 @@ function SoundLabPanel({ phonemes }: { phonemes: SkillProfileData['weakestPhonem
 
 function LexiconPanel({
   wordsByStatus,
-  core1000Practiced,
-  lessonsCompleted,
+  essentialWords,
 }: {
   wordsByStatus: SkillProfileData['wordsByStatus']
-  core1000Practiced: number
-  lessonsCompleted: number
+  essentialWords: SkillProfileData['essentialWords']
 }) {
   const total = wordsByStatus.new + wordsByStatus.learning + wordsByStatus.review
     + wordsByStatus.mastered + (wordsByStatus.legacyMastered ?? 0)
@@ -75,7 +73,7 @@ function LexiconPanel({
   const toReview = wordsByStatus.review + wordsByStatus.learning
   const needsVerification = wordsByStatus.legacyMastered ?? 0
 
-  if (total === 0 && core1000Practiced === 0 && lessonsCompleted === 0) {
+  if (total === 0 && essentialWords.studied === 0) {
     return (
       <ProgressCard>
         <ProgressCardHeader icon={<BookOpen size={16} />} eyebrow="Diccionario" title="Vocabulario" />
@@ -121,19 +119,20 @@ function LexiconPanel({
           )}
         </>
       )}
-      {(core1000Practiced > 0 || lessonsCompleted > 0) && (
+      {essentialWords.studied > 0 && (
         <div className="mt-3 flex gap-[var(--layout-stack-loose)] border-t border-[var(--line-divider)] pt-3">
-          {core1000Practiced > 0 && (
-            <ProgressBigNumber value={core1000Practiced} sub="palabras clave" />
-          )}
-          {lessonsCompleted > 0 && (
-            <ProgressBigNumber value={lessonsCompleted} sub="lecciones hechas" />
-          )}
+          <ProgressBigNumber value={essentialWords.studied} sub="esenciales estudiadas" />
+          <ProgressBigNumber value={essentialWords.due} sub="esenciales por repasar" tone={essentialWords.due > 0 ? 'warning' : 'primary'} />
         </div>
       )}
-      <Link href="/words" className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
-        Abrir diccionario →
-      </Link>
+      <div className="mt-1 flex flex-wrap gap-3">
+        <Link href="/words" className="inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+          Abrir diccionario →
+        </Link>
+        <Link href="/practice/essential-words" className="inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
+          Palabras esenciales →
+        </Link>
+      </div>
     </ProgressCard>
   )
 }
@@ -193,8 +192,7 @@ export function SkillProfileCard({ data, coach }: Props) {
   const hasAnyData =
     Object.values(data.wordsByStatus).some((v) => v > 0) ||
     data.weakestPhonemes.length > 0 ||
-    data.core1000Practiced > 0 ||
-    data.lessonsCompleted > 0 ||
+    data.essentialWords.studied > 0 ||
     coach.weakTopics.length > 0 ||
     coach.cefrEstimate !== null ||
     coach.profileLevel !== null
@@ -223,8 +221,7 @@ export function SkillProfileCard({ data, coach }: Props) {
         <SoundLabPanel phonemes={data.weakestPhonemes} />
         <LexiconPanel
           wordsByStatus={data.wordsByStatus}
-          core1000Practiced={data.core1000Practiced}
-          lessonsCompleted={data.lessonsCompleted}
+          essentialWords={data.essentialWords}
         />
         <CoachInsightsPanel coach={coach} />
       </div>

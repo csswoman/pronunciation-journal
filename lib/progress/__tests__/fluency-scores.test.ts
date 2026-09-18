@@ -11,8 +11,7 @@ const baseInput = {
   wordsByStatus: emptyWords,
   contrastCorrect: 0,
   contrastTotal: 0,
-  core1000Practiced: 0,
-  lessonsCompleted: 0,
+  essentialWordsStudied: 0,
 }
 
 function answer(
@@ -49,7 +48,7 @@ describe('computeFluencyScores', () => {
     const scores = computeFluencyScores({
       ...baseInput,
       answers,
-      core1000Practiced: 12,
+      essentialWordsStudied: 12,
     })
     expect(scores.vocabulary).toBeGreaterThan(50)
     expect(scores.speaking).toBeGreaterThan(0)
@@ -62,12 +61,6 @@ describe('computeFluencyScores', () => {
       wordsByStatus: { new: 2, learning: 3, review: 5, mastered: 10 },
     })
     expect(scores.vocabulary).toBeGreaterThan(0)
-  })
-
-  it('does not turn lesson completion into grammar or reading evidence', () => {
-    const scores = computeFluencyScores({ ...baseInput, answers: [], lessonsCompleted: 10 })
-    expect(scores.grammar).toBe(0)
-    expect(scores.reading).toBe(0)
   })
 
   it('uses the canonical ids for modern exercise types', () => {

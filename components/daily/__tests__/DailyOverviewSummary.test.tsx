@@ -41,6 +41,7 @@ describe('DailyOverviewSummary', () => {
         completedCount={0}
         arc={undefined}
         dueTomorrow={null}
+        essentialWordsTotal={null}
       />,
     )
     expect(container.firstChild).toBeNull()
@@ -54,6 +55,7 @@ describe('DailyOverviewSummary', () => {
         completedCount={0}
         arc={makeArc({ soundIpa: 'k', topicLabel: 'Consonantes oclusivas' })}
         dueTomorrow={3}
+        essentialWordsTotal={null}
       />,
     )
 
@@ -77,6 +79,7 @@ describe('DailyOverviewSummary', () => {
         completedCount={1}
         arc={makeArc({ topicLabel: 'Gramática: Condicionales' })}
         dueTomorrow={0}
+        essentialWordsTotal={null}
       />,
     )
 
@@ -85,7 +88,7 @@ describe('DailyOverviewSummary', () => {
     expect(screen.queryByLabelText(/Sonido del día/i)).not.toBeInTheDocument()
   })
 
-  it('renders essential words progress bar when learned > 0', () => {
+  it('renders essential words progress bar and real total when essentialWordsTotal is a number', () => {
     render(
       <DailyOverviewSummary
         steps={steps}
@@ -94,6 +97,7 @@ describe('DailyOverviewSummary', () => {
         arc={makeArc({ soundIpa: 'i' })}
         dueTomorrow={1}
         learned={45}
+        essentialWordsTotal={740}
       />,
     )
 
@@ -101,7 +105,7 @@ describe('DailyOverviewSummary', () => {
       screen.getByRole('progressbar', { name: /Progreso de palabras esenciales/i }),
     ).toBeInTheDocument()
     expect(screen.getByText('45')).toBeInTheDocument()
-    expect(screen.getByText('/ 1000')).toBeInTheDocument()
+    expect(screen.getByText('/ 740')).toBeInTheDocument()
   })
 
   it('does not render essential words progress bar when learned is 0', () => {
@@ -113,11 +117,33 @@ describe('DailyOverviewSummary', () => {
         arc={makeArc({ soundIpa: 'k' })}
         dueTomorrow={0}
         learned={0}
+        essentialWordsTotal={740}
       />,
     )
 
     expect(
       screen.queryByRole('progressbar', { name: /Progreso de palabras esenciales/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('renders only the learned count with no denominator or bar when essentialWordsTotal is null', () => {
+    render(
+      <DailyOverviewSummary
+        steps={steps}
+        getStepStatus={() => 'pending'}
+        completedCount={2}
+        arc={makeArc({ soundIpa: 'i' })}
+        dueTomorrow={1}
+        learned={45}
+        essentialWordsTotal={null}
+      />,
+    )
+
+    expect(
+      screen.queryByRole('progressbar', { name: /Progreso de palabras esenciales/i }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByText('45')).toBeInTheDocument()
+    expect(screen.getByText('palabras')).toBeInTheDocument()
+    expect(screen.queryByText(/^\/ \d+$/)).not.toBeInTheDocument()
   })
 })
