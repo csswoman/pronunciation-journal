@@ -79,11 +79,11 @@
 }
 
 .accent-button {
-  background-color: var(--color-accent);
-  color: var(--color-text-on-accent);
+  background-color: var(--accent);
+  color: var(--on-accent);
   transition: all 0.2s ease;
 }
-.accent-button:hover   { background-color: var(--color-accent-hover); }
+.accent-button:hover   { background-color: var(--primary-hover); }
 .accent-button:active  { filter: brightness(0.92); }
 .accent-button:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -231,7 +231,7 @@
 .text-title-active   { color: var(--title-active); }
 .text-page-bg        { color: var(--page-bg); }
 .text-on-primary     { color: var(--on-primary); }
-.text-on-accent      { color: var(--color-text-on-accent); }
+.text-on-accent      { color: var(--on-accent); }
 .text-accent-analog  { color: var(--accent-analog-1); }
 .text-accent-complement { color: var(--accent-complement); }
 .text-accent-hover:hover { color: var(--primary-hover); }
@@ -244,7 +244,7 @@
 
 /* ── Background colors ───────────────────────────────────────────────────── */
 .bg-primary          { background-color: var(--primary); }
-.bg-accent           { background-color: var(--color-accent); }
+.bg-accent           { background-color: var(--accent); }
 .bg-accent-analog    { background-color: var(--accent-analog-1); }
 .bg-page-bg          { background-color: var(--page-bg); }
 .bg-card-bg          { background-color: var(--card-bg); }
@@ -273,16 +273,16 @@
 
 /* ── Borders ─────────────────────────────────────────────────────────────── */
 .border-primary      { border-color: var(--primary); }
-.border-accent       { border-color: var(--color-accent); }
+.border-accent       { border-color: var(--accent); }
 .border-line-divider { border-color: var(--line-divider); }
 .border-line-color   { border-color: var(--line-color); }
 
 /* ── Accent helpers ──────────────────────────────────────────────────────── */
-.accent-bg     { background-color: var(--color-accent); }
-.accent-text   { color: var(--color-accent); }
-.accent-border { border-color: var(--color-accent); }
+.accent-bg     { background-color: var(--accent); }
+.accent-text   { color: var(--accent-text); }
+.accent-border { border-color: var(--accent-border); }
 .accent-ring {
-  --tw-ring-color: var(--color-accent);
+  --tw-ring-color: var(--accent);
   box-shadow: 0 0 0 3px var(--focus-color);
 }
 
@@ -569,6 +569,11 @@
 
   background: var(--card);
   color: var(--ink);
+}
+
+.pastel-card .bg-accent,
+.pastel-card .bg-primary {
+  color: var(--on-accent);
 }
 
 .pastel-card[data-tone="sky"] {

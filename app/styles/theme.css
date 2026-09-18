@@ -64,6 +64,7 @@
   --color-accent-border: var(--accent-border);
 
   --color-primary:       var(--accent);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-text:  var(--primary-text);
   --color-primary-soft:  var(--primary-soft);
   --color-on-primary:    var(--on-accent);
