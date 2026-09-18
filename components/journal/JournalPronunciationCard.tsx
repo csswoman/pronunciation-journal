@@ -18,15 +18,12 @@ interface JournalPronunciationCardProps {
   onAddWord?: () => void
 }
 
-const DEFAULT_SAMPLE_WORDS = ['thoroughly', 'clothes', 'world', 'schedule']
-
 export function JournalPronunciationCard({
   savedWords = [],
   onAddWord,
 }: JournalPronunciationCardProps) {
-  const displayWords = savedWords.length > 0 ? savedWords : DEFAULT_SAMPLE_WORDS
-  const visibleWords = displayWords.slice(0, 3)
-  const remainingCount = displayWords.length - visibleWords.length
+  const visibleWords = savedWords.slice(0, 3)
+  const remainingCount = savedWords.length - visibleWords.length
 
   return (
     <section
@@ -54,21 +51,25 @@ export function JournalPronunciationCard({
           </p>
 
           {/* Chips de palabras guardadas */}
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
-            {visibleWords.map((word) => (
-              <span
-                key={word}
-                className="rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-mono text-xs font-medium text-fg"
-              >
-                {word}
-              </span>
-            ))}
-            {remainingCount > 0 && (
-              <span className="font-caption text-fg-muted">
-                +{remainingCount} más
-              </span>
-            )}
-          </div>
+          {savedWords.length > 0 ? (
+            <div className="mt-1 flex flex-wrap items-center gap-1.5">
+              {visibleWords.map((word) => (
+                <span
+                  key={word}
+                  className="rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-mono text-xs font-medium text-fg"
+                >
+                  {word}
+                </span>
+              ))}
+              {remainingCount > 0 && (
+                <span className="font-caption text-fg-muted">
+                  +{remainingCount} más
+                </span>
+              )}
+            </div>
+          ) : (
+            <p className="font-caption text-fg-muted">Aún no has guardado palabras.</p>
+          )}
         </div>
       </div>
 
