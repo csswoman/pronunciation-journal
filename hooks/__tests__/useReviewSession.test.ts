@@ -86,7 +86,7 @@ describe('useReviewSession', () => {
       dueWords: summary.dueWords,
       dueLessons: summary.dueLessons,
       essentialWordsDue: summary.essentialWordsDue,
-      includeChunkReview: false,
+      includeChunkReview: true,
     }))
   })
 

@@ -46,7 +46,7 @@ export interface EssentialWordReviewItem {
   dueAt: string
 }
 
-export interface ReviewHubCounts {
+export interface ReviewQueueCounts {
   failedSentences: number
   weakWords: number
   dueWords: number
@@ -55,9 +55,24 @@ export interface ReviewHubCounts {
   weakTopics: number
   dueLessons: number
   essentialWordsDue: number
+  chunksDue?: number
   /** Items that can start a review session (excludes display-only failures). */
   reviewable: number
   total: number
+}
+
+export type ReviewHubCounts = ReviewQueueCounts
+
+export interface ReviewSessionCandidates {
+  failedSentences: FailedSentenceItem[]
+  weakWords: WordBankEntry[]
+  dueWords: WordBankEntry[]
+  soundsDue: SoundDueHome[]
+  dueTopics: TopicSrsRow[]
+  weakTopics: TopicSrsRow[]
+  dueLessons: LessonReviewItem[]
+  essentialWordsDue: EssentialWordReviewItem[]
+  chunksDue?: unknown[]
 }
 
 export interface ReviewHubSummary {
@@ -69,6 +84,10 @@ export interface ReviewHubSummary {
   weakTopics: TopicSrsRow[]
   dueLessons: LessonReviewItem[]
   essentialWordsDue: EssentialWordReviewItem[]
+  /** Exact queue counts across all review categories */
+  queueCounts?: ReviewQueueCounts
+  /** Session candidate items */
+  sessionCandidates?: ReviewSessionCandidates
   counts: ReviewHubCounts
   /** No sections with items to show. */
   nothingDue: boolean

@@ -4,6 +4,7 @@
 // the shapes.
 
 import type { CefrLevelId } from '@/lib/courses/types'
+import type { AggregatedReviewSummary } from '@/lib/review/summary-types'
 
 export interface PracticeHubRecommendedData {
   /** Words past their next-review date. */
@@ -35,6 +36,7 @@ export interface PracticeHubCourseData {
 }
 
 export interface PracticeHubData {
+  reviewSummary?: AggregatedReviewSummary | null
   recommended: PracticeHubRecommendedData
   decks: PracticeHubDecksData
   reader: { recentWordCount: number }
@@ -43,6 +45,7 @@ export interface PracticeHubData {
 }
 
 const EMPTY: PracticeHubData = {
+  reviewSummary: null,
   recommended: { dueCount: 0, criticalCount: 0, retentionPct: null, previewWords: [] },
   decks: { deckCount: 0, cardCount: 0, topDeckNames: [] },
   reader: { recentWordCount: 0 },

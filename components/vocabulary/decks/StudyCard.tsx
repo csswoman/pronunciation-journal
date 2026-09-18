@@ -44,7 +44,7 @@ export function StudyCard({
       {/* Encabezado superior dentro de la tarjeta */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full bg-[#fbe495] text-stone-900 font-extrabold text-caption border-none shadow-2xs">
+          <span className="px-3 py-1 rounded-full bg-butter text-stone-900 font-extrabold text-caption border-none shadow-2xs">
             {levelLabel ?? "A1"}
           </span>
           {deckName && (

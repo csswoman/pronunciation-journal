@@ -45,13 +45,13 @@ export function StudyRightPanel({
             {currentIndex + 1} <span className="font-sans text-caption font-medium text-fg-muted">de {totalCards} tarjetas</span>
           </p>
           <div className="flex items-center gap-1.5 flex-wrap pt-1">
-            <span className="px-2.5 py-1 rounded-full bg-[#a3e8ca] text-emerald-950 text-tiny font-extrabold border-none shadow-2xs">
+            <span className="px-2.5 py-1 rounded-full bg-mint text-emerald-950 text-tiny font-extrabold border-none shadow-2xs">
               {stats.easy} bien
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#fbe495] text-amber-950 text-tiny font-extrabold border-none shadow-2xs">
+            <span className="px-2.5 py-1 rounded-full bg-butter text-amber-950 text-tiny font-extrabold border-none shadow-2xs">
               {stats.hard} con esfuerzo
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#f8b4a6] text-rose-950 text-tiny font-extrabold border-none shadow-2xs">
+            <span className="px-2.5 py-1 rounded-full bg-coral text-rose-950 text-tiny font-extrabold border-none shadow-2xs">
               {stats.again} falladas
             </span>
           </div>

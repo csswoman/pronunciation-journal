@@ -44,6 +44,12 @@ export interface DailyCompletionStats {
   completedDays30: number
   /** Last 30 days, oldest → today. */
   heatmap30: ConsistencyHeatLevel[]
+  /** Days with any qualifying activity (answers, lessons, practice sessions). */
+  activeDays7: number
+  activeDays30: number
+  /** Days where daily plan was completed. */
+  planCompletedDays7: number
+  planCompletedDays30: number
 }
 
 export interface WeeklySummaryStats {
@@ -52,8 +58,10 @@ export interface WeeklySummaryStats {
 }
 
 export interface AccuracyStats {
-  accuracy7: number  // 0-100 weighted accuracy over last 7 days
+  accuracy7: number  // 0-100 percentage based strictly on is_correct over last 7 days
   totalAnswers7: number
+  /** Average retrieval quality (grade 1-5), or null if no graded answers */
+  retrievalQuality7?: number | null
 }
 
 export interface WordBankByStatus {
@@ -139,25 +147,64 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
 
   const since30 = new Date()
   since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
+  const since30Iso = since30.toISOString()
 
-  const { data } = await supabase
-    .from('answer_history')
-    .select('answered_at')
-    .eq('user_id', userId)
-    .not('answered_at', 'is', null)
-    .gte('answered_at', since30.toISOString())
+  const [answersResult, sessionsResult, lessonsResult] = await Promise.all([
+    supabase
+      .from('answer_history')
+      .select('answered_at')
+      .eq('user_id', userId)
+      .not('answered_at', 'is', null)
+      .gte('answered_at', since30Iso),
+    supabase
+      .from('activity_sessions')
+      .select('completed_at, source')
+      .eq('user_id', userId)
+      .gte('completed_at', since30Iso),
+    supabase
+      .from('lesson_completions')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .gte('completed_at', since30Iso),
+  ])
 
-  const rows = data ?? []
+  const answerRows = answersResult.data ?? []
+  const sessionRows = sessionsResult.data ?? []
+  const lessonRows = lessonsResult.data ?? []
 
   const countsByDay = new Map<string, number>()
-  for (const row of rows) {
+  const activeDaysSet = new Set<string>()
+  const planCompletedDaysSet = new Set<string>()
+
+  for (const row of answerRows) {
+    if (!row.answered_at) continue
     const day = toLocalDateString(row.answered_at as string, STREAK_TIMEZONE)
     countsByDay.set(day, (countsByDay.get(day) ?? 0) + 1)
+    activeDaysSet.add(day)
+  }
+
+  for (const row of lessonRows) {
+    if (!row.completed_at) continue
+    const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
+    activeDaysSet.add(day)
+  }
+
+  for (const row of sessionRows) {
+    if (!row.completed_at) continue
+    const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
+    activeDaysSet.add(day)
+    if (row.source === 'daily_plan') {
+      planCompletedDaysSet.add(day)
+    }
   }
 
   const today = new Date()
   let completedDays7 = 0
   let completedDays30 = 0
+  let activeDays7 = 0
+  let activeDays30 = 0
+  let planCompletedDays7 = 0
+  let planCompletedDays30 = 0
   const heatmap30: ConsistencyHeatLevel[] = []
 
   for (let i = 29; i >= 0; i--) {
@@ -165,6 +212,9 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     d.setDate(d.getDate() - i)
     const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
+    const isActive = activeDaysSet.has(day)
+    const isPlanCompleted = planCompletedDaysSet.has(day)
+
     const level: ConsistencyHeatLevel =
       count >= DAILY_STREAK_THRESHOLD * 2
         ? 3
@@ -180,6 +230,16 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
       completedDays30++
       if (i <= 6) completedDays7++
     }
+
+    if (isActive) {
+      activeDays30++
+      if (i <= 6) activeDays7++
+    }
+
+    if (isPlanCompleted) {
+      planCompletedDays30++
+      if (i <= 6) planCompletedDays7++
+    }
   }
 
   return {
@@ -188,6 +248,10 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     completedDays7,
     completedDays30,
     heatmap30,
+    activeDays7,
+    activeDays30,
+    planCompletedDays7,
+    planCompletedDays30,
   }
 }
 
@@ -222,27 +286,30 @@ export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
 
   const { data } = await supabase
     .from('answer_history')
-    .select('grade, is_correct')
+    .select('grade, is_correct, user_answer')
     .eq('user_id', userId)
     .gte('answered_at', since7.toISOString())
     .not('answered_at', 'is', null)
 
   const rows = data ?? []
-  if (rows.length === 0) return { accuracy7: 0, totalAnswers7: 0 }
+  if (rows.length === 0) return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null }
 
-  // Prefer grade (0-5) when present, fall back to is_correct boolean
-  let weightedSum = 0
-  for (const row of rows) {
-    if (row.grade !== null && row.grade !== undefined) {
-      weightedSum += (row.grade / 5) * 100
-    } else {
-      weightedSum += row.is_correct ? 100 : 0
-    }
-  }
+  // Exclude non-evaluable interactions (e.g. skips)
+  const evaluatedRows = rows.filter((r) => r.user_answer !== 'skip')
+  if (evaluatedRows.length === 0) return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null }
+
+  const correctCount = evaluatedRows.filter((r) => r.is_correct === true).length
+  const accuracy7 = Math.round((correctCount / evaluatedRows.length) * 100)
+
+  const gradedRows = evaluatedRows.filter((r) => r.grade !== null && r.grade !== undefined && r.grade > 0)
+  const retrievalQuality7 = gradedRows.length > 0
+    ? Math.round((gradedRows.reduce((sum, r) => sum + (r.grade as number), 0) / gradedRows.length) * 10) / 10
+    : null
 
   return {
-    accuracy7: Math.round(weightedSum / rows.length),
-    totalAnswers7: rows.length,
+    accuracy7,
+    totalAnswers7: evaluatedRows.length,
+    retrievalQuality7,
   }
 }
 

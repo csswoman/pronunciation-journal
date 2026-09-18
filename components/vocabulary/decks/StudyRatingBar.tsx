@@ -21,19 +21,19 @@ const RATING_BUTTONS: {
     key: "again",
     label: "No me acordé",
     keyNum: "1",
-    bgClass: "bg-[#f8b4a6] hover:bg-[#f6a190] text-stone-900 border-none",
+    bgClass: "bg-coral hover:bg-coral-deep text-stone-900 border-none",
   },
   {
     key: "hard",
     label: "Con esfuerzo",
     keyNum: "2",
-    bgClass: "bg-[#fbe495] hover:bg-[#fad879] text-stone-900 border-none",
+    bgClass: "bg-butter hover:bg-butter-deep text-stone-900 border-none",
   },
   {
     key: "easy",
     label: "Muy bien",
     keyNum: "3",
-    bgClass: "bg-[#a3e8ca] hover:bg-[#8ee1bc] text-stone-900 border-none",
+    bgClass: "bg-mint hover:bg-mint-deep text-stone-900 border-none",
   },
 ];
 

@@ -180,7 +180,7 @@ export default function HomeImmersionCard() {
                 className={cn(
                   "size-3 rounded-full transition-colors",
                   idx < 4
-                    ? "bg-mint dark:bg-[#7ee7b8]"
+                    ? "bg-mint"
                     : "border border-dashed border-fg-muted/40 bg-transparent",
                 )}
               />

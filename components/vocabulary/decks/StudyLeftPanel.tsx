@@ -98,7 +98,7 @@ export function StudyLeftPanel({
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between gap-2">
             <span className="font-sans text-caption font-medium text-fg-muted">Nivel</span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#fbe495] text-stone-900 text-caption font-bold border-none shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-butter text-stone-900 text-caption font-bold border-none shadow-2xs">
               {levelLabel ?? "A1"} · {LEVEL_NAMES[levelLabel ?? "A1"] ?? "Principiante"}
             </span>
           </div>
@@ -113,14 +113,11 @@ export function StudyLeftPanel({
 
       {/* CONSEJO */}
       {showTip && (
-        <div
-          className="rounded-2xl p-4 border-none shadow-2xs"
-          style={{ backgroundColor: "#a3e8ca", color: "#064e3b" }}
-        >
-          <p className="font-kicker text-caption font-extrabold uppercase tracking-wider mb-1" style={{ color: "#064e3b" }}>
+        <div className="rounded-2xl p-4 border-none shadow-2xs bg-mint text-emerald-950">
+          <p className="font-kicker text-caption font-extrabold uppercase tracking-wider mb-1 text-emerald-900">
             Consejo
           </p>
-          <p className="font-sans text-caption leading-relaxed font-semibold" style={{ color: "#042f2e" }}>
+          <p className="font-sans text-caption leading-relaxed font-semibold text-emerald-950">
             {STUDY_TIPS[tipIndex % STUDY_TIPS.length]}
           </p>
         </div>

@@ -10,41 +10,137 @@
     {
       "id": "a1-plural-nouns-spelling-concept",
       "tag": "Idea central",
-      "title": "Reglas principales de plurales",
-      "lede": "Sigue las terminaciones de la palabra para elegir el sufijo correcto.",
+      "title": "Regla general (+s)",
+      "lede": "La gran mayoría de los sustantivos en inglés forman su plural simplemente añadiendo -s.",
       "blocks": [
         {
           "type": "rules",
           "rows": [
             {
-              "key": "Regla general (+s)",
-              "value": "book → books / car → cars",
-              "highlights": ["books", "cars"]
+              "key": "Sustantivos regulares",
+              "value": "book → books / cat → cats / cup → cups",
+              "highlights": ["books", "cats", "cups"]
             },
             {
-              "key": "Terminados en -s, -ch, -sh, -x, -z (+es)",
-              "value": "bus → buses / watch → watches / box → boxes",
-              "highlights": ["buses", "watches", "boxes"]
+              "key": "Objetos y lugares",
+              "value": "car → cars / park → parks / phone → phones",
+              "highlights": ["cars", "parks", "phones"]
             },
             {
-              "key": "Consonante + y (-ies)",
-              "value": "city → cities / baby → babies",
-              "highlights": ["cities", "babies"]
-            },
-            {
-              "key": "Vocal + y (+s)",
-              "value": "boy → boys / day → days",
-              "highlights": ["boys", "days"]
+              "key": "Vocal + e final",
+              "value": "house → houses / name → names / plate → plates",
+              "highlights": ["houses", "names", "plates"]
             }
           ]
         }
-      ]
+      ],
+      "tip": {
+        "label": "Regla base:",
+        "body": "Si la palabra no entra en una regla especial de terminación, solo añade -s."
+      }
+    },
+    {
+      "id": "a1-plural-nouns-spelling-es-endings",
+      "tag": "Terminaciones sibilantes",
+      "title": "Terminados en -s, -sh, -ch, -x, -z (+es)",
+      "lede": "Cuando el sustantivo termina en un sonido sibilante, añade -es para crear una nueva sílaba pronunciable.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "-s y -ss",
+              "value": "bus → buses / glass → glasses / kiss → kisses",
+              "highlights": ["buses", "glasses", "kisses"]
+            },
+            {
+              "key": "-sh y -ch",
+              "value": "dish → dishes / wish → wishes / watch → watches",
+              "highlights": ["dishes", "wishes", "watches"]
+            },
+            {
+              "key": "-x y -z",
+              "value": "box → boxes / fox → foxes / quiz → quizzes",
+              "highlights": ["boxes", "foxes", "quizzes"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Pronunciación:",
+        "body": "La terminación -es tras sonidos sibilantes añade una sílaba y suena como /ɪz/ (ej. 'buses' /ˈbʌs.ɪz/)."
+      }
+    },
+    {
+      "id": "a1-plural-nouns-spelling-y-rules",
+      "tag": "Reglas de la -y",
+      "title": "Consonante + Y (-ies) frente a Vocal + Y (+s)",
+      "lede": "Observa la letra anterior a la 'y': una consonante la cambia por -ies, pero una vocal mantiene la 'y'.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Consonante + y → -ies",
+              "rule": "La 'y' desaparece y se sustituye por -ies.",
+              "examples": [
+                "city → cities / baby → babies",
+                "party → parties / family → families"
+              ]
+            },
+            {
+              "label": "Vocal + y → +s",
+              "rule": "La 'y' se conserva y solo se agrega -s.",
+              "examples": [
+                "boy → boys / day → days",
+                "key → keys / toy → toys"
+              ]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Atención:",
+        "body": "En 'day' o 'boy', la vocal precedente protege a la 'y': days, boys."
+      }
+    },
+    {
+      "id": "a1-plural-nouns-spelling-f-fe",
+      "tag": "Terminación -f / -fe",
+      "title": "Cambio de -f o -fe a -ves",
+      "lede": "Muchos sustantivos cotidianos terminados en -f o -fe transforman esa terminación en -ves al pluralizar.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "-f → -ves",
+              "value": "leaf → leaves / wolf → wolves / half → halves",
+              "highlights": ["leaves", "wolves", "halves"]
+            },
+            {
+              "key": "-fe → -ves",
+              "value": "knife → knives / life → lives / wife → wives",
+              "highlights": ["knives", "lives", "wives"]
+            },
+            {
+              "key": "Excepciones regulares (+s)",
+              "value": "roof → roofs / chef → chefs / cliff → cliffs",
+              "highlights": ["roofs", "chefs", "cliffs"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Sonido:",
+        "body": "El sonido sordo /f/ cambia al sonoro /v/ antes del plural (knife /naɪf/ → knives /naɪvz/)."
+      }
     },
     {
       "id": "a1-plural-nouns-spelling-irregular",
       "tag": "Excepciones",
       "title": "Plurales irregulares esenciales",
-      "lede": "Estos sustantivos cambian su raíz al pasar al plural.",
+      "lede": "Estos sustantivos cambian su raíz o vocales internas al pasar al plural sin añadir -s ni -es.",
       "blocks": [
         {
           "type": "rules",
@@ -63,10 +159,72 @@
               "key": "foot / tooth",
               "value": "feet / teeth",
               "highlights": ["feet", "teeth"]
+            },
+            {
+              "key": "Invariables (sin cambio)",
+              "value": "fish → fish / sheep → sheep",
+              "highlights": ["fish", "sheep"]
             }
           ]
         }
-      ]
+      ],
+      "tip": {
+        "label": "¡Cuidado!",
+        "body": "Nunca digas 'childrens' ni 'peoples' para referirte a niños o personas en plural común."
+      }
+    },
+    {
+      "id": "a1-plural-nouns-spelling-mistakes",
+      "tag": "Error frecuente",
+      "title": "Errores típicos de ortografía en plurales",
+      "lede": "Compara la versión incorrecta con la forma natural y correcta en inglés.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I bought two new watchs for my brothers."
+            },
+            {
+              "variant": "good",
+              "text": "I bought two new watches for my brothers.",
+              "note": "Termina en -ch: añade -es."
+            },
+            {
+              "variant": "bad",
+              "text": "There are three countrys in this region."
+            },
+            {
+              "variant": "good",
+              "text": "There are three countries in this region.",
+              "note": "Consonante + y cambia a -ies."
+            },
+            {
+              "variant": "bad",
+              "text": "Please be careful with these knifes."
+            },
+            {
+              "variant": "good",
+              "text": "Please be careful with these knives.",
+              "note": "-fe cambia a -ves."
+            },
+            {
+              "variant": "bad",
+              "text": "Five persons are waiting outside."
+            },
+            {
+              "variant": "good",
+              "text": "Five people are waiting outside.",
+              "note": "El plural natural de person es people."
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Estrategia:",
+        "body": "Revisa siempre la terminación: sibilante (-es), consonante+y (-ies), -f/-fe (-ves) o irregular."
+      }
     }
   ],
   "quiz": [
@@ -78,6 +236,24 @@
       ],
       "answer": 1,
       "explain": "Termina en consonante + 'y', cambia a '-ies'."
+    },
+    {
+      "q": "What is the plural of 'knife'?",
+      "options": [
+        "knives",
+        "knifes"
+      ],
+      "answer": 0,
+      "explain": "Sustantivos terminados en '-fe' como knife forman su plural en '-ves'."
+    },
+    {
+      "q": "What is the plural of 'watch'?",
+      "options": [
+        "watchs",
+        "watches"
+      ],
+      "answer": 1,
+      "explain": "Palabras terminadas en '-ch' añaden '-es' para formar el plural."
     }
   ]
 }

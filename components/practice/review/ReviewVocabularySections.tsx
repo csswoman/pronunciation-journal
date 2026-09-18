@@ -23,7 +23,7 @@ function formatIpa(ipa: string): string {
 }
 
 export function ReviewVocabularySections({ summary }: { summary: ReviewHubSummary }) {
-  const { counts } = summary
+  const counts = summary.queueCounts ?? summary.counts
   return (
     <>
       <ReviewSectionCard

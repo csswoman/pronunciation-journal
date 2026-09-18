@@ -20,6 +20,7 @@ import {
   lessonProgressKey,
 } from '@/lib/courses/progress'
 import type { CefrLevelId, CoursePathLevel } from '@/lib/courses/types'
+import { getAggregatedReviewSummary } from '@/lib/review/server-queries'
 import {
   emptyPracticeHubData,
   type PracticeHubData,
@@ -53,15 +54,16 @@ export async function getPracticeHubData(userId: string | null): Promise<Practic
 
   const supabase = await createSupabaseServerClient()
 
-  const [recommended, decks, reader, immersion, course] = await Promise.all([
+  const [recommended, decks, reader, immersion, course, reviewSummary] = await Promise.all([
     loadRecommended(supabase, userId).catch(() => empty.recommended),
     loadDecks(supabase, userId).catch(() => empty.decks),
     loadReader(supabase, userId).catch(() => empty.reader),
     loadImmersion(supabase).catch(() => empty.immersion),
     loadCourse(supabase, userId).catch(() => null),
+    getAggregatedReviewSummary(userId).catch(() => null),
   ])
 
-  return { recommended, decks, reader, immersion, course }
+  return { recommended, decks, reader, immersion, course, reviewSummary }
 }
 
 type ServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>

@@ -21,4 +21,9 @@ describe('buildTopicStatusByDeck', () => {
     expect(statuses.get('a1-articulos-basicos')).toBe('mastered')
     expect(statuses.get('a1-presente-simple')).toBe('review')
   })
+
+  it('does not infer retention from route completion', () => {
+    const statuses = buildTopicStatusByDeck([])
+    expect(statuses.get('a1-pronombres-objeto')).toBeUndefined()
+  })
 })

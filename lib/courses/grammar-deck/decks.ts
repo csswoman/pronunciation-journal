@@ -265,6 +265,7 @@ export function listAllDecks(): DeckSummary[] {
       if (!raw) continue
       const meta = (raw.meta ?? {}) as Record<string, string>
       const cards = Array.isArray(raw.cards) ? (raw.cards as Record<string, unknown>[]) : []
+      if (cards.length !== 6) continue
       const title = [meta.title, meta.titleEmphasis].filter(Boolean).join(' ') || slug
       const level = slugToLevel(slug)
       const cardCount = cards.length

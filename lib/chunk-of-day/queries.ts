@@ -18,7 +18,6 @@ export interface ChunkPracticeSession {
   chunks: LearningChunk[]
   exercises: ReturnType<typeof buildChunkExercises>
 }
-
 function dailyRank(id: string): number {
   const seed = new Date().toISOString().slice(0, 10)
   let result = 0
@@ -279,4 +278,24 @@ export async function loadDueChunkReviewStep(
     chunks,
     featuredWords: chunkFeaturedWords(chunks),
   }
+}
+
+export async function countDueChunks(userId: string): Promise<number> {
+  const now = new Date().toISOString()
+  return db.srsData
+    .where('userId')
+    .equals(userId)
+    .filter((row) => row.wordId.startsWith('chunk:') && row.nextReview <= now)
+    .count()
+}
+
+export async function getDueChunks(userId: string, limit = 3): Promise<LearningChunk[]> {
+  const now = new Date().toISOString()
+  const rows = await db.srsData
+    .where('userId')
+    .equals(userId)
+    .filter((row) => row.wordId.startsWith('chunk:') && row.nextReview <= now)
+    .sortBy('nextReview')
+  const dueIds = rows.slice(0, limit).map((row) => row.wordId.slice('chunk:'.length))
+  return dueIds.flatMap((id) => LEARNING_CHUNKS.find((chunk) => chunk.id === id) ?? [])
 }

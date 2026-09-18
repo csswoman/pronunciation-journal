@@ -101,7 +101,10 @@ export default async function ProgressPage() {
         <ImmersionProgressCard data={data.domains.immersion} />
 
         {/* Gramática por temas */}
-        <LevelConceptsProgressCard topics={data.domains.topics} />
+        <LevelConceptsProgressCard
+          topics={data.domains.topics}
+          completedRoute={data.domains.completedRoute}
+        />
 
         {/* Producción oral demostrada */}
         <CanSayNowCard

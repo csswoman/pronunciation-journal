@@ -38,14 +38,21 @@ describe('getProgressDomainData', () => {
             { watched: true, quiz_score: null, updated_at: new Date().toISOString() },
           ])
         }
+        if (table === 'lesson_completions') {
+          return queryResult([
+            { course_slug: 'path-a1', lesson_slug: 'a1-articulos-basicos', completed_at: '2026-09-10T00:00:00.000Z' },
+          ])
+        }
         return queryResult([], 12)
       },
     })
 
     const result = await getProgressDomainData('user-1')
 
-    expect(tables).toEqual(['topic_srs', 'immersion_lesson_progress', 'immersion_lessons'])
+    expect(tables).toEqual(['topic_srs', 'immersion_lesson_progress', 'immersion_lessons', 'lesson_completions'])
     expect(result.topics[0]?.srsStatus).toBe('review')
+    expect(result.learningTopics[0]?.topic).toBe('grammar:articles')
+    expect(result.completedRoute[0]?.lessonSlug).toBe('a1-articulos-basicos')
     expect(result.immersion).toEqual({ watched: 2, completed: 1, due: 1, total: 12 })
   })
 })

@@ -3,19 +3,21 @@
 // Planned structure:
 // <ReviewHubClient>
 //   <ReviewSessionRunner (deferred, active when user launches review)>
-//   <PageDashboardBanner (momentum alert or all-clear banner)>
+//   <ReviewHubBanner (momentum alert or all-clear banner)>
 //   <PageDashboardMain (failed sentences, weak words, due vocabulary, sounds, topics, lessons, actions)>
 //   <PageDashboardRail (SRS history, SRS vault)>
 // </ReviewHubClient>
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
-import { cn } from '@/lib/cn'
+import { useAuthOptional } from '@/components/auth/AuthProvider'
+import { countDueChunks } from '@/lib/chunk-of-day/queries'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
 import { ReviewLessonSection } from '@/components/practice/review/ReviewLessonSection'
+import { ReviewChunksSection } from '@/components/practice/review/ReviewChunksSection'
+import { ReviewHubBanner } from '@/components/practice/review/ReviewHubBanner'
 import { ReviewHubActions } from '@/components/practice/review/ReviewHubActions'
 import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
 import type { ReviewHubSummary } from '@/lib/review/types'
@@ -50,13 +52,35 @@ function overdueLabel(daysOverdue: number): string {
 }
 
 export function ReviewHubClient({ summary }: Props) {
+  const auth = useAuthOptional()
+  const user = auth?.user ?? null
   const [activeSession, setActiveSession] = useState<ReviewSessionAction | null>(null)
+  const [clientChunksDue, setClientChunksDue] = useState<number | null>(null)
   const isSessionActive = activeSession !== null
-  const { counts } = summary
-  const canStart = summary.canStartReview && !isSessionActive
-  const showMomentum =
-    !isSessionActive && summary.canStartReview && counts.reviewable > 0
-  const showAllClear = !isSessionActive && summary.nothingDue
+
+  useEffect(() => {
+    if (!user) return
+    let cancelled = false
+    countDueChunks(user.id)
+      .then((due) => {
+        if (!cancelled) setClientChunksDue(due)
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [user])
+
+  const queueCounts = summary.queueCounts ?? summary.counts
+  const initialChunks = queueCounts.chunksDue ?? 0
+  const effectiveChunksDue =
+    clientChunksDue !== null ? Math.max(clientChunksDue, initialChunks) : initialChunks
+  const chunksDifference = effectiveChunksDue - initialChunks
+  const totalReviewable = (queueCounts.reviewable ?? 0) + Math.max(0, chunksDifference)
+
+  const canStart = (totalReviewable > 0 || summary.canStartReview) && !isSessionActive
+  const showMomentum = !isSessionActive && totalReviewable > 0
+  const showAllClear = !isSessionActive && totalReviewable === 0 && summary.nothingDue
 
   return (
     <>
@@ -69,43 +93,16 @@ export function ReviewHubClient({ summary }: Props) {
       ) : null}
 
       <div className="page-dashboard">
-        {showMomentum || showAllClear ? (
-          <div className="page-dashboard__banner">
-            {showMomentum ? (
-              <div
-                className={cn(
-                  'animate-message-in rounded-[var(--radius-lg)] border border-primary/20',
-                  'bg-primary-soft px-4 py-3',
-                )}
-              >
-                <p className="m-0 font-body-sm text-fg">
-                  <span className="font-semibold tabular-nums text-primary">{counts.reviewable}</span>
-                  {' '}
-                  {counts.reviewable === 1 ? 'pendiente listo' : 'pendientes listos'} para repasar hoy
-                </p>
-              </div>
-            ) : null}
-            {showAllClear ? (
-              <div
-                className={cn(
-                  'animate-fadeIn flex flex-col items-center gap-2 rounded-[var(--radius-lg)]',
-                  'border border-border-subtle bg-surface-sunken px-4 py-5 text-center',
-                )}
-              >
-                <Sparkles size={20} className="text-primary" aria-hidden />
-                <p className="m-0 font-body-sm font-medium text-fg">Estás al día</p>
-                <p className="m-0 max-w-[36ch] font-caption text-fg-muted">
-                  Nada pendiente en el hub — sigue con tu plan diario o explora sonidos nuevos.
-                </p>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
+        <ReviewHubBanner
+          showMomentum={showMomentum}
+          showAllClear={showAllClear}
+          totalReviewable={totalReviewable}
+        />
 
         <div className="page-dashboard__main">
           <ReviewSectionCard
             title="Oraciones fallidas"
-            count={counts.failedSentences}
+            count={queueCounts.failedSentences}
             emptyMessage="Sin errores recientes en dictados u oraciones."
           >
             <ul className="flex flex-col gap-2">
@@ -139,9 +136,14 @@ export function ReviewHubClient({ summary }: Props) {
 
           <ReviewVocabularySections summary={summary} />
 
+          <ReviewChunksSection
+            chunksCount={effectiveChunksDue}
+            onStartReview={() => setActiveSession({ type: 'review' })}
+          />
+
           <ReviewSectionCard
             title="Sonidos pendientes"
-            count={counts.soundsDue}
+            count={queueCounts.soundsDue}
             emptyMessage="Ningún contraste de fonema pendiente hoy."
           >
             <ul className="flex flex-col gap-2">
@@ -153,7 +155,7 @@ export function ReviewHubClient({ summary }: Props) {
                 </li>
               ))}
             </ul>
-            {counts.soundsDue > 0 ? (
+            {queueCounts.soundsDue > 0 ? (
               <Link href="/practice/sounds" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
                 Laboratorio de sonidos →
               </Link>
@@ -162,7 +164,7 @@ export function ReviewHubClient({ summary }: Props) {
 
           <ReviewSectionCard
             title="Conceptos pendientes"
-            count={counts.dueTopics}
+            count={queueCounts.dueTopics}
             emptyMessage="Nada de gramática pendiente hoy."
           >
             <ul className="flex flex-col gap-2">
@@ -184,7 +186,7 @@ export function ReviewHubClient({ summary }: Props) {
 
           <ReviewSectionCard
             title="Conceptos débiles"
-            count={counts.weakTopics}
+            count={queueCounts.weakTopics}
             emptyMessage="Ningún concepto en aprendizaje."
           >
             <ul className="flex flex-col gap-2">
@@ -196,7 +198,7 @@ export function ReviewHubClient({ summary }: Props) {
 
           <ReviewLessonSection
             lessons={summary.dueLessons}
-            count={counts.dueLessons}
+            count={queueCounts.dueLessons}
           />
 
           <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
@@ -215,15 +217,15 @@ export function ReviewHubClient({ summary }: Props) {
           <ReviewHubActions
             phase={isSessionActive ? 'loading' : 'idle'}
             canStart={canStart}
-            hadReviewableItems={counts.reviewable > 0}
-            reviewableCount={counts.reviewable}
+            hadReviewableItems={totalReviewable > 0}
+            reviewableCount={totalReviewable}
             onStartReview={() => setActiveSession({ type: 'review' })}
             onRetry={() => setActiveSession({ type: 'review' })}
           />
 
-          {!summary.canStartReview && !isSessionActive && !summary.nothingDue ? (
+          {!canStart && !isSessionActive && !showAllClear ? (
             <p className="font-body-sm text-center text-fg-muted animate-fadeIn">
-              {counts.failedSentences > 0 && counts.reviewable === 0
+              {queueCounts.failedSentences > 0 && totalReviewable === 0
                 ? 'Hay errores en el historial, pero nada listo para repasar hoy. Sigue con tu plan diario.'
                 : 'Nada listo para un repaso completo ahora. Practica en el plan diario para generar nuevos ítems.'}
             </p>

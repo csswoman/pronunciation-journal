@@ -5,7 +5,6 @@ import {
   getWordsDueForReview,
 } from '@/lib/word-bank/server-queries'
 import {
-  buildReviewHubCounts,
   computeCanStartReview,
   resolveFailedSentenceLookups,
   rowsToFailedItems,
@@ -92,7 +91,7 @@ async function getDueTopicsForReview(userId: string, limit = 6): Promise<TopicSr
     .from('topic_srs')
     .select(TOPIC_COLS)
     .eq('user_id', userId)
-    .neq('srs_status', 'new')
+    .in('srs_status', ['review', 'mastered'])
     .lte('next_review_at', today)
     .order('next_review_at', { ascending: true })
     .limit(limit)
@@ -153,6 +152,7 @@ async function getDueLessonsForReview(
           const lastStudiedAt = p.updated_at || p.watched_at || new Date().toISOString()
           const daysSinceStudy = Math.max(
             0,
+            0,
             Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24)),
           )
           const dueAt = new Date(
@@ -179,6 +179,12 @@ async function getDueLessonsForReview(
   return items.slice(0, limit)
 }
 
+import { fetchExactReviewQueueCounts } from './queue-count-queries'
+import type { AggregatedReviewSummary } from './summary-types'
+
+export { fetchExactReviewQueueCounts }
+export type { AggregatedReviewSummary }
+
 /** Server: full hub summary for `/practice/review`. */
 export async function getReviewHubSummary(userId: string): Promise<ReviewHubSummary> {
   const [failedSentences, weakWords, dueWords, soundsDueRaw, dueTopicsRaw, weakTopicsRaw, dueLessons, essentialWordsDue] =
@@ -196,11 +202,31 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
   const dueTopics = filterReviewableTopics(dueTopicsRaw)
   const weakTopics = filterReviewableTopics(weakTopicsRaw)
 
-  const counts = buildReviewHubCounts(
-    failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, essentialWordsDue,
-  )
+  const queueCounts = await fetchExactReviewQueueCounts(userId, {
+    soundsDueCount: soundsDue.length,
+    chunksDueCount: 0,
+  })
+
+  const sessionCandidates = {
+    failedSentences,
+    weakWords,
+    dueWords,
+    soundsDue,
+    dueTopics,
+    weakTopics,
+    dueLessons,
+    essentialWordsDue,
+  }
+
   const canStartReview = computeCanStartReview({
-    failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, essentialWordsDue,
+    failedSentences,
+    weakWords,
+    dueWords,
+    soundsDue,
+    dueTopics,
+    weakTopics,
+    dueLessons,
+    essentialWordsDue,
   })
 
   return {
@@ -212,8 +238,62 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     weakTopics,
     dueLessons,
     essentialWordsDue,
-    counts,
-    nothingDue: counts.reviewable === 0,
+    queueCounts,
+    sessionCandidates,
+    counts: queueCounts,
+    nothingDue: queueCounts.reviewable === 0,
     canStartReview,
+  }
+}
+
+export async function getAggregatedReviewSummary(userId: string): Promise<AggregatedReviewSummary> {
+  const soundsDue = (await getSoundsDueForHome(userId)).filter((s) => s.soundId > 0)
+  const queueCounts = await fetchExactReviewQueueCounts(userId, {
+    soundsDueCount: soundsDue.length,
+  })
+
+  const hasPendingReview = queueCounts.reviewable > 0
+
+  let primaryQueue: AggregatedReviewSummary['primaryQueue'] = null
+  let headline = 'Todo al día'
+  let subtext = 'No tienes repasos pendientes por ahora.'
+
+  if (queueCounts.dueWords > 0) {
+    primaryQueue = 'words'
+    headline = `${queueCounts.dueWords} ${queueCounts.dueWords === 1 ? 'palabra espera' : 'palabras esperan'} repaso`
+    subtext = 'Repasarlas hoy las mantiene en memoria a largo plazo · unos 5 min'
+  } else if (queueCounts.essentialWordsDue > 0) {
+    primaryQueue = 'essential_words'
+    headline = `${queueCounts.essentialWordsDue} palabras esenciales esperan repaso`
+    subtext = 'Afianza vocabulario de alta frecuencia para hablar con soltura.'
+  } else if (queueCounts.dueTopics > 0) {
+    primaryQueue = 'topics'
+    headline = `${queueCounts.dueTopics} temas gramaticales esperan repaso`
+    subtext = 'Refuerza los conceptos antes de que se olviden.'
+  } else if (queueCounts.failedSentences > 0) {
+    primaryQueue = 'sentences'
+    headline = `${queueCounts.failedSentences} oraciones esperan corrección`
+    subtext = 'Corrige tus errores recientes para no repetirlos.'
+  } else if (queueCounts.dueLessons > 0) {
+    primaryQueue = 'lessons'
+    headline = `${queueCounts.dueLessons} lecciones esperan repaso`
+    subtext = 'Vuelve a repasar el contenido visto en inmersión.'
+  } else if (queueCounts.soundsDue > 0) {
+    primaryQueue = 'sounds'
+    headline = `${queueCounts.soundsDue} sonidos esperan repaso`
+    subtext = 'Entrena tu oído con pares mínimos.'
+  } else if (queueCounts.weakWords > 0) {
+    primaryQueue = 'words'
+    headline = `${queueCounts.weakWords} palabras nuevas o en aprendizaje`
+    subtext = 'Practica para afianzarlas en tu vocabulario.'
+  }
+
+  return {
+    hasPendingReview,
+    totalDue: queueCounts.reviewable,
+    queueCounts,
+    primaryQueue,
+    headline,
+    subtext,
   }
 }

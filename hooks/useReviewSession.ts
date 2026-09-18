@@ -33,7 +33,7 @@ export function useReviewSession() {
           dueSoundIds: summary.soundsDue.map((sound) => sound.soundId),
           dueLessons: summary.dueLessons,
           essentialWordsDue: summary.essentialWordsDue,
-          includeChunkReview: false,
+          includeChunkReview: true,
         }),
         fetch('/api/review/topics', {
           method: 'POST',
