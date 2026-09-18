@@ -33,8 +33,17 @@ export interface LessonReviewItem {
   typeLabel: string
   url: string
   lastStudiedAt: string
+  dueAt: string
   daysSinceStudy: number
   summary?: string
+}
+
+export interface EssentialWordReviewItem {
+  id: string
+  wordId: string
+  word: string
+  skill: 'meaning' | 'listening' | 'production' | 'usage'
+  dueAt: string
 }
 
 export interface ReviewHubCounts {
@@ -45,6 +54,7 @@ export interface ReviewHubCounts {
   dueTopics: number
   weakTopics: number
   dueLessons: number
+  essentialWordsDue: number
   /** Items that can start a review session (excludes display-only failures). */
   reviewable: number
   total: number
@@ -58,12 +68,12 @@ export interface ReviewHubSummary {
   dueTopics: TopicSrsRow[]
   weakTopics: TopicSrsRow[]
   dueLessons: LessonReviewItem[]
+  essentialWordsDue: EssentialWordReviewItem[]
   counts: ReviewHubCounts
   /** No sections with items to show. */
   nothingDue: boolean
   /** At least one step can be built for "Iniciar repaso completo". */
   canStartReview: boolean
-  srsHistory: SrsHistoryGroup[]
 }
 
 export type SrsHistoryDomain = 'words' | 'sounds' | 'sentences' | 'topics'

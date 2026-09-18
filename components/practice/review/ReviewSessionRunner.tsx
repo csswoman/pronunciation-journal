@@ -11,7 +11,7 @@
 import { useEffect, useRef } from 'react'
 import { useReviewSession } from '@/hooks/useReviewSession'
 import { ReviewSessionLauncher } from './ReviewSessionLauncher'
-import type { FailedSentenceItem } from '@/lib/review/types'
+import type { FailedSentenceItem, ReviewHubSummary } from '@/lib/review/types'
 
 export type ReviewSessionAction =
   | { type: 'review' }
@@ -20,6 +20,7 @@ export type ReviewSessionAction =
 
 interface Props {
   action: ReviewSessionAction
+  summary: ReviewHubSummary
   onExit: () => void
 }
 
@@ -32,7 +33,7 @@ function isSameAction(a: ReviewSessionAction | null, b: ReviewSessionAction): bo
   return false
 }
 
-export function ReviewSessionRunner({ action, onExit }: Props) {
+export function ReviewSessionRunner({ action, summary, onExit }: Props) {
   const { state, sessionKey, startReview, startFailedItem, startTopic, advanceStep, exitSession } =
     useReviewSession()
   const startedActionRef = useRef<ReviewSessionAction | null>(null)
@@ -42,13 +43,13 @@ export function ReviewSessionRunner({ action, onExit }: Props) {
     startedActionRef.current = action
 
     if (action.type === 'review') {
-      void startReview()
+      void startReview(summary)
     } else if (action.type === 'failed_item') {
       void startFailedItem(action.item)
     } else if (action.type === 'topic') {
       void startTopic(action.topic)
     }
-  }, [action, startReview, startFailedItem, startTopic])
+  }, [action, summary, startReview, startFailedItem, startTopic])
 
   const handleExit = () => {
     exitSession()

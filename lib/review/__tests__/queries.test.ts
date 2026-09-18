@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildReviewHubCounts,
   computeCanStartReview,
   exerciseTypeLabel,
   rowsToFailedItems,
@@ -113,6 +114,29 @@ describe('computeCanStartReview', () => {
         soundsDue: [],
       }),
     ).toBe(false)
+  })
+
+  it('allows a review made only of pending lessons or essential words', () => {
+    const base = { failedSentences: [], weakWords: [], dueWords: [], soundsDue: [] }
+    expect(computeCanStartReview({ ...base, dueLessons: [{}] })).toBe(true)
+    expect(computeCanStartReview({ ...base, essentialWordsDue: [{}] })).toBe(true)
+  })
+})
+
+describe('buildReviewHubCounts', () => {
+  it('dedupes weak and due words and includes every executable domain', () => {
+    const counts = buildReviewHubCounts(
+      [],
+      [{ id: 'same' }],
+      [{ id: 'same' }, { id: 'due-only' }],
+      [{}],
+      [{ id: 'topic' }],
+      [{ id: 'topic' }],
+      [{}],
+      [{ id: 'essential' }],
+    )
+    expect(counts.reviewable).toBe(6)
+    expect(counts.total).toBe(6)
   })
 })
 

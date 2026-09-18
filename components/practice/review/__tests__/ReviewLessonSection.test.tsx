@@ -19,6 +19,7 @@ describe('ReviewLessonSection', () => {
         typeLabel: 'Inmersión · B1 (Teacher Emma)',
         url: '/practice/immersion/mastering-linked-sounds',
         lastStudiedAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+        dueAt: new Date().toISOString(),
         daysSinceStudy: 3,
       },
     ]

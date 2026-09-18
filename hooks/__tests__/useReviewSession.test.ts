@@ -3,6 +3,7 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useReviewSession } from '../useReviewSession'
 import type { ReviewPlan } from '@/lib/practice/daily-plan/composer'
+import type { ReviewHubSummary } from '@/lib/review/types'
 
 const mockUser = { id: 'user-review-123' }
 let currentMockUser: { id: string } | null = mockUser
@@ -41,6 +42,13 @@ const sampleReviewPlan: ReviewPlan = {
   nothingDue: false,
 }
 
+const summary = {
+  failedSentences: [], weakWords: [], dueWords: [], soundsDue: [], dueTopics: [], weakTopics: [],
+  dueLessons: [], essentialWordsDue: [], canStartReview: true, nothingDue: false,
+  counts: { failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
+    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, reviewable: 1, total: 1 },
+} as ReviewHubSummary
+
 describe('useReviewSession', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -62,7 +70,7 @@ describe('useReviewSession', () => {
     const { result } = renderHook(() => useReviewSession())
 
     act(() => {
-      void result.current.startReview()
+      void result.current.startReview(summary)
     })
 
     await waitFor(() => {
@@ -73,6 +81,13 @@ describe('useReviewSession', () => {
       expect(result.current.state.steps.length).toBe(2)
       expect(result.current.state.stepIndex).toBe(0)
     }
+    expect(mockBuildReviewPlan).toHaveBeenCalledWith(mockUser.id, expect.objectContaining({
+      failedItems: summary.failedSentences,
+      dueWords: summary.dueWords,
+      dueLessons: summary.dueLessons,
+      essentialWordsDue: summary.essentialWordsDue,
+      includeChunkReview: false,
+    }))
   })
 
   it('advances steps and marks done at the end of queue', async () => {
@@ -81,7 +96,7 @@ describe('useReviewSession', () => {
     const { result } = renderHook(() => useReviewSession())
 
     act(() => {
-      void result.current.startReview()
+      void result.current.startReview(summary)
     })
 
     await waitFor(() => {
@@ -110,7 +125,7 @@ describe('useReviewSession', () => {
     const { result } = renderHook(() => useReviewSession())
 
     act(() => {
-      void result.current.startReview()
+      void result.current.startReview(summary)
     })
 
     await waitFor(() => {

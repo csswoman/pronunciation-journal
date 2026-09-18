@@ -14,15 +14,13 @@ import Link from 'next/link'
 import { Sparkles } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import { WordStrengthBars } from '@/components/vocabulary/words/WordStrengthBars'
-import { getWordStrength } from '@/lib/word-bank/strength'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
 import { ReviewLessonSection } from '@/components/practice/review/ReviewLessonSection'
 import { ReviewHubActions } from '@/components/practice/review/ReviewHubActions'
-import { SrsHistoryPanel } from '@/components/practice/review/SrsHistoryPanel'
 import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
 import type { ReviewHubSummary } from '@/lib/review/types'
 import type { ReviewSessionAction } from './ReviewSessionRunner'
+import { ReviewVocabularySections } from './ReviewVocabularySections'
 
 const ReviewSessionRunner = dynamic(
   () => import('./ReviewSessionRunner').then((m) => m.ReviewSessionRunner),
@@ -65,6 +63,7 @@ export function ReviewHubClient({ summary }: Props) {
       {activeSession ? (
         <ReviewSessionRunner
           action={activeSession}
+          summary={summary}
           onExit={() => setActiveSession(null)}
         />
       ) : null}
@@ -138,43 +137,7 @@ export function ReviewHubClient({ summary }: Props) {
             </ul>
           </ReviewSectionCard>
 
-          <ReviewSectionCard
-            title="Palabras débiles"
-            count={counts.weakWords}
-            emptyMessage="Ninguna palabra en aprendizaje — muy bien."
-          >
-            <ul className="flex flex-col gap-3">
-              {summary.weakWords.slice(0, 4).map((w) => (
-                <li key={w.id} className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-base font-medium text-fg">{w.text}</p>
-                    {w.translation ? <p className="font-body-sm text-fg-muted">{w.translation}</p> : null}
-                  </div>
-                  <WordStrengthBars strength={getWordStrength(w)} size={14} />
-                </li>
-              ))}
-            </ul>
-          </ReviewSectionCard>
-
-          <ReviewSectionCard
-            title="Vocabulario pendiente"
-            count={counts.dueWords}
-            emptyMessage="Nada de vocabulario para hoy."
-          >
-            <ul className="flex flex-col gap-2">
-              {summary.dueWords.slice(0, 4).map((w) => (
-                <li key={w.id} className="font-body-sm text-fg">
-                  {w.text}
-                  {w.ipa ? <span className="font-ipa ml-2 text-primary">{formatIpa(w.ipa)}</span> : null}
-                </li>
-              ))}
-            </ul>
-            {counts.dueWords > 0 ? (
-              <Link href="/words" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
-                Ver léxico →
-              </Link>
-            ) : null}
-          </ReviewSectionCard>
+          <ReviewVocabularySections summary={summary} />
 
           <ReviewSectionCard
             title="Sonidos pendientes"
@@ -267,8 +230,7 @@ export function ReviewHubClient({ summary }: Props) {
           ) : null}
         </div>
 
-        <aside className="page-dashboard__rail" aria-label="Historial SRS">
-          <SrsHistoryPanel groups={summary.srsHistory} />
+        <aside className="page-dashboard__rail" aria-label="Herramientas de repaso">
           {!isSessionActive ? <SrsVault /> : null}
         </aside>
       </div>

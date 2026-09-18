@@ -37,6 +37,7 @@ const mockSummary: ReviewHubSummary = {
     dueTopics: 1,
     weakTopics: 1,
     dueLessons: 0,
+    essentialWordsDue: 0,
     total: 6,
   },
   canStartReview: true,
@@ -89,7 +90,7 @@ const mockSummary: ReviewHubSummary = {
     } as unknown as ReviewHubSummary['weakTopics'][number],
   ],
   dueLessons: [],
-  srsHistory: [],
+  essentialWordsDue: [],
 }
 
 describe('ReviewHubClient', () => {

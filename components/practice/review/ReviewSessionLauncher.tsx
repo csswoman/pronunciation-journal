@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic'
 import type { ReviewSessionPhase } from '@/hooks/useReviewSession'
+import { ReviewLinkStep } from './ReviewLinkStep'
 
 const PracticeSession = dynamic(() => import('@/components/practice/PracticeSession'), {
   loading: () => (
@@ -20,6 +21,9 @@ export function ReviewSessionLauncher({ state, sessionKey, onStepComplete, onExi
   if (state.phase !== 'session') return null
 
   const step = state.steps[state.stepIndex]
+  if (step.href && step.exercises.length === 0) {
+    return <ReviewLinkStep step={step} onContinue={onStepComplete} onExit={onExit} />
+  }
   return (
     <div className="fixed inset-0 z-50">
       <PracticeSession

@@ -4,6 +4,14 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { ReviewSessionRunner } from '../ReviewSessionRunner'
 import type { ReviewSessionPhase } from '@/hooks/useReviewSession'
+import type { ReviewHubSummary } from '@/lib/review/types'
+
+const summary = {
+  failedSentences: [], weakWords: [], dueWords: [], soundsDue: [], dueTopics: [], weakTopics: [],
+  dueLessons: [], essentialWordsDue: [], canStartReview: false, nothingDue: true,
+  counts: { failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
+    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, reviewable: 0, total: 0 },
+} as ReviewHubSummary
 
 const mockStartReview = vi.fn()
 const mockStartFailedItem = vi.fn()
@@ -47,7 +55,7 @@ describe('ReviewSessionRunner', () => {
 
     render(
       <React.StrictMode>
-        <ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />
+        <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />
       </React.StrictMode>,
     )
 
@@ -60,13 +68,13 @@ describe('ReviewSessionRunner', () => {
     const onExit = vi.fn()
 
     const { rerender } = render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />,
     )
 
     expect(mockStartReview).toHaveBeenCalledTimes(1)
 
     // Rerender with a fresh object reference having the same shape
-    rerender(<ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />)
+    rerender(<ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />)
 
     expect(mockStartReview).toHaveBeenCalledTimes(1)
   })
@@ -75,7 +83,7 @@ describe('ReviewSessionRunner', () => {
     const onExit = vi.fn()
 
     const { rerender } = render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />,
     )
 
     expect(mockStartReview).toHaveBeenCalledTimes(1)
@@ -85,6 +93,7 @@ describe('ReviewSessionRunner', () => {
     rerender(
       <ReviewSessionRunner
         action={{ type: 'topic', topic: 'grammar:past-tense' }}
+        summary={summary}
         onExit={onExit}
       />,
     )
@@ -97,7 +106,7 @@ describe('ReviewSessionRunner', () => {
     mockCurrentState = { phase: 'loading' }
 
     render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={vi.fn()} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={vi.fn()} />,
     )
 
     expect(screen.getByText('Cargando sesión…')).toBeTruthy()
@@ -108,7 +117,7 @@ describe('ReviewSessionRunner', () => {
     const onExit = vi.fn()
 
     render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />,
     )
 
     expect(screen.getByText('No se pudo cargar la sesión de repaso.')).toBeTruthy()
@@ -125,7 +134,7 @@ describe('ReviewSessionRunner', () => {
     const onExit = vi.fn()
 
     render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={onExit} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={onExit} />,
     )
 
     expect(screen.getByText('¡Repaso completado!')).toBeTruthy()
@@ -145,7 +154,7 @@ describe('ReviewSessionRunner', () => {
     }
 
     render(
-      <ReviewSessionRunner action={{ type: 'review' }} onExit={vi.fn()} />,
+      <ReviewSessionRunner action={{ type: 'review' }} summary={summary} onExit={vi.fn()} />,
     )
 
     expect(screen.getByTestId('session-launcher')).toBeTruthy()

@@ -173,6 +173,9 @@ export function computeCanStartReview(summary: {
   dueWords: unknown[]
   soundsDue: unknown[]
   dueTopics?: unknown[]
+  weakTopics?: unknown[]
+  dueLessons?: unknown[]
+  essentialWordsDue?: unknown[]
 }): boolean {
   return (
     summary.dueWords.length > 0 ||
@@ -180,6 +183,9 @@ export function computeCanStartReview(summary: {
     summary.soundsDue.length > 0 ||
     summary.failedSentences.some((item) => item.drillable)
     || (summary.dueTopics?.length ?? 0) > 0
+    || (summary.weakTopics?.length ?? 0) > 0
+    || (summary.dueLessons?.length ?? 0) > 0
+    || (summary.essentialWordsDue?.length ?? 0) > 0
   )
 }
 
@@ -191,9 +197,19 @@ export function buildReviewHubCounts(
   dueTopics: unknown[] = [],
   weakTopics: unknown[] = [],
   dueLessons: unknown[] = [],
+  essentialWordsDue: unknown[] = [],
 ) {
+  const reviewWordIds = new Set([
+    ...weakWords.map((word) => (word as { id: string }).id),
+    ...dueWords.map((word) => (word as { id: string }).id),
+  ])
+  const reviewTopicIds = new Set([
+    ...dueTopics.map((topic) => (topic as { id: string }).id),
+    ...weakTopics.map((topic) => (topic as { id: string }).id),
+  ])
   const reviewable =
-    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length + dueTopics.length + dueLessons.length
+    reviewWordIds.size + soundsDue.length + failedSentences.filter((f) => f.drillable).length
+    + reviewTopicIds.size + dueLessons.length + essentialWordsDue.length
 
   return {
     failedSentences: failedSentences.length,
@@ -203,8 +219,9 @@ export function buildReviewHubCounts(
     dueTopics: dueTopics.length,
     weakTopics: weakTopics.length,
     dueLessons: dueLessons.length,
+    essentialWordsDue: essentialWordsDue.length,
     reviewable,
-    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length + dueTopics.length + weakTopics.length + dueLessons.length,
+    total: reviewable,
   }
 }
 

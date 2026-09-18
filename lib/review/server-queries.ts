@@ -13,7 +13,9 @@ import {
   type FailedHistoryRow,
 } from '@/lib/review/failed-sentences-core'
 import type { ReviewHubSummary, TopicSrsRow } from '@/lib/review/types'
-import { getSrsHistory } from '@/lib/review/srs-history-queries'
+import { filterReviewableTopics, getDueEssentialWords } from '@/lib/review/candidate-queries'
+
+const LESSON_REVIEW_INTERVAL_DAYS = 7
 
 async function loadFailedSentenceItemsServer(
   userId: string,
@@ -125,12 +127,14 @@ async function getDueLessonsForReview(
   const items: import('./types').LessonReviewItem[] = []
 
   try {
+    const cutoff = new Date(Date.now() - LESSON_REVIEW_INTERVAL_DAYS * 86_400_000).toISOString()
     // 1. Lecciones de inmersión vistas
     const { data: immersionData } = await supabase
       .from('immersion_lesson_progress')
       .select('lesson_id, watched_at, quiz_score, updated_at')
       .eq('user_id', userId)
       .eq('watched', true)
+      .lte('updated_at', cutoff)
       .order('updated_at', { ascending: true })
       .limit(limit)
 
@@ -151,6 +155,9 @@ async function getDueLessonsForReview(
             0,
             Math.floor((Date.now() - new Date(lastStudiedAt).getTime()) / (1000 * 60 * 60 * 24)),
           )
+          const dueAt = new Date(
+            new Date(lastStudiedAt).getTime() + LESSON_REVIEW_INTERVAL_DAYS * 86_400_000,
+          ).toISOString()
           items.push({
             id: `immersion:${l.id}`,
             title: l.title,
@@ -158,6 +165,7 @@ async function getDueLessonsForReview(
             typeLabel: `Inmersión · ${l.level} (Teacher ${l.teacher})`,
             url: `/practice/immersion/${l.slug}`,
             lastStudiedAt,
+            dueAt,
             daysSinceStudy,
             summary: l.summary,
           })
@@ -173,8 +181,7 @@ async function getDueLessonsForReview(
 
 /** Server: full hub summary for `/practice/review`. */
 export async function getReviewHubSummary(userId: string): Promise<ReviewHubSummary> {
-  const supabase = await createSupabaseServerClient()
-  const [failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, srsHistory] =
+  const [failedSentences, weakWords, dueWords, soundsDueRaw, dueTopicsRaw, weakTopicsRaw, dueLessons, essentialWordsDue] =
     await Promise.all([
       loadFailedSentenceItemsServer(userId, 5),
       getWeakWordsForReviewServer(userId, 6),
@@ -183,11 +190,18 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
       getDueTopicsForReview(userId, 6),
       getWeakTopicsForReview(userId, 6),
       getDueLessonsForReview(userId, 4),
-      getSrsHistory(supabase, userId),
+      getDueEssentialWords(userId, 12),
     ])
+  const soundsDue = soundsDueRaw.filter((sound) => sound.soundId > 0)
+  const dueTopics = filterReviewableTopics(dueTopicsRaw)
+  const weakTopics = filterReviewableTopics(weakTopicsRaw)
 
-  const counts = buildReviewHubCounts(failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons)
-  const canStartReview = computeCanStartReview({ failedSentences, weakWords, dueWords, soundsDue, dueTopics })
+  const counts = buildReviewHubCounts(
+    failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, essentialWordsDue,
+  )
+  const canStartReview = computeCanStartReview({
+    failedSentences, weakWords, dueWords, soundsDue, dueTopics, weakTopics, dueLessons, essentialWordsDue,
+  })
 
   return {
     failedSentences,
@@ -197,9 +211,9 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     dueTopics,
     weakTopics,
     dueLessons,
+    essentialWordsDue,
     counts,
-    nothingDue: counts.total === 0,
+    nothingDue: counts.reviewable === 0,
     canStartReview,
-    srsHistory,
   }
 }
