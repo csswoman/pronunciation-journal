@@ -58,10 +58,15 @@
   --color-mint-soft: var(--mint-soft);
 
   /* ── 4. Acento y Feedback ──────────────────────────────────────────────── */
-  --color-accent:       var(--accent);
-  --color-primary:      var(--accent);
-  --color-primary-soft: var(--primary-soft);
-  --color-on-primary:   var(--on-accent);
+  --color-accent:        var(--accent);
+  --color-accent-text:   var(--accent-text);
+  --color-accent-soft:   var(--accent-soft);
+  --color-accent-border: var(--accent-border);
+
+  --color-primary:       var(--accent);
+  --color-primary-text:  var(--primary-text);
+  --color-primary-soft:  var(--primary-soft);
+  --color-on-primary:    var(--on-accent);
 
   --color-feedback-correct:      var(--feedback-correct);
   --color-feedback-correct-soft: var(--feedback-correct-soft);

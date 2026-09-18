@@ -106,7 +106,23 @@ El acento es dinámico y seleccionable por el usuario entre 9 valores predefinid
 
 ---
 
-### 2.4 Feedback (Alias de Pasteles)
+### 2.4 Derivados del acento (por tema)
+El relleno (`--accent`) es el mismo en claro y oscuro. Sus derivados NO:
+- `--accent-text`  : dark `color-mix(in oklch, var(--accent) 45%, white)` | light `color-mix(in oklch, var(--accent) 88%, black)`
+- `--accent-soft`  : dark `color-mix(in oklch, var(--accent) 26%, #0d1018)` | light `color-mix(in oklch, var(--accent) 14%, white)`
+- `--accent-border`: dark `color-mix(in oklch, var(--accent) 55%, #0d1018)` | light `color-mix(in oklch, var(--accent) 45%, white)`
+
+**Regla obligatoria:**
+1. Sobre `--accent` el texto es SIEMPRE blanco (`--on-accent`), nunca ink.
+2. Sobre `--accent-soft` el texto es SIEMPRE `--accent-text`, nunca blanco.
+3. Como texto o icono sobre `bg`/`surface` usa `--accent-text`, nunca `--accent`.
+
+> **Observación de armonía de acentos:**
+> Verde, ámbar y violeta como acento pueden chocar visualmente con el menta de acierto, el amarillo de las frases y el lila de progreso. Se mantienen disponibles en el selector, pero azul (predeterminado), turquesa (`teal`), esmeralda y rosa son los que mejor se separan en la interfaz.
+
+---
+
+### 2.5 Feedback (Alias de Pasteles)
 El feedback de ejercicios utiliza la paleta pastel y **NUNCA** tonos verdes o rojos oscuros saturados:
 * `feedback-correct`: mint (`#a8e6c9`) · `feedback-correct-soft`: mint-soft (`#e3f6ec`)
 * `feedback-wrong`: coral (`#f7b7a6`) · `feedback-wrong-soft`: coral-soft (`#fde4dc`)

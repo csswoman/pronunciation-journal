@@ -83,6 +83,14 @@ html[data-theme="dark"], .dark {
   --cta-bg:           var(--paper);
   --cta-fg:           var(--ink);
   --cta-bg-hover:     oklch(0.92 0.005 85);
+
+  /* Derivados del acento (Dark theme) */
+  --accent-text:   color-mix(in oklch, var(--accent) 45%, white);
+  --accent-soft:   color-mix(in oklch, var(--accent) 26%, #0d1018);
+  --accent-border: color-mix(in oklch, var(--accent) 55%, #0d1018);
+
+  --primary-text:  var(--accent-text);
+  --primary-soft:  var(--accent-soft);
 }
 
 :root {
@@ -168,9 +176,16 @@ html[data-theme="dark"], .dark {
   --accent:         var(--accent-blue);
   --primary:        var(--accent);
   --primary-hover:  color-mix(in oklch, var(--accent) 85%, black);
-  --primary-soft:   color-mix(in oklch, var(--accent) 15%, var(--surface));
   --on-primary:     var(--on-accent);
   --focus-ring:     var(--accent);
+
+  /* Derivados del acento (Light theme) */
+  --accent-text:   color-mix(in oklch, var(--accent) 88%, black);
+  --accent-soft:   color-mix(in oklch, var(--accent) 14%, white);
+  --accent-border: color-mix(in oklch, var(--accent) 45%, white);
+
+  --primary-text:  var(--accent-text);
+  --primary-soft:  var(--accent-soft);
 
   /* ── 6. Motion ─────────────────────────────────────────────────────────── */
   --dur-fast: 150ms;
