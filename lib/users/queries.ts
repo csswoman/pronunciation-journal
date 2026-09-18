@@ -1,6 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { CefrLevel } from "@/lib/essential-words/types";
-import type { LearnerLevelSource } from "@/lib/learner-level/core";
 import { normalizeInterests, type Interest } from "@/lib/users/interests";
 
 export interface UserPreferences {
@@ -105,23 +104,21 @@ export async function updatePassword(newPassword: string): Promise<void> {
   if (error) throw error;
 }
 
-/** Best-effort: persists the local CEFR estimate to user_profiles. */
+/** Best-effort: persists the manual CEFR level to user_profiles via server API. */
 export async function syncCefrLevel(
-  userId: string,
+  _userId: string,
   cefrEstimate: string,
-  source: LearnerLevelSource = "practice_estimate",
 ): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const { error } = await supabase
-    .from("user_profiles")
-    .upsert({
-      id: userId,
-      cefr_level: cefrEstimate,
-      cefr_level_source: source,
-      cefr_level_updated_at: new Date().toISOString(),
-    }, { onConflict: "id" });
+  const response = await fetch("/api/profile/level", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ level: cefrEstimate }),
+  });
 
-  if (error) throw error;
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Failed to update CEFR level");
+  }
 }
 
 /**
@@ -133,7 +130,7 @@ export async function syncCefrLevel(
  * re-hydrates on user change only.
  */
 export async function applyManualCefrLevel(userId: string, level: CefrLevel): Promise<void> {
-  await syncCefrLevel(userId, level, "manual");
+  await syncCefrLevel(userId, level);
 
   const [{ db, ensureDbReady }, { getUserLearningState }, { persistLearningState }] =
     await Promise.all([

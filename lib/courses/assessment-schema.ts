@@ -43,5 +43,8 @@ export const AssessmentPayloadSchema = z.object({
 export const AssessmentResultSchema = z.object({
   mode: z.enum(["placement", "checkpoint"]),
   evaluatedLevel: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
-  result: AssessmentPayloadSchema,
+  checkpointLevel: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
+  answers: z.record(z.string().min(1).max(120), z.number().int().min(0).max(10)).optional(),
+  selfRatings: z.record(z.string(), z.enum(["unknown", "familiar", "confident"])).optional(),
+  result: AssessmentPayloadSchema.optional(),
 }).strict();

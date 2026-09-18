@@ -29,6 +29,9 @@ const result = {
     assessedAt: "2026-07-18T12:00:00.000Z",
   }],
   completedAt: "2026-07-18T12:01:00.000Z",
+  answers: { "a1:reading:1": 0 },
+  selfRatings: { "a1-present": "confident" },
+  checkpointLevel: "a2",
 };
 
 describe("claimGuestPlacement", () => {
@@ -54,7 +57,10 @@ describe("claimGuestPlacement", () => {
 
     await expect(claimGuestPlacement("u1")).resolves.toBe(true);
 
-    expect(fetchMock).toHaveBeenCalledWith("/api/assessment/results", expect.objectContaining({ method: "POST" }));
+    expect(fetchMock).toHaveBeenCalledWith("/api/assessment/results", expect.objectContaining({
+      method: "POST",
+      body: expect.stringContaining('"answers":{"a1:reading:1":0}'),
+    }));
     expect(persistMock).toHaveBeenCalledWith("u1", result.conceptSignals, "A2");
     expect(window.localStorage.getItem("assessment:guest:placement:placement")).toBeNull();
     expect(window.localStorage.getItem("assessment:u1:placement:placement")).toContain('"assignedLevel":"A2"');

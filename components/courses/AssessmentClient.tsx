@@ -79,7 +79,16 @@ export default function AssessmentClient({
     });
     setResult(nextResult);
     if (attemptedQuestions.length > 0) {
-      persistLocalAssessmentCache({ userId, mode, checkpointLabel, nextResult });
+      const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
+      persistLocalAssessmentCache({
+        userId,
+        mode,
+        checkpointLabel,
+        nextResult,
+        answers,
+        selfRatings,
+        checkpointLevel,
+      });
       try {
         saveGuestStudyLevel(nextResult.assignedLevel);
       } catch {
@@ -93,6 +102,9 @@ export default function AssessmentClient({
           nextResult,
           setSaving,
           setSaveError,
+          answers,
+          selfRatings,
+          checkpointLevel,
         });
       }
     }
@@ -172,6 +184,7 @@ export default function AssessmentClient({
   });
 
   if (result) {
+    const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
     return (
       <AssessmentResultView
         mode={mode}
@@ -188,6 +201,9 @@ export default function AssessmentClient({
             nextResult: result,
             setSaving,
             setSaveError,
+            answers,
+            selfRatings,
+            checkpointLevel,
           });
         }}
       />

@@ -15,7 +15,7 @@ fila al terminar.
 |---|---|---|---|---|---|
 | 005 | Eliminar datos inventados en Home, Diario, Daily, landing y enlaces rotos | P1 | M | — | TODO |
 | 006 | Progreso no presenta cobertura ni volumen como dominio | P1 | S | — | DONE |
-| 007 | El nivel y su procedencia solo los escribe el servidor tras re-puntuar | P1 | M | — | TODO |
+| 007 | El nivel y su procedencia solo los escribe el servidor tras re-puntuar | P1 | M | — | DONE |
 | 008 | Todas las pantallas leen el nivel por `resolveLearnerLevel`; estado "desconocido" | P1 | M | — (mejor tras 007) | TODO |
 | 009 | Retirar el estimador de nivel por precisión de pronunciación y la semilla B1 | P2 | S | — (mejor tras 008) | TODO |
 | 010 | Home propone el checkpoint cuando el alumno está listo | P2 | M | 007, 008 | TODO |
