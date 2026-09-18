@@ -55,7 +55,7 @@ export default function ReferenceSection() {
         </span>
         <div className="grid grid-cols-2 gap-2">
           <Link
-            href="/chunks"
+            href="/practice/chunks"
             className="flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-sunken/50 px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
           >
             <Layers size={14} className="text-fg-subtle shrink-0" aria-hidden="true" />

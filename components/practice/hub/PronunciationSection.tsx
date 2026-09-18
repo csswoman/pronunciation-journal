@@ -59,7 +59,7 @@ export default function PronunciationSection() {
       </Link>
 
       <Link
-        href="/practice/minimal-pairs"
+        href="/practice/sounds/minimal-pairs"
         onClick={() => void setLastPracticeMode('minimal-pairs')}
         className="flex shrink-0 w-[82vw] max-w-[280px] md:w-auto md:max-w-none snap-start flex-col justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 transition-colors hover:bg-surface-sunken focus-ring group h-full"
       >

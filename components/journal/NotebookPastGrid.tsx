@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <NotebookPastGrid>
-//   <SectionHeader: "Páginas anteriores" + "Ver todas" link />
+//   <SectionHeader: "Páginas anteriores" />
 //   <RowsList:
 //     {pastPages.map => <PastPageRow date firstLine badge />}
 //   </RowsList>
@@ -21,22 +21,12 @@ export function NotebookPastGrid({ pastPages }: NotebookPastGridProps) {
 
   return (
     <section aria-labelledby="past-pages-heading" className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h3
-          id="past-pages-heading"
-          className="font-h4 font-medium text-fg"
-        >
-          Páginas anteriores
-        </h3>
-        {pastPages.length > 5 && (
-          <Link
-            href="/journal/history"
-            className="font-caption font-medium text-fg-muted hover:text-fg"
-          >
-            Ver todas
-          </Link>
-        )}
-      </div>
+      <h3
+        id="past-pages-heading"
+        className="font-h4 font-medium text-fg"
+      >
+        Páginas anteriores
+      </h3>
 
       <div className="flex flex-col gap-2">
         {pastPages.map((page) => {

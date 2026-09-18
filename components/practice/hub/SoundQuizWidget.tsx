@@ -16,7 +16,7 @@ import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import SoundMicroQuiz, { type SoundCategory } from './SoundMicroQuiz'
 
 const EXERCISES = [
-  { href: '/practice/minimal-pairs', mode: 'minimal-pairs', title: 'Pares mínimos' },
+  { href: '/practice/sounds/minimal-pairs', mode: 'minimal-pairs', title: 'Pares mínimos' },
   { href: '/practice/intonation', mode: 'intonation', title: 'Entonación' },
   { href: '/practice/connected-speech', mode: 'connected-speech', title: 'Habla conectada' },
 ] as const
