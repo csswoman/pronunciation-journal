@@ -30,8 +30,31 @@ export {
   type SoundDueHome,
 };
 
-/** Fallback per answer when `time_ms` is missing (~90 s). */
-const FALLBACK_ANSWER_MS = 90_000;
+/**
+ * Sums `time_ms` from answer_history rows into today/week totals (America/Lima).
+ * Pure function of `nowIso` so it is testable without mocking the clock.
+ * Rows with a missing `time_ms` contribute 0 — no fabricated fallback time.
+ */
+export function sumPracticeMs(
+  rows: Array<{ answered_at: string; time_ms: number | null }>,
+  nowIso: string,
+): { todayMs: number; weekMs: number } {
+  const todayStr = toLocalDateString(nowIso, STREAK_TIMEZONE);
+  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
+
+  let todayMs = 0;
+  let weekMs = 0;
+
+  for (const row of rows) {
+    const answeredAt = row.answered_at;
+    const localDay = toLocalDateString(answeredAt, STREAK_TIMEZONE);
+    const ms = row.time_ms ?? 0;
+    if (localDay >= weekStart) weekMs += ms;
+    if (localDay === todayStr) todayMs += ms;
+  }
+
+  return { todayMs, weekMs };
+}
 
 /**
  * Sums `time_ms` from answer_history for today and the current week (America/Lima).
@@ -39,7 +62,6 @@ const FALLBACK_ANSWER_MS = 90_000;
 export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalProgress> {
   const supabase = await createSupabaseServerClient();
   const nowIso = new Date().toISOString();
-  const todayStr = toLocalDateString(nowIso, STREAK_TIMEZONE);
 
   const since = new Date();
   since.setDate(since.getDate() - 7);
@@ -53,17 +75,10 @@ export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalPro
 
   if (error) throw error;
 
-  let todayMs = 0;
-  let weekMs = 0;
-  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
-
-  for (const row of data ?? []) {
-    const answeredAt = row.answered_at as string;
-    const localDay = toLocalDateString(answeredAt, STREAK_TIMEZONE);
-    const ms = row.time_ms ?? FALLBACK_ANSWER_MS;
-    if (localDay >= weekStart) weekMs += ms;
-    if (localDay === todayStr) todayMs += ms;
-  }
+  const { todayMs, weekMs } = sumPracticeMs(
+    (data ?? []) as Array<{ answered_at: string; time_ms: number | null }>,
+    nowIso,
+  );
 
   const minutesDone = Math.round(todayMs / 60_000);
   const weekMinutes = Math.round(weekMs / 60_000);
