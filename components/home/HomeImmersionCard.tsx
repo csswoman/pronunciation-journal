@@ -2,16 +2,16 @@
 
 // Sub-components:
 // <HomeImmersionCard>
-//   <ImmersionHeader /> (Title, subtitle, +2 XP badge)
+//   <ImmersionHeader /> (Title, subtitle, computed XP badge)
 //   <ImmersionCategoryChips /> (Video o serie, Podcast, Lectura chips con circulo de icono pastel)
-//   <ImmersionFooter /> (7-day streak dots con círculos punteados inactivos, CTA "Registrar →")
+//   <ImmersionFooter /> (CTA "Registrar →")
 //   <ImmersionStepperControls /> (conditional details panel when open)
 // </HomeImmersionCard>
 
 import { useState } from "react";
 import { Video, Headphones, BookOpen, Check, ArrowRight } from "@/components/icons";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
-import { logExternalImmersion } from "@/lib/immersion/external-log";
+import { logExternalImmersion, immersionXpForMinutes } from "@/lib/immersion/external-log";
 import type { ImmersionMediaType } from "@/lib/progress/activity-types";
 import { cn } from "@/lib/cn";
 
@@ -89,7 +89,7 @@ export default function HomeImmersionCard() {
         </div>
 
         <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
-          +2 XP
+          +{immersionXpForMinutes(minutes)} XP
         </span>
       </div>
 
@@ -169,28 +169,8 @@ export default function HomeImmersionCard() {
           : ""}
       </div>
 
-      {/* Fila inferior: Racha de 7 días y Botón de acción */}
-      <div className="flex items-center justify-between gap-3 pt-1">
-        {/* Tracker de racha con círculos desmarcados en borde punteado */}
-        <div className="flex items-center gap-2 select-none">
-          <div className="flex items-center gap-1.5">
-            {Array.from({ length: 7 }).map((_, idx) => (
-              <span
-                key={idx}
-                className={cn(
-                  "size-3 rounded-full transition-colors",
-                  idx < 4
-                    ? "bg-mint"
-                    : "border border-dashed border-fg-muted/40 bg-transparent",
-                )}
-              />
-            ))}
-          </div>
-          <span className="font-sans text-caption font-medium text-fg-muted">
-            4 días
-          </span>
-        </div>
-
+      {/* Fila inferior: Botón de acción */}
+      <div className="flex items-center justify-end gap-3 pt-1">
         {/* Botón CTA principal */}
         <button
           type="button"
