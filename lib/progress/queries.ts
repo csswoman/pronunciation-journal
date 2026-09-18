@@ -29,6 +29,8 @@ import { getSpeechLatencyData, type SpeechLatencyData } from './speech-latency-q
 import { summarizeEssentialWordsProgress } from '@/lib/essential-words/progress-summary'
 import type { ItemSchedule } from '@/lib/essential-words/verification/types'
 import { getProgressDomainData, type ProgressDomainData } from './domain-queries'
+import { getEffectiveLearnerLevelServer } from '@/lib/learner-level/server-queries'
+import type { LearnerLevelResolution } from '@/lib/learner-level/core'
 
 export type { SpeechLatencyData } from './speech-latency-queries'
 
@@ -110,6 +112,7 @@ export interface FluencyProfileData {
 }
 
 export interface ProgressPageData {
+  learnerLevel: LearnerLevelResolution
   streak: DailyStreakResult
   dailyCompletion: DailyCompletionStats
   accuracy: AccuracyStats
@@ -642,7 +645,7 @@ export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttemp
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency, domains] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency, domains, learnerLevel] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -655,11 +658,13 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getCanSayNowAttempts(userId),
       getSpeechLatencyData(userId),
       getProgressDomainData(userId),
+      getEffectiveLearnerLevelServer(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
 
   return {
+    learnerLevel,
     streak,
     dailyCompletion,
     accuracy,

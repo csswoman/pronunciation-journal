@@ -18,7 +18,7 @@ import {
   type EssentialWordsPhase,
   type EssentialWordsSessionSummary,
 } from "@/lib/essential-words/session-model";
-import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
+import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 import { modeHasData, selectMode, type EssentialWordMode } from "@/lib/essential-words/exercise-modes";
 import { resolveRenderedSkillMode } from "@/lib/essential-words/rendered-skill-mode";
 import type { Step as PlanStep } from "@/lib/essential-words/session-plan-types";
@@ -425,11 +425,12 @@ export function useEssentialWordsSession() {
           const level = isGuest
             ? readGuestStudyLevel()
             : user
-              ? await readStoredCefrLevel(user.id)
+              ? (await getEffectiveLearnerLevel(user.id)).level
               : null;
-          if (!cancelled && level && level !== "A1") {
-            levelsRef.current = [level];
-            setLevelsState([level]);
+          const catalogLevel = level === "C2" ? "C1" : level;
+          if (!cancelled && catalogLevel) {
+            levelsRef.current = [catalogLevel];
+            setLevelsState([catalogLevel]);
           }
         }
         if (cancelled) return;

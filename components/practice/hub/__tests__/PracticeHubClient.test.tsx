@@ -25,8 +25,8 @@ vi.mock('@/lib/essential-words/level-count', () => ({
   getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000, due: 2 })),
 }))
 
-vi.mock('@/lib/essential-words/target-level', () => ({
-  readStoredCefrLevel: vi.fn(async () => 'A1'),
+vi.mock('@/lib/learner-level/client-queries', () => ({
+  getEffectiveLearnerLevel: vi.fn(async () => ({ level: 'A1', source: 'starter_default' })),
 }))
 
 vi.mock('@/lib/immersion/progress-queries', () => ({

@@ -20,7 +20,7 @@ import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
+import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
@@ -77,7 +77,9 @@ export default function HomeWordOfDayCard({
     const isGuest = isAnonymousUser(user);
     const storedLevel = isGuest
       ? Promise.resolve(readGuestStudyLevel())
-      : (user?.id ? readStoredCefrLevel(user.id) : Promise.resolve(null));
+      : (user?.id
+          ? getEffectiveLearnerLevel(user.id).then((resolved) => resolved.level)
+          : Promise.resolve(null));
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });

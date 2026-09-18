@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { countWordsDueForReview } from '@/lib/word-bank/server-queries'
 import { SENTENCE_EXERCISE_IDS } from '@/lib/review/failed-sentences-core'
+import { countUnredeemedFailures, type AnswerTimestampRow } from '@/lib/review/failed-count-core'
 import type { ReviewQueueCounts } from '@/lib/review/types'
 
 const LESSON_REVIEW_INTERVAL_DAYS = 7
@@ -123,41 +124,51 @@ export async function countDueEssentialWordsServer(userId: string): Promise<numb
 
 export async function countUnredeemedFailedSentencesServer(userId: string): Promise<number> {
   const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase
-    .from('answer_history')
-    .select('content_id, answered_at')
-    .eq('user_id', userId)
-    .eq('is_correct', false)
-    .in('exercise_type_id', [...SENTENCE_EXERCISE_IDS])
-    .order('answered_at', { ascending: false })
-    .limit(100)
-
-  if (error || !data || data.length === 0) return 0
-
-  const latestFailAt = new Map<string, string>()
-  for (const row of data) {
-    if (!row.content_id || !row.answered_at) continue
-    if (!latestFailAt.has(row.content_id)) latestFailAt.set(row.content_id, row.answered_at)
+  const pageSize = 1_000
+  const failures: AnswerTimestampRow[] = []
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from('answer_history')
+      .select('content_id, answered_at')
+      .eq('user_id', userId)
+      .eq('is_correct', false)
+      .in('exercise_type_id', [...SENTENCE_EXERCISE_IDS])
+      .order('answered_at', { ascending: false })
+      .range(from, from + pageSize - 1)
+    if (error) {
+      console.error('[review] failed-sentence pagination failed', error)
+      return 0
+    }
+    failures.push(...(data ?? []))
+    if (!data || data.length < pageSize) break
   }
 
-  const contentIds = [...latestFailAt.keys()]
+  const contentIds = [...new Set(failures.flatMap((row) => row.content_id ? [row.content_id] : []))]
   if (contentIds.length === 0) return 0
 
-  const { data: successes } = await supabase
-    .from('answer_history')
-    .select('content_id, answered_at')
-    .eq('user_id', userId)
-    .eq('is_correct', true)
-    .in('content_id', contentIds)
-
-  const redeemedIds = new Set<string>()
-  for (const row of successes ?? []) {
-    if (!row.content_id || !row.answered_at) continue
-    const failedAt = latestFailAt.get(row.content_id)
-    if (failedAt && row.answered_at > failedAt) redeemedIds.add(row.content_id)
+  const successes: AnswerTimestampRow[] = []
+  const batchSize = 100
+  for (let start = 0; start < contentIds.length; start += batchSize) {
+    const batch = contentIds.slice(start, start + batchSize)
+    for (let from = 0; ; from += pageSize) {
+      const { data, error } = await supabase
+        .from('answer_history')
+        .select('content_id, answered_at')
+        .eq('user_id', userId)
+        .eq('is_correct', true)
+        .in('content_id', batch)
+        .order('answered_at', { ascending: false })
+        .range(from, from + pageSize - 1)
+      if (error) {
+        console.error('[review] failed-sentence redemption query failed', error)
+        return 0
+      }
+      successes.push(...(data ?? []))
+      if (!data || data.length < pageSize) break
+    }
   }
 
-  return contentIds.filter((id) => !redeemedIds.has(id)).length
+  return countUnredeemedFailures(failures, successes)
 }
 
 export async function fetchExactReviewQueueCounts(

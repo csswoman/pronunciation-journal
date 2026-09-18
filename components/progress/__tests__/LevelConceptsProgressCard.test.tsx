@@ -14,6 +14,7 @@ describe('LevelConceptsProgressCard', () => {
   it('shows route completion separately without claiming retention', () => {
     render(
       <LevelConceptsProgressCard
+        initialLevel="a1"
         topics={[]}
         completedRoute={[
           {
@@ -47,6 +48,7 @@ describe('LevelConceptsProgressCard', () => {
   it('reflects SRS learning topics appropriately', () => {
     render(
       <LevelConceptsProgressCard
+        initialLevel="a1"
         topics={[
           {
             topic: 'grammar:present simple',

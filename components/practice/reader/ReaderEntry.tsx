@@ -34,7 +34,7 @@ import { ReaderCatalog } from './ReaderCatalog'
 import { ReaderExercise } from './ReaderExercise'
 import { CreateStoryModal } from './CreateStoryModal'
 
-async function resolveTargets(offset = 0): Promise<ReaderTarget[] | null> {
+async function resolveTargets(level: CEFRLevel, offset = 0): Promise<ReaderTarget[] | null> {
   const words = await getMyWords()
   const rows: ReaderTargetRow[] = words.map((w) => ({
     srsId: `wb:${w.id}`,
@@ -45,7 +45,11 @@ async function resolveTargets(offset = 0): Promise<ReaderTarget[] | null> {
   let targets = pickTargets(rows)
   if (!targets) {
     const dayOfYear = Math.floor(Date.now() / 86_400_000)
-    const fallbackWords = await fetchEssentialWordsForDay(dayOfYear + offset, 5)
+    const fallbackWords = await fetchEssentialWordsForDay(
+      dayOfYear + offset,
+      5,
+      level === 'C2' ? 'C1' : level,
+    )
     if (fallbackWords.length >= 3) {
       targets = fallbackWords.map((w) => ({
         srsId: w.id,
@@ -76,10 +80,10 @@ export function ReaderEntry() {
   const loadCatalog = useCallback(async () => {
     if (!user) return
     try {
-      const [items, level, targets] = await Promise.all([
+      const level = await resolveReaderLevel(user.id, 'A1')
+      const [items, targets] = await Promise.all([
         getUserReaderPassages(user.id),
-        resolveReaderLevel(user.id, 'B1'),
-        resolveTargets(0),
+        resolveTargets(level, 0),
       ])
       setPassages(items)
       setUserLevel(level)
@@ -109,7 +113,7 @@ export function ReaderEntry() {
       setIsGenerating(true)
 
       try {
-        const targets = await resolveTargets(passages.length)
+        const targets = await resolveTargets(level, passages.length)
         if (!targets || targets.length === 0) {
           throw new Error('No hay suficientes palabras para generar la lectura')
         }

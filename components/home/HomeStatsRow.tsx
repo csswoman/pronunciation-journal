@@ -12,20 +12,12 @@ import dynamic from "next/dynamic";
 import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
 import HomeImmersionCard from "@/components/home/HomeImmersionCard";
 
-// Dexie exists here only to fill in one counter, so it loads after first paint
-// instead of blocking hydration. Until it arrives the card renders the same
-// body at count 0, so the swap costs no layout shift.
+// Catalog + Dexie progress load after first paint instead of blocking hydration.
+// Until they arrive, the card renders the same geometry with an unknown count.
 const HomeEssentialWordsCount = dynamic(
   () => import("@/components/home/HomeEssentialWordsCount"),
   { ssr: false },
 );
-
-const CEFR_WORD_TOTALS: Record<string, number> = {
-  A1: 740,
-  A2: 1150,
-  B1: 1800,
-  B2: 2400,
-};
 
 interface HomeStatsRowProps {
   profileLevel?: string | null;
@@ -37,10 +29,9 @@ export default function HomeStatsRow({
   showImmersionCard = true,
 }: HomeStatsRowProps) {
   const levelKey = (profileLevel || "A1").toUpperCase();
-  const totalLevelWords = CEFR_WORD_TOTALS[levelKey] ?? 740;
 
-  // Defer the Dexie chunk past the first frame; the placeholder below is
-  // byte-identical in geometry, so nothing moves when the real count lands.
+  // Defer the progress reader past the first frame; the placeholder below
+  // preserves the card geometry without inventing a zero.
   const [showLiveCount, setShowLiveCount] = useState(false);
   useEffect(() => {
     setShowLiveCount(true);
@@ -57,13 +48,12 @@ export default function HomeStatsRow({
       >
         {showLiveCount ? (
           <HomeEssentialWordsCount
-            totalLevelWords={totalLevelWords}
             levelKey={levelKey}
           />
         ) : (
           <HomeEssentialWordsBody
-            learnedCount={0}
-            totalLevelWords={totalLevelWords}
+            learnedCount={null}
+            totalLevelWords={null}
             levelKey={levelKey}
           />
         )}

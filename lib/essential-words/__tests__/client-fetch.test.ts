@@ -118,7 +118,7 @@ describe('fetchEssentialWordsForDay', () => {
 
   it('returns WordBankEntry array', async () => {
     const { fetchEssentialWordsForDay } = await import('../client-fetch')
-    const result = await fetchEssentialWordsForDay(0, 3)
+    const result = await fetchEssentialWordsForDay(0, 3, 'A1')
     expect(result).toHaveLength(3)
     expect(result[0]).toHaveProperty('text')
     expect(result[0]).toHaveProperty('example')
@@ -126,13 +126,26 @@ describe('fetchEssentialWordsForDay', () => {
 
   it('filters out words shorter than 4 chars', async () => {
     const { fetchEssentialWordsForDay } = await import('../client-fetch')
-    const result = await fetchEssentialWordsForDay(0, 5)
+    const result = await fetchEssentialWordsForDay(0, 5, 'A1')
     expect(result.every(e => e.text.length >= 4)).toBe(true)
+  })
+
+  it('never leaks words from another CEFR level', async () => {
+    const mixed = [
+      makeWord({ word: 'basic', cefr_level: 'A1' }),
+      makeWord({ word: 'advanced', cefr_level: 'B2' }),
+    ]
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => mixed })
+      .mockResolvedValue({ ok: false, json: async () => [] })
+    const { fetchEssentialWordsForDay } = await import('../client-fetch')
+    const result = await fetchEssentialWordsForDay(0, 3, 'B2')
+    expect(result.map((entry) => entry.text)).toEqual(['advanced'])
   })
 
   it('fetches chunk 001 first', async () => {
     const { fetchEssentialWordsForDay } = await import('../client-fetch')
-    await fetchEssentialWordsForDay(0, 3)
+    await fetchEssentialWordsForDay(0, 3, 'A1')
     expect(global.fetch).toHaveBeenCalledWith('/essential-words/words-001.json')
   })
 })

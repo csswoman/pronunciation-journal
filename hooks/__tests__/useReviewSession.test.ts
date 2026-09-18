@@ -12,6 +12,10 @@ vi.mock('@/components/auth/AuthProvider', () => ({
   useAuth: () => ({ user: currentMockUser }),
 }))
 
+vi.mock('@/lib/learner-level/client-queries', () => ({
+  getEffectiveLearnerLevel: vi.fn(async () => ({ level: 'B1', source: 'placement' })),
+}))
+
 const mockBuildReviewPlan = vi.fn()
 vi.mock('@/lib/practice/daily-plan', () => ({
   buildReviewPlan: (...args: unknown[]) => mockBuildReviewPlan(...args),
@@ -87,6 +91,7 @@ describe('useReviewSession', () => {
       dueLessons: summary.dueLessons,
       essentialWordsDue: summary.essentialWordsDue,
       includeChunkReview: true,
+      learnerLevel: 'B1',
     }))
   })
 

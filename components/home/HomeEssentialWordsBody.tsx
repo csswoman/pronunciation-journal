@@ -10,8 +10,8 @@ import { ArrowRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 interface HomeEssentialWordsBodyProps {
-  learnedCount: number;
-  totalLevelWords: number;
+  learnedCount: number | null;
+  totalLevelWords: number | null;
   levelKey: string;
 }
 
@@ -32,11 +32,12 @@ export default function HomeEssentialWordsBody({
   totalLevelWords,
   levelKey,
 }: HomeEssentialWordsBodyProps) {
-  const remainingCount = Math.max(0, totalLevelWords - learnedCount);
-  const progressRatio = totalLevelWords > 0 ? learnedCount / totalLevelWords : 0;
+  const hasCount = learnedCount !== null && totalLevelWords !== null;
+  const remainingCount = hasCount ? Math.max(0, totalLevelWords - learnedCount) : 0;
+  const progressRatio = hasCount && totalLevelWords > 0 ? learnedCount / totalLevelWords : 0;
   const progressPct = Math.min(100, Math.round(progressRatio * 100));
   const activeSegments =
-    learnedCount > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 1;
+    hasCount && learnedCount > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 0;
 
   return (
     <div className="flex h-full flex-col justify-between gap-4 overflow-hidden">
@@ -53,12 +54,18 @@ export default function HomeEssentialWordsBody({
       {/* Métrica principal y CTA */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-baseline gap-1.5">
-          <span className="font-heading text-4xl font-extrabold text-ink tabular-nums leading-none sm:text-5xl">
-            {learnedCount}
-          </span>
-          <span className="font-sans text-body-sm font-medium text-ink-secondary">
-            /{totalLevelWords} palabras
-          </span>
+          {hasCount ? (
+            <>
+              <span className="font-heading text-4xl font-extrabold text-ink tabular-nums leading-none sm:text-5xl">
+                {learnedCount}
+              </span>
+              <span className="font-sans text-body-sm font-medium text-ink-secondary">
+                /{totalLevelWords} palabras
+              </span>
+            </>
+          ) : (
+            <span className="font-sans text-body-sm font-medium text-ink-secondary">Calculando progreso…</span>
+          )}
         </div>
 
         <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-all group-hover:bg-ink-secondary shrink-0">
@@ -70,10 +77,12 @@ export default function HomeEssentialWordsBody({
       {/* Barra de progreso segmentada */}
       <div
         role="progressbar"
-        aria-valuenow={progressPct}
+        aria-valuenow={hasCount ? progressPct : undefined}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`Progreso de mazo nivel ${levelKey}: ${progressPct}%`}
+        aria-label={hasCount
+          ? `Progreso de mazo nivel ${levelKey}: ${progressPct}%`
+          : `Calculando progreso de mazo nivel ${levelKey}`}
         className="flex w-full items-center gap-1.5 py-1"
       >
         {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => (

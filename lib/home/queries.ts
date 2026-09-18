@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CefrLevel } from "@/lib/essential-words/types";
+import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { normalizeIpaKey, rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
 import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
@@ -309,13 +310,6 @@ export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[
 
 /** CEFR level from `user_profiles` for home focus hints (server-only). */
 export async function getUserProfileLevel(userId: string): Promise<CefrLevel | null> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("user_profiles")
-    .select("cefr_level")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (error) throw error;
-  return (data?.cefr_level as CefrLevel | null) ?? null;
+  const { level } = await getEffectiveLearnerLevelServer(userId);
+  return level === "C2" ? "C1" : level;
 }

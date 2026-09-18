@@ -48,11 +48,15 @@ export async function persistAssessmentOutcome(
   evaluatedLevel?: CefrLevelId,
 ): Promise<void> {
   const supabase = await createSupabaseServerClient();
+  const levelUpdatedAt = new Date().toISOString();
+  const profileUpdate = {
+    id: userId,
+    cefr_level: result.assignedLevel,
+    cefr_level_source: mode,
+    cefr_level_updated_at: levelUpdatedAt,
+  };
   const [profileResult] = await Promise.all([
-    supabase.from("user_profiles").upsert({
-      id: userId,
-      cefr_level: result.assignedLevel,
-    }, { onConflict: "id" }),
+    supabase.from("user_profiles").upsert(profileUpdate, { onConflict: "id" }),
     saveAssessmentResult(userId, mode, result, evaluatedLevel),
   ]);
 
@@ -61,7 +65,7 @@ export async function persistAssessmentOutcome(
     if (admin) {
       const { error: adminError } = await admin
         .from("user_profiles")
-        .upsert({ id: userId, cefr_level: result.assignedLevel }, { onConflict: "id" });
+        .upsert(profileUpdate, { onConflict: "id" });
       if (adminError) throw profileResult.error;
     } else {
       throw profileResult.error;

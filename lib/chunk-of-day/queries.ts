@@ -181,7 +181,7 @@ export async function loadDailyChunkIntroStep(
 /** Offers one authored listen → recall → production route per difficulty signal. */
 export async function loadPronunciationDifficultyChunkStep(
   userId: string,
-  learnerLevel: CEFRLevel = 'C1',
+  learnerLevel: CEFRLevel,
   sounds?: readonly Sound[],
 ): Promise<DailyStep | null> {
   const signals = await db.essentialWordLearnerSignals.where('userId').equals(userId).toArray()
@@ -257,7 +257,7 @@ export async function loadChunkPracticeSession(userId: string, level: CEFRLevel,
 export async function loadDueChunkReviewStep(
   userId: string,
   context: Extract<PracticeContext, 'daily' | 'review'>,
-  learnerLevel: CEFRLevel = 'C1',
+  learnerLevel: CEFRLevel,
 ): Promise<DailyStep | null> {
   const now = new Date().toISOString()
   const rows = await db.srsData

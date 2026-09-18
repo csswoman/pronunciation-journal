@@ -14,7 +14,7 @@
 import { useState } from "react";
 import { Check, Timer, BookOpen } from "@/components/icons";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
-import type { CoursePathTrackId } from "@/lib/courses/types";
+import type { CefrLevelId, CoursePathTrackId } from "@/lib/courses/types";
 import { cn } from "@/lib/cn";
 import type { CompletedLessonRow, TopicProgressRow } from "@/lib/progress/domain-queries";
 import { buildTopicStatusByDeck } from "@/lib/progress/topic-progress";
@@ -29,6 +29,7 @@ export type { LevelConceptItem, StatusTab };
 interface Props {
   topics: TopicProgressRow[];
   completedRoute?: CompletedLessonRow[];
+  initialLevel: CefrLevelId;
 }
 
 const TAB_CONFIG = [
@@ -37,8 +38,8 @@ const TAB_CONFIG = [
   { id: "pending" as const, label: "Por iniciar", icon: BookOpen, activeClass: "border-primary text-primary" },
 ];
 
-export function LevelConceptsProgressCard({ topics, completedRoute }: Props) {
-  const [selectedLevel, setSelectedLevel] = useState<CoursePathTrackId>("a1");
+export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel }: Props) {
+  const [selectedLevel, setSelectedLevel] = useState<CoursePathTrackId>(initialLevel);
   const [activeTab, setActiveTab] = useState<StatusTab>("mastered");
 
   const levelData =

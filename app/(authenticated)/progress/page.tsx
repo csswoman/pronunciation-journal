@@ -104,6 +104,7 @@ export default async function ProgressPage() {
         <LevelConceptsProgressCard
           topics={data.domains.topics}
           completedRoute={data.domains.completedRoute}
+          initialLevel={data.learnerLevel.level.toLowerCase() as import("@/lib/courses/types").CefrLevelId}
         />
 
         {/* Producción oral demostrada */}

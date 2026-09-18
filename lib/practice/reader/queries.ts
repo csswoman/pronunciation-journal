@@ -1,5 +1,5 @@
 import { normalizeCEFR, type CEFRLevel } from '@/lib/exercises/cefr'
-import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 import { targetHash } from './target-hash'
 import type { ReaderTarget } from './select-targets'
 import type { ReaderPassage, ReaderQuestion } from './types'
@@ -18,7 +18,8 @@ interface GenerateReaderResponse {
  * generator so lookup and persistence stay in sync.
  */
 export async function resolveReaderLevel(userId: string, defaultLevel: CEFRLevel = 'B1'): Promise<CEFRLevel> {
-  return normalizeCEFR((await readStoredCefrLevel(userId)) ?? defaultLevel)
+  const resolved = await getEffectiveLearnerLevel(userId).catch(() => null)
+  return normalizeCEFR(resolved?.level ?? defaultLevel)
 }
 
 /**

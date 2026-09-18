@@ -16,7 +16,7 @@ import { fetchAggregatedReviewSummaryClient } from '@/lib/review/client-queries'
 import { countDueChunks } from '@/lib/chunk-of-day/queries'
 import { getEssentialWordsLevelCount } from '@/lib/essential-words/level-count'
 import { readGuestStudyLevel } from '@/lib/preferences/guest-study-level'
-import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
@@ -109,10 +109,10 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
       const studyLevel = isAnonymousUser(user)
         ? readGuestStudyLevel()
         : user
-          ? await readStoredCefrLevel(user.id)
+          ? (await getEffectiveLearnerLevel(user.id)).level
           : null
       const vocabCount = await getEssentialWordsLevelCount(
-        studyLevel ? [studyLevel] : null,
+        studyLevel ? [studyLevel === 'C2' ? 'C1' : studyLevel] : null,
         user?.id,
       )
       if (!cancelled) {

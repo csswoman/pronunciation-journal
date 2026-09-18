@@ -8,6 +8,7 @@ import type { DailyStep } from '@/lib/practice/types'
 import type { FailedSentenceItem } from '@/lib/review/types'
 import type { ReviewHubSummary } from '@/lib/review/types'
 import { composeReviewSessionPlan } from '@/lib/review/session-plan'
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 
 export type ReviewSessionPhase =
   | { phase: 'idle' }
@@ -25,6 +26,7 @@ export function useReviewSession() {
     if (!user) return
     setState({ phase: 'loading' })
     try {
+      const learnerLevel = await getEffectiveLearnerLevel(user.id)
       const [plan, topicResponse] = await Promise.all([
         buildReviewPlan(user.id, {
           failedItems: summary.failedSentences,
@@ -34,6 +36,7 @@ export function useReviewSession() {
           dueLessons: summary.dueLessons,
           essentialWordsDue: summary.essentialWordsDue,
           includeChunkReview: true,
+          learnerLevel: learnerLevel.level,
         }),
         fetch('/api/review/topics', {
           method: 'POST',

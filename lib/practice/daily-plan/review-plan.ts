@@ -21,6 +21,7 @@ import {
   buildWordReviewStep,
 } from './step-builders'
 import { loadDueChunkReviewStep } from '@/lib/chunk-of-day/queries'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 
 export type ReviewPlan = {
   steps: DailyStep[]
@@ -42,6 +43,7 @@ export interface BuildReviewPlanOptions {
   dueLessons?: LessonReviewItem[]
   essentialWordsDue?: EssentialWordReviewItem[]
   includeChunkReview?: boolean
+  learnerLevel: CEFRLevel
 }
 
 function buildLinkSteps(
@@ -89,19 +91,19 @@ function buildLinkSteps(
 
 export async function buildReviewPlan(
   userId: string,
-  options?: BuildReviewPlanOptions,
+  options: BuildReviewPlanOptions,
 ): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
   const [failedItems, weakWords, reviewWords, dueSounds, wordIndex, chunkStep] = await Promise.all([
-    options?.failedItems ?? fetchRecentFailedSentences(userId, 5),
-    options?.weakWords ?? fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
-    options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
-    options?.dueSounds ?? fetchDueSounds(userId),
+    options.failedItems ?? fetchRecentFailedSentences(userId, 5),
+    options.weakWords ?? fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
+    options.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
+    options.dueSounds ?? fetchDueSounds(userId),
     getWordCategoryIndex(),
-    options?.includeChunkReview === false
+    options.includeChunkReview === false
       ? Promise.resolve(null)
-      : loadDueChunkReviewStep(userId, reviewContext).catch(() => null),
+      : loadDueChunkReviewStep(userId, reviewContext, options.learnerLevel).catch(() => null),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
@@ -119,7 +121,7 @@ export async function buildReviewPlan(
   const contextStep = buildContextPracticeStep(mergedWords, reviewContext)
   if (contextStep) steps.push(contextStep)
 
-  const soundIds = options?.dueSoundIds ?? dueSounds.map((sound) => sound.id)
+  const soundIds = options.dueSoundIds ?? dueSounds.map((sound) => sound.id)
   const reviewDatasets = await getSessionDatasets(soundIds)
 
   for (const soundId of soundIds) {
@@ -140,7 +142,7 @@ export async function buildReviewPlan(
     if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }
 
-  steps.push(...buildLinkSteps(options?.essentialWordsDue ?? [], options?.dueLessons ?? []))
+  steps.push(...buildLinkSteps(options.essentialWordsDue ?? [], options.dueLessons ?? []))
 
   // Deduplicar ejercicios cruzados a lo largo de todos los pasos
   const seenContent = new Set<string>()
