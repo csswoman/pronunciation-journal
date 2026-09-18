@@ -577,8 +577,8 @@
 }
 
 .pastel-card[data-tone="accent"] {
-  --card: oklch(calc(0.88 + var(--l-shift-base)) calc(0.07 * var(--chroma-boost-base)) var(--hue-base));
-  --card-deep: oklch(calc(0.78 + var(--l-shift-base)) calc(0.10 * var(--chroma-boost-base)) var(--hue-base));
+  --card: color-mix(in oklch, var(--accent) 22%, var(--paper));
+  --card-deep: color-mix(in oklch, var(--accent) 35%, var(--paper));
 }
 
 .pastel-card[data-tone="butter"] {

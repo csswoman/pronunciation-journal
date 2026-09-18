@@ -111,7 +111,7 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <PastelCard tone="accent" className="flex flex-col gap-5 p-5 sm:p-6 motion-reduce:shadow-none">
+      <PastelCard tone="sky" className="flex flex-col gap-5 p-5 sm:p-6 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex flex-col gap-4 min-w-0 flex-1">
@@ -165,7 +165,7 @@ export default function HomeHeroCard({
                 {isReadingConcept ? (
                   <Link
                     href={currentStep.href!}
-                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-cta-bg py-3.5 px-7 text-center font-label text-body font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
@@ -174,7 +174,7 @@ export default function HomeHeroCard({
                   <button
                     type="button"
                     onClick={handleStartCurrentStep}
-                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-cta-bg py-3.5 px-7 text-center font-label text-body font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
