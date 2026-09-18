@@ -5,7 +5,7 @@
 //   <CardHeader>
 //     <TitleAndLevelPicker />
 //     <ProgressMetricsSummary routeCompleted={completedRouteCount} mastered={masteredCount} inReview={inReviewCount} />
-//     <ProgressBar value={routePct} />
+//     <ProgressBar value={masteredPct} />
 //   </CardHeader>
 //   <TabNavigation tabs={["mastered", "review", "pending"]} />
 //   <LevelConceptsList items={currentList} activeTab={activeTab} selectedLevel={selectedLevel} />
@@ -76,11 +76,11 @@ export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel
   const completedRouteCount = allLessons.filter((l) => l.isRouteCompleted).length;
 
   const total = allLessons.length;
-  const routePct = total > 0 ? Math.round((completedRouteCount / total) * 100) : 0;
+  const masteredPct = total > 0 ? Math.round((mastered.length / total) * 100) : 0;
   const currentList = activeTab === "mastered" ? mastered : activeTab === "review" ? inReview : pending;
 
   const metricIndicators = [
-    { count: completedRouteCount, label: "ruta completada", dotClass: "bg-success" },
+    { count: completedRouteCount, label: "lecciones recorridas", dotClass: "bg-success" },
     { count: mastered.length, label: "retenidos", dotClass: "bg-primary" },
     { count: inReview.length, label: "en aprendizaje", dotClass: "bg-warning" },
   ];
@@ -89,7 +89,7 @@ export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel
     <section className="flex flex-col gap-3.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:p-5">
       <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="font-kicker font-semibold text-fg-subtle">Dominio por temas</span>
+          <span className="font-kicker font-semibold text-fg-subtle">Cobertura y retención</span>
           <h2 className="text-h4 font-semibold text-fg">Gramática y Conceptos</h2>
         </div>
 
@@ -118,20 +118,20 @@ export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel
         <div className="flex flex-wrap items-center justify-between gap-1 text-body-sm text-fg-muted">
           <span>{levelData.title}</span>
           <span className="font-semibold text-fg">
-            {completedRouteCount}/{total} completadas ({routePct}%)
+            {mastered.length}/{total} retenidos ({masteredPct}%)
           </span>
         </div>
         <div
           role="progressbar"
-          aria-valuenow={routePct}
+          aria-valuenow={masteredPct}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`Porcentaje de lecciones completadas en nivel ${levelData.title}`}
+          aria-label={`Porcentaje de conceptos retenidos en nivel ${levelData.title}`}
           className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken"
         >
           <span
             className="block h-full w-full rounded-full bg-success origin-left transition-transform duration-300 ease-out"
-            style={{ transform: `scaleX(${Math.min(1, Math.max(0, routePct / 100))})` }}
+            style={{ transform: `scaleX(${Math.min(1, Math.max(0, masteredPct / 100))})` }}
           />
         </div>
         <div className="flex flex-wrap items-center gap-3 text-caption text-fg-muted pt-0.5">

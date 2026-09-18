@@ -12,25 +12,31 @@ describe('LevelConceptsProgressCard', () => {
     .find((l) => l.slug === 'a1-presente-simple')!
 
   it('shows route completion separately without claiming retention', () => {
+    const firstTenLessons = firstLevel.units
+      .flatMap((u) => u.lessons)
+      .filter((l): l is typeof l & { slug: string } => Boolean(l.slug))
+      .slice(0, 10)
+    const totalLessons = firstLevel.units.flatMap((unit) => unit.lessons).filter(
+      (lesson): lesson is typeof lesson & { slug: string } => Boolean(lesson.slug),
+    ).length
+
     render(
       <LevelConceptsProgressCard
         initialLevel="a1"
         topics={[]}
-        completedRoute={[
-          {
-            courseSlug: 'a1',
-            lessonSlug: firstLesson.slug!,
-            completedAt: new Date().toISOString(),
-          },
-        ]}
+        completedRoute={firstTenLessons.map((l) => ({
+          courseSlug: 'a1',
+          lessonSlug: l.slug,
+          completedAt: new Date().toISOString(),
+        }))}
       />,
     )
 
-    // Should show completed route in summary
-    const matches = screen.getAllByText((_, el) => el?.textContent?.includes('1/37 completadas') ?? false)
-    expect(matches.length).toBeGreaterThan(0)
-    // The summary reports route coverage independently from retention.
-    expect(screen.getAllByText(/ruta completada/i).length).toBe(1)
+    // Main metric remains retention even when ten route lessons were completed.
+    expect(screen.getByText(`0/${totalLessons} retenidos (0%)`)).toBeInTheDocument()
+    expect(screen.getByText('lecciones recorridas').parentElement).toHaveTextContent(
+      '10 lecciones recorridas',
+    )
 
     // Completion alone must not place the lesson under Retenidos.
     expect(screen.queryByText(firstLesson.title)).toBeNull()
@@ -42,7 +48,6 @@ describe('LevelConceptsProgressCard', () => {
     // Without topic_srs evidence it remains pending verification, while retaining
     // the independent route-completed badge.
     expect(screen.getByText(firstLesson.title)).toBeInTheDocument()
-    expect(screen.getAllByText(/ruta completada/i).length).toBe(2)
   })
 
   it('reflects SRS learning topics appropriately', () => {

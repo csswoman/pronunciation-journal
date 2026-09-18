@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { classifyTopicProgress } from './topic-progress'
 
 export interface TopicProgressRow {
   topic: string
@@ -76,17 +77,7 @@ export async function getProgressDomainData(userId: string): Promise<ProgressDom
     completedAt: row.completed_at,
   }))
 
-  const masteredTopics = topics.filter(
-    (t) =>
-      t.srsStatus === 'mastered' ||
-      ((t.repetitions ?? 0) >= 3 && (t.intervalDays ?? 0) >= 7),
-  )
-
-  const learningTopics = topics.filter(
-    (t) =>
-      !masteredTopics.includes(t) &&
-      (t.srsStatus === 'learning' || t.srsStatus === 'review' || (t.repetitions ?? 0) > 0),
-  )
+  const { learningTopics, masteredTopics } = classifyTopicProgress(topics)
 
   const immersionRows = immersionResult.data ?? []
   const watched = immersionRows.filter((row) => row.watched).length

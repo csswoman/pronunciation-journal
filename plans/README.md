@@ -14,7 +14,7 @@ fila al terminar.
 | Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
 |---|---|---|---|---|---|
 | 005 | Eliminar datos inventados en Home, Diario, Daily, landing y enlaces rotos | P1 | M | — | TODO |
-| 006 | Progreso no presenta cobertura ni volumen como dominio | P1 | S | — | TODO |
+| 006 | Progreso no presenta cobertura ni volumen como dominio | P1 | S | — | DONE |
 | 007 | El nivel y su procedencia solo los escribe el servidor tras re-puntuar | P1 | M | — | TODO |
 | 008 | Todas las pantallas leen el nivel por `resolveLearnerLevel`; estado "desconocido" | P1 | M | — (mejor tras 007) | TODO |
 | 009 | Retirar el estimador de nivel por precisión de pronunciación y la semilla B1 | P2 | S | — (mejor tras 008) | TODO |

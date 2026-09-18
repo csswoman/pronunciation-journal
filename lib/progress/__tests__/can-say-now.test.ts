@@ -72,4 +72,34 @@ describe('buildCanSayNow', () => {
     expect(result.mastered).toEqual([])
     expect(result.inProgress).toEqual([])
   })
+
+  it('classifies two correct attempts 5 minutes apart in inProgress', () => {
+    const t1 = new Date(NOW - 5 * 60 * 1000).toISOString()
+    const t2 = new Date(NOW).toISOString()
+    const result = buildCanSayNow(
+      {
+        attempts: [
+          { constraintId: 'past_simple_narrative', isCorrect: true, answeredAt: t1 },
+          { constraintId: 'past_simple_narrative', isCorrect: true, answeredAt: t2 },
+        ],
+      },
+      NOW,
+    )
+    expect(result.inProgress.map((m) => m.constraintId)).toContain('past_simple_narrative')
+    expect(result.mastered.map((m) => m.constraintId)).not.toContain('past_simple_narrative')
+  })
+
+  it('classifies two correct attempts 2 days apart in mastered', () => {
+    const result = buildCanSayNow(
+      {
+        attempts: [
+          attempt('past_simple_narrative', true, 2),
+          attempt('past_simple_narrative', true, 0),
+        ],
+      },
+      NOW,
+    )
+    expect(result.mastered.map((m) => m.constraintId)).toContain('past_simple_narrative')
+    expect(result.inProgress.map((m) => m.constraintId)).not.toContain('past_simple_narrative')
+  })
 })
