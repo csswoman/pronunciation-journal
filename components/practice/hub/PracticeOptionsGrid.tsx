@@ -25,7 +25,7 @@ import ReferenceSection from './ReferenceSection'
 interface PracticeOptionsGridProps {
   activeFilter?: PracticeFilter
   recommendation: RecommendedResult
-  dueCount: number | null
+  essentialWordsDueCount: number | null
   vocabLearnedCount: number | null
   vocabTotalCount: number | null
   arc?: SessionArc
@@ -37,7 +37,7 @@ interface PracticeOptionsGridProps {
 export default function PracticeOptionsGrid({
   activeFilter = 'all',
   recommendation,
-  dueCount,
+  essentialWordsDueCount,
   vocabLearnedCount,
   vocabTotalCount,
   arc,
@@ -59,7 +59,7 @@ export default function PracticeOptionsGrid({
         <div className="flex flex-col gap-5">
           {showVocab && (
             <VocabularyReviewCard
-              dueCount={dueCount}
+              dueCount={essentialWordsDueCount}
               learnedCount={vocabLearnedCount}
               totalCount={vocabTotalCount}
             />
@@ -90,4 +90,3 @@ export default function PracticeOptionsGrid({
     </div>
   )
 }
-

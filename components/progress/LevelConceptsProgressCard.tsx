@@ -12,13 +12,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useLiveQuery } from "dexie-react-hooks";
 import { Check, Timer, BookOpen, ChevronRight } from "@/components/icons";
-import { useAuth } from "@/components/auth/AuthProvider";
-import { db } from "@/lib/db";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import { cn } from "@/lib/cn";
+import type { TopicProgressRow } from "@/lib/progress/domain-queries";
+import { buildTopicStatusByDeck } from "@/lib/progress/topic-progress";
 
 type StatusTab = "mastered" | "review" | "pending";
 
@@ -30,41 +29,21 @@ interface LessonItem {
   status: "mastered" | "review" | "pending";
 }
 
-export function LevelConceptsProgressCard() {
-  let user: { id: string } | null = null;
-  try {
-    user = useAuth()?.user ?? null;
-  } catch {
-    user = null;
-  }
+export function LevelConceptsProgressCard({ topics }: { topics: TopicProgressRow[] }) {
   const [selectedLevel, setSelectedLevel] = useState<CoursePathTrackId>("a1");
   const [activeTab, setActiveTab] = useState<StatusTab>("mastered");
-
-  const learningState = useLiveQuery(
-    async () => {
-      if (!user) return null;
-      const rec = await db.learningState.get(user.id);
-      return rec?.state ?? null;
-    },
-    [user?.id],
-    null,
-  );
 
   const levelData =
     COURSE_PATH_CURRICULUM.levels.find((l) => l.id === selectedLevel) ??
     COURSE_PATH_CURRICULUM.levels[0];
 
-  const concepts = learningState?.theory?.concepts ?? [];
-  const conceptMap = new Map(concepts.map((c) => [c.lessonSlug, c]));
+  const topicStatusByDeck = buildTopicStatusByDeck(topics);
 
   const allLessons: LessonItem[] = levelData.units.flatMap((unit) =>
     unit.lessons
       .filter((lesson): lesson is typeof lesson & { slug: string } => !!lesson.slug)
       .map((lesson) => {
-        const signal = conceptMap.get(lesson.slug);
-        let status: "mastered" | "review" | "pending" = "pending";
-        if (signal?.status === "mastered") status = "mastered";
-        else if (signal?.status === "review") status = "review";
+        const status = topicStatusByDeck.get(lesson.slug) ?? "pending";
         return {
           id: lesson.id,
           title: lesson.title,

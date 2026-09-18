@@ -34,7 +34,7 @@ function isSameAction(a: ReviewSessionAction | null, b: ReviewSessionAction): bo
 }
 
 export function ReviewSessionRunner({ action, summary, onExit }: Props) {
-  const { state, sessionKey, startReview, startFailedItem, startTopic, advanceStep, exitSession } =
+  const { userId, state, sessionKey, startReview, startFailedItem, startTopic, advanceStep, exitSession } =
     useReviewSession()
   const startedActionRef = useRef<ReviewSessionAction | null>(null)
 
@@ -97,6 +97,7 @@ export function ReviewSessionRunner({ action, summary, onExit }: Props) {
   return (
     <ReviewSessionLauncher
       state={state}
+      userId={userId}
       sessionKey={sessionKey}
       onStepComplete={advanceStep}
       onExit={handleExit}

@@ -42,8 +42,7 @@ export interface FluencyScoreInput {
   wordsByStatus: FluencyWordBankStatus
   contrastCorrect: number
   contrastTotal: number
-  core1000Practiced: number
-  lessonsCompleted: number
+  essentialWordsStudied: number
 }
 
 /** Target answers in 30 days for frequency component to reach 100. */
@@ -84,16 +83,16 @@ function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, { correct:
 }
 
 function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
-  const { wordsByStatus, contrastCorrect, contrastTotal, core1000Practiced } = input
+  const { wordsByStatus, contrastCorrect, contrastTotal, essentialWordsStudied } = input
   const wordTotal = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
 
   switch (skill) {
     case 'vocabulary': {
-      if (wordTotal === 0 && core1000Practiced === 0) return 0
+      if (wordTotal === 0 && essentialWordsStudied === 0) return 0
       const bankRetention = wordTotal > 0
         ? Math.round((wordsByStatus.mastered / wordTotal) * 100)
         : 0
-      const coreBonus = Math.min(100, core1000Practiced * 2)
+      const coreBonus = Math.min(100, essentialWordsStudied * 2)
       return Math.max(bankRetention, coreBonus)
     }
     case 'pronunciation':

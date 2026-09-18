@@ -39,7 +39,7 @@ describe('PracticeOptionsGrid', () => {
     const { container } = render(
       <PracticeOptionsGrid
         recommendation={recommendation}
-        dueCount={15}
+        essentialWordsDueCount={15}
         vocabLearnedCount={612}
         vocabTotalCount={1000}
         arc={undefined}

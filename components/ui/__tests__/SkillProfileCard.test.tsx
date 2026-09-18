@@ -14,8 +14,7 @@ describe("SkillProfileCard", () => {
         data={{
           wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
           weakestPhonemes: [],
-          core1000Practiced: 0,
-          lessonsCompleted: 0,
+          essentialWords: { studied: 0, due: 0 },
         }}
         coach={{
           weakTopics: [],
@@ -37,8 +36,7 @@ describe("SkillProfileCard", () => {
         data={{
           wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
           weakestPhonemes: [],
-          core1000Practiced: 0,
-          lessonsCompleted: 0,
+          essentialWords: { studied: 0, due: 0 },
         }}
         coach={{
           weakTopics: [],

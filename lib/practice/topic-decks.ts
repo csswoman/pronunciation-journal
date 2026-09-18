@@ -129,6 +129,37 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'dependent preposition', deckSlug: 'b1-prepositional-verbs-dependent' },
 ]
 
+/** Exact mapping for every canonical topic accepted by topic_srs. */
+const CANONICAL_TOPIC_DECKS: Record<string, string> = {
+  'grammar:subject omission': 'a1-pronombres-sujeto',
+  'grammar:articles': 'a1-articulos-basicos',
+  'grammar:present simple': 'a1-presente-simple',
+  'grammar:past simple': 'a2-experiencias-pasadas-planes',
+  'grammar:present continuous': 'a1-presente-continuo',
+  'grammar:word order': 'a1-construccion-oraciones',
+  'grammar:past continuous': 'a2-pasado-continuo',
+  'grammar:present perfect': 'a2-presente-perfecto-experiencias',
+  'grammar:past perfect': 'b1-pasado-perfecto',
+  'grammar:future simple': 'a2-will-going-to',
+  'grammar:going to': 'a2-will-going-to',
+  'grammar:conditionals': 'b1-condicional-cero',
+  'grammar:prepositions': 'a1-preposiciones-lugar-tiempo',
+  'grammar:modal verbs': 'b1-modales-deduccion',
+  'grammar:phrasal verbs': 'b1-phrasal-verbs-tipos',
+  'grammar:comparatives': 'a2-comparatives-superlatives',
+  'grammar:superlatives': 'a2-comparatives-superlatives',
+  'grammar:questions': 'a1-preguntas-do-does',
+  'grammar:question words': 'a1-palabras-interrogativas',
+  'grammar:pronouns': 'a1-pronombres-sujeto',
+  'grammar:quantifiers': 'a2-cuantificadores-esenciales',
+  'grammar:adjectives': 'a2-orden-adjetivos',
+  'grammar:adverbs': 'a1-adverbios-frecuencia',
+  'grammar:passive': 'b1-voz-pasiva-consejos',
+  'grammar:reported speech': 'b1-estilo-indirecto',
+  'grammar:relative clauses': 'b1-pronombres-clausulas-relativas',
+  'vocab:vocabulary': 'a1-vocabulario-expresiones-basicas',
+}
+
 /**
  * Weakness thresholds.
  *
@@ -142,6 +173,8 @@ export const WEAK_TOPIC_MIN_SAMPLES = 2
 
 export function deckSlugForTopic(topic: string): string | null {
   const normalized = topic.toLowerCase()
+  const canonical = CANONICAL_TOPIC_DECKS[normalized]
+  if (canonical) return canonical
   return TOPIC_DECK_MAP.find((entry) => normalized.includes(entry.keyword))?.deckSlug ?? null
 }
 

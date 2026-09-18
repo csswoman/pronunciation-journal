@@ -22,7 +22,7 @@ vi.mock('@/lib/practice/last-practice-mode', () => ({
 }))
 
 vi.mock('@/lib/essential-words/level-count', () => ({
-  getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000 })),
+  getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000, due: 2 })),
 }))
 
 vi.mock('@/lib/essential-words/target-level', () => ({
@@ -53,6 +53,7 @@ describe('PracticeHubClient', () => {
     })
 
     expect(screen.getByText('Palabras esenciales')).toBeInTheDocument()
+    expect(screen.getByText('2 pendientes')).toBeInTheDocument()
     expect(screen.getByText('TUS MAZOS')).toBeInTheDocument()
     expect(screen.getByText(/Empezar repaso/)).toBeInTheDocument()
     expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()

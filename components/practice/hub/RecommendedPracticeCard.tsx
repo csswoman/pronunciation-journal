@@ -123,8 +123,8 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
         </Link>
         {reason === 'due-review' && (
           <Link
-            href="/practice/essential-words"
-            onClick={() => void setLastPracticeMode('essential-words')}
+            href="/practice/review"
+            onClick={() => void setLastPracticeMode('review')}
             className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink bg-transparent px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors duration-150 hover:bg-ink/10 select-none"
           >
             <span>Ver cuáles</span>

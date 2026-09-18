@@ -104,6 +104,7 @@ export function useReviewSession() {
   }, [])
 
   return {
+    userId: user?.id ?? null,
     state,
     sessionKey,
     startReview,

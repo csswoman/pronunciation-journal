@@ -29,7 +29,7 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
     resolveRecommendedMode({ fromDaily: false, arc: undefined, lastModeId: null }),
   )
   const [arc, setArc] = useState<import('@/lib/practice/types').SessionArc | undefined>(undefined)
-  const [dueCount, setDueCount] = useState<number | null>(null)
+  const [essentialWordsDueCount, setEssentialWordsDueCount] = useState<number | null>(null)
   const [vocabLearnedCount, setVocabLearnedCount] = useState<number | null>(null)
   const [vocabTotalCount, setVocabTotalCount] = useState<number | null>(null)
   const [immersionWatchedCount, setImmersionWatchedCount] = useState<number | null>(null)
@@ -64,7 +64,6 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
       })
       if (!cancelled) {
         setArc(arc)
-        setDueCount(nextDueCount)
         setActivityUnavailable(lastModeResult.failed || dueResult.failed)
         setRecommendation(result)
       }
@@ -82,6 +81,7 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
       if (!cancelled) {
         setVocabLearnedCount(vocabCount?.learned ?? null)
         setVocabTotalCount(vocabCount?.total ?? null)
+        setEssentialWordsDueCount(vocabCount?.due ?? null)
       }
 
       // Immersion "watched" count is Dexie-backed (offline-first); the total
@@ -117,7 +117,7 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
         <PracticeOptionsGrid
           activeFilter={activeFilter}
           recommendation={recommendation}
-          dueCount={dueCount}
+          essentialWordsDueCount={essentialWordsDueCount}
           vocabLearnedCount={vocabLearnedCount}
           vocabTotalCount={vocabTotalCount}
           arc={arc}

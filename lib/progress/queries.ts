@@ -26,6 +26,9 @@ import { projectProgress, type ProgressFact, type ProgressProjections } from './
 import type { EvidenceAttribution } from '@/lib/practice/attribution'
 import type { CanSayAttempt } from './can-say-now'
 import { getSpeechLatencyData, type SpeechLatencyData } from './speech-latency-queries'
+import { summarizeEssentialWordsProgress } from '@/lib/essential-words/progress-summary'
+import type { ItemSchedule } from '@/lib/essential-words/verification/types'
+import { getProgressDomainData, type ProgressDomainData } from './domain-queries'
 
 export type { SpeechLatencyData } from './speech-latency-queries'
 
@@ -74,10 +77,10 @@ export interface WeakestPhoneme {
 export interface SkillProfileData {
   wordsByStatus: WordBankByStatus
   weakestPhonemes: WeakestPhoneme[]
-  /** Unique Core 1000 words answered correctly at least once. */
-  core1000Practiced: number
-  /** Total course/mini-lesson completions recorded. */
-  lessonsCompleted: number
+  essentialWords: {
+    studied: number
+    due: number
+  }
 }
 
 export interface CoachWeakTopic {
@@ -110,6 +113,7 @@ export interface ProgressPageData {
   projections: ProgressProjections
   canSayAttempts: CanSayAttempt[]
   speechLatency: SpeechLatencyData
+  domains: ProgressDomainData
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -245,7 +249,7 @@ export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
 export async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const supabase = await createSupabaseServerClient()
 
-  const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
+  const [wordBankResult, phonemeResult, essentialWordsResult] = await Promise.all([
     supabase
       .from('word_bank')
       .select('srs_status, familiarity_status, mastery_provenance, objective_evidence_count')
@@ -261,15 +265,8 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
       .limit(SKILL_PROFILE_CONTRAST_LIMIT),
 
     supabase
-      .from('answer_history')
-      .select('content_id', { count: 'exact', head: false })
-      .eq('user_id', userId)
-      .eq('context', 'essential-words')
-      .eq('is_correct', true),
-
-    supabase
-      .from('lesson_completions')
-      .select('id', { count: 'exact', head: true })
+      .from('learning_items')
+      .select('word_id, schedule, suspended')
       .eq('user_id', userId)
   ])
 
@@ -309,14 +306,21 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
     totalAttempts: r.totalAttempts,
   }))
 
-  // Unique Core 1000 words practiced correctly (dedupe by content_id)
-  const core1000Ids = new Set((core1000Result.data ?? []).map((r) => r.content_id))
+  const essentialWords = summarizeEssentialWordsProgress(
+    (essentialWordsResult.data ?? []).map((row) => ({
+      wordId: row.word_id,
+      schedule: row.schedule as unknown as ItemSchedule,
+      suspended: row.suspended,
+    })),
+  )
 
   return {
     wordsByStatus,
     weakestPhonemes: phonemes,
-    core1000Practiced: core1000Ids.size,
-    lessonsCompleted: lessonsResult.count ?? 0,
+    essentialWords: {
+      studied: essentialWords.studiedWords,
+      due: essentialWords.dueWords,
+    },
   }
 }
 
@@ -401,8 +405,7 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
     wordsByStatus: skillProfile.wordsByStatus,
     contrastCorrect,
     contrastTotal,
-    core1000Practiced: skillProfile.core1000Practiced,
-    lessonsCompleted: skillProfile.lessonsCompleted,
+    essentialWordsStudied: skillProfile.essentialWords.studied,
   }
 
   const scores = computeFluencyScores({ ...base, answers: mapRows(rows) })
@@ -419,8 +422,7 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
     wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
     contrastCorrect: 0,
     contrastTotal: 0,
-    core1000Practiced: 0,
-    lessonsCompleted: 0,
+    essentialWordsStudied: 0,
   }
   const comparisonLabel = fluencyComparisonLabel(
     computeFluencyScores({ ...windowBase, answers: mapRows(current7) }),
@@ -573,7 +575,7 @@ export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttemp
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency, domains] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -585,6 +587,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getProgressProjections(userId),
       getCanSayNowAttempts(userId),
       getSpeechLatencyData(userId),
+      getProgressDomainData(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
@@ -601,6 +604,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     projections,
     canSayAttempts,
     speechLatency,
+    domains,
   }
 }
 

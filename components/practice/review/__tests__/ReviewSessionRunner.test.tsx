@@ -24,6 +24,7 @@ let mockCurrentState: ReviewSessionPhase = { phase: 'idle' }
 vi.mock('@/hooks/useReviewSession', () => ({
   useReviewSession: () => ({
     state: mockCurrentState,
+    userId: 'test-user',
     sessionKey: 1,
     startReview: mockStartReview,
     startFailedItem: mockStartFailedItem,
