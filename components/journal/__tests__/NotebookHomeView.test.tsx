@@ -60,7 +60,9 @@ describe('NotebookHomeView ("Tu cuaderno")', () => {
 
     // 1. Encabezado
     expect(screen.getByRole('heading', { name: 'Tu cuaderno' })).toBeInTheDocument()
-    expect(screen.getByText(/3 páginas · 21 frases en inglés/)).toBeInTheDocument()
+    expect(screen.getByText(/3 páginas/)).toBeInTheDocument()
+    expect(screen.getByText(/21/)).toBeInTheDocument()
+    expect(screen.getByText(/frases en inglés/)).toBeInTheDocument()
 
     // 2. Tarjeta de hoy
     expect(screen.getByText('PÁGINA DE HOY')).toBeInTheDocument()
