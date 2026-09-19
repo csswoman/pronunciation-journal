@@ -21,6 +21,7 @@ import { useEffect, useMemo, useState } from "react";
 import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgress";
 import CoursePathC1Electives from "@/components/courses/CoursePathC1Electives";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
+import CoursePathLessonRow from "@/components/courses/CoursePathLessonRow";
 import CoursePathMainCard from "@/components/courses/CoursePathMainCard";
 import CoursePathOptionalCard from "@/components/courses/CoursePathOptionalCard";
 import CoursePathSearch from "@/components/courses/CoursePathSearch";
@@ -40,6 +41,8 @@ interface CoursePathProgressClientProps {
   level: CoursePathLevel;
   compactHead?: boolean;
   hideAside?: boolean;
+  hideHero?: boolean;
+  hideSearch?: boolean;
   electiveTracks?: CoursePathLevel[];
   topicImmersionMap?: Record<string, ImmersionLesson>;
 }
@@ -61,6 +64,8 @@ export default function CoursePathProgressClient({
   level,
   compactHead,
   hideAside,
+  hideHero,
+  hideSearch,
   electiveTracks,
   topicImmersionMap,
 }: CoursePathProgressClientProps) {
@@ -93,7 +98,6 @@ export default function CoursePathProgressClient({
 
   useEffect(() => {
     let cancelled = false;
-
     setCompletedIds(null);
     setLoadError(false);
 
@@ -220,7 +224,7 @@ export default function CoursePathProgressClient({
           </div>
         )}
 
-        {(() => {
+        {!hideHero && (() => {
           const hasProgress = completedIds.size > 0;
           const targetLesson = hasProgress && currentLesson ? currentLesson : firstLesson;
           const targetUnit = derived.units.find((u) =>
@@ -245,43 +249,62 @@ export default function CoursePathProgressClient({
           );
         })()}
 
-        <div className="course-path__main-search mb-3 sm:mb-4">
-          <CoursePathSearch />
-        </div>
+        {!hideSearch && (
+          <div className="course-path__main-search mb-3 sm:mb-4">
+            <CoursePathSearch />
+          </div>
+        )}
 
         <div className="course-path__units" aria-label="Unidades del curso">
-          {derived.units.map((unit) => {
-            const isOptional = Boolean(unit.unit.isOptionalSection);
-            const optId = `${unit.unit.id}-optional-card`;
+          {level.isElective ? (
+            <div className="course-path__spine-body p-1 sm:p-2">
+              {derived.units
+                .flatMap((u) => u.lessons)
+                .map((lesson, index, all) => (
+                  <CoursePathLessonRow
+                    key={lesson.id}
+                    lesson={lesson}
+                    levelId={level.id}
+                    isDownloaded={downloadedIds.has(`${level.id}:${lesson.number}`)}
+                    immersionLesson={lesson.slug ? topicImmersionMap?.[lesson.slug] : undefined}
+                    isLast={index === all.length - 1}
+                  />
+                ))}
+            </div>
+          ) : (
+            derived.units.map((unit) => {
+              const isOptional = Boolean(unit.unit.isOptionalSection);
+              const optId = `${unit.unit.id}-optional-card`;
 
-            if (isOptional) {
+              if (isOptional) {
+                return (
+                  <CoursePathOptionalCard
+                    key={unit.unit.id}
+                    unit={unit}
+                    levelId={level.id}
+                    isOpen={expandedGroups[optId] ?? false}
+                    onToggle={handleGroupToggle}
+                    downloadedIds={downloadedIds}
+                    topicImmersionMap={topicImmersionMap}
+                  />
+                );
+              }
+
               return (
-                <CoursePathOptionalCard
+                <CoursePathMainCard
                   key={unit.unit.id}
                   unit={unit}
                   levelId={level.id}
-                  isOpen={expandedGroups[optId] ?? false}
+                  firstLessonId={firstLesson?.id}
+                  completedIdsCount={completedIds.size}
+                  expandedGroups={expandedGroups}
                   onToggle={handleGroupToggle}
                   downloadedIds={downloadedIds}
                   topicImmersionMap={topicImmersionMap}
                 />
               );
-            }
-
-            return (
-              <CoursePathMainCard
-                key={unit.unit.id}
-                unit={unit}
-                levelId={level.id}
-                firstLessonId={firstLesson?.id}
-                completedIdsCount={completedIds.size}
-                expandedGroups={expandedGroups}
-                onToggle={handleGroupToggle}
-                downloadedIds={downloadedIds}
-                topicImmersionMap={topicImmersionMap}
-              />
-            );
-          })}
+            })
+          )}
         </div>
 
         {level.realLife && level.realLife.length > 0 && (
@@ -299,13 +322,12 @@ export default function CoursePathProgressClient({
       </div>
 
       {showAside && (
-        <div className="course-path__client-aside hidden lg:block">
+        <div className="course-path__client-aside mt-8 lg:mt-0">
           <CoursePathAsideProgress
             level={level}
             selectedLevelId={level.id}
             completedCount={completedLessonCount}
             totalCount={totalLessonCount}
-            completedIds={completedIds}
           />
         </div>
       )}
