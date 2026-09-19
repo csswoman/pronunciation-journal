@@ -10,6 +10,7 @@ import { getHomeMiniLessons } from "@/lib/content/lessons";
 import { getDailyStreak } from "@/lib/daily/streak";
 import {
   getTodayPracticeGoal,
+  getHomeImmersionSummary,
   getUserProfileLevel,
   getWeakestPhonemeForHome,
 } from "@/lib/home/queries";
@@ -21,7 +22,7 @@ import {
 } from "@/lib/home/pronunciation-diagnostic-state";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
-import type { DailyGoalProgress, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
+import type { DailyGoalProgress, HomeImmersionSummary, WeakestPhonemeHome, ReviewQueueSummary } from "@/lib/home/constants";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import { resolvePrimaryAction } from "@/lib/home/primary-action";
 
@@ -87,6 +88,7 @@ async function HomePageContent() {
     profileLevel,
     placementState,
     pronunciationDiagnosticState,
+    immersionSummary,
   ] = await Promise.all([
     settled(getReviewQueueSummary(userId), emptyQueue, "review queue"),
     lessonsPromise,
@@ -122,6 +124,11 @@ async function HomePageContent() {
         : Promise.resolve(hiddenPronunciationPrompt),
       hiddenPronunciationPrompt,
       "pronunciation diagnostic state",
+    ),
+    settled(
+      userId ? getHomeImmersionSummary(userId) : Promise.resolve(null),
+      null as HomeImmersionSummary | null,
+      "immersion summary",
     ),
   ]);
 
@@ -167,6 +174,7 @@ async function HomePageContent() {
       pronunciationDiagnosticState={pronunciationDiagnosticState}
       primaryAction={primaryAction}
       previewWords={queue.preview}
+      immersionSummary={immersionSummary}
     />
   );
 }

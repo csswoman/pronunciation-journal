@@ -105,12 +105,12 @@ export default function CourseCard({ data }: Props) {
         </div>
       </div>
 
-      {/* Marca de agua grande de A1 (letra normal suave) */}
+      {/* Marca de agua del nivel real de la ruta. */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute right-3 bottom-0.5 font-heading text-6xl sm:text-7xl font-black text-ink/10 select-none transition-colors group-hover:text-ink/15"
       >
-        A1
+        {data.levelId.toUpperCase()}
       </span>
     </Link>
   )

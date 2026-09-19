@@ -8,7 +8,7 @@ import type { PracticeHubData } from '@/lib/practice/hub-data-types'
 const hubData: PracticeHubData = {
   recommended: { dueCount: 15, criticalCount: 4, retentionPct: 88, previewWords: ['receipt'] },
   decks: { deckCount: 4, cardCount: 112, topDeckNames: ['Viajes', 'Trabajo'] },
-  reader: { recentWordCount: 25 },
+  reader: { recentWordCount: 25, recentWords: ['receipt', 'return'] },
   immersion: { totalCount: 12 },
   course: {
     levelId: 'b1',
@@ -17,6 +17,7 @@ const hubData: PracticeHubData = {
     currentUnitTitle: 'Unidad 4',
     currentLessonTitle: 'Pasado simple',
   },
+  sound: { ipa: '/æ/', accuracy: 72, totalAttempts: 18 },
 }
 
 vi.mock('@/lib/db', () => ({

@@ -70,7 +70,7 @@ export default function PracticeOptionsGrid({
 
         {/* Column 2: Sonido & Mazos & Inmersión */}
         <div className="flex flex-col gap-5">
-          {showSound && <SoundQuizWidget />}
+          {showSound && <SoundQuizWidget sound={hubData.sound} />}
           {showVocab && <DecksCard data={hubData.decks} />}
           {showSound && (
             <ImmersionCard
@@ -82,7 +82,7 @@ export default function PracticeOptionsGrid({
 
         {/* Column 3: Lectura & Ruta & Diccionario */}
         <div className="flex flex-col gap-5">
-          {showVocab && <ReaderCard recentWordCount={hubData.reader.recentWordCount} />}
+          {showVocab && <ReaderCard {...hubData.reader} />}
           {showSpeech && <CourseCard data={hubData.course} />}
           {showVocab && <ReferenceSection />}
         </div>

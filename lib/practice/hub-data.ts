@@ -27,6 +27,7 @@ import {
   type PracticeHubDecksData,
   type PracticeHubCourseData,
   type PracticeHubRecommendedData,
+  type PracticeHubSoundData,
 } from './hub-data-types'
 
 export {
@@ -35,6 +36,7 @@ export {
   type PracticeHubDecksData,
   type PracticeHubCourseData,
   type PracticeHubRecommendedData,
+  type PracticeHubSoundData,
 } from './hub-data-types'
 
 const LEVEL_LABELS: Record<CefrLevelId, string> = {
@@ -54,16 +56,17 @@ export async function getPracticeHubData(userId: string | null): Promise<Practic
 
   const supabase = await createSupabaseServerClient()
 
-  const [recommended, decks, reader, immersion, course, reviewSummary] = await Promise.all([
+  const [recommended, decks, reader, immersion, course, sound, reviewSummary] = await Promise.all([
     loadRecommended(supabase, userId).catch(() => empty.recommended),
     loadDecks(supabase, userId).catch(() => empty.decks),
     loadReader(supabase, userId).catch(() => empty.reader),
     loadImmersion(supabase).catch(() => empty.immersion),
     loadCourse(supabase, userId).catch(() => null),
+    loadSound(supabase, userId).catch(() => null),
     getAggregatedReviewSummary(userId).catch(() => null),
   ])
 
-  return { recommended, decks, reader, immersion, course, reviewSummary }
+  return { recommended, decks, reader, immersion, course, sound, reviewSummary }
 }
 
 type ServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>
@@ -156,13 +159,56 @@ async function loadDecks(
 async function loadReader(
   supabase: ServerClient,
   userId: string,
-): Promise<{ recentWordCount: number }> {
-  const { count } = await supabase
-    .from('word_bank')
-    .select('id', { count: 'exact', head: true })
+): Promise<{ recentWordCount: number; recentWords: string[] }> {
+  const [countResult, wordsResult] = await Promise.all([
+    supabase
+      .from('word_bank')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('status', 'ready'),
+    supabase
+      .from('word_bank')
+      .select('text')
+      .eq('user_id', userId)
+      .eq('status', 'ready')
+      .order('created_at', { ascending: false })
+      .limit(3),
+  ])
+  const recentWords = ((wordsResult.data ?? []) as { text: string }[])
+    .map((row) => row.text)
+    .filter(Boolean)
+  return { recentWordCount: countResult.count ?? 0, recentWords }
+}
+
+async function loadSound(
+  supabase: ServerClient,
+  userId: string,
+): Promise<PracticeHubSoundData | null> {
+  const { data, error } = await supabase
+    .from('user_contrast_progress')
+    .select('contrast_id, total_attempts, correct_answers')
     .eq('user_id', userId)
-    .eq('status', 'ready')
-  return { recentWordCount: count ?? 0 }
+    .gt('total_attempts', 0)
+
+  if (error) throw error
+
+  const rows = (data ?? []) as {
+    contrast_id: string
+    total_attempts: number
+    correct_answers: number
+  }[]
+  const weakest = [...rows].sort((a, b) =>
+    (a.correct_answers / a.total_attempts) - (b.correct_answers / b.total_attempts),
+  )[0]
+  if (!weakest) return null
+
+  const ipa = weakest.contrast_id.split('|')[0]?.trim()
+  if (!ipa) return null
+  return {
+    ipa,
+    accuracy: Math.round((weakest.correct_answers / weakest.total_attempts) * 100),
+    totalAttempts: weakest.total_attempts,
+  }
 }
 
 async function loadImmersion(supabase: ServerClient): Promise<{ totalCount: number }> {

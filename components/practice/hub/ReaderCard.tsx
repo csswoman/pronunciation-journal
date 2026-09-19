@@ -4,7 +4,7 @@
 // <ReaderCard> — "Lectura en contexto" dark card
 //   Header: LECTURA kicker + "{recentWordCount} palabras tuyas" badge
 //   Title: Lectura en contexto
-//   Sample sentence with highlighted target words (receipt in butter, refused in coral)
+//   Recent words from the learner's word bank
 //   Actions: "Leer más" blue pill button + subtext
 
 import Link from 'next/link'
@@ -13,9 +13,10 @@ import { ArrowRight } from '@/components/icons'
 
 interface Props {
   recentWordCount: number
+  recentWords: string[]
 }
 
-export default function ReaderCard({ recentWordCount }: Props) {
+export default function ReaderCard({ recentWordCount, recentWords }: Props) {
   const wordsText = recentWordCount > 0 ? `${recentWordCount} palabras tuyas` : 'Sin palabras guardadas'
 
   return (
@@ -34,18 +35,19 @@ export default function ReaderCard({ recentWordCount }: Props) {
           Lectura en contexto
         </h2>
 
-        {/* Oración de ejemplo con palabras clave destacadas e inclinadas */}
-        <div className="rounded-2xl border border-border-subtle bg-surface-sunken p-4.5 font-sans text-body-sm sm:text-body-md font-medium text-fg leading-relaxed">
-          She kept the{' '}
-          <span className="inline-block -rotate-1 transform rounded-md bg-butter px-1.5 py-0.5 font-heading text-body-sm font-extrabold text-ink shadow-2xs">
-            receipt
-          </span>{' '}
-          in her coat pocket, just in case the shop{' '}
-          <span className="inline-block rotate-1 transform rounded-md bg-coral px-1.5 py-0.5 font-heading text-body-sm font-extrabold text-ink shadow-2xs">
-            refused
-          </span>{' '}
-          to take it back.
-        </div>
+        {recentWords.length > 0 ? (
+          <div className="flex flex-wrap gap-2 rounded-2xl border border-border-subtle bg-surface-sunken p-3.5" aria-label="Palabras recientes para practicar">
+            {recentWords.map((word) => (
+              <span key={word} className="rounded-md bg-surface-raised px-2 py-1 font-heading text-body-sm font-bold text-fg">
+                {word}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-border-subtle bg-surface-sunken p-3.5 font-sans text-body-sm text-fg-muted">
+            Guarda algunas palabras para crear lecturas en torno a tu vocabulario.
+          </p>
+        )}
       </div>
 
       <div className="flex items-center pt-1 z-10">

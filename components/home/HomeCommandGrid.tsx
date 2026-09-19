@@ -25,7 +25,7 @@ import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson, DailyStep, useDailyPlan } from "@/hooks/useDailyPlan";
-import type { WeakestPhonemeHome } from "@/lib/home/constants";
+import type { HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { PrimaryAction } from "@/lib/home/primary-action";
@@ -56,6 +56,7 @@ export interface HomeCommandGridProps {
   soundsDueCount?: number;
   streak?: number | null;
   previewWords?: Array<{ text: string }>;
+  immersionSummary?: HomeImmersionSummary | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
   onStartStep?: (step: DailyStep) => void;
@@ -74,6 +75,7 @@ export default function HomeCommandGrid({
   pronunciationDiagnosticState,
   onStartStep,
   planState,
+  immersionSummary = null,
 }: HomeCommandGridProps) {
   const { user } = useAuth();
   const isGuest = isAnonymousUser(user);
@@ -213,6 +215,7 @@ export default function HomeCommandGrid({
           <HomeStatsRow
             profileLevel={profileLevel}
             showImmersionCard={showImmersionCard}
+            immersionSummary={immersionSummary}
           />
 
           {/* Acordeón de Ejercicios extra: desbloqueado al completar el plan */}

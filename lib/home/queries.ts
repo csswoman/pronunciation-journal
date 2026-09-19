@@ -3,7 +3,11 @@ import type { CefrLevel } from "@/lib/essential-words/types";
 import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { normalizeIpaKey, rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
-import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
+import {
+  STREAK_TIMEZONE,
+  computeStreakFromTimestamps,
+  toLocalDateString,
+} from "@/lib/daily/streak-core";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import {
   DEFAULT_DAILY_GOAL_MINUTES,
@@ -12,6 +16,7 @@ import {
   type DailyPlanPreview,
   type DailyStepPreview,
   type SoundDueHome,
+  type HomeImmersionSummary,
 } from "@/lib/home/constants";
 
 /**
@@ -28,6 +33,7 @@ export {
   type DailyPlanPreview,
   type DailyStepPreview,
   type SoundDueHome,
+  type HomeImmersionSummary,
 };
 
 /** Fallback per answer when `time_ms` is missing (~90 s). */
@@ -312,4 +318,30 @@ export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[
 export async function getUserProfileLevel(userId: string): Promise<CefrLevel | null> {
   const { level } = await getEffectiveLearnerLevelServer(userId);
   return level === "C2" ? "C1" : level;
+}
+
+/** Real external-immersion streak and time, scoped to the signed-in learner. */
+export async function getHomeImmersionSummary(userId: string): Promise<HomeImmersionSummary> {
+  const supabase = await createSupabaseServerClient();
+  const nowIso = new Date().toISOString();
+  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
+  const { data, error } = await supabase
+    .from("activity_sessions")
+    .select("completed_at, duration_ms")
+    .eq("user_id", userId)
+    .eq("source", "immersion")
+    .not("completed_at", "is", null);
+
+  if (error) throw error;
+
+  const rows = (data ?? []) as { completed_at: string; duration_ms: number | null }[];
+  const weekMinutes = Math.round(rows.reduce((total, row) => {
+    const localDay = toLocalDateString(row.completed_at, STREAK_TIMEZONE);
+    return localDay >= weekStart ? total + (row.duration_ms ?? 0) : total;
+  }, 0) / 60_000);
+
+  return {
+    currentStreak: computeStreakFromTimestamps(rows.map((row) => row.completed_at), nowIso).currentStreak,
+    weekMinutes,
+  };
 }

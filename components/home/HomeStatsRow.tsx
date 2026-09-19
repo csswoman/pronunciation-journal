@@ -11,6 +11,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
 import HomeImmersionCard from "@/components/home/HomeImmersionCard";
+import type { HomeImmersionSummary } from "@/lib/home/constants";
 
 // Catalog + Dexie progress load after first paint instead of blocking hydration.
 // Until they arrive, the card renders the same geometry with an unknown count.
@@ -22,11 +23,13 @@ const HomeEssentialWordsCount = dynamic(
 interface HomeStatsRowProps {
   profileLevel?: string | null;
   showImmersionCard?: boolean;
+  immersionSummary?: HomeImmersionSummary | null;
 }
 
 export default function HomeStatsRow({
   profileLevel = "A1",
   showImmersionCard = true,
+  immersionSummary = null,
 }: HomeStatsRowProps) {
   const levelKey = (profileLevel || "A1").toUpperCase();
 
@@ -60,7 +63,7 @@ export default function HomeStatsRow({
       </Link>
 
       {/* Registro de inmersión: ¿Viste algo en inglés hoy? */}
-      {showImmersionCard ? <HomeImmersionCard /> : null}
+      {showImmersionCard ? <HomeImmersionCard summary={immersionSummary} /> : null}
     </div>
   );
 }

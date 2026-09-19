@@ -2,18 +2,17 @@
 
 // Planned structure:
 // <SoundQuizWidget> — "Laboratorio de sonidos" bento card in PastelCard tone="butter"
-//   Header: SONIDOS kicker + top-right phoneme circle badge (/i:/)
+//   Header: SONIDOS kicker + top-right learner focus badge
 //   Title: Laboratorio de sonidos
-//   Micro Quiz player: /i:/ sheep vs /ɪ/ ship with play & refresh controls
+//   Learner evidence panel, or an honest empty state
 //   Exercise Chips (Outline, single row): Pares mínimos, Entonación, Habla conectada
 //   Decorative SVG wavy lines (bottom-right)
 // </SoundQuizWidget>
 
-import { useState } from 'react'
 import Link from 'next/link'
 import PastelCard from '@/components/layout/PastelCard'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
-import SoundMicroQuiz, { type SoundCategory } from './SoundMicroQuiz'
+import type { PracticeHubSoundData } from '@/lib/practice/hub-data-types'
 
 const EXERCISES = [
   { href: '/practice/minimal-pairs', mode: 'minimal-pairs', title: 'Pares mínimos' },
@@ -21,9 +20,11 @@ const EXERCISES = [
   { href: '/practice/connected-speech', mode: 'connected-speech', title: 'Habla conectada' },
 ] as const
 
-export default function SoundQuizWidget() {
-  const [selectedCategory] = useState<SoundCategory>('all')
-  const [resetKey] = useState(0)
+interface Props {
+  sound: PracticeHubSoundData | null
+}
+
+export default function SoundQuizWidget({ sound }: Props) {
 
   return (
     <PastelCard
@@ -47,15 +48,22 @@ export default function SoundQuizWidget() {
             </Link>
           </div>
 
-          {/* Badge de fonema destacado arriba a la derecha */}
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink/10 font-phoneme text-lg sm:text-xl font-bold text-ink select-none shadow-2xs">
-            /i:/
+          <div className="flex h-14 min-w-14 shrink-0 items-center justify-center rounded-full bg-ink/10 px-2 font-phoneme text-lg sm:text-xl font-bold text-ink select-none shadow-2xs">
+            {sound?.ipa ?? '—'}
           </div>
         </div>
       </div>
 
-      <div className="z-10">
-        <SoundMicroQuiz category={selectedCategory} resetKey={resetKey} />
+      <div className="z-10 rounded-2xl border border-ink/10 bg-paper/85 p-3.5">
+        {sound ? (
+          <p className="font-sans text-body-sm text-ink-secondary">
+            Tu foco actual: <span className="font-phoneme font-bold text-ink">{sound.ipa}</span> · {sound.accuracy}% de acierto en {sound.totalAttempts} {sound.totalAttempts === 1 ? 'intento' : 'intentos'}.
+          </p>
+        ) : (
+          <p className="font-sans text-body-sm text-ink-secondary">
+            Aún no hay intentos evaluados. Explora un sonido para empezar a crear tu historial.
+          </p>
+        )}
       </div>
 
       {/* Chips de enlaces de ejercicios en una sola línea centrados y sin fondo (outline) */}
@@ -89,4 +97,3 @@ export default function SoundQuizWidget() {
     </PastelCard>
   )
 }
-

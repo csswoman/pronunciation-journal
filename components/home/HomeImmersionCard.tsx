@@ -13,6 +13,7 @@ import { Video, Headphones, BookOpen, Check, ArrowRight } from "@/components/ico
 import { useAuthOptional } from "@/components/auth/AuthProvider";
 import { logExternalImmersion } from "@/lib/immersion/external-log";
 import type { ImmersionMediaType } from "@/lib/progress/activity-types";
+import type { HomeImmersionSummary } from "@/lib/home/constants";
 import { cn } from "@/lib/cn";
 
 interface CategoryOption {
@@ -43,12 +44,17 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
   },
 ];
 
-export default function HomeImmersionCard() {
+interface Props {
+  summary?: HomeImmersionSummary | null;
+}
+
+export default function HomeImmersionCard({ summary = null }: Props) {
   const auth = useAuthOptional();
   const userId = auth?.user?.id ?? null;
   const [selectedCategory, setSelectedCategory] = useState<ImmersionMediaType>("video");
   const [minutes, setMinutes] = useState(30);
   const [registered, setRegistered] = useState(false);
+  const [registeredXp, setRegisteredXp] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegister = async () => {
@@ -58,10 +64,11 @@ export default function HomeImmersionCard() {
     }
     if (userId) {
       try {
-        await logExternalImmersion(userId, {
+        const result = await logExternalImmersion(userId, {
           type: selectedCategory,
           minutes,
         });
+        setRegisteredXp(result.xpEarned);
       } catch (err) {
         console.error("[HomeImmersionCard] Error logging immersion:", err);
       }
@@ -76,7 +83,7 @@ export default function HomeImmersionCard() {
       aria-label="Registrar inmersión"
       className="flex h-full flex-col justify-between gap-4 rounded-3xl border border-border-default bg-surface-raised p-4 sm:p-5 shadow-sm"
     >
-      {/* Encabezado: Título + Subtítulo + Badge +2 XP */}
+      {/* Encabezado: título y actividad persistida del usuario. */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-0.5 min-w-0">
           <h2 className="font-heading text-h4 font-bold text-fg leading-tight">
@@ -88,9 +95,11 @@ export default function HomeImmersionCard() {
           </p>
         </div>
 
-        <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
-          +2 XP
-        </span>
+        {registeredXp !== null ? (
+          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
+            +{registeredXp} XP
+          </span>
+        ) : null}
       </div>
 
       {/* Chips con circulo de icono pastel */}
@@ -171,7 +180,7 @@ export default function HomeImmersionCard() {
 
       {/* Fila inferior: Racha de 7 días y Botón de acción */}
       <div className="flex items-center justify-between gap-3 pt-1">
-        {/* Tracker de racha con círculos desmarcados en borde punteado */}
+        {/* Solo muestra historial realmente registrado. */}
         <div className="flex items-center gap-2 select-none">
           <div className="flex items-center gap-1.5">
             {Array.from({ length: 7 }).map((_, idx) => (
@@ -179,7 +188,7 @@ export default function HomeImmersionCard() {
                 key={idx}
                 className={cn(
                   "size-3 rounded-full transition-colors",
-                  idx < 4
+                  idx < Math.min(summary?.currentStreak ?? 0, 7)
                     ? "bg-mint"
                     : "border border-dashed border-fg-muted/40 bg-transparent",
                 )}
@@ -187,7 +196,11 @@ export default function HomeImmersionCard() {
             ))}
           </div>
           <span className="font-sans text-caption font-medium text-fg-muted">
-            4 días
+            {summary && summary.currentStreak > 0
+              ? `${summary.currentStreak} ${summary.currentStreak === 1 ? "día" : "días"} · ${summary.weekMinutes} min esta semana`
+              : summary && summary.weekMinutes > 0
+                ? `${summary.weekMinutes} min esta semana`
+                : "Sin inmersión registrada"}
           </span>
         </div>
 

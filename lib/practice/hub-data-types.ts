@@ -35,22 +35,31 @@ export interface PracticeHubCourseData {
   currentLessonTitle: string | null
 }
 
+/** A pronunciation focus backed by the learner's evaluated contrast attempts. */
+export interface PracticeHubSoundData {
+  ipa: string
+  accuracy: number
+  totalAttempts: number
+}
+
 export interface PracticeHubData {
   reviewSummary?: AggregatedReviewSummary | null
   recommended: PracticeHubRecommendedData
   decks: PracticeHubDecksData
-  reader: { recentWordCount: number }
+  reader: { recentWordCount: number; recentWords: string[] }
   immersion: { totalCount: number }
   course: PracticeHubCourseData | null
+  sound: PracticeHubSoundData | null
 }
 
 const EMPTY: PracticeHubData = {
   reviewSummary: null,
   recommended: { dueCount: 0, criticalCount: 0, retentionPct: null, previewWords: [] },
   decks: { deckCount: 0, cardCount: 0, topDeckNames: [] },
-  reader: { recentWordCount: 0 },
+  reader: { recentWordCount: 0, recentWords: [] },
   immersion: { totalCount: 0 },
   course: null,
+  sound: null,
 }
 
 /** Empty bundle for guests / total failure. */
