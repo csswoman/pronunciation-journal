@@ -5,14 +5,10 @@ import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { shouldOfferMission } from './mission-cadence'
+import { recentMissionAvoidance } from './mission-avoidance'
+import { loadRecentMissionSessions } from '@/lib/ai-practice/missions/recent-sessions'
 import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, MAX_DUE_STEPS, RESERVED_CHUNK_NEW_SLOTS, WORD_REVIEW_WORD_COUNT } from './constants'
-import {
-  fetchDueReviewWords,
-  fetchDueSounds,
-  fetchNewWords,
-  fetchSavedOrFamiliarWords,
-  fetchWeakestSoundProgress,
-} from './fetchers'
+import { fetchDueReviewWords, fetchDueSounds, fetchNewWords, fetchSavedOrFamiliarWords, fetchWeakestSoundProgress } from './fetchers'
 import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
@@ -24,15 +20,11 @@ import { getTarget, phonemeTargetId } from '@/lib/pronunciation/targets/registry
 import { duePatterns, type ErrorRecurrenceQueue } from '@/lib/practice/error-recurrence'
 import { repairConstraintFor } from '@/lib/exercises/error-patterns'
 import type { SpeechConstraintId } from '@/lib/exercises/speech-constraints'
-import {
-  buildReviewPlan,
-  type BuildReviewPlanOptions,
-  type ReviewPlan,
-  shouldKeepNonExerciseStep,
-} from './review-plan'
+import { buildReviewPlan, type BuildReviewPlanOptions, type ReviewPlan, shouldKeepNonExerciseStep } from './review-plan'
 import {
   reasonForStep,
   resolvePrimarySound,
+  selectedPhoneticStep,
   sortStepsByPedagogicalProgression,
   targetRefsForStep,
 } from './candidate-helpers'
@@ -44,12 +36,7 @@ import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { loadDailyChunkIntroStep, loadDueChunkReviewStep, loadPronunciationDifficultyChunkStep, markPronunciationDifficultyRouted } from '@/lib/chunk-of-day/queries'
 import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 
-export {
-  buildReviewPlan,
-  type BuildReviewPlanOptions,
-  type ReviewPlan,
-  shouldKeepNonExerciseStep,
-}
+export { buildReviewPlan, type BuildReviewPlanOptions, type ReviewPlan, shouldKeepNonExerciseStep }
 
 /**
  * Repair drills for the error patterns due today. Seeded into production
@@ -207,6 +194,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     : null
   const primaryTarget = rawPrimaryTarget && getTarget(rawPrimaryTarget).ok ? rawPrimaryTarget : null
   const mission = primaryTarget ? missionForTarget(primaryTarget) : null
+  const recentMissionSessions = await loadRecentMissionSessions(userId, 2).catch(() => [])
+  const missionAvoidance = recentMissionAvoidance(recentMissionSessions)
   const missionStep: DailyStep | null = mission && primaryTarget
     ? {
         kind: 'mission',
@@ -215,7 +204,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
         subtitle: 'Misión oral con un objetivo exacto',
         icon: 'Messages',
         exercises: [],
-        estMinutes: 5,
+        estMinutes: missionAvoidance ? 3 : 5,
+        scaffolded: missionAvoidance,
         missionLaunch: parseMissionLaunch({
           missionId: mission.id,
           targetIds: [primaryTarget],
@@ -295,6 +285,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
   )
   const sessionWords = Array.from(new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)))
+  const activeSoundStep = selectedPhoneticStep(dedupedFinalSteps)
+  const soundWords = activeSoundStep?.featuredWords ?? []
   const diagnosticPrescription = diagnosticTarget?.sound && primarySound?.ipa === diagnosticTarget.sound.ipa
     ? { soundIpa: diagnosticTarget.sound.ipa, dayIndex: diagnosticTarget.dayIndex + 1, totalDays: 5, reason: diagnosticTarget.session.reason }
     : null
@@ -303,8 +295,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     : null
   const arc: SessionArc = {
     topicLabel: dominantTopicLabel(arcTopics),
-    soundIpa: primarySound?.ipa ?? null,
+    soundIpa: activeSoundStep?.ipa ?? null,
     sessionWords,
+    soundWords,
     diagnosticPrescription,
     journalRepairs,
   }
