@@ -12,6 +12,7 @@ export const EVIDENCE_EXIT_CONTRACTS: readonly EvidenceExitContract[] = [
   { adapter: 'grammar_deck_topic_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'topic_srs' },
   { adapter: 'mini_lesson_quiz', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'topic_srs' },
   { adapter: 'essential_words_runtime', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'essential_words' },
+  { adapter: 'chunk_practice', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'chunk_srs' },
   { adapter: 'target_practice_route', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'pronunciation' },
   { adapter: 'oral_mission_launch', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'pronunciation_feedback_evidence' },
   { adapter: 'tracking_word_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'word_bank' },

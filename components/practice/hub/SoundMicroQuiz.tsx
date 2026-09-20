@@ -79,46 +79,42 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
   }, [currentQuiz, handlePlaySound, handleSelectAnswer, handleNextQuiz])
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-[var(--radius-md)] bg-surface-sunken/70 p-3">
-      <div className="flex items-center gap-2.5">
+    <div className="flex flex-col gap-2 rounded-2xl bg-paper/85 p-3.5 shadow-2xs border border-ink/10">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => handlePlaySound(currentQuiz.word)}
           aria-label={`Escuchar pronunciación de ${currentQuiz.word} (tecla espacio)`}
           className={cn(
-            'focus-ring grid h-12 w-12 shrink-0 place-items-center rounded-full border transition-all duration-200 active:scale-95',
-            isPlayingAudio
-              ? 'border-primary bg-primary-soft text-primary'
-              : 'border-border-default bg-surface-raised text-primary hover:border-primary/50 hover:shadow-sm',
+            'focus-ring grid h-12 w-12 shrink-0 place-items-center rounded-full bg-ink text-paper shadow-xs transition-all duration-150 active:scale-95 hover:opacity-90',
+            isPlayingAudio && 'ring-2 ring-ink ring-offset-2',
           )}
         >
           {isPlayingAudio ? (
             <span className="flex items-end gap-0.5" aria-hidden="true">
-              <span className="h-2.5 w-1 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
-              <span className="h-4 w-1 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
-              <span className="h-2.5 w-1 rounded-full bg-primary animate-bounce" />
+              <span className="h-2.5 w-1 rounded-full bg-paper animate-bounce [animation-delay:-0.3s]" />
+              <span className="h-4 w-1 rounded-full bg-paper animate-bounce [animation-delay:-0.15s]" />
+              <span className="h-2.5 w-1 rounded-full bg-paper animate-bounce" />
             </span>
           ) : (
-            <Play size={18} className="translate-x-px fill-current" aria-hidden="true" />
+            <Play size={18} className="translate-x-px fill-current text-paper" aria-hidden="true" />
           )}
         </button>
 
-        <div className="grid flex-1 grid-cols-2 gap-2" role="group" aria-label="¿Cuál escuchaste?">
+        <div className="grid flex-1 grid-cols-2 gap-2 text-center" role="group" aria-label="¿Cuál escuchaste?">
           <button
             type="button"
             onClick={() => handleSelectAnswer(currentQuiz.phoneme)}
             aria-label={`Fonema ${currentQuiz.phoneme}, como en ${currentQuiz.word}`}
             className={cn(
-              'focus-ring flex min-h-12 flex-col items-center justify-center rounded-[var(--radius-sm)] border px-2 py-1.5 text-center transition-all duration-150 active:scale-95',
+              'focus-ring flex flex-col items-center justify-center rounded-xl p-1.5 transition-all duration-150 active:scale-95 select-none',
               selectedAnswer === currentQuiz.phoneme
-                ? 'border-success bg-success-soft text-success'
-                : selectedAnswer === currentQuiz.distractorPhoneme
-                  ? 'border-success/60 bg-success-soft/30 text-fg'
-                  : 'border-border-subtle bg-surface-raised text-fg hover:border-primary/40',
+                ? 'bg-ink/10 font-bold'
+                : 'hover:bg-ink/5',
             )}
           >
-            <span className="font-ipa text-body-sm font-bold">{currentQuiz.phoneme}</span>
-            <span className="text-tiny text-fg-muted">{currentQuiz.word}</span>
+            <span className="font-phoneme text-caption font-bold text-ink-secondary">{currentQuiz.phoneme}</span>
+            <span className="font-heading text-body-md font-extrabold text-ink">{currentQuiz.word}</span>
           </button>
 
           <button
@@ -126,14 +122,14 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
             onClick={() => handleSelectAnswer(currentQuiz.distractorPhoneme)}
             aria-label={`Fonema ${currentQuiz.distractorPhoneme}, como en ${currentQuiz.distractor}`}
             className={cn(
-              'focus-ring flex min-h-12 flex-col items-center justify-center rounded-[var(--radius-sm)] border px-2 py-1.5 text-center transition-all duration-150 active:scale-95',
+              'focus-ring flex flex-col items-center justify-center rounded-xl p-1.5 transition-all duration-150 active:scale-95 select-none',
               selectedAnswer === currentQuiz.distractorPhoneme
-                ? 'border-warning bg-warning-soft text-warning'
-                : 'border-border-subtle bg-surface-raised text-fg hover:border-primary/40',
+                ? 'bg-ink/10 font-bold'
+                : 'hover:bg-ink/5',
             )}
           >
-            <span className="font-ipa text-body-sm font-bold">{currentQuiz.distractorPhoneme}</span>
-            <span className="text-tiny text-fg-muted">{currentQuiz.distractor}</span>
+            <span className="font-phoneme text-caption font-bold text-ink-secondary">{currentQuiz.distractorPhoneme}</span>
+            <span className="font-heading text-body-md font-extrabold text-ink">{currentQuiz.distractor}</span>
           </button>
         </div>
 
@@ -142,7 +138,7 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           onClick={handleNextQuiz}
           title="Otro par de sonidos (tecla N)"
           aria-label="Otro par de sonidos (tecla N)"
-          className="focus-ring grid h-11 w-8 shrink-0 place-items-center rounded-[var(--radius-sm)] text-fg-subtle transition-colors hover:text-primary active:scale-95"
+          className="focus-ring grid h-10 w-10 shrink-0 place-items-center rounded-full border border-ink/40 bg-transparent text-ink transition-all hover:bg-ink/10 active:scale-95"
         >
           <RefreshCw size={15} aria-hidden="true" />
         </button>
@@ -153,15 +149,15 @@ export default function SoundMicroQuiz({ category, resetKey }: Props) {
           role="status"
           aria-live="polite"
           className={cn(
-            'text-tiny text-pretty animate-fadeIn',
-            selectedAnswer === currentQuiz.phoneme ? 'text-success' : 'text-fg-muted',
+            'text-tiny text-pretty animate-fadeIn px-1 font-sans font-medium',
+            selectedAnswer === currentQuiz.phoneme ? 'text-ink' : 'text-ink-secondary',
           )}
         >
           {selectedAnswer === currentQuiz.phoneme ? (
             currentQuiz.explanation
           ) : (
             <>
-              Era <span className="font-ipa font-bold">{currentQuiz.phoneme}</span>. {currentQuiz.mouthTip}
+              Era <span className="font-phoneme font-bold">{currentQuiz.phoneme}</span>. {currentQuiz.mouthTip}
             </>
           )}
         </p>

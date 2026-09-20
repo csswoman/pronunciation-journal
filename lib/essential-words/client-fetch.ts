@@ -77,6 +77,10 @@ export function filterAndRotate(words: EssentialWord[], day: number, count: numb
   return result
 }
 
+function wordsAtLevel(words: readonly EssentialWord[], level: CefrLevel): EssentialWord[] {
+  return words.filter((word) => word.cefr_level === level)
+}
+
 function chunkUrl(n: number): string {
   return `/essential-words/words-${String(n).padStart(3, '0')}.json`
 }
@@ -94,18 +98,22 @@ async function loadChunk(n: number): Promise<EssentialWord[]> {
  * Selection rotates by `day` so different days surface different words.
  * Loads additional chunks if the first chunk doesn't yield enough eligible words.
  */
-export async function fetchEssentialWordsForDay(day: number, count: number): Promise<EssentialWordBankEntry[]> {
+export async function fetchEssentialWordsForDay(
+  day: number,
+  count: number,
+  level: CefrLevel,
+): Promise<EssentialWordBankEntry[]> {
   const collected: EssentialWord[] = []
   let chunkIndex = 1
 
-  while (collected.filter(w => w.word.length >= 4).length < count && chunkIndex <= MAX_CHUNKS) {
+  while (wordsAtLevel(collected, level).filter(w => w.word.length >= 4).length < count && chunkIndex <= MAX_CHUNKS) {
     const words = await loadChunk(chunkIndex)
     if (words.length === 0) break
     collected.push(...words)
     chunkIndex++
   }
 
-  return filterAndRotate(collected, day, count).map(coreWordToWordBankEntry)
+  return filterAndRotate(wordsAtLevel(collected, level), day, count).map(coreWordToWordBankEntry)
 }
 
 /**
@@ -116,6 +124,7 @@ export async function fetchEssentialWordsForDay(day: number, count: number): Pro
 export async function fetchEssentialWordsForAnchors(
   anchorIds: readonly string[],
   count: number,
+  level: CefrLevel,
 ): Promise<EssentialWordBankEntry[]> {
   const requested = Array.from(new Set(anchorIds.filter((id) => id.startsWith('c1k:')))).slice(0, count)
   if (requested.length === 0) return []
@@ -126,6 +135,6 @@ export async function fetchEssentialWordsForAnchors(
 
   return requested.flatMap((id) => {
     const entry = entries.get(id)
-    return entry ? [coreWordToWordBankEntry(entry)] : []
+    return entry?.cefr_level === level ? [coreWordToWordBankEntry(entry)] : []
   })
 }

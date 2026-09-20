@@ -27,7 +27,6 @@ export interface FluencyWordBankStatus {
   review: number
   mastered: number
 }
-
 export interface FluencyRawAnswer {
   exerciseTypeId: number
   slug?: ExerciseSlug | null
@@ -42,15 +41,13 @@ export interface FluencyScoreInput {
   wordsByStatus: FluencyWordBankStatus
   contrastCorrect: number
   contrastTotal: number
-  core1000Practiced: number
-  lessonsCompleted: number
+  essentialWordsStudied: number
 }
 
 /** Target answers in 30 days for frequency component to reach 100. */
 const TARGET_ANSWERS_PER_SKILL = 20
 
 function answerAccuracy(answer: FluencyRawAnswer): number {
-  if (answer.grade != null) return Math.round((answer.grade / 5) * 100)
   return answer.isCorrect ? 100 : 0
 }
 
@@ -84,17 +81,13 @@ function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, { correct:
 }
 
 function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
-  const { wordsByStatus, contrastCorrect, contrastTotal, core1000Practiced } = input
+  const { wordsByStatus, contrastCorrect, contrastTotal } = input
   const wordTotal = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
 
   switch (skill) {
     case 'vocabulary': {
-      if (wordTotal === 0 && core1000Practiced === 0) return 0
-      const bankRetention = wordTotal > 0
-        ? Math.round((wordsByStatus.mastered / wordTotal) * 100)
-        : 0
-      const coreBonus = Math.min(100, core1000Practiced * 2)
-      return Math.max(bankRetention, coreBonus)
+      if (wordTotal === 0) return 0
+      return Math.round((wordsByStatus.mastered / wordTotal) * 100)
     }
     case 'pronunciation':
       return contrastTotal >= 5
@@ -152,4 +145,116 @@ export function fluencyComparisonLabel(
 
 export function isFluencyProfileEmpty(scores: FluencyScores): boolean {
   return SKILL_KEYS.every((k) => scores[k] <= 0)
+}
+
+export interface SkillMetricsBreakdown {
+  accuracy: number
+  retrievalQuality: number | null
+  retention: number
+  practiceVolume: number
+}
+
+export interface SeparateLearningDimensions {
+  accuracy: {
+    overallPct: number
+    bySkill: Record<SkillKey, number>
+    evaluatedAnswers: number
+  }
+  retrievalQuality: {
+    averageGrade: number | null
+    bySkill: Record<SkillKey, number | null>
+    gradedAnswers: number
+  }
+  retention: {
+    overallPct: number
+    bySkill: Record<SkillKey, number>
+  }
+  coverage: {
+    essentialWordsStudied: number
+    wordBankTotal: number
+    wordBankMastered: number
+  }
+}
+
+export function computeDetailedSkillMetrics(
+  input: FluencyScoreInput,
+): Record<SkillKey, SkillMetricsBreakdown> {
+  const buckets = bucketAnswers(input.answers)
+  const result = {} as Record<SkillKey, SkillMetricsBreakdown>
+
+  for (const skill of SKILL_KEYS) {
+    const bucket = buckets[skill]
+    const accuracy = bucket.total > 0 ? Math.round((bucket.correct / bucket.total) * 100) : 0
+    const relevantAnswers = input.answers.filter((a) => skillsForAnswer(a).includes(skill) && a.grade != null && a.grade > 0)
+    const retrievalQuality = relevantAnswers.length > 0
+      ? Math.round((relevantAnswers.reduce((sum, a) => sum + (a.grade ?? 0), 0) / relevantAnswers.length) * 10) / 10
+      : null
+    const retention = retentionForSkill(skill, input)
+
+    result[skill] = {
+      accuracy,
+      retrievalQuality,
+      retention,
+      practiceVolume: bucket.total,
+    }
+  }
+
+  return result
+}
+
+export function computeSeparateLearningDimensions(
+  input: FluencyScoreInput,
+): SeparateLearningDimensions {
+  const detailed = computeDetailedSkillMetrics(input)
+
+  let totalEvaluated = 0
+  let totalCorrect = 0
+  let totalGradeSum = 0
+  let totalGraded = 0
+
+  for (const answer of input.answers) {
+    totalEvaluated++
+    if (answer.isCorrect) totalCorrect++
+    if (answer.grade != null && answer.grade > 0) {
+      totalGradeSum += answer.grade
+      totalGraded++
+    }
+  }
+
+  const accuracyBySkill = {} as Record<SkillKey, number>
+  const retrievalBySkill = {} as Record<SkillKey, number | null>
+  const retentionBySkill = {} as Record<SkillKey, number>
+
+  for (const skill of SKILL_KEYS) {
+    accuracyBySkill[skill] = detailed[skill].accuracy
+    retrievalBySkill[skill] = detailed[skill].retrievalQuality
+    retentionBySkill[skill] = detailed[skill].retention
+  }
+
+  const wordBankTotal = Object.values(input.wordsByStatus).reduce((a, b) => a + b, 0)
+  const wordRetentionPct = wordBankTotal > 0
+    ? Math.round((input.wordsByStatus.mastered / wordBankTotal) * 100)
+    : 0
+
+  return {
+    accuracy: {
+      overallPct: totalEvaluated > 0 ? Math.round((totalCorrect / totalEvaluated) * 100) : 0,
+      bySkill: accuracyBySkill,
+      evaluatedAnswers: totalEvaluated,
+    },
+    retrievalQuality: {
+      averageGrade: totalGraded > 0 ? Math.round((totalGradeSum / totalGraded) * 10) / 10 : null,
+      bySkill: retrievalBySkill,
+      gradedAnswers: totalGraded,
+    },
+    retention: {
+      overallPct: wordRetentionPct,
+      bySkill: retentionBySkill,
+    },
+    coverage: {
+      essentialWordsStudied: input.essentialWordsStudied,
+      wordBankTotal,
+      wordBankMastered: input.wordsByStatus.mastered,
+    },
+  }
 }

@@ -99,11 +99,11 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
     for (const entry of entries) {
       if (entry.entryMode === 'pronunciation' && entry.content) {
         try {
-          const parsed = JSON.parse(entry.content) as { items?: Array<{ word?: string }> }
+          const parsed = JSON.parse(entry.content) as { items?: Array<{ wordOrPhrase?: string }> }
           if (Array.isArray(parsed.items)) {
             for (const item of parsed.items) {
-              if (item.word && !savedPronunciationWords.includes(item.word)) {
-                savedPronunciationWords.push(item.word)
+              if (item.wordOrPhrase && !savedPronunciationWords.includes(item.wordOrPhrase)) {
+                savedPronunciationWords.push(item.wordOrPhrase)
               }
             }
           }

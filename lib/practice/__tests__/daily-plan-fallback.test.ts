@@ -31,6 +31,7 @@ vi.mock('@/lib/phoneme-practice/queries', () => ({
 }))
 
 vi.mock('@/lib/db', () => ({
+  ensureDbReady: async () => undefined,
   db: {
     learningState: { get: async () => null },
     completedLessons: { toArray: async () => [] },

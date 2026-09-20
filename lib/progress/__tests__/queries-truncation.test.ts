@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('server-only', () => ({}))
+
 type Row = Record<string, unknown>
 
 const callLog = vi.hoisted(() => ({
@@ -13,7 +15,7 @@ const fixtures = vi.hoisted(() => ({
   answers: [] as Row[],
   contrasts: [] as Row[],
   wordBank: [] as Row[],
-  lessons: { count: 0 },
+  learningItems: [] as Row[],
 }))
 
 function daysAgo(n: number): string {
@@ -28,6 +30,7 @@ function makeChain(table: string) {
   if (table === 'answer_history') rows = fixtures.answers
   if (table === 'user_contrast_progress') rows = fixtures.contrasts
   if (table === 'word_bank') rows = fixtures.wordBank
+  if (table === 'learning_items') rows = fixtures.learningItems
 
   const state = {
     gteColumn: null as string | null,
@@ -83,13 +86,6 @@ vi.mock('@/lib/supabase/server', () => ({
   createSupabaseServerClient: async () => ({
     from: (table: string) => {
       callLog.tables.push(table)
-      if (table === 'lesson_completions') {
-        return {
-          select: () => ({
-            eq: () => Promise.resolve({ data: null, count: fixtures.lessons.count, error: null }),
-          }),
-        }
-      }
       return makeChain(table)
     },
   }),
@@ -122,7 +118,7 @@ describe('progress query truncation (oversized histories)', () => {
     fixtures.answers = []
     fixtures.contrasts = []
     fixtures.wordBank = []
-    fixtures.lessons = { count: 0 }
+    fixtures.learningItems = []
   })
 
   it('keeps only RECENT_ACTIVITY_SESSION_LIMIT sessions when more than 30 exist', async () => {
@@ -202,5 +198,25 @@ describe('progress query truncation (oversized histories)', () => {
     // rankWeakestSounds is called with the already-truncated row set (≤ 40).
     expect(profile.weakestPhonemes.length).toBeLessThanOrEqual(5)
     expect(profile.weakestPhonemes[0]?.ipa).toBe('/c-0/')
+  })
+
+  it('derives Essential Words progress from learning_items instead of answer history', async () => {
+    fixtures.learningItems = [
+      {
+        word_id: 'c1k:the',
+        schedule: { kind: 'provisional', dueAt: daysAgo(1), source: 'direct', evidenceConfidence: 1 },
+        suspended: false,
+      },
+      {
+        word_id: 'c1k:be',
+        schedule: { kind: 'none' },
+        suspended: false,
+      },
+    ]
+
+    const profile = await getSkillProfileData('user-1')
+
+    expect(callLog.tables).toContain('learning_items')
+    expect(profile.essentialWords).toEqual({ studied: 1, due: 1 })
   })
 })

@@ -22,11 +22,11 @@ vi.mock('@/lib/practice/last-practice-mode', () => ({
 }))
 
 vi.mock('@/lib/essential-words/level-count', () => ({
-  getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000 })),
+  getEssentialWordsLevelCount: vi.fn(async () => ({ learned: 0, total: 1000, due: 2 })),
 }))
 
-vi.mock('@/lib/essential-words/target-level', () => ({
-  readStoredCefrLevel: vi.fn(async () => 'A1'),
+vi.mock('@/lib/learner-level/client-queries', () => ({
+  getEffectiveLearnerLevel: vi.fn(async () => ({ level: 'A1', source: 'starter_default' })),
 }))
 
 vi.mock('@/lib/immersion/progress-queries', () => ({
@@ -52,9 +52,10 @@ describe('PracticeHubClient', () => {
       expect(screen.getByText(/palabras esperan repaso/i)).toBeInTheDocument()
     })
 
-    expect(screen.getByText('Las 1000 esenciales')).toBeInTheDocument()
-    expect(screen.getByText('Tus mazos')).toBeInTheDocument()
-    expect(screen.getByText('Empezar repaso')).toBeInTheDocument()
+    expect(screen.getByText('Palabras esenciales')).toBeInTheDocument()
+    expect(screen.getByText('2 pendientes')).toBeInTheDocument()
+    expect(screen.getByText('TUS MAZOS')).toBeInTheDocument()
+    expect(screen.getByText(/Empezar repaso/)).toBeInTheDocument()
     expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()
     expect(screen.getByText('Habla conectada')).toBeInTheDocument()
     expect(screen.getByText('Entonación')).toBeInTheDocument()

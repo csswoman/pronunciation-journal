@@ -18,6 +18,11 @@ interface HeroTermExampleProps {
   resetKey?: string;
 }
 
+/**
+ * Inset "EJEMPLO" block. Always sits inside a PastelCard, so it never needs
+ * its own tone — pastel-card-inset is a relative white layer over whatever
+ * --card the parent set, and ink/ink-muted are already remapped in scope.
+ */
 export function HeroTermExample({ example }: HeroTermExampleProps) {
   const speakSource =
     example.kind === "sentence"
@@ -25,21 +30,21 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
       : example.turns.map((t) => t.en).join(" ");
 
   return (
-    <div className="rounded-2xl border border-border-subtle/50 bg-surface-sunken/60 p-4 flex flex-col gap-2.5 mt-1">
+    <div className="pastel-card-inset rounded-2xl p-4 flex flex-col gap-2.5 mt-1">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-kicker text-fg-faint">
+        <span className="font-kicker font-bold text-ink-muted">
           EJEMPLO
         </span>
         <ListenButton
           iconOnly
           aria-label="Escuchar ejemplo"
-          className="shrink-0 text-fg-muted hover:text-primary transition-colors"
+          className="shrink-0 text-ink-muted hover:text-ink transition-colors"
           onPlay={() => speakText(speakSource)}
         />
       </div>
 
       {example.kind === "sentence" ? (
-        <p className="font-body-md text-fg-muted leading-relaxed whitespace-pre-line">
+        <p className="font-body-md text-ink font-medium leading-relaxed whitespace-pre-line">
           {example.en}
         </p>
       ) : (
@@ -47,7 +52,7 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
           {example.turns.map((turn, i) => (
             <p
               key={i}
-              className="font-body-md text-fg-muted leading-relaxed whitespace-pre-line"
+              className="font-body-md text-ink font-medium leading-relaxed whitespace-pre-line"
             >
               — {turn.en}
             </p>
@@ -60,16 +65,16 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
           {example.turns.map((turn, i) => (
             <p
               key={i}
-              className="font-body-sm text-fg-subtle leading-normal whitespace-pre-line"
+              className="font-body-sm text-ink-muted font-medium leading-normal whitespace-pre-line"
             >
               — {turn.es}
             </p>
           ))}
         </div>
       ) : example.es ? (
-        <p className="font-body-sm text-fg-subtle leading-normal whitespace-pre-line">
+        <p className="font-body-sm text-ink-muted font-medium leading-normal whitespace-pre-line">
           {example.es.startsWith("Traducción:") ? null : (
-            <span className="text-fg-faint font-normal">Traducción: </span>
+            <span className="text-ink-muted font-normal">Traducción: </span>
           )}
           {example.es.replace(/^Traducción:\s*/, "")}
         </p>

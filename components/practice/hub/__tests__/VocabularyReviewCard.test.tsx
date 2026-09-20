@@ -17,13 +17,13 @@ describe("VocabularyReviewCard", () => {
   it("shows an inviting empty state when nothing is learned yet", () => {
     render(<VocabularyReviewCard dueCount={null} learnedCount={0} totalCount={1000} />);
     expect(screen.getByText("Empieza aquí")).toBeInTheDocument();
-    expect(screen.queryByText(/aprendidas/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/estudiadas/)).not.toBeInTheDocument();
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
   });
 
   it("renders real learned / ahead counts and a matching progress bar", () => {
     render(<VocabularyReviewCard dueCount={null} learnedCount={150} totalCount={600} />);
-    expect(screen.getByText("150 aprendidas")).toBeInTheDocument();
+    expect(screen.getByText("150 estudiadas")).toBeInTheDocument();
     expect(screen.getByText("450 por delante")).toBeInTheDocument();
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "25");
   });

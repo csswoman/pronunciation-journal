@@ -6,7 +6,10 @@ import { getDeckBySlug } from '@/lib/courses/grammar-deck/decks'
 import { deckSlugForTopic } from '@/lib/practice/topic-decks'
 import { buildTopicReviewStep } from '@/lib/review/topic-review-step'
 
-const schema = z.object({ topic: z.string().min(1).max(120).optional() }).strict()
+const schema = z.object({
+  topic: z.string().min(1).max(120).optional(),
+  topics: z.array(z.string().min(1).max(120)).max(12).optional(),
+}).strict()
 
 export async function POST(request: NextRequest) {
   const originError = requireSameOrigin(request)
@@ -21,12 +24,15 @@ export async function POST(request: NextRequest) {
   if (limited) return rateLimitError
   const { data: body, error: validationError } = await validateBody(request, schema)
   if (validationError) return validationError
-  const supabase = await createSupabaseServerClient()
-  let query = supabase.from('topic_srs').select('topic').eq('user_id', user.id).limit(2)
-  if (body.topic) query = query.eq('topic', body.topic)
-  else query = query.lte('next_review_at', new Date().toISOString()).order('next_review_at')
-  const { data } = await query
-  const steps = (data ?? []).flatMap(({ topic }) => {
+  let topics = body.topics ?? (body.topic ? [body.topic] : null)
+  if (!topics) {
+    const supabase = await createSupabaseServerClient()
+    const { data } = await supabase.from('topic_srs').select('topic')
+      .eq('user_id', user.id).lte('next_review_at', new Date().toISOString())
+      .order('next_review_at').limit(2)
+    topics = (data ?? []).map(({ topic }) => topic)
+  }
+  const steps = [...new Set(topics)].flatMap((topic) => {
     const slug = deckSlugForTopic(topic)
     const deck = slug ? getDeckBySlug(slug) : null
     const step = deck && slug ? buildTopicReviewStep(topic, slug, deck) : null

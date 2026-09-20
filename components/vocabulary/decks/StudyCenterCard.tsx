@@ -26,7 +26,7 @@ export function StudyCenterCard({
   onSkip,
 }: StudyCenterCardProps) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center min-w-0">
+    <div className="w-full flex flex-col items-center justify-center min-w-0">
       {currentCard && (
         <StudyCard
           word={currentCard.word}
@@ -38,21 +38,6 @@ export function StudyCenterCard({
           onFlip={onFlip}
           onSkip={onSkip}
         />
-      )}
-      {!flipped && (
-        <p className="mt-3 text-caption text-fg-subtle">
-          Hint: Press{" "}
-          <kbd
-            className="px-1.5 py-0.5 rounded border text-tiny font-mono"
-            style={{
-              borderColor: "var(--line-divider)",
-              backgroundColor: "var(--btn-regular-bg)",
-            }}
-          >
-            SPACE
-          </kbd>
-          {" "}to flip
-        </p>
       )}
     </div>
   );

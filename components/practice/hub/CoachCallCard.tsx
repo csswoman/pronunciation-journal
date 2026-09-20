@@ -1,13 +1,13 @@
 'use client'
 
 // Planned structure:
-// <CoachCallCard>
-//   header: hand-drawn chip + kicker + title
-//   description
-//   actions: conversa / misión oral
-//   illustration: hand-drawn watermark, bottom-right
-// </CoachCallCard>
+// <CoachCallCard> — Coach de conversación in PastelCard tone="mint"
+//   Header: HABLA kicker + "libre" badge
+//   Title: Coach de conversación + subtitle
+//   Actions: Conversa (tinta sólida) + Misión oral (contorno)
+//   Illustration: speaking watermark, bottom-right
 
+import PastelCard from '@/components/layout/PastelCard'
 import { MessageCircle, Mic } from '@/components/icons'
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { buildCoachPrefill } from '@/lib/ai-practice/coach-prefill'
@@ -25,53 +25,56 @@ export default function CoachCallCard({ arc }: Props) {
   const prefill = buildCoachPrefill(arc)
 
   return (
-    <div
+    <PastelCard
+      tone="mint"
       data-testid="speak-with-coach"
-      className="group relative flex flex-col justify-between gap-5 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm overflow-hidden"
+      className="group relative flex flex-col justify-between gap-5 rounded-3xl p-5 overflow-hidden shadow-sm motion-reduce:shadow-none"
     >
       <div className="flex flex-col gap-3 z-10">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[var(--hue-icon-bg)] text-primary [&>svg]:h-5 [&>svg]:w-auto">
-            <Illustration aria-hidden />
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink select-none">
+            HABLA
           </span>
-          <span className="font-kicker text-tiny uppercase tracking-wider text-fg-subtle">libre</span>
+          <span className="inline-flex items-center rounded-full bg-ink/12 px-2.5 py-0.5 font-sans text-caption font-bold text-ink">
+            libre
+          </span>
         </div>
 
         <div className="flex flex-col gap-1">
-          <h2 className="text-h3 font-bold text-fg">Coach de conversación</h2>
-          <p className="text-body-sm text-fg-muted text-pretty">
+          <h2 className="font-heading text-h3 font-extrabold text-ink leading-tight">
+            Coach de conversación
+          </h2>
+          <p className="font-sans text-body-sm text-ink-secondary text-pretty">
             Habla en voz alta y recibe corrección al instante.
           </p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-3 pt-2 z-10">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => openCoach({ tab: 'chat', prefill })}
-            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-transform duration-150 hover:bg-surface-sunken active:scale-[0.98]"
-          >
-            <MessageCircle size={14} aria-hidden />
-            <span>Conversa</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => openCoach({ tab: 'missions', prefill })}
-            className="focus-ring inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-default bg-surface-raised px-3.5 py-2.5 font-label text-body-xs font-semibold text-fg transition-transform duration-150 hover:bg-surface-sunken active:scale-[0.98]"
-          >
-            <Mic size={14} aria-hidden />
-            <span>Misión oral</span>
-          </button>
-        </div>
+      <div className="flex items-center gap-2.5 pt-2 z-10">
+        <button
+          type="button"
+          onClick={() => openCoach({ tab: 'chat', prefill })}
+          className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-all hover:bg-ink-secondary cursor-pointer select-none"
+        >
+          <MessageCircle size={15} aria-hidden />
+          <span>Conversa</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => openCoach({ tab: 'missions', prefill })}
+          className="focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-ink/40 bg-transparent px-4 py-2 font-label text-body-sm font-semibold text-ink transition-colors hover:bg-ink/10 cursor-pointer select-none"
+        >
+          <Mic size={15} aria-hidden />
+          <span>Misión oral</span>
+        </button>
       </div>
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-3 bottom-2 hidden text-primary/15 transition-colors duration-200 group-hover:text-primary/25 sm:block [&>svg]:h-20 [&>svg]:w-auto"
+        className="pointer-events-none absolute right-2 bottom-1 hidden text-ink/15 transition-colors duration-200 group-hover:text-ink/25 sm:block [&>svg]:h-24 [&>svg]:w-auto"
       >
         <Illustration />
       </div>
-    </div>
+    </PastelCard>
   )
 }

@@ -173,13 +173,24 @@ export function computeCanStartReview(summary: {
   dueWords: unknown[]
   soundsDue: unknown[]
   dueTopics?: unknown[]
+  weakTopics?: unknown[]
+  dueLessons?: unknown[]
+  essentialWordsDue?: unknown[]
+  chunksDue?: unknown[] | number
 }): boolean {
+  const chunksCount = Array.isArray(summary.chunksDue)
+    ? summary.chunksDue.length
+    : (summary.chunksDue ?? 0)
   return (
     summary.dueWords.length > 0 ||
     summary.weakWords.length > 0 ||
     summary.soundsDue.length > 0 ||
     summary.failedSentences.some((item) => item.drillable)
     || (summary.dueTopics?.length ?? 0) > 0
+    || (summary.weakTopics?.length ?? 0) > 0
+    || (summary.dueLessons?.length ?? 0) > 0
+    || (summary.essentialWordsDue?.length ?? 0) > 0
+    || chunksCount > 0
   )
 }
 
@@ -191,9 +202,21 @@ export function buildReviewHubCounts(
   dueTopics: unknown[] = [],
   weakTopics: unknown[] = [],
   dueLessons: unknown[] = [],
+  essentialWordsDue: unknown[] = [],
+  chunksDue: unknown[] | number = 0,
 ) {
+  const reviewWordIds = new Set([
+    ...weakWords.map((word) => (word as { id: string }).id),
+    ...dueWords.map((word) => (word as { id: string }).id),
+  ])
+  const reviewTopicIds = new Set([
+    ...dueTopics.map((topic) => (topic as { id: string }).id),
+    ...weakTopics.map((topic) => (topic as { id: string }).id),
+  ])
+  const chunksCount = Array.isArray(chunksDue) ? chunksDue.length : chunksDue
   const reviewable =
-    dueWords.length + weakWords.length + soundsDue.length + failedSentences.filter((f) => f.drillable).length + dueTopics.length + dueLessons.length
+    reviewWordIds.size + soundsDue.length + failedSentences.filter((f) => f.drillable).length
+    + reviewTopicIds.size + dueLessons.length + essentialWordsDue.length + chunksCount
 
   return {
     failedSentences: failedSentences.length,
@@ -203,8 +226,48 @@ export function buildReviewHubCounts(
     dueTopics: dueTopics.length,
     weakTopics: weakTopics.length,
     dueLessons: dueLessons.length,
+    essentialWordsDue: essentialWordsDue.length,
+    chunksDue: chunksCount,
     reviewable,
-    total: failedSentences.length + weakWords.length + dueWords.length + soundsDue.length + dueTopics.length + weakTopics.length + dueLessons.length,
+    total: reviewable,
+  }
+}
+
+export function buildExactReviewQueueCounts(counts: {
+  failedSentences: number
+  weakWords: number
+  dueWords: number
+  soundsDue: number
+  dueTopics: number
+  weakTopics: number
+  dueLessons: number
+  essentialWordsDue: number
+  chunksDue?: number
+}) {
+  const chunksCount = counts.chunksDue ?? 0
+  const reviewable =
+    counts.failedSentences +
+    counts.dueWords +
+    counts.weakWords +
+    counts.soundsDue +
+    counts.dueTopics +
+    counts.weakTopics +
+    counts.dueLessons +
+    counts.essentialWordsDue +
+    chunksCount
+
+  return {
+    failedSentences: counts.failedSentences,
+    weakWords: counts.weakWords,
+    dueWords: counts.dueWords,
+    soundsDue: counts.soundsDue,
+    dueTopics: counts.dueTopics,
+    weakTopics: counts.weakTopics,
+    dueLessons: counts.dueLessons,
+    essentialWordsDue: counts.essentialWordsDue,
+    chunksDue: chunksCount,
+    reviewable,
+    total: reviewable,
   }
 }
 

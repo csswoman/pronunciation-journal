@@ -60,6 +60,7 @@ vi.mock('@/lib/phoneme-practice/queries', () => ({
 }))
 
 vi.mock('@/lib/db', () => ({
+  ensureDbReady: vi.fn().mockResolvedValue(undefined),
   db: {
     learningState: { get: vi.fn().mockResolvedValue(null) },
     completedLessons: { toArray: vi.fn().mockResolvedValue([]) },

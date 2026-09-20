@@ -1,41 +1,37 @@
 "use client";
 
 // Planned structure:
-// <HomeEssentialWordsCount>  (leaf — reads Dexie, renders HomeEssentialWordsBody)
+// <HomeEssentialWordsCount>  (leaf — reads canonical catalog/progress, renders HomeEssentialWordsBody)
 
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/lib/db";
+import { useAuth } from "@/components/auth/AuthProvider";
 import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
+import { getEssentialWordsLevelCount } from "@/lib/essential-words/level-count";
+import type { CefrLevel } from "@/lib/essential-words/types";
 
 interface HomeEssentialWordsCountProps {
-  totalLevelWords: number;
   levelKey: string;
 }
 
 /**
  * Isolated so Dexie (~35 KB gzip) stays out of the home's initial bundle.
  * HomeStatsRow loads this with next/dynamic and falls back to the same body at
- * count 0, so the swap never changes the card's height.
+ * an unknown count, so the card never claims zero progress while loading.
  */
 export default function HomeEssentialWordsCount({
-  totalLevelWords,
   levelKey,
 }: HomeEssentialWordsCountProps) {
-  const learnedCount =
-    useLiveQuery(async () => {
-      try {
-        return await db.srsData
-          .filter((item) => (item.interval ?? 0) > 0 && !item.archived)
-          .count();
-      } catch {
-        return 0;
-      }
-    }, []) ?? 0;
+  const { user } = useAuth();
+  const catalogLevel = (levelKey === "C2" ? "C1" : levelKey) as CefrLevel;
+  const count = useLiveQuery(
+    () => getEssentialWordsLevelCount([catalogLevel], user?.id),
+    [catalogLevel, user?.id],
+  );
 
   return (
     <HomeEssentialWordsBody
-      learnedCount={learnedCount}
-      totalLevelWords={totalLevelWords}
+      learnedCount={count?.learned ?? null}
+      totalLevelWords={count?.total ?? null}
       levelKey={levelKey}
     />
   );

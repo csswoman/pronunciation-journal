@@ -26,6 +26,11 @@ import { projectProgress, type ProgressFact, type ProgressProjections } from './
 import type { EvidenceAttribution } from '@/lib/practice/attribution'
 import type { CanSayAttempt } from './can-say-now'
 import { getSpeechLatencyData, type SpeechLatencyData } from './speech-latency-queries'
+import { summarizeEssentialWordsProgress } from '@/lib/essential-words/progress-summary'
+import type { ItemSchedule } from '@/lib/essential-words/verification/types'
+import { getProgressDomainData, type ProgressDomainData } from './domain-queries'
+import { getEffectiveLearnerLevelServer } from '@/lib/learner-level/server-queries'
+import type { LearnerLevelResolution } from '@/lib/learner-level/core'
 
 export type { SpeechLatencyData } from './speech-latency-queries'
 
@@ -41,6 +46,12 @@ export interface DailyCompletionStats {
   completedDays30: number
   /** Last 30 days, oldest → today. */
   heatmap30: ConsistencyHeatLevel[]
+  /** Days with any qualifying activity (answers, lessons, practice sessions). */
+  activeDays7: number
+  activeDays30: number
+  /** Days where daily plan was completed. */
+  planCompletedDays7: number
+  planCompletedDays30: number
 }
 
 export interface WeeklySummaryStats {
@@ -49,8 +60,10 @@ export interface WeeklySummaryStats {
 }
 
 export interface AccuracyStats {
-  accuracy7: number  // 0-100 weighted accuracy over last 7 days
+  accuracy7: number  // 0-100 percentage based strictly on is_correct over last 7 days
   totalAnswers7: number
+  /** Average retrieval quality (grade 1-5), or null if no graded answers */
+  retrievalQuality7?: number | null
 }
 
 export interface WordBankByStatus {
@@ -74,10 +87,10 @@ export interface WeakestPhoneme {
 export interface SkillProfileData {
   wordsByStatus: WordBankByStatus
   weakestPhonemes: WeakestPhoneme[]
-  /** Unique Core 1000 words answered correctly at least once. */
-  core1000Practiced: number
-  /** Total course/mini-lesson completions recorded. */
-  lessonsCompleted: number
+  essentialWords: {
+    studied: number
+    due: number
+  }
 }
 
 export interface CoachWeakTopic {
@@ -99,6 +112,7 @@ export interface FluencyProfileData {
 }
 
 export interface ProgressPageData {
+  learnerLevel: LearnerLevelResolution
   streak: DailyStreakResult
   dailyCompletion: DailyCompletionStats
   accuracy: AccuracyStats
@@ -110,6 +124,7 @@ export interface ProgressPageData {
   projections: ProgressProjections
   canSayAttempts: CanSayAttempt[]
   speechLatency: SpeechLatencyData
+  domains: ProgressDomainData
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -135,25 +150,64 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
 
   const since30 = new Date()
   since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
+  const since30Iso = since30.toISOString()
 
-  const { data } = await supabase
-    .from('answer_history')
-    .select('answered_at')
-    .eq('user_id', userId)
-    .not('answered_at', 'is', null)
-    .gte('answered_at', since30.toISOString())
+  const [answersResult, sessionsResult, lessonsResult] = await Promise.all([
+    supabase
+      .from('answer_history')
+      .select('answered_at')
+      .eq('user_id', userId)
+      .not('answered_at', 'is', null)
+      .gte('answered_at', since30Iso),
+    supabase
+      .from('activity_sessions')
+      .select('completed_at, source')
+      .eq('user_id', userId)
+      .gte('completed_at', since30Iso),
+    supabase
+      .from('lesson_completions')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .gte('completed_at', since30Iso),
+  ])
 
-  const rows = data ?? []
+  const answerRows = answersResult.data ?? []
+  const sessionRows = sessionsResult.data ?? []
+  const lessonRows = lessonsResult.data ?? []
 
   const countsByDay = new Map<string, number>()
-  for (const row of rows) {
+  const activeDaysSet = new Set<string>()
+  const planCompletedDaysSet = new Set<string>()
+
+  for (const row of answerRows) {
+    if (!row.answered_at) continue
     const day = toLocalDateString(row.answered_at as string, STREAK_TIMEZONE)
     countsByDay.set(day, (countsByDay.get(day) ?? 0) + 1)
+    activeDaysSet.add(day)
+  }
+
+  for (const row of lessonRows) {
+    if (!row.completed_at) continue
+    const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
+    activeDaysSet.add(day)
+  }
+
+  for (const row of sessionRows) {
+    if (!row.completed_at) continue
+    const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
+    activeDaysSet.add(day)
+    if (row.source === 'daily_plan') {
+      planCompletedDaysSet.add(day)
+    }
   }
 
   const today = new Date()
   let completedDays7 = 0
   let completedDays30 = 0
+  let activeDays7 = 0
+  let activeDays30 = 0
+  let planCompletedDays7 = 0
+  let planCompletedDays30 = 0
   const heatmap30: ConsistencyHeatLevel[] = []
 
   for (let i = 29; i >= 0; i--) {
@@ -161,6 +215,9 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     d.setDate(d.getDate() - i)
     const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
+    const isActive = activeDaysSet.has(day)
+    const isPlanCompleted = planCompletedDaysSet.has(day)
+
     const level: ConsistencyHeatLevel =
       count >= DAILY_STREAK_THRESHOLD * 2
         ? 3
@@ -176,6 +233,16 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
       completedDays30++
       if (i <= 6) completedDays7++
     }
+
+    if (isActive) {
+      activeDays30++
+      if (i <= 6) activeDays7++
+    }
+
+    if (isPlanCompleted) {
+      planCompletedDays30++
+      if (i <= 6) planCompletedDays7++
+    }
   }
 
   return {
@@ -184,6 +251,10 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     completedDays7,
     completedDays30,
     heatmap30,
+    activeDays7,
+    activeDays30,
+    planCompletedDays7,
+    planCompletedDays30,
   }
 }
 
@@ -218,34 +289,37 @@ export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
 
   const { data } = await supabase
     .from('answer_history')
-    .select('grade, is_correct')
+    .select('grade, is_correct, user_answer')
     .eq('user_id', userId)
     .gte('answered_at', since7.toISOString())
     .not('answered_at', 'is', null)
 
   const rows = data ?? []
-  if (rows.length === 0) return { accuracy7: 0, totalAnswers7: 0 }
+  if (rows.length === 0) return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null }
 
-  // Prefer grade (0-5) when present, fall back to is_correct boolean
-  let weightedSum = 0
-  for (const row of rows) {
-    if (row.grade !== null && row.grade !== undefined) {
-      weightedSum += (row.grade / 5) * 100
-    } else {
-      weightedSum += row.is_correct ? 100 : 0
-    }
-  }
+  // Exclude non-evaluable interactions (e.g. skips)
+  const evaluatedRows = rows.filter((r) => r.user_answer !== 'skip')
+  if (evaluatedRows.length === 0) return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null }
+
+  const correctCount = evaluatedRows.filter((r) => r.is_correct === true).length
+  const accuracy7 = Math.round((correctCount / evaluatedRows.length) * 100)
+
+  const gradedRows = evaluatedRows.filter((r) => r.grade !== null && r.grade !== undefined && r.grade > 0)
+  const retrievalQuality7 = gradedRows.length > 0
+    ? Math.round((gradedRows.reduce((sum, r) => sum + (r.grade as number), 0) / gradedRows.length) * 10) / 10
+    : null
 
   return {
-    accuracy7: Math.round(weightedSum / rows.length),
-    totalAnswers7: rows.length,
+    accuracy7,
+    totalAnswers7: evaluatedRows.length,
+    retrievalQuality7,
   }
 }
 
 export async function getSkillProfileData(userId: string): Promise<SkillProfileData> {
   const supabase = await createSupabaseServerClient()
 
-  const [wordBankResult, phonemeResult, core1000Result, lessonsResult] = await Promise.all([
+  const [wordBankResult, phonemeResult, essentialWordsResult] = await Promise.all([
     supabase
       .from('word_bank')
       .select('srs_status, familiarity_status, mastery_provenance, objective_evidence_count')
@@ -261,15 +335,8 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
       .limit(SKILL_PROFILE_CONTRAST_LIMIT),
 
     supabase
-      .from('answer_history')
-      .select('content_id', { count: 'exact', head: false })
-      .eq('user_id', userId)
-      .eq('context', 'essential-words')
-      .eq('is_correct', true),
-
-    supabase
-      .from('lesson_completions')
-      .select('id', { count: 'exact', head: true })
+      .from('learning_items')
+      .select('word_id, schedule, suspended')
       .eq('user_id', userId)
   ])
 
@@ -309,14 +376,21 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
     totalAttempts: r.totalAttempts,
   }))
 
-  // Unique Core 1000 words practiced correctly (dedupe by content_id)
-  const core1000Ids = new Set((core1000Result.data ?? []).map((r) => r.content_id))
+  const essentialWords = summarizeEssentialWordsProgress(
+    (essentialWordsResult.data ?? []).map((row) => ({
+      wordId: row.word_id,
+      schedule: row.schedule as unknown as ItemSchedule,
+      suspended: row.suspended,
+    })),
+  )
 
   return {
     wordsByStatus,
     weakestPhonemes: phonemes,
-    core1000Practiced: core1000Ids.size,
-    lessonsCompleted: lessonsResult.count ?? 0,
+    essentialWords: {
+      studied: essentialWords.studiedWords,
+      due: essentialWords.dueWords,
+    },
   }
 }
 
@@ -401,8 +475,7 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
     wordsByStatus: skillProfile.wordsByStatus,
     contrastCorrect,
     contrastTotal,
-    core1000Practiced: skillProfile.core1000Practiced,
-    lessonsCompleted: skillProfile.lessonsCompleted,
+    essentialWordsStudied: skillProfile.essentialWords.studied,
   }
 
   const scores = computeFluencyScores({ ...base, answers: mapRows(rows) })
@@ -419,8 +492,7 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
     wordsByStatus: { new: 0, learning: 0, review: 0, mastered: 0 },
     contrastCorrect: 0,
     contrastTotal: 0,
-    core1000Practiced: 0,
-    lessonsCompleted: 0,
+    essentialWordsStudied: 0,
   }
   const comparisonLabel = fluencyComparisonLabel(
     computeFluencyScores({ ...windowBase, answers: mapRows(current7) }),
@@ -573,7 +645,7 @@ export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttemp
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency, domains, learnerLevel] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -585,11 +657,14 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getProgressProjections(userId),
       getCanSayNowAttempts(userId),
       getSpeechLatencyData(userId),
+      getProgressDomainData(userId),
+      getEffectiveLearnerLevelServer(userId),
     ])
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
 
   return {
+    learnerLevel,
     streak,
     dailyCompletion,
     accuracy,
@@ -601,6 +676,7 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     projections,
     canSayAttempts,
     speechLatency,
+    domains,
   }
 }
 

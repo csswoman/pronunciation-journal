@@ -35,7 +35,7 @@ export default function Badge({
       className={[
         "inline-flex items-center gap-1.5 font-semibold",
         sizeClasses,
-        isNeutral ? "bg-[var(--btn-regular-bg)] text-fg-muted" : badgeVariantClasses[variant],
+        isNeutral ? "bg-[var(--btn-regular-bg)] text-fg-muted border border-border-subtle" : badgeVariantClasses[variant],
         className,
       ].filter(Boolean).join(" ")}
     >

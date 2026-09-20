@@ -14,8 +14,6 @@ import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
 import type { SessionArc } from '@/lib/practice/types'
 import type { DailyStep, DailyStepStatus } from '@/hooks/useDailyPlan'
 
-const ESSENTIAL_WORD_TARGET = 1000
-
 interface Props {
   steps: DailyStep[]
   getStepStatus: (stepId: string) => DailyStepStatus
@@ -25,6 +23,8 @@ interface Props {
   dueTomorrow: number | null
   /** Palabras esenciales aprendidas (Core 1000). */
   learned?: number
+  /** Total de palabras esenciales del nivel del usuario. null si no está disponible. */
+  essentialWordsTotal: number | null
 }
 
 function SummaryStat({
@@ -52,6 +52,7 @@ export default function DailyOverviewSummary({
   arc,
   dueTomorrow,
   learned = 0,
+  essentialWordsTotal,
 }: Props) {
   if (steps.length === 0) return null
 
@@ -63,7 +64,8 @@ export default function DailyOverviewSummary({
 
   const soundIpa = formatIpaDisplay(arc?.soundIpa)
   const topicLabel = arc?.topicLabel
-  const progressPct = Math.min(100, (learned / ESSENTIAL_WORD_TARGET) * 100)
+  const hasTotal = essentialWordsTotal != null && essentialWordsTotal > 0
+  const progressPct = hasTotal ? Math.min(100, (learned / essentialWordsTotal) * 100) : 0
 
   return (
     <section
@@ -120,29 +122,39 @@ export default function DailyOverviewSummary({
       {learned > 0 ? (
         <div
           role="group"
-          aria-label={`Palabras esenciales, ${learned} de ${ESSENTIAL_WORD_TARGET}`}
+          aria-label={
+            hasTotal
+              ? `Palabras esenciales, ${learned} de ${essentialWordsTotal}`
+              : `Palabras esenciales, ${learned}`
+          }
           className="border-t border-border-subtle/60 pt-2.5"
         >
           <div className="mb-1.5 flex items-baseline justify-between gap-3">
             <span className="font-caption text-fg-muted">Palabras esenciales</span>
             <span className="font-caption tabular-nums text-fg">
               <span className="font-semibold">{learned}</span>
-              <span className="text-fg-muted"> / {ESSENTIAL_WORD_TARGET}</span>
+              {hasTotal ? (
+                <span className="text-fg-muted"> / {essentialWordsTotal}</span>
+              ) : (
+                <span className="text-fg-muted"> palabras</span>
+              )}
             </span>
           </div>
-          <div
-            className="h-1 w-full overflow-hidden rounded-full bg-surface-sunken"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={ESSENTIAL_WORD_TARGET}
-            aria-valuenow={learned}
-            aria-label="Progreso de palabras esenciales"
-          >
+          {hasTotal ? (
             <div
-              className="h-full rounded-full bg-primary transition-[width] duration-500 motion-reduce:transition-none"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
+              className="h-1 w-full overflow-hidden rounded-full bg-surface-sunken"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={essentialWordsTotal}
+              aria-valuenow={learned}
+              aria-label="Progreso de palabras esenciales"
+            >
+              <div
+                className="h-full rounded-full bg-primary transition-[width] duration-500 motion-reduce:transition-none"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
     </section>

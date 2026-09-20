@@ -1,18 +1,21 @@
 // Lightweight "learned vs total" counts for the Practice hub's Vocabulary card.
 // Uses the compact catalog-index (not the 25MB word dataset) plus a single
-// Dexie scan of the user's Essential Words SRS rows. Offline-safe: any failure
+// Dexie scan of the user's canonical learning items. Offline-safe: any failure
 // resolves to nulls so the card falls back to a bare title.
 
 import { fetchCatalogIndex } from "@/lib/essential-words/client";
-import { getEssentialWordsSrsEntries } from "@/lib/db";
+import { getLearningItems } from "@/lib/essential-words/queries";
 import { matchesFilter } from "@/lib/essential-words/queue";
 import { essentialWordId, type CefrLevel } from "@/lib/essential-words/types";
+import { summarizeEssentialWordsProgress } from "@/lib/essential-words/progress-summary";
 
 export interface EssentialWordsLevelCount {
-  /** Distinct Essential Words with an SRS row, scoped to `levels`. */
+  /** Distinct Essential Words with observed progress, scoped to `levels`. */
   learned: number;
   /** Total Essential Words in the catalog, scoped to `levels`. */
   total: number;
+  /** Distinct Essential Words currently due, scoped to `levels`. */
+  due: number;
 }
 
 /**
@@ -25,22 +28,22 @@ export async function getEssentialWordsLevelCount(
   userId?: string,
 ): Promise<EssentialWordsLevelCount | null> {
   try {
-    const [catalog, srsEntries] = await Promise.all([
+    const [catalog, learningItems] = await Promise.all([
       fetchCatalogIndex(),
-      userId ? getEssentialWordsSrsEntries(userId) : Promise.resolve([]),
+      userId ? getLearningItems(userId) : Promise.resolve([]),
     ]);
 
     const scoped = catalog.filter((entry) => matchesFilter(entry, levels, null));
     const total = scoped.length;
 
-    if (!userId || srsEntries.length === 0) {
-      return { learned: 0, total };
+    if (!userId) {
+      return { learned: 0, total, due: 0 };
     }
 
     const scopedIds = new Set(scoped.map((entry) => essentialWordId(entry.word)));
-    const learned = srsEntries.filter((e) => scopedIds.has(e.wordId)).length;
+    const progress = summarizeEssentialWordsProgress(learningItems, new Date(), scopedIds);
 
-    return { learned, total };
+    return { learned: progress.studiedWords, total, due: progress.dueWords };
   } catch {
     return null;
   }

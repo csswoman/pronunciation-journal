@@ -510,13 +510,115 @@
 .home-sidebar-card {
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-subtle);
-  background-color: var(--surface-raised);
   padding: var(--layout-card-pad);
+}
+
+.home-sidebar-card:not(.home-sidebar-card--tinted) {
+  background-color: var(--surface-raised);
 }
 
 .home-sidebar-card--compact {
   gap: var(--layout-stack-tight);
   padding-block: var(--layout-card-pad-compact);
+}
+
+/* ── PastelCard ──────────────────────────────────────────────────────────
+   A pastel-filled card is its own theming scope: neutral tokens that read
+   fine on --surface-raised (text-muted, text-faint, border-subtle...) go
+   low-contrast on a saturated fill, so this remaps them in place to ink
+   variants instead of asking every child to opt out individually. Internal
+   surfaces layer white/ink at fixed alpha over --card — never a sibling
+   tone's -soft/-deep swatch, which fights the card's own hue. */
+.pastel-card {
+  /* Real neutral chain (theme.css): --text-primary/secondary/tertiary/quaternary
+     feed text-fg / text-fg-muted / text-fg-subtle / text-fg-faint via @theme
+     inline. Redefining them here — not just the ink-* aliases — is what makes
+     any child using the plain neutral utilities legible on the pastel fill. */
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-secondary);
+  --text-tertiary: var(--ink-muted);
+  --text-quaternary: var(--ink-muted);
+  --border: rgb(18 21 28 / 0.15);
+  --border-subtle: rgb(18 21 28 / 0.15);
+  --border-default: rgb(18 21 28 / 0.15);
+
+  --btn-regular-bg: rgb(18 21 28 / 0.08);
+  --surface-sunken: rgb(18 21 28 / 0.08);
+  --bg-tertiary: rgb(255 255 255 / 0.65);
+
+  --success: var(--success-value);
+  --warning: var(--warning-value);
+  --error: var(--error-value);
+  --info: var(--info-value);
+
+  --success-soft: color-mix(in oklch, var(--success-value) 16%, rgb(255 255 255 / 0.75));
+  --warning-soft: color-mix(in oklch, var(--warning-value) 16%, rgb(255 255 255 / 0.75));
+  --error-soft: color-mix(in oklch, var(--error-value) 16%, rgb(255 255 255 / 0.75));
+  --info-soft: color-mix(in oklch, var(--info-value) 16%, rgb(255 255 255 / 0.75));
+
+  --badge-primary-bg: rgb(18 21 28 / 0.12);
+  --badge-primary-border: rgb(18 21 28 / 0.20);
+  --badge-success-bg: color-mix(in oklch, var(--success-value) 16%, rgb(255 255 255 / 0.75));
+  --badge-success-border: color-mix(in oklch, var(--success-value) 30%, transparent);
+  --badge-warning-bg: color-mix(in oklch, var(--warning-value) 16%, rgb(255 255 255 / 0.75));
+  --badge-warning-border: color-mix(in oklch, var(--warning-value) 30%, transparent);
+  --badge-error-bg: color-mix(in oklch, var(--error-value) 16%, rgb(255 255 255 / 0.75));
+  --badge-error-border: color-mix(in oklch, var(--error-value) 30%, transparent);
+  --badge-info-bg: color-mix(in oklch, var(--info-value) 16%, rgb(255 255 255 / 0.75));
+  --badge-info-border: color-mix(in oklch, var(--info-value) 30%, transparent);
+
+  background: var(--card);
+  color: var(--ink);
+}
+
+.pastel-card[data-tone="sky"] {
+  --card: var(--ej-sky);
+  --card-deep: var(--ej-sky-deep);
+}
+
+.pastel-card[data-tone="accent"] {
+  --card: oklch(calc(0.88 + var(--l-shift-base)) calc(0.07 * var(--chroma-boost-base)) var(--hue-base));
+  --card-deep: oklch(calc(0.78 + var(--l-shift-base)) calc(0.10 * var(--chroma-boost-base)) var(--hue-base));
+}
+
+.pastel-card[data-tone="butter"] {
+  --card: var(--ej-butter);
+  --card-deep: var(--ej-butter-deep);
+}
+
+.pastel-card[data-tone="coral"] {
+  --card: var(--ej-coral);
+  --card-deep: var(--ej-coral-deep);
+}
+
+.pastel-card[data-tone="lilac"] {
+  --card: var(--ej-lilac);
+  --card-deep: var(--ej-lilac-deep);
+}
+
+.pastel-card[data-tone="mint"] {
+  --card: var(--ej-mint);
+  --card-deep: var(--ej-mint-deep);
+}
+
+/* Internal surfaces — relative layers only, never a -soft/-deep swatch of
+   another tone (that reintroduces the illegible-neutral problem this card
+   exists to fix, just with a second hue instead of gray). */
+.pastel-card-inset {
+  background: rgb(255 255 255 / 0.55);
+}
+
+.pastel-card-panel {
+  background: rgb(255 255 255 / 0.9);
+}
+
+.pastel-card-chip {
+  background: var(--card-deep, rgb(18 21 28 / 0.12));
+  color: var(--ink);
+}
+
+.pastel-card-row-active {
+  background: color-mix(in oklch, var(--card) 40%, white);
 }
 
 .home-sidebar-card--priority {

@@ -1,28 +1,26 @@
 import { forwardRef } from "react";
-import type { IconProps, TablerIcon } from "@tabler/icons-react";
+import type { LucideIcon as LucideIconComponent, LucideProps } from "lucide-react";
 
-/** Lucide-compatible props: accept `strokeWidth` and default stroke to 1. */
-export type AppIconProps = IconProps & {
-  strokeWidth?: string | number;
-};
+export type AppIconProps = LucideProps;
 
-export type LucideIcon = TablerIcon;
+export type LucideIcon = LucideIconComponent;
 
-const DEFAULT_STROKE = 1;
+/** Nav icons read best at a lighter stroke; button/inline icons stay closer to Lucide's default. */
+const DEFAULT_STROKE_WIDTH = 1.8;
 
-export function createIcon(Icon: TablerIcon, displayName: string): TablerIcon {
+export function createIcon(Icon: LucideIconComponent, displayName: string): LucideIconComponent {
   const Wrapped = forwardRef<SVGSVGElement, AppIconProps>(function AppIcon(
-    { stroke, strokeWidth, ...props },
+    { strokeWidth, ...props },
     ref,
   ) {
     return (
       <Icon
         ref={ref}
-        stroke={stroke ?? strokeWidth ?? DEFAULT_STROKE}
+        strokeWidth={strokeWidth ?? DEFAULT_STROKE_WIDTH}
         {...props}
       />
     );
   });
   Wrapped.displayName = displayName;
-  return Wrapped;
+  return Wrapped as unknown as LucideIconComponent;
 }

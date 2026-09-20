@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { StudySessionHeader } from "./StudySessionHeader";
 import { StudySessionCard } from "./StudySessionCard";
 import { StudyRatingBar } from "./StudyRatingBar";
@@ -17,6 +18,23 @@ export function StudyModalWordBank({ source, onClose }: StudyModalWordBankProps)
     phase, queue, currentIndex, currentCard, flipped, stats, progress,
     setFlipped, handleRate, advanceCard, resetSession,
   } = useStudySession(source);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (phase !== "studying") return;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        advanceCard();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [phase, advanceCard, onClose]);
 
   if (phase === "loading") return <StudyLoadingScreen />;
   if (phase === "studying" && queue.length === 0) {

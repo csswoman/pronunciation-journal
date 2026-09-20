@@ -223,6 +223,49 @@
   --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
   --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
 
+  /* ── "English Journal" design system tokens ─────────────────────────────
+     Additive layer: pastel content colors + fixed ink/paper + neutral
+     aliases from the new visual language. --color-accent rides the existing
+     --primary (still driven by --hue, now constrained to 9 presets in the
+     picker UI). Prefixed ej-* to avoid clashing with existing bg-* names. */
+  --color-accent:       var(--primary);
+  --color-accent-hover: var(--primary-hover);
+  --color-on-accent:    var(--on-accent);
+
+  --color-ink:           var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted:     var(--ink-muted);
+  --color-paper:         var(--paper);
+
+  --color-ej-bg:             var(--ej-bg);
+  --color-ej-bg-sidebar:     var(--ej-bg-sidebar);
+  --color-ej-surface:        var(--ej-surface);
+  --color-ej-surface-raised: var(--ej-surface-raised);
+  --color-ej-field:          var(--ej-field);
+  --color-ej-border:         var(--ej-border);
+  --color-ej-border-strong:  var(--ej-border-strong);
+  --color-ej-text-strong:    var(--ej-text-strong);
+  --color-ej-text:           var(--ej-text);
+  --color-ej-text-secondary: var(--ej-text-secondary);
+  --color-ej-text-muted:     var(--ej-text-muted);
+  --color-ej-text-faint:     var(--ej-text-faint);
+
+  --color-sky:       var(--ej-sky);
+  --color-sky-deep:  var(--ej-sky-deep);
+  --color-sky-soft:  var(--ej-sky-soft);
+  --color-butter:      var(--ej-butter);
+  --color-butter-deep: var(--ej-butter-deep);
+  --color-butter-soft: var(--ej-butter-soft);
+  --color-coral:      var(--ej-coral);
+  --color-coral-deep: var(--ej-coral-deep);
+  --color-coral-soft: var(--ej-coral-soft);
+  --color-lilac:      var(--ej-lilac);
+  --color-lilac-deep: var(--ej-lilac-deep);
+  --color-lilac-soft: var(--ej-lilac-soft);
+  --color-mint:      var(--ej-mint);
+  --color-mint-deep: var(--ej-mint-deep);
+  --color-mint-soft: var(--ej-mint-soft);
+
   /* ── Badge backgrounds (soft variants) ──────────────────────────────────── */
   --color-badge-primary-bg:   var(--badge-primary-bg);
   --color-badge-primary-border: var(--badge-primary-border);

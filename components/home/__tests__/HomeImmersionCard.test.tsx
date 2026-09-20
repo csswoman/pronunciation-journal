@@ -16,23 +16,22 @@ describe("HomeImmersionCard", () => {
 
     fireEvent.click(registerBtn);
 
-    expect(screen.getByRole("button", { name: /^video$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^serie$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^podcast$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^lectura$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /video o serie/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /podcast/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /lectura/i })).toBeInTheDocument();
   });
 
   it("allows selecting category and adjusting time when expanded", () => {
     render(<HomeImmersionCard />);
     fireEvent.click(screen.getByRole("button", { name: /^registrar$/i }));
 
-    const podcastChip = screen.getByRole("button", { name: /^podcast$/i });
+    const podcastChip = screen.getByRole("button", { name: /podcast/i });
     fireEvent.click(podcastChip);
-    expect(podcastChip.className).toContain("bg-primary-soft");
+    expect(podcastChip.className).toContain("border-primary");
 
     const incrementBtn = screen.getByRole("button", { name: /aumentar tiempo/i });
     fireEvent.click(incrementBtn);
-    expect(screen.getByText(/35/)).toBeInTheDocument();
+    expect(screen.getByText("35")).toBeInTheDocument();
   });
 
   it("updates state to registered on submit", () => {
@@ -42,5 +41,15 @@ describe("HomeImmersionCard", () => {
     const saveBtn = screen.getByRole("button", { name: /^guardar$/i });
     fireEvent.click(saveBtn);
     expect(screen.getByText("¡Registrado!")).toBeInTheDocument();
+  });
+
+  it("does not render a fabricated streak", () => {
+    render(<HomeImmersionCard />);
+    expect(screen.queryByText(/4 días/)).toBeNull();
+  });
+
+  it("shows the xp that will actually be awarded", () => {
+    render(<HomeImmersionCard />);
+    expect(screen.getByText(/\+30 XP/)).toBeInTheDocument();
   });
 });

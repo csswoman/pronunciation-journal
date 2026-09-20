@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "@/components/icons";
+import { Plus, BookOpen } from "@/components/icons";
 import Card from "@/components/layout/Card";
 import Button from "@/components/ui/Button";
 import { DeckGrid } from "@/components/vocabulary/decks/DeckGrid";
@@ -50,20 +50,20 @@ export function DecksTab({
 
   if (decks.length === 0) {
     return (
-      <Card className="p-12 text-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-h2 bg-surface-sunken">
-            📚
+      <div className="rounded-3xl border border-dashed border-border-default bg-surface-sunken p-12 text-center">
+        <div className="flex flex-col items-center gap-4 max-w-sm mx-auto">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-surface-raised border border-border-subtle shadow-xs">
+            <BookOpen size={24} className="text-fg-subtle" />
           </div>
           <div>
-            <p className="text-body-sm font-semibold text-fg">No decks yet</p>
-            <p className="text-caption mt-1 text-fg-subtle">Group words by theme, lesson, or level and study them as a set.</p>
+            <p className="font-heading text-body-lg font-bold text-fg">No tienes mazos aún</p>
+            <p className="text-body-sm text-fg-muted mt-1">Agrupa palabras por tema o nivel y repásalas juntas.</p>
           </div>
           <Button variant="primary" icon={<Plus size={16} />} onClick={onCreateNew} className="mt-2">
-            Create a deck
+            Crear mazo
           </Button>
         </div>
-      </Card>
+      </div>
     );
   }
 

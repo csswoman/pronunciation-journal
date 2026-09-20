@@ -5,6 +5,7 @@ export type LearningSurface =
   | 'grammar_deck'
   | 'mini_lesson'
   | 'essential_words'
+  | 'chunks'
   | 'sound_lab'
   | 'pronunciation_path'
   | 'oral_mission'
@@ -21,6 +22,7 @@ export type ProgressOwner =
   | 'lesson_completions'
   | 'topic_srs'
   | 'essential_words'
+  | 'chunk_srs'
   | 'pronunciation'
   | 'word_bank'
   | 'tracked_items'
@@ -30,6 +32,7 @@ export type LearningTargetRef =
   | { namespace: 'topic'; id: string }
   | { namespace: 'pronunciation'; id: PronunciationTargetId }
   | { namespace: 'essential_word'; id: string }
+  | { namespace: 'chunks'; id: string }
   | { namespace: 'word_bank'; id: 'dynamic:user-word-uuid' }
   | { namespace: 'tracked_item'; id: 'dynamic:tracked-item-uuid' }
   | { namespace: 'lesson'; id: string }
