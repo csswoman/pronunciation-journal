@@ -49,10 +49,10 @@ export function buildSystemPrompt(
   options: SystemPromptOptions = {},
 ): string {
   const { lastTopic, voiceScored, missionId, interests, languagePreference } = options;
-  // Defaults to B1 (English) when we have no state yet, matching the default
-  // `cefrEstimate` a fresh learning state is seeded with.
+  // Defaults to A1 (English) when we have no state yet, matching the empty
+  // starter seed — no fabricated B1 guess.
   const language = resolveCoachLanguage(
-    learningState?.level.cefrEstimate ?? "B1",
+    learningState?.level.cefrEstimate ?? "A1",
     languagePreference ?? null,
   );
   const languageSuffix = `
