@@ -249,6 +249,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       reservedChunkNewSlots: RESERVED_CHUNK_NEW_SLOTS,
       // Review stays first in priority, but it stops being the whole session.
       maxDueSteps: MAX_DUE_STEPS,
+      context: { learnerLevel: activeLevel },
     }),
   )
 
