@@ -1,0 +1,55 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Registro lingüístico",
+    "title": "Inglés Formal vs. Informal",
+    "titleEmphasis": "register & vocabulary shifts",
+    "goal": "Adaptar tu vocabulario y estructuras según el nivel de formalidad de la situación."
+  },
+  "cards": [
+    {
+      "id": "b2-formal-vs-informal-concept",
+      "tag": "Idea central",
+      "title": "Transformaciones de vocabulario según el registro",
+      "lede": "Compara las versiones cotidianas con las alternativas académicas o ejecutivas.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Informal / Conversacional",
+              "rule": "Uso habitual en chats y amigos",
+              "examples": [
+                "ask for",
+                "check out",
+                "help",
+                "buy"
+              ]
+            },
+            {
+              "label": "Formal / Profesional",
+              "rule": "Uso en informes y correos ejecutivos",
+              "examples": [
+                "request",
+                "inspect / examine",
+                "assist",
+                "purchase"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What is a formal synonym for 'to help' in business correspondence?",
+      "options": [
+        "To assist",
+        "To back up"
+      ],
+      "answer": 0,
+      "explain": "'Assist' es la alternativa formal recomendada en registros ejecutivos."
+    }
+  ]
+}

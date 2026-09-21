@@ -1,0 +1,123 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Verbos",
+    "title": "Verbos Irregulares Esenciales",
+    "titleEmphasis": "base form, past & past participle",
+    "goal": "Dominar los patrones de cambio de los verbos irregulares más frecuentes en inglés."
+  },
+  "cards": [
+    {
+      "id": "a2-irregular-verbs-table-concept",
+      "tag": "Idea central",
+      "title": "Patrones de cambio en verbos irregulares",
+      "lede": "Los verbos irregulares no añaden '-ed' en pasado; en su lugar, transforman la vocal o la raíz.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Invariables (V1 = V2 = V3)",
+              "value": "cut → cut → cut / put → put → put / hit → hit → hit",
+              "highlights": ["cut", "put", "hit"]
+            },
+            {
+              "key": "Pasado y Participio idénticos (V2 = V3)",
+              "value": "buy → bought → bought / bring → brought → brought / keep → kept → kept",
+              "highlights": ["bought", "brought", "kept"]
+            },
+            {
+              "key": "Tres formas distintas (V1 ≠ V2 ≠ V3)",
+              "value": "go → went → gone / see → saw → seen / write → wrote → written",
+              "highlights": ["went", "saw", "written"]
+            },
+            {
+              "key": "Patrón i → a → u",
+              "value": "sing → sang → sung / drink → drank → drunk / begin → began → begun",
+              "highlights": ["sang", "drank", "began"]
+            }
+          ]
+        }
+      ],
+      "tip": {
+        "label": "Consejo de estudio:",
+        "body": "Memoriza los verbos agrupados por su patrón fonético en lugar de orden alfabético."
+      }
+    },
+    {
+      "id": "a2-irregular-verbs-table-groups",
+      "tag": "Tabla de referencia",
+      "title": "Verbos por patrón de cambio",
+      "lede": "Revisa los grupos de verbos más usados en la conversación diaria.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "speak / spoke / spoken",
+              "value": "Hablar · I spoke to her yesterday / She has spoken in public.",
+              "highlights": ["spoke", "spoken"]
+            },
+            {
+              "key": "take / took / taken",
+              "value": "Tomar / llevar · He took the train / The photo was taken here.",
+              "highlights": ["took", "taken"]
+            },
+            {
+              "key": "give / gave / given",
+              "value": "Dar · They gave us feedback / A gift was given.",
+              "highlights": ["gave", "given"]
+            },
+            {
+              "key": "drive / drove / driven",
+              "value": "Conducir · She drove home / He has driven all day.",
+              "highlights": ["drove", "driven"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-irregular-verbs-table-mistakes",
+      "tag": "Error frecuente",
+      "title": "Evita aplicar '-ed' a verbos irregulares",
+      "lede": "Compara el error común de regularización con la forma correcta.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Yesterday I buyed a new car."
+            },
+            {
+              "variant": "good",
+              "text": "Yesterday I bought a new car.",
+              "note": "'buy' es irregular; su Pasado Simple es 'bought'."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What is the Past Simple form of 'write'?",
+      "options": [
+        "wrote",
+        "written"
+      ],
+      "answer": 0,
+      "explain": "'wrote' es el Pasado Simple (V2), mientras que 'written' es el Participio Pasado (V3)."
+    },
+    {
+      "q": "Which series follows the i → a → u pattern?",
+      "options": [
+        "begin / began / begun",
+        "make / made / made"
+      ],
+      "answer": 0,
+      "explain": "'begin' cambia su vocal de i a a en pasado y u en participio."
+    }
+  ]
+}

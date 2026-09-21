@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Business · Oficina",
+    "title": "Preguntas y Respuestas Básicas de Oficina",
+    "titleEmphasis": "daily workplace interaction",
+    "goal": "Desenvolverse con fluidez en interacciones operativas y preguntas de rutina en el trabajo."
+  },
+  "cards": [
+    {
+      "id": "biz-basic-qa-concept",
+      "tag": "Idea central",
+      "title": "Preguntas de rutina en el entorno de trabajo",
+      "lede": "Expresiones estándar para coordinar tareas, reuniones y entregables.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "¿Tienes tiempo hoy?",
+              "value": "Do you have a few minutes to connect?",
+              "highlights": ["Do you have a few minutes"]
+            },
+            {
+              "key": "¿Cuál es la fecha límite?",
+              "value": "What is the deadline for this deliverable?",
+              "highlights": ["deadline"]
+            },
+            {
+              "key": "¿Quién lidera este proyecto?",
+              "value": "Who is leading this initiative?",
+              "highlights": ["leading"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "How do you ask about the due date for a project in a professional way?",
+      "options": [
+        "What is the deadline for this project?",
+        "When must I give this thing?"
+      ],
+      "answer": 0,
+      "explain": "'What is the deadline...' es la pregunta profesional estándar."
+    }
+  ]
+}

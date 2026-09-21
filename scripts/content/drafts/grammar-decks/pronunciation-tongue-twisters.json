@@ -1,0 +1,50 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Pronunciación · Articulación",
+    "title": "Trabalenguas para Agilidad Articulatoria",
+    "titleEmphasis": "tongue twisters & vocal agility",
+    "goal": "Entrenar la agilidad muscular de la lengua y los labios para sonidos difíciles en inglés."
+  },
+  "cards": [
+    {
+      "id": "pronunciation-tongue-twisters-concept",
+      "tag": "Idea central",
+      "title": "Práctica con trabalenguas clave",
+      "lede": "Repite lentamente prestando atención al punto de articulación y acelera progresivamente.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Sonidos /s/ y /ʃ/",
+              "value": "She sells seashells by the seashore.",
+              "highlights": ["She sells seashells"]
+            },
+            {
+              "key": "Sonido /p/",
+              "value": "Peter Piper picked a peck of pickled peppers.",
+              "highlights": ["Peter Piper picked"]
+            },
+            {
+              "key": "Sonidos /w/ y /v/",
+              "value": "Which witch wished which wish?",
+              "highlights": ["Which witch"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What phoneme contrast does 'She sells seashells' help practice?",
+      "options": [
+        "/s/ vs. /ʃ/ (sh)",
+        "/b/ vs. /v/"
+      ],
+      "answer": 0,
+      "explain": "Entrena la transición entre la fricativa alveolar /s/ y la posalveolar /ʃ/ (sh)."
+    }
+  ]
+}

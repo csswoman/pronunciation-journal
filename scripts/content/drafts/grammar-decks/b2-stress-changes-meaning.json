@@ -1,0 +1,53 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Acentuación y Fonética",
+    "title": "Cambio de Acento que Cambia el Significado",
+    "titleEmphasis": "noun vs. verb syllable stress",
+    "goal": "Reconocer cómo acentuar la primera sílaba convierte una palabra en sustantivo y en la segunda sílaba en verbo."
+  },
+  "cards": [
+    {
+      "id": "b2-stress-changes-meaning-concept",
+      "tag": "Idea central",
+      "title": "Acentuación en Sustantivos vs. Verbos",
+      "lede": "Sustantivo → primera sílaba destacada. Verbo → segunda sílaba destacada.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "Sustantivo (1ª sílaba)",
+              "rule": "Énfasis al inicio",
+              "examples": [
+                "PRO-ject (proyecto)",
+                "RE-cord (disco/registro)",
+                "IN-crease (incremento)"
+              ]
+            },
+            {
+              "label": "Verbo (2ª sílaba)",
+              "rule": "Énfasis al final",
+              "examples": [
+                "pro-JECT (proyectar)",
+                "re-CORD (grabar)",
+                "in-CREASE (incrementar)"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "In the sentence 'We need to re-CORD the audio', where is the stress?",
+      "options": [
+        "Second syllable (re-CORD)",
+        "First syllable (RE-cord)"
+      ],
+      "answer": 0,
+      "explain": "Como funciona como verbo ('grabar'), el acento recae en la segunda sílaba."
+    }
+  ]
+}

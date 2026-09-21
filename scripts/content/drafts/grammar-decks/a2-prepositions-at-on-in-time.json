@@ -1,0 +1,72 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "A2 · Preposiciones",
+    "title": "Preposiciones de tiempo: AT, ON, IN",
+    "titleEmphasis": "horas, días y períodos",
+    "goal": "Elegir la preposición de tiempo exacta según el nivel de precisión del momento."
+  },
+  "cards": [
+    {
+      "id": "a2-prepositions-at-on-in-time-concept",
+      "tag": "Idea central",
+      "title": "La pirámide del tiempo",
+      "lede": "Usa AT para momentos precisos, ON para días y fechas, e IN para períodos largos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "AT (Preciso / Hora)",
+              "value": "at 8:00 AM, at noon, at night, at midnight",
+              "highlights": ["at"]
+            },
+            {
+              "key": "ON (Días / Fechas)",
+              "value": "on Monday, on May 5th, on my birthday",
+              "highlights": ["on"]
+            },
+            {
+              "key": "IN (Meses / Años / Estaciones / Siglos)",
+              "value": "in July, in 2026, in the morning, in summer",
+              "highlights": ["in"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a2-prepositions-at-on-in-time-mistakes",
+      "tag": "Error frecuente",
+      "title": "Partes del día vs. días específicos",
+      "lede": "Fíjate si la frase menciona solo la parte del día o el día de la semana.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "I will see you in Monday morning."
+            },
+            {
+              "variant": "good",
+              "text": "I will see you on Monday morning.",
+              "note": "Al incluir el día ('Monday'), prima la regla de 'ON'."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "The meeting starts ___ 9:30 AM ___ Friday.",
+      "options": [
+        "at / on",
+        "on / in"
+      ],
+      "answer": 0,
+      "explain": "AT para horas específicas y ON para días de la semana."
+    }
+  ]
+}

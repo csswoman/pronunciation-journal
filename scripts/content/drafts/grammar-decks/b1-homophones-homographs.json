@@ -1,0 +1,78 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Ortografía & Vocabulario",
+    "title": "Homófonos y Homógrafos en Inglés",
+    "titleEmphasis": "words that sound or look identical",
+    "goal": "Diferenciar palabras que suenan igual pero tienen significados y escrituras distintas."
+  },
+  "cards": [
+    {
+      "id": "b1-homophones-homographs-concept",
+      "tag": "Idea central",
+      "title": "Homófonos de confusión habitual",
+      "lede": "Palabras que comparten pronunciación idéntica pero difieren en escritura y significado.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "there / their / they're",
+              "value": "there (lugar) / their (su de ellos) / they're (ellos son/están)",
+              "highlights": ["there", "their", "they're"]
+            },
+            {
+              "key": "your / you're",
+              "value": "your (tu posesivo) / you're (tú eres/estás)",
+              "highlights": ["your", "you're"]
+            },
+            {
+              "key": "its / it's",
+              "value": "its (su posesivo de cosa) / it's (es/está)",
+              "highlights": ["its", "it's"]
+            },
+            {
+              "key": "hear / here",
+              "value": "hear (escuchar) / here (aquí)",
+              "highlights": ["hear", "here"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-homophones-homographs-contrast",
+      "tag": "Contraste",
+      "title": "Ahí, Su y Ellos Están",
+      "lede": "Compara estos tres términos pronunciados exactamente igual /ðɛər/.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "There (Lugar)",
+              "rule": "Indica ubicación",
+              "examples": ["Put the book over there."]
+            },
+            {
+              "label": "Their (Posesión)",
+              "rule": "Pertenece a ellos",
+              "examples": ["Their car is parked outside."]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which option completes: '___ going to love ___ new home'?",
+      "options": [
+        "They're / their",
+        "Their / there"
+      ],
+      "answer": 0,
+      "explain": "'They're' (Ellos van a...) y 'their' (su nuevo hogar)."
+    }
+  ]
+}

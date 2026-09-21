@@ -1,0 +1,77 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B2 · Estilo",
+    "title": "Evitar Redundancias en Inglés",
+    "titleEmphasis": "concise & professional writing",
+    "goal": "Eliminar repeticiones innecesarias de palabras para lograr una redacción limpia y profesional."
+  },
+  "cards": [
+    {
+      "id": "b2-avoiding-redundancies-concept",
+      "tag": "Idea central",
+      "title": "Redundancias comunes en la comunicación",
+      "lede": "Combinaciones donde una palabra repite el significado de la otra.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Redundancia común",
+              "value": "return back / repeat again / revert back",
+              "highlights": ["return back", "repeat again"]
+            },
+            {
+              "key": "Forma concisa",
+              "value": "return / repeat / revert",
+              "highlights": ["return", "repeat"]
+            },
+            {
+              "key": "Adjetivos duplicados",
+              "value": "free gift / unexpected surprise / past history",
+              "highlights": ["free gift", "past history"]
+            },
+            {
+              "key": "Forma concisa",
+              "value": "gift / surprise / history",
+              "highlights": ["gift", "surprise"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2-avoiding-redundancies-mistakes",
+      "tag": "Error frecuente",
+      "title": "Revert back vs. Revert",
+      "lede": "'Revert' ya significa volver a un estado anterior; no requiere 'back'.",
+      "blocks": [
+        {
+          "type": "pairs",
+          "lines": [
+            {
+              "variant": "bad",
+              "text": "Please revert back to me with the details."
+            },
+            {
+              "variant": "good",
+              "text": "Please reply to me with the details (o 'Please revert with the details').",
+              "note": "Usa 'reply' o 'respond' en comunicación ejecutiva."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which expression is free of redundancies?",
+      "options": [
+        "Please repeat that again.",
+        "Please repeat that."
+      ],
+      "answer": 1,
+      "explain": "'repeat' ya implica volver a decir algo; 'again' es redundante."
+    }
+  ]
+}

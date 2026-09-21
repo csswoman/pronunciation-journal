@@ -1,0 +1,55 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Business · Modismos",
+    "title": "Expresiones para Describir Personas en el Trabajo",
+    "titleEmphasis": "workplace personality idioms",
+    "goal": "Utilizar modismos comunes en el mundo corporativo para caracterizar estilos de trabajo y personalidades."
+  },
+  "cards": [
+    {
+      "id": "biz-people-idioms-concept",
+      "tag": "Idea central",
+      "title": "Modismos de personalidad profesional",
+      "lede": "Expresiones idiomáticas comunes en entornos laborales angloparlantes.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "go-getter",
+              "value": "persona ambiciosa e iniciadora de proyectos",
+              "highlights": ["go-getter"]
+            },
+            {
+              "key": "team player",
+              "value": "persona colaboradora que trabaja muy bien en equipo",
+              "highlights": ["team player"]
+            },
+            {
+              "key": "micromanager",
+              "value": "líder o jefe que controla en exceso cada detalle",
+              "highlights": ["micromanager"]
+            },
+            {
+              "key": "fast learner",
+              "value": "persona que aprende conceptos rápidamente",
+              "highlights": ["fast learner"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What idiom describes someone who is proactive and highly ambitious?",
+      "options": [
+        "A go-getter",
+        "A micromanager"
+      ],
+      "answer": 0,
+      "explain": "Un 'go-getter' es alguien emprendedor y con iniciativa constante."
+    }
+  ]
+}
