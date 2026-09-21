@@ -16,6 +16,7 @@ interface CoursePathElectiveTrackProps {
   level: CoursePathLevel;
   defaultOpen?: boolean;
   topicImmersionMap?: Record<string, ImmersionLesson>;
+  hideHero?: boolean;
 }
 
 export default function CoursePathElectiveTrack({ level, defaultOpen, topicImmersionMap }: CoursePathElectiveTrackProps) {

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
 import {
+  CANONICAL_TOPIC_DECKS,
   TOPIC_DECK_MAP,
   deckSlugForTopic,
   deckSlugForWeakTopics,
@@ -30,10 +31,15 @@ describe('TOPIC_DECK_MAP coverage', () => {
     }
   })
 
-  it('points every mapping at a deck file that exists', () => {
-    for (const { keyword, deckSlug } of TOPIC_DECK_MAP) {
+  it('points every keyword and canonical mapping at a deck file that exists', () => {
+    const mappings = [
+      ...TOPIC_DECK_MAP.map(({ keyword, deckSlug }) => [keyword, deckSlug] as const),
+      ...Object.entries(CANONICAL_TOPIC_DECKS),
+    ]
+
+    for (const [topic, deckSlug] of mappings) {
       const file = path.join(DECKS_DIR, `${deckSlug}.json`)
-      expect(fs.existsSync(file), `${keyword} → missing deck ${deckSlug}.json`).toBe(true)
+      expect(fs.existsSync(file), `${topic} → missing deck ${deckSlug}.json`).toBe(true)
     }
   })
 
@@ -44,6 +50,17 @@ describe('TOPIC_DECK_MAP coverage', () => {
 
   it('resolves more specific keywords before the generic ones they contain', () => {
     expect(deckSlugForTopic('present perfect continuous')).toBe('b1-presente-perfecto-continuo')
+  })
+
+  it('routes canonical comparatives and superlatives to their authored deck', () => {
+    expect(deckSlugForTopic('grammar:comparatives')).toBe('b1-comparativos-planes-futuros')
+    expect(deckSlugForTopic('grammar:superlatives')).toBe('b1-comparativos-planes-futuros')
+  })
+
+  it('does not redirect retired engVid topics to unrelated authored decks', () => {
+    expect(deckSlugForTopic('homophone')).toBeNull()
+    expect(deckSlugForTopic('irregular verb')).toBeNull()
+    expect(deckSlugForTopic('ielts letter')).toBeNull()
   })
 })
 

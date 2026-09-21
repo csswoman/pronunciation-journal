@@ -95,6 +95,10 @@ export function sortStepsByPedagogicalProgression(steps: DailyStep[]): DailyStep
   })
 }
 
+export function selectedPhoneticStep(steps: DailyStep[]): DailyStep | undefined {
+  return steps.find((step) => step.ipa || ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind))
+}
+
 /**
  * Resuelve el sonido primario del día respetando el bucle adaptativo SLA:
  * 1. Prioridad máxima: fonema con fallos orales reiterados (≥2 intentos, <65% precisión) en producción oral.

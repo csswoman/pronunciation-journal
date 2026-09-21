@@ -3,9 +3,9 @@ const ENGLISH_LANG_PREFIXES = ['en-US', 'en-GB', 'en-AU', 'en-CA', 'en']
 let cachedVoices: SpeechSynthesisVoice[] | null = null
 
 export function getEnglishVoices(): SpeechSynthesisVoice[] {
-  if (typeof window === 'undefined') return []
+  if (typeof window === 'undefined' || !window.speechSynthesis?.getVoices) return []
   if (cachedVoices) return cachedVoices
-  const all = window.speechSynthesis.getVoices()
+  const all = window.speechSynthesis.getVoices() ?? []
   const filtered = all.filter((v) =>
     ENGLISH_LANG_PREFIXES.some((prefix) => v.lang.startsWith(prefix))
   )
@@ -33,7 +33,7 @@ export function speak(
       }
     | (() => void),
 ): SpeechSynthesisUtterance | null {
-  if (typeof window === 'undefined') return null
+  if (typeof window === 'undefined' || !window.speechSynthesis?.speak) return null
   window.speechSynthesis.cancel()
   const utt = new SpeechSynthesisUtterance(word)
   

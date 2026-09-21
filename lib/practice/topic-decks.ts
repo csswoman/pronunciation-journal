@@ -88,49 +88,28 @@ export const TOPIC_DECK_MAP: Array<{ keyword: string; deckSlug: string }> = [
   { keyword: 'standup',            deckSlug: 'biz-code-review' },
   { keyword: 'hedging',            deckSlug: 'biz-code-review' },
 
-  // ── EngVid Resource Decks ─────────────────────────────────────────────────
-  { keyword: 'stative verb',       deckSlug: 'b1-stative-verbs' },
-  { keyword: 'superlative',        deckSlug: 'a2-comparatives-superlatives' },
-  { keyword: 'comma',              deckSlug: 'b1-commas-punctuation' },
-  { keyword: 'plural',             deckSlug: 'a1-plural-nouns-spelling' },
-  { keyword: 'preposition of time', deckSlug: 'a2-prepositions-at-on-in-time' },
-  { keyword: 'gerund and infinitive', deckSlug: 'b1-gerunds-and-infinitives' },
-  { keyword: 'redundancy',         deckSlug: 'b2-avoiding-redundancies' },
-  { keyword: 'literal phrasal',    deckSlug: 'a2-literal-phrasal-verbs' },
-  { keyword: 'command phrasal',    deckSlug: 'b1-phrasal-verbs-commands' },
-  { keyword: 'suffix ful',         deckSlug: 'b1-suffixes-ful-less' },
-  { keyword: 'suffix ize',         deckSlug: 'b2-suffixes-ize-ization' },
-  { keyword: 'ending en',          deckSlug: 'b1-verbs-ending-en' },
-  { keyword: 'abbreviation',       deckSlug: 'b1-online-texting-abbreviations' },
-  { keyword: 'shortened word',     deckSlug: 'b1-shortened-words-spoken' },
-  { keyword: 'proverb',            deckSlug: 'b2-common-proverbs' },
-  { keyword: 'riddle',             deckSlug: 'a2-riddles-wordplay' },
-  { keyword: 'crime',              deckSlug: 'b2-crime-justice-vocabulary' },
-  { keyword: 'email writing',      deckSlug: 'biz-professional-emails' },
-  { keyword: 'resume',             deckSlug: 'biz-resume-cv-tips' },
-  { keyword: 'manager',            deckSlug: 'biz-manager-collocations' },
-  { keyword: 'situational',        deckSlug: 'biz-situational-interview-qa' },
-  { keyword: 'common interview',   deckSlug: 'biz-common-interview-qa' },
-  { keyword: 'office qa',          deckSlug: 'biz-basic-qa' },
-  { keyword: 'people idiom',       deckSlug: 'biz-people-idioms' },
-  { keyword: 'persuasive',         deckSlug: 'b2-persuasive-speaking' },
-  { keyword: 'on sound',           deckSlug: 'pronunciation-on-sound' },
-  { keyword: 'stress meaning',     deckSlug: 'b2-stress-changes-meaning' },
-  { keyword: 'tongue twister',     deckSlug: 'pronunciation-tongue-twisters' },
-  { keyword: 'open ended',         deckSlug: 'b2-open-ended-questions' },
-  { keyword: 'formal informal',    deckSlug: 'b2-formal-vs-informal' },
-  { keyword: 'academic word',      deckSlug: 'academic-word-list' },
-  { keyword: 'academic adjective', deckSlug: 'academic-142-adjectives' },
-  { keyword: 'ielts letter',       deckSlug: 'ielts-task-1-letters' },
-  { keyword: 'irregular verb',     deckSlug: 'a2-irregular-verbs-table' },
-  { keyword: 'homophone',          deckSlug: 'b1-homophones-homographs' },
-  { keyword: 'silent letter',      deckSlug: 'a2-silent-letters' },
-  { keyword: 'make or do',         deckSlug: 'b1-common-collocations-make-do' },
-  { keyword: 'dependent preposition', deckSlug: 'b1-prepositional-verbs-dependent' },
+  // Retired engVid decks are drafts, not canonical sources. Do not redirect a
+  // learner's observed weakness to merely adjacent material: returning null is
+  // preferable until an authored deck covers that exact target.
 ]
 
+/**
+ * These generated engVid topics were retired with their decks. They can contain
+ * generic terms such as "verb" or "adjective", but the remaining authored deck
+ * for that generic term is not evidence-backed remediation for this target.
+ */
+const UNSUPPORTED_RETIRED_ENGVID_TOPICS = [
+  'stative verb',
+  'literal phrasal verb',
+  'suffix ful',
+  'suffix ize',
+  'ending en',
+  'academic adjective',
+  'irregular verb',
+] as const
+
 /** Exact mapping for every canonical topic accepted by topic_srs. */
-const CANONICAL_TOPIC_DECKS: Record<string, string> = {
+export const CANONICAL_TOPIC_DECKS: Readonly<Record<string, string>> = {
   'grammar:subject omission': 'a1-pronombres-sujeto',
   'grammar:articles': 'a1-articulos-basicos',
   'grammar:present simple': 'a1-presente-simple',
@@ -146,8 +125,10 @@ const CANONICAL_TOPIC_DECKS: Record<string, string> = {
   'grammar:prepositions': 'a1-preposiciones-lugar-tiempo',
   'grammar:modal verbs': 'b1-modales-deduccion',
   'grammar:phrasal verbs': 'b1-phrasal-verbs-tipos',
-  'grammar:comparatives': 'a2-comparatives-superlatives',
-  'grammar:superlatives': 'a2-comparatives-superlatives',
+  // The former combined deck was removed. This authored B1 deck covers both
+  // forms; do not substitute a quantifier-only deck for either concept.
+  'grammar:comparatives': 'b1-comparativos-planes-futuros',
+  'grammar:superlatives': 'b1-comparativos-planes-futuros',
   'grammar:questions': 'a1-preguntas-do-does',
   'grammar:question words': 'a1-palabras-interrogativas',
   'grammar:pronouns': 'a1-pronombres-sujeto',
@@ -175,6 +156,9 @@ export function deckSlugForTopic(topic: string): string | null {
   const normalized = topic.toLowerCase()
   const canonical = CANONICAL_TOPIC_DECKS[normalized]
   if (canonical) return canonical
+  if (UNSUPPORTED_RETIRED_ENGVID_TOPICS.some((retiredTopic) => normalized.includes(retiredTopic))) {
+    return null
+  }
   return TOPIC_DECK_MAP.find((entry) => normalized.includes(entry.keyword))?.deckSlug ?? null
 }
 

@@ -21,6 +21,20 @@ export type SprintGap = {
   level: FocusLevel
 }
 
+// ── Practice Progress ──────────────────────────────────────────────────────────
+
+export type FocusPracticeDay = {
+  day: number
+  startedContentIds: string[]
+  answeredExerciseKeys: string[]
+  completedContentIds: string[]
+  lastActivityAt: string
+}
+
+export type FocusPracticeProgress = {
+  days: FocusPracticeDay[]
+}
+
 // ── Sprint ─────────────────────────────────────────────────────────────────────
 
 export type SprintStatus = 'active' | 'completed' | 'expired'
@@ -28,11 +42,13 @@ export type SprintStatus = 'active' | 'completed' | 'expired'
 /** Sesión de foco de 7 días con 1-2 gaps declarados. */
 export type FocusSprint = {
   id: string
+  userId?: string
   gaps: SprintGap[]
   startsAt: string  // ISO
   endsAt: string    // ISO — startsAt + 7 días
   status: SprintStatus
   createdAt: string // ISO
+  practice?: FocusPracticeProgress
 }
 
 // ── Content bodies por kind ───────────────────────────────────────────────────
@@ -125,6 +141,7 @@ export type FocusContentKind = 'story' | 'drill' | 'dialogue' | 'error_trap' | '
 /** Asset de contenido generado por Gemini para un sprint. */
 export type FocusContent = {
   id: string
+  userId?: string
   sprintId: string
   kind: FocusContentKind
   gapIds: string[]
