@@ -2,7 +2,7 @@
 
 // Planned structure:
 // <NotebookPastGrid>
-//   <SectionHeader: "Páginas anteriores" + page count badge + "Ver todas" link />
+//   <SectionHeader: "Páginas anteriores" + page count badge />
 //   <RowsList:
 //     {pastPages.map => <PastPageRow mintDateBox previewText meta badge arrowRight />}
 //   </RowsList>
@@ -51,14 +51,6 @@ export function NotebookPastGrid({ pastPages }: NotebookPastGridProps) {
           </span>
         </div>
 
-        {pastPages.length > 5 && (
-          <Link
-            href="/journal/history"
-            className="font-label text-body-sm font-semibold text-fg-muted hover:text-fg transition-colors"
-          >
-            Ver todas
-          </Link>
-        )}
       </div>
 
       {/* Lista de páginas anteriores */}

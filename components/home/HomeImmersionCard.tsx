@@ -2,16 +2,16 @@
 
 // Sub-components:
 // <HomeImmersionCard>
-//   <ImmersionHeader /> (Title, subtitle, +2 XP badge)
+//   <ImmersionHeader /> (Title, subtitle, computed XP badge)
 //   <ImmersionCategoryChips /> (Video o serie, Podcast, Lectura chips con circulo de icono pastel)
-//   <ImmersionFooter /> (7-day streak dots con círculos punteados inactivos, CTA "Registrar →")
+//   <ImmersionFooter /> (CTA "Registrar →")
 //   <ImmersionStepperControls /> (conditional details panel when open)
 // </HomeImmersionCard>
 
 import { useState } from "react";
 import { Video, Headphones, BookOpen, Check, ArrowRight } from "@/components/icons";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
-import { logExternalImmersion } from "@/lib/immersion/external-log";
+import { logExternalImmersion, immersionXpForMinutes } from "@/lib/immersion/external-log";
 import type { ImmersionMediaType } from "@/lib/progress/activity-types";
 import type { HomeImmersionSummary } from "@/lib/home/constants";
 import { cn } from "@/lib/cn";
@@ -99,7 +99,11 @@ export default function HomeImmersionCard({ summary = null }: Props) {
           <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
             +{registeredXp} XP
           </span>
-        ) : null}
+        ) : (
+          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
+            +{immersionXpForMinutes(minutes)} XP
+          </span>
+        )}
       </div>
 
       {/* Chips con circulo de icono pastel */}

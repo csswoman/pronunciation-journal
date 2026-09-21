@@ -19,6 +19,13 @@ export interface ExternalImmersionResult {
 }
 
 /**
+ * Calcula el XP otorgado por una sesión de inmersión externa según los minutos registrados.
+ */
+export function immersionXpForMinutes(minutes: number): number {
+  return Math.max(10, Math.round(minutes))
+}
+
+/**
  * Registra una sesión de inmersión externa (YouTube, series, podcasts, lectura)
  * asociándola a las habilidades correspondientes y sumando XP y tiempo al progreso.
  */
@@ -28,7 +35,7 @@ export async function logExternalImmersion(
 ): Promise<ExternalImmersionResult> {
   const minutes = Math.max(1, input.minutes)
   const skills = IMMERSION_MEDIA_SKILLS[input.type] ?? ['listening']
-  const xpEarned = Math.max(10, Math.round(minutes * 1))
+  const xpEarned = immersionXpForMinutes(minutes)
   const durationMs = minutes * 60 * 1000
 
   const outcome = await recordActivitySession(userId, {
@@ -39,7 +46,7 @@ export async function logExternalImmersion(
     explicitXp: xpEarned,
     sessionResult: {
       results: [],
-      accuracy: 100,
+      accuracy: 0,
       totalTimeMs: durationMs,
       bySlug: {} as import('@/lib/practice/types').SessionResult['bySlug'],
     },

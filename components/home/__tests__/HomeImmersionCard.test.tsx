@@ -31,7 +31,7 @@ describe("HomeImmersionCard", () => {
 
     const incrementBtn = screen.getByRole("button", { name: /aumentar tiempo/i });
     fireEvent.click(incrementBtn);
-    expect(screen.getByText(/35/)).toBeInTheDocument();
+    expect(screen.getByText("35")).toBeInTheDocument();
   });
 
   it("updates state to registered on submit", () => {
@@ -41,5 +41,15 @@ describe("HomeImmersionCard", () => {
     const saveBtn = screen.getByRole("button", { name: /^guardar$/i });
     fireEvent.click(saveBtn);
     expect(screen.getByText("¡Registrado!")).toBeInTheDocument();
+  });
+
+  it("does not render a fabricated streak", () => {
+    render(<HomeImmersionCard />);
+    expect(screen.queryByText(/4 días/)).toBeNull();
+  });
+
+  it("shows the xp that will actually be awarded", () => {
+    render(<HomeImmersionCard />);
+    expect(screen.getByText(/\+30 XP/)).toBeInTheDocument();
   });
 });

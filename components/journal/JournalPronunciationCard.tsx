@@ -21,27 +21,12 @@ interface JournalPronunciationCardProps {
   onAddWord?: () => void
 }
 
-const DEFAULT_SAMPLE_WORDS: Array<{ word: string; ipa: string }> = [
-  { word: 'thoroughly', ipa: '/ˈθʌrəli/' },
-  { word: 'clothes', ipa: '/kloʊðz/' },
-  { word: 'world', ipa: '/wɜːrld/' },
-]
-
-const SAMPLE_IPA_MAP: Record<string, string> = {
-  thoroughly: '/ˈθʌrəli/',
-  clothes: '/kloʊðz/',
-  world: '/wɜːrld/',
-  schedule: '/ˈskɛdʒuːl/',
-}
-
 export function JournalPronunciationCard({
   savedWords = [],
   onAddWord,
 }: JournalPronunciationCardProps) {
-  const isDefault = savedWords.length === 0
-  const rawWords = isDefault ? DEFAULT_SAMPLE_WORDS.map((item) => item.word) : savedWords
-  const visibleWords = rawWords.slice(0, 3)
-  const remainingCount = rawWords.length - visibleWords.length
+  const visibleWords = savedWords.slice(0, 3)
+  const remainingCount = savedWords.length - visibleWords.length
 
   const buttonContent = (
     <button
@@ -79,28 +64,25 @@ export function JournalPronunciationCard({
             Palabras que se te traban al hablar. Vuelve a ellas cuando practiques.
           </p>
 
-          {/* Chips de palabras guardadas con IPA */}
-          <div className="mt-1 flex flex-wrap items-center gap-2">
-            {visibleWords.map((word) => {
-              const ipa = SAMPLE_IPA_MAP[word.toLowerCase()]
-              return (
+          {savedWords.length > 0 ? (
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              {visibleWords.map((word) => (
                 <span
                   key={word}
                   className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-paper px-3 py-1 font-sans text-caption font-semibold text-ink shadow-2xs select-none"
                 >
                   <span className="font-bold text-ink">{word}</span>
-                  {ipa ? (
-                    <span className="font-ipa font-normal text-ink-secondary">{ipa}</span>
-                  ) : null}
                 </span>
-              )
-            })}
-            {remainingCount > 0 && (
-              <span className="font-sans text-caption font-semibold text-ink-secondary select-none">
-                +{remainingCount} más
-              </span>
-            )}
-          </div>
+              ))}
+              {remainingCount > 0 && (
+                <span className="font-sans text-caption font-semibold text-ink-secondary select-none">
+                  +{remainingCount} más
+                </span>
+              )}
+            </div>
+          ) : (
+            <p className="font-sans text-caption text-ink-secondary">Aún no has guardado palabras.</p>
+          )}
         </div>
       </div>
 

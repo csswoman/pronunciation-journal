@@ -13,7 +13,7 @@ fila al terminar.
 
 | Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
 |---|---|---|---|---|---|
-| 005 | Eliminar datos inventados en Home, Diario, Daily, landing y enlaces rotos | P1 | M | — | TODO |
+| 005 | Eliminar datos inventados en Home, Diario, Daily, landing y enlaces rotos | P1 | M | — | DONE (rama `advisor/005-remove-fabricated-ui-data`) |
 | 006 | Progreso no presenta cobertura ni volumen como dominio | P1 | S | — | DONE |
 | 007 | El nivel y su procedencia solo los escribe el servidor tras re-puntuar | P1 | M | — | DONE |
 | 008 | Todas las pantallas leen el nivel por `resolveLearnerLevel`; estado "desconocido" | P1 | M | — (mejor tras 007) | TODO |
