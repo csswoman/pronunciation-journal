@@ -1,26 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "@/components/icons";
-import Button from "@/components/ui/Button";
-import { H2 } from "@/components/ui/Typography";
+import { X, Check } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createDeckWithWords } from "@/lib/decks/queries";
 import { publicDataErrorMessage } from "@/lib/degradation/messages";
 import type { Tables } from "@/lib/supabase/types";
+import { DECK_COLORS, DECK_ICONS, ICON_MAP, type DeckIconKey, type DeckColorTone } from "./deck-palette";
+import { cn } from "@/lib/cn";
 
 type Deck = Tables<"decks">;
-
-const COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
-  "#f97316", "#eab308", "#22c55e", "#14b8a6",
-  "#3b82f6", "#06b6d4",
-];
-
-const ICONS = [
-  "📚", "✏️", "🌍", "💼", "🎯", "🔬", "🎨", "🏋️",
-  "🍕", "✈️", "🎵", "💡", "🧠", "📰", "🤝", "🏠",
-];
 
 interface CreateDeckFromWordsModalProps {
   wordIds: string[];
@@ -32,10 +21,12 @@ export function CreateDeckFromWordsModal({ wordIds, onClose, onCreated }: Create
   const { user } = useAuth();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [color, setColor] = useState(COLORS[0]);
-  const [icon, setIcon] = useState(ICONS[0]);
+  const [color, setColor] = useState<DeckColorTone>(DECK_COLORS[0]);
+  const [icon, setIcon] = useState<DeckIconKey>(DECK_ICONS[0]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const SelectedIcon = ICON_MAP[icon] ?? ICON_MAP.book;
 
   const handleCreate = async () => {
     if (!name.trim() || !user) return;
@@ -55,99 +46,155 @@ export function CreateDeckFromWordsModal({ wordIds, onClose, onCreated }: Create
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md mx-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--line-divider)] shadow-xl layout-card-pad space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+      <div className="w-full max-w-lg rounded-3xl border border-border-default bg-surface-raised p-6 sm:p-7 shadow-2xl space-y-5 select-none">
+        {/* Cabecera */}
         <div className="flex items-center justify-between">
           <div>
-            <H2 className="font-heading font-bold text-body-lg">New deck from selection</H2>
-            <p className="text-caption text-fg-subtle mt-0.5">{wordIds.length} word{wordIds.length !== 1 ? "s" : ""} will be added</p>
+            <h2 className="font-heading text-2xl font-extrabold text-fg">Nuevo mazo desde selección</h2>
+            <p className="font-sans text-caption text-fg-muted mt-0.5">{wordIds.length} palabra{wordIds.length !== 1 ? "s" : ""} seleccionada{wordIds.length !== 1 ? "s" : ""}</p>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X size={20} />
-          </Button>
-        </div>
-
-        {/* Preview */}
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--btn-regular-bg)]">
-          <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center text-h4 flex-shrink-0"
-            style={{ background: color }}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Cerrar"
+            className="focus-ring flex size-9 items-center justify-center rounded-full bg-surface-sunken text-fg-muted hover:bg-surface-hover hover:text-fg transition-colors"
           >
-            {icon}
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-body-sm text-fg truncate">{name || "Deck name"}</p>
-            <p className="text-caption text-fg-subtle truncate">{description || "Description"}</p>
-          </div>
+            <X size={18} />
+          </button>
         </div>
 
-        <div className="space-y-3">
+        {/* Previsualización en vivo */}
+        <div
+          data-tone={color}
+          className="pastel-card flex items-center justify-between gap-3 rounded-2xl p-4 border border-ink/10 shadow-xs transition-colors"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-ink/10 text-ink shrink-0 shadow-2xs">
+              <SelectedIcon size={20} className="text-ink" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-heading text-body-md font-bold text-ink truncate leading-snug">
+                {name.trim() || "Nombre del mazo"}
+              </p>
+              <p className="font-sans text-tiny font-medium text-ink/70 truncate">
+                {wordIds.length} palabras agregadas
+              </p>
+            </div>
+          </div>
+          <span className="inline-flex items-center rounded-full bg-paper/40 border border-ink/15 px-3 py-1 font-mono text-tiny font-bold text-ink shrink-0">
+            Así se verá
+          </span>
+        </div>
+
+        {/* Formulario */}
+        <div className="space-y-4">
           <div>
-            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide">Name</label>
+            <label className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted mb-1.5 block">
+              Nombre
+            </label>
             <input
               autoFocus
               value={name}
-              onChange={e => setName(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && void handleCreate()}
-              placeholder="e.g. Travel Vocabulary"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40"
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && void handleCreate()}
+              placeholder="Ej. Vocabulario de viajes..."
+              className="w-full rounded-2xl border border-border-default bg-surface-sunken px-4 py-3 font-sans text-body-md text-fg placeholder:text-fg-muted transition-all focus:border-border-strong focus:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
           <div>
-            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide">Description (optional)</label>
+            <label className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted mb-1.5 block">
+              Descripción · Opcional
+            </label>
             <textarea
               value={description}
-              onChange={e => setDescription(e.target.value)}
-              rows={2}
-              placeholder="What is this deck about?"
-              className="mt-1 w-full px-3 py-2 rounded-xl bg-[var(--btn-regular-bg)] border border-[var(--line-divider)] text-body-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/40 resize-none"
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              placeholder="Para qué usas este mazo..."
+              className="w-full rounded-2xl border border-border-default bg-surface-sunken px-4 py-3 font-sans text-body-sm text-fg placeholder:text-fg-muted transition-all focus:border-border-strong focus:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
             />
           </div>
 
+          {/* Selector de Icono */}
           <div>
-            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide mb-2 block">Icon</label>
-            <div className="flex gap-1.5 flex-wrap">
-              {ICONS.map(i => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setIcon(i)}
-                  className={`w-9 h-9 rounded-lg text-body-lg flex items-center justify-center transition-all ${ icon === i ? "ring-2 ring-[var(--primary)] bg-[var(--primary)]/10 scale-110" : "bg-[var(--btn-regular-bg)] hover:scale-105" }`}
-                >
-                  {i}
-                </button>
-              ))}
+            <label className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted mb-2 block">
+              Icono
+            </label>
+            <div className="flex flex-wrap items-center gap-2">
+              {DECK_ICONS.map((iconKey) => {
+                const IconComp = ICON_MAP[iconKey];
+                const isActive = icon === iconKey;
+                return (
+                  <button
+                    key={iconKey}
+                    type="button"
+                    onClick={() => setIcon(iconKey)}
+                    className={cn(
+                      "focus-ring flex size-10 items-center justify-center rounded-2xl transition-all select-none",
+                      isActive
+                        ? "bg-ink text-paper shadow-xs scale-105"
+                        : "bg-surface-sunken border border-border-subtle text-fg hover:bg-surface-raised hover:scale-105"
+                    )}
+                  >
+                    <IconComp size={18} />
+                  </button>
+                );
+              })}
             </div>
           </div>
 
+          {/* Selector de Color */}
           <div>
-            <label className="text-caption font-medium text-fg-muted uppercase tracking-wide mb-2 block">Color</label>
-            <div className="flex gap-2 flex-wrap">
-              {COLORS.map(c => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`w-7 h-7 rounded-full transition-all ${color === c ? "ring-2 ring-offset-2 ring-[var(--primary)] scale-110" : "hover:scale-105"}`}
-                  style={{ background: c }}
-                />
-              ))}
+            <label className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted mb-2 block">
+              Color
+            </label>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                {DECK_COLORS.map((toneKey) => {
+                  const isActive = color === toneKey;
+                  return (
+                    <button
+                      key={toneKey}
+                      type="button"
+                      data-tone={toneKey}
+                      onClick={() => setColor(toneKey)}
+                      className={cn(
+                        "pastel-card focus-ring relative size-10 rounded-2xl transition-all flex items-center justify-center shadow-xs",
+                        isActive ? "ring-2 ring-ink ring-offset-2 scale-105" : "hover:scale-105"
+                      )}
+                    >
+                      {isActive && <Check size={16} className="text-ink font-bold" />}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
-        {error && <p className="text-caption text-error">{error}</p>}
+        {error && <p className="font-sans text-caption text-error">{error}</p>}
 
-        <div className="flex gap-2 pt-1">
-          <Button variant="secondary" size="sm" fullWidth onClick={onClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" size="sm" fullWidth onClick={() => void handleCreate()} disabled={!name.trim() || saving}>
-            {saving ? "Creating…" : "Create & add words"}
-          </Button>
+        {/* Acciones de pie */}
+        <div className="flex items-center justify-end gap-2 pt-4 border-t border-border-subtle/60">
+          <button
+            type="button"
+            onClick={onClose}
+            className="focus-ring rounded-full px-5 py-2.5 font-sans text-body-sm font-bold bg-surface-sunken hover:bg-surface-hover text-fg transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleCreate()}
+            disabled={!name.trim() || saving}
+            className="focus-ring rounded-full px-6 py-2.5 font-sans text-body-sm font-bold bg-primary hover:bg-primary/90 text-primary-fg transition-all shadow-xs disabled:opacity-50"
+          >
+            {saving ? "Creando..." : "Crear y agregar palabras"}
+          </button>
         </div>
       </div>
     </div>
   );
 }
+

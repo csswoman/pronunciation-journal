@@ -77,6 +77,7 @@ const dbMocks = vi.hoisted(() => {
     updateDailyProgress: vi.fn(async () => undefined),
     updateUserStats: vi.fn(async () => undefined),
     migrateArchivedSrsRows: vi.fn(async () => undefined),
+    ensureDbReady: vi.fn(async () => undefined),
   }
 })
 vi.mock('@/lib/db', () => {
@@ -89,6 +90,9 @@ vi.mock('@/lib/db', () => {
         // The session loader also reads the non-mutating tomorrow count through
         // Dexie's collection API. Keep this fixture aligned with its contract.
         filter: () => ({ toArray: async () => [] }),
+      },
+      learningState: {
+        get: async () => undefined,
       },
       essentialWordSessionDrafts: {
         get: vi.fn(async (userId: string) => dbMocks.sessionDrafts.get(userId)),

@@ -1,19 +1,27 @@
 'use client'
 
+// Planned structure:
+// <PracticeHubClient>
+//   <PracticeHubHeader filter={activeFilter} onFilterChange={setActiveFilter} />
+//   <PracticeOptionsGrid recommendation={recommendation} ... />
+// </PracticeHubClient>
+
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PageLayout from '@/components/layout/PageLayout'
 import { loadCachedDailyPlan } from '@/lib/daily/plan-storage'
 import { getLastPracticeMode } from '@/lib/practice/last-practice-mode'
 import { countWordsDueForReviewClient } from '@/lib/word-bank/queries'
+import { fetchAggregatedReviewSummaryClient } from '@/lib/review/client-queries'
+import { countDueChunks } from '@/lib/chunk-of-day/queries'
 import { getEssentialWordsLevelCount } from '@/lib/essential-words/level-count'
 import { readGuestStudyLevel } from '@/lib/preferences/guest-study-level'
-import { readStoredCefrLevel } from '@/lib/essential-words/target-level'
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
 import { emptyPracticeHubData, type PracticeHubData } from '@/lib/practice/hub-data-types'
-import PracticeHubHeader from './PracticeHubHeader'
+import PracticeHubHeader, { type PracticeFilter } from './PracticeHubHeader'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
 
 interface Props {
@@ -24,11 +32,12 @@ interface Props {
 export default function PracticeHubClient({ fromDaily, serverData }: Props) {
   const { user } = useAuth()
   const hubData = serverData ?? emptyPracticeHubData()
+  const [activeFilter, setActiveFilter] = useState<PracticeFilter>('all')
   const [recommendation, setRecommendation] = useState<RecommendedResult>(() =>
     resolveRecommendedMode({ fromDaily: false, arc: undefined, lastModeId: null }),
   )
   const [arc, setArc] = useState<import('@/lib/practice/types').SessionArc | undefined>(undefined)
-  const [dueCount, setDueCount] = useState<number | null>(null)
+  const [essentialWordsDueCount, setEssentialWordsDueCount] = useState<number | null>(null)
   const [vocabLearnedCount, setVocabLearnedCount] = useState<number | null>(null)
   const [vocabTotalCount, setVocabTotalCount] = useState<number | null>(null)
   const [immersionWatchedCount, setImmersionWatchedCount] = useState<number | null>(null)
@@ -39,20 +48,48 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
     async function resolve() {
       const arc = fromDaily && user ? (loadCachedDailyPlan(user.id)?.arc ?? undefined) : undefined
       // Dexie may be unavailable (private mode / no IndexedDB) — fall back to null.
-      const [lastModeResult, dueResult] = await Promise.all([
+      const [lastModeResult, reviewResult] = await Promise.all([
         fromDaily
           ? Promise.resolve({ value: null, failed: false })
           : getLastPracticeMode()
               .then((value) => ({ value, failed: false }))
               .catch(() => ({ value: null, failed: true })),
         user
-          ? countWordsDueForReviewClient(user.id)
-              .then((value) => ({ value, failed: false }))
-              .catch(() => ({ value: null, failed: true }))
-          : Promise.resolve({ value: null, failed: false }),
+          ? Promise.all([
+              hubData.reviewSummary
+                ? Promise.resolve(hubData.reviewSummary)
+                : fetchAggregatedReviewSummaryClient(user.id),
+              countDueChunks(user.id).catch(() => 0),
+            ])
+              .then(([serverSummary, chunksDue]) => {
+                const previousChunks = serverSummary.queueCounts.chunksDue ?? 0
+                const totalDue = serverSummary.totalDue - previousChunks + chunksDue
+                const summary = {
+                  ...serverSummary,
+                  hasPendingReview: totalDue > 0,
+                  totalDue,
+                  queueCounts: {
+                    ...serverSummary.queueCounts,
+                    chunksDue,
+                    reviewable: totalDue,
+                    total: totalDue,
+                  },
+                }
+                return { summary, dueCount: summary.queueCounts.dueWords, failed: false }
+              })
+              .catch(async () => {
+                try {
+                  const dueCount = await countWordsDueForReviewClient(user.id)
+                  return { summary: null, dueCount, failed: false }
+                } catch {
+                  return { summary: null, dueCount: null, failed: true }
+                }
+              })
+          : Promise.resolve({ summary: null, dueCount: null, failed: false }),
       ])
       const lastModeId = lastModeResult.value
-      const nextDueCount = dueResult.value
+      const reviewSummary = reviewResult.summary
+      const nextDueCount = reviewResult.dueCount
       // `fromDaily` but the cached plan is gone (e.g. fresh tab): treat as neutral.
       const effectiveFromDaily = fromDaily && !!arc
       const result = resolveRecommendedMode({
@@ -60,27 +97,28 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
         arc,
         lastModeId,
         dueCount: nextDueCount,
+        reviewSummary,
       })
       if (!cancelled) {
         setArc(arc)
-        setDueCount(nextDueCount)
-        setActivityUnavailable(lastModeResult.failed || dueResult.failed)
+        setActivityUnavailable(lastModeResult.failed || reviewResult.failed)
         setRecommendation(result)
       }
 
-      // Level-scoped vocabulary counts for the "Las 1000 esenciales" card.
+      // Level-scoped vocabulary counts for the essential-words card.
       const studyLevel = isAnonymousUser(user)
         ? readGuestStudyLevel()
         : user
-          ? await readStoredCefrLevel(user.id)
+          ? (await getEffectiveLearnerLevel(user.id)).level
           : null
       const vocabCount = await getEssentialWordsLevelCount(
-        studyLevel ? [studyLevel] : null,
+        studyLevel ? [studyLevel === 'C2' ? 'C1' : studyLevel] : null,
         user?.id,
       )
       if (!cancelled) {
         setVocabLearnedCount(vocabCount?.learned ?? null)
         setVocabTotalCount(vocabCount?.total ?? null)
+        setEssentialWordsDueCount(vocabCount?.due ?? null)
       }
 
       // Immersion "watched" count is Dexie-backed (offline-first); the total
@@ -102,7 +140,11 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
 
   return (
     <PageLayout archetype="catalog" className="practice-hub">
-      <PracticeHubHeader fromDaily={fromDaily} />
+      <PracticeHubHeader
+        fromDaily={fromDaily}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+      />
       <div className="flex flex-col gap-5">
         {activityUnavailable && (
           <p role="status" className="font-caption text-fg-muted">
@@ -110,8 +152,9 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
           </p>
         )}
         <PracticeOptionsGrid
+          activeFilter={activeFilter}
           recommendation={recommendation}
-          dueCount={dueCount}
+          essentialWordsDueCount={essentialWordsDueCount}
           vocabLearnedCount={vocabLearnedCount}
           vocabTotalCount={vocabTotalCount}
           arc={arc}

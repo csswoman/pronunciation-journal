@@ -1,4 +1,13 @@
-import { Target } from "@/components/icons"
+// Planned structure:
+// <AccuracyTrend>
+//   <ProgressCardHeader title="Precisión" />
+//   <AccuracyGaugeChart percentage={stats.accuracy7} tier={tier} />
+//   <AccuracyTierBadge tier={tier} />
+//   <RetrievalQualityMetric quality={stats.retrievalQuality7} />
+//   <EvaluatedAnswersCount count={stats.totalAnswers7} />
+// </AccuracyTrend>
+
+import { Target, Sparkles } from "@/components/icons"
 import type { AccuracyStats } from '@/lib/progress/queries'
 import { ProgressCard, ProgressCardHeader } from './ProgressCard'
 
@@ -6,22 +15,28 @@ interface Props {
   stats: AccuracyStats
 }
 
-function qualityLabel(accuracy: number): { text: string; className: string; strokeClass: string } {
+interface AccuracyTier {
+  text: string
+  className: string
+  strokeClass: string
+}
+
+function accuracyTierLabel(accuracy: number): AccuracyTier {
   if (accuracy >= 85) {
-    return { text: 'Excelente', className: 'text-success', strokeClass: 'stroke-success' }
+    return { text: 'Alta precisión', className: 'text-success', strokeClass: 'stroke-success' }
   }
   if (accuracy >= 70) {
-    return { text: 'Buena', className: 'text-primary', strokeClass: 'stroke-primary' }
+    return { text: 'Buena precisión', className: 'text-primary', strokeClass: 'stroke-primary' }
   }
   if (accuracy >= 50) {
-    return { text: 'Mejorando', className: 'text-warning', strokeClass: 'stroke-warning' }
+    return { text: 'En desarrollo', className: 'text-warning', strokeClass: 'stroke-warning' }
   }
-  return { text: 'Sigue así', className: 'text-warning', strokeClass: 'stroke-warning' }
+  return { text: 'Por afianzar', className: 'text-warning', strokeClass: 'stroke-warning' }
 }
 
 export function AccuracyTrend({ stats }: Props) {
   const hasData = stats.totalAnswers7 > 0
-  const quality = hasData ? qualityLabel(stats.accuracy7) : null
+  const tier = hasData ? accuracyTierLabel(stats.accuracy7) : null
 
   const radius = 74
   const circumference = Math.PI * radius
@@ -44,7 +59,7 @@ export function AccuracyTrend({ stats }: Props) {
             viewBox="0 0 180 100"
             className="block"
             role="img"
-            aria-label={hasData ? `Precisión de ${stats.accuracy7}% (${quality?.text})` : "Sin datos de precisión"}
+            aria-label={hasData ? `Precisión de ${stats.accuracy7}% (${tier?.text})` : "Sin datos de precisión"}
           >
             <path
               d="M16 90 A74 74 0 0 1 164 90"
@@ -53,14 +68,14 @@ export function AccuracyTrend({ stats }: Props) {
               strokeLinecap="round"
               className="stroke-surface-sunken"
             />
-            {quality ? (
+            {tier ? (
               <path
                 d="M16 90 A74 74 0 0 1 164 90"
                 fill="none"
                 strokeWidth={12}
                 strokeLinecap="round"
                 strokeDasharray={`${dash} ${circumference}`}
-                className={quality.strokeClass}
+                className={tier.strokeClass}
               />
             ) : null}
           </svg>
@@ -69,10 +84,25 @@ export function AccuracyTrend({ stats }: Props) {
           </div>
         </div>
 
-        {quality ? (
-          <p className={`mt-2 text-body-sm font-semibold ${quality.className}`}>
-            {quality.text}
+        {tier ? (
+          <p className={`mt-2 text-body-sm font-semibold ${tier.className}`}>
+            {tier.text}
           </p>
+        ) : null}
+
+        {stats.retrievalQuality7 != null ? (
+          <div className="mt-3 flex w-full items-center justify-between rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken px-3 py-2 text-caption">
+            <div className="flex items-center gap-1.5 text-left">
+              <Sparkles size={14} className="text-primary shrink-0" aria-hidden="true" />
+              <div>
+                <span className="block font-semibold text-fg">Calidad de recuerdo</span>
+                <span className="block text-tiny text-fg-subtle">Escala SRS (1 a 5)</span>
+              </div>
+            </div>
+            <span className="text-body-sm font-bold tabular-nums text-primary">
+              {stats.retrievalQuality7.toFixed(1)} <span className="text-tiny font-normal text-fg-muted">/ 5</span>
+            </span>
+          </div>
         ) : null}
 
         <p className="mt-2 text-caption text-fg-subtle text-center">

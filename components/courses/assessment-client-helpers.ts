@@ -31,8 +31,21 @@ export async function saveAssessmentLevel(params: {
   nextResult: AssessmentResult;
   setSaving: (value: boolean) => void;
   setSaveError: (value: boolean) => void;
+  answers: Record<string, number>;
+  selfRatings?: Record<string, ConceptSelfRating>;
+  checkpointLevel?: CefrLevelId | null;
 }) {
-  const { mode, questions, userId, nextResult, setSaving, setSaveError } = params;
+  const {
+    mode,
+    questions,
+    userId,
+    nextResult,
+    setSaving,
+    setSaveError,
+    answers,
+    selfRatings,
+    checkpointLevel: passedCheckpointLevel,
+  } = params;
   setSaving(true);
   setSaveError(false);
 
@@ -54,6 +67,13 @@ export async function saveAssessmentLevel(params: {
               : highest;
           }, null) ?? null;
 
+    const checkpointLevel =
+      passedCheckpointLevel !== undefined
+        ? passedCheckpointLevel
+        : mode === "checkpoint"
+          ? questions[0]?.level ?? null
+          : null;
+
     // 1. Guardado local en Dexie (fuente de verdad offline-first)
     await persistAssessmentConceptProfile(
       userId,
@@ -65,7 +85,14 @@ export async function saveAssessmentLevel(params: {
     const response = await fetch("/api/assessment/results", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mode, evaluatedLevel, result: nextResult }),
+      body: JSON.stringify({
+        mode,
+        evaluatedLevel,
+        result: nextResult,
+        answers,
+        selfRatings,
+        checkpointLevel,
+      }),
     });
     // 401 o 403 indica sesión anónima o no autenticada en Supabase: el progreso local ya está a salvo
     if (!response.ok && response.status !== 401 && response.status !== 403) {
@@ -108,11 +135,20 @@ export function persistLocalAssessmentCache(params: {
   mode: "placement" | "checkpoint";
   checkpointLabel?: string;
   nextResult: AssessmentResult;
+  answers?: Record<string, number>;
+  selfRatings?: Record<string, ConceptSelfRating>;
+  checkpointLevel?: CefrLevelId | null;
 }) {
-  const { userId, mode, checkpointLabel, nextResult } = params;
+  const { userId, mode, checkpointLabel, nextResult, answers, selfRatings, checkpointLevel } = params;
   window.localStorage.setItem(
     `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`,
-    JSON.stringify({ ...nextResult, completedAt: new Date().toISOString() }),
+    JSON.stringify({
+      ...nextResult,
+      answers,
+      selfRatings,
+      checkpointLevel,
+      completedAt: new Date().toISOString(),
+    }),
   );
 }
 

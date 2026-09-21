@@ -2,30 +2,59 @@
 
 // Sub-components:
 // <HomeImmersionCard>
-//   <ImmersionBar (icon, title, categories list, CTA button)>
-//   <ImmersionControls (category chips, duration stepper)> [conditional when open]
+//   <ImmersionHeader /> (Title, subtitle, computed XP badge)
+//   <ImmersionCategoryChips /> (Video o serie, Podcast, Lectura chips con circulo de icono pastel)
+//   <ImmersionFooter /> (CTA "Registrar →")
+//   <ImmersionStepperControls /> (conditional details panel when open)
 // </HomeImmersionCard>
 
 import { useState } from "react";
-import { Tv, Check } from "@/components/icons";
-import Button from "@/components/ui/Button";
+import { Video, Headphones, BookOpen, Check, ArrowRight } from "@/components/icons";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
-import { logExternalImmersion } from "@/lib/immersion/external-log";
+import { logExternalImmersion, immersionXpForMinutes } from "@/lib/immersion/external-log";
 import type { ImmersionMediaType } from "@/lib/progress/activity-types";
+import type { HomeImmersionSummary } from "@/lib/home/constants";
+import { cn } from "@/lib/cn";
 
-const IMMERSION_CATEGORIES: { id: ImmersionMediaType; label: string }[] = [
-  { id: "video", label: "Video" },
-  { id: "series", label: "Serie" },
-  { id: "podcast", label: "Podcast" },
-  { id: "reading", label: "Lectura" },
+interface CategoryOption {
+  id: ImmersionMediaType;
+  label: string;
+  icon: React.ElementType;
+  badgeBg: string;
+}
+
+const CATEGORY_OPTIONS: CategoryOption[] = [
+  {
+    id: "video",
+    label: "Video o serie",
+    icon: Video,
+    badgeBg: "bg-coral text-ink",
+  },
+  {
+    id: "podcast",
+    label: "Podcast",
+    icon: Headphones,
+    badgeBg: "bg-lilac text-ink",
+  },
+  {
+    id: "reading",
+    label: "Lectura",
+    icon: BookOpen,
+    badgeBg: "bg-butter text-ink",
+  },
 ];
 
-export default function HomeImmersionCard() {
+interface Props {
+  summary?: HomeImmersionSummary | null;
+}
+
+export default function HomeImmersionCard({ summary = null }: Props) {
   const auth = useAuthOptional();
   const userId = auth?.user?.id ?? null;
   const [selectedCategory, setSelectedCategory] = useState<ImmersionMediaType>("video");
   const [minutes, setMinutes] = useState(30);
   const [registered, setRegistered] = useState(false);
+  const [registeredXp, setRegisteredXp] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegister = async () => {
@@ -35,10 +64,11 @@ export default function HomeImmersionCard() {
     }
     if (userId) {
       try {
-        await logExternalImmersion(userId, {
+        const result = await logExternalImmersion(userId, {
           type: selectedCategory,
           minutes,
         });
+        setRegisteredXp(result.xpEarned);
       } catch (err) {
         console.error("[HomeImmersionCard] Error logging immersion:", err);
       }
@@ -51,87 +81,92 @@ export default function HomeImmersionCard() {
   return (
     <section
       aria-label="Registrar inmersión"
-      className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs"
+      className="flex h-full flex-col justify-between gap-4 rounded-3xl border border-border-default bg-surface-raised p-4 sm:p-5 shadow-sm"
     >
-      {/* Bar compacto principal */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        {/* Izquierda: Icono TV + Pregunta y Categorías */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Tv className="size-5 shrink-0 text-fg-muted" aria-hidden />
-          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 min-w-0">
-            <h2 className="text-body-sm font-semibold text-fg">
-              ¿Viste algo en inglés hoy?
-            </h2>
-            <span className="text-caption text-fg-muted">
-              Video, serie, podcast, lectura
-            </span>
-          </div>
+      {/* Encabezado: título y actividad persistida del usuario. */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <h2 className="font-heading text-h4 font-bold text-fg leading-tight">
+            ¿Viste algo en inglés hoy?
+          </h2>
+          <p className="font-sans text-body-sm text-fg-muted">
+            Anótalo y lo convierto en práctica.{" "}
+            <span className="sr-only">Video, serie, podcast, lectura</span>
+          </p>
         </div>
 
-        {/* Derecha: Botón de acción */}
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleRegister}
-            icon={registered ? <Check size={14} className="text-success" /> : undefined}
-          >
-            {registered ? "¡Registrado!" : isOpen ? "Guardar" : "Registrar"}
-          </Button>
-        </div>
+        {registeredXp !== null ? (
+          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
+            +{registeredXp} XP
+          </span>
+        ) : (
+          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
+            +{immersionXpForMinutes(minutes)} XP
+          </span>
+        )}
       </div>
 
-      {/* Feedback para lectores de pantalla */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {registered ? `Se han registrado ${minutes} minutos de inmersión en ${selectedCategory}` : ""}
+      {/* Chips con circulo de icono pastel */}
+      <div
+        className="flex flex-wrap items-center gap-2.5"
+        role="group"
+        aria-label="Categorías de inmersión"
+      >
+        {CATEGORY_OPTIONS.map((cat) => {
+          const Icon = cat.icon;
+          const isSelected = selectedCategory === cat.id;
+
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => setSelectedCategory(cat.id)}
+              className={cn(
+                "focus-ring inline-flex min-h-11 items-center gap-3 rounded-full border px-2 py-1.5 pr-4 font-sans text-body-sm transition-all select-none",
+                isSelected
+                  ? "border-primary bg-primary/10 text-fg ring-1 ring-primary font-bold"
+                  : "border-border-default bg-surface-sunken/80 text-fg hover:bg-surface-raised hover:border-border-strong",
+              )}
+            >
+              <span
+                className={cn(
+                  "flex size-8 shrink-0 items-center justify-center rounded-full shadow-xs transition-transform",
+                  cat.badgeBg,
+                )}
+              >
+                <Icon className="size-4 text-ink" aria-hidden />
+              </span>
+              <span className="font-heading font-semibold text-fg">
+                {cat.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Selector desplegable de detalles de inmersión */}
+      {/* Selector desplegable de minutos (stepper) si el usuario abre para ajustar */}
       {isOpen && (
-        <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-border-subtle/50 pt-3">
-          {/* Chips de categoría */}
-          <div
-            className="flex flex-wrap items-center gap-1.5"
-            role="group"
-            aria-label="Tipo de inmersión"
-          >
-            {IMMERSION_CATEGORIES.map((cat) => {
-              const isSelected = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`focus-ring inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-caption font-medium transition-all ${
-                    isSelected
-                      ? "border border-primary/25 bg-primary-soft text-primary font-semibold"
-                      : "border border-border-subtle/60 bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Stepper de tiempo */}
-          <div className="flex min-h-9 items-center rounded-lg border border-border-subtle bg-surface-sunken px-1 font-sans text-caption font-medium tabular-nums text-fg">
+        <div className="flex items-center justify-between gap-3 border-t border-border-subtle pt-3">
+          <span className="font-sans text-caption font-medium text-fg-muted">
+            Duración de la sesión:
+          </span>
+          <div className="flex min-h-9 items-center rounded-xl border border-border-default bg-surface-sunken px-1.5 font-sans text-caption font-medium tabular-nums text-fg">
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.max(5, m - 5))}
-              className="focus-ring flex h-8 w-8 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              className="focus-ring flex h-8 w-8 items-center justify-center rounded-lg text-body-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
               aria-label="Disminuir tiempo 5 minutos"
             >
               −
             </button>
-            <span className="min-w-[3.5ch] px-1 text-center">
+            <span className="min-w-[4ch] px-1.5 text-center font-bold text-fg">
               {minutes}
-              <span className="ml-0.5 text-fg-muted">m</span>
+              <span className="ml-0.5 text-fg-muted font-normal">min</span>
             </span>
             <button
               type="button"
               onClick={() => setMinutes((m) => Math.min(180, m + 5))}
-              className="focus-ring flex h-8 w-8 items-center justify-center rounded text-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
+              className="focus-ring flex h-8 w-8 items-center justify-center rounded-lg text-body-sm font-bold text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg"
               aria-label="Aumentar tiempo 5 minutos"
             >
               +
@@ -139,6 +174,64 @@ export default function HomeImmersionCard() {
           </div>
         </div>
       )}
+
+      {/* Feedback para lectores de pantalla */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {registered
+          ? `Se han registrado ${minutes} minutos de inmersión en ${selectedCategory}`
+          : ""}
+      </div>
+
+      {/* Fila inferior: Racha de 7 días y Botón de acción */}
+      <div className="flex items-center justify-between gap-3 pt-1">
+        {/* Solo muestra historial realmente registrado. */}
+        <div className="flex items-center gap-2 select-none">
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: 7 }).map((_, idx) => (
+              <span
+                key={idx}
+                className={cn(
+                  "size-3 rounded-full transition-colors",
+                  idx < Math.min(summary?.currentStreak ?? 0, 7)
+                    ? "bg-mint"
+                    : "border border-dashed border-fg-muted/40 bg-transparent",
+                )}
+              />
+            ))}
+          </div>
+          <span className="font-sans text-caption font-medium text-fg-muted">
+            {summary && summary.currentStreak > 0
+              ? `${summary.currentStreak} ${summary.currentStreak === 1 ? "día" : "días"} · ${summary.weekMinutes} min esta semana`
+              : summary && summary.weekMinutes > 0
+                ? `${summary.weekMinutes} min esta semana`
+                : "Sin inmersión registrada"}
+          </span>
+        </div>
+
+        {/* Botón CTA principal */}
+        <button
+          type="button"
+          onClick={handleRegister}
+          className={cn(
+            "focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full px-5 py-2 font-label text-body-sm font-semibold transition-all select-none shrink-0",
+            registered
+              ? "bg-success text-paper"
+              : "bg-primary text-on-primary hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98]",
+          )}
+        >
+          {registered ? (
+            <>
+              <Check className="size-4 shrink-0 text-paper" aria-hidden />
+              <span>¡Registrado!</span>
+            </>
+          ) : (
+            <>
+              <span>{isOpen ? "Guardar" : "Registrar"}</span>
+              <ArrowRight className="size-4 shrink-0" aria-hidden />
+            </>
+          )}
+        </button>
+      </div>
     </section>
   );
 }

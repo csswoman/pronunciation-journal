@@ -5,35 +5,26 @@ import { dominantTopicLabel } from '@/lib/practice/topic-labels'
 import type { DailyPlan, DailyStep, SessionArc } from '@/lib/practice/types'
 import { buildJournalDailyStep, shouldOfferJournalStep } from '@/lib/journal/daily-step'
 import { shouldOfferMission } from './mission-cadence'
+import { recentMissionAvoidance } from './mission-avoidance'
+import { loadRecentMissionSessions } from '@/lib/ai-practice/missions/recent-sessions'
 import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, MAX_DUE_STEPS, RESERVED_CHUNK_NEW_SLOTS, WORD_REVIEW_WORD_COUNT } from './constants'
-import {
-  fetchDueReviewWords,
-  fetchDueSounds,
-  fetchNewWords,
-  fetchSavedOrFamiliarWords,
-  fetchWeakestSoundProgress,
-} from './fetchers'
+import { fetchDueReviewWords, fetchDueSounds, fetchNewWords, fetchSavedOrFamiliarWords, fetchWeakestSoundProgress } from './fetchers'
 import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
 import { biasWordsByChunkAnchors } from './chunk-word-bridge'
 import { selectDailyReviewWords } from './saved-priority'
-import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { candidate, selectDailyCandidates } from './policy'
 import { missionForTarget, parseMissionLaunch } from '@/lib/ai-practice/missions/launch'
 import { getTarget, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 import { duePatterns, type ErrorRecurrenceQueue } from '@/lib/practice/error-recurrence'
 import { repairConstraintFor } from '@/lib/exercises/error-patterns'
 import type { SpeechConstraintId } from '@/lib/exercises/speech-constraints'
-import {
-  buildReviewPlan,
-  type BuildReviewPlanOptions,
-  type ReviewPlan,
-  shouldKeepNonExerciseStep,
-} from './review-plan'
+import { buildReviewPlan, type BuildReviewPlanOptions, type ReviewPlan, shouldKeepNonExerciseStep } from './review-plan'
 import {
   reasonForStep,
   resolvePrimarySound,
+  selectedPhoneticStep,
   sortStepsByPedagogicalProgression,
   targetRefsForStep,
 } from './candidate-helpers'
@@ -43,13 +34,9 @@ import { buildImmersionLessonStep } from './immersion-step'
 import { buildEdClusterDrillStep } from './ed-drill-step'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { loadDailyChunkIntroStep, loadDueChunkReviewStep, loadPronunciationDifficultyChunkStep, markPronunciationDifficultyRouted } from '@/lib/chunk-of-day/queries'
+import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
 
-export {
-  buildReviewPlan,
-  type BuildReviewPlanOptions,
-  type ReviewPlan,
-  shouldKeepNonExerciseStep,
-}
+export { buildReviewPlan, type BuildReviewPlanOptions, type ReviewPlan, shouldKeepNonExerciseStep }
 
 /**
  * Repair drills for the error patterns due today. Seeded into production
@@ -87,6 +74,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     localLearningState,
     completedLessons,
     wordIndex,
+    levelResolution,
   ] = await Promise.all([
     getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
@@ -97,12 +85,13 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     db.learningState.get(userId).catch(() => null),
     readCompletedLessons().catch(() => []),
     getWordCategoryIndex(),
+    getEffectiveLearnerLevel(userId),
   ])
 
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
-  const activeLevel = localLearningState?.state.level.cefrEstimate.toLowerCase() as import('@/lib/courses/types').CefrLevelId | undefined
-  const learnerLevel = normalizeCEFR(activeLevel ?? 'A1')
+  const learnerLevel = levelResolution.level
+  const activeLevel = learnerLevel.toLowerCase() as import('@/lib/courses/types').CefrLevelId
   const dueChunkStep = await loadDueChunkReviewStep(userId, 'daily', learnerLevel).catch(() => null)
 
   const dailyWordSelection = selectDailyReviewWords({
@@ -144,10 +133,15 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     const anchoredWords = await fetchEssentialWordsForAnchors(
       dailyThreadChunks.flatMap((chunk) => chunk.contentGraph.anchors.map((anchor) => anchor.id)),
       WORD_REVIEW_WORD_COUNT,
+      learnerLevel === 'C2' ? 'C1' : learnerLevel,
     ).catch(() => [])
     reviewWords = anchoredWords.length > 0
       ? anchoredWords
-      : await fetchEssentialWordsForDay(dayOfYear(), WORD_REVIEW_WORD_COUNT)
+      : await fetchEssentialWordsForDay(
+        dayOfYear(),
+        WORD_REVIEW_WORD_COUNT,
+        learnerLevel === 'C2' ? 'C1' : learnerLevel,
+      )
   }
   reviewWords = biasWordsByChunkAnchors(reviewWords, dailyThreadChunks)
   const pronunciationChunkStep = await loadPronunciationDifficultyChunkStep(userId, learnerLevel, allSounds).catch(() => null)
@@ -188,7 +182,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
   const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0 || dueChunkStep !== null
 
   if (hasDueSrs) {
-    const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds })
+    const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds, learnerLevel })
     const hubPriority = hubPlan.steps.slice(0, 2)
     const usedIds = new Set(steps.map((s) => s.id))
     const toPrepend = hubPriority.filter((s) => !usedIds.has(s.id))
@@ -200,6 +194,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     : null
   const primaryTarget = rawPrimaryTarget && getTarget(rawPrimaryTarget).ok ? rawPrimaryTarget : null
   const mission = primaryTarget ? missionForTarget(primaryTarget) : null
+  const recentMissionSessions = await loadRecentMissionSessions(userId, 2).catch(() => [])
+  const missionAvoidance = recentMissionAvoidance(recentMissionSessions)
   const missionStep: DailyStep | null = mission && primaryTarget
     ? {
         kind: 'mission',
@@ -208,7 +204,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
         subtitle: 'Misión oral con un objetivo exacto',
         icon: 'Messages',
         exercises: [],
-        estMinutes: 5,
+        estMinutes: missionAvoidance ? 3 : 5,
+        scaffolded: missionAvoidance,
         missionLaunch: parseMissionLaunch({
           missionId: mission.id,
           targetIds: [primaryTarget],
@@ -252,6 +249,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       reservedChunkNewSlots: RESERVED_CHUNK_NEW_SLOTS,
       // Review stays first in priority, but it stops being the whole session.
       maxDueSteps: MAX_DUE_STEPS,
+      context: { learnerLevel: activeLevel },
     }),
   )
 
@@ -288,6 +286,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     s.exercises.map((e) => (e.payload.kind === 'generic' ? e.payload.data.topic : undefined)),
   )
   const sessionWords = Array.from(new Set(reviewWords.map((w) => w.text).filter((t): t is string => !!t)))
+  const activeSoundStep = selectedPhoneticStep(dedupedFinalSteps)
+  const soundWords = activeSoundStep?.featuredWords ?? []
   const diagnosticPrescription = diagnosticTarget?.sound && primarySound?.ipa === diagnosticTarget.sound.ipa
     ? { soundIpa: diagnosticTarget.sound.ipa, dayIndex: diagnosticTarget.dayIndex + 1, totalDays: 5, reason: diagnosticTarget.session.reason }
     : null
@@ -296,8 +296,9 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     : null
   const arc: SessionArc = {
     topicLabel: dominantTopicLabel(arcTopics),
-    soundIpa: primarySound?.ipa ?? null,
+    soundIpa: activeSoundStep?.ipa ?? null,
     sessionWords,
+    soundWords,
     diagnosticPrescription,
     journalRepairs,
   }

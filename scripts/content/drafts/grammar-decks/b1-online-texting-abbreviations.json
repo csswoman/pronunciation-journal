@@ -1,0 +1,60 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Slang & Chat",
+    "title": "Abreviaturas Comunes en Chat y Redes",
+    "titleEmphasis": "texting & online acronyms",
+    "goal": "Descifrar y utilizar las abreviaturas más utilizadas en chats y mensajería en inglés."
+  },
+  "cards": [
+    {
+      "id": "b1-online-texting-abbreviations-concept",
+      "tag": "Idea central",
+      "title": "Siglas esenciales en chat",
+      "lede": "Abreviaturas cotidianas para agilizar la escritura digital.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "ASAP",
+              "value": "As Soon As Possible (Lo antes posible)",
+              "highlights": ["ASAP"]
+            },
+            {
+              "key": "FYI",
+              "value": "For Your Information (Para tu información)",
+              "highlights": ["FYI"]
+            },
+            {
+              "key": "IMO / IMHO",
+              "value": "In My (Humble) Opinion (En mi opinión)",
+              "highlights": ["IMO"]
+            },
+            {
+              "key": "BTW",
+              "value": "By The Way (Por cierto / A propósito)",
+              "highlights": ["BTW"]
+            },
+            {
+              "key": "IDK",
+              "value": "I Don't Know (No lo sé)",
+              "highlights": ["IDK"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "What does 'IMO' stand for in online messages?",
+      "options": [
+        "In My Opinion",
+        "In Many Options"
+      ],
+      "answer": 0,
+      "explain": "'IMO' significa 'In My Opinion' (En mi opinión)."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "B1 · Verbos",
+    "title": "Gerundios e Infinitivos",
+    "titleEmphasis": "verb + -ing vs. to + verb",
+    "goal": "Dominar qué verbos requieren la forma -ing y cuáles requieren infinitivo con 'to'."
+  },
+  "cards": [
+    {
+      "id": "b1-gerunds-and-infinitives-concept",
+      "tag": "Idea central",
+      "title": "Verbos seguidos de -ing vs. to-infinitivo",
+      "lede": "El segundo verbo adopta gerundio o infinitivo según el primer verbo de la oración.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Gerundio (-ing)",
+              "value": "enjoy, avoid, suggest, consider, finish",
+              "highlights": ["enjoy", "avoid"]
+            },
+            {
+              "key": "Infinitivo (to + v)",
+              "value": "decide, hope, plan, refuse, promise, offer",
+              "highlights": ["decide", "hope"]
+            },
+            {
+              "key": "Ambos sin cambio de significado",
+              "value": "start, begin, continue, like, love",
+              "highlights": ["start", "begin"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b1-gerunds-and-infinitives-contrast",
+      "tag": "Contraste",
+      "title": "Verbos que cambian de significado",
+      "lede": "Algunos verbos como 'stop' o 'remember' cambian completamente su sentido.",
+      "blocks": [
+        {
+          "type": "contrast",
+          "columns": [
+            {
+              "label": "stop + -ing (Interrumpir hábito/acción)",
+              "rule": "Dejar de hacer la actividad",
+              "examples": ["He stopped smoking last year."]
+            },
+            {
+              "label": "stop + to-infinitivo (Pausa con propósito)",
+              "rule": "Detenerse para realizar otra acción",
+              "examples": ["He stopped to buy a bottle of water."]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "She decided ___ for a new position.",
+      "options": [
+        "to apply",
+        "applying"
+      ],
+      "answer": 0,
+      "explain": "'decide' siempre va seguido de infinitivo con 'to'."
+    }
+  ]
+}

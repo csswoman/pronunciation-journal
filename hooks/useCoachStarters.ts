@@ -10,7 +10,7 @@ import { readStarterHistory, recordStarterUse } from "@/lib/ai-practice/starters
 import type { ResolvedStarter, StarterId } from "@/lib/ai-practice/starters/types";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
-import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
+import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 
 /**
  * Resolves the starters shown on the chat home.
@@ -55,13 +55,12 @@ export function useCoachStarters(isOpen = true) {
         getUserLearningState(userId).catch(() => null),
         getCachedUserInterests(userId).catch(() => null),
         readStarterHistory(userId).catch(() => ({ ids: [], angles: [] })),
-        readStoredCefrLevel(userId).catch(() => null),
+        getEffectiveLearnerLevel(userId).catch(() => null),
       ]);
       if (cancelled) return;
       setStarters(selectStarters({
         state,
-        // readStoredCefrLevel already folds C2→C1 and validates; default A1.
-        level: storedLevel ?? "A1",
+        level: storedLevel?.level === "C2" ? "C1" : (storedLevel?.level ?? "A1"),
         interests: normalizeInterests(cachedInterests ?? []),
         seed,
         recentIds: history.ids,

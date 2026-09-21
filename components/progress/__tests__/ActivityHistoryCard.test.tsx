@@ -50,6 +50,42 @@ describe('ActivityHistoryCard', () => {
     expect(screen.getByText('40%')).toBeInTheDocument()
   })
 
+  it('excludes zero-exercise sessions from the overall accuracy average and hides their percentage', () => {
+    const sessions: ActivitySessionSummary[] = [
+      {
+        id: 's1',
+        source: 'immersion',
+        sourceLabel: 'Inmersión',
+        skillTags: ['listening'],
+        exercisesTotal: 0,
+        accuracyPct: 0,
+        xpEarned: 20,
+        completedAt: new Date().toISOString(),
+      },
+      {
+        id: 's2',
+        source: 'daily_plan',
+        sourceLabel: 'Plan Diario',
+        skillTags: ['grammar'],
+        exercisesTotal: 10,
+        accuracyPct: 80,
+        xpEarned: 50,
+        completedAt: new Date(Date.now() - 3600000).toISOString(),
+      },
+    ]
+
+    render(<ActivityHistoryCard sessions={sessions} />)
+
+    // Overall average must exclude the zero-exercise session: 80%, not (0 + 80) / 2 = 40%
+    expect(screen.getByText('80%')).toBeInTheDocument()
+    expect(screen.queryByText('40%')).not.toBeInTheDocument()
+
+    // The immersion row shows activity without a fabricated accuracy percentage
+    const immersionRow = screen.getByText('Sin ejercicios · actividad registrada')
+    expect(immersionRow).toBeInTheDocument()
+    expect(immersionRow.textContent).not.toContain('% precisión')
+  })
+
   it('paginates list to 3 items per page and navigates with next/previous buttons', () => {
     const sessions: ActivitySessionSummary[] = Array.from({ length: 5 }, (_, i) => ({
       id: `session-id-${i + 1}`,

@@ -27,13 +27,15 @@ const heroProps = {
 }
 
 describe('SessionReadyHero', () => {
-  it('shows the commitment headline, breakdown, size picker, route chips, and start CTA', () => {
+  it('shows the commitment headline, breakdown, size picker, route chips, and start CTA', async () => {
+    const user = userEvent.setup()
     render(<SessionReadyHero {...heroProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
-    expect(screen.getByText(/unos \d+ min/)).toBeInTheDocument()
+    expect(screen.getAllByText(/\d+ min/).length).toBeGreaterThan(0)
     expect(screen.getByText('3 palabras nuevas · 4 repasos')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Recomendada · 15' })).toHaveAttribute('aria-pressed', 'true')
+    await user.click(screen.getByRole('button', { name: 'Cambiar el orden' }))
     expect(screen.getByRole('combobox', { name: 'Ruta' })).toHaveTextContent('Por frecuencia')
     expect(screen.getByRole('button', { name: 'Empezar' })).toBeInTheDocument()
   })
@@ -85,6 +87,7 @@ describe('SessionReadyHero', () => {
     const onRouteChange = vi.fn()
     render(<SessionReadyHero {...heroProps} activeRouteId="verbs-b1" onRouteChange={onRouteChange} />)
 
+    await user.click(screen.getByRole('button', { name: 'Cambiar el orden' }))
     const routePicker = screen.getByRole('combobox', { name: 'Ruta' })
     expect(routePicker).toHaveTextContent('Verbos B1')
 
@@ -99,13 +102,15 @@ describe('SessionReadyHero', () => {
     expect(onRouteChange).toHaveBeenLastCalledWith('nouns-b2')
   })
 
-  it('keeps the hero mounted and disables start while rebuilding the preview', () => {
+  it('keeps the hero mounted and disables start while rebuilding the preview', async () => {
+    const user = userEvent.setup()
     render(<SessionReadyHero {...heroProps} previewLoading />)
 
     expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('Actualizando sesión')
     expect(screen.getByRole('button', { name: 'Actualizando…' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeEnabled()
+    await user.click(screen.getByRole('button', { name: 'Cambiar el orden' }))
     expect(screen.getByRole('combobox', { name: 'Ruta' })).toBeEnabled()
   })
 
@@ -115,7 +120,7 @@ describe('SessionReadyHero', () => {
     render(<SessionReadyHero {...heroProps} isResume onDiscard={onDiscard} />)
 
     expect(screen.getByRole('button', { name: 'Corta · 5' })).toBeDisabled()
-    expect(screen.getByRole('combobox', { name: 'Ruta' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Cambiar el orden' })).toBeDisabled()
     await user.click(screen.getByRole('button', { name: 'Descartar sesión' }))
     expect(onDiscard).toHaveBeenCalledOnce()
   })

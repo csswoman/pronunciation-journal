@@ -15,7 +15,6 @@ import type { DailyGoalProgress } from "@/lib/home/constants";
 
 interface HomePageHeaderProps {
   streak?: DailyStreakResult;
-  wordsMastered?: number;
   weekMinutes?: number;
   dailyGoal?: DailyGoalProgress | null;
   /** True until the learner has real practice history. */
@@ -29,24 +28,8 @@ function getGreeting(): "Buenos días" | "Buenas tardes" | "Buenas noches" {
   return "Buenas noches";
 }
 
-function buildSubtitle(
-  wordsMastered: number,
-  week: number,
-  isNewLearner: boolean,
-): string | undefined {
-  const parts: string[] = [];
-
-  if (wordsMastered > 0) {
-    parts.push(
-      `${wordsMastered} ${wordsMastered === 1 ? "palabra dominada" : "palabras dominadas"}`,
-    );
-  }
-
-  if (week > 0) {
-    parts.push(`${week} min esta semana`);
-  }
-
-  if (parts.length > 0) return parts.join(" · ");
+function buildSubtitle(week: number, isNewLearner: boolean): string | undefined {
+  if (week > 0) return `${week} min esta semana`;
   if (isNewLearner) {
     return "Tu plan de hoy es el camino más corto — empieza cuando quieras.";
   }
@@ -56,7 +39,6 @@ function buildSubtitle(
 /** Canonical home header — streak renders as a chip in the title row. */
 export default function HomePageHeader({
   streak,
-  wordsMastered = 0,
   weekMinutes,
   dailyGoal = null,
   isNewLearner = false,
@@ -74,7 +56,7 @@ export default function HomePageHeader({
   const greeting = getGreeting();
 
   const title = userName ? `${greeting}, ${userName}` : greeting;
-  const subtitle = buildSubtitle(wordsMastered, week, isNewLearner);
+  const subtitle = buildSubtitle(week, isNewLearner);
 
   return (
     <PageHeader

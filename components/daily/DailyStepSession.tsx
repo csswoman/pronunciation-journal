@@ -25,6 +25,7 @@ import { ChunkStudyPanel } from '@/components/practice/chunks/ChunkStudyPanel'
 import { getThreadHintsForStep } from '@/lib/practice/daily-plan/step-thread'
 import { IPA_EXTRA } from '@/lib/pronunciation/ipa-data'
 import { useAuth } from '@/components/auth/AuthProvider'
+import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { logDailyStepEvent } from '@/lib/practice/daily-plan/analytics'
 import type { DailyStep } from '@/lib/practice/types'
 
@@ -53,8 +54,16 @@ export default function DailyStepSession({
   onExit,
 }: Props) {
   const { user } = useAuth()
+  const openCoach = useAICoachStore((s) => s.openCoach)
   const isReader = step.kind === 'reader'
   const threadHints = getThreadHintsForStep(allSteps, stepIndex)
+
+  useEffect(() => {
+    if (step.kind === 'mission' && step.missionLaunch) {
+      openCoach({ tab: 'missions', mission: step.missionLaunch })
+      onExit()
+    }
+  }, [step, openCoach, onExit])
 
   const showable =
     step.kind === 'phoneme_focus' &&

@@ -5,10 +5,10 @@ import { mergeReviewWords } from '@/lib/review/merge-words'
 import type { DailyStep } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import type { EssentialWordReviewItem, FailedSentenceItem, LessonReviewItem } from '@/lib/review/types'
 import { isOptionalLinkStep } from './step-completion'
 import { WORD_REVIEW_WORD_COUNT } from './constants'
 import {
-  fetchAllPracticedSounds,
   fetchDueReviewWords,
   fetchDueSounds,
   fetchWeakWords,
@@ -21,6 +21,7 @@ import {
   buildWordReviewStep,
 } from './step-builders'
 import { loadDueChunkReviewStep } from '@/lib/chunk-of-day/queries'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 
 export type ReviewPlan = {
   steps: DailyStep[]
@@ -35,22 +36,74 @@ export function shouldKeepNonExerciseStep(step: DailyStep): boolean {
 
 export interface BuildReviewPlanOptions {
   dueWords?: WordBankEntry[]
+  weakWords?: WordBankEntry[]
   dueSounds?: Sound[]
+  dueSoundIds?: number[]
+  failedItems?: FailedSentenceItem[]
+  dueLessons?: LessonReviewItem[]
+  essentialWordsDue?: EssentialWordReviewItem[]
+  includeChunkReview?: boolean
+  learnerLevel: CEFRLevel
+}
+
+function buildLinkSteps(
+  essentialWordsDue: readonly EssentialWordReviewItem[],
+  dueLessons: readonly LessonReviewItem[],
+): DailyStep[] {
+  const steps: DailyStep[] = []
+  if (essentialWordsDue.length > 0) {
+    const uniqueWords = new Set(essentialWordsDue.map((item) => item.wordId)).size
+    steps.push({
+      id: 'review:essential-words',
+      kind: 'concept',
+      title: 'Palabras esenciales pendientes',
+      subtitle: `${uniqueWords} ${uniqueWords === 1 ? 'palabra' : 'palabras'} · ${essentialWordsDue.length} acciones`,
+      icon: 'BookOpen',
+      exercises: [],
+      estMinutes: Math.max(2, Math.ceil(essentialWordsDue.length / 2)),
+      href: '/practice/essential-words',
+      selection: {
+        reason: 'due',
+        targetRefs: essentialWordsDue.map((item) => `essential-word:${item.id}`),
+        source: 'learning_items',
+      },
+    })
+  }
+  for (const lesson of dueLessons) {
+    steps.push({
+      id: `review:${lesson.id}`,
+      kind: 'immersion_lesson',
+      title: lesson.title,
+      subtitle: lesson.typeLabel,
+      icon: 'Clapperboard',
+      exercises: [],
+      estMinutes: 5,
+      href: lesson.url,
+      selection: {
+        reason: 'due',
+        targetRefs: [lesson.id],
+        source: 'immersion_lesson_progress',
+      },
+    })
+  }
+  return steps
 }
 
 export async function buildReviewPlan(
   userId: string,
-  options?: BuildReviewPlanOptions,
+  options: BuildReviewPlanOptions,
 ): Promise<ReviewPlan> {
   const reviewContext = 'review' as const
 
   const [failedItems, weakWords, reviewWords, dueSounds, wordIndex, chunkStep] = await Promise.all([
-    fetchRecentFailedSentences(userId, 5),
-    fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
-    options?.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
-    options?.dueSounds ?? fetchDueSounds(userId),
+    options.failedItems ?? fetchRecentFailedSentences(userId, 5),
+    options.weakWords ?? fetchWeakWords(userId, WORD_REVIEW_WORD_COUNT),
+    options.dueWords ?? fetchDueReviewWords(userId, WORD_REVIEW_WORD_COUNT),
+    options.dueSounds ?? fetchDueSounds(userId),
     getWordCategoryIndex(),
-    loadDueChunkReviewStep(userId, reviewContext).catch(() => null),
+    options.includeChunkReview === false
+      ? Promise.resolve(null)
+      : loadDueChunkReviewStep(userId, reviewContext, options.learnerLevel).catch(() => null),
   ])
 
   const mergedWords = mergeReviewWords(weakWords, reviewWords, WORD_REVIEW_WORD_COUNT)
@@ -68,12 +121,11 @@ export async function buildReviewPlan(
   const contextStep = buildContextPracticeStep(mergedWords, reviewContext)
   if (contextStep) steps.push(contextStep)
 
-  // Sounds: use due sounds when available, fall back to all practiced sounds.
-  const soundsToReview = dueSounds.length > 0 ? dueSounds : await fetchAllPracticedSounds(userId, 4)
-  const reviewDatasets = await getSessionDatasets(soundsToReview.map((sound) => sound.id))
+  const soundIds = options.dueSoundIds ?? dueSounds.map((sound) => sound.id)
+  const reviewDatasets = await getSessionDatasets(soundIds)
 
-  for (const sound of soundsToReview) {
-    const dataset = reviewDatasets.get(sound.id)
+  for (const soundId of soundIds) {
+    const dataset = reviewDatasets.get(soundId)
     if (!dataset) continue
 
     const { targetSound, sounds, wordsBySoundId, minimalPairs } = dataset
@@ -89,6 +141,8 @@ export async function buildReviewPlan(
     )
     if (focus) steps.push({ ...focus, id: `review_sound:${targetSound.id}`, kind: 'phoneme_focus' })
   }
+
+  steps.push(...buildLinkSteps(options.essentialWordsDue ?? [], options.dueLessons ?? []))
 
   // Deduplicar ejercicios cruzados a lo largo de todos los pasos
   const seenContent = new Set<string>()

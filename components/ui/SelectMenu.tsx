@@ -33,6 +33,9 @@ export interface SelectMenuProps<T extends string = string> {
   placeholder?: string
   disabled?: boolean
   className?: string
+  triggerClassName?: string
+  menuClassName?: string
+  align?: 'left' | 'right'
   id?: string
   'aria-label'?: string
 }
@@ -46,6 +49,9 @@ export function SelectMenu<T extends string = string>({
   placeholder = 'Selecciona una opción',
   disabled = false,
   className,
+  triggerClassName,
+  menuClassName,
+  align = 'left',
   id,
   'aria-label': ariaLabel,
 }: SelectMenuProps<T>) {
@@ -111,27 +117,27 @@ export function SelectMenu<T extends string = string>({
         disabled={opt.disabled}
         onClick={() => handleSelect(opt.value)}
         className={cn(
-          'flex w-full min-h-11 items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition-colors',
+          'flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition-colors',
           'focus-ring cursor-pointer disabled:cursor-not-allowed disabled:opacity-40',
           isSelected
-            ? 'bg-primary-soft text-primary font-semibold'
+            ? 'bg-surface-sunken text-fg font-semibold'
             : 'text-fg hover:bg-surface-sunken hover:text-fg font-normal',
         )}
       >
         <div className="flex min-w-0 flex-col gap-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-body-sm leading-snug">{opt.label}</span>
+            <span className="text-body-sm font-semibold leading-snug text-fg">{opt.label}</span>
             {opt.badge ? (
-              <span className="rounded bg-surface-sunken px-1.5 py-0.5 text-tiny font-medium text-fg-muted">
+              <span className="rounded bg-surface-sunken px-1.5 py-0.5 text-tiny font-medium text-fg-muted shrink-0">
                 {opt.badge}
               </span>
             ) : null}
           </div>
           {opt.description ? (
-            <span className="text-caption text-pretty text-fg-muted font-normal">{opt.description}</span>
+            <span className="text-caption text-fg-muted font-normal leading-relaxed">{opt.description}</span>
           ) : null}
         </div>
-        {isSelected ? <Check size={16} className="shrink-0 text-primary" aria-hidden /> : null}
+        {isSelected ? <Check size={16} className="shrink-0 text-primary stroke-[2.5]" aria-hidden /> : null}
       </button>
     )
   }
@@ -140,7 +146,9 @@ export function SelectMenu<T extends string = string>({
     if (groups) {
       return groups.map((g) => (
         <div key={g.label} className="flex flex-col gap-1 py-1">
-          <span className="px-3 pt-2 pb-1 font-kicker text-fg-subtle">{g.label}</span>
+          <span className="px-3 pt-2 pb-1 text-tiny font-bold tracking-wider text-fg-muted uppercase">
+            {g.label}
+          </span>
           <div className="flex flex-col gap-0.5">{g.options.map(renderOptionItem)}</div>
         </div>
       ))
@@ -173,6 +181,7 @@ export function SelectMenu<T extends string = string>({
           'hover:border-border-strong hover:bg-surface-raised focus-ring',
           'disabled:cursor-not-allowed disabled:opacity-60',
           open && 'border-primary bg-surface-raised',
+          triggerClassName,
         )}
       >
         <span className="truncate">
@@ -195,8 +204,10 @@ export function SelectMenu<T extends string = string>({
           role="listbox"
           aria-label={ariaLabel ?? label ?? 'Opciones'}
           className={cn(
-            'hidden sm:block absolute top-[calc(100%+4px)] left-0 z-50 max-h-72 w-full overflow-y-auto',
-            'rounded-xl border border-border-subtle bg-surface-raised p-1.5 shadow-lg animate-fade-in',
+            'hidden sm:block absolute top-[calc(100%+6px)] z-50 max-h-80 min-w-[280px] sm:min-w-[320px] max-w-[380px] overflow-y-auto',
+            'rounded-2xl border border-border-default bg-surface-raised p-2 shadow-xl animate-fade-in',
+            align === 'right' ? 'right-0' : 'left-0',
+            menuClassName,
           )}
         >
           {renderGroupList()}

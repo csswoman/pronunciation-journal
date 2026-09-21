@@ -43,7 +43,13 @@ if (typeof window !== 'undefined') {
     Object.defineProperty(window, 'speechSynthesis', {
       configurable: true,
       writable: true,
-      value: { speak: () => {}, cancel: () => {} },
+      value: {
+        speak: () => {},
+        cancel: () => {},
+        getVoices: () => [],
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      },
     })
   }
 

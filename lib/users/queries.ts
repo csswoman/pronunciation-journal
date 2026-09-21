@@ -104,14 +104,21 @@ export async function updatePassword(newPassword: string): Promise<void> {
   if (error) throw error;
 }
 
-/** Best-effort: persists the local CEFR estimate to user_profiles. */
-export async function syncCefrLevel(userId: string, cefrEstimate: string): Promise<void> {
-  const supabase = getSupabaseBrowserClient();
-  const { error } = await supabase
-    .from("user_profiles")
-    .upsert({ id: userId, cefr_level: cefrEstimate }, { onConflict: "id" });
+/** Best-effort: persists the manual CEFR level to user_profiles via server API. */
+export async function syncCefrLevel(
+  _userId: string,
+  cefrEstimate: string,
+): Promise<void> {
+  const response = await fetch("/api/profile/level", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ level: cefrEstimate }),
+  });
 
-  if (error) throw error;
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Failed to update CEFR level");
+  }
 }
 
 /**

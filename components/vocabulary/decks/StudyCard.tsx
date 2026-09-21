@@ -1,9 +1,8 @@
 "use client";
 
-import { Bookmark, SkipForward, Volume2 } from "@/components/icons";
+import { Bookmark, Volume2 } from "@/components/icons";
 import { cn } from "@/lib/cn";
-import Button from "@/components/ui/Button";
-import { blankOutWord, speakWord } from "./study-utils";
+import { speakWord } from "./study-utils";
 
 interface Meaning {
   partOfSpeech?: string;
@@ -12,6 +11,7 @@ interface Meaning {
 
 interface StudyCardProps {
   word: string;
+  deckName?: string;
   ipa?: string | null;
   levelLabel: string | null;
   firstMeaning?: Meaning;
@@ -22,77 +22,85 @@ interface StudyCardProps {
 }
 
 export function StudyCard({
-  word, ipa, levelLabel, firstMeaning, firstDef, flipped, onFlip, onSkip,
+  word,
+  deckName = "Creativity Mind",
+  ipa,
+  levelLabel = "A1",
+  firstMeaning,
+  firstDef,
+  flipped,
+  onFlip,
 }: StudyCardProps) {
   const partOfSpeech = firstMeaning?.partOfSpeech;
 
-  const headerBadge = partOfSpeech ? (
-    <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold uppercase tracking-wide"
-      style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
-      {partOfSpeech}
-    </span>
-  ) : levelLabel ? (
-    <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold"
-      style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
-      {levelLabel}
-    </span>
-  ) : <span />;
-
-  const headerActions = (
-    <div className="flex items-center gap-1.5">
-      <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); onSkip(); }} title="Skip" className="!p-1.5 !rounded-lg">
-        <SkipForward size={13} />
-      </Button>
-      <Button variant="outline" size="icon" onClick={(e) => e.stopPropagation()} className="!p-1.5 !rounded-lg">
-        <Bookmark size={13} />
-      </Button>
-    </div>
-  );
-
-  const wordDisplay = (
-    <>
-      <p className="m-0 text-display-word font-bold italic text-balance text-fg">
-        {word}
-      </p>
-      {ipa && (
-        <div className="flex items-center gap-2 justify-center">
-          <span className="text-base text-fg-muted">/{ipa}/</span>
-          <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); speakWord(word); }} className="!p-1.5">
-            <Volume2 size={13} />
-          </Button>
-        </div>
-      )}
-      <div className="w-full border-t border-dashed" style={{ borderColor: "var(--line-divider)" }} />
-    </>
-  );
-
   const cardFace = (content: React.ReactNode, isBack = false) => (
     <div
+      className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 rounded-3xl border border-border-default bg-surface-raised shadow-xl overflow-hidden"
       style={{
         backfaceVisibility: "hidden",
         transform: isBack ? "rotateY(180deg)" : undefined,
-        backgroundColor: "var(--card-bg)",
-        borderRadius: "16px",
-        border: "1px solid var(--line-divider)",
-        boxShadow: "var(--shadow-sm)",
-        overflow: "hidden",
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
       }}
     >
-      <div className="flex items-center justify-between px-4 pt-4 pb-0">
-        {isBack && partOfSpeech ? (
-          <span className="px-2.5 py-0.5 rounded-full border text-caption font-bold uppercase tracking-wide"
-            style={{ borderColor: "var(--warning)", backgroundColor: "var(--warning-soft)", color: "var(--warning)" }}>
-            {partOfSpeech}
+      {/* Encabezado superior dentro de la tarjeta */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1 rounded-full bg-butter text-stone-900 font-extrabold text-caption border-none shadow-2xs">
+            {levelLabel ?? "A1"}
           </span>
-        ) : !isBack ? headerBadge : <span />}
-        {headerActions}
+          {deckName && (
+            <span className="px-3 py-1 rounded-full bg-surface-sunken text-fg-muted font-semibold text-caption truncate max-w-[140px] sm:max-w-[200px] border-none">
+              {deckName}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              speakWord(word);
+            }}
+            aria-label="Pronunciar"
+            className="focus-ring flex size-9 items-center justify-center rounded-full bg-fg text-surface-raised hover:bg-fg/90 transition-colors shadow-2xs"
+          >
+            <Volume2 size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Guardar marcador"
+            className="focus-ring flex size-9 items-center justify-center rounded-full border border-border-default bg-surface-sunken hover:bg-surface-raised text-fg-subtle hover:text-fg transition-colors"
+          >
+            <Bookmark size={16} />
+          </button>
+        </div>
       </div>
-      <div className="flex-1 flex flex-col items-center justify-center px-[var(--layout-card-pad)] py-[var(--layout-section-gap)] text-center space-y-3">
+
+      {/* Centro de la tarjeta */}
+      <div className="flex-1 flex flex-col items-center justify-center my-6 text-center">
         {content}
+      </div>
+
+      {/* Pie de la tarjeta con pista y tecla */}
+      <div className="border-t border-border-subtle pt-4 text-center">
+        {!isBack ? (
+          <p className="font-sans text-caption text-fg-muted">
+            Piensa el significado y pulsa{" "}
+            <kbd className="px-2 py-0.5 rounded-md border border-border-strong bg-surface-sunken font-mono text-tiny font-bold text-fg uppercase">
+              ESPACIO
+            </kbd>{" "}
+            para girar
+          </p>
+        ) : (
+          <p className="font-sans text-caption text-fg-muted">
+            Pulsa{" "}
+            <kbd className="px-2 py-0.5 rounded-md border border-border-strong bg-surface-sunken font-mono text-tiny font-bold text-fg uppercase">
+              ESPACIO
+            </kbd>{" "}
+            para voltear al frente
+          </p>
+        )}
       </div>
     </div>
   );
@@ -100,53 +108,40 @@ export function StudyCard({
   return (
     <button
       type="button"
-      className="flip-card-perspective w-full max-w-sm cursor-pointer select-none text-left"
+      className="flip-card-perspective w-full max-w-xl sm:max-w-2xl min-h-[360px] sm:min-h-[380px] cursor-pointer select-none text-left"
       onClick={onFlip}
-      aria-label={flipped ? "Flip card to front" : "Flip card to see answer"}
+      aria-label={flipped ? "Ver frente de la tarjeta" : "Ver respuesta de la tarjeta"}
     >
-      <div
-        className={cn("flip-card-inner", flipped && "flip-card-inner--flipped")}
-      >
-        {/* Front */}
+      <div className={cn("flip-card-inner h-full w-full", flipped && "flip-card-inner--flipped")}>
+        {/* Frente */}
         {cardFace(
-          <>
-            {wordDisplay}
-            {firstDef?.example ? (
-              <div className="rounded-xl border border-dashed p-3 w-full text-left"
-                style={{ borderColor: "var(--line-divider)" }}>
-                <p className="font-kicker font-semibold mb-1 text-fg-subtle">Fill in the blank</p>
-                <p className="text-caption italic leading-relaxed text-fg-muted">
-                  "{blankOutWord(firstDef.example, word)}"
-                </p>
-              </div>
-            ) : (
-              <p className="text-body-sm italic text-fg-subtle">
-                Think of the meaning before flipping
-              </p>
-            )}
-          </>
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="font-heading text-4xl sm:text-5xl font-black text-fg tracking-tight">
+              {word}
+            </h2>
+            {ipa && <p className="font-phoneme text-body-md text-fg-muted">/{ipa}/</p>}
+          </div>
         )}
 
-        {/* Back */}
+        {/* Reverso */}
         {cardFace(
-          <>
-            {wordDisplay}
-            <div className="w-full space-y-3 text-left">
-              {firstDef?.definition && (
-                <p className="text-body-sm leading-snug text-fg">
-                  {firstDef.definition}
-                </p>
-              )}
-              {firstDef?.example && (
-                <div className="rounded-xl border border-dashed p-3" style={{ borderColor: "var(--line-divider)" }}>
-                  <p className="font-kicker font-semibold mb-1 text-fg-subtle">Example</p>
-                  <p className="text-caption italic leading-relaxed text-fg-muted">
-                    "{firstDef.example}"
-                  </p>
-                </div>
-              )}
-            </div>
-          </>,
+          <div className="flex flex-col items-center gap-3 w-full max-w-md">
+            {partOfSpeech && (
+              <span className="px-3 py-0.5 rounded-full border border-primary/20 bg-primary/10 text-primary font-bold text-tiny uppercase tracking-wider">
+                {partOfSpeech}
+              </span>
+            )}
+            {firstDef?.definition && (
+              <p className="font-sans text-body-md font-semibold text-fg text-center leading-snug">
+                {firstDef.definition}
+              </p>
+            )}
+            {firstDef?.example && (
+              <p className="font-sans text-body-sm italic text-fg-muted text-center bg-surface-sunken p-3 rounded-2xl border border-border-subtle w-full mt-1">
+                "{firstDef.example}"
+              </p>
+            )}
+          </div>,
           true
         )}
       </div>

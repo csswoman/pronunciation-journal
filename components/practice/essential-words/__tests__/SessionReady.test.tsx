@@ -79,25 +79,24 @@ const readyProps = {
   sessionSize: 'recommended' as const,
   onSessionSizeChange: vi.fn(),
   onBegin: vi.fn(),
-  onLeechReview: vi.fn(),
   isResume: false,
   previewLoading: false,
   onDiscard: vi.fn(),
 }
 
 describe('SessionReady', () => {
-  it('composes hero, recap, forecast, vocabulary, rail, and heatmap', () => {
+  it('composes hero, recap, streak, vocabulary, and vault row without residual forecast/heatmap rows', () => {
     render(<SessionReady {...readyProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
     expect(screen.getByText(/Última: buen ritmo · 8\/9/)).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Próximos 7 días' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tu vocabulario' })).toBeInTheDocument()
     expect(screen.getByText('Racha')).toBeInTheDocument()
-    expect(screen.getByText('Retención 30 días')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Se te resisten' })).toBeInTheDocument()
     expect(screen.getByTestId('vault')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Últimas 12 semanas' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Próximos 7 días' })).not.toBeInTheDocument()
+    expect(screen.queryByText('Retención 30 días')).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Se te resisten' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Últimas 12 semanas' })).not.toBeInTheDocument()
   })
 
   it('calls onBegin from the hero CTA', async () => {
@@ -106,10 +105,5 @@ describe('SessionReady', () => {
     render(<SessionReady {...readyProps} onBegin={onBegin} />)
     await user.click(screen.getByRole('button', { name: 'Empezar' }))
     expect(onBegin).toHaveBeenCalledOnce()
-  })
-
-  it('disables the alternate leech route while resuming a draft', () => {
-    render(<SessionReady {...readyProps} isResume />)
-    expect(screen.getByRole('button', { name: 'Repasar las 1 difíciles →' })).toBeDisabled()
   })
 })

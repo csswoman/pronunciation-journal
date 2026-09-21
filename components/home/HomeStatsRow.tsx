@@ -11,65 +11,59 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
 import HomeImmersionCard from "@/components/home/HomeImmersionCard";
+import type { HomeImmersionSummary } from "@/lib/home/constants";
 
-// Dexie exists here only to fill in one counter, so it loads after first paint
-// instead of blocking hydration. Until it arrives the card renders the same
-// body at count 0, so the swap costs no layout shift.
+// Catalog + Dexie progress load after first paint instead of blocking hydration.
+// Until they arrive, the card renders the same geometry with an unknown count.
 const HomeEssentialWordsCount = dynamic(
   () => import("@/components/home/HomeEssentialWordsCount"),
   { ssr: false },
 );
 
-const CEFR_WORD_TOTALS: Record<string, number> = {
-  A1: 740,
-  A2: 1150,
-  B1: 1800,
-  B2: 2400,
-};
-
 interface HomeStatsRowProps {
   profileLevel?: string | null;
   showImmersionCard?: boolean;
+  immersionSummary?: HomeImmersionSummary | null;
 }
 
 export default function HomeStatsRow({
   profileLevel = "A1",
   showImmersionCard = true,
+  immersionSummary = null,
 }: HomeStatsRowProps) {
   const levelKey = (profileLevel || "A1").toUpperCase();
-  const totalLevelWords = CEFR_WORD_TOTALS[levelKey] ?? 740;
 
-  // Defer the Dexie chunk past the first frame; the placeholder below is
-  // byte-identical in geometry, so nothing moves when the real count lands.
+  // Defer the progress reader past the first frame; the placeholder below
+  // preserves the card geometry without inventing a zero.
   const [showLiveCount, setShowLiveCount] = useState(false);
   useEffect(() => {
     setShowLiveCount(true);
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {/* Palabras esenciales */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+      {/* Palabras esenciales / Tu Mazo */}
       <Link
         href="/practice/essential-words"
         prefetch={false}
-        className="focus-ring group flex flex-col justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3.5 sm:p-4 shadow-xs transition-all hover:border-border-default hover:shadow-sm"
+        data-tone="lilac"
+        className="pastel-card focus-ring group flex flex-col justify-between gap-4 rounded-3xl p-4 sm:p-5 transition-transform hover:-translate-y-px"
       >
         {showLiveCount ? (
           <HomeEssentialWordsCount
-            totalLevelWords={totalLevelWords}
             levelKey={levelKey}
           />
         ) : (
           <HomeEssentialWordsBody
-            learnedCount={0}
-            totalLevelWords={totalLevelWords}
+            learnedCount={null}
+            totalLevelWords={null}
             levelKey={levelKey}
           />
         )}
       </Link>
 
       {/* Registro de inmersión: ¿Viste algo en inglés hoy? */}
-      {showImmersionCard ? <HomeImmersionCard /> : null}
+      {showImmersionCard ? <HomeImmersionCard summary={immersionSummary} /> : null}
     </div>
   );
 }

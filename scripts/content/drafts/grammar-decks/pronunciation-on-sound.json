@@ -1,0 +1,45 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Pronunciación · Fonética",
+    "title": "Pronunciación del sonido 'ON'",
+    "titleEmphasis": "/ɒn/ vs. /ʌn/ contrast",
+    "goal": "Diferenciar la vocal corta en palabras con la terminación o prefijo ON."
+  },
+  "cards": [
+    {
+      "id": "pronunciation-on-sound-concept",
+      "tag": "Idea central",
+      "title": "El sonido vocal en palabras con ON",
+      "lede": "Compara la vocal abierta /ɒ/ de 'on' con la vocal media central /ʌ/ de 'under'.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "Sonido /ɒn/ (Abierto)",
+              "value": "on /ɒn/, contact /ˈkɒntækt/, online /ˈɒnlaɪn/",
+              "highlights": ["/ɒn/"]
+            },
+            {
+              "key": "Sonido /ʌn/ (Central neutro)",
+              "value": "done /dʌn/, onion /ˈʌnjən/, monday /ˈmʌndeɪ/",
+              "highlights": ["/ʌn/"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which word is pronounced with the /ʌ/ sound (like 'sun')?",
+      "options": [
+        "done",
+        "on"
+      ],
+      "answer": 0,
+      "explain": "'done' se pronuncia /dʌn/ (con el mismo sonido vocálico que 'sun' o 'bus')."
+    }
+  ]
+}

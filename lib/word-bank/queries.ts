@@ -367,7 +367,7 @@ export async function countWordsDueForReviewClient(userId: string): Promise<numb
     .eq("status", "ready")
     .or(`and(srs_status.neq.new,next_review_at.lte.${today}),verification_due_at.lte.${today}`);
 
-  if (error) return 0;
+  if (error) throw error;
   return count ?? 0;
 }
 

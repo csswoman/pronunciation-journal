@@ -103,6 +103,12 @@ export interface ResolveInput {
   arc: ArcLike | undefined
   lastModeId: string | null
   dueCount?: number | null
+  reviewSummary?: {
+    hasPendingReview: boolean
+    totalDue: number
+    headline?: string
+    subtext?: string
+  } | null
 }
 
 function modeById(id: string): PracticeMode | undefined {
@@ -111,13 +117,29 @@ function modeById(id: string): PracticeMode | undefined {
 
 /**
  * Pick the highlighted card for the hub. Priority:
- * 1. from daily + arc has a sound → Sound Lab
- * 2. from daily (no sound) → Essential Words
- * 3. last practiced mode is known → continue it
- * 4. fallback → Essential Words
+ * 1. review items due (from aggregated review summary or word bank due count)
+ * 2. from daily + arc has a sound → Sound Lab
+ * 3. from daily (no sound) → Essential Words
+ * 4. last practiced mode is known → continue it
+ * 5. fallback → Essential Words
  */
 export function resolveRecommendedMode(input: ResolveInput): RecommendedResult {
   const fallback = modeById(FALLBACK_MODE_ID)!
+
+  if (input.reviewSummary?.hasPendingReview && input.reviewSummary.totalDue > 0) {
+    const mode = modeById('review')!
+    const total = input.reviewSummary.totalDue
+    return {
+      mode,
+      reason: 'due-review',
+      headline:
+        input.reviewSummary.headline ||
+        `${total} ${total === 1 ? 'elemento espera' : 'elementos esperan'} repaso`,
+      subtext:
+        input.reviewSummary.subtext ||
+        'Repásalos hoy para mantenerlos en tu memoria a largo plazo · unos 5 min',
+    }
+  }
 
   if (input.dueCount && input.dueCount > 0) {
     const mode = modeById('review')!

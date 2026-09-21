@@ -30,36 +30,36 @@ vi.mock('@/components/layout/PageHeader', () => ({
 }))
 
 describe('HomePageHeader streak copy', () => {
-  it('shows the streak as a chip alongside the subtitle', () => {
+  it('shows the streak as a chip alongside the weekly minutes subtitle', () => {
     render(
       <HomePageHeader
         streak={{ currentStreak: 4, maxStreak: 4, completedToday: true }}
-        wordsMastered={2}
+        weekMinutes={20}
         isNewLearner={false}
       />,
     )
     expect(screen.getByText(/4 días/i)).toBeInTheDocument()
-    expect(screen.getByText(/2 palabras dominadas/i)).toBeInTheDocument()
+    expect(screen.getByText(/20 min esta semana/i)).toBeInTheDocument()
   })
 
-  it('shows no streak chip and falls back to progress copy when streak is 0', () => {
+  it('shows no streak chip when streak is 0 but still shows weekly minutes', () => {
     render(
       <HomePageHeader
         streak={{ currentStreak: 0, maxStreak: 0, completedToday: false }}
-        wordsMastered={12}
+        weekMinutes={12}
         isNewLearner={false}
       />,
     )
     expect(screen.queryByText(/^0 días$/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/^1 día$/i)).not.toBeInTheDocument()
-    expect(screen.getByText(/12 palabras dominadas/i)).toBeInTheDocument()
+    expect(screen.getByText(/12 min esta semana/i)).toBeInTheDocument()
   })
 
   it('keeps first-visit orientation when there is no retention signal', () => {
     render(
       <HomePageHeader
         streak={{ currentStreak: 0, maxStreak: 0, completedToday: false }}
-        wordsMastered={0}
+        weekMinutes={0}
         isNewLearner
       />,
     )

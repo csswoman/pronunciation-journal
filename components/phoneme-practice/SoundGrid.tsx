@@ -9,10 +9,10 @@ interface Props {
   accuracyByIpa: Map<string, number>
 }
 
-function scoreColor(score: number): string {
-  if (score >= 85) return 'oklch(0.62 0.17 145)'
-  if (score >= 60) return 'oklch(0.68 0.16 70)'
-  return 'oklch(0.62 0.18 30)'
+function scoreColorClass(score: number): string {
+  if (score >= 85) return 'text-success'
+  if (score >= 60) return 'text-warning'
+  return 'text-error'
 }
 
 export function SoundGrid({ sounds, accuracyByIpa }: Props) {
@@ -53,59 +53,33 @@ export function SoundGrid({ sounds, accuracyByIpa }: Props) {
             score !== null ? `${score}% accuracy` : null,
           ].filter(Boolean)
 
-          const bg = isMastered
-            ? 'var(--primary)'
-            : isPracticing
-            ? 'color-mix(in oklch, var(--primary) 12%, var(--card-bg))'
-            : 'var(--card-bg)'
-
-          const border = isMastered
-            ? 'var(--primary)'
-            : isPracticing
-            ? 'color-mix(in oklch, var(--primary) 45%, transparent)'
-            : 'color-mix(in oklch, var(--line-divider) 100%, transparent)'
-
-          const ipaColor = isMastered
-            ? 'var(--on-primary)'
-            : isPracticing
-            ? 'var(--primary)'
-            : 'var(--text-primary)'
-
-          const subColor = isMastered
-            ? 'rgba(var(--on-primary), 0.65)'
-            : isPracticing && score !== null
-            ? scoreColor(score)
-            : 'var(--text-tertiary)'
-
           const subText = isMastered ? '✓' : score !== null ? String(score) : isAvailable ? '—' : ''
+
+          const tileClass = isMastered
+            ? 'bg-primary border-primary shadow-xs'
+            : isPracticing
+            ? 'bg-primary-soft border-primary/45 shadow-xs'
+            : 'bg-surface-raised border-border-subtle'
+
+          const ipaClass = isMastered ? 'text-on-primary' : isPracticing ? 'text-primary' : 'text-fg'
+          const subClass = isMastered
+            ? 'text-on-primary/65'
+            : isPracticing && score !== null
+            ? scoreColorClass(score)
+            : 'text-fg-subtle'
 
           return (
             <button
               key={s.id}
               onClick={() => router.push(`/practice/sounds/sound/${s.id}`)}
               title={tooltipParts.join(' — ')}
-              className="flex flex-col items-center justify-center rounded-xl py-2 px-1 transition-all active:scale-95 relative group"
-              style={{
-                background: bg,
-                border: `1px solid ${border}`,
-                boxShadow: isPracticing
-                  ? '0 1px 4px color-mix(in oklch, var(--primary) 14%, transparent)'
-                  : isAvailable
-                  ? '0 1px 3px var(--line-divider)'
-                  : 'none',
-              }}
+              className={`flex flex-col items-center justify-center rounded-xl border py-2 px-1 transition-all active:scale-95 relative group ${tileClass}`}
             >
               <div className="absolute inset-0 rounded-xl bg-black opacity-0 transition-opacity group-hover:opacity-5 pointer-events-none" />
-              <span
-                className="font-mono font-bold text-body-sm leading-none"
-                style={{ color: ipaColor, letterSpacing: '-0.01em' }}
-              >
+              <span className={`font-phonetic font-bold text-body-sm leading-none tracking-tight ${ipaClass}`}>
                 {s.ipa}
               </span>
-              <span
-                className="mt-1 text-tiny font-semibold tabular-nums leading-none"
-                style={{ color: subColor }}
-              >
+              <span className={`mt-1 text-tiny font-semibold tabular-nums leading-none ${subClass}`}>
                 {subText}
               </span>
             </button>
@@ -116,12 +90,12 @@ export function SoundGrid({ sounds, accuracyByIpa }: Props) {
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
         {[
-          { label: 'Mastered',    bg: 'var(--primary)',                                            border: 'var(--primary)' },
-          { label: 'In progress', bg: 'color-mix(in oklch, var(--primary) 12%, var(--card-bg))',   border: 'color-mix(in oklch, var(--primary) 45%, transparent)' },
-          { label: 'Untouched',   bg: 'var(--card-bg)',                                            border: 'var(--line-divider)' },
-        ].map(({ label, bg, border }) => (
+          { label: 'Mastered',    tileClass: 'bg-primary border-primary' },
+          { label: 'In progress', tileClass: 'bg-primary-soft border-primary/45' },
+          { label: 'Untouched',   tileClass: 'bg-surface-raised border-border-subtle' },
+        ].map(({ label, tileClass }) => (
           <div key={label} className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded" style={{ background: bg, border: `1px solid ${border}` }} />
+            <div className={`h-3 w-3 rounded border ${tileClass}`} />
             <span className="text-tiny text-fg-muted">{label}</span>
           </div>
         ))}

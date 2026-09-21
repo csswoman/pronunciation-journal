@@ -26,10 +26,9 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
     }
   };
 
-  const baseClasses = `press-feedback relative flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 w-full min-h-[38px] px-2.5 py-1.5"} rounded-md text-body-sm transition-all duration-[var(--transition-fast)] group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]`;
-  const baseStyle = active
-    ? { background: "var(--primary-soft)", color: "var(--primary)", fontWeight: 600 }
-    : { color: "var(--text-secondary)" };
+  const baseClasses = `press-feedback relative flex items-center ${collapsed ? "justify-center w-9 h-9 mx-auto" : "gap-2.5 w-full min-h-[38px] px-2.5 py-1.5"} rounded-md text-body-sm transition-all duration-[var(--transition-fast)] group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] ${
+    active ? "bg-primary-soft text-primary-text font-semibold" : "text-[var(--text-secondary)]"
+  }`;
 
   const inner = (
     <>
@@ -54,7 +53,6 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
         onClick={handleClick}
         ref={(el) => { ref.current = el; }}
         className={baseClasses}
-        style={baseStyle}
         {...tooltipProps}
       >
         {inner}
@@ -67,7 +65,6 @@ export function NavButton({ active, onClick, children, as = "button", href, tool
       onClick={handleClick}
       ref={(el) => { ref.current = el; }}
       className={baseClasses}
-      style={baseStyle}
       {...tooltipProps}
     >
       {inner}

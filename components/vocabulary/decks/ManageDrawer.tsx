@@ -16,12 +16,12 @@ import {
 } from "@/lib/decks/queries";
 import type { Tables } from "@/lib/supabase/types";
 import { BookOpen, Plus, Sparkles, X } from "@/components/icons";
-import Button from "@/components/ui/Button";
-import { H2 } from "@/components/ui/Typography";
 import { fetchMeaningForWord } from "@/lib/word-bank/meaning";
 import { ManageVocabTab } from "./ManageVocabTab";
 import { ManageAddTab } from "./ManageAddTab";
 import { ManageAiTab } from "./ManageAiTab";
+import { getDeckIconComponent, normalizeDeckTone } from "./deck-palette";
+import { cn } from "@/lib/cn";
 
 type Entry = Tables<"entries">;
 type Tab = "words" | "add" | "ai";
@@ -33,9 +33,9 @@ interface ManageDrawerProps {
 }
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
-  { id: "words", label: "Words", icon: <BookOpen size={14} /> },
-  { id: "add", label: "Add", icon: <Plus size={14} /> },
-  { id: "ai", label: "AI Suggest", icon: <Sparkles size={14} /> },
+  { id: "words", label: "Palabras", icon: <BookOpen size={15} /> },
+  { id: "add", label: "Agregar", icon: <Plus size={15} /> },
+  { id: "ai", label: "Sugerencias IA", icon: <Sparkles size={15} /> },
 ];
 
 export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerProps) {
@@ -53,13 +53,16 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
   const [mutating, setMutating] = useState(false);
   const selectMode = selected.size > 0;
 
+  const tone = normalizeDeckTone(deck.color, deck.name);
+  const DeckIconComp = getDeckIconComponent(deck.icon);
+
   const loadEntries = useCallback(async () => {
     try {
       const loaded = await getDeckEntries(deck.id);
       setEntries(loaded);
       onWordCountChange?.(loaded.length);
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Could not load the deck.");
+      setActionError(error instanceof Error ? error.message : "No se pudo cargar el mazo.");
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
         await loadEntries();
       }
     } catch (error: unknown) {
-      setActionError(error instanceof Error ? error.message : "Could not add the word.");
+      setActionError(error instanceof Error ? error.message : "No se pudo agregar la palabra.");
     } finally {
       setAddingWord(false);
     }
@@ -113,7 +116,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
       });
       await loadEntries();
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Could not remove the word.");
+      setActionError(error instanceof Error ? error.message : "No se pudo eliminar la palabra.");
     } finally {
       setMutating(false);
     }
@@ -128,7 +131,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
       setSelected(new Set());
       await loadEntries();
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Could not remove the selected words.");
+      setActionError(error instanceof Error ? error.message : "No se pudieron eliminar las palabras seleccionadas.");
     } finally {
       setMutating(false);
     }
@@ -152,7 +155,7 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
       await updateEntryContent(entryId, { phrases: phrases.length ? phrases : null, meanings });
       await loadEntries();
     } catch (error) {
-      setActionError(error instanceof Error ? error.message : "Could not save the changes.");
+      setActionError(error instanceof Error ? error.message : "No se pudieron guardar los cambios.");
       throw error;
     }
   };
@@ -183,29 +186,102 @@ export function ManageDrawer({ deck, onClose, onWordCountChange }: ManageDrawerP
     }
   };
 
-  return <>
-    <button type="button" className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm cursor-default" onClick={onClose} aria-label="Close drawer" tabIndex={-1} />
-    <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md flex flex-col bg-[var(--card-bg)] border-l border-[var(--line-divider)] shadow-2xl">
-      <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[var(--line-divider)]">
-        <div><H2 className="font-bold text-body-lg leading-tight">{deck.name}</H2>{deck.description && <p className="text-caption text-fg-muted mt-0.5 line-clamp-1">{deck.description}</p>}<p className="text-caption text-fg-subtle mt-1">{loading ? "..." : `${entries.length} word${entries.length !== 1 ? "s" : ""}`}</p></div>
-        <Button variant="ghost" size="icon" onClick={onClose} className="mt-0.5"><X size={18} /></Button>
-      </div>
-
-      <div className="flex px-4 pt-3 gap-1 border-b border-[var(--line-divider)] pb-0">{TABS.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex items-center gap-1.5 px-3 py-2 text-caption font-semibold rounded-t-lg border-b-2 transition-colors -mb-px ${tab === item.id ? "border-[var(--primary)] text-[var(--primary)]" : "border-transparent text-fg-muted hover:text-fg"}`}>{item.icon}{item.label}</button>)}</div>
-
-      <div className="flex-1 overflow-y-auto">
-        {actionError && (
-          <div role="alert" className="mx-4 mt-3 flex items-center justify-between gap-3 rounded-xl border border-error bg-error-soft px-3 py-2 text-body-sm text-error">
-            <span>{actionError}</span>
-            <button type="button" onClick={() => setActionError(null)} aria-label="Dismiss error">
-              ×
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+      <div className="w-full max-w-xl max-h-[85vh] flex flex-col rounded-3xl border border-border-default bg-surface-raised shadow-2xl overflow-hidden select-none">
+        {/* Banner de Cabecera con Tono Pastel */}
+        <div
+          data-tone={tone}
+          className="pastel-card relative flex flex-col gap-4 p-6 pb-5 border-b border-ink/10 shadow-xs transition-colors"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-paper text-ink shrink-0 shadow-xs border border-ink/15">
+                <DeckIconComp size={22} className="text-ink" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-heading text-2xl font-extrabold text-ink truncate leading-snug">
+                  {deck.name}
+                </h2>
+                <p className="font-sans text-body-sm font-medium text-ink-secondary truncate">
+                  {loading ? "Cargando palabras..." : `${entries.length} palabra${entries.length !== 1 ? "s" : ""} en este mazo`}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Cerrar"
+              className="focus-ring flex size-9 items-center justify-center rounded-full bg-paper/60 hover:bg-paper text-ink border border-ink/15 transition-colors shrink-0"
+            >
+              <X size={18} />
             </button>
           </div>
-        )}
-        {tab === "words" && <ManageVocabTab loading={loading} entries={entries} filter={filter} selected={selected} selectMode={selectMode} onFilterChange={setFilter} onToggleSelectAll={toggleSelectAll} onBulkRemove={handleBulkRemove} onToggleSelect={toggleSelect} onRemoveWord={handleRemoveWord} onSaveEntry={handleSaveEntry} onChangeTab={setTab} />}
-        {tab === "add" && <ManageAddTab entries={entries} manualWord={manualWord} manualPhrases={manualPhrases} showPhrases={showPhrases} addingWord={addingWord} onManualWordChange={setManualWord} onManualPhrasesChange={setManualPhrases} onTogglePhrases={() => setShowPhrases((value) => !value)} onAddWord={() => handleAddWord()} />}
-        {tab === "ai" && <ManageAiTab deck={deck} entries={entries} onAddEntry={handleAddWord} />}
+
+          {/* Barra de pestañas segmentada pastel */}
+          <div className="flex items-center gap-2 pt-1">
+            {TABS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                className={cn(
+                  "focus-ring inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-sans text-caption transition-all select-none",
+                  tab === item.id
+                    ? "bg-ink text-paper font-bold shadow-xs scale-105"
+                    : "bg-paper/50 hover:bg-paper/80 text-ink border border-ink/15 font-semibold"
+                )}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Contenido desplazable */}
+        <div className="flex-1 overflow-y-auto">
+          {actionError && (
+            <div role="alert" className="mx-6 mt-4 flex items-center justify-between gap-3 rounded-2xl border border-error bg-error-soft px-4 py-3 text-body-sm text-error">
+              <span>{actionError}</span>
+              <button type="button" onClick={() => setActionError(null)} aria-label="Descartar error" className="font-bold">
+                ×
+              </button>
+            </div>
+          )}
+          {tab === "words" && (
+            <ManageVocabTab
+              loading={loading}
+              entries={entries}
+              filter={filter}
+              selected={selected}
+              selectMode={selectMode}
+              onFilterChange={setFilter}
+              onToggleSelectAll={toggleSelectAll}
+              onBulkRemove={handleBulkRemove}
+              onToggleSelect={toggleSelect}
+              onRemoveWord={handleRemoveWord}
+              onSaveEntry={handleSaveEntry}
+              onChangeTab={setTab}
+            />
+          )}
+          {tab === "add" && (
+            <ManageAddTab
+              entries={entries}
+              manualWord={manualWord}
+              manualPhrases={manualPhrases}
+              showPhrases={showPhrases}
+              addingWord={addingWord}
+              onManualWordChange={setManualWord}
+              onManualPhrasesChange={setManualPhrases}
+              onTogglePhrases={() => setShowPhrases((value) => !value)}
+              onAddWord={() => handleAddWord()}
+            />
+          )}
+          {tab === "ai" && <ManageAiTab deck={deck} entries={entries} onAddEntry={handleAddWord} />}
+        </div>
       </div>
     </div>
-  </>;
+  );
 }
+

@@ -192,6 +192,12 @@ export default function DailyChecklist({
             arc={plan?.arc}
             dueTomorrow={dueTomorrow}
             learned={learnedCount}
+            // TODO: no total-words-per-level source available in this render path
+            // without a new query (Home's totalLevelWords comes from
+            // getEssentialWordsLevelCount, a Dexie call keyed by CEFR level that
+            // isn't fetched anywhere in DailyChecklist today). See
+            // plans/005-remove-fabricated-ui-data.md.
+            essentialWordsTotal={null}
           />
         ) : null}
 

@@ -60,6 +60,24 @@ describe("User Profiles and Role Security Migration Audit", () => {
     );
     expect(sql).toMatch(/Do NOT backfill public\.user_roles from user_profiles\.role/i);
   });
+
+  it("includes migration protecting cefr_level_source and enforcing cefr_level CHECK constraint", () => {
+    const protectSourceMigration = migrationFiles.find((f) =>
+      f.includes("protect_cefr_level_source"),
+    );
+    expect(protectSourceMigration).toBeDefined();
+
+    const sql = fs.readFileSync(path.join(migrationsDir, protectSourceMigration!), "utf8");
+
+    expect(sql).toMatch(/user_profiles_cefr_level_check/i);
+    expect(sql).toMatch(/CHECK\s*\(\s*cefr_level\s+IS\s+NULL\s+OR\s+cefr_level\s+IN\s*\(\s*'A1'\s*,\s*'A2'\s*,\s*'B1'\s*,\s*'B2'\s*,\s*'C1'\s*,\s*'C2'\s*\)\s*\)/i);
+    expect(sql).toMatch(/protect_user_profiles_privileged_columns/i);
+    expect(sql).toMatch(/starter_default/i);
+    expect(sql).toMatch(/manual/i);
+    expect(sql).toMatch(/GRANT INSERT \(id, display_name, interests\)/i);
+    expect(sql).toMatch(/GRANT UPDATE \(display_name, interests\)/i);
+    expect(sql).not.toMatch(/GRANT UPDATE \([^)]*cefr_level/i);
+  });
 });
 
 describe("Storage bucket policy migration audit", () => {

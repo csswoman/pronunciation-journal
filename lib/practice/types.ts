@@ -258,6 +258,12 @@ export type DailyStep = {
   selection?: DailySelectionMetadata
   /** Exact oral handoff for mission steps. */
   missionLaunch?: MissionLaunch
+  /**
+   * True when the learner has abandoned their last 2 mission sessions
+   * (see lib/practice/daily-plan/mission-avoidance.ts). The mission itself
+   * is never skipped — it is offered in a lower-friction form instead.
+   */
+  scaffolded?: boolean
   /** Solo para 'ed_cluster_drill': qué cluster se corrige y con qué evidencia. */
   edClusterDrill?: {
     cluster: string
@@ -281,10 +287,12 @@ export type DailyStep = {
 export type SessionArc = {
   /** Dominant grammar concept of the session, via dominantTopicLabel(). null if none. */
   topicLabel: string | null
-  /** IPA of the day's primary sound. null if no phonetic focus. */
+  /** IPA from the phonetic step that actually survived daily-plan selection. */
   soundIpa: string | null
   /** Distinct words touched in the session (from word_intro/word_review/context steps). */
   sessionWords: string[]
+  /** Words from the selected sound catalog entry, as shown in /practice/sounds. */
+  soundWords?: string[]
   /** Metadatos de la prescripción diagnóstica activa si el sonido de hoy proviene de ella. */
   diagnosticPrescription?: {
     soundIpa: string

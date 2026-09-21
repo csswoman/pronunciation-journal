@@ -210,9 +210,9 @@ export function MinimalPairsRunner({
                 className={cn(
                   "relative flex flex-col items-center justify-center p-3 rounded-xl border font-semibold text-body-sm transition-all duration-150 shadow-2xs",
                   highlights.A === "correct"
-                    ? "bg-[var(--success-soft,#dcfce7)] border-[var(--success,#22c55e)] text-[var(--success,#15803d)] ring-2 ring-[var(--success,#22c55e)]/30"
+                    ? "bg-success-soft border-success text-success ring-2 ring-success/30"
                     : highlights.A === "wrong"
-                      ? "bg-[var(--error-soft,#fee2e2)] border-[var(--error,#ef4444)] text-[var(--error,#b91c1c)]"
+                      ? "bg-error-soft border-error text-error"
                       : "bg-surface-raised border-border-default text-fg hover:border-primary/50 hover:bg-surface-raised/80",
                   (!quizTarget && verdict === null) && "opacity-60 cursor-not-allowed"
                 )}
@@ -234,9 +234,9 @@ export function MinimalPairsRunner({
                 className={cn(
                   "relative flex flex-col items-center justify-center p-3 rounded-xl border font-semibold text-body-sm transition-all duration-150 shadow-2xs",
                   highlights.B === "correct"
-                    ? "bg-[var(--success-soft,#dcfce7)] border-[var(--success,#22c55e)] text-[var(--success,#15803d)] ring-2 ring-[var(--success,#22c55e)]/30"
+                    ? "bg-success-soft border-success text-success ring-2 ring-success/30"
                     : highlights.B === "wrong"
-                      ? "bg-[var(--error-soft,#fee2e2)] border-[var(--error,#ef4444)] text-[var(--error,#b91c1c)]"
+                      ? "bg-error-soft border-error text-error"
                       : "bg-surface-raised border-border-default text-fg hover:border-primary/50 hover:bg-surface-raised/80",
                   (!quizTarget && verdict === null) && "opacity-60 cursor-not-allowed"
                 )}

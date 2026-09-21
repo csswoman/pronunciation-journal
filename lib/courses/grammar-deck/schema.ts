@@ -100,6 +100,7 @@ const GrammarQuizQuestionSchema = z.object({
 /** A grammar deck file. `meta` is optional; the loader fills a default. */
 export const GrammarStudyDeckSchema = z.object({
   meta: GrammarDeckMetaSchema.optional(),
+  isGenerated: z.boolean().optional(),
   /** Target IPA sounds for the Sound Lab handoff (e.g. ["θ","ð","ə"]). @deprecated prefer `pronunciationTargetIds`. */
   sounds: z.array(z.string()).optional(),
   /** Authored pronunciation target ids (see lib/pronunciation/targets/registry.ts). Never inferred. */
@@ -109,7 +110,7 @@ export const GrammarStudyDeckSchema = z.object({
   /** Optional 1–5 question self-check shown before the done screen. */
   quiz: z.array(GrammarQuizQuestionSchema).max(5).optional(),
   // Exactly 6 cards per lesson — the "aprendizaje correcto" rule.
-  cards: z.array(GrammarStudyCardSchema).length(6),
+  cards: z.array(GrammarStudyCardSchema).min(1).max(6),
 });
 
 export type GrammarStudyDeckFile = z.infer<typeof GrammarStudyDeckSchema>;

@@ -1,109 +1,99 @@
 'use client'
 
 // Planned structure:
-// <SoundQuizWidget>
-//   header: hand-drawn chip + kicker + title + category filter
-//   <SoundMicroQuiz />        — the card's anchor
-//   exercise list: three divided rows (pares mínimos / entonación / habla conectada)
+// <SoundQuizWidget> — "Laboratorio de sonidos" bento card in PastelCard tone="butter"
+//   Header: SONIDOS kicker + top-right learner focus badge
+//   Title: Laboratorio de sonidos
+//   Learner evidence panel, or an honest empty state
+//   Exercise Chips (Outline, single row): Pares mínimos, Entonación, Habla conectada
+//   Decorative SVG wavy lines (bottom-right)
 // </SoundQuizWidget>
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from '@/components/icons'
+import PastelCard from '@/components/layout/PastelCard'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
-import { cn } from '@/lib/cn'
-import { getIllustration } from '@/lib/illustrations/registry'
-import SoundMicroQuiz, { type SoundCategory } from './SoundMicroQuiz'
-
-const Illustration = getIllustration('domainSpeaking')
-
-const CATEGORY_FILTERS = [
-  { id: 'all', label: 'Todos' },
-  { id: 'vowels', label: 'Vocales' },
-  { id: 'consonants', label: 'Consonantes' },
-] as const satisfies readonly { id: SoundCategory; label: string }[]
+import type { PracticeHubSoundData } from '@/lib/practice/hub-data-types'
 
 const EXERCISES = [
-  { href: '/practice/minimal-pairs', mode: 'minimal-pairs', title: 'Pares mínimos' },
+  { href: '/practice/sounds/minimal-pairs', mode: 'minimal-pairs', title: 'Pares mínimos' },
   { href: '/practice/intonation', mode: 'intonation', title: 'Entonación' },
   { href: '/practice/connected-speech', mode: 'connected-speech', title: 'Habla conectada' },
 ] as const
 
-export default function SoundQuizWidget() {
-  const [selectedCategory, setSelectedCategory] = useState<SoundCategory>('all')
-  const [resetKey, setResetKey] = useState(0)
+interface Props {
+  sound: PracticeHubSoundData | null
+}
+
+export default function SoundQuizWidget({ sound }: Props) {
 
   return (
-    <div className="group relative flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border-default bg-surface-raised p-5 md:p-6 shadow-xs transition-all duration-200 hover:border-border-strong hover:shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2.5">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--radius-md)] bg-[var(--hue-icon-bg)] text-primary [&>svg]:h-5 [&>svg]:w-auto">
-            <Illustration aria-hidden />
-          </span>
-          <Link
-            href="/practice/sounds"
-            onClick={() => void setLastPracticeMode('sounds')}
-            className="focus-ring group/title flex items-center gap-1.5 rounded-sm"
-          >
-            <h2 className="text-h3 font-bold text-fg transition-colors group-hover/title:text-primary">
-              Laboratorio de sonidos
-            </h2>
-            <ArrowRight
-              size={16}
-              className="shrink-0 text-fg-subtle transition-transform duration-200 group-hover/title:translate-x-1 group-hover/title:text-primary"
-              aria-hidden
-            />
-          </Link>
-        </div>
-
-        <div
-          role="group"
-          aria-label="Filtro de sonidos por categoría"
-          className="flex items-center gap-0.5 rounded-full border border-border-subtle bg-surface-sunken/70 p-0.5"
-        >
-          {CATEGORY_FILTERS.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => {
-                setSelectedCategory(id)
-                setResetKey((k) => k + 1)
-              }}
-              className={cn(
-                'focus-ring inline-flex items-center rounded-full px-2.5 py-1 text-tiny transition-colors duration-150',
-                selectedCategory === id
-                  ? 'bg-surface-raised font-semibold text-fg shadow-2xs'
-                  : 'text-fg-muted hover:text-fg',
-              )}
-              aria-pressed={selectedCategory === id}
+    <PastelCard
+      tone="butter"
+      className="group relative flex flex-col justify-between gap-5 rounded-3xl p-6 overflow-hidden shadow-sm motion-reduce:shadow-none"
+    >
+      <div className="flex flex-col gap-3 z-10">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink select-none">
+              SONIDOS
+            </span>
+            <Link
+              href="/practice/sounds"
+              onClick={() => void setLastPracticeMode('sounds')}
+              className="focus-ring inline-block"
             >
-              {label}
-            </button>
-          ))}
+              <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-tight transition-colors group-hover:text-ink-secondary">
+                Laboratorio de sonidos
+              </h2>
+            </Link>
+          </div>
+
+          <div className="flex h-14 min-w-14 shrink-0 items-center justify-center rounded-full bg-ink/10 px-2 font-phoneme text-lg sm:text-xl font-bold text-ink select-none shadow-2xs">
+            {sound?.ipa ?? '—'}
+          </div>
         </div>
       </div>
 
-      <SoundMicroQuiz category={selectedCategory} resetKey={resetKey} />
+      <div className="z-10 rounded-2xl border border-ink/10 bg-paper/85 p-3.5">
+        {sound ? (
+          <p className="font-sans text-body-sm text-ink-secondary">
+            Tu foco actual: <span className="font-phoneme font-bold text-ink">{sound.ipa}</span> · {sound.accuracy}% de acierto en {sound.totalAttempts} {sound.totalAttempts === 1 ? 'intento' : 'intentos'}.
+          </p>
+        ) : (
+          <p className="font-sans text-body-sm text-ink-secondary">
+            Aún no hay intentos evaluados. Explora un sonido para empezar a crear tu historial.
+          </p>
+        )}
+      </div>
 
-      <div className="flex flex-col">
+      {/* Chips de enlaces de ejercicios en una sola línea centrados y sin fondo (outline) */}
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-1 z-10 select-none">
         {EXERCISES.map(({ href, mode, title }) => (
           <Link
             key={href}
             href={href}
             onClick={() => void setLastPracticeMode(mode)}
-            className="focus-ring group/item flex min-h-11 items-center justify-between gap-3 rounded-[var(--radius-sm)] border-t border-border-subtle px-1 transition-colors duration-150 hover:bg-surface-sunken/60"
+            className="focus-ring inline-flex shrink-0 items-center justify-center rounded-full border border-ink bg-transparent px-2.5 sm:px-3 py-1 font-sans text-tiny sm:text-caption font-semibold text-ink transition-all hover:bg-ink hover:text-paper"
           >
-            <span className="font-label text-body-xs font-semibold text-fg transition-colors group-hover/item:text-primary">
-              {title}
-            </span>
-            <ArrowRight
-              size={14}
-              className="shrink-0 text-fg-subtle transition-transform duration-150 group-hover/item:translate-x-0.5 group-hover/item:text-primary"
-              aria-hidden
-            />
+            {title}
           </Link>
         ))}
       </div>
-    </div>
+
+      {/* Decoración de líneas onduladas en tono más oscuro de la tarjeta */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 160 60"
+        fill="none"
+        className="pointer-events-none absolute -right-2 -bottom-1 w-48 h-auto text-ink/15 z-0"
+      >
+        <path
+          d="M10 50 C 40 10, 80 60, 110 20 C 130 5, 150 30, 170 15 M5 35 C 35 5, 75 45, 105 10"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </PastelCard>
   )
 }

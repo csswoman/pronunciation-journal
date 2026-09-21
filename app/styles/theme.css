@@ -1,237 +1,136 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Theme — Tailwind v4 token mappings
+   Theme — Tailwind v4 token mappings for English Journal Design System
    @theme inline generates utility classes (bg-*, text-*, border-*, etc.)
-   without re-emitting CSS variables. Values using var() resolve at runtime
-   so dynamic tokens (--primary, --hue) work correctly.
-
-   Generated utility patterns:
-     --color-*    → bg-*, text-*, border-*, ring-*, fill-*, stroke-*
-     --spacing-*  → p-*, m-*, gap-*, w-*, h-*, inset-*, translate-*
-     --radius-*   → rounded-*  (overrides Tailwind defaults)
-     --text-*     → text-*     (font-size + optional line-height, weight, tracking)
-     --shadow-*   → shadow-*
-
-   Naming conventions:
-     border-border-subtle, border-border-default …
-     text-fg, text-fg-muted, text-fg-subtle
+   without re-emitting CSS variables.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  /* ── Surfaces ──────────────────────────────────────────────────────────── */
-  --color-surface-base:    var(--surface-base);
-  --color-surface-raised:  var(--surface-raised);
-  --color-surface-sunken:  var(--surface-sunken);
-  --color-surface-overlay: var(--surface-overlay);
-  --color-surface-tooltip: var(--surface-tooltip);
-  --color-surface-code:    var(--surface-code);
-
-  /* ── Primary (dynamic — driven by --hue / --hue-base at runtime) ─────── */
-  --color-primary:       var(--primary);
-  --color-primary-soft:  var(--primary-soft);
-  --color-primary-hover: var(--primary-hover);
-  --color-on-primary:    var(--on-primary);
-  --color-primary-50:    var(--primary-50);
-  --color-primary-100:   var(--primary-100);
-  --color-primary-200:   var(--primary-200);
-  --color-primary-300:   var(--primary-300);
-
-  /* Split-complementary accents */
-  --color-accent-1:       var(--accent-1);
-  --color-accent-1-soft:  var(--accent-1-soft);
-  --color-accent-1-hover: var(--accent-1-hover);
-  --color-on-accent-1:    var(--on-accent-1);
-  --color-accent-2:       var(--accent-2);
-  --color-accent-2-soft:  var(--accent-2-soft);
-  --color-accent-2-hover: var(--accent-2-hover);
-  --color-on-accent-2:    var(--on-accent-2);
-
-  /* ── Foreground / text ─────────────────────────────────────────────────── */
-  /* Named fg-* to avoid clashing with Tailwind's text-base font-size utility */
-  --color-fg:             var(--text-primary);
-  --color-fg-muted:       var(--text-secondary);
-  --color-fg-subtle:      var(--text-tertiary);
-  --color-fg-faint:       var(--text-quaternary);
-  --color-fg-disabled:    var(--text-disabled);
-  --color-fg-placeholder: var(--text-placeholder);
-
-  /* ── Borders ───────────────────────────────────────────────────────────── */
-  --color-border-subtle:  var(--border-subtle);
-  --color-border-default: var(--border-default);
+  /* ── 1. Neutros ────────────────────────────────────────────────────────── */
+  --color-bg:             var(--bg);
+  --color-bg-sidebar:     var(--bg-sidebar);
+  --color-surface:        var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-field:          var(--field);
+  --color-border:         var(--border);
   --color-border-strong:  var(--border-strong);
-  --color-border-focus:   var(--border-focus);
-  --color-line-divider:   var(--line-divider);
+  --color-text-strong:    var(--text-strong);
+  --color-text:           var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted:     var(--text-muted);
+  --color-text-faint:     var(--text-faint);
 
-  /* ── Legacy surface aliases (bg-page-bg, bg-card-bg) ───────────────────── */
-  --color-page-bg: var(--page-bg);
-  --color-card-bg: var(--card-bg);
+  --color-fg:             var(--text);
+  --color-fg-muted:       var(--text-secondary);
+  --color-fg-subtle:      var(--text-muted);
+  --color-fg-faint:       var(--text-faint);
+  --color-border-subtle:  var(--border);
+  --color-border-default: var(--border);
+  --color-surface-base:   var(--bg);
+  --color-surface-sunken: var(--field);
+  --color-surface-overlay: var(--surface-overlay);
 
-  /* ── Overlays ──────────────────────────────────────────────────────────── */
-  --color-overlay-subtle: var(--overlay-subtle);
-  --color-overlay-weak:   var(--overlay-weak);
-  --color-overlay-light:  var(--overlay-light);
-  --color-overlay-medium: var(--overlay-medium);
-  --color-overlay-strong: var(--overlay-strong);
-  --color-overlay-darker: var(--overlay-darker);
+  /* ── 2. Fijos (Tinta y Papel) ──────────────────────────────────────────── */
+  --color-ink:           var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted:     var(--ink-muted);
+  --color-paper:         var(--paper);
+  --color-on-accent:     var(--on-accent);
 
-  /* ── CTA — always-contrast actions (bg-cta-bg, text-cta-fg, …) ─────────── */
+  /* ── 3. Pastel de Contenido ────────────────────────────────────────────── */
+  --color-sky:       var(--sky);
+  --color-sky-deep:  var(--sky-deep);
+  --color-sky-soft:  var(--sky-soft);
+
+  --color-butter:      var(--butter);
+  --color-butter-deep: var(--butter-deep);
+  --color-butter-soft: var(--butter-soft);
+
+  --color-coral:      var(--coral);
+  --color-coral-deep: var(--coral-deep);
+  --color-coral-soft: var(--coral-soft);
+
+  --color-lilac:      var(--lilac);
+  --color-lilac-deep: var(--lilac-deep);
+  --color-lilac-soft: var(--lilac-soft);
+
+  --color-mint:      var(--mint);
+  --color-mint-deep: var(--mint-deep);
+  --color-mint-soft: var(--mint-soft);
+
+  /* ── 4. Acento y Feedback ──────────────────────────────────────────────── */
+  --color-accent:        var(--accent);
+  --color-accent-text:   var(--accent-text);
+  --color-accent-soft:   var(--accent-soft);
+  --color-accent-border: var(--accent-border);
+
+  --color-primary:       var(--accent);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-text:  var(--primary-text);
+  --color-primary-soft:  var(--primary-soft);
+  --color-on-primary:    var(--on-accent);
+
+  --color-feedback-correct:      var(--feedback-correct);
+  --color-feedback-correct-soft: var(--feedback-correct-soft);
+  --color-feedback-wrong:        var(--feedback-wrong);
+  --color-feedback-wrong-soft:   var(--feedback-wrong-soft);
+  --color-feedback-hint:         var(--feedback-hint);
+  --color-feedback-hint-soft:    var(--feedback-hint-soft);
+
+  --color-success:      var(--feedback-correct);
+  --color-success-soft: var(--feedback-correct-soft);
+  --color-error:        var(--feedback-wrong);
+  --color-error-soft:   var(--feedback-wrong-soft);
+  --color-warning:      var(--feedback-hint);
+  --color-warning-soft: var(--feedback-hint-soft);
+  --color-info:         var(--sky);
+  --color-info-soft:    var(--sky-soft);
+
   --color-cta-bg:       var(--cta-bg);
   --color-cta-fg:       var(--cta-fg);
-  --color-cta-bg-hover: var(--cta-bg-hover);
 
-  /* ── Semantic ──────────────────────────────────────────────────────────── */
-  --color-success:         var(--success);
-  --color-success-soft:    var(--success-soft);
-  --color-success-border:  var(--success-border);
-  --color-success-deco:    var(--success-deco);
-  --color-success-icon-bg: var(--success-icon-bg);
-  --color-success-value:   var(--success-value);
-
-  --color-warning:         var(--warning);
-  --color-warning-soft:    var(--warning-soft);
-  --color-warning-border:  var(--warning-border);
-  --color-warning-deco:    var(--warning-deco);
-  --color-warning-icon-bg: var(--warning-icon-bg);
-  --color-warning-value:   var(--warning-value);
-
-  --color-error:         var(--error);
-  --color-error-soft:    var(--error-soft);
-  --color-error-border:  var(--error-border);
-  --color-error-deco:    var(--error-deco);
-  --color-error-icon-bg: var(--error-icon-bg);
-  --color-error-value:   var(--error-value);
-
-  --color-info:         var(--info);
-  --color-info-soft:    var(--info-soft);
-  --color-info-border:  var(--info-border);
-  --color-info-deco:    var(--info-deco);
-  --color-info-icon-bg: var(--info-icon-bg);
-  --color-info-value:   var(--info-value);
-
-  /* ── Scoring / Word chip ────────────────────────────────────────────── */
-  --color-score-excellent:     var(--score-excellent);
-  --color-score-excellent-bg:  var(--score-excellent-bg);
-  --color-score-acceptable:    var(--score-acceptable);
-  --color-score-acceptable-bg: var(--score-acceptable-bg);
-  --color-score-poor:          var(--score-poor);
-  --color-score-poor-bg:       var(--score-poor-bg);
-  --color-word-correct:        var(--word-correct);
-  --color-word-correct-bg:     var(--word-correct-bg);
-  --color-word-incorrect:      var(--word-incorrect);
-  --color-word-incorrect-bg:   var(--word-incorrect-bg);
-  --color-word-missing:        var(--word-missing);
-  --color-word-missing-bg:     var(--word-missing-bg);
-  --color-word-extra:          var(--word-extra);
-  --color-word-extra-bg:       var(--word-extra-bg);
-
-  /* ── Spacing — mirrors tokens.css (--space-*). Do not hardcode here. ───── */
+  /* ── 5. Espaciado ──────────────────────────────────────────────────────── */
   --spacing-space-1:  var(--space-1);
   --spacing-space-2:  var(--space-2);
   --spacing-space-3:  var(--space-3);
   --spacing-space-4:  var(--space-4);
   --spacing-space-5:  var(--space-5);
+  --spacing-space-22: var(--space-22);
   --spacing-space-6:  var(--space-6);
+  --spacing-space-28: var(--space-28);
   --spacing-space-8:  var(--space-8);
   --spacing-space-10: var(--space-10);
-  --spacing-space-12: var(--space-12);
-  --spacing-space-16: var(--space-16);
-  --spacing-space-20: var(--space-20);
 
-  /* ── Layout spacing — mirrors tokens.css (--layout-*) ───────────────────── */
-  --spacing-layout-page-inline:     var(--layout-page-inline);
-  --spacing-layout-page-block:      var(--layout-page-block);
-  --spacing-layout-page-block-end:  var(--layout-page-block-end);
-  --spacing-layout-section-gap:     var(--layout-section-gap);
-  --spacing-layout-stack-tight:     var(--layout-stack-tight);
-  --spacing-layout-stack:           var(--layout-stack);
-  --spacing-layout-stack-loose:     var(--layout-stack-loose);
-  --spacing-layout-card-pad:        var(--layout-card-pad);
-  --spacing-layout-session-max:     var(--layout-session-max);
-
-  /* ── Motion easings — same curves as tokens.css ─────────────────────────── */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* ── Z-index ───────────────────────────────────────────────────────────── */
-  --z-tooltip: 9999;
-
-  /* ── Border radius — keep literals (same names as tokens.css; no var loop) */
-  --radius-xs:   4px;
+  /* ── 6. Radios ─────────────────────────────────────────────────────────── */
+  --radius-xs:   6px;
   --radius-sm:   8px;
   --radius-md:   12px;
-  --radius-lg:   16px;
+  --radius-lg:   14px;
   --radius-xl:   20px;
   --radius-2xl:  24px;
-  --radius-3xl:  32px;
+  --radius-3xl:  28px;
   --radius-full: 9999px;
 
-  /* ── Typography — mirrors tokens.css size ramp (mobile + md bump) ─────── */
-  --text-h1: var(--text-size-h1);
-  --text-h1--line-height: var(--text-leading-h1);
-  --text-h1--font-weight: var(--text-weight-h1);
-  --text-h1--letter-spacing: var(--text-tracking-h1);
+  /* ── 7. Tipografía ─────────────────────────────────────────────────────── */
+  --font-display: var(--font-display);
+  --font-body:    var(--font-sans);
+  --font-phonetic: var(--font-ipa);
 
-  --text-h2: var(--text-size-h2);
-  --text-h2--line-height: var(--text-leading-h2);
-  --text-h2--font-weight: var(--text-weight-h2);
-  --text-h2--letter-spacing: var(--text-tracking-h2);
+  --text-hero:     var(--text-size-hero);
+  --text-display:  var(--text-size-display);
+  --text-headline: var(--text-size-headline);
+  --text-numeral:  var(--text-size-numeral);
+  --text-title:    var(--text-size-title);
+  --text-body-lg:  var(--text-size-body-lg);
+  --text-body-md:  var(--text-size-body);
+  --text-body-sm:  var(--text-size-body-sm);
+  --text-caption:  var(--text-size-caption);
+  --text-overline: var(--text-size-overline);
+  --text-ipa-lg:   var(--text-size-ipa-lg);
+  --text-ipa:      var(--text-size-ipa);
 
-  --text-h3: var(--text-size-h3);
-  --text-h3--line-height: var(--text-leading-h3);
-  --text-h3--font-weight: var(--text-weight-h3);
-  --text-h3--letter-spacing: var(--text-tracking-h3);
-
-  --text-h4: var(--text-size-h4);
-  --text-h4--line-height: var(--text-leading-h4);
-  --text-h4--font-weight: var(--text-weight-h4);
-
-  --text-body-lg: var(--text-size-body-lg);
-  --text-body-lg--line-height: var(--text-leading-body-lg);
-
-  --text-body-md: var(--text-size-body);
-  --text-body-md--line-height: var(--text-leading-body);
-
-  --text-body-sm: var(--text-size-body-sm);
-  --text-body-sm--line-height: var(--text-leading-body-sm);
-
-  --text-label: var(--text-size-label);
-  --text-label--line-height: var(--text-leading-label);
-  --text-label--font-weight: var(--text-weight-label);
-
-  --text-caption: var(--text-size-caption);
-  --text-caption--line-height: var(--text-leading-caption);
-
-  --text-kicker: var(--text-size-kicker);
-  --text-kicker--line-height: var(--text-leading-kicker);
-  --text-kicker--font-weight: var(--text-weight-kicker);
-  --text-kicker--letter-spacing: var(--text-tracking-kicker);
-
-  --text-xxs: var(--text-size-xxs);
-  --text-tiny: var(--text-size-tiny);
-
-  --text-display-word: var(--text-size-display-word);
-  --text-display-word--line-height: var(--text-leading-display);
-
-  --text-display-ipa: var(--text-size-display-ipa);
-  --text-display-ipa--line-height: var(--text-leading-display);
-
-  --text-ipa-hero: var(--text-size-ipa-hero);
-  --text-ipa-hero--line-height: var(--text-leading-display);
-
-  /* ── Shadows — shadow-sm…shadow-xl ─────────────────────────────────────── */
+  /* ── 8. Sombras (solo flotantes) ────────────────────────────────────────── */
   --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px   oklch(0 0 0 / 0.07);
   --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.10);
   --shadow-xl: 0 20px 25px oklch(0 0 0 / 0.10);
-
-  /* ── Badge backgrounds (soft variants) ──────────────────────────────────── */
-  --color-badge-primary-bg:   var(--badge-primary-bg);
-  --color-badge-primary-border: var(--badge-primary-border);
-  --color-badge-success-bg:   var(--badge-success-bg);
-  --color-badge-success-border: var(--badge-success-border);
-  --color-badge-warning-bg:   var(--badge-warning-bg);
-  --color-badge-warning-border: var(--badge-warning-border);
-  --color-badge-error-bg:     var(--badge-error-bg);
-  --color-badge-error-border: var(--badge-error-border);
-  --color-badge-info-bg:      var(--badge-info-bg);
-  --color-badge-info-border:  var(--badge-info-border);
 }

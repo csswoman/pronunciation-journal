@@ -10,8 +10,14 @@ import Dexie from 'dexie'
 import { db } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
 import type { FocusSprint, FocusContent, SprintGap, FocusContentKind, FocusMediaUrls } from './types'
+import { addFocusPractice, type FocusPracticeAction } from './practice-progress'
 
 // ── Sprint ─────────────────────────────────────────────────────────────────────
+
+/** Sprint por id. */
+export async function getSprintById(sprintId: string): Promise<FocusSprint | undefined> {
+  return db.focusSprints.get(sprintId)
+}
 
 /** Sprint activo del usuario, o undefined si no tiene ninguno. */
 export async function getActiveSprint(userId: string): Promise<FocusSprint | undefined> {
@@ -41,6 +47,7 @@ export async function createSprint(
 
   const sprint: FocusSprint = {
     id: crypto.randomUUID(),
+    userId,
     gaps,
     startsAt: now.toISOString(),
     endsAt: endsAt.toISOString(),
@@ -171,3 +178,34 @@ export async function updateFocusContentMedia(
     }, { id: contentId })
   })
 }
+
+/**
+ * Registra una acción de práctica (started, answered, completed) en el sprint correspondiente.
+ * Retorna true si se pudo registrar, false si no existe el sprint o no pertenece al usuario.
+ */
+export async function recordFocusPractice(
+  userId: string,
+  sprintId: string,
+  contentId: string,
+  action: FocusPracticeAction,
+): Promise<boolean> {
+  const sprint = await db.focusSprints.get(sprintId)
+  if (!sprint) return false
+  if (sprint.userId && sprint.userId !== userId) return false
+
+  const content = await db.focusContent.get(contentId)
+  if (content && content.userId && content.userId !== userId) return false
+
+  const progress = addFocusPractice(sprint, contentId, action)
+  if (!progress) return false
+
+  await db.transaction('rw', [db.focusSprints, db.syncOutbox], async () => {
+    await db.focusSprints.update(sprintId, { practice: progress })
+    if (userId !== 'guest-local-user') {
+      await enqueue(userId, 'focus_sprints', 'update', { practice_progress: progress }, { id: sprintId })
+    }
+  })
+
+  return true
+}
+

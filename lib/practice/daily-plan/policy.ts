@@ -3,8 +3,10 @@ import type {
   DailySelectionReason,
   DailyStep,
 } from '@/lib/practice/types'
+import type { CefrLevelId } from '@/lib/courses/types'
 
-const REASON_PRIORITY: Record<DailySelectionReason, number> = {
+/** Default ranking — unchanged from before this file introduced level-awareness. */
+const DEFAULT_REASON_PRIORITY: Record<DailySelectionReason, number> = {
   due: 0,
   verification_due: 0,
   // Preserve one new communicative thread after the genuinely due work. The
@@ -23,6 +25,42 @@ const REASON_PRIORITY: Record<DailySelectionReason, number> = {
   route_next: 3,
   saved_intent: 4,
   variety: 5,
+}
+
+/**
+ * C1/C2 learners already have a large receptive vocabulary; drilling more
+ * new words at the same priority as due review crowds out the free-form
+ * production and novel practice (`variety`) that is actually their growth
+ * edge at this stage. Swap the two priorities rather than introducing a
+ * third tier, so `variety` competes for word_new's old reserved-adjacent
+ * slot instead of sitting last where it never gets picked.
+ */
+const ADVANCED_REASON_PRIORITY: Record<DailySelectionReason, number> = {
+  ...DEFAULT_REASON_PRIORITY,
+  word_new: 5,
+  variety: 2,
+}
+
+const ADVANCED_LEVELS: ReadonlySet<CefrLevelId> = new Set(['c1', 'c2'])
+
+export interface DailyPlanSelectionContext {
+  /** Effective learner level (lowercase, matches getEffectiveLearnerLevel's output shape). */
+  learnerLevel?: CefrLevelId
+}
+
+/**
+ * Returns the reason→priority map for this learner. Defaults to
+ * DEFAULT_REASON_PRIORITY for every level outside the advanced set, so a
+ * caller passing no context (or a non-advanced level) sees byte-identical
+ * ranking to the pre-existing flat constant.
+ */
+export function reasonPriorityFor(
+  context: DailyPlanSelectionContext = {},
+): Record<DailySelectionReason, number> {
+  if (context.learnerLevel && ADVANCED_LEVELS.has(context.learnerLevel)) {
+    return ADVANCED_REASON_PRIORITY
+  }
+  return DEFAULT_REASON_PRIORITY
 }
 
 export interface DailyPlanCandidate {
@@ -46,6 +84,8 @@ export interface SelectDailyCandidatesOptions {
    * from being the *whole* session once a backlog builds up.
    */
   maxDueSteps?: number
+  /** Learner context used to adjust reason priority (see reasonPriorityFor). Defaults to {}. */
+  context?: DailyPlanSelectionContext
 }
 
 /** Reasons that introduce material the learner has not seen before. */
@@ -58,9 +98,10 @@ export function selectDailyCandidates(
 ): DailyStep[] {
   const available = options.availableCapabilities
   const maxSavedIntent = options.maxSavedIntent ?? 2
+  const priority = reasonPriorityFor(options.context)
   const ranked = candidates
     .map((candidate, index) => ({ ...candidate, index }))
-    .sort((a, b) => REASON_PRIORITY[a.selection.reason] - REASON_PRIORITY[b.selection.reason] || a.index - b.index)
+    .sort((a, b) => priority[a.selection.reason] - priority[b.selection.reason] || a.index - b.index)
   const selected: DailyStep[] = []
   const selectedIds = new Set<string>()
   const selectedTargets = new Set<string>()

@@ -1,8 +1,13 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CefrLevel } from "@/lib/essential-words/types";
+import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { normalizeIpaKey, rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
-import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
+import {
+  STREAK_TIMEZONE,
+  computeStreakFromTimestamps,
+  toLocalDateString,
+} from "@/lib/daily/streak-core";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import {
   DEFAULT_DAILY_GOAL_MINUTES,
@@ -11,6 +16,7 @@ import {
   type DailyPlanPreview,
   type DailyStepPreview,
   type SoundDueHome,
+  type HomeImmersionSummary,
 } from "@/lib/home/constants";
 
 /**
@@ -27,10 +33,34 @@ export {
   type DailyPlanPreview,
   type DailyStepPreview,
   type SoundDueHome,
+  type HomeImmersionSummary,
 };
 
-/** Fallback per answer when `time_ms` is missing (~90 s). */
-const FALLBACK_ANSWER_MS = 90_000;
+/**
+ * Sums `time_ms` from answer_history rows into today/week totals (America/Lima).
+ * Pure function of `nowIso` so it is testable without mocking the clock.
+ * Rows with a missing `time_ms` contribute 0 — no fabricated fallback time.
+ */
+export function sumPracticeMs(
+  rows: Array<{ answered_at: string; time_ms: number | null }>,
+  nowIso: string,
+): { todayMs: number; weekMs: number } {
+  const todayStr = toLocalDateString(nowIso, STREAK_TIMEZONE);
+  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
+
+  let todayMs = 0;
+  let weekMs = 0;
+
+  for (const row of rows) {
+    const answeredAt = row.answered_at;
+    const localDay = toLocalDateString(answeredAt, STREAK_TIMEZONE);
+    const ms = row.time_ms ?? 0;
+    if (localDay >= weekStart) weekMs += ms;
+    if (localDay === todayStr) todayMs += ms;
+  }
+
+  return { todayMs, weekMs };
+}
 
 /**
  * Sums `time_ms` from answer_history for today and the current week (America/Lima).
@@ -38,7 +68,6 @@ const FALLBACK_ANSWER_MS = 90_000;
 export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalProgress> {
   const supabase = await createSupabaseServerClient();
   const nowIso = new Date().toISOString();
-  const todayStr = toLocalDateString(nowIso, STREAK_TIMEZONE);
 
   const since = new Date();
   since.setDate(since.getDate() - 7);
@@ -52,17 +81,10 @@ export async function getTodayPracticeGoal(userId: string): Promise<DailyGoalPro
 
   if (error) throw error;
 
-  let todayMs = 0;
-  let weekMs = 0;
-  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
-
-  for (const row of data ?? []) {
-    const answeredAt = row.answered_at as string;
-    const localDay = toLocalDateString(answeredAt, STREAK_TIMEZONE);
-    const ms = row.time_ms ?? FALLBACK_ANSWER_MS;
-    if (localDay >= weekStart) weekMs += ms;
-    if (localDay === todayStr) todayMs += ms;
-  }
+  const { todayMs, weekMs } = sumPracticeMs(
+    (data ?? []) as Array<{ answered_at: string; time_ms: number | null }>,
+    nowIso,
+  );
 
   const minutesDone = Math.round(todayMs / 60_000);
   const weekMinutes = Math.round(weekMs / 60_000);
@@ -309,13 +331,32 @@ export async function getSoundsDueForHome(userId: string): Promise<SoundDueHome[
 
 /** CEFR level from `user_profiles` for home focus hints (server-only). */
 export async function getUserProfileLevel(userId: string): Promise<CefrLevel | null> {
+  const { level } = await getEffectiveLearnerLevelServer(userId);
+  return level === "C2" ? "C1" : level;
+}
+
+/** Real external-immersion streak and time, scoped to the signed-in learner. */
+export async function getHomeImmersionSummary(userId: string): Promise<HomeImmersionSummary> {
   const supabase = await createSupabaseServerClient();
+  const nowIso = new Date().toISOString();
+  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
   const { data, error } = await supabase
-    .from("user_profiles")
-    .select("cefr_level")
-    .eq("id", userId)
-    .maybeSingle();
+    .from("activity_sessions")
+    .select("completed_at, duration_ms")
+    .eq("user_id", userId)
+    .eq("source", "immersion")
+    .not("completed_at", "is", null);
 
   if (error) throw error;
-  return (data?.cefr_level as CefrLevel | null) ?? null;
+
+  const rows = (data ?? []) as { completed_at: string; duration_ms: number | null }[];
+  const weekMinutes = Math.round(rows.reduce((total, row) => {
+    const localDay = toLocalDateString(row.completed_at, STREAK_TIMEZONE);
+    return localDay >= weekStart ? total + (row.duration_ms ?? 0) : total;
+  }, 0) / 60_000);
+
+  return {
+    currentStreak: computeStreakFromTimestamps(rows.map((row) => row.completed_at), nowIso).currentStreak,
+    weekMinutes,
+  };
 }

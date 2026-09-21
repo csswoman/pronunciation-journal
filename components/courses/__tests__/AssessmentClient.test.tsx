@@ -189,10 +189,12 @@ describe("AssessmentClient", () => {
       "/api/assessment/results",
       expect.objectContaining({
         method: "POST",
+        body: expect.stringContaining('"answers":{"a1:topic-one":1}'),
       }),
     );
     expect(persistAssessmentConceptProfileMock).toHaveBeenCalledWith("user-1", [], "A2");
     expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"assignedLevel":"A2"');
+    expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"answers":{"a1:topic-one":1}');
   });
 
   it("uses an error state for a failed checkpoint result", () => {
@@ -219,6 +221,13 @@ describe("AssessmentClient", () => {
     fireEvent.click(retry);
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/assessment/results",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.stringContaining('"answers":{"a1:topic-one":1}'),
+      }),
+    );
     await waitFor(() => expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument());
   });
 

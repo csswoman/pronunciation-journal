@@ -12,6 +12,7 @@ export interface MissionLaunch {
   targetIds: PronunciationTargetId[]
   source: MissionLaunchSource
   stepId?: string
+  scaffolded?: boolean
 }
 const VALID_SOURCES: readonly MissionLaunchSource[] = ['route', 'daily', 'tracking', 'sound_lab', 'coach']
 

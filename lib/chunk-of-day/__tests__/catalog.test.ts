@@ -40,7 +40,7 @@ describe('chunk learning catalog', () => {
 
   it('builds a progressive session attributed to chunks', () => {
     const selected = LEARNING_CHUNKS.slice(0, 2)
-    const exercises = buildChunkExercises(selected, LEARNING_CHUNKS, 'practice')
+    const exercises = buildChunkExercises(selected, LEARNING_CHUNKS, 'practice', 'C1')
     // One form↔meaning board opens the session and covers both chunks at once,
     // so the learner meets today's expressions before being asked to recall them.
     expect(exercises.map((exercise) => exercise.slug)).toEqual([

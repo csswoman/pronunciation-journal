@@ -5,6 +5,7 @@ import {
   levelPassed,
   scoreAssessment,
 } from "../assessment";
+import { buildServerAssessment } from "../server-assessment";
 
 const quizzes = {
   "a1-verbo-to-be": [{ q: "I ___ ready.", options: ["am", "is"], answer: 0 }],
@@ -150,5 +151,11 @@ describe("curriculum assessments", () => {
     expect(section.level).toBe("a1");
     expect(levelPassed("a1", section.questions, correct)).toBe(true);
     expect(levelPassed("a1", section.questions, {})).toBe(false);
+  });
+
+  it("builds server assessment with questions and concepts", () => {
+    const { questions, concepts } = buildServerAssessment("placement");
+    expect(questions.length).toBeGreaterThan(0);
+    expect(concepts.length).toBeGreaterThan(0);
   });
 });

@@ -18,6 +18,7 @@ import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
 import { ProgressProjectionCards } from "@/components/progress/ProgressProjectionCards";
 import { LevelConceptsProgressCard } from "@/components/progress/LevelConceptsProgressCard";
 import { ProgressActivationBanner } from "@/components/progress/ProgressActivationBanner";
+import { ImmersionProgressCard } from "@/components/progress/ImmersionProgressCard";
 import { buildCanSayNow } from "@/lib/progress/can-say-now";
 
 const progressHeader = (
@@ -97,8 +98,14 @@ export default async function ProgressPage() {
         {/* Detalle por dominio */}
         <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
 
+        <ImmersionProgressCard data={data.domains.immersion} />
+
         {/* Gramática por temas */}
-        <LevelConceptsProgressCard />
+        <LevelConceptsProgressCard
+          topics={data.domains.topics}
+          completedRoute={data.domains.completedRoute}
+          initialLevel={data.learnerLevel.level.toLowerCase() as import("@/lib/courses/types").CefrLevelId}
+        />
 
         {/* Producción oral demostrada */}
         <CanSayNowCard

@@ -61,26 +61,31 @@ export function CanSayNowCard({ data, latency }: Props) {
       )}
 
       {data.mastered.length > 0 && (
-        <ul className="flex flex-col gap-2.5">
-          {data.mastered.map((entry) => (
-            <li
-              key={entry.constraintId}
-              className="flex items-start gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken/40 p-3"
-            >
-              <div className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-success-soft text-success mt-0.5">
-                <Check size={12} strokeWidth={2.5} aria-hidden="true" />
-              </div>
-              <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-body-sm font-semibold text-fg">{entry.label}</span>
-                {entry.example && (
-                  <span className="text-caption italic text-fg-muted">
-                    “{entry.example}”
-                  </span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col gap-2">
+          <h3 className="font-kicker font-semibold text-fg-subtle">
+            Producidas correctamente en días distintos
+          </h3>
+          <ul className="flex flex-col gap-2.5">
+            {data.mastered.map((entry) => (
+              <li
+                key={entry.constraintId}
+                className="flex items-start gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken/40 p-3"
+              >
+                <div className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-success-soft text-success mt-0.5">
+                  <Check size={12} strokeWidth={2.5} aria-hidden="true" />
+                </div>
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <span className="text-body-sm font-semibold text-fg">{entry.label}</span>
+                  {entry.example && (
+                    <span className="text-caption italic text-fg-muted">
+                      “{entry.example}”
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {data.inProgress.length > 0 && (

@@ -20,6 +20,12 @@ export interface DailyGoalProgress {
   weekMinutes: number;
 }
 
+/** Learner-owned immersion activity, derived from persisted activity sessions. */
+export interface HomeImmersionSummary {
+  currentStreak: number;
+  weekMinutes: number;
+}
+
 export interface WeakestPhonemeHome {
   ipa: string;
   /** Mastery 0–100 (for qualitative fallbacks). */

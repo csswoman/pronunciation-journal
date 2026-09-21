@@ -110,7 +110,7 @@ export function NavAccordionItem({ item, isActive }: NavAccordionItemProps) {
                 }}
                 className={`press-feedback flex items-center min-h-[30px] px-2 py-1 rounded-[var(--radius-sm)] text-caption transition-all duration-[var(--transition-fast)] ${
                   childActive
-                    ? "bg-primary-soft text-primary font-medium"
+                    ? "bg-primary-soft text-primary-text font-medium"
                     : "text-fg-muted hover:text-fg hover:bg-surface-sunken"
                 }`}
               >

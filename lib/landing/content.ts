@@ -3,12 +3,16 @@
  *
  * Numbers here are counted from real shipped content, not aspirational:
  *   words   → public/essential-words/catalog-index.json  (2800 entries)
- *   sounds  → public/sounds/                             (110 files)
+ *   sounds  → CANONICAL_SOUNDS (lib/sounds/inventory.ts) — the app's real
+ *             English phoneme inventory (currently 40). NOT public/sounds/,
+ *             which holds 110 .ogg files covering the full IPA chart
+ *             (clicks, ejectives, etc.), not just English sounds.
  *   lessons → public/mini-lessons/                       (66 lessons)
  *   decks   → public/grammar-decks/                      (276 decks)
- * Re-check these before changing them.
+ * Last verified: 2026-09-21. Re-check these before changing them.
  */
 import type { IllustrationKey } from "@/lib/illustrations/registry";
+import { CANONICAL_SOUNDS } from "@/lib/sounds/inventory";
 
 export interface LandingStat {
   value: string;
@@ -29,7 +33,10 @@ export interface LandingSignal {
 
 export const LANDING_STATS: readonly LandingStat[] = [
   { value: "2.800", label: "palabras esenciales con forma débil y fuerte" },
-  { value: "110", label: "sonidos del inglés con audio de referencia" },
+  {
+    value: String(CANONICAL_SOUNDS.length),
+    label: "sonidos del inglés con audio de referencia",
+  },
   { value: "66", label: "mini-lecciones de A1 a C2" },
   { value: "276", label: "mazos de patrones gramaticales" },
 ] as const;

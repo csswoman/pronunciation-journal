@@ -15,7 +15,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useDailyPlan, type ConceptLesson } from "@/hooks/useDailyPlan";
 import { useDailySessionRunner } from "@/hooks/useDailySessionRunner";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
-import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { DailyGoalProgress, HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/constants";
 import type { PrimaryAction } from "@/lib/home/primary-action";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import type { MiniLesson } from "@/lib/content/schemas";
@@ -48,6 +48,7 @@ interface HomeLayoutProps {
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
   primaryAction: PrimaryAction;
   previewWords?: Array<{ text: string }>;
+  immersionSummary?: HomeImmersionSummary | null;
 }
 
 export default function HomeLayout({
@@ -61,6 +62,7 @@ export default function HomeLayout({
   pronunciationDiagnosticState,
   primaryAction,
   previewWords = [],
+  immersionSummary = null,
 }: HomeLayoutProps) {
   const { user } = useAuth()
   const dailyPlan = useDailyPlan({
@@ -122,6 +124,7 @@ export default function HomeLayout({
       soundsDueCount={soundsDueCount}
       streak={currentStreak}
       previewWords={previewWords}
+      immersionSummary={immersionSummary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
       onStartStep={runner.startStep}

@@ -1345,6 +1345,8 @@ export type Database = {
       user_profiles: {
         Row: {
           cefr_level: string
+          cefr_level_source: string
+          cefr_level_updated_at: string | null
           created_at: string | null
           display_name: string | null
           id: string
@@ -1354,6 +1356,8 @@ export type Database = {
         }
         Insert: {
           cefr_level?: string
+          cefr_level_source?: string
+          cefr_level_updated_at?: string | null
           created_at?: string | null
           display_name?: string | null
           id: string
@@ -1363,6 +1367,8 @@ export type Database = {
         }
         Update: {
           cefr_level?: string
+          cefr_level_source?: string
+          cefr_level_updated_at?: string | null
           created_at?: string | null
           display_name?: string | null
           id?: string

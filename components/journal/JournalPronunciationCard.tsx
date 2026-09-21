@@ -2,89 +2,99 @@
 
 // Planned structure:
 // <JournalPronunciationCard>
-//   <LeftIllustration: amber language-phrase-book SVG />
-//   <MiddleContent: title, description, saved words chips />
-//   <RightAction: "+ Añadir palabra" button (opens modal or link) />
+//   <LeftGroup>
+//     <MicrophoneIconCircle />
+//     <CopyAndWordChips>
+//       <TitleAndSubtitle />
+//       <IPASavedWordPills />
+//     </CopyAndWordChips>
+//   </LeftGroup>
+//   <RightCTA: "+ Añadir palabra" dark ink pill button />
 // </JournalPronunciationCard>
 
 import Link from 'next/link'
-import Button from '@/components/ui/Button'
-import { getIllustration } from '@/lib/illustrations/registry'
-
-const LanguageBookIllustration = getIllustration('journalLanguageBook')
+import { Mic } from '@/components/icons'
+import PastelCard from '@/components/layout/PastelCard'
 
 interface JournalPronunciationCardProps {
   savedWords?: string[]
   onAddWord?: () => void
 }
 
-const DEFAULT_SAMPLE_WORDS = ['thoroughly', 'clothes', 'world', 'schedule']
-
 export function JournalPronunciationCard({
   savedWords = [],
   onAddWord,
 }: JournalPronunciationCardProps) {
-  const displayWords = savedWords.length > 0 ? savedWords : DEFAULT_SAMPLE_WORDS
-  const visibleWords = displayWords.slice(0, 3)
-  const remainingCount = displayWords.length - visibleWords.length
+  const visibleWords = savedWords.slice(0, 3)
+  const remainingCount = savedWords.length - visibleWords.length
+
+  const buttonContent = (
+    <button
+      type="button"
+      onClick={onAddWord}
+      className="press-feedback focus-ring inline-flex items-center justify-center rounded-full bg-ink px-5 py-2.5 font-label text-body-sm font-bold text-paper transition-all hover:bg-ink-secondary shadow-sm select-none cursor-pointer"
+    >
+      + Añadir palabra
+    </button>
+  )
 
   return (
-    <section
+    <PastelCard
+      tone="coral"
+      className="flex flex-col gap-4 p-5 sm:p-6 sm:flex-row sm:items-center sm:justify-between overflow-hidden motion-reduce:shadow-none"
       aria-labelledby="pronunciation-card-heading"
-      className="flex flex-col gap-4 rounded-[var(--radius-xl)] border border-border-subtle bg-surface-raised p-5 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div className="flex items-start gap-4 sm:items-center">
-        {/* Ilustración ámbar / accent */}
+      <div className="flex items-start gap-4 sm:items-center min-w-0">
+        {/* Ícono de micrófono en círculo */}
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-primary-soft text-primary [&>svg]:h-10 [&>svg]:w-auto"
+          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-ink/10 text-ink shadow-xs"
           aria-hidden="true"
         >
-          <LanguageBookIllustration />
+          <Mic className="size-6 text-ink" aria-hidden />
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 min-w-0 flex-1">
           <h2
             id="pronunciation-card-heading"
-            className="font-h4 font-medium text-fg"
+            className="font-heading text-h3 font-bold text-ink leading-tight"
           >
             Diario de pronunciación
           </h2>
-          <p className="font-body-sm text-fg-muted max-w-xl">
-            Guarda las palabras que se te traban al hablar y vuelve a ellas cuando practiques.
+          <p className="font-sans text-body-sm text-ink-secondary max-w-xl">
+            Palabras que se te traban al hablar. Vuelve a ellas cuando practiques.
           </p>
 
-          {/* Chips de palabras guardadas */}
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
-            {visibleWords.map((word) => (
-              <span
-                key={word}
-                className="rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-0.5 font-mono text-xs font-medium text-fg"
-              >
-                {word}
-              </span>
-            ))}
-            {remainingCount > 0 && (
-              <span className="font-caption text-fg-muted">
-                +{remainingCount} más
-              </span>
-            )}
-          </div>
+          {savedWords.length > 0 ? (
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              {visibleWords.map((word) => (
+                <span
+                  key={word}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-paper px-3 py-1 font-sans text-caption font-semibold text-ink shadow-2xs select-none"
+                >
+                  <span className="font-bold text-ink">{word}</span>
+                </span>
+              ))}
+              {remainingCount > 0 && (
+                <span className="font-sans text-caption font-semibold text-ink-secondary select-none">
+                  +{remainingCount} más
+                </span>
+              )}
+            </div>
+          ) : (
+            <p className="font-sans text-caption text-ink-secondary">Aún no has guardado palabras.</p>
+          )}
         </div>
       </div>
 
-      <div className="shrink-0 self-start sm:self-center">
+      <div className="shrink-0 self-start sm:self-center pt-1 sm:pt-0">
         {onAddWord ? (
-          <Button variant="secondary" size="sm" onClick={onAddWord}>
-            + Añadir palabra
-          </Button>
+          buttonContent
         ) : (
           <Link href="/journal/write?mode=pronunciation">
-            <Button variant="secondary" size="sm">
-              + Añadir palabra
-            </Button>
+            {buttonContent}
           </Link>
         )}
       </div>
-    </section>
+    </PastelCard>
   )
 }

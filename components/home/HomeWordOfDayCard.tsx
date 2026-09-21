@@ -13,13 +13,14 @@
 // </HomeWordOfDayCard>
 
 import { useEffect, useState } from "react";
-import { BookOpen, Bookmark, BookmarkCheck, RefreshCw, Volume2 } from "@/components/icons";
+import { Bookmark, BookmarkCheck, RefreshCw, Volume2 } from "@/components/icons";
 import Button from "@/components/ui/Button";
+import PastelCard from "@/components/layout/PastelCard";
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { readStoredCefrLevel } from "@/lib/essential-words/target-level";
+import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
@@ -45,13 +46,13 @@ function FormattedDefinition({ definition }: { definition: string }) {
     const english = parts.slice(1).join(" — ");
     return (
       <p className="font-body-md leading-relaxed">
-        <span className="font-bold text-fg">{spanish}</span>
-        <span className="text-fg-muted font-normal"> — {english}</span>
+        <span className="font-bold text-ink">{spanish}</span>
+        <span className="text-ink-secondary font-normal"> — {english}</span>
       </p>
     );
   }
   return (
-    <p className="font-body-md text-fg font-semibold leading-relaxed">
+    <p className="font-body-md text-ink font-semibold leading-relaxed">
       {definition}
     </p>
   );
@@ -76,7 +77,9 @@ export default function HomeWordOfDayCard({
     const isGuest = isAnonymousUser(user);
     const storedLevel = isGuest
       ? Promise.resolve(readGuestStudyLevel())
-      : (user?.id ? readStoredCefrLevel(user.id) : Promise.resolve(null));
+      : (user?.id
+          ? getEffectiveLearnerLevel(user.id).then((resolved) => resolved.level)
+          : Promise.resolve(null));
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });
@@ -130,29 +133,29 @@ export default function HomeWordOfDayCard({
     : null;
 
   return (
-    <div
-      className="home-sidebar-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-border-default bg-surface-raised p-5 shadow-xs motion-reduce:shadow-none"
+    <PastelCard
+      tone="coral"
+      className="relative flex h-full flex-col justify-between gap-5 overflow-hidden motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="word-of-day-heading"
     >
       {/* Header: Palabra del día + Categoría gramatical o vínculo con la sesión */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
-        <div className="flex items-center gap-2 shrink-0">
-          <BookOpen size={16} className="text-accent" aria-hidden />
-          <span id="word-of-day-heading" className="whitespace-nowrap font-kicker text-fg-subtle">
+        <div className="flex items-center justify-center shrink-0 rounded-full bg-ink px-4 py-1.5 text-paper">
+          <span id="word-of-day-heading" className="whitespace-nowrap font-sans text-caption font-bold tracking-tight text-paper">
             Palabra del día
           </span>
         </div>
         {inSessionToday ? (
           <span
-            className="truncate max-w-[62%] rounded-full border border-primary/25 bg-primary-soft/60 px-3 py-1 font-sans text-caption font-medium text-primary whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-ink px-3.5 py-1.5 font-sans text-caption font-medium text-paper whitespace-nowrap"
             title="Aparece en tu sesión de hoy"
           >
             En tu sesión de hoy
           </span>
         ) : posLabel ? (
           <span
-            className="truncate max-w-[62%] rounded-full bg-surface-sunken/80 px-3 py-1 font-sans text-caption font-medium text-fg-muted lowercase whitespace-nowrap"
+            className="pastel-card-chip truncate max-w-[62%] rounded-full px-3.5 py-1.5 font-sans text-caption font-medium text-ink-muted lowercase whitespace-nowrap"
             title={posLabel}
           >
             {posLabel}
@@ -162,17 +165,17 @@ export default function HomeWordOfDayCard({
 
       {loading && (
         <div className="relative z-1 flex flex-col gap-3 py-1" aria-hidden>
-          <div className="h-7 w-3/4 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-1/3 animate-pulse rounded bg-surface-sunken" />
-          <div className="h-4 w-full animate-pulse rounded bg-surface-sunken" />
-          <div className="mt-2 h-4 w-5/6 animate-pulse rounded bg-surface-sunken" />
+          <div className="pastel-card-chip h-8 w-3/4 animate-pulse rounded-xl" />
+          <div className="pastel-card-chip h-4 w-1/3 animate-pulse rounded-lg" />
+          <div className="pastel-card-chip h-4 w-full animate-pulse rounded-lg" />
+          <div className="pastel-card-chip mt-2 h-4 w-5/6 animate-pulse rounded-lg" />
         </div>
       )}
 
       {error && !word && !loading && (
         <div className="animate-state-in relative z-1 flex flex-col items-start gap-2 py-1">
           <p className="font-body-sm text-error">No se pudo cargar la palabra.</p>
-          <Button type="button" variant="ghost" size="md" onClick={() => refresh()}>
+          <Button type="button" variant="ej-outline" size="md" onClick={() => refresh()}>
             Reintentar
           </Button>
         </div>
@@ -180,36 +183,34 @@ export default function HomeWordOfDayCard({
 
       {word && !loading && (
         <div className="animate-state-in relative z-1 flex flex-col gap-3" key={word.word}>
-          {/* Grupo de título y pronunciación tocable */}
-          <button
-            type="button"
-            onClick={() => speakText(word.word)}
-            className="group/listen focus-ring -mx-1.5 flex flex-col gap-1 rounded-xl p-1.5 text-left transition-colors hover:bg-surface-sunken/60 cursor-pointer"
-            aria-label={`Escuchar pronunciación de ${word.word}`}
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span
-                className={cn(
-                  "font-heading font-bold text-fg leading-tight break-words tracking-tight transition-colors group-hover/listen:text-primary",
-                  getHeroScale(word.word)
-                )}
-              >
-                {word.word}
-              </span>
-              <div className="shrink-0 rounded-full border border-border-subtle/50 bg-surface-sunken/70 p-2 text-fg-muted transition-colors group-hover/listen:border-primary/40 group-hover/listen:bg-primary-soft group-hover/listen:text-primary">
-                <Volume2 size={16} aria-hidden />
-              </div>
-            </div>
+          {/* Grupo de título y pronunciación */}
+          <div className="flex items-start justify-between gap-3">
+            <span
+              className={cn(
+                "font-heading font-extrabold text-ink leading-[1.2] break-words tracking-tight",
+                getHeroScale(word.word)
+              )}
+            >
+              {word.word}
+            </span>
+            <button
+              type="button"
+              onClick={() => speakText(word.word)}
+              className="shrink-0 rounded-full bg-ink p-3 text-paper hover:scale-105 active:scale-95 transition-transform cursor-pointer focus-ring shadow-sm"
+              aria-label={`Escuchar pronunciación de ${word.word}`}
+            >
+              <Volume2 size={18} aria-hidden />
+            </button>
+          </div>
 
-            {word.ipa ? (
-              <span
-                className="font-ipa text-body-md font-medium text-fg-subtle tracking-wide"
-                lang="en-fonipa"
-              >
-                {formatIpaDisplay(word.ipa)}
-              </span>
-            ) : null}
-          </button>
+          {word.ipa ? (
+            <span
+              className="font-ipa text-body-md font-bold text-ink-secondary tracking-wide -mt-1"
+              lang="en-fonipa"
+            >
+              {formatIpaDisplay(word.ipa)}
+            </span>
+          ) : null}
 
           {/* Significado (definición con formato de resaltado) */}
           {word.definition ? (
@@ -224,7 +225,7 @@ export default function HomeWordOfDayCard({
       )}
 
       {/* Footer de acciones: Guardar (Bookmark) + Otra (Refresh icon) */}
-      <div className="relative z-1 flex items-center gap-2 border-t border-border-subtle/50 pt-3">
+      <div className="relative z-1 flex items-center gap-2.5 pt-1">
         <button
           ref={bookmarkRef}
           type="button"
@@ -233,11 +234,11 @@ export default function HomeWordOfDayCard({
           aria-label={label}
           aria-pressed={saveState === "saved"}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center gap-2 rounded-lg border px-3.5 py-1.5 font-body-sm font-medium transition-colors cursor-pointer",
+            "focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2 font-sans text-body-sm font-bold text-ink transition-all cursor-pointer",
             saveState === "saved"
-              ? "border-accent/40 bg-accent/10 text-accent font-medium cursor-default"
-              : "border-border-default bg-surface-base text-fg hover:bg-surface-sunken",
-            saveState === "error" && "border-error/40 text-error"
+              ? "bg-ink text-paper border-ink cursor-default"
+              : "bg-transparent text-ink hover:bg-ink hover:text-paper",
+            saveState === "error" && "text-error border-error"
           )}
         >
           {saveState === "saved" ? (
@@ -252,19 +253,22 @@ export default function HomeWordOfDayCard({
           type="button"
           onClick={handleShuffle}
           aria-label="Ver otra palabra"
-          className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-border-default bg-surface-base px-3 text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg cursor-pointer"
+          title="Otra palabra"
+          className="focus-ring group relative inline-flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-transparent text-ink transition-all hover:bg-ink/10 hover:scale-105 active:scale-95 cursor-pointer select-none"
         >
           <RefreshCw
-            size={14}
+            size={18}
             className={cn(
-              "transition-transform duration-300",
-              isRotating && "rotate-180"
+              "transition-transform duration-500",
+              isRotating ? "rotate-[360deg] opacity-60" : "group-hover:rotate-45"
             )}
             aria-hidden
           />
-          <span className="font-body-sm font-medium">Otra</span>
+          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 font-sans text-caption font-semibold whitespace-nowrap shadow-xs">
+            Otra palabra
+          </span>
         </button>
       </div>
-    </div>
+    </PastelCard>
   );
 }

@@ -12,6 +12,8 @@ import { constraintById } from '@/lib/exercises/speech-constraints'
 const WINDOW_DAYS = 30
 /** Correct productions needed before a structure is called mastered. */
 const MASTERY_THRESHOLD = 2
+// dos aciertos en la misma sesión son volumen, no retención
+const MIN_SPACING_MS = 24 * 3_600_000
 
 export interface CanSayAttempt {
   constraintId: string
@@ -57,18 +59,20 @@ export function buildCanSayNow(input: CanSayInput, now: number = Date.now()): Ca
     const correct = attempts.filter((a) => a.isCorrect)
     if (correct.length === 0) continue
 
-    const latest = [...correct].sort(
-      (a, b) => Date.parse(b.answeredAt) - Date.parse(a.answeredAt),
-    )[0]!
+    const sorted = [...correct].sort(
+      (a, b) => Date.parse(a.answeredAt) - Date.parse(b.answeredAt),
+    )
+    const spaced =
+      Date.parse(sorted.at(-1)!.answeredAt) - Date.parse(sorted[0]!.answeredAt) >= MIN_SPACING_MS
 
     const entry: CanSayEntry = {
       constraintId,
       label: constraintById(constraintId)?.label ?? constraintId,
       correctCount: correct.length,
-      example: latest.sentence,
+      example: sorted.at(-1)!.sentence,
     }
 
-    if (correct.length >= MASTERY_THRESHOLD) mastered.push(entry)
+    if (correct.length >= MASTERY_THRESHOLD && spaced) mastered.push(entry)
     else inProgress.push(entry)
   }
 

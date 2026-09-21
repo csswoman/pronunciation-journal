@@ -23,6 +23,35 @@ describe('daily candidate policy', () => {
     expect(selected.map((entry) => entry.id)).toEqual(['due', 'weak', 'route', 'saved', 'variety'])
   })
 
+  it('orders identically with no learner context (parity check)', () => {
+    const selected = selectDailyCandidates([
+      step('variety', 'variety'), step('saved', 'saved_intent'), step('route', 'route_next'),
+      step('weak', 'weak_target'), step('due', 'due'),
+    ], { limit: 5, context: {} })
+    expect(selected.map((entry) => entry.id)).toEqual(['due', 'weak', 'route', 'saved', 'variety'])
+  })
+
+  it('prioritizes variety over new-word drilling for advanced learners (C1/C2)', () => {
+    const selected = selectDailyCandidates([
+      step('word', 'word_new'), step('variety', 'variety'),
+    ], { limit: 2, context: { learnerLevel: 'c1' } })
+    expect(selected.map((entry) => entry.id)).toEqual(['variety', 'word'])
+  })
+
+  it('applies the same advanced ordering for C2', () => {
+    const selected = selectDailyCandidates([
+      step('word', 'word_new'), step('variety', 'variety'),
+    ], { limit: 2, context: { learnerLevel: 'c2' } })
+    expect(selected.map((entry) => entry.id)).toEqual(['variety', 'word'])
+  })
+
+  it('keeps the default order for non-advanced levels', () => {
+    const selected = selectDailyCandidates([
+      step('word', 'word_new'), step('variety', 'variety'),
+    ], { limit: 2, context: { learnerLevel: 'a2' } })
+    expect(selected.map((entry) => entry.id)).toEqual(['word', 'variety'])
+  })
+
   it('keeps a new chunk thread immediately after genuinely due work', () => {
     const selected = selectDailyCandidates([
       step('variety', 'variety'), step('chunk', 'chunk_new'), step('due', 'due'),

@@ -1,0 +1,60 @@
+{
+  "isGenerated": true,
+  "meta": {
+    "eyebrow": "Académico · AWL",
+    "title": "Vocabulario Esencial del Academic Word List",
+    "titleEmphasis": "academic research & analysis",
+    "goal": "Dominar palabras académicas de alta frecuencia para comprensión y redacción de textos analíticos."
+  },
+  "cards": [
+    {
+      "id": "academic-word-list-concept",
+      "tag": "Idea central",
+      "title": "Términos indispensables del AWL",
+      "lede": "Palabras fundamentales en textos científicos, universitarios y ensayos.",
+      "blocks": [
+        {
+          "type": "rules",
+          "rows": [
+            {
+              "key": "analyze",
+              "value": "analizar datos o evidencia minuciosamente",
+              "highlights": ["analyze"]
+            },
+            {
+              "key": "concept",
+              "value": "noción o idea abstracta formulada",
+              "highlights": ["concept"]
+            },
+            {
+              "key": "evidence",
+              "value": "hechos o datos que respaldan una afirmación",
+              "highlights": ["evidence"]
+            },
+            {
+              "key": "significant",
+              "value": "importante, notable o estadísticamente relevante",
+              "highlights": ["significant"]
+            },
+            {
+              "key": "hypothesis",
+              "value": "suposición previa sujeta a verificación",
+              "highlights": ["hypothesis"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which term describes a proposed explanation made on the basis of limited evidence?",
+      "options": [
+        "Hypothesis",
+        "Conclusion"
+      ],
+      "answer": 0,
+      "explain": "Una 'hypothesis' es una suposición tentativa que requiere investigación."
+    }
+  ]
+}

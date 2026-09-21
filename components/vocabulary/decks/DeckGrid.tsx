@@ -1,4 +1,5 @@
 "use client";
+
 import { Plus } from "@/components/icons";
 import { DeckCard } from "./DeckCard";
 import type { DeckCounts } from "@/hooks/useDeckData";
@@ -18,10 +19,22 @@ interface DeckGridProps {
   onCreateNewHover?: () => void;
 }
 
-export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, onCreateNew, onStudyHover, onManageHover, onEditHover, onCreateNewHover }: DeckGridProps) {
+export function DeckGrid({
+  decks,
+  counts,
+  onStudy,
+  onManage,
+  onEdit,
+  onDelete,
+  onCreateNew,
+  onStudyHover,
+  onManageHover,
+  onEditHover,
+  onCreateNewHover,
+}: DeckGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {decks.map(deck => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 grid-flow-row-dense">
+      {decks.map((deck) => (
         <DeckCard
           key={deck.id}
           deck={deck}
@@ -39,17 +52,18 @@ export function DeckGrid({ decks, counts, onStudy, onManage, onEdit, onDelete, o
       ))}
 
       <button
+        type="button"
         onClick={onCreateNew}
         onMouseEnter={onCreateNewHover}
         onFocus={onCreateNewHover}
-        className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border-2 border-dashed border-[color-mix(in_oklch,var(--primary)_30%,var(--line-divider))] bg-[var(--card-bg)] px-4 py-3 text-center transition-all hover:border-[var(--primary)] hover:bg-[color-mix(in_oklch,var(--primary)_5%,var(--card-bg))] group"
+        className="group flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-default bg-surface-sunken/50 p-5 text-center transition-all hover:border-border-strong hover:bg-surface-raised min-h-[150px] focus-ring select-none"
       >
-        <div className="w-10 h-10 rounded-full border border-[var(--line-divider)] bg-[var(--surface-sunken)] flex items-center justify-center">
-          <Plus size={16} className="text-fg-subtle" />
+        <div className="flex size-11 items-center justify-center rounded-2xl border border-border-subtle bg-surface-raised text-fg group-hover:scale-105 transition-transform shadow-xs">
+          <Plus size={20} className="text-fg-muted group-hover:text-primary transition-colors" />
         </div>
-        <div>
-          <p className="font-semibold text-body-sm text-fg">New deck</p>
-        </div>
+        <span className="font-heading text-body-sm font-bold text-fg group-hover:text-primary transition-colors">
+          Nuevo mazo
+        </span>
       </button>
     </div>
   );

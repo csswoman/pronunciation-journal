@@ -47,24 +47,28 @@ export async function persistAssessmentOutcome(
   result: AssessmentResult,
   evaluatedLevel?: CefrLevelId,
 ): Promise<void> {
-  const supabase = await createSupabaseServerClient();
-  const [profileResult] = await Promise.all([
-    supabase.from("user_profiles").upsert({
-      id: userId,
-      cefr_level: result.assignedLevel,
-    }, { onConflict: "id" }),
-    saveAssessmentResult(userId, mode, result, evaluatedLevel),
-  ]);
+  await saveAssessmentResult(userId, mode, result, evaluatedLevel);
 
-  if (profileResult.error) {
-    const admin = tryGetSupabaseAdminClient();
-    if (admin) {
-      const { error: adminError } = await admin
-        .from("user_profiles")
-        .upsert({ id: userId, cefr_level: result.assignedLevel }, { onConflict: "id" });
-      if (adminError) throw profileResult.error;
-    } else {
-      throw profileResult.error;
-    }
+  if (mode === "checkpoint" && !result.passed) {
+    return;
   }
+
+  const admin = tryGetSupabaseAdminClient();
+  if (!admin) {
+    throw new Error("Supabase admin client unavailable for updating user profile");
+  }
+
+  const levelUpdatedAt = new Date().toISOString();
+  const profileUpdate = {
+    id: userId,
+    cefr_level: result.assignedLevel,
+    cefr_level_source: mode,
+    cefr_level_updated_at: levelUpdatedAt,
+  };
+
+  const { error } = await admin
+    .from("user_profiles")
+    .upsert(profileUpdate, { onConflict: "id" });
+
+  if (error) throw error;
 }

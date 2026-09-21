@@ -1,12 +1,17 @@
 "use client";
 
 import type { AssessmentResult } from "@/lib/courses/assessment";
+import type { ConceptSelfRating } from "@/lib/courses/concept-profile";
+import type { CefrLevelId } from "@/lib/courses/types";
 
 const GUEST_PLACEMENT_KEY = "assessment:guest:placement:placement";
 const claims = new Map<string, Promise<boolean>>();
 
-interface StoredGuestAssessment extends AssessmentResult {
+export interface StoredGuestAssessment extends AssessmentResult {
   completedAt?: string;
+  answers?: Record<string, number>;
+  selfRatings?: Record<string, ConceptSelfRating>;
+  checkpointLevel?: CefrLevelId;
 }
 
 async function claim(userId: string): Promise<boolean> {
@@ -15,7 +20,7 @@ async function claim(userId: string): Promise<boolean> {
 
   try {
     const parsed = JSON.parse(raw) as StoredGuestAssessment;
-    const { completedAt, ...candidate } = parsed;
+    const { completedAt, answers, selfRatings, checkpointLevel, ...candidate } = parsed;
     const [{ AssessmentPayloadSchema }, { persistAssessmentConceptProfile }] = await Promise.all([
       import("@/lib/courses/assessment-schema"),
       import("@/lib/courses/assessment-profile"),
@@ -30,6 +35,9 @@ async function claim(userId: string): Promise<boolean> {
       body: JSON.stringify({
         mode: "placement",
         evaluatedLevel: result.conceptSignals.at(-1)?.level ?? null,
+        answers,
+        selfRatings,
+        checkpointLevel,
         result,
       }),
     });

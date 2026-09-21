@@ -20,7 +20,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, ChevronUp } from "@/components/icons";
-import Badge from "@/components/ui/Badge";
+import PastelCard from "@/components/layout/PastelCard";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
 import {
   localizeDailyStepSubtitle,
@@ -111,45 +111,41 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 shadow-sm ring-1 ring-border-subtle/50 sm:p-6 motion-reduce:shadow-none">
+      <PastelCard tone="sky" className="flex flex-col gap-5 p-5 sm:p-6 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex flex-col gap-4 min-w-0 flex-1">
             {/* Header: Kicker de actividad con chip + Métricas de la sesión */}
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2.5">
-                  <span className="font-mono text-caption font-semibold tracking-wider uppercase text-primary">
-                    {allDone
-                      ? "Sesión completada"
-                      : isMidSession
-                        ? "Continuar donde lo dejaste"
-                        : "Sesión de hoy"}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 font-sans text-caption font-bold text-paper select-none">
+                  {allDone
+                    ? "Sesión completada"
+                    : isMidSession
+                      ? "Sesión en curso"
+                      : "Sesión de hoy"}
+                </span>
+                {!allDone ? (
+                  <span className="inline-flex items-center rounded-full border border-ink/40 bg-transparent px-3 py-1 font-sans text-caption font-medium text-ink select-none">
+                    {isCurrentOptional
+                      ? "Actividad opcional"
+                      : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`}
                   </span>
-                  {!allDone ? (
-                    <Badge
-                      label={
-                        isCurrentOptional
-                          ? "Actividad opcional"
-                          : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`
-                      }
-                      variant={isMidSession ? "info" : "default"}
-                      dot={isMidSession}
-                      size="sm"
-                    />
-                  ) : (
-                    <Badge label="Completado" variant="success" dot size="sm" />
-                  )}
-                </div>
-                <h2 className="font-heading text-h2 font-bold text-fg">
-                  {allDone ? "¡Todo listo por hoy!" : stepTitle}
-                </h2>
+                ) : null}
+                {isMidSession && !allDone ? (
+                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-sans text-caption font-bold text-on-primary select-none">
+                    En curso
+                  </span>
+                ) : null}
               </div>
+              <h2 className="font-heading text-h1 font-bold text-ink text-balance">
+                {allDone ? "¡Todo listo por hoy!" : stepTitle}
+              </h2>
             </div>
 
             {/* Subtítulo y Metadatos de la actividad hero */}
             {!allDone && (stepSubtitle || metaText || currentStepMinutes) ? (
-              <p className="-mt-2 font-body-sm text-fg-muted text-pretty">
+              <p className="font-body-sm text-ink-secondary text-pretty">
                 {[
                   stepSubtitle,
                   metaText,
@@ -169,7 +165,7 @@ export default function HomeHeroCard({
                 {isReadingConcept ? (
                   <Link
                     href={currentStep.href!}
-                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
@@ -178,7 +174,7 @@ export default function HomeHeroCard({
                   <button
                     type="button"
                     onClick={handleStartCurrentStep}
-                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover sm:w-auto"
+                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
@@ -190,7 +186,7 @@ export default function HomeHeroCard({
 
           {/* Ilustración de lado derecho */}
           <div
-            className="hidden sm:flex shrink-0 items-center justify-center self-center p-2 text-primary opacity-90 transition-opacity hover:opacity-100 [&>svg]:h-28 md:[&>svg]:h-32 [&>svg]:w-auto select-none"
+            className="hidden sm:flex shrink-0 items-center justify-center self-center p-2 text-ink opacity-90 transition-opacity hover:opacity-100 [&>svg]:h-28 md:[&>svg]:h-32 [&>svg]:w-auto select-none"
             aria-hidden="true"
             data-testid="hero-illustration"
           >
@@ -200,7 +196,7 @@ export default function HomeHeroCard({
 
         {/* Lista de actividades: 2 visibles por defecto, expandible a todas */}
         {steps.length > 0 ? (
-          <div className="flex flex-col gap-2 border-t border-border-subtle pt-3">
+          <div className="pastel-card-panel flex flex-col gap-2 rounded-2xl p-3 shadow-sm sm:p-4">
             <HomeHeroStepList
               steps={steps}
               getStepStatus={getStepStatus}
@@ -216,7 +212,7 @@ export default function HomeHeroCard({
                 type="button"
                 onClick={() => setShowSecondarySteps((prev) => !prev)}
                 aria-expanded={showSecondarySteps}
-                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-fg-muted transition-colors hover:text-fg"
+                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-ink-secondary transition-colors hover:text-ink"
               >
                 <span>
                   {showSecondarySteps
@@ -232,7 +228,7 @@ export default function HomeHeroCard({
             ) : null}
           </div>
         ) : null}
-      </div>
+      </PastelCard>
     </section>
   );
 }
