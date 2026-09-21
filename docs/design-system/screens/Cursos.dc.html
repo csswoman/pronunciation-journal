@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    a { color: inherit; text-decoration: none; } a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+  </style>
+</helmet>
+<div style="width: 1280px; height: 1380px; box-sizing: border-box; padding: 40px 48px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 28px;">
+
+  <!-- Header -->
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 46px; line-height: 48px; letter-spacing: -0.02em; color: {{t.textStrong}};">Cursos</h1>
+      <div style="font-size: 17px; color: {{t.muted}};">Organizados por nivel, a tu ritmo.</div>
+    </div>
+    <div role="tablist" aria-label="Nivel" style="display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}};">
+      <button role="tab" aria-selected="true" style="height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 15px; font-weight: 700;">A1 · 0/37</button>
+      <button role="tab" aria-selected="false" style="height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.text}}; font-size: 15px; font-weight: 600;">A2</button>
+      <button role="tab" aria-selected="false" style="height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.text}}; font-size: 15px; font-weight: 600;">B1</button>
+      <button role="tab" aria-selected="false" style="height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.text}}; font-size: 15px; font-weight: 600;">B2</button>
+      <button role="tab" aria-selected="false" style="height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.text}}; font-size: 15px; font-weight: 600;">C1</button>
+      <button role="tab" aria-selected="false" style="height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.text}}; font-size: 15px; font-weight: 600;">C2</button>
+    </div>
+  </header>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 22px; align-items: start;">
+
+    <!-- LEFT -->
+    <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0;">
+
+      <!-- Hero course card -->
+      <section style="background: #b9d3fb; color: #12151c; border-radius: 28px; padding: 28px; display: flex; gap: 20px; align-items: center;">
+        <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; gap: 8px;">
+            <span style="padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em;">A1</span>
+            <span style="padding: 6px 13px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600;">Fundamentos</span>
+          </div>
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 45px; letter-spacing: -0.025em;">Cómo estudiar por tu cuenta</h2>
+          <div style="font-size: 16px; color: #2c3445;">Aprende y practica: estrategias · hábitos · estudio</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; max-width: 460px; padding-top: 4px;">
+            <div role="progressbar" aria-label="Lecciones completadas" aria-valuenow="0" aria-valuemin="0" aria-valuemax="28" style="height: 14px; border-radius: 999px; background: #9ec0f6; box-shadow: inset 0 0 0 1.5px #12151c; overflow: hidden;"><div style="width: 3%; height: 100%; background: #12151c; border-radius: 999px;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px;">
+              <span><strong>0 / 28</strong> completadas</span>
+              <span style="display: flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>5 min</span>
+            </div>
+          </div>
+          <div style="padding-top: 6px;">
+            <button style="height: 54px; padding: 0 28px; border: 0; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 17px; font-weight: 700; display: inline-flex; align-items: center; gap: 12px;"><span>Comenzar</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div style="width: 250px; height: 250px; border-radius: 50%; background: #9ec0f6; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: inset 0 0 0 2px #12151c; text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#12151c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"></rect><circle cx="9" cy="10" r="2"></circle><path d="m21 16-5-5-9 9"></path></svg>
+          <div style="font-size: 14px; font-weight: 700;">Ilustración Koboyo</div>
+          <div style="font-size: 13px; color: #2c3445;">“pupil reading aloud”</div>
+        </div>
+      </section>
+
+      <!-- Search -->
+      <label style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 14px 0 18px; border-radius: 999px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.muted}};">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input type="text" placeholder="Buscar lección o tema…" style="flex-grow: 1; min-width: 0; border: 0; outline: none; background: transparent; color: {{t.text}}; font-family: inherit; font-size: 15px;">
+        <span style="font-size: 12px; padding: 4px 8px; border-radius: 6px; background: {{t.raised}}; color: {{t.text}};">Ctrl K</span>
+      </label>
+
+      <!-- Expanded module -->
+      <section style="background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; border-radius: 28px; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+        <button aria-expanded="true" style="display: flex; align-items: center; gap: 16px; padding: 12px 14px; border: 0; background: transparent; color: {{t.text}}; text-align: left; border-radius: 20px;">
+          <span style="width: 50px; height: 50px; border-radius: 14px; background: #b9d3fb; color: #12151c; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg>
+          </span>
+          <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 19px; font-weight: 700;">Cómo empezar</span>
+            <span style="font-size: 14px; color: {{t.muted}};">1 lección · sin empezar</span>
+          </span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 15 6-6 6 6"></path></svg>
+        </button>
+        <a href="#" style="display: flex; align-items: flex-start; gap: 16px; padding: 18px; border-radius: 20px; background: {{t.raised}}; color: {{t.text}}; text-decoration: none;">
+          <span style="width: 50px; height: 50px; border-radius: 50%; background: {{accent}}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">02</span>
+          <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+            <span style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 17px; font-weight: 700;">Tus primeras frases</span>
+              <span style="padding: 4px 11px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 13px; font-weight: 600;">práctica</span>
+            </span>
+            <span style="display: flex; flex-wrap: wrap; gap: 6px;">
+              <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 14px; font-weight: 600;">hello</span>
+              <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 14px; font-weight: 600;">thanks</span>
+              <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 14px; font-weight: 600;">please</span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.muted}};">
+              <span style="width: 26px; height: 26px; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></span>
+              Video: Gill · 12 min · apoyo
+            </span>
+          </span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: {{t.muted}}; padding-top: 14px;">6 min
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </span>
+        </a>
+      </section>
+
+      <!-- Collapsed modules -->
+      <a href="#" style="display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 28px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.text}}; text-decoration: none;">
+        <span style="width: 50px; height: 50px; border-radius: 14px; background: #cbbcf5; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 19px; font-weight: 700;">Gramática base</span><span style="font-size: 14px; color: {{t.muted}};">8 lecciones · sin empezar</span></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 28px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.text}}; text-decoration: none;">
+        <span style="width: 50px; height: 50px; border-radius: 14px; background: #f8e08e; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.5V14M12 17.5h.01"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 19px; font-weight: 700;">Presente simple y preguntas</span><span style="font-size: 14px; color: {{t.muted}};">5 lecciones · sin empezar</span></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 28px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.text}}; text-decoration: none;">
+        <span style="width: 50px; height: 50px; border-radius: 14px; background: #a8e6c9; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 19px; font-weight: 700;">Acciones y vida diaria</span><span style="font-size: 14px; color: {{t.muted}};">10 lecciones · sin empezar</span></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 28px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.text}}; text-decoration: none;">
+        <span style="width: 50px; height: 50px; border-radius: 14px; background: #f7b7a6; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 19px; font-weight: 700;">Pronunciación inicial</span><span style="font-size: 14px; color: {{t.muted}};">3 lecciones · sin empezar</span></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+    </div>
+
+    <!-- RIGHT -->
+    <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0;">
+
+      <a href="#" style="background: #f7b7a6; color: #12151c; border-radius: 28px; padding: 20px 22px; display: flex; align-items: center; gap: 14px; text-decoration: none;">
+        <span style="width: 58px; height: 58px; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12" fill="none"></path></svg>
+        </span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-size: 19px; font-weight: 700;">Pronunciación</span>
+          <span style="font-size: 14px; color: #2c3445;">4 palabras guardadas para practicar</span>
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+
+      <section style="background: #cbbcf5; color: #12151c; border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700;">Tu progreso en A1</h3>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; position: relative;">
+            <svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true" style="position: absolute; left: 0; top: 0;"><circle cx="48" cy="48" r="40" fill="none" stroke="#b1a0ea" stroke-width="10"></circle><circle cx="48" cy="48" r="40" fill="none" stroke="#12151c" stroke-width="10" stroke-linecap="round" stroke-dasharray="4 251" transform="rotate(-90 48 48)"></circle></svg>
+            <span style="position: relative; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px;">0%</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 34px; line-height: 36px; letter-spacing: -0.02em;">0 <span style="font-size: 20px; font-weight: 600;">de 37</span></div>
+            <div style="font-size: 15px; color: #2c3445;">lecciones · ~18 h restantes</div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background: #f8e08e; color: #12151c; border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+        <span style="align-self: flex-start; padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em;">SIGUIENTE HITO</span>
+        <h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; line-height: 30px; letter-spacing: -0.02em;">Checkpoint · Fundamentos A1</h3>
+        <div role="progressbar" aria-label="Progreso al checkpoint" aria-valuenow="1" aria-valuemin="0" aria-valuemax="3" style="height: 14px; border-radius: 999px; background: #efd06a; box-shadow: inset 0 0 0 1.5px #12151c; overflow: hidden;"><div style="width: 33%; height: 100%; background: #12151c; border-radius: 999px;"></div></div>
+        <div style="font-size: 15px; color: #2c3445;">Te faltan 2 lecciones para el checkpoint.</div>
+        <div>
+          <a href="#" style="height: 44px; padding: 0 18px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">Ir al Checkpoint
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+      </section>
+
+      <section style="background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.text}}; border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Para repasar</h3>
+            <span style="min-width: 28px; height: 28px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center;">3</span>
+          </div>
+          <div style="font-size: 14px; color: {{t.muted}};">Temas que se te resistieron.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 15px;"><span style="font-weight: 600;">Verbo to be</span><span style="color: {{t.muted}};">40%</span></div>
+          <div style="height: 10px; border-radius: 999px; background: {{t.raised}}; overflow: hidden;"><div style="width: 40%; height: 100%; background: {{accent}}; border-radius: 999px;"></div></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 15px;"><span style="font-weight: 600;">Artículos a / an</span><span style="color: {{t.muted}};">60%</span></div>
+          <div style="height: 10px; border-radius: 999px; background: {{t.raised}}; overflow: hidden;"><div style="width: 60%; height: 100%; background: {{accent}}; border-radius: 999px;"></div></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 15px;"><span style="font-weight: 600;">Plurales irregulares</span><span style="color: {{t.muted}};">65%</span></div>
+          <div style="height: 10px; border-radius: 999px; background: {{t.raised}}; overflow: hidden;"><div style="width: 65%; height: 100%; background: {{accent}}; border-radius: 999px;"></div></div>
+        </div>
+        <button style="height: 48px; border: 0; border-radius: 999px; background: {{t.raised}}; box-shadow: inset 0 0 0 1px {{t.borderStrong}}; color: {{t.text}}; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"></path></svg>Repasar los 3 · 5 min</button>
+      </section>
+
+      <section style="background: #a8e6c9; color: #12151c; border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: baseline; justify-content: space-between;">
+          <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Esta semana</h3>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px;">4 días</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px;">
+          <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+              <sc-if value="{{d.done}}" hint-placeholder-val="{{true}}">
+                <span style="width: 38px; height: 38px; border-radius: 50%; background: #12151c; color: #a8e6c9; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span>
+              </sc-if>
+              <sc-if value="{{d.empty}}" hint-placeholder-val="{{false}}">
+                <span style="width: 38px; height: 38px; box-sizing: border-box; border-radius: 50%; border: 2px dashed #12151c; opacity: 0.45;"></span>
+              </sc-if>
+              <span style="font-size: 13px; font-weight: 600;">{{d.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1280,"height":1380}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: '#f6f4ef', surface: '#ffffff', raised: '#f1eee7', border: '#e2ddd2', borderStrong: '#b9b2a4', textStrong: '#0a0c11', text: '#12151c', muted: '#4a5263' },
+      Oscuro: { bg: '#0d1018', surface: '#141925', raised: '#1b2130', border: '#262d3d', borderStrong: '#2f3749', textStrong: '#ffffff', text: '#eef1f7', muted: '#aab2c4' }
+    };
+    const accents = { 'Rojo': '#dc2626', 'Naranja': '#c2410c', 'Ámbar': '#b45309', 'Verde': '#15803d', 'Esmeralda': '#047857', 'Turquesa': '#0e7490', 'Azul': '#2563eb', 'Violeta': '#7c3aed', 'Rosa': '#be185d' };
+    const done = [true, true, false, true, true, false, false];
+    const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    return {
+      t: themes[this.props.tema] || themes.Claro,
+      accent: accents[this.props.acento] || '#2563eb',
+      days: labels.map((label, i) => ({ label: label, done: done[i], empty: !done[i] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

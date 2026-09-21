@@ -24,7 +24,7 @@ export default function ReaderPage() {
 
       <header className="page-header w-full">
         <span className="font-kicker text-primary">Input Comprensible</span>
-        <h1 className="text-h1 text-fg mt-1">Lectura Guiada</h1>
+        <h1 className="font-heading text-h1 font-bold text-fg mt-1">Lectura Guiada</h1>
         <p className="text-body text-fg-muted max-w-2xl text-pretty mt-1">
           Historias adaptadas a tu nivel con vocabulario clave.
         </p>

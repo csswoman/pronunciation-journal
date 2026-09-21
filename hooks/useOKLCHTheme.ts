@@ -143,3 +143,21 @@ export function useOKLCHTheme() {
 }
 
 export { useOKLCHTheme as useTheme };
+
+/**
+ * useAppearance() — thin wrapper over useOKLCHTheme() matching the shape
+ * from docs/design-system/README.md §Color (`theme`, `accent`, `setTheme`,
+ * `setAccent`). `theme` here is the resolved light/dark mode (`mode` in the
+ * underlying hook), not the raw "light|dark|system" preference — components
+ * that need the three-way preference (e.g. a "usar el del sistema" option)
+ * should use `useOKLCHTheme()`/`useTheme()` directly instead.
+ */
+export function useAppearance() {
+  const { mode, setPreference, accent, setAccent } = useOKLCHTheme();
+  return {
+    theme: mode,
+    accent,
+    setTheme: setPreference,
+    setAccent,
+  };
+}

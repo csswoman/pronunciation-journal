@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #4a5263; }
+    .col { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .mark { width: 17px; height: 17px; }
+  </style>
+</helmet>
+<div style="width: 1180px; height: 520px; box-sizing: border-box; padding: 32px 36px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <div style="display: flex; flex-direction: column; gap: 4px;">
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; color: {{t.textStrong}};">Estados de los botones sobre pastel</h2>
+    <span style="font-size: 14px; color: {{t.muted}};">El relleno de tinta significa “guardada”, nunca hover.</span>
+  </div>
+
+  <!-- Guardar -->
+  <section style="background: #f8e08e; color: #12151c; border-radius: 24px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+    <span class="lbl">GUARDAR · INTERRUPTOR CON ESTADO</span>
+    <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+      <div class="col">
+        <button aria-pressed="false" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+        <span style="font-size: 13px; color: #4a5263;">Reposo</span>
+      </div>
+      <div class="col">
+        <button aria-pressed="false" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: rgba(18,21,28,0.08); box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+        <span style="font-size: 13px; color: #4a5263;">Hover · tinta 8%</span>
+      </div>
+      <div class="col">
+        <button aria-pressed="false" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: rgba(18,21,28,0.14); box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+        <span style="font-size: 13px; color: #4a5263;">Pulsado · tinta 14%</span>
+      </div>
+      <div class="col">
+        <button aria-pressed="false" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; outline: 3px solid {{accent}}; outline-offset: 2px;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+        <span style="font-size: 13px; color: #4a5263;">Foco · anillo de acento</span>
+      </div>
+      <div class="col">
+        <button aria-pressed="true" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+          <svg class="mark" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardada</button>
+        <span style="font-size: 13px; color: #4a5263;">Guardada · icono relleno</span>
+      </div>
+    </div>
+
+    <div style="height: 1px; background: rgba(18,21,28,0.15);"></div>
+
+    <span class="lbl">OTRA · ACCIÓN REPETIBLE, SOLO ICONO</span>
+    <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+      <div class="col">
+        <button aria-label="Ver otra frase" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"></path></svg>
+        </button>
+        <span style="font-size: 13px; color: #4a5263;">Reposo</span>
+      </div>
+      <div class="col">
+        <button aria-label="Ver otra frase" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(18,21,28,0.08); box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; display: flex; align-items: center; justify-content: center;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"></path></svg>
+        </button>
+        <span style="font-size: 13px; color: #4a5263;">Hover</span>
+      </div>
+      <div class="col">
+        <button aria-label="Ver otra frase" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(18,21,28,0.14); box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; display: flex; align-items: center; justify-content: center; opacity: 0.6;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"></path></svg>
+        </button>
+        <span style="font-size: 13px; color: #4a5263;">Cargando · gira 1 vuelta</span>
+      </div>
+      <div class="col">
+        <span style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: rgba(18,21,28,0.08); font-size: 14px; font-weight: 600;">
+          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"></path></svg>Otra frase</span>
+        <span style="font-size: 13px; color: #4a5263;">Tooltip al enfocar</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Jerarquía de chips -->
+  <section style="background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}; border-radius: 24px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+    <span class="lbl" style="color: {{t.muted}};">JERARQUÍA DE CHIPS · TRES NIVELES, NO UNO</span>
+    <div style="display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start;">
+      <div style="background: #b9d3fb; border-radius: 18px; padding: 14px 16px; display: flex; gap: 8px; align-items: center;">
+        <span style="padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em;">SESIÓN DE HOY</span>
+        <span style="padding: 6px 13px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 13px; font-weight: 600;">Actividad 1 de 4</span>
+        <span style="padding: 5px 12px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 13px; font-weight: 600;">En curso</span>
+      </div>
+      <div style="background: #f8e08e; border-radius: 18px; padding: 14px 16px; display: flex; gap: 8px; align-items: center;">
+        <span style="padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 600;">Frase del día</span>
+        <span style="padding: 6px 12px; border-radius: 999px; background: #efd06a; color: #12151c; font-size: 13px; font-weight: 600;">razones y explicaciones</span>
+      </div>
+      <div style="background: #f7b7a6; border-radius: 18px; padding: 14px 16px; display: flex; gap: 8px; align-items: center;">
+        <span style="padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 600;">Palabra del día</span>
+        <span style="padding: 6px 12px; border-radius: 999px; background: #ee9f8b; color: #12151c; font-size: 13px; font-weight: 600;">verbo</span>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Oscuro","Claro"],"default":"Oscuro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1180,"height":520}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: '#f6f4ef', surface: '#ffffff', border: '#e2ddd2', textStrong: '#0a0c11', text: '#12151c', muted: '#4a5263' },
+      Oscuro: { bg: '#0d1018', surface: '#141925', border: '#262d3d', textStrong: '#ffffff', text: '#eef1f7', muted: '#aab2c4' }
+    };
+    const accents = { 'Rojo': '#dc2626', 'Naranja': '#c2410c', 'Ámbar': '#b45309', 'Verde': '#15803d', 'Esmeralda': '#047857', 'Turquesa': '#0e7490', 'Azul': '#2563eb', 'Violeta': '#7c3aed', 'Rosa': '#be185d' };
+    return {
+      t: themes[this.props.tema] || themes.Oscuro,
+      accent: accents[this.props.acento] || '#2563eb'
+    };
+  }
+}
+</script>
+</body>
+</html>

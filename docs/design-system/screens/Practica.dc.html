@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .panel { background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px }
+    .kbd { padding: 3px 8px; border-radius: 6px; background: rgba(18,21,28,.12); font-size: 12px; font-weight: 700 }
+    .next { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--raised); font-size: 14px }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1400px; height: 900px; box-sizing: border-box; padding: 20px 28px 28px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <!-- Barra de sesión -->
+  <header style="display: flex; align-items: center; gap: 16px; padding: 10px 14px; border-radius: 999px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}};">
+    <button aria-label="Volver al mazo" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: {{t.raised}}; color: {{t.text}}; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"></path></svg></button>
+    <span style="width: 34px; height: 34px; border-radius: 11px; background: #cbbcf5; color: #12151c; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path></svg></span>
+    <span style="font-size: 17px; font-weight: 700;">Creativity Mind</span>
+    <span style="flex-grow: 1; display: flex; gap: 3px; padding: 0 12px;">
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="12">
+        <span style="flex-grow: 1; height: 8px; border-radius: 999px; background: {{c.bg}};"></span>
+      </sc-for>
+    </span>
+    <span style="font-size: 15px; font-weight: 700;">1 <span style="color: {{t.muted}}; font-weight: 500;">de 12</span></span>
+    <button style="height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: {{t.raised}}; box-shadow: inset 0 0 0 1px {{t.borderStrong}}; color: {{t.text}}; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h7"></path></svg>Panel</button>
+    <button style="height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: {{t.raised}}; box-shadow: inset 0 0 0 1px {{t.borderStrong}}; color: {{t.text}}; font-size: 14px; font-weight: 600;">Salir</button>
+  </header>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: 280px minmax(0, 1fr) 300px; gap: 22px; align-items: stretch;">
+
+    <!-- Panel izquierdo -->
+    <aside style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="panel">
+        <span class="lbl">REFERENCIA</span>
+        <button style="height: 150px; border: 2px dashed {{t.border}}; border-radius: 18px; background: transparent; color: {{t.muted}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 14px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"></rect><circle cx="9" cy="10" r="2"></circle><path d="m21 16-5-5-9 9"></path></svg>
+          Añadir imagen
+        </button>
+      </div>
+      <div class="panel">
+        <span class="lbl">DETALLES</span>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 14px; color: {{t.muted}};">Nivel</span><span style="padding: 5px 12px; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 13px; font-weight: 700;">A1 · Principiante</span></div>
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 14px; color: {{t.muted}};">Se repite</span><span class="chip-n">en 2 días</span></div>
+        <div style="background: #a8e6c9; color: #12151c; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: .12em;">CONSEJO</span>
+          <span style="font-size: 14px;">Di la palabra en voz alta: ayuda a fijarla en la memoria.</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Tarjeta -->
+    <main style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;">
+      <section style="position: relative; width: 100%; max-width: 620px; background: #ffffff; color: #12151c; border: 2px solid #12151c; border-radius: 28px; padding: 26px 28px 30px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="padding: 5px 12px; border-radius: 999px; background: #f8e08e; font-size: 13px; font-weight: 700;">A1</span>
+          <span style="padding: 5px 12px; border-radius: 999px; background: rgba(18,21,28,.08); font-size: 13px; font-weight: 600;">Creativity Mind</span>
+          <span style="flex-grow: 1;"></span>
+          <button aria-label="Escuchar la palabra" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+          <button aria-label="Guardar palabra" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg></button>
+        </div>
+        <div style="padding: 34px 0 26px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+          <span class="num" style="font-size: 62px; line-height: 62px;">catalyst</span>
+          <span class="ipa" style="font-size: 20px; color: #4a5263;">/ˈkætəlɪst/</span>
+        </div>
+        <div style="border-top: 1px solid rgba(18,21,28,.14); padding-top: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; color: #4a5263;">
+          Piensa el significado y pulsa <span class="kbd">ESPACIO</span> para girar
+        </div>
+      </section>
+
+      <div style="width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 10px;">
+        <span style="text-align: center; font-size: 14px; color: {{t.muted}};">Puntúa después de ver la respuesta</span>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+          <button style="height: 58px; border: 0; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">No me acordé <span class="kbd">1</span></button>
+          <button style="height: 58px; border: 0; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">Con esfuerzo <span class="kbd">2</span></button>
+          <button style="height: 58px; border: 0; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">Muy bien <span class="kbd">3</span></button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Panel derecho -->
+    <aside style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="panel">
+        <span class="lbl">ESTA SESIÓN</span>
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="num" style="font-size: 34px; color: {{t.textStrong}};">1</span><span style="font-size: 15px; color: {{t.muted}};">de 12 tarjetas</span></div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <span style="padding: 5px 12px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 13px; font-weight: 700;">0 bien</span>
+          <span style="padding: 5px 12px; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 13px; font-weight: 700;">0 con esfuerzo</span>
+          <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 13px; font-weight: 700;">0 falladas</span>
+        </div>
+      </div>
+      <div class="panel" style="flex-grow: 1;">
+        <span class="lbl">SIGUIENTES</span>
+        <div class="next"><span style="width: 10px; height: 10px; border-radius: 50%; background: #cbbcf5;"></span><span style="flex-grow: 1; font-weight: 600;">conceptualize</span><span style="color: {{t.muted}};">ahora</span></div>
+        <div class="next"><span style="width: 10px; height: 10px; border-radius: 50%; background: #f7b7a6;"></span><span style="flex-grow: 1; font-weight: 600;">tangible</span><span style="color: {{t.muted}};">ahora</span></div>
+        <div class="next"><span style="width: 10px; height: 10px; border-radius: 50%; background: #a8e6c9;"></span><span style="flex-grow: 1; font-weight: 600;">eureka moment</span><span style="color: {{t.muted}};">nueva</span></div>
+        <div style="flex-grow: 1;"></div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: {{t.muted}};"><span class="kbd" style="background: {{t.raised}}; color: {{t.text}};">→</span> saltar<span style="flex-grow: 1;"></span><span class="kbd" style="background: {{t.raised}}; color: {{t.text}};">Esc</span> salir</div>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1400,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    const t = themes[this.props.tema] || themes.Claro;
+    const accent = accents[this.props.acento] || "#2563eb";
+    return { t: t, accent: accent, textStrong: t.textStrong, cards: Array.from({ length: 12 }, (_, i) => ({ bg: i === 0 ? accent : t.border })) };
+  }
+}
+</script>
+</body>
+</html>

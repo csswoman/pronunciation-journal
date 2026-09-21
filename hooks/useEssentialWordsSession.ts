@@ -18,12 +18,10 @@ import {
   type EssentialWordsPhase,
   type EssentialWordsSessionSummary,
 } from "@/lib/essential-words/session-model";
-import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 import { modeHasData, selectMode, type EssentialWordMode } from "@/lib/essential-words/exercise-modes";
 import { resolveRenderedSkillMode } from "@/lib/essential-words/rendered-skill-mode";
 import type { Step as PlanStep } from "@/lib/essential-words/session-plan-types";
 import { ESSENTIAL_WORDS_LEVEL3_ENABLED, gateLevel3Mode } from "@/lib/essential-words/level3-flag";
-import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   archiveEssentialWordProgress,
   getEssentialWordProgressForUser,
@@ -425,13 +423,10 @@ export function useEssentialWordsSession() {
         // Seed the level filter from the user's stored CEFR level (offline-safe)
         // so a placed learner starts at their level. Only when untouched (null).
         if (levelsRef.current === null) {
+          const { getEffectiveLearnerLevelForViewer } = await import("@/lib/learner-level/client-queries");
           const { isAnonymousUser } = await import("@/lib/auth/is-anonymous");
-          const isGuest = isAnonymousUser(user);
-          const level = isGuest
-            ? readGuestStudyLevel()
-            : user
-              ? (await getEffectiveLearnerLevel(user.id)).level
-              : null;
+          const viewerUserId = isAnonymousUser(user) ? null : user?.id ?? null;
+          const level = (await getEffectiveLearnerLevelForViewer(viewerUserId)).level;
           const catalogLevel = level === "C2" ? "C1" : level;
           if (!cancelled && catalogLevel) {
             levelsRef.current = [catalogLevel];

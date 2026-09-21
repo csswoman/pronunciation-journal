@@ -15,7 +15,7 @@ export default function IntonationPage() {
           <span className="font-kicker text-primary">Pronunciación & Melodía</span>
           <Badge label="Pitch en tiempo real" variant="info" size="sm" />
         </div>
-        <h1 className="text-h1 text-fg mt-1">Gráficas de Entonación</h1>
+        <h1 className="font-heading text-h1 font-bold text-fg mt-1">Gráficas de Entonación</h1>
         <p className="text-body text-fg-muted max-w-3xl text-pretty mt-1">
           Compara la curva melódica de tu voz con los patrones nativos del inglés.
           Identifica cuándo subir el tono en preguntas ↗ y cuándo bajarlo en afirmaciones ↘.

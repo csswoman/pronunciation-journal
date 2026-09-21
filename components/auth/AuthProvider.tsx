@@ -114,25 +114,19 @@ export default function AuthProvider({
           await claimGuestPlacement(userId);
           await claimGuestPronunciationDiagnostic(userId);
 
-          const { data } = await getSupabaseBrowserClient()
-            .from("user_profiles" as never)
-            .select("cefr_level")
-            .eq("id", userId)
-            .maybeSingle();
-          const profile = data as { cefr_level?: string } | null;
+          const { getEffectiveLearnerLevel } = await import("@/lib/learner-level/client-queries");
+          const resolution = await getEffectiveLearnerLevel(userId);
 
           const [
             { db, ensureDbReady },
             { getUserLearningState },
             { hydrateFromRemote },
-            { normalizeCEFR },
             { hydrateLessonCompletions },
             { hydrateImmersionProgress },
           ] = await Promise.all([
             import("@/lib/db"),
             import("@/lib/ai-practice/load-state"),
             import("@/lib/ai-practice/queries"),
-            import("@/lib/exercises/cefr"),
             import("@/lib/courses/queries"),
             import("@/lib/immersion/progress-queries"),
           ]);
@@ -141,9 +135,9 @@ export default function AuthProvider({
           await hydrateFromRemote(userId);
           await hydrateLessonCompletions(userId);
           await hydrateImmersionProgress(userId);
-          if (!profile?.cefr_level) return;
+          if (resolution.source === "unknown") return;
 
-          const nextLevel = normalizeCEFR(profile.cefr_level);
+          const nextLevel = resolution.level;
           const existing = await db.learningState.get(userId);
           if (existing) {
             await db.learningState.put({

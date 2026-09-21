@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .thumb { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; display: flex; align-items: flex-end; padding: 10px }
+    .thumb .over { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px }
+    .thumb .dur { position: absolute; right: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700 }
+    .thumb .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .lc { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 24px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); text-decoration: none }
+    .lc h3 { margin: 0; font-size: 17px; line-height: 22px; font-weight: 700 }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1220px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">INMERSIÓN CON PROFESORES NATIVOS</span>
+      <h1 class="num" style="margin: 0; font-size: 46px; line-height: 48px; color: {{t.textStrong}};">Ver y hablar</h1>
+      <span style="font-size: 16px; color: {{t.muted}}; max-width: 660px;">Lecciones reales de pronunciación y fluidez. Guarda vocabulario con su IPA y saca frases para tu repaso.</span>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <span class="chip-n">287 lecciones</span>
+      <span style="padding: 8px 14px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 14px; font-weight: 700;">12 palabras tuyas de aquí</span>
+    </div>
+  </header>
+
+  <!-- Continuar viendo -->
+  <section class="card sky" style="padding: 20px; flex-direction: row; gap: 20px; align-items: stretch;">
+    <div class="thumb" style="width: 300px; flex-shrink: 0; background: #9ec0f6;">
+      <svg width="100%" height="100%" viewBox="0 0 300 170" fill="none" style="position: absolute; inset: 0;" aria-hidden="true">
+        <path d="M20 28h150M20 46h120M20 64h140M20 82h90" stroke="#12151c" stroke-width="3" stroke-linecap="round" opacity=".35"></path>
+        <circle cx="230" cy="70" r="26" stroke="#12151c" stroke-width="3"></circle>
+        <path d="M196 150c6-30 18-44 34-44s28 14 34 44" stroke="#12151c" stroke-width="3" stroke-linejoin="round"></path>
+      </svg>
+      <span class="play"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></span>
+      <span class="dur">quedan 6 min</span>
+    </div>
+    <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-ink">SIGUE DONDE LO DEJASTE</span>
+        <span class="chip-t">B1 · entonación</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 14px; color: #2c3445;">Teacher Adam</span>
+      </div>
+      <h2 class="num" style="margin: 0; font-size: 32px; line-height: 33px;">Phrasal verbs para hablar de emociones</h2>
+      <div style="display: flex; gap: 3px;">
+        <sc-for list="{{seen}}" as="s" hint-placeholder-count="14">
+          <span style="flex-grow: 1; height: 8px; border-radius: 999px; background: {{s.bg}};"></span>
+        </sc-for>
+      </div>
+      <span style="font-size: 15px; color: #4a5263;">8 de 14 min · te quedan 3 frases por minar</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <button class="btn-acc" style="height: 52px; padding: 0 24px; font-size: 16px;">Seguir viendo
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </button>
+        <button class="btn-out" style="height: 52px;">Ver mis 5 palabras</button>
+        <span style="flex-grow: 1;"></span>
+        <span class="wpill">blow up</span><span class="wpill">tell off</span><span class="wpill">let down</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtros en una fila -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <label class="sfield" style="width: 300px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex-grow: 1;">Tema, palabra o profesor…</span>
+    </label>
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none;">
+      <button class="tab tab--on" style="font-size: 14px;">Todos</button><button class="tab" style="font-size: 14px;">A2</button><button class="tab" style="font-size: 14px;">B1</button><button class="tab" style="font-size: 14px;">B2</button><button class="tab" style="font-size: 14px;">C1</button>
+    </div>
+    <span class="chip-n">Vocabulario 96</span>
+    <span class="chip-n">Pronunciación 64</span>
+    <span class="chip-n">Gramática 71</span>
+    <button class="chip-n" style="border: 0; display: inline-flex; align-items: center; gap: 6px;">+4 temas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></button>
+    <span style="flex-grow: 1;"></span>
+    <span class="chip-n">Sin ver</span>
+    <span style="padding: 6px 12px; border-radius: 999px; background: {{accent}}; color: #fff; font-size: 13px; font-weight: 700;">Con mis focos</span>
+  </div>
+
+  <div style="display: flex; align-items: baseline; gap: 10px;">
+    <h2 class="num" style="margin: 0; font-size: 24px; color: {{t.textStrong}};">Para tus focos de esta semana</h2>
+    <span class="chip-n ipa">/ə/ vs /ɪ/</span>
+    <span class="chip-n">pasado simple</span>
+  </div>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; align-items: start;">
+
+    <a href="#" class="lc">
+      <div class="thumb" style="background: #cbbcf5;">
+        <svg width="100%" height="100%" viewBox="0 0 300 170" fill="none" style="position: absolute; inset: 0;" aria-hidden="true">
+          <path d="M18 26h130M18 44h100M18 62h120" stroke="#12151c" stroke-width="3" stroke-linecap="round" opacity=".3"></path>
+          <circle cx="232" cy="66" r="24" stroke="#12151c" stroke-width="3"></circle>
+          <path d="M200 148c6-28 17-40 32-40s26 12 32 40" stroke="#12151c" stroke-width="3" stroke-linejoin="round"></path>
+        </svg>
+        <span class="over"><span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700;">C1</span></span>
+        <span class="dur">14 min</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700;">VOCABULARIO</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 13px; color: {{t.muted}};">Teacher Alex</span>
+      </div>
+      <h3>10 phrasal verbs para hablar de citas y relaciones</h3>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span class="chip-n">5 palabras</span><span class="chip-n">4 frases</span>
+      </div>
+    </a>
+
+    <a href="#" class="lc">
+      <div class="thumb" style="background: #f8e08e;">
+        <svg width="100%" height="100%" viewBox="0 0 300 170" fill="none" style="position: absolute; inset: 0;" aria-hidden="true">
+          <path d="M150 24h130M150 42h110M150 60h124M150 78h90" stroke="#12151c" stroke-width="3" stroke-linecap="round" opacity=".3"></path>
+          <circle cx="72" cy="64" r="24" stroke="#12151c" stroke-width="3"></circle>
+          <path d="M40 146c6-28 17-40 32-40s26 12 32 40" stroke="#12151c" stroke-width="3" stroke-linejoin="round"></path>
+        </svg>
+        <span class="over"><span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700;">C1</span><span style="padding: 4px 10px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 12px; font-weight: 700;">VISTA</span></span>
+        <span class="dur">11 min</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700;">VOCABULARIO</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 13px; color: {{t.muted}};">Teacher Adam</span>
+      </div>
+      <h3>10 modismos ingleses cuyo significado no adivinarías</h3>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span class="chip-n">4 palabras guardadas</span>
+      </div>
+    </a>
+
+    <a href="#" class="lc">
+      <div class="thumb" style="background: #b9d3fb;">
+        <svg width="100%" height="100%" viewBox="0 0 300 170" fill="none" style="position: absolute; inset: 0;" aria-hidden="true">
+          <path d="M18 26h120M18 44h140M18 62h100" stroke="#12151c" stroke-width="3" stroke-linecap="round" opacity=".3"></path>
+          <circle cx="228" cy="60" r="24" stroke="#12151c" stroke-width="3"></circle>
+          <path d="M196 142c6-28 17-40 32-40s26 12 32 40" stroke="#12151c" stroke-width="3" stroke-linejoin="round"></path>
+        </svg>
+        <span class="over"><span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700;">B1</span></span>
+        <span class="dur">8 min</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #cbbcf5; color: #12151c; font-size: 12px; font-weight: 700;">GRAMÁTICA</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 13px; color: {{t.muted}};">Teacher Adam</span>
+      </div>
+      <h3>Pasado simple: los irregulares que más se fallan</h3>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span style="padding: 5px 11px; border-radius: 999px; background: #cbbcf5; color: #12151c; font-size: 12px; font-weight: 700;">TU FOCO</span>
+        <span class="chip-n">6 frases</span>
+      </div>
+    </a>
+
+    <a href="#" class="lc">
+      <div class="thumb" style="background: #a8e6c9;">
+        <svg width="100%" height="100%" viewBox="0 0 300 170" fill="none" style="position: absolute; inset: 0;" aria-hidden="true">
+          <path d="M150 28h120M150 46h132M150 64h96" stroke="#12151c" stroke-width="3" stroke-linecap="round" opacity=".3"></path>
+          <circle cx="74" cy="62" r="24" stroke="#12151c" stroke-width="3"></circle>
+          <path d="M42 144c6-28 17-40 32-40s26 12 32 40" stroke="#12151c" stroke-width="3" stroke-linejoin="round"></path>
+        </svg>
+        <span class="over"><span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700;">A2</span></span>
+        <span class="dur">13 min</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 12px; font-weight: 700;">PRONUNCIACIÓN</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 13px; color: {{t.muted}};">Teacher Emma</span>
+      </div>
+      <h3>Sustantivos que se confunden: weather o climate</h3>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span style="padding: 5px 11px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700;">TU FOCO <span class="ipa">/ə/</span></span>
+        <span class="chip-n">7 palabras</span>
+      </div>
+    </a>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <button class="btn-n" style="height: 46px;">Ver las 287 lecciones</button>
+    <span style="font-size: 14px; color: {{t.muted}};">También puedes registrar lo que veas fuera de la app desde tu plan de hoy.</span>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1220}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return {
+      t: themes[this.props.tema] || themes.Claro,
+      accent: accents[this.props.acento] || "#2563eb",
+      seen: Array.from({ length: 14 }, (_, i) => ({ bg: i < 8 ? "#12151c" : "rgba(18,21,28,.16)" }))
+    };
+  }
+}
+</script>
+</body>
+</html>

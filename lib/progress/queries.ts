@@ -101,8 +101,6 @@ export interface CoachWeakTopic {
 
 export interface CoachInsights {
   weakTopics: CoachWeakTopic[]
-  cefrEstimate: string | null
-  profileLevel: string | null
   avgAccuracy: number | null
 }
 
@@ -397,13 +395,10 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 export async function getCoachInsights(userId: string): Promise<CoachInsights> {
   try {
     const supabase = await createSupabaseServerClient()
-    const [{ data }, { data: profile }] = await Promise.all([
-      supabase.from('user_learning_state').select('state').eq('user_id', userId).maybeSingle(),
-      supabase.from('user_profiles').select('cefr_level').eq('id', userId).maybeSingle(),
-    ])
+    const { data } = await supabase.from('user_learning_state').select('state').eq('user_id', userId).maybeSingle()
 
     if (!data?.state) {
-      return { weakTopics: [], cefrEstimate: null, profileLevel: profile?.cefr_level ?? null, avgAccuracy: null }
+      return { weakTopics: [], avgAccuracy: null }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jsonb blob, shape validated at write time
@@ -415,12 +410,10 @@ export async function getCoachInsights(userId: string): Promise<CoachInsights> {
 
     return {
       weakTopics,
-      cefrEstimate: state?.level?.cefrEstimate ?? null,
-      profileLevel: profile?.cefr_level ?? null,
       avgAccuracy: state?.pronunciation?.averageAccuracy ?? null,
     }
   } catch {
-    return { weakTopics: [], cefrEstimate: null, profileLevel: null, avgAccuracy: null }
+    return { weakTopics: [], avgAccuracy: null }
   }
 }
 
@@ -691,9 +684,9 @@ export async function loadSkillProfile(userId: string): Promise<SkillProfileSnap
       getCoachInsights(userId),
       getSkillProfileData(userId),
     ])
-    const rawCefr = insights.cefrEstimate || insights.profileLevel
+    const learnerLevel = await getEffectiveLearnerLevelServer(userId)
     return {
-      cefr: rawCefr,
+      cefr: learnerLevel.level,
       weakestPhonemes: skillData.weakestPhonemes,
     }
   } catch {

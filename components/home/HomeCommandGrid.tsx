@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { ArrowRight } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readWelcomeTourCompleted } from "@/lib/home/onboarding";
@@ -133,7 +131,7 @@ export default function HomeCommandGrid({
       <HomeHeader streakDays={streak ?? 0} onOpenTour={() => setTourOpen(true)} />
 
       {/* Cuadrícula principal de 2 columnas */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-5.5 items-start">
         {/* Columna Principal (Izquierda) */}
         <div className="flex flex-col gap-8 min-w-0">
           <div className={showPostPlan ? "hidden" : "contents"}>
@@ -178,16 +176,6 @@ export default function HomeCommandGrid({
                 </>
               }
             />
-            {/* Home ejecuta el paso siguiente; /daily despliega el día entero. */}
-            {planSettled && !planEmpty ? (
-              <Link
-                href="/daily"
-                className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-start rounded-md px-1 font-label text-body-sm text-fg-muted transition-colors hover:text-primary"
-              >
-                Ver el día completo
-                <ArrowRight size={16} aria-hidden />
-              </Link>
-            ) : null}
           </div>
 
           {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}

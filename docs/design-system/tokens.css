@@ -1,0 +1,115 @@
+/* English Journal — tokens.css
+   Generado desde tokens.json. No editar a mano: cambia tokens.json y regenera.
+   Oscuro es el tema por defecto; claro con <html data-theme="light">.
+   Los derivados del acento (accent-text/soft/border) y data-accent viven en bundle.css. */
+
+:root {
+  /* Fijos: pastel, tinta, acentos, tipografía, espaciado, radios, tamaños */
+  --ink: #12151c;
+  --ink-secondary: #2c3445;
+  --ink-muted: #4a5263;
+  --paper: #ffffff;
+  --on-accent: #ffffff;
+  --sky: #b9d3fb;
+  --sky-deep: #9ec0f6;
+  --sky-soft: #eaf2fe;
+  --butter: #f8e08e;
+  --butter-deep: #efd06a;
+  --butter-soft: #fdf3cf;
+  --coral: #f7b7a6;
+  --coral-deep: #ee9f8b;
+  --coral-soft: #fde4dc;
+  --lilac: #cbbcf5;
+  --lilac-deep: #b1a0ea;
+  --lilac-soft: #ece6fd;
+  --mint: #a8e6c9;
+  --mint-deep: #86d6b0;
+  --mint-soft: #e3f6ec;
+  --accent-red: #dc2626;
+  --accent-orange: #c2410c;
+  --accent-amber: #b45309;
+  --accent-green: #15803d;
+  --accent-emerald: #047857;
+  --accent-teal: #0e7490;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-pink: #be185d;
+  --accent: var(--accent-blue);
+  --focus-ring: var(--accent);
+  --feedback-correct: var(--mint);
+  --feedback-correct-soft: var(--mint-soft);
+  --feedback-wrong: var(--coral);
+  --feedback-wrong-soft: var(--coral-soft);
+  --feedback-hint: var(--butter);
+  --feedback-hint-soft: var(--butter-soft);
+  --font-display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-phonetic: "Noto Sans", "Figtree", sans-serif;
+  --text-hero: 60px; --text-hero--line-height: 60px; --text-hero--font-weight: 800; --text-hero--letter-spacing: -0.03em;
+  --text-display: 46px; --text-display--line-height: 48px; --text-display--font-weight: 800; --text-display--letter-spacing: -0.02em;
+  --text-headline: 36px; --text-headline--line-height: 37px; --text-headline--font-weight: 800; --text-headline--letter-spacing: -0.025em;
+  --text-numeral: 34px; --text-numeral--line-height: 36px; --text-numeral--font-weight: 800; --text-numeral--letter-spacing: -0.02em;
+  --text-title: 19px; --text-title--line-height: 24px; --text-title--font-weight: 700;
+  --text-body-lg: 17px; --text-body-lg--line-height: 26px; --text-body-lg--font-weight: 500;
+  --text-body: 15px; --text-body--line-height: 22px; --text-body--font-weight: 400;
+  --text-body-sm: 14px; --text-body-sm--line-height: 20px; --text-body-sm--font-weight: 400;
+  --text-caption: 13px; --text-caption--line-height: 18px; --text-caption--font-weight: 600;
+  --text-overline: 12px; --text-overline--line-height: 16px; --text-overline--font-weight: 700; --text-overline--letter-spacing: 0.14em;
+  --text-ipa-lg: 20px; --text-ipa-lg--line-height: 28px; --text-ipa-lg--font-weight: 400;
+  --text-ipa: 18px; --text-ipa--line-height: 26px; --text-ipa--font-weight: 400;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-gap: 22px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 40px;
+  --radius-xs: 6px;
+  --radius-sm: 12px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+  --control-sm: 40px;
+  --control-md: 44px;
+  --control-lg: 54px;
+  --audio-lg: 58px;
+}
+
+:root, [data-theme="dark"] {
+  /* Neutros y sombra — oscuro */
+  --bg: #0d1018;
+  --surface-sunken: #0f131c;
+  --bg-sidebar: #11151f;
+  --surface: #141925;
+  --surface-raised: #1b2130;
+  --field: #1a1f2c;
+  --border: #262d3d;
+  --border-strong: #2f3749;
+  --text-strong: #ffffff;
+  --text: #eef1f7;
+  --text-secondary: #c9cfdb;
+  --text-muted: #aab2c4;
+  --text-faint: #7c8499;
+  --shadow-float: 0 10px 30px rgba(0,0,0,0.45);
+}
+
+[data-theme="light"] {
+  /* Neutros y sombra — claro */
+  --bg: #f6f4ef;
+  --surface-sunken: #f1eee7;
+  --bg-sidebar: #efebe3;
+  --surface: #ffffff;
+  --surface-raised: #faf8f4;
+  --field: #fbf9f5;
+  --border: #eae5db;
+  --border-strong: #cfc8b9;
+  --text-strong: #0a0c11;
+  --text: #12151c;
+  --text-secondary: #2c3445;
+  --text-muted: #4a5263;
+  --text-faint: #636a78;
+  --shadow-float: 0 10px 30px rgba(18,21,28,0.18);
+}

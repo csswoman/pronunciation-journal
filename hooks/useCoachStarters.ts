@@ -8,9 +8,8 @@ import { normalizeInterests } from "@/lib/users/interests";
 import { selectStarters } from "@/lib/ai-practice/starters/select";
 import { readStarterHistory, recordStarterUse } from "@/lib/ai-practice/starters/history";
 import type { ResolvedStarter, StarterId } from "@/lib/ai-practice/starters/types";
+import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-queries";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
-import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
 
 /**
  * Resolves the starters shown on the chat home.
@@ -39,23 +38,13 @@ export function useCoachStarters(isOpen = true) {
   useEffect(() => {
     let cancelled = false;
     const userId = user?.id;
-    const isGuest = isAnonymousUser(user);
-
-    if (!userId || isGuest) {
-      setStarters(selectStarters({
-        state: null,
-        level: readGuestStudyLevel(),
-        interests: [], seed, recentIds: [], recentAngles: [], now: Date.now(),
-      }));
-      return;
-    }
-
+    const viewerUserId = isAnonymousUser(user) ? null : userId ?? null;
     void (async () => {
       const [state, cachedInterests, history, storedLevel] = await Promise.all([
-        getUserLearningState(userId).catch(() => null),
-        getCachedUserInterests(userId).catch(() => null),
-        readStarterHistory(userId).catch(() => ({ ids: [], angles: [] })),
-        getEffectiveLearnerLevel(userId).catch(() => null),
+        userId ? getUserLearningState(userId).catch(() => null) : Promise.resolve(null),
+        userId ? getCachedUserInterests(userId).catch(() => null) : Promise.resolve(null),
+        userId ? readStarterHistory(userId).catch(() => ({ ids: [], angles: [] })) : Promise.resolve({ ids: [], angles: [] }),
+        getEffectiveLearnerLevelForViewer(viewerUserId).catch(() => null),
       ]);
       if (cancelled) return;
       setStarters(selectStarters({

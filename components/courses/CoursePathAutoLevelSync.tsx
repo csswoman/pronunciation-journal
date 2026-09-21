@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
-import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-queries";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevelId } from "@/lib/courses/types";
 
@@ -67,12 +67,6 @@ export default function CoursePathAutoLevelSync({
           const activeLevel = [...counts].reverse().find((level) => level.count > 0);
           if (activeLevel) {
             activeLevelId = activeLevel.id;
-          } else {
-            const stateRow = await db.learningState?.get(userId);
-            const userEst = stateRow?.state?.level?.cefrEstimate;
-            if (userEst) {
-              activeLevelId = parseCefrLevelId(userEst.toLowerCase());
-            }
           }
         } catch {
           /* Fallback a nivel local de estudio */
@@ -80,7 +74,8 @@ export default function CoursePathAutoLevelSync({
       }
 
       if (!activeLevelId) {
-        activeLevelId = parseCefrLevelId(readGuestStudyLevel().toLowerCase());
+        const resolution = await getEffectiveLearnerLevelForViewer(userId);
+        activeLevelId = parseCefrLevelId(resolution.level.toLowerCase());
       }
 
       if (cancelled) return;

@@ -32,7 +32,7 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
   return (
     <div className="pastel-card-inset rounded-2xl p-4 flex flex-col gap-2.5 mt-1">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-kicker font-bold text-ink-muted">
+        <span className="font-kicker uppercase tracking-wider text-secondary">
           EJEMPLO
         </span>
         <ListenButton

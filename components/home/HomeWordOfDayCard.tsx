@@ -18,10 +18,9 @@ import Button from "@/components/ui/Button";
 import PastelCard from "@/components/layout/PastelCard";
 import { HeroTermExample } from "@/components/home/HeroTermExample";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { useWordOfDay } from "@/hooks/useWordOfDay";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
-import { getEffectiveLearnerLevel } from "@/lib/learner-level/client-queries";
-import { readGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { useWordOfDay } from "@/hooks/useWordOfDay";
+import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-queries";
 import { formatIpaDisplay } from "@/lib/lexicon/format-ipa";
 import { quickAddWord, toggleFavorite } from "@/lib/word-bank/queries";
 import { speakText } from "@/lib/speech/synthesis";
@@ -74,12 +73,10 @@ export default function HomeWordOfDayCard({
   useEffect(() => {
     if (profileLevel) return;
     let cancelled = false;
-    const isGuest = isAnonymousUser(user);
-    const storedLevel = isGuest
-      ? Promise.resolve(readGuestStudyLevel())
-      : (user?.id
-          ? getEffectiveLearnerLevel(user.id).then((resolved) => resolved.level)
-          : Promise.resolve(null));
+    const viewerUserId = isAnonymousUser(user) ? null : user?.id ?? null;
+    const storedLevel = getEffectiveLearnerLevelForViewer(viewerUserId)
+      .then((resolved) => resolved.level)
+      .catch(() => null);
     void storedLevel.then((l) => {
       if (!cancelled && l) setLevel(l.toLowerCase());
     });

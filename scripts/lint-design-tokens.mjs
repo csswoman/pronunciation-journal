@@ -86,6 +86,17 @@ const TEXT_SIZE_REGEX = /(?<![[\w-])text-\[(\d+(?:\.\d+)?(?:px|rem|em))\]/g;
  */
 const RAW_COLOR_REGEX = /(#(?:[0-9a-fA-F]{3,4}){1,2}\b|\brgba?\(|\bhsla?\(|\boklch\()/g;
 
+/**
+ * Rule 7 (blocking): raw color FUNCTION literal inside a Tailwind arbitrary
+ * value, e.g. bg-[oklch(0.5_0.2_250)] or border-[rgb(255,0,0)]. Rule 5 above
+ * deliberately skips anything inside -[...] brackets (that's rules 1-4's
+ * job), but rules 1-4 only check for hex there, not oklch()/rgb()/hsl() —
+ * this closes that gap. A var(--token) or color-mix(...,var(--token),...)
+ * reference inside the bracket is fine and not flagged.
+ */
+const ARBITRARY_COLOR_FN_REGEX =
+  /-\[(?:[a-z-]+:)?(oklch|rgba?|hsla?)\([^\]]*\]/g;
+
 /** Files/globs allowed to contain raw color literals (design tokens, brand assets, user palettes). */
 const RAW_COLOR_ALLOWLIST = new Set([
   "app/layout.tsx",
@@ -223,6 +234,19 @@ function collectViolations(filePath, content) {
       }
     }
 
+    // Rule 7 — oklch()/rgb()/hsl() literal inside a Tailwind arbitrary value
+    let colorFnMatch;
+    ARBITRARY_COLOR_FN_REGEX.lastIndex = 0;
+    while ((colorFnMatch = ARBITRARY_COLOR_FN_REGEX.exec(line)) !== null) {
+      if (colorFnMatch[0].includes("var(--")) continue; // color-mix(...) wrapping a token is fine
+      addViolation(
+        "arbitrary-color-fn",
+        i,
+        colorFnMatch[0],
+        `${colorFnMatch[1]}(...) inside a Tailwind arbitrary value. Use a CSS variable (var(--token)) instead.`,
+      );
+    }
+
     // Rule 5 — raw color literal outside Tailwind brackets / token files
     // (test fixtures legitimately use arbitrary literal values as mock data)
     const relFile = relative(ROOT, filePath).replace(/\\/g, "/");
@@ -299,6 +323,7 @@ const RULE_LABELS = {
   "off-grid-spacing": "Off-grid spacing",
   "arbitrary-radius": "Arbitrary border radius",
   "raw-color": "Raw color literal",
+  "arbitrary-color-fn": "Color function in arbitrary value",
 };
 
 const RULE_COLORS = {
@@ -307,6 +332,7 @@ const RULE_COLORS = {
   "off-grid-spacing": "\x1b[33m",    // yellow
   "arbitrary-radius": "\x1b[36m",   // cyan
   "raw-color": "\x1b[31m",          // red
+  "arbitrary-color-fn": "\x1b[31m", // red
 };
 
 const RESET = "\x1b[0m";

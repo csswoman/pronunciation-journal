@@ -37,7 +37,7 @@ export default function HomeActivationStrip({
       <div className="min-w-0 flex flex-col gap-1.5">
         <h2
           id="home-activation-title"
-          className="text-h3 font-bold text-balance text-fg"
+          className="font-heading text-h3 font-bold text-balance text-fg"
         >
           Una práctica ahora — sin cuenta
         </h2>

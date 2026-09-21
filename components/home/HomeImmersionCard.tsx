@@ -10,6 +10,7 @@
 
 import { useState } from "react";
 import { Video, Headphones, BookOpen, Check, ArrowRight } from "@/components/icons";
+import Chip from "@/components/ui/Chip";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
 import { logExternalImmersion, immersionXpForMinutes } from "@/lib/immersion/external-log";
 import type { ImmersionMediaType } from "@/lib/progress/activity-types";
@@ -95,15 +96,9 @@ export default function HomeImmersionCard({ summary = null }: Props) {
           </p>
         </div>
 
-        {registeredXp !== null ? (
-          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
-            +{registeredXp} XP
-          </span>
-        ) : (
-          <span className="inline-flex items-center rounded-full bg-mint px-2.5 py-1 font-mono text-caption font-bold text-ink shadow-xs shrink-0 select-none">
-            +{immersionXpForMinutes(minutes)} XP
-          </span>
-        )}
+        <Chip variant="mint" className="shrink-0">
+          +{registeredXp !== null ? registeredXp : immersionXpForMinutes(minutes)} XP
+        </Chip>
       </div>
 
       {/* Chips con circulo de icono pastel */}

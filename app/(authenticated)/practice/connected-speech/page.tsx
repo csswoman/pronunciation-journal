@@ -24,7 +24,7 @@ export default function ConnectedSpeechPage() {
 
       <header className="page-header w-full">
         <span className="font-kicker text-primary">Fluidez & Comprensión Auditiva</span>
-        <h1 className="text-h1 text-fg mt-1">Habla Conectada y Enlaces</h1>
+        <h1 className="font-heading text-h1 font-bold text-fg mt-1">Habla Conectada y Enlaces</h1>
         <p className="text-body text-fg-muted max-w-2xl text-pretty mt-1">
           En inglés nativo las palabras nunca se pronuncian aisladas. Aprende cómo se encadenan
           las consonantes finales con las vocales siguientes para entender a los nativos a velocidad real.

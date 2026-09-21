@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .field { display: flex; flex-direction: column; gap: 7px }
+    .field > span { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--muted) }
+    .input { height: 52px; padding: 0 16px; border-radius: 14px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 16px; display: flex; align-items: center }
+    .ico { width: 56px; height: 56px; border-radius: 14px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; border: 0; cursor: pointer }
+    .sw { width: 46px; height: 46px; border-radius: 14px; border: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #12151c }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1100px; height: 880px; box-sizing: border-box; padding: 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; align-items: center; justify-content: center; position: relative;">
+
+  <div style="position: absolute; inset: 0; background: rgba(13,16,24,.55);"></div>
+
+  <div role="dialog" aria-label="Editar mazo" style="position: relative; width: 640px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.border}}, 0 20px 60px rgba(0,0,0,.45); border-radius: 28px; padding: 26px 28px 22px; display: flex; flex-direction: column; gap: 20px;">
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <h2 class="num" style="margin: 0; flex-grow: 1; font-size: 28px; color: {{t.textStrong}};">Editar mazo</h2>
+      <button aria-label="Cerrar" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: {{t.raised}}; color: {{t.text}}; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+    </div>
+
+    <!-- Vista previa en vivo -->
+    <div style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 20px; background: #cbbcf5; color: #12151c;">
+      <span style="width: 52px; height: 52px; border-radius: 16px; background: rgba(18,21,28,.12); display: flex; align-items: center; justify-content: center;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      </span>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 19px; font-weight: 700;">Creativity Mind</span>
+        <span style="font-size: 14px; color: #4a5263;">12 palabras · 3 para repasar hoy</span>
+      </div>
+      <span style="padding: 5px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600;">Así se verá</span>
+    </div>
+
+    <div class="field">
+      <span>NOMBRE</span>
+      <div class="input" style="outline: 3px solid {{accent}}; outline-offset: 2px; color: {{t.textStrong}}; font-weight: 600;">Creativity Mind</div>
+    </div>
+
+    <div class="field">
+      <span>DESCRIPCIÓN · OPCIONAL</span>
+      <div class="input" style="height: 76px; align-items: flex-start; padding: 14px 16px; color: {{t.muted}}; font-size: 15px;">Para qué usas este mazo…</div>
+    </div>
+
+    <div class="field">
+      <span>ICONO</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <button class="ico" aria-label="Chispa" aria-pressed="true" style="background: #12151c; color: #ffffff; box-shadow: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+        <button class="ico" aria-label="Libro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></button>
+        <button class="ico" aria-label="Código"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 8-5 4 5 4M15 8l5 4-5 4"></path></svg></button>
+        <button class="ico" aria-label="Maletín"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path></svg></button>
+        <button class="ico" aria-label="Casa"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path></svg></button>
+        <button class="ico" aria-label="Avión"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M10 3 4 13l-2-1v4l3 1 1 3h4l-1-2 10-6a2 2 0 0 0-2-3l-4 2-2-8z"></path></svg></button>
+        <button class="ico" aria-label="Micrófono"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg></button>
+        <button class="ico" aria-label="Música"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 18V5l10-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></svg></button>
+        <button class="ico" aria-label="Globo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"></path></svg></button>
+        <button class="ico" aria-label="Diana"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span>COLOR</span>
+      <div style="display: flex; gap: 10px;">
+        <button class="sw" aria-label="Azul cielo" style="background: #b9d3fb;"></button>
+        <button class="sw" aria-label="Amarillo" style="background: #f8e08e;"></button>
+        <button class="sw" aria-label="Coral" style="background: #f7b7a6;"></button>
+        <button class="sw" aria-label="Lila" aria-pressed="true" style="background: #cbbcf5; box-shadow: 0 0 0 3px {{t.surface}}, 0 0 0 5px {{t.text}};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></button>
+        <button class="sw" aria-label="Menta" style="background: #a8e6c9;"></button>
+        <span style="flex-grow: 1;"></span>
+        <span style="align-self: center; font-size: 13px; color: {{t.muted}};">El color del mazo no cambia con tu tema.</span>
+      </div>
+    </div>
+
+    <div style="height: 1px; background: {{t.border}};"></div>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button style="height: 46px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: {{t.muted}}; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg>Eliminar mazo</button>
+      <span style="flex-grow: 1;"></span>
+      <button style="height: 48px; padding: 0 20px; border: 0; border-radius: 999px; background: {{t.raised}}; box-shadow: inset 0 0 0 1px {{t.borderStrong}}; color: {{t.text}}; font-size: 15px; font-weight: 600;">Cancelar</button>
+      <button style="height: 48px; padding: 0 24px; border: 0; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 15px; font-weight: 700;">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1100,"height":880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

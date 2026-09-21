@@ -12,6 +12,7 @@
 import Link from "next/link";
 import { ArrowRight, Check, Lock } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
+import Chip from "@/components/ui/Chip";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
 import {
   localizeDailyStepSubtitle,
@@ -62,7 +63,7 @@ export default function HomeHeroStepList({
               className={cn(
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-sm font-bold select-none transition-colors",
                 isCurrent
-                  ? "bg-ink text-paper"
+                  ? "bg-paper text-accent"
                   : isDone
                     ? "bg-success/10 border border-success/20 text-success"
                     : "bg-ink/10 text-ink-secondary group-hover:text-ink"
@@ -100,11 +101,7 @@ export default function HomeHeroStepList({
                   </span>
                 ) : (
                   <div className="flex items-center gap-2 shrink-0">
-                    {isCurrent ? (
-                      <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-sans text-caption font-bold text-on-primary select-none">
-                        En curso
-                      </span>
-                    ) : null}
+                    {isCurrent ? <Chip variant="status">En curso</Chip> : null}
                     {step.id === "journal_entry" || step.href === "/journal" ? (
                       <Badge label="Opcional" variant="neutral" size="sm" />
                     ) : null}
