@@ -2,6 +2,7 @@ import type { DailySelectionReason, DailyStep } from '@/lib/practice/types'
 import type { Sound } from '@/lib/phoneme-practice/types'
 import type { UserLearningState } from '@/lib/ai-practice/learning-state'
 import { pickSeedSound } from './selectors'
+import { theoryTopicForMiniLessonStepId } from './mini-lesson-step'
 
 export function targetRefsForStep(
   step: DailyStep,
@@ -22,6 +23,9 @@ export function targetRefsForStep(
   }
   if (step.kind === 'reader') {
     return step.readerPassage ? [`reader:${step.readerPassage.id}`] : [step.id]
+  }
+  if (step.kind === 'concept' && step.id.startsWith('mini_lesson:')) {
+    return [theoryTopicForMiniLessonStepId(step.id) ?? step.id]
   }
   if (step.kind === 'study_deck' || step.kind === 'concept' || step.kind === 'immersion_lesson') return [step.id]
   // Cluster-keyed, not sound-keyed: the ref must name the cluster so the plan is
@@ -51,7 +55,7 @@ export function reasonForStep(
   // 'variety' (la última prioridad) nunca entraba en el plan.
   if (step.kind === 'word_intro') return 'word_new'
   if (options.hasProgress && ['phoneme_focus', 'minimal_pairs', 'listening'].includes(step.kind)) return 'weak_target'
-  if (step.kind === 'study_deck' || step.kind === 'reader' || step.kind === 'immersion_lesson') return 'route_next'
+  if (step.kind === 'study_deck' || step.kind === 'reader' || step.kind === 'immersion_lesson' || step.kind === 'concept') return 'route_next'
   if (step.kind === 'word_review' && options.hasSavedOrFamiliar) return 'saved_intent'
   return 'variety'
 }

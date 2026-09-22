@@ -593,6 +593,15 @@
   transition: color 0.15s ease;
 }
 
+.mini-lessons__section-label {
+  margin-block-end: var(--space-2);
+  font-size: var(--text-size-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
 .mini-lessons__toolbar-reset {
   min-height: 2.75rem;
   padding-inline: var(--space-2);

@@ -25,7 +25,7 @@ fila al terminar.
 | 014 | El placement de invitado llega a la cuenta; fallos visibles | P2 | S | 007 | DONE (rama `advisor/014-guest-claim`) |
 | 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | DONE |
 | 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | TODO |
-| 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | TODO |
+| 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | DONE |
 | 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | TODO |
 | 019 | SRS de chunks y frases del sistema sincroniza vía outbox | P3 | L | — | TODO |
 

@@ -31,6 +31,7 @@ import {
 import { buildDailyCandidateSteps } from './daily-steps-builder'
 import { resolveDiagnosticPrescriptionTarget } from './diagnostic-prescription'
 import { buildImmersionLessonStep } from './immersion-step'
+import { buildMiniLessonStep } from './mini-lesson-step'
 import { buildEdClusterDrillStep } from './ed-drill-step'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { loadDailyChunkIntroStep, loadDueChunkReviewStep, loadPronunciationDifficultyChunkStep, markPronunciationDifficultyRouted } from '@/lib/chunk-of-day/queries'
@@ -169,6 +170,8 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     wordIndex,
   })
 
+  const miniLessonStep = buildMiniLessonStep(weakTopic, completedLessonIds)
+
   const preferImmersionTopic = weakTopic ?? (studyDeckStep?.id ? studyDeckStep.id.replace(/^study_deck:/, '') : undefined)
   const watchedImmersionIds = await loadWatchedImmersionLessonIds(userId).catch(() => new Set<string>())
   const immersionStep = await buildImmersionLessonStep(activeLevel, watchedImmersionIds, dayOfYear(), preferImmersionTopic)
@@ -224,6 +227,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     ...steps,
     ...(grammarStep ? [grammarStep] : []),
     ...(studyDeckStep ? [studyDeckStep] : []),
+    ...(miniLessonStep ? [miniLessonStep] : []),
     ...(immersionStep ? [immersionStep] : []),
     ...(missionAllowedToday && missionStep ? [missionStep] : []),
   ].map((step) =>

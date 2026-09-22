@@ -23,6 +23,8 @@ import {
   type MiniLesson,
   type LanguageConcept,
 } from "./schemas";
+import type { CefrLevelId } from "@/lib/courses/types";
+import { miniLessonCefrLevel } from "./mini-lesson-order";
 
 const LESSONS_DIR = path.join(process.cwd(), "public", "lessons");
 const MINI_LESSONS_DIR = path.join(process.cwd(), "public", "mini-lessons");
@@ -69,6 +71,16 @@ export async function getLessonBySlug(slug: string): Promise<LessonContent | nul
 /** Mini-lesson card metadata + short body for a slug. */
 export async function getMiniLessonBySlug(slug: string): Promise<MiniLesson | null> {
   return validate(MiniLessonSchema, readJson(MINI_LESSONS_DIR, slug), `mini-lesson "${slug}"`);
+}
+
+/**
+ * CEFR level for a mini-lesson, derived from its equivalent deck slug's
+ * prefix (authored in MINI_LESSON_EQUIVALENT_DECKS). Mini-lessons without an
+ * equivalence, or whose deck has no CEFR prefix (e.g. `cs-*`), have no CEFR
+ * level — they stay in the general/connected-speech section of the catalog.
+ */
+export function miniLessonLevel(slug: string): CefrLevelId | null {
+  return miniLessonCefrLevel(slug);
 }
 
 /** Every lesson slug — for `generateStaticParams` and listings. */
