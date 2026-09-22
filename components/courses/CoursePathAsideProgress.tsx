@@ -16,7 +16,8 @@ import PastelCard from "@/components/layout/PastelCard";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
-import type { CoursePathLevel, CoursePathTrackId } from "@/lib/courses/types";
+import { useLearnerLevelId } from "@/hooks/useLearnerLevelId";
+import type { CefrLevelId, CoursePathLevel, CoursePathTrackId } from "@/lib/courses/types";
 
 interface CoursePathAsideProgressProps {
   level: CoursePathLevel;
@@ -54,6 +55,8 @@ export default function CoursePathAsideProgress({
   const percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   const remainingLessons = Math.max(0, totalCount - completedCount);
   const [userId, setUserId] = useState<string | null>(null);
+  const learnerLevelId = useLearnerLevelId(selectedLevelId as CefrLevelId);
+  const isNavigatingOwnLevel = learnerLevelId === selectedLevelId;
 
   useEffect(() => {
     let cancelled = false;
@@ -196,7 +199,9 @@ export default function CoursePathAsideProgress({
         </div>
 
         <h4 className="text-2xl sm:text-3xl font-bold tracking-tight text-fg leading-tight font-display text-balance">
-          Checkpoint · {level.title}
+          {isNavigatingOwnLevel
+            ? `Checkpoint · ${level.title}`
+            : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
         </h4>
 
         {/* Milestone Progress Bar */}
@@ -215,7 +220,7 @@ export default function CoursePathAsideProgress({
 
         <div>
           <Link
-            href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
+            href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
             className="bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 rounded-full px-6 py-3 text-sm font-bold inline-flex items-center gap-2.5 transition-colors no-underline shadow-xs font-display"
           >
             <span>Ir al Checkpoint</span>
