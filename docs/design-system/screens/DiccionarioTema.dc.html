@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .hd { display: grid; grid-template-columns: 210px 150px minmax(0,1fr) 92px 74px 34px; gap: 14px; align-items: center; padding: 0 14px 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--muted) }
+    .rw { display: grid; grid-template-columns: 210px 150px minmax(0,1fr) 92px 74px 34px; gap: 14px; align-items: center; padding: 10px 14px; border-radius: 14px; color: var(--text); text-decoration: none; border-top: 1px solid var(--border) }
+    .rw:hover { background: var(--raised) }
+    .rw--on { background: var(--raised); border-top-color: transparent; box-shadow: inset 0 0 0 2px var(--borderStrong) }
+    .dif { display: flex; gap: 3px }
+    .dif span { width: 9px; height: 9px; border-radius: 50%; background: var(--border) }
+    .dif span.on { background: var(--text) }
+    .mini { width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer }
+    .letter { padding: 10px 14px 4px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px; color: var(--muted) }
+    .az { display: flex; flex-direction: column; gap: 1px }
+    .az span { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; cursor: pointer }
+    .az span.on { color: var(--text) }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1080px; box-sizing: border-box; padding: 30px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 18px;">
+
+  <!-- Cabecera del tema -->
+  <section class="card neutral" style="gap: 14px; padding: 22px 24px;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span class="plate" style="width: 58px; height: 58px; border-radius: 18px; background: #b9d3fb; color: #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="30" height="30" viewBox="0 0 48 48" fill="none" stroke="#12151c" stroke-width="2.4" stroke-linejoin="round"><rect x="12" y="14" width="24" height="20" rx="6"></rect><circle cx="19" cy="24" r="2.4" fill="#12151c"></circle><circle cx="29" cy="24" r="2.4" fill="#12151c"></circle><path d="M24 8v6M9 22H6M42 22h-3M20 34v5M28 34v5" stroke-linecap="round"></path></svg>
+      </span>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px;">
+        <span style="font-size: 13px; color: {{t.muted}};">Diccionario · Ingeniería</span>
+        <h1 class="num" style="margin: 0; font-size: 34px; line-height: 35px; color: {{t.textStrong}};">Inteligencia artificial</h1>
+        <span style="font-size: 15px; color: {{t.muted}};">Vocabulario de modelos, entrenamiento y producto de IA · objetivo: reconocer</span>
+      </div>
+      <button class="btn-acc" style="height: 52px; padding: 0 24px; font-size: 16px;">Practicar el tema
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; height: 14px; border-radius: 999px; overflow: hidden; gap: 2px; background: {{t.border}};">
+          <span style="width: 1%; background: #12151c;"></span>
+          <span style="width: 2%; background: #ee9f8b;"></span>
+        </div>
+        <div style="display: flex; gap: 14px; font-size: 13px;">
+          <span style="display: inline-flex; align-items: center; gap: 7px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #12151c;"></span>Aprendidas 0</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #ee9f8b;"></span>En repaso 1</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; color: {{t.muted}};"><span style="width: 10px; height: 10px; border-radius: 3px; background: {{t.border}};"></span>Nuevas 81</span>
+        </div>
+      </div>
+      <span class="num" style="font-size: 30px; color: {{t.textStrong}};">1 <span style="font-size: 16px; font-weight: 600; color: {{t.muted}};">de 82</span></span>
+    </div>
+  </section>
+
+  <!-- Barra de herramientas -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <label class="sfield" style="width: 260px; height: 42px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex-grow: 1; font-size: 14px;">Buscar en este tema…</span>
+    </label>
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none;">
+      <button class="tab tab--on" style="font-size: 14px;">Todas 82</button><button class="tab" style="font-size: 14px;">Nuevas 81</button><button class="tab" style="font-size: 14px;">En repaso 1</button><button class="tab" style="font-size: 14px;">Aprendidas 0</button>
+    </div>
+    <span style="flex-grow: 1;"></span>
+    <span style="font-size: 13px; color: {{t.muted}};">Orden</span>
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none; padding: 3px;">
+      <button class="tab tab--on" style="font-size: 13px; padding: 7px 12px;">A–Z</button><button class="tab" style="font-size: 13px; padding: 7px 12px;">Dificultad</button><button class="tab" style="font-size: 13px; padding: 7px 12px;">Sin ver</button>
+    </div>
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none; padding: 3px;">
+      <button class="tab tab--on" aria-label="Vista de lista" style="padding: 7px 10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+      <button class="tab" aria-label="Vista de fichas" style="padding: 7px 10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg></button>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: 22px minmax(0, 1fr) 400px; gap: 16px; align-items: start;">
+
+    <!-- Índice alfabético -->
+    <div class="az" style="padding-top: 40px;">
+      <span class="on">A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span><span>L</span><span>M</span><span>N</span><span>O</span><span>P</span><span>R</span><span>S</span><span>T</span><span>V</span><span>W</span>
+    </div>
+
+    <!-- Lista -->
+    <section class="card neutral" style="padding: 14px 10px; gap: 0;">
+      <div class="hd"><span>PALABRA</span><span>TRADUCCIÓN</span><span>DEFINICIÓN</span><span>ESTADO</span><span>DIFICULTAD</span><span></span></div>
+      <span class="letter">A</span>
+
+      <a href="#" class="rw rw--on" style="border-top: 0;">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">aggregation</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/ˌæɡrɪˈɡeɪʃən/</span></span>
+        <span style="font-size: 14px;">agregación</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Combinar varios datos en un solo valor resumen.</span>
+        <span><span style="padding: 3px 9px; border-radius: 999px; background: #ee9f8b; color: #12151c; font-size: 12px; font-weight: 700;">en repaso</span></span>
+        <span class="dif"><span class="on"></span><span></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">anomaly detection</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/əˈnɑːməli dɪˈtɛkʃən/</span></span>
+        <span style="font-size: 14px;">detección de anomalías</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Identificar datos que se desvían del patrón esperado.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">arithmetic mean</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/ˌærɪθˈmɛtɪk miːn/</span></span>
+        <span style="font-size: 14px;">media aritmética</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">La suma de todos los valores dividida por su cantidad.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">array</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/əˈreɪ/</span></span>
+        <span style="font-size: 14px;">arreglo, matriz</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Colección ordenada de elementos del mismo tipo.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">attention</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/əˈtɛnʃən/</span></span>
+        <span style="font-size: 14px;">atención</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Mecanismo que pesa qué partes de la entrada importan más.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <span class="letter">B</span>
+
+      <a href="#" class="rw" style="border-top: 0;">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">backpropagation</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/ˌbækprɑːpəˈɡeɪʃən/</span></span>
+        <span style="font-size: 14px;">retropropagación</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ajustar los pesos según el error, capa por capa hacia atrás.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">batch size</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/bætʃ saɪz/</span></span>
+        <span style="font-size: 14px;">tamaño de lote</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Cuántos ejemplos se procesan antes de actualizar el modelo.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <a href="#" class="rw">
+        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 16px; font-weight: 700;">bias</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/ˈbaɪəs/</span></span>
+        <span style="font-size: 14px;">sesgo</span>
+        <span style="font-size: 14px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Desviación sistemática en los datos o en las predicciones.</span>
+        <span><span class="chip-n" style="font-size: 12px;">nueva</span></span>
+        <span class="dif"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+        <button class="mini" aria-label="Escuchar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px 2px; border-top: 1px solid {{t.border}};">
+        <span style="font-size: 13px; color: {{t.muted}};">8 de 82 · sigue bajando para ver el resto</span>
+        <span style="flex-grow: 1;"></span>
+        <button class="btn-n" style="height: 36px; font-size: 13px;">Marcar las visibles como aprendidas</button>
+      </div>
+    </section>
+
+    <!-- Detalle -->
+    <section class="card coral" style="gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-ink">PALABRA</span>
+        <span class="chip-t">sustantivo</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="padding: 5px 12px; border-radius: 999px; background: #ee9f8b; font-size: 13px; font-weight: 700;">en repaso</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+          <span class="num" style="font-size: 40px; line-height: 41px;">aggregation</span>
+          <span class="ipa" style="font-size: 18px; color: #2c3445;">/ˌæɡrɪˈɡeɪʃən/</span>
+        </div>
+        <button aria-label="Escuchar la palabra" style="width: 54px; height: 54px; border: 0; border-radius: 50%; background: #12151c; color: #f7b7a6; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+      </div>
+      <span style="font-size: 18px; font-weight: 700;">agregación</span>
+      <div class="inset" style="gap: 8px;">
+        <span class="lbl-ink">EN INGLÉS</span>
+        <span style="font-size: 15px;">Combining multiple data points into a single summary value such as a sum, mean, or count.</span>
+      </div>
+      <div class="inset" style="gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="lbl-ink">EN CONTEXTO</span>
+          <button aria-label="Escuchar el ejemplo" style="width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(18,21,28,.10); color: #12151c; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6"></path></svg></button>
+        </div>
+        <span style="font-size: 15px;">The dashboard runs an <strong>aggregation</strong> over the last 30 days.</span>
+        <span style="font-size: 14px; color: #4a5263;">El panel hace una agregación de los últimos 30 días.</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px; color: #4a5263;">Dificultad</span>
+        <span class="dif"><span class="on" style="background: #12151c;"></span><span style="background: rgba(18,21,28,.2);"></span><span style="background: rgba(18,21,28,.2);"></span><span style="background: rgba(18,21,28,.2);"></span><span style="background: rgba(18,21,28,.2);"></span></span>
+        <span style="flex-grow: 1;"></span>
+        <span style="font-size: 14px; color: #4a5263;">vuelve en 2 días</span>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-ink" style="height: 46px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg>Ya la sé</button>
+        <button class="btn-out" style="height: 46px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+        <button class="btn-out" style="height: 46px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>A un mazo</button>
+      </div>
+      <span style="font-size: 13px; color: #4a5263;">Usa ↑ ↓ para moverte por la lista y Espacio para escuchar.</span>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

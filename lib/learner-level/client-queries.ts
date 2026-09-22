@@ -1,5 +1,6 @@
-import { db, ensureDbReady } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { readGuestStudyLevel } from '@/lib/preferences/guest-study-level'
+import { normalizeCEFR } from '@/lib/exercises/cefr'
 import { resolveLearnerLevel, type LearnerLevelResolution } from './core'
 
 type ProfileLevelRow = {
@@ -8,35 +9,37 @@ type ProfileLevelRow = {
   cefr_level_updated_at?: string | null
 }
 
-async function loadProfileLevel(userId: string): Promise<ProfileLevelRow | null> {
+async function loadProfileLevel(userId: string): Promise<{ profile: ProfileLevelRow | null; readFailed: boolean }> {
   const supabase = getSupabaseBrowserClient()
   const current = await supabase
     .from('user_profiles')
     .select('cefr_level, cefr_level_source, cefr_level_updated_at')
     .eq('id', userId)
     .maybeSingle()
-  if (!current.error) return current.data
-
-  const legacy = await supabase
-    .from('user_profiles')
-    .select('cefr_level')
-    .eq('id', userId)
-    .maybeSingle()
-  return legacy.error ? null : legacy.data
+  return { profile: current.data, readFailed: Boolean(current.error) }
 }
 
 export async function getEffectiveLearnerLevel(userId: string): Promise<LearnerLevelResolution> {
-  await ensureDbReady().catch(() => undefined)
-  const [profile, local] = await Promise.all([
-    loadProfileLevel(userId).catch(() => null),
-    db.learningState.get(userId).catch(() => undefined),
-  ])
+  const profileResult = await loadProfileLevel(userId).catch(() => ({ profile: null, readFailed: true }))
 
   return resolveLearnerLevel({
-    profileLevel: profile?.cefr_level,
-    profileSource: profile?.cefr_level_source,
-    profileUpdatedAt: profile?.cefr_level_updated_at,
-    practiceLevel: local?.state.level.cefrEstimate,
-    practiceConfidence: local?.state.level.confidence,
+    profileLevel: profileResult.profile?.cefr_level,
+    profileSource: profileResult.profile?.cefr_level_source,
+    profileUpdatedAt: profileResult.profile?.cefr_level_updated_at,
+    readFailed: profileResult.readFailed,
   })
+}
+
+export async function getEffectiveLearnerLevelForViewer(
+  userId: string | null,
+  guestLevel?: string,
+): Promise<LearnerLevelResolution> {
+  if (userId) return getEffectiveLearnerLevel(userId)
+  return {
+    level: normalizeCEFR(guestLevel ?? readGuestStudyLevel()),
+    source: 'manual',
+    confidence: null,
+    isPlaced: false,
+    updatedAt: null,
+  }
 }

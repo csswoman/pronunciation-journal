@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --webpack",
+    "tokens": "tsx scripts/build-tokens.ts",
     "content-index:generate": "tsx scripts/generate-content-index.ts",
     "immersion-index:generate": "tsx --env-file-if-exists=.env.local scripts/generate-immersion-index.ts",
     "sync:engvid": "tsx --env-file-if-exists=.env.local scripts/sync-engvid-lessons.ts",
@@ -18,6 +19,7 @@
     "scan:secrets": "node scripts/scan-secrets.mjs",
     "audit:rls": "node scripts/audit-rls.mjs",
     "lint:design-tokens": "node scripts/lint-design-tokens.mjs",
+    "lint:design": "node scripts/lint-design-tokens.mjs",
     "audit:ai-prompts": "node scripts/audit-ai-prompts.mjs",
     "audit:state-duplication": "node scripts/audit-state-duplication.mjs",
     "audit:hard-rules": "npm run audit:ai-prompts && npm run audit:rls && npm run lint:design-tokens && npm run audit:state-duplication",

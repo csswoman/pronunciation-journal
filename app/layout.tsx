@@ -13,8 +13,10 @@ const figtree = Figtree({
 });
 
 // Display — hero word, page titles, headline cards — Bricolage Grotesque
+// Variable weight (not a static array) so the opsz axis ships and activates
+// automatically at display sizes, per docs/design-system/README.md §Tipografía.
 const bricolage = Bricolage_Grotesque({
-  weight: ["600", "700", "800"],
+  weight: "variable",
   subsets: ["latin", "latin-ext"],
   variable: "--font-display",
   display: "swap",

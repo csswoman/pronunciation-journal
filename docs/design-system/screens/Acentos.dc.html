@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .arow { display: grid; grid-template-columns: 120px 150px 130px 150px 130px minmax(0,1fr); gap: 14px; align-items: center; padding: 12px 14px; border-radius: 16px; border-top: 1px solid var(--border) }
+    .hd { display: grid; grid-template-columns: 120px 150px 130px 150px 130px minmax(0,1fr); gap: 14px; padding: 0 14px 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--muted) }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; width: 1240px; height: 900px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 18px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">SISTEMA DE DISEÑO</span>
+      <h1 class="num" style="margin: 0; font-size: 36px; line-height: 38px; color: {{t.textStrong}};">El acento en claro y en oscuro</h1>
+      <span style="font-size: 15px; color: {{t.muted}};">El relleno es el mismo en los dos temas. Lo que cambia son sus derivados: texto, fondo suave y borde.</span>
+    </div>
+    <span class="chip-n">cambia el tema en Tweaks</span>
+  </header>
+
+  <section class="card neutral" style="padding: 16px 10px; gap: 0;">
+    <div class="hd"><span>COLOR</span><span>RELLENO</span><span>TEXTO</span><span>FONDO SUAVE</span><span>BORDE</span><span>USO</span></div>
+    <sc-for list="{{accents}}" as="a" hint-placeholder-count="9">
+      <div class="arow">
+        <span style="display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700;"><span style="width: 26px; height: 26px; border-radius: 9px; background: {{a.fill}};"></span>{{a.name}}</span>
+        <span style="height: 40px; border-radius: 999px; background: {{a.fill}}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">Empezar</span>
+        <span style="color: {{a.text}}; font-size: 15px; font-weight: 700;">Ver el día →</span>
+        <span style="height: 34px; border-radius: 999px; background: {{a.soft}}; color: {{a.text}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">En curso</span>
+        <span style="height: 34px; border-radius: 12px; background: transparent; box-shadow: inset 0 0 0 2px {{a.border}}; display: flex; align-items: center; justify-content: center; font-size: 13px; color: {{t.muted}};">elegido</span>
+        <span style="font-size: 13px; color: {{t.muted}};">{{a.use}}</span>
+      </div>
+    </sc-for>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;">
+    <section class="card neutral compact" style="gap: 8px;">
+      <span class="lbl">RELLENO · IGUAL EN LOS DOS TEMAS</span>
+      <span style="font-size: 15px;">Los nueve acentos son tonos 600: pasan 4.5:1 con texto blanco sobre claro y sobre oscuro. Por eso el botón primario no necesita versión por tema.</span>
+      <div style="display: flex; gap: 8px; align-items: center; padding-top: 4px;">
+        <span style="height: 44px; padding: 0 18px; border-radius: 999px; background: {{fill}}; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center;">Texto blanco</span>
+        <span style="height: 44px; padding: 0 18px; border-radius: 999px; background: {{fill}}; color: #12151c; font-size: 15px; font-weight: 700; display: flex; align-items: center; opacity: .6;">nunca en tinta</span>
+      </div>
+    </section>
+
+    <section class="card neutral compact" style="gap: 8px;">
+      <span class="lbl">TEXTO · SÍ CAMBIA</span>
+      <span style="font-size: 15px;">Como texto o icono sobre el fondo, el tono 600 se queda corto en oscuro y algo justo en claro. Se aclara en oscuro y se oscurece en claro.</span>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+        <span style="font-size: 16px; font-weight: 700; color: {{text}};">accent-text · correcto</span>
+        <span style="font-size: 16px; font-weight: 700; color: {{fill}}; opacity: .85;">accent relleno como texto · evítalo</span>
+      </div>
+    </section>
+
+    <section class="card neutral compact" style="gap: 8px;">
+      <span class="lbl">FONDO SUAVE · SÍ CAMBIA</span>
+      <span style="font-size: 15px;">En claro se mezcla con blanco; en oscuro, con el fondo de la app. Siempre lleva accent-text encima, nunca blanco.</span>
+      <div style="display: flex; gap: 8px; padding-top: 4px;">
+        <span style="height: 38px; padding: 0 14px; border-radius: 999px; background: {{soft}}; color: {{text}}; font-size: 14px; font-weight: 700; display: flex; align-items: center;">En curso</span>
+        <span style="height: 38px; padding: 0 14px; border-radius: 999px; background: {{soft}}; color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; opacity: .8;">ilegible</span>
+      </div>
+    </section>
+  </div>
+
+  <section class="card sky compact" style="flex-direction: row; align-items: center; gap: 18px;">
+    <span style="width: 54px; height: 54px; border-radius: 50%; background: rgba(18,21,28,.12); color: #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v5M12 16h.01"></path><circle cx="12" cy="12" r="9"></circle></svg></span>
+    <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px;">
+      <span style="font-size: 17px; font-weight: 700;">Sobre las tarjetas pastel el acento no aparece</span>
+      <span style="font-size: 15px; color: #4a5263;">Dentro de una tarjeta de color, el botón principal va en tinta y el texto en ink. El acento solo vive sobre bg y surface.</span>
+    </div>
+    <span style="height: 44px; padding: 0 18px; border-radius: 999px; background: #12151c; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center;">Empezar · 4 min</span>
+  </section>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Rosa"},"$preview":{"width":1240,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263", mixText: "black", pText: 88, mixSoft: "white", pSoft: 14, pBorder: 45, mixBorder: "white" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4", mixText: "white", pText: 45, mixSoft: "#0d1018", pSoft: 26, pBorder: 55, mixBorder: "#0d1018" }
+    };
+    const list = [
+      ["Rojo", "#dc2626", "errores y avisos"],
+      ["Naranja", "#c2410c", "cálido, alta energía"],
+      ["Ámbar", "#b45309", "ojo: se acerca al amarillo de las tarjetas"],
+      ["Verde", "#15803d", "ojo: se acerca al menta de acierto"],
+      ["Esmeralda", "#047857", "sobrio, buen contraste"],
+      ["Turquesa", "#0e7490", "sobrio, buen contraste"],
+      ["Azul", "#2563eb", "por defecto"],
+      ["Violeta", "#7c3aed", "ojo: se acerca al lila de progreso"],
+      ["Rosa", "#be185d", "expresivo, muy legible"]
+    ];
+    const t = themes[this.props.tema] || themes.Claro;
+    const mk = (hex) => ({
+      fill: hex,
+      text: `color-mix(in oklch, ${hex} ${t.pText}%, ${t.mixText})`,
+      soft: `color-mix(in oklch, ${hex} ${t.pSoft}%, ${t.mixSoft})`,
+      border: `color-mix(in oklch, ${hex} ${t.pBorder}%, ${t.mixBorder})`
+    });
+    const current = list.find(a => a[0] === this.props.acento) || list[8];
+    const c = mk(current[1]);
+    return {
+      t: t,
+      fill: c.fill, text: c.text, soft: c.soft, border: c.border,
+      accents: list.map(([name, hex, use]) => Object.assign({ name: name, use: use }, mk(hex)))
+    };
+  }
+}
+</script>
+</body>
+</html>

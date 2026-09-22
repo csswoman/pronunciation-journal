@@ -15,11 +15,12 @@ import {
 import type { Interest } from "@/lib/users/interests";
 import { cacheUserInterests, getCachedUserInterests } from "@/lib/db";
 import type { CefrLevel } from "@/lib/essential-words/types";
+import type { LearnerLevelResolution } from "@/lib/learner-level/core";
+import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-queries";
 
 export interface UserPreferencesData {
   full_name?: string;
   avatar_url?: string;
-  cefr_level?: CefrLevel | null;
   interests?: Interest[];
 }
 
@@ -28,14 +29,19 @@ export function useUserPreferences() {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [learnerLevel, setLearnerLevel] = useState<LearnerLevelResolution | null>(null);
 
   const loadPreferences = useCallback(async () => {
     if (!user) return;
 
     try {
       setLoading(true);
-      const prefs = await getUserPreferences(user.id, user.user_metadata);
+      const [prefs, level] = await Promise.all([
+        getUserPreferences(user.id, user.user_metadata),
+        getEffectiveLearnerLevelForViewer(user.id),
+      ]);
       setPreferences(prefs);
+      setLearnerLevel(level);
       // Dexie cache is best-effort — never discard remote prefs if local DB is down.
       try {
         const { ensureDbReady } = await import("@/lib/db");
@@ -119,7 +125,7 @@ export function useUserPreferences() {
       if (!user) return;
       try {
         await applyManualCefrLevel(user.id, level);
-        setPreferences((prev) => ({ ...prev, cefr_level: level }));
+        setLearnerLevel(await getEffectiveLearnerLevelForViewer(user.id));
       } catch {
         const message = publicDataErrorMessage();
         setError(message);
@@ -144,6 +150,7 @@ export function useUserPreferences() {
 
   return {
     preferences,
+    learnerLevel,
     loading,
     error,
     updateFullName,

@@ -29,15 +29,6 @@ function getOrCreateDeviceId(): string {
   return id;
 }
 
-function accuracyToCEFR(accuracy: number): UserLearningState["level"]["cefrEstimate"] {
-  if (accuracy <= 30) return "A1";
-  if (accuracy <= 45) return "A2";
-  if (accuracy <= 60) return "B1";
-  if (accuracy <= 75) return "B2";
-  if (accuracy <= 88) return "C1";
-  return "C2";
-}
-
 export async function getUserLearningState(userId: string): Promise<UserLearningState> {
   const cached = cache.get(userId);
   if (cached && cached.expiresAt > Date.now()) {
@@ -130,8 +121,6 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
       srsWeakTopics.status === "fulfilled" ? srsWeakTopics.value : [];
 
     const avgAccuracy = resolvedStats?.averageAccuracy ?? 0;
-    const cefrEstimate = accuracyToCEFR(avgAccuracy);
-    const confidence = Math.min(1, (resolvedStats?.totalAttempts ?? 0) / 100);
 
     const savedWords = resolvedFavs.map(f => ({ word: f.word, ipa: f.ipa }));
 
@@ -156,11 +145,9 @@ async function buildUserLearningState(userId: string): Promise<UserLearningState
 
     return {
       ...base,
-      // An assessed level (stored) beats one guessed from raw accuracy: the
-      // assessment asked real questions, `accuracyToCEFR` only sees a percentage.
-      level: stored?.level
-        ? { ...stored.level, confidence: Math.max(stored.level.confidence, confidence) }
-        : { cefrEstimate, confidence },
+      // El nivel del estado es un espejo del nivel resuelto (perfil), nunca una
+      // inferencia propia. AuthProvider lo hidrata; aquí solo se conserva.
+      level: stored?.level ?? base.level,
       vocabulary: {
         knownCount: resolvedStats?.totalWords ?? 0,
         strugglingWords,

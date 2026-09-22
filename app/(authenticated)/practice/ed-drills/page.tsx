@@ -18,7 +18,7 @@ export default function EdDrillsPage() {
       </Link>
       <header className="page-header w-full">
         <span className="font-kicker text-primary">Pronunciación · Clusters finales</span>
-        <h1 className="mt-1 text-h1 text-fg">Escalera de -ed</h1>
+        <h1 className="font-heading text-h1 font-bold mt-1 text-fg">Escalera de -ed</h1>
         <p className="mt-1 max-w-2xl text-body text-fg-muted">Escucha, enlaza y conserva el pasado regular cuando el entorno se vuelve más difícil.</p>
       </header>
       <main className="w-full"><EdDrillSession /></main>

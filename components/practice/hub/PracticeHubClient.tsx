@@ -15,8 +15,7 @@ import { countWordsDueForReviewClient } from '@/lib/word-bank/queries'
 import { fetchAggregatedReviewSummaryClient } from '@/lib/review/client-queries'
 import { countDueChunks } from '@/lib/chunk-of-day/queries'
 import { getEssentialWordsLevelCount } from '@/lib/essential-words/level-count'
-import { readGuestStudyLevel } from '@/lib/preferences/guest-study-level'
-import { getEffectiveLearnerLevel } from '@/lib/learner-level/client-queries'
+import { getEffectiveLearnerLevelForViewer } from '@/lib/learner-level/client-queries'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 import { loadWatchedImmersionLessonIds } from '@/lib/immersion/progress-queries'
 import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/practice-modes'
@@ -109,11 +108,8 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
       }
 
       // Level-scoped vocabulary counts for the essential-words card.
-      const studyLevel = isAnonymousUser(user)
-        ? readGuestStudyLevel()
-        : user
-          ? (await getEffectiveLearnerLevel(user.id)).level
-          : null
+      const viewerUserId = isAnonymousUser(user) ? null : user?.id ?? null
+      const studyLevel = (await getEffectiveLearnerLevelForViewer(viewerUserId)).level
       const vocabCount = await getEssentialWordsLevelCount(
         studyLevel ? [studyLevel === 'C2' ? 'C1' : studyLevel] : null,
         user?.id,

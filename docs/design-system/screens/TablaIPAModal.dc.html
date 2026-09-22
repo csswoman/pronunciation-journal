@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .vt { border-radius: 14px; padding: 9px 6px; background: #cbbcf5; color: #12151c; border: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px }
+    .vt .s { font-family: 'Noto Sans', sans-serif; font-size: 21px; font-weight: 700; line-height: 25px }
+    .vt .w { font-size: 11px; color: #4a5263 }
+    .vt--on { background: #12151c; color: #ffffff }
+    .vt--on .w { color: rgba(255,255,255,.75) }
+    .vt--done { background: #a8e6c9 }
+    .collbl { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--muted); text-align: center }
+    .rowlbl { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: var(--muted); align-self: center }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1100px; height: 760px; box-sizing: border-box; padding: 40px; background: {{t.bg}}; display: flex; align-items: center; justify-content: center; position: relative;">
+  <div style="position: absolute; inset: 0; background: rgba(13,16,24,.55);"></div>
+
+  <div role="dialog" aria-label="Tabla IPA" style="position: relative; width: 860px; background: {{t.surface}}; color: {{t.text}}; box-shadow: inset 0 0 0 1px {{t.border}}, 0 20px 60px rgba(0,0,0,.45); border-radius: 28px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+        <span class="lbl">CONSULTA RÁPIDA</span>
+        <h2 class="num" style="margin: 0; font-size: 26px; color: {{t.textStrong}};">Tabla IPA</h2>
+      </div>
+      <a href="#" style="font-size: 14px; font-weight: 600; color: {{t.text}}; text-decoration: none; display: inline-flex; align-items: center; gap: 7px;">Abrir la página completa
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <button aria-label="Cerrar" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: {{t.raised}}; color: {{t.text}}; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="tabs" style="background: {{t.raised}}; box-shadow: none;">
+        <button class="tab tab--on" style="font-size: 14px;">Vocales 11</button><button class="tab" style="font-size: 14px;">Consonantes 24</button><button class="tab" style="font-size: 14px;">Diptongos 5</button>
+      </div>
+      <span style="flex-grow: 1;"></span>
+      <label class="sfield" style="width: 220px; height: 42px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span style="flex-grow: 1; font-size: 14px;">Buscar…</span>
+      </label>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 76px repeat(3, minmax(0, 1fr)); gap: 8px;">
+      <span></span><span class="collbl">ANTERIOR</span><span class="collbl">CENTRAL</span><span class="collbl">POSTERIOR</span>
+      <span class="rowlbl">CERRADA</span>
+      <button class="vt vt--on"><span class="s">iː</span><span class="w">see</span></button><span></span><button class="vt"><span class="s">uː</span><span class="w">moon</span></button>
+      <span class="rowlbl">CASI CERR.</span>
+      <button class="vt"><span class="s">ɪ</span><span class="w">sit</span></button><span></span><button class="vt"><span class="s">ʊ</span><span class="w">book</span></button>
+      <span class="rowlbl">MEDIA</span>
+      <span></span><button class="vt"><span class="s">ə</span><span class="w">about</span></button><span></span>
+      <span class="rowlbl">MEDIA AB.</span>
+      <button class="vt"><span class="s">ɛ</span><span class="w">bed</span></button><button class="vt"><span class="s">ɜr</span><span class="w">bird</span></button><button class="vt"><span class="s">ɔ</span><span class="w">law</span></button>
+      <span class="rowlbl">ABIERTA</span>
+      <button class="vt vt--done"><span class="s">æ</span><span class="w">cat</span></button><button class="vt"><span class="s">ʌ</span><span class="w">cup</span></button><button class="vt"><span class="s">ɑː</span><span class="w">father</span></button>
+    </div>
+
+    <div class="card lilac compact" style="flex-direction: row; align-items: center; gap: 14px;">
+      <span class="ipa" style="font-size: 34px; font-weight: 700;">/iː/</span>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+        <span style="font-size: 15px; font-weight: 600;">Como la <strong>ee</strong> de <strong>see</strong>: lengua alta y adelante, labios estirados.</span>
+        <div style="display: flex; gap: 5px; flex-wrap: wrap; padding-top: 4px;">
+          <span class="wpill"><i><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>see</span>
+          <span class="wpill"><i><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>tree</span>
+          <span class="wpill"><i><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>key</span>
+        </div>
+      </div>
+      <button aria-label="Escuchar el sonido" style="width: 50px; height: 50px; border: 0; border-radius: 50%; background: #12151c; color: #cbbcf5; display: flex; align-items: center; justify-content: center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+      <button class="btn-ink" style="height: 44px;">Practicar</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1100,"height":760}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

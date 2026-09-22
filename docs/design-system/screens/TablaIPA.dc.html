@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .vt { border-radius: 16px; padding: 12px 8px; background: #cbbcf5; color: #12151c; border: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px }
+    .vt .s { font-family: 'Noto Sans', sans-serif; font-size: 26px; font-weight: 700; line-height: 30px }
+    .vt .w { font-size: 12px; color: #4a5263 }
+    .vt--on { background: #12151c; color: #ffffff }
+    .vt--on .w { color: rgba(255,255,255,.75) }
+    .vt--done { background: #a8e6c9 }
+    .rowlbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--muted); align-self: center }
+    .collbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--muted); text-align: center }
+    .dtile { border-radius: 18px; padding: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); display: flex; flex-direction: column; gap: 6px }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1180px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">REFERENCIA · PRONUNCIACIÓN</span>
+      <h1 class="num" style="margin: 0; font-size: 44px; line-height: 46px; color: {{t.textStrong}};">Tabla IPA del inglés</h1>
+      <span style="font-size: 16px; color: {{t.muted}};">40 sonidos con audio, boca y ejemplos. Cada uno con su enlace propio.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 12px;">
+      <div class="tabs">
+        <button class="tab tab--on">Vocales <span style="opacity: .7;">11</span></button><button class="tab">Consonantes <span style="color: {{t.muted}};">24</span></button><button class="tab">Diptongos <span style="color: {{t.muted}};">5</span></button>
+      </div>
+      <label class="sfield" style="width: 280px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span style="flex-grow: 1;">Buscar sonido o palabra…</span>
+      </label>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 22px; align-items: start;">
+
+    <!-- Cuadro de vocales -->
+    <section class="card neutral" style="gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span class="lbl">DÓNDE SE ARTICULA</span>
+        <span style="flex-grow: 1;"></span>
+        <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #cbbcf5;"></span>por practicar</span>
+        <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #a8e6c9;"></span>dominado</span>
+        <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #12151c;"></span>abierto</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 92px repeat(3, minmax(0, 1fr)); gap: 10px;">
+        <span></span>
+        <span class="collbl">ANTERIOR</span><span class="collbl">CENTRAL</span><span class="collbl">POSTERIOR</span>
+
+        <span class="rowlbl">CERRADA</span>
+        <button class="vt vt--on"><span class="s">iː</span><span class="w">see</span></button>
+        <span></span>
+        <button class="vt"><span class="s">uː</span><span class="w">moon</span></button>
+
+        <span class="rowlbl">CASI CERRADA</span>
+        <button class="vt"><span class="s">ɪ</span><span class="w">sit</span></button>
+        <span></span>
+        <button class="vt"><span class="s">ʊ</span><span class="w">book</span></button>
+
+        <span class="rowlbl">MEDIA</span>
+        <span></span>
+        <button class="vt"><span class="s">ə</span><span class="w">about</span></button>
+        <span></span>
+
+        <span class="rowlbl">MEDIA ABIERTA</span>
+        <button class="vt"><span class="s">ɛ</span><span class="w">bed</span></button>
+        <button class="vt"><span class="s">ɜr</span><span class="w">bird</span></button>
+        <button class="vt"><span class="s">ɔ</span><span class="w">law</span></button>
+
+        <span class="rowlbl">ABIERTA</span>
+        <button class="vt vt--done"><span class="s">æ</span><span class="w">cat</span></button>
+        <button class="vt"><span class="s">ʌ</span><span class="w">cup</span></button>
+        <button class="vt"><span class="s">ɑː</span><span class="w">father</span></button>
+      </div>
+
+      <span style="font-size: 13px; color: {{t.muted}};">La posición en el cuadro indica dónde va la lengua: arriba o abajo, delante o detrás.</span>
+    </section>
+
+    <!-- Panel de detalle -->
+    <section class="card lilac" style="gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-ink">VOCAL</span>
+        <span class="chip-t">tensa · larga</span>
+        <span style="flex-grow: 1;"></span>
+        <span class="chip-t">Fácil para ti</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span class="ipa" style="flex-grow: 1; font-size: 54px; font-weight: 700; line-height: 56px;">/iː/</span>
+        <button aria-label="Escuchar el sonido" style="width: 58px; height: 58px; border: 0; border-radius: 50%; background: #12151c; color: #cbbcf5; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+      </div>
+      <span style="font-size: 17px;">Como la <strong>ee</strong> de <strong>see</strong>: cerrada, anterior y sin redondear los labios.</span>
+
+      <div class="inset" style="flex-direction: row; gap: 12px; align-items: stretch;">
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+          <span class="lbl-ink" style="align-self: flex-start;">LENGUA Y PALADAR</span>
+          <svg width="170" height="130" viewBox="0 0 200 150" fill="none" aria-label="Perfil de la lengua">
+            <path d="M28 138c-12-42 0-84 34-104 30-18 68-12 86 12 10 14 10 30 2 42l12 8-12 8 6 12-16 2-4 14" stroke="#12151c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M52 86c22-12 50-14 72-8" stroke="#12151c" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round"></path>
+            <path d="M52 124c16-6 40-12 58-26 8-6 12-14 10-22-18 8-44 16-60 24-8 4-12 16-8 24z" fill="#b9d3fb" stroke="#12151c" stroke-width="2.5" stroke-linejoin="round"></path>
+            <circle cx="118" cy="80" r="5" fill="#12151c"></circle>
+            <path d="M138 96h16" stroke="#12151c" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+          <span style="font-size: 13px; color: #4a5263;">Lengua alta y adelante</span>
+        </div>
+        <span style="width: 1px; background: rgba(18,21,28,.18);"></span>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+          <span class="lbl-ink" style="align-self: flex-start;">LABIOS</span>
+          <svg width="170" height="130" viewBox="0 0 200 150" fill="none" aria-label="Posición de los labios">
+            <path d="M26 74c30-30 118-30 148 0-30 30-118 30-148 0z" stroke="#12151c" stroke-width="2.5" stroke-linejoin="round"></path>
+            <path d="M40 74h120" stroke="#12151c" stroke-width="2.5" stroke-linecap="round"></path>
+            <rect x="62" y="64" width="76" height="8" rx="2" fill="#ffffff" stroke="#12151c" stroke-width="1.8"></rect>
+            <path d="M18 74l-10-6M18 74l-10 6M182 74l10-6M182 74l10 6" stroke="#12151c" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+          <span style="font-size: 13px; color: #4a5263;">Sonrisa tensa, rendija estrecha</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span class="lbl-ink">EJEMPLOS</span>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>see</span>
+          <span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>tree</span>
+          <span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>key</span>
+          <span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>feet</span>
+          <span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>machine</span>
+        </div>
+      </div>
+
+      <div class="inset" style="gap: 4px; background: rgba(255,255,255,.75);">
+        <span class="lbl-ink">EL TRUCO</span>
+        <span style="font-size: 15px;">Es como la <strong>i</strong> del español pero más tensa: exagera la sonrisa y aprieta los labios.</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button class="btn-ink">Practicar este sonido</button>
+        <button class="btn-out">Ver pares mínimos</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Difíciles para hispanohablantes -->
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="display: flex; align-items: baseline; gap: 10px;">
+      <h2 class="num" style="margin: 0; font-size: 26px; color: {{t.textStrong}};">Los que más cuestan en español</h2>
+      <span class="chip-n">11 sonidos</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px;">
+      <div class="dtile">
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="ipa" style="font-size: 26px; font-weight: 700;">/æ/</span><span style="font-size: 14px; font-weight: 600;">cat</span><span style="flex-grow: 1;"></span><span style="width: 28px; height: 28px; border-radius: 50%; background: #a8e6c9; color: #12151c; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span></div>
+        <span style="font-size: 14px; color: {{t.muted}};">No existe en español y aparece en todas partes.</span>
+      </div>
+      <div class="dtile">
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="ipa" style="font-size: 26px; font-weight: 700;">/ʌ/</span><span style="font-size: 14px; font-weight: 600;">cup</span></div>
+        <span style="font-size: 14px; color: {{t.muted}};">Un “uh” corto y seco, como un golpe suave.</span>
+      </div>
+      <div class="dtile">
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="ipa" style="font-size: 26px; font-weight: 700;">/ɜr/</span><span style="font-size: 14px; font-weight: 600;">bird</span></div>
+        <span style="font-size: 14px; color: {{t.muted}};">La vocal con R americana.</span>
+      </div>
+      <div class="dtile">
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="ipa" style="font-size: 26px; font-weight: 700;">/v/</span><span style="font-size: 14px; font-weight: 600;">van</span></div>
+        <span style="font-size: 14px; color: {{t.muted}};">En español b y v suenan igual; aquí no.</span>
+      </div>
+      <div class="dtile">
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="ipa" style="font-size: 26px; font-weight: 700;">/z/</span><span style="font-size: 14px; font-weight: 600;">zoo</span></div>
+        <span style="font-size: 14px; color: {{t.muted}};">El zumbido de la abeja: la s vibra.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

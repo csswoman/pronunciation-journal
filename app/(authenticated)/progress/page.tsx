@@ -96,7 +96,7 @@ export default async function ProgressPage() {
         </section>
 
         {/* Detalle por dominio */}
-        <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} />
+        <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} learnerLevel={data.learnerLevel} />
 
         <ImmersionProgressCard data={data.domains.immersion} />
 

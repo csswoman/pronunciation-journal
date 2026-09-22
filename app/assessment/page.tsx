@@ -3,7 +3,7 @@ import AssessmentClient from "@/components/courses/AssessmentClient";
 import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import "@/app/styles/assessment.css";
 
 interface AssessmentPageProps {
@@ -20,16 +20,14 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
 
   if (questions.length === 0) notFound();
 
-  let profileLevel = null;
+  let initialLevel = null;
   if (mode === "placement" && user) {
     try {
-      const supabase = await createSupabaseServerClient();
-      const { data } = await supabase
-        .from("user_profiles")
-        .select("cefr_level")
-        .eq("id", user.id)
-        .maybeSingle();
-      profileLevel = parseCefrLevelId(data?.cefr_level?.toLowerCase());
+      const resolution = await getEffectiveLearnerLevelServer(user.id);
+      // The A1 fallback is safe to display but must not anchor a failed read.
+      initialLevel = resolution.source === "unknown"
+        ? null
+        : parseCefrLevelId(resolution.level.toLowerCase());
     } catch {
       // The assessment remains available when profile preferences cannot load.
     }
@@ -42,7 +40,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
       concepts={concepts}
       checkpointLabel={checkpointLevel?.toUpperCase()}
       userId={user?.id}
-      initialLevel={profileLevel}
+      initialLevel={initialLevel}
     />
   );
 }

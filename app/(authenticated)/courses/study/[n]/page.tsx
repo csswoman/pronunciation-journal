@@ -4,7 +4,7 @@ import DeckUnavailable from "@/components/courses/grammar-deck/DeckUnavailable";
 import { getDeckForLesson, getDerivedRelated } from "@/lib/courses/grammar-deck/decks";
 import { getLessonByNumber, parseCoursePathTrackId } from "@/lib/courses/curriculumIndex";
 import type { CefrLevel } from "@/lib/essential-words/types";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { fetchServerImmersionLessonForTopic } from "@/lib/immersion/server-queries";
 
@@ -36,14 +36,11 @@ export default async function CourseStudyPage({ params, searchParams }: PageProp
 
   const CEFR_TRACKS = ["a1", "a2", "b1", "b2", "c1"] as const;
   const user = await getSupabaseServerUser();
-  const supabase = await createSupabaseServerClient();
-  const { data: profile } = user
-    ? await supabase.from("user_profiles").select("cefr_level").eq("id", user.id).maybeSingle()
-    : { data: null };
-  const profileLevel = profile?.cefr_level as CefrLevel | null | undefined;
+  const resolution = user ? await getEffectiveLearnerLevelServer(user.id) : null;
 
   // The course topic is freely explorable; practice difficulty follows the learner profile.
-  const cefrLevel: CefrLevel = profileLevel ?? ((CEFR_TRACKS as readonly string[]).includes(trackId)
+  const learnerCatalogLevel = resolution?.level === "C2" ? "C1" : resolution?.level;
+  const cefrLevel: CefrLevel = learnerCatalogLevel ?? ((CEFR_TRACKS as readonly string[]).includes(trackId)
     ? (trackId.toUpperCase() as CefrLevel)
     : "A1");
 

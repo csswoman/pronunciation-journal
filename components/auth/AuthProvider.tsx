@@ -123,14 +123,10 @@ export default function AuthProvider({
             }, 15_000);
           }
 
-          const { data } = await getSupabaseBrowserClient()
-            .from("user_profiles" as never)
-            .select("cefr_level, cefr_level_source")
-            .eq("id", userId)
-            .maybeSingle();
-          const profile = data as { cefr_level?: string; cefr_level_source?: string } | null;
+          const { getEffectiveLearnerLevel } = await import("@/lib/learner-level/client-queries");
+          let resolution = await getEffectiveLearnerLevel(userId);
 
-          if (!claimed && (!profile?.cefr_level_source || profile?.cefr_level_source === "starter_default")) {
+          if (!claimed && resolution.source === "starter_default") {
             const { readGuestStudyLevel, clearGuestStudyLevel } = await import(
               "@/lib/preferences/guest-study-level"
             );
@@ -139,6 +135,7 @@ export default function AuthProvider({
               const { applyManualCefrLevel } = await import("@/lib/users/queries");
               await applyManualCefrLevel(userId, guestLevel);
               clearGuestStudyLevel();
+              resolution = await getEffectiveLearnerLevel(userId);
             }
           }
 
@@ -146,7 +143,6 @@ export default function AuthProvider({
             { db, ensureDbReady },
             { getUserLearningState },
             { hydrateFromRemote },
-            { normalizeCEFR },
             { hydrateLessonCompletions },
             { hydrateImmersionProgress },
             { hydrateContentSrs },
@@ -154,7 +150,6 @@ export default function AuthProvider({
             import("@/lib/db"),
             import("@/lib/ai-practice/load-state"),
             import("@/lib/ai-practice/queries"),
-            import("@/lib/exercises/cefr"),
             import("@/lib/courses/queries"),
             import("@/lib/immersion/progress-queries"),
             import("@/lib/practice/content-srs-queries"),
@@ -165,9 +160,9 @@ export default function AuthProvider({
           await hydrateLessonCompletions(userId);
           await hydrateImmersionProgress(userId);
           await hydrateContentSrs(userId);
-          if (!profile?.cefr_level) return;
+          if (resolution.source === "unknown") return;
 
-          const nextLevel = normalizeCEFR(profile.cefr_level);
+          const nextLevel = resolution.level;
           const existing = await db.learningState.get(userId);
           if (existing) {
             await db.learningState.put({

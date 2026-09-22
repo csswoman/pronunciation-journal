@@ -97,7 +97,7 @@ export default function GuestSaveProgressBanner({
           className={cn(
             "text-balance text-fg",
             emphasized
-              ? "text-h3 font-bold tracking-tight"
+              ? "font-heading text-h3 font-bold tracking-tight"
               : "font-label font-semibold",
           )}
         >

@@ -5,7 +5,6 @@ import { normalizeInterests, type Interest } from "@/lib/users/interests";
 export interface UserPreferences {
   full_name: string;
   avatar_url: string;
-  cefr_level: CefrLevel | null;
   interests: Interest[];
 }
 
@@ -25,7 +24,7 @@ export async function getUserPreferences(
   // maybeSingle: missing profile is valid (new/anonymous users); .single() → HTTP 406.
   const { data, error } = await supabase
     .from("user_profiles")
-    .select("display_name, cefr_level, interests")
+    .select("display_name, interests")
     .eq("id", userId)
     .maybeSingle();
 
@@ -34,7 +33,6 @@ export async function getUserPreferences(
   return {
     full_name: data?.display_name || metadataString(authMetadata?.full_name) || "",
     avatar_url: metadataString(authMetadata?.avatar_url) || "",
-    cefr_level: (data?.cefr_level as CefrLevel | null) ?? null,
     interests: normalizeInterests(Array.isArray(data?.interests) ? data.interests : []),
   };
 }

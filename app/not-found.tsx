@@ -16,7 +16,7 @@ export default function NotFound() {
 
       <div className="flex flex-col gap-space-3 max-w-sm">
         <h1
-          className="text-h2 font-bold tracking-tight"
+          className="font-heading text-h2 font-bold tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
           Page not found

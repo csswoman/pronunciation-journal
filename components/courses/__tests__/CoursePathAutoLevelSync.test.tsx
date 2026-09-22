@@ -20,6 +20,16 @@ vi.mock("@/lib/db", () => ({
   },
 }));
 
+vi.mock("@/lib/learner-level/client-queries", () => ({
+  getEffectiveLearnerLevelForViewer: async () => ({
+    level: window.localStorage.getItem("guest-study-level") ?? "A1",
+    source: "manual",
+    confidence: null,
+    isPlaced: false,
+    updatedAt: null,
+  }),
+}));
+
 vi.mock("@/lib/supabase/client", () => ({
   getSupabaseBrowserClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }),
 }));

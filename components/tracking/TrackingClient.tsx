@@ -43,8 +43,8 @@ interface TrackingClientProps {
 // </TrackingClient>
 export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const { reviewSources, loading, userId, words, addWord, removeWord, updateWord } = useTracking();
-  const { preferences } = useUserPreferences();
-  const reviewLevel = preferences?.cefr_level ? normalizeCEFR(preferences.cefr_level) : undefined;
+  const { learnerLevel } = useUserPreferences();
+  const reviewLevel = learnerLevel ? normalizeCEFR(learnerLevel.level) : undefined;
   const [filter, setFilter] = useState<TrackingFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

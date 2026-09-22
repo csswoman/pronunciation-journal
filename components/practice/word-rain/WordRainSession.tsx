@@ -35,7 +35,7 @@ export default function WordRainSession() {
   const router = useRouter()
   const auth = useAuthOptional()
   const user = auth?.user ?? null
-  const { preferences, loading: prefsLoading } = useUserPreferences()
+  const { learnerLevel, loading: prefsLoading } = useUserPreferences()
   const gameStartedAtRef = useRef<number | null>(null)
   const hasRecordedActivityRef = useRef(false)
 
@@ -56,14 +56,14 @@ export default function WordRainSession() {
 
   // Sync default level from user profile once loaded
   useEffect(() => {
-    if (!prefsLoading && preferences?.cefr_level && !hasInitializedLevel) {
-      const userLevel = preferences.cefr_level as CefrLevel
+    if (!prefsLoading && learnerLevel && !hasInitializedLevel) {
+      const userLevel = learnerLevel.level as CefrLevel
       if (CEFR_LEVELS.includes(userLevel)) {
         setSelectedLevel(userLevel)
       }
       setHasInitializedLevel(true)
     }
-  }, [prefsLoading, preferences?.cefr_level, hasInitializedLevel])
+  }, [prefsLoading, learnerLevel, hasInitializedLevel])
 
   const startNewGame = useCallback(async (level: CefrLevel) => {
     setIsLoadingWords(true)

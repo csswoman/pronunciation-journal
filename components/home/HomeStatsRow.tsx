@@ -41,7 +41,7 @@ export default function HomeStatsRow({
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5.5 items-stretch">
       {/* Palabras esenciales / Tu Mazo */}
       <Link
         href="/practice/essential-words"
