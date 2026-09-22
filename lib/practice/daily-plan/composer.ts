@@ -92,7 +92,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     fetchDueTopics(userId).catch(() => []),
   ])
 
-  const dueTopicSteps = buildDueTopicSteps(dueTopics)
+  const dueTopicSteps = await buildDueTopicSteps(dueTopics)
 
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null

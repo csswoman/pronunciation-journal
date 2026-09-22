@@ -1,11 +1,31 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
 import { buildDueTopicSteps } from '@/lib/practice/daily-plan/due-topics'
 import { candidate, selectDailyCandidates } from '@/lib/practice/daily-plan/policy'
 import type { DailyStep } from '@/lib/practice/types'
 
+const realFetch = globalThis.fetch
+
+beforeAll(() => {
+  globalThis.fetch = vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input)
+    const slug = url.split('/').pop()?.replace('.json', '') ?? ''
+    const file = path.join(process.cwd(), 'public', 'grammar-decks', `${slug}.json`)
+    if (!fs.existsSync(file)) {
+      return new Response('not found', { status: 404 })
+    }
+    return new Response(fs.readFileSync(file, 'utf8'), { status: 200 })
+  }) as typeof fetch
+})
+
+afterAll(() => {
+  globalThis.fetch = realFetch
+})
+
 describe('buildDueTopicSteps', () => {
-  it('maps an overdue topic with a known deck into a review_topic step', () => {
-    const steps = buildDueTopicSteps([
+  it('maps an overdue topic with a known deck into a review_topic step', async () => {
+    const steps = await buildDueTopicSteps([
       { topic: 'grammar:present simple', nextReviewAt: '2026-09-20T00:00:00.000Z' },
     ])
     expect(steps).toHaveLength(1)
@@ -17,15 +37,15 @@ describe('buildDueTopicSteps', () => {
     })
   })
 
-  it('drops topics with no matching deck', () => {
-    const steps = buildDueTopicSteps([
+  it('drops topics with no matching deck', async () => {
+    const steps = await buildDueTopicSteps([
       { topic: 'grammar:not-a-real-topic', nextReviewAt: '2026-09-20T00:00:00.000Z' },
     ])
     expect(steps).toHaveLength(0)
   })
 
-  it('caps at the given limit', () => {
-    const steps = buildDueTopicSteps([
+  it('caps at the given limit', async () => {
+    const steps = await buildDueTopicSteps([
       { topic: 'grammar:present simple', nextReviewAt: '2026-09-18T00:00:00.000Z' },
       { topic: 'grammar:present simple', nextReviewAt: '2026-09-19T00:00:00.000Z' },
       { topic: 'grammar:present simple', nextReviewAt: '2026-09-20T00:00:00.000Z' },
@@ -39,8 +59,8 @@ function wordStep(id: string): DailyStep {
 }
 
 describe('due topic candidates respect MAX_DUE_STEPS', () => {
-  it('does not let a due topic push the plan past the due-step cap', () => {
-    const [topicStep] = buildDueTopicSteps([
+  it('does not let a due topic push the plan past the due-step cap', async () => {
+    const [topicStep] = await buildDueTopicSteps([
       { topic: 'grammar:present simple', nextReviewAt: '2026-09-20T00:00:00.000Z' },
     ])
     const candidates = [
@@ -54,3 +74,4 @@ describe('due topic candidates respect MAX_DUE_STEPS', () => {
     expect(selected.some((s) => s.id === topicStep!.id)).toBe(false)
   })
 })
+

@@ -98,3 +98,22 @@ export interface GrammarStudyDeckData {
   quiz?: GrammarQuizQuestion[];
   cards: GrammarStudyCardData[];
 }
+
+export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'false-friends' | 'other'
+export type DeckTone = 'butter' | 'lilac' | 'mint' | 'coral' | 'sky'
+
+export interface DeckSummary {
+  slug: string
+  level: DeckLevel
+  title: string
+  shortTitle: string
+  eyebrow: string
+  cardCount: number
+  durationMinutes: number
+  sampleWords: string[]
+  tone: DeckTone
+  iconName: string
+  hasQuiz: boolean
+  hasSounds: boolean
+}
+

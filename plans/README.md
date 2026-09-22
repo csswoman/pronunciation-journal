@@ -1,13 +1,44 @@
 # Planes de implementación
 
-Dos series. La primera (001–004, peso y carga) está cerrada. La segunda
+Tres series. La primera (001–004, peso y carga) está cerrada. La segunda
 (005–019) sale de la auditoría pedagógica del 2026-09-18 sobre `c869029c`:
 cómo se evalúa y avanza el nivel, si el contenido está conectado al ciclo de
-evidencia, y qué ve el usuario que no proviene de datos reales.
+evidencia, y qué ve el usuario que no proviene de datos reales. La tercera
+(020–027) sale de la auditoría de cableado del 2026-09-22 sobre `eb4cb5d3`.
 
 Cada ejecutor: lee el plan completo antes de empezar, respeta sus STOP
-conditions, una rama por plan (`advisor/NNN-slug` desde `dev`) y actualiza tu
-fila al terminar.
+conditions y actualiza su fila al terminar. Los planes nuevos usan ramas
+`codex/NNN-slug` desde `dev` solo si el operador pide crear una rama; no hacen
+commit ni push sin instrucción explícita. Las ramas `advisor/*` de la serie 2
+son históricas.
+
+## Serie 3 — plan diario y evidencia evaluable (2026-09-22, `eb4cb5d3`)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 020 | Progreso muestra participación en Daily sin afirmar planes completos | P1 | M | — | TODO |
+| 021 | Cada respuesta de teoría cuenta una sola vez | P1 | S | — | DONE |
+| 022 | La práctica externa resuelve solo targets diarios equivalentes | P1 | M | 021 | TODO |
+| 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | TODO |
+| 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | TODO |
+| 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | TODO |
+| 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | TODO |
+| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | TODO |
+
+Orden recomendado: **021 → 020 → 022 → 023 → 024 → 025 → 026 → 027**.
+020 puede ejecutarse en paralelo con 021. 023–025 pueden ejecutarse por separado
+después de 022, pero comparten el contrato de `activity_sessions`: revisar
+solapamientos antes de integrarlos. 027 se ejecuta al final para probar los
+caminos de producción ya implementados.
+
+La comprobación de catálogo actual (`node_modules/.bin/tsx.cmd
+scripts/audit-learning-loop.mjs`) pasa con 4.125 entradas y 0 incidencias;
+comprueba declaraciones, no llamadas runtime. Los tests focalizados de
+reconciliación, actividad y evidence exits pasan (3 archivos, 13 tests). En este
+checkout `pnpm audit:learning-loop` intentó reinstalar `node_modules` y abortó
+sin TTY; los planes permiten usar los binarios locales existentes, dejando
+constancia de esa sustitución. No se ha verificado la aplicación de migraciones
+en Supabase remoto.
 
 ## Serie 2 — evaluación, progresión y contenido honesto (2026-09-18, `c869029c`)
 

@@ -21,6 +21,7 @@ import {
 } from '@/lib/courses/progress'
 import type { CefrLevelId, CoursePathLevel } from '@/lib/courses/types'
 import { getAggregatedReviewSummary } from '@/lib/review/server-queries'
+import { getEffectiveLearnerLevelServer } from '@/lib/learner-level/server-queries'
 import {
   emptyPracticeHubData,
   type PracticeHubData,
@@ -222,12 +223,12 @@ async function loadCourse(
   supabase: ServerClient,
   userId: string,
 ): Promise<PracticeHubCourseData | null> {
-  const [completionsResult, profileResult] = await Promise.all([
+  const [completionsResult, levelResolution] = await Promise.all([
     supabase
       .from('lesson_completions')
       .select('course_slug, lesson_slug')
       .eq('user_id', userId),
-    supabase.from('user_profiles').select('cefr_level').eq('id', userId).maybeSingle(),
+    getEffectiveLearnerLevelServer(userId),
   ])
 
   const completions = (completionsResult.data ?? []) as {
@@ -242,7 +243,7 @@ async function loadCourse(
 
   const activeLevel = resolveActiveLevel(
     completedKeys,
-    normalizeCefr((profileResult.data as { cefr_level?: string | null } | null)?.cefr_level),
+    normalizeCefr(levelResolution.level),
   )
   if (!activeLevel) return null
 
