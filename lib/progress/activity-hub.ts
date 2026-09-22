@@ -194,19 +194,16 @@ export async function recordActivitySession(
   // Aggregate lesson exercise evidence for concept signals (Pieza 7)
   const lessonStats = new Map<string, { correct: number; total: number }>()
 
-  if (input.metadata?.lessonSlug) {
-    const correct = sessionResult.results.filter((r) => r.isCorrect).length
-    const total = sessionResult.results.length
-    if (total > 0) {
-      lessonStats.set(input.metadata.lessonSlug, { correct, total })
-    }
-  }
-
   for (const r of sessionResult.results) {
+    const isEvaluable = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
+    if (!isEvaluable) continue
+
     const payload = r.exercisePayload as Record<string, unknown> | undefined
     const slugFromPayload = (payload?.lessonSlug as string | undefined) ?? (payload?.deckSlug as string | undefined)
     const slugFromSourceRef = r.sourceRef?.source === 'grammar_deck' ? r.sourceRef.id : undefined
-    const slug = slugFromPayload ?? slugFromSourceRef
+    // Metadata describes the session, not every answer. An explicit result-level
+    // slug wins so each evaluable answer contributes to one concept at most.
+    const slug = slugFromPayload ?? slugFromSourceRef ?? input.metadata?.lessonSlug
     if (slug) {
       const curr = lessonStats.get(slug) ?? { correct: 0, total: 0 }
       curr.total += 1
