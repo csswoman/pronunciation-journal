@@ -14,6 +14,9 @@ import {
   getUserProfileLevel,
   getWeakestPhonemeForHome,
 } from "@/lib/home/queries";
+import { getCheckpointReadiness } from "@/lib/home/checkpoint-readiness-query";
+import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
+import type { CefrLevelId } from "@/lib/courses/types";
 import { getReviewQueueSummary } from "@/lib/home/review-queue";
 import { getHomePlacementState, type HomePlacementState } from "@/lib/home/placement-state";
 import {
@@ -132,6 +135,16 @@ async function HomePageContent() {
     ),
   ]);
 
+  const resolvedLevelId = profileLevel ? (profileLevel.toLowerCase() as CefrLevelId) : null;
+  const checkpointReadiness =
+    userId && placementState.hasPlacement && resolvedLevelId
+      ? await settled(
+          getCheckpointReadiness(userId, resolvedLevelId),
+          null as CheckpointReadiness | null,
+          "checkpoint readiness",
+        )
+      : null;
+
   const conceptLesson = homeLessons.primary
     ? {
         slug: homeLessons.primary.slug,
@@ -156,6 +169,10 @@ async function HomePageContent() {
     planDoneToday,
     dueCount: wordsDueCount + soundsDueCount,
     estimatedMinutes: 12,
+    checkpointReady: checkpointReadiness?.ready ?? false,
+    checkpointHref: checkpointReadiness
+      ? `/assessment?mode=checkpoint&level=${checkpointReadiness.level}`
+      : undefined,
   });
 
   return (
@@ -172,6 +189,7 @@ async function HomePageContent() {
       secondaryLesson={homeLessons.secondary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
+      checkpointReadiness={checkpointReadiness}
       primaryAction={primaryAction}
       previewWords={queue.preview}
       immersionSummary={immersionSummary}

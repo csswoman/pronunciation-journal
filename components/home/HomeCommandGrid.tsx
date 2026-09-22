@@ -22,6 +22,7 @@ import HomePlanRationale from "@/components/home/HomePlanRationale";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
+import HomeCheckpointCard from "@/components/home/HomeCheckpointCard";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson, DailyStep, useDailyPlan } from "@/hooks/useDailyPlan";
@@ -29,6 +30,7 @@ import type { HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/consta
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { PrimaryAction } from "@/lib/home/primary-action";
+import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 import type { SessionArc } from "@/lib/practice/types";
 
 const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
@@ -59,6 +61,7 @@ export interface HomeCommandGridProps {
   immersionSummary?: HomeImmersionSummary | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
+  checkpointReadiness?: CheckpointReadiness | null;
   onStartStep?: (step: DailyStep) => void;
   planState?: ReturnType<typeof useDailyPlan>;
 }
@@ -73,6 +76,7 @@ export default function HomeCommandGrid({
   streak = null,
   placementState,
   pronunciationDiagnosticState,
+  checkpointReadiness = null,
   onStartStep,
   planState,
   immersionSummary = null,
@@ -209,6 +213,10 @@ export default function HomeCommandGrid({
               {needsPlacement ? <HomePlacementPrompt compact /> : null}
               {needsPronunciation ? <HomePronunciationPrompt compact /> : null}
             </div>
+          ) : null}
+
+          {placementState.hasPlacement && checkpointReadiness ? (
+            <HomeCheckpointCard readiness={checkpointReadiness} />
           ) : null}
 
           {/* Fila secundaria: Palabras esenciales + Registro de inmersión */}
