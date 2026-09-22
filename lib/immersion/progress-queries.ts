@@ -2,6 +2,7 @@
 // lib/courses/queries.ts para completedLessons.
 import { db, type ImmersionLessonProgressRecord } from '@/lib/db'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { enqueue } from '@/lib/sync/sync-manager'
 
 type RemoteImmersionProgress = {
   user_id: string
@@ -87,18 +88,22 @@ export async function markImmersionLessonWatched(
     updatedAt: now,
   }
 
-  await db.immersionLessonProgress.put(record)
-
-  const { error } = await getSupabaseBrowserClient().from('immersion_lesson_progress').upsert(
-    {
-      user_id: userId,
-      lesson_id: lessonId,
-      watched: true,
-      watched_at: now,
-      quiz_score: quizScore ?? null,
-      updated_at: now,
-    },
-    { onConflict: 'user_id,lesson_id' },
-  )
-  if (error) throw error
+  await db.transaction('rw', [db.immersionLessonProgress, db.syncOutbox], async () => {
+    await db.immersionLessonProgress.put(record)
+    await enqueue(
+      userId,
+      'immersion_lesson_progress',
+      'upsert',
+      {
+        user_id: userId,
+        lesson_id: lessonId,
+        watched: true,
+        watched_at: now,
+        quiz_score: quizScore ?? null,
+        updated_at: now,
+      },
+      undefined,
+      'user_id,lesson_id',
+    )
+  })
 }
