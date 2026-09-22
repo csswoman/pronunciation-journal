@@ -26,7 +26,7 @@ fila al terminar.
 | 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | DONE |
 | 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | TODO |
 | 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | DONE |
-| 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | TODO |
+| 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | DONE |
 | 019 | SRS de chunks y frases del sistema sincroniza vía outbox | P3 | L | — | TODO |
 
 Orden recomendado: 013 → 005 → 006 → 007 → 008 → 009 → 011 → 012 → 010 → 014 → 015 → 016 → 017 → 018 → 019.

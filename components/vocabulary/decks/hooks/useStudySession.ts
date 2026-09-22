@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { RATING_CONFIG } from "../study-utils";
 import type { DifficultyKey } from "../StudyDifficultyButtons";
 import type { StudySource, StudyCardData, SM2Progress } from "@/lib/decks/study-source";
+import { buildSessionResult } from "@/lib/practice/session-result";
+import type { ExerciseResult } from "@/lib/practice/types";
 
 export interface SessionStats {
   seen: number;
@@ -42,6 +44,7 @@ export interface UseStudySessionReturn {
   setFlipped: (v: boolean | ((prev: boolean) => boolean)) => void;
   handleRate: (difficulty: DifficultyKey) => Promise<void>;
   advanceCard: () => void;
+  completeSession: () => Promise<void>;
   resetSession: () => void;
 }
 
@@ -51,6 +54,19 @@ export function useStudySession(source: StudySource): UseStudySessionReturn {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [stats, setStats] = useState<SessionStats>(EMPTY_STATS);
+  const ratedResultsRef = useRef<ExerciseResult[]>([]);
+  const sessionStartedAtRef = useRef<number | null>(null);
+  const hasRecordedSessionRef = useRef(false);
+
+  const completeSession = useCallback(async () => {
+    if (hasRecordedSessionRef.current || ratedResultsRef.current.length === 0 || !source.recordSession) return;
+    hasRecordedSessionRef.current = true;
+    const result = buildSessionResult(ratedResultsRef.current);
+    await source.recordSession({
+      ...result,
+      totalTimeMs: Math.max(0, Date.now() - (sessionStartedAtRef.current ?? Date.now())),
+    });
+  }, [source]);
 
   useEffect(() => {
     source.loadCards().then(cards => {
@@ -67,16 +83,31 @@ export function useStudySession(source: StudySource): UseStudySessionReturn {
   const advanceCard = useCallback(() => {
     if (currentIndex + 1 >= queue.length) {
       setPhase("done");
+      void completeSession().catch((err) => console.warn('[useStudySession] record activity error:', err));
     } else {
       setCurrentIndex(p => p + 1);
       setFlipped(false);
     }
-  }, [currentIndex, queue.length]);
+  }, [completeSession, currentIndex, queue.length]);
 
   const handleRate = useCallback(async (difficulty: DifficultyKey) => {
     if (!currentCard) return;
     const q = RATING_CONFIG[difficulty].q;
     const next = await source.saveProgress(currentCard.id, q, currentCard.progress);
+    if (sessionStartedAtRef.current === null) sessionStartedAtRef.current = Date.now();
+    ratedResultsRef.current.push({
+      exerciseId: `user-deck:${currentCard.id}:${crypto.randomUUID()}`,
+      slug: 'identify',
+      exerciseTypeId: 11,
+      isCorrect: q >= 3,
+      userAnswer: String(q),
+      timeMs: 0,
+      status: 'answered',
+      contentId: currentCard.id,
+      context: 'practice',
+      sourceRef: { source: 'word_bank', id: currentCard.id },
+      completedAt: new Date(),
+    });
     setQueue(prev => prev.map(c => c.id === currentCard.id ? { ...c, progress: next } : c));
     setStats(s => ({
       seen: s.seen + 1,
@@ -92,6 +123,9 @@ export function useStudySession(source: StudySource): UseStudySessionReturn {
     setCurrentIndex(0);
     setFlipped(false);
     setStats(EMPTY_STATS);
+    ratedResultsRef.current = [];
+    sessionStartedAtRef.current = null;
+    hasRecordedSessionRef.current = false;
     setPhase("studying");
   }, []);
 
@@ -113,6 +147,6 @@ export function useStudySession(source: StudySource): UseStudySessionReturn {
 
   return {
     phase, queue, currentIndex, currentCard, flipped, stats, progress,
-    setFlipped, handleRate, advanceCard, resetSession,
+    setFlipped, handleRate, advanceCard, completeSession, resetSession,
   };
 }

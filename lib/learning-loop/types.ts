@@ -11,6 +11,8 @@ export type LearningSurface =
   | 'oral_mission'
   | 'tracking'
   | 'immersion'
+  | 'user_decks'
+  | 'games'
 
 export type LearningSignal =
   | 'exposure'

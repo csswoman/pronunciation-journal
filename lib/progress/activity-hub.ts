@@ -43,6 +43,8 @@ export type ActivitySessionInput = {
     dailyTargetId?: string
     quizPassed?: boolean
     mediaType?: string
+    gameId?: string
+    deckId?: string
     notes?: string
   }
 }

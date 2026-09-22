@@ -24,6 +24,8 @@ describe('learning-loop content manifest', () => {
       oral_mission: listMissions().length,
       tracking: 3,
       immersion: GENERATED_IMMERSION_INDEX.length,
+      user_decks: 1,
+      games: 2,
     })
     expect(validateLearningContentManifest(manifest)).toEqual([])
   }, 30000)

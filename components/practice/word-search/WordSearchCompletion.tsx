@@ -15,6 +15,7 @@ import type { WordSearchPuzzle } from '@/lib/exercises/word-search/types'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import { getIllustration } from '@/lib/illustrations/registry'
 import { recordWordSearchRepetition } from '@/lib/word-bank/domain-queries'
+import { recordGameActivity } from '@/lib/progress/game-activity'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import Button from '@/components/ui/Button'
 import { ListenButton } from '@/components/ui/ListenButton'
@@ -48,6 +49,7 @@ export default function WordSearchCompletion({
   const user = auth?.user ?? null
   const [recordedCount, setRecordedCount] = useState<number | null>(null)
   const hasRecordedRef = useRef(false)
+  const hasRecordedActivityRef = useRef(false)
   const Illustration = getIllustration('stateWin')
   const modeLabel = puzzle.mode === 'classic' ? 'Lista visible' : 'Con pistas'
 
@@ -61,10 +63,17 @@ export default function WordSearchCompletion({
       clue: item.clue,
     }))
 
-    void recordWordSearchRepetition(user.id, items, elapsedSeconds * 1000)
+    void recordWordSearchRepetition(user.id, items)
       .then((count) => setRecordedCount(count))
       .catch((err) => console.warn('[WordSearchCompletion] record error', err))
   }, [user?.id, puzzle, elapsedSeconds])
+
+  useEffect(() => {
+    if (!user?.id || hasRecordedActivityRef.current) return
+    hasRecordedActivityRef.current = true
+    void recordGameActivity(user.id, 'word_search', elapsedSeconds * 1000, puzzle.id)
+      .catch((err) => console.warn('[WordSearchCompletion] activity record failed', err))
+  }, [elapsedSeconds, puzzle.id, user?.id])
 
   return (
     <section

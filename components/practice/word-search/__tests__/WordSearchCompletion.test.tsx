@@ -6,8 +6,12 @@ import WordSearchCompletion from '../WordSearchCompletion'
 import type { WordSearchPuzzle } from '@/lib/exercises/word-search/types'
 
 const recordWordSearchRepetition = vi.fn()
+const recordGameActivity = vi.fn()
 vi.mock('@/lib/word-bank/domain-queries', () => ({
   recordWordSearchRepetition: (...args: unknown[]) => recordWordSearchRepetition(...args),
+}))
+vi.mock('@/lib/progress/game-activity', () => ({
+  recordGameActivity: (...args: unknown[]) => recordGameActivity(...args),
 }))
 
 vi.mock('@/components/auth/AuthProvider', () => ({
@@ -37,6 +41,8 @@ const mockPuzzle: WordSearchPuzzle = {
 describe('WordSearchCompletion', () => {
   beforeEach(() => {
     recordWordSearchRepetition.mockReset()
+    recordGameActivity.mockReset()
+    recordGameActivity.mockResolvedValue(undefined)
   })
 
   it('renders completion screen and records word_bank repetitions', async () => {
@@ -63,7 +69,15 @@ describe('WordSearchCompletion', () => {
           { id: 'wb-1', word: 'CATS', clue: 'Felines' },
           { id: 'wb-2', word: 'DOGS', clue: 'Canines' },
         ],
+      )
+    })
+
+    await waitFor(() => {
+      expect(recordGameActivity).toHaveBeenCalledWith(
+        'test-user-uuid',
+        'word_search',
         45000,
+        'puzzle-wb-1',
       )
     })
 

@@ -19,6 +19,8 @@ describe('learning domain contracts', () => {
       'oral_mission',
       'tracking',
       'immersion',
+      'user_decks',
+      'games',
     ]
     for (const surface of requiredSurfaces) {
       expect(entries.some((entry) => entry.surface === surface), `${surface} has no contract`).toBe(true)

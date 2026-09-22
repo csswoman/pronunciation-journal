@@ -29,6 +29,27 @@ export const NON_EVALUABLE_CONTENT_ALLOWLIST: readonly NonEvaluableContentAllowa
   ...IMMERSION_NON_EVALUABLE_ALLOWANCES,
 ]
 
+export const PRACTICE_ROUTE_SURFACES: Record<string, readonly LearningSurface[]> = {
+  chunks: ['chunks'],
+  decks: ['grammar_deck', 'user_decks'],
+  'essential-words': ['essential_words'],
+  games: ['games'],
+  immersion: ['immersion'],
+  sounds: ['sound_lab', 'pronunciation_path'],
+  'word-rain': ['games'],
+  'word-search': ['games'],
+}
+
+/** Routes that are intentionally not backed by a manifest content surface. */
+export const PRACTICE_ROUTES_WITHOUT_SURFACE: Readonly<Record<string, string>> = {
+  'connected-speech': 'A route-level practice launcher; its target-level work is represented by pronunciation surfaces.',
+  'core-1000': 'Legacy Essential Words entry point; the canonical content is essential_words.',
+  'ed-drills': 'Conditional remediation route without standalone authored content.',
+  intonation: 'Conditional pronunciation remediation route without standalone authored content.',
+  reader: 'Reader passages are generated per session and do not have stable manifest content ids.',
+  review: 'A queue over existing learning owners, not an independent content surface.',
+}
+
 function pronunciationRefs(ids: readonly PronunciationTargetId[]) {
   return ids.map((id) => ({ namespace: 'pronunciation' as const, id }))
 }
@@ -225,6 +246,49 @@ function trackingEntries(): LearningContentManifestEntry[] {
   ]
 }
 
+function userDeckEntries(): LearningContentManifestEntry[] {
+  return [{
+    contentId: 'user-deck:word-bank',
+    surface: 'user_decks',
+    title: 'Mazos personales de vocabulario',
+    signals: ['objective_evidence'],
+    targetRefs: [{ namespace: 'word_bank', id: 'dynamic:user-word-uuid' }],
+    practice: { status: 'objective', adapter: 'user_deck_word_bank_review' },
+    owners: ['word_bank', 'activity_sessions'],
+  }]
+}
+
+function gameEntries(): LearningContentManifestEntry[] {
+  return [
+    {
+      contentId: 'game:word-rain',
+      surface: 'games',
+      title: 'Lluvia de palabras',
+      signals: ['exposure'],
+      targetRefs: [],
+      practice: {
+        status: 'activity_only',
+        adapter: 'word_rain_activity',
+        reason: 'Typing speed game has no canonical learner-word target or evaluated answer.',
+      },
+      owners: ['activity_sessions'],
+    },
+    {
+      contentId: 'game:word-search',
+      surface: 'games',
+      title: 'Sopa de letras',
+      signals: ['exposure'],
+      targetRefs: [],
+      practice: {
+        status: 'activity_only',
+        adapter: 'word_search_activity',
+        reason: 'Word-finding game records play activity; only its separate word-bank repetition updates SRS.',
+      },
+      owners: ['activity_sessions'],
+    },
+  ]
+}
+
 export async function buildLearningContentManifest(): Promise<LearningContentManifestEntry[]> {
   return [
     ...courseEntries(),
@@ -235,6 +299,8 @@ export async function buildLearningContentManifest(): Promise<LearningContentMan
     ...pronunciationEntries(),
     ...missionEntries(),
     ...trackingEntries(),
+    ...userDeckEntries(),
+    ...gameEntries(),
     ...immersionEntries(),
   ]
 }
@@ -297,7 +363,7 @@ export function summarizeLearningContentManifest(
 ): Record<LearningSurface, number> {
   const summary = Object.fromEntries([
     'course_path', 'grammar_deck', 'mini_lesson', 'essential_words', 'chunks',
-    'sound_lab', 'pronunciation_path', 'oral_mission', 'tracking', 'immersion',
+    'sound_lab', 'pronunciation_path', 'oral_mission', 'tracking', 'immersion', 'user_decks', 'games',
   ].map((surface) => [surface, 0])) as Record<LearningSurface, number>
   for (const entry of entries) summary[entry.surface] += 1
   return summary
