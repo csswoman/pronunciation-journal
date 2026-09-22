@@ -22,6 +22,7 @@ export type SkillTag =
   | 'pronunciation'
   | 'listening'
   | 'reading'
+  | 'writing'
 
 export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   essential_words: 'Essential Words',

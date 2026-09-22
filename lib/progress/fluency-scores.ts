@@ -9,6 +9,7 @@ export type SkillKey =
   | 'listening'
   | 'speaking'
   | 'reading'
+  | 'writing'
 
 export type FluencyScores = Record<SkillKey, number>
 
@@ -19,6 +20,7 @@ export const SKILL_KEYS: SkillKey[] = [
   'listening',
   'speaking',
   'reading',
+  'writing',
 ]
 
 export interface FluencyWordBankStatus {
@@ -65,6 +67,7 @@ function emptyBuckets(): Record<SkillKey, { correct: number; total: number }> {
     listening: { correct: 0, total: 0 },
     speaking: { correct: 0, total: 0 },
     reading: { correct: 0, total: 0 },
+    writing: { correct: 0, total: 0 },
   }
 }
 

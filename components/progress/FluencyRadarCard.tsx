@@ -21,6 +21,7 @@ const SKILL_ORDER: { key: SkillKey; label: string; source: string; href: string 
   { key: 'listening', label: 'Escucha', source: 'Práctica diaria: percepción y dictado', href: '/daily' },
   { key: 'speaking', label: 'Habla', source: 'Práctica diaria: producción oral', href: '/daily' },
   { key: 'reading', label: 'Lectura', source: 'Cursos: comprensión de textos', href: '/courses' },
+  { key: 'writing', label: 'Escritura', source: 'Práctica diaria: producción escrita', href: '/daily' },
 ]
 
 const SIZE = 380

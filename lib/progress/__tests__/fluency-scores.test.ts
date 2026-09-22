@@ -80,6 +80,36 @@ describe('computeFluencyScores', () => {
     })
     expect(scores.reading).toBe(0)
   })
+
+  it('uses the same persisted task skill as session telemetry', () => {
+    const scores = computeFluencyScores({
+      ...baseInput,
+      answers: Array.from({ length: 4 }, () => answer({
+        exerciseTypeId: 17,
+        exercisePayload: { taskSkill: 'grammar' },
+      })),
+    })
+    expect(scores.grammar).toBeGreaterThan(0)
+    expect(scores.reading).toBe(0)
+  })
+
+  it('keeps legacy multiple-choice answers out of a skill bucket', () => {
+    const scores = computeFluencyScores({
+      ...baseInput,
+      answers: [answer({ exerciseTypeId: 17 })],
+    })
+    expect(scores.reading).toBe(0)
+    expect(scores.grammar).toBe(0)
+  })
+
+  it('scores written production as writing', () => {
+    const scores = computeFluencyScores({
+      ...baseInput,
+      answers: [answer({ exerciseTypeId: 15, exercisePayload: { taskSkill: 'writing' } })],
+    })
+    expect(scores.writing).toBeGreaterThan(0)
+    expect(scores.reading).toBe(0)
+  })
 })
 
 describe('fluencyComparisonLabel', () => {
@@ -91,6 +121,7 @@ describe('fluencyComparisonLabel', () => {
       listening: 20,
       speaking: 20,
       reading: 20,
+      writing: 20,
     }
     const cur = { ...prev, pronunciation: 50, vocabulary: 50 }
     expect(fluencyComparisonLabel(cur, prev)).toBe('Mejorando esta semana')

@@ -1,4 +1,5 @@
 import type { ExerciseSlug } from '@/lib/practice/types'
+import type { PracticeExercise } from '@/lib/practice/types'
 import type { SkillTag } from '@/lib/progress/activity-types'
 
 /**
@@ -20,9 +21,11 @@ export const EXERCISE_SKILL_MATRIX = {
   odd_one_out: ['pronunciation', 'listening'],
   abx: ['pronunciation', 'listening'],
   sentence_context: ['vocabulary', 'reading'],
-  multiple_choice: ['reading'],
+  // A multiple-choice slug is a response format, not a measured skill.
+  // New rows must declare the task skill in their persisted payload.
+  multiple_choice: [],
   reader: ['reading'],
-  written_production: ['reading'],
+  written_production: ['writing'],
   spoken_production: ['speaking'],
   error_correction: ['grammar'],
   conjugation_blank: ['grammar'],
@@ -37,11 +40,50 @@ export function skillsForSlug(slug: ExerciseSlug): readonly SkillTag[] {
   return EXERCISE_SKILL_MATRIX[slug]
 }
 
-type EssentialWordsPayload = { mode?: unknown }
+type AnswerSkillPayload = {
+  mode?: unknown
+  taskSkill?: unknown
+}
+
+const SKILL_TAGS = new Set<SkillTag>([
+  'speaking',
+  'vocabulary',
+  'grammar',
+  'pronunciation',
+  'listening',
+  'reading',
+  'writing',
+])
 
 const LISTENING_ESSENTIAL_WORD_MODES = new Set([
   'dictation_word', 'dictation_sentence', 'listening_cloze_sentence', 'recognize_audio',
 ])
+
+/**
+ * Resolves the one skill the authored task is designed to evaluate.
+ * It is persisted with the answer so activity sessions and fluency history
+ * use the same evidence rather than inferring from a response format.
+ */
+export function taskSkillForExercise(
+  exercise: Pick<PracticeExercise, 'slug' | 'payload'>,
+): SkillTag | undefined {
+  switch (exercise.slug) {
+    case 'written_production':
+      return 'writing'
+    case 'spoken_production':
+    case 'speak_word':
+    case 'cs_shadow_phrase':
+      return 'speaking'
+    case 'dictation':
+    case 'sentence_dictation':
+      return 'listening'
+    default:
+      break
+  }
+
+  if (exercise.payload.kind !== 'generic') return undefined
+  return exercise.payload.data.exerciseType?.domain
+}
 
 /** Context identifies origin, never a practiced skill. */
 export function resolveAnswerSkills(
@@ -50,10 +92,13 @@ export function resolveAnswerSkills(
 ): readonly SkillTag[] {
   if (!slug) return []
   const baseline = new Set<SkillTag>(skillsForSlug(slug))
-  if (slug !== 'fill_blank' && slug !== 'speak_word') return [...baseline]
   const payload = exercisePayload && typeof exercisePayload === 'object'
-    ? exercisePayload as EssentialWordsPayload
+    ? exercisePayload as AnswerSkillPayload
     : undefined
+  if (typeof payload?.taskSkill === 'string' && SKILL_TAGS.has(payload.taskSkill as SkillTag)) {
+    return [payload.taskSkill as SkillTag]
+  }
+  if (slug !== 'fill_blank' && slug !== 'speak_word') return [...baseline]
   if (typeof payload?.mode !== 'string') return [...baseline]
   const skills = new Set<SkillTag>(['vocabulary'])
   if (LISTENING_ESSENTIAL_WORD_MODES.has(payload.mode)) skills.add('listening')

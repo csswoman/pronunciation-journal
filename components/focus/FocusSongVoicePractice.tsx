@@ -88,7 +88,7 @@ export function FocusSongVoicePractice({ body, contentId, onResult, onComplete, 
           isCorrect: current.score >= 80, userAnswer: result.transcript, score: current.score,
           timeMs: Date.now() - startedAt.current, status: 'answered', contentId: `${contentId}:voice-${index}`,
           context: 'practice', sourceRef: { source: 'focus_content', id: contentId },
-          exercisePayload: { type: 'focus_song_voice', target, transcript: result.transcript, score: current.score }, completedAt: new Date(),
+          exercisePayload: { type: 'focus_song_voice', taskSkill: 'speaking', target, transcript: result.transcript, score: current.score }, completedAt: new Date(),
         }
         rowsRef.current = [...rowsRef.current, row]
         onResult(row)

@@ -4,6 +4,7 @@ import type {
 } from '@/lib/practice/types'
 import { ATTRIBUTION_VERSION } from '@/lib/practice/attribution'
 import { resolveAnswerAttribution } from '@/lib/practice/resolve-attribution'
+import { taskSkillForExercise } from '@/lib/progress/skill-matrix'
 
 export const FEEDBACK_MS = 1500
 
@@ -28,6 +29,7 @@ export function buildExerciseResult(params: {
 }): ExerciseResult {
   const { current, isCorrect, userAnswer, timeMs, context, extras } = params
   const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
+  const taskSkill = taskSkillForExercise(current)
   const status = extras?.status ?? (userAnswer === 'skip' ? 'skipped' : 'answered')
   const responseTimeMs = extras?.responseTimeMs ?? timeMs
 
@@ -64,6 +66,8 @@ export function buildExerciseResult(params: {
           }
         : {
             type: current.slug,
+            taskSkill,
+            sourceRef: current.sourceRef,
             contentId: current.contentId,
             constraintId:
               current.payload.kind === 'generic'

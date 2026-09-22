@@ -63,7 +63,7 @@ export function FocusErrorTrapPractice({ body, contentId, onResult, onComplete, 
             isCorrect, userAnswer: guess ? 'has_error' : 'no_error', timeMs: Date.now() - startedAt.current,
             status: 'answered', contentId: `${contentId}:trap-${index}`, context: 'practice',
             sourceRef: { source: 'focus_content', id: contentId },
-            exercisePayload: { type: 'focus_error_trap', sentence: item.text, expectedAnswer: item.hasError ? 'has_error' : 'no_error' },
+            exercisePayload: { type: 'focus_error_trap', taskSkill: 'grammar', sentence: item.text, expectedAnswer: item.hasError ? 'has_error' : 'no_error' },
             completedAt: new Date(),
           }
           rowsRef.current = [...rowsRef.current, result]

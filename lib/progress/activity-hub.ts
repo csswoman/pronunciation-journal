@@ -12,7 +12,7 @@ import {
   type ActivitySource,
   type SkillTag,
 } from '@/lib/progress/activity-types'
-import { skillsForSlug } from '@/lib/progress/skill-matrix'
+import { resolveAnswerSkills } from '@/lib/progress/skill-matrix'
 import { updateConceptSignalsWithEvidence } from '@/lib/courses/assessment-profile'
 import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumIndex'
 import type { ConceptSignal } from '@/lib/courses/concept-profile'
@@ -51,13 +51,15 @@ export type ActivitySessionInput = {
 }
 
 /**
- * Derive practiced skills from exercise slugs only.
- * Context is provenance for activity_sessions.source — it must not invent skills.
+ * Derive practiced skills from each evaluated task's persisted metadata.
+ * Context remains provenance for activity_sessions.source; it never invents skills.
  */
 export function deriveSkillTags(_context: PracticeContext, result: SessionResult): SkillTag[] {
   const tags = new Set<SkillTag>()
   for (const r of result.results) {
-    for (const t of skillsForSlug(r.slug)) tags.add(t)
+    const isEvaluated = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
+    if (!isEvaluated) continue
+    for (const t of resolveAnswerSkills(r.slug, r.exercisePayload)) tags.add(t)
   }
   return [...tags]
 }
