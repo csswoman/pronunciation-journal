@@ -63,15 +63,18 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
             ])
               .then(([serverSummary, chunksDue]) => {
                 const previousChunks = serverSummary.queueCounts.chunksDue ?? 0
-                const totalDue = serverSummary.totalDue - previousChunks + chunksDue
+                const executable = serverSummary.queueCounts.executable - previousChunks + chunksDue
+                const elsewhere = serverSummary.queueCounts.elsewhere
+                const totalDue = executable + elsewhere
                 const summary = {
                   ...serverSummary,
-                  hasPendingReview: totalDue > 0,
+                  hasPendingReview: executable > 0,
                   totalDue,
                   queueCounts: {
                     ...serverSummary.queueCounts,
                     chunksDue,
-                    reviewable: totalDue,
+                    executable,
+                    elsewhere,
                     total: totalDue,
                   },
                 }

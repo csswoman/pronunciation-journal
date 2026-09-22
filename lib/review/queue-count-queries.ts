@@ -191,14 +191,10 @@ export async function fetchExactReviewQueueCounts(
   const soundsDue = options?.soundsDueCount ?? 0
   const chunksDue = options?.chunksDueCount ?? 0
 
-  const reviewable =
-    failedSentences +
-    reviewableWords +
-    soundsDue +
-    reviewableTopics +
-    dueLessons +
-    essentialWordsDue +
-    chunksDue
+  // `elsewhere` items are practiced on their own surface (Essential Words, Inmersión);
+  // Repaso only links to them, so they don't count toward what the session can execute.
+  const executable = failedSentences + reviewableWords + soundsDue + reviewableTopics + chunksDue
+  const elsewhere = dueLessons + essentialWordsDue
 
   return {
     failedSentences,
@@ -210,7 +206,8 @@ export async function fetchExactReviewQueueCounts(
     dueLessons,
     essentialWordsDue,
     chunksDue,
-    reviewable,
-    total: reviewable,
+    executable,
+    elsewhere,
+    total: executable + elsewhere,
   }
 }

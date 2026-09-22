@@ -29,7 +29,8 @@ vi.mock('@/components/practice/srs-vault/SrsVault', () => ({
 
 const mockSummary: ReviewHubSummary = {
   counts: {
-    reviewable: 5,
+    executable: 5,
+    elsewhere: 0,
     failedSentences: 1,
     weakWords: 1,
     dueWords: 1,
@@ -38,7 +39,7 @@ const mockSummary: ReviewHubSummary = {
     weakTopics: 1,
     dueLessons: 0,
     essentialWordsDue: 0,
-    total: 6,
+    total: 5,
   },
   canStartReview: true,
   nothingDue: false,
