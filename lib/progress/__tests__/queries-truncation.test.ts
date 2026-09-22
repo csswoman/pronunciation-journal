@@ -175,6 +175,19 @@ describe('progress query truncation (oversized histories)', () => {
     expect(stats.heatmap30.filter((level) => level > 0)).toHaveLength(2)
   })
 
+  it('counts a zero-exercise daily-plan session as plan activity, not plan completion', async () => {
+    fixtures.sessions = [
+      { source: 'daily_plan', exercises_total: 0, completed_at: daysAgo(0) },
+      { source: 'daily_plan', exercises_total: 3, completed_at: daysAgo(0) },
+      { source: 'review', exercises_total: 5, completed_at: daysAgo(1) },
+    ]
+
+    const stats = await getDailyCompletionStats('user-1')
+
+    expect(stats.planActivityDays30).toBe(1)
+    expect(stats.planActivityDays7).toBe(1)
+  })
+
   it('fetches at most SKILL_PROFILE_CONTRAST_LIMIT contrasts when more than 40 exist', async () => {
     fixtures.contrasts = Array.from({ length: 45 }, (_, i) => ({
       contrast_id: `c-${i}`,

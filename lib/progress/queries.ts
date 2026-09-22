@@ -49,9 +49,9 @@ export interface DailyCompletionStats {
   /** Days with any qualifying activity (answers, lessons, practice sessions). */
   activeDays7: number
   activeDays30: number
-  /** Days where daily plan was completed. */
-  planCompletedDays7: number
-  planCompletedDays30: number
+  /** Days with at least one recorded daily-plan activity session. */
+  planActivityDays7: number
+  planActivityDays30: number
 }
 
 export interface WeeklySummaryStats {
@@ -175,7 +175,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
 
   const countsByDay = new Map<string, number>()
   const activeDaysSet = new Set<string>()
-  const planCompletedDaysSet = new Set<string>()
+  const planActivityDaysSet = new Set<string>()
 
   for (const row of answerRows) {
     if (!row.answered_at) continue
@@ -195,7 +195,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
     activeDaysSet.add(day)
     if (row.source === 'daily_plan') {
-      planCompletedDaysSet.add(day)
+      planActivityDaysSet.add(day)
     }
   }
 
@@ -204,8 +204,8 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
   let completedDays30 = 0
   let activeDays7 = 0
   let activeDays30 = 0
-  let planCompletedDays7 = 0
-  let planCompletedDays30 = 0
+  let planActivityDays7 = 0
+  let planActivityDays30 = 0
   const heatmap30: ConsistencyHeatLevel[] = []
 
   for (let i = 29; i >= 0; i--) {
@@ -214,7 +214,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     const day = toLocalDateString(d.toISOString(), STREAK_TIMEZONE)
     const count = countsByDay.get(day) ?? 0
     const isActive = activeDaysSet.has(day)
-    const isPlanCompleted = planCompletedDaysSet.has(day)
+    const hasPlanActivity = planActivityDaysSet.has(day)
 
     const level: ConsistencyHeatLevel =
       count >= DAILY_STREAK_THRESHOLD * 2
@@ -237,9 +237,9 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
       if (i <= 6) activeDays7++
     }
 
-    if (isPlanCompleted) {
-      planCompletedDays30++
-      if (i <= 6) planCompletedDays7++
+    if (hasPlanActivity) {
+      planActivityDays30++
+      if (i <= 6) planActivityDays7++
     }
   }
 
@@ -251,8 +251,8 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     heatmap30,
     activeDays7,
     activeDays30,
-    planCompletedDays7,
-    planCompletedDays30,
+    planActivityDays7,
+    planActivityDays30,
   }
 }
 

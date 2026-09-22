@@ -16,7 +16,7 @@ son históricas.
 
 | Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
 |---|---|---|---|---|---|
-| 020 | Progreso muestra participación en Daily sin afirmar planes completos | P1 | M | — | TODO |
+| 020 | Progreso muestra participación en Daily sin afirmar planes completos | P1 | M | — | DONE |
 | 021 | Cada respuesta de teoría cuenta una sola vez | P1 | S | — | DONE |
 | 022 | La práctica externa resuelve solo targets diarios equivalentes | P1 | M | 021 | TODO |
 | 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | TODO |

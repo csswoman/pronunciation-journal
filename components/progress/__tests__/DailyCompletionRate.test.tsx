@@ -15,8 +15,8 @@ describe('DailyCompletionRate', () => {
           heatmap30: Array(30).fill(0),
           activeDays7: 0,
           activeDays30: 0,
-          planCompletedDays7: 0,
-          planCompletedDays30: 0,
+          planActivityDays7: 0,
+          planActivityDays30: 0,
         }}
       />,
     )
@@ -24,7 +24,7 @@ describe('DailyCompletionRate', () => {
     expect(screen.getByText('Sin sesiones registradas este mes')).toBeInTheDocument()
   })
 
-  it('renders active days, completed goals, and daily plans explicitly', () => {
+  it('renders active days, completed goals, and daily-plan activity explicitly', () => {
     render(
       <DailyCompletionRate
         stats={{
@@ -38,8 +38,8 @@ describe('DailyCompletionRate', () => {
           ],
           activeDays7: 6,
           activeDays30: 18,
-          planCompletedDays7: 4,
-          planCompletedDays30: 12,
+          planActivityDays7: 4,
+          planActivityDays30: 12,
         }}
       />,
     )
@@ -49,7 +49,9 @@ describe('DailyCompletionRate', () => {
     expect(screen.getByText('50% del mes')).toBeInTheDocument()
     expect(screen.getByText(/Días activos:/i)).toBeInTheDocument()
     expect(screen.getByText('18')).toBeInTheDocument()
-    expect(screen.getByText(/Planes completados:/i)).toBeInTheDocument()
+    expect(screen.getByText(/Días con actividad en el plan:/i)).toBeInTheDocument()
     expect(screen.getByText('12')).toBeInTheDocument()
+    expect(screen.getByRole('img')).toHaveAccessibleName(/12 días con actividad en el plan/i)
+    expect(screen.queryByText(/planes completados/i)).not.toBeInTheDocument()
   })
 })

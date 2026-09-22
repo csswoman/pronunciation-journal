@@ -3,7 +3,7 @@
 //   <ProgressCardHeader title="Consistencia" />
 //   <HeatmapGrid heatmap={stats.heatmap30} />
 //   <PrimaryConsistencyStat days={stats.completedDays30} rate={stats.rate30} />
-//   <ActivityBreakdown activeDays={stats.activeDays30} planCompletedDays={stats.planCompletedDays30} />
+//   <ActivityBreakdown activeDays={stats.activeDays30} planActivityDays={stats.planActivityDays30} />
 //   <HeatmapLegend />
 // </DailyCompletionRate>
 
@@ -43,7 +43,7 @@ export function DailyCompletionRate({ stats }: Props) {
           <div
             className="mt-1 grid grid-cols-[repeat(15,minmax(0,1fr))] gap-1"
             role="img"
-            aria-label={`Mapa de actividad de los últimos 30 días: ${stats.completedDays30} días con meta cumplida (${stats.rate30}% del mes), ${stats.activeDays30} días activos y ${stats.planCompletedDays30} planes completados.`}
+            aria-label={`Mapa de actividad de los últimos 30 días: ${stats.completedDays30} días con meta cumplida (${stats.rate30}% del mes), ${stats.activeDays30} días activos y ${stats.planActivityDays30} días con actividad en el plan.`}
           >
             {stats.heatmap30.map((level, i) => (
               <span
@@ -67,7 +67,7 @@ export function DailyCompletionRate({ stats }: Props) {
               Días activos: <strong className="font-semibold text-fg">{stats.activeDays30}</strong>
             </span>
             <span>
-              Planes completados: <strong className="font-semibold text-fg">{stats.planCompletedDays30}</strong>
+              Días con actividad en el plan: <strong className="font-semibold text-fg">{stats.planActivityDays30}</strong>
             </span>
           </div>
 
