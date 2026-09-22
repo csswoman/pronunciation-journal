@@ -19,7 +19,7 @@ son históricas.
 | 020 | Progreso muestra participación en Daily sin afirmar planes completos | P1 | M | — | DONE |
 | 021 | Cada respuesta de teoría cuenta una sola vez | P1 | S | — | DONE |
 | 022 | La práctica externa resuelve solo targets diarios equivalentes | P1 | M | 021 | TODO |
-| 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | TODO |
+| 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | DONE |
 | 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | TODO |
 | 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | TODO |
 | 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | TODO |

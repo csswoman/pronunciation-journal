@@ -1,5 +1,7 @@
 import { db } from '@/lib/db'
+import { enqueue } from '@/lib/sync/sync-manager'
 import type {
+  EdClusterAttempt,
   EdAllophone,
   EdCluster,
   EdEnvironment,
@@ -12,6 +14,12 @@ export interface RecordEdDrillAttempt {
   correct: boolean
   suspectedEpenthesis: boolean
   level?: EdEnvironment
+  phase: 1 | 2
+}
+
+export interface RecordEdDrillAttemptResult {
+  progress: UserEdClusterProgress
+  attempt: EdClusterAttempt
 }
 
 const T_CLUSTERS = new Set<EdCluster>(['kt', 'pt', 'ft', 'st', 'ʃt', 'tʃt'])
@@ -32,8 +40,8 @@ export async function readClusterProgress(
 export async function recordAttempt(
   userId: string,
   cluster: EdCluster,
-  { correct, suspectedEpenthesis, level = 1 }: RecordEdDrillAttempt,
-): Promise<UserEdClusterProgress> {
+  { correct, suspectedEpenthesis, level = 1, phase }: RecordEdDrillAttempt,
+): Promise<RecordEdDrillAttemptResult> {
   const id = `${userId}:${cluster}`
   const existing = await db.userEdClusterProgress.get(id)
   const attemptsCount = (existing?.attemptsCount ?? 0) + 1
@@ -43,6 +51,7 @@ export async function recordAttempt(
   const unlockedLevel = reachedStableLevel
     ? Math.min(3, level + 1) as EdEnvironment
     : existing?.unlockedLevel ?? 1
+  const occurredAt = new Date().toISOString()
   const progress: UserEdClusterProgress = {
     id,
     userId,
@@ -52,9 +61,21 @@ export async function recordAttempt(
     accuracy,
     unlockedLevel,
     epenthesisWarningsCount: (existing?.epenthesisWarningsCount ?? 0) + Number(suspectedEpenthesis),
-    lastPracticedAt: new Date().toISOString(),
+    lastPracticedAt: occurredAt,
+  }
+  const attempt: EdClusterAttempt = {
+    id: crypto.randomUUID(), userId, cluster, phase, environmentLevel: level,
+    isCorrect: correct, suspectedEpenthesis, occurredAt,
   }
 
-  await db.userEdClusterProgress.put(progress)
-  return progress
+  await db.transaction('rw', [db.userEdClusterProgress, db.edClusterAttempts, db.syncOutbox], async () => {
+    await db.userEdClusterProgress.put(progress)
+    await db.edClusterAttempts.put(attempt)
+    await enqueue(userId, 'ed_cluster_attempts', 'insert', {
+      id: attempt.id, user_id: userId, cluster, phase,
+      environment_level: level, is_correct: correct,
+      suspected_epenthesis: suspectedEpenthesis, occurred_at: occurredAt,
+    })
+  })
+  return { progress, attempt }
 }

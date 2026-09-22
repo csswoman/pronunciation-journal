@@ -28,6 +28,7 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { logDailyStepEvent } from '@/lib/practice/daily-plan/analytics'
 import type { DailyStep } from '@/lib/practice/types'
+import type { EdCluster } from '@/lib/pronunciation/ed-drills/types'
 
 interface Props {
   step: DailyStep
@@ -122,7 +123,11 @@ export default function DailyStepSession({
       <div className="mx-auto flex w-full max-w-prose flex-col gap-4 p-[var(--layout-card-pad)] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] lg:pb-[var(--layout-section-gap)]">
         {sessionChrome}
         {threadHints.length > 0 ? <DailyThreadStrip hints={threadHints} /> : null}
-        <EdDrillSession onComplete={handleStepComplete} />
+        <EdDrillSession
+          cluster={step.edClusterDrill?.cluster as EdCluster | undefined}
+          dailyStepId={step.id}
+          onComplete={handleStepComplete}
+        />
       </div>
     )
   }
