@@ -20,7 +20,7 @@ fila al terminar.
 | 009 | Retirar el estimador de nivel por precisión de pronunciación y la semilla B1 | P2 | S | — (mejor tras 008) | TODO |
 | 010 | Home propone el checkpoint cuando el alumno está listo | P2 | M | 007, 008 | TODO |
 | 011 | Daily incluye temas vencidos; repaso de temas sin target fantasma | P2 | M | — | TODO |
-| 012 | Inmersión offline-first (outbox) y en el manifest | P2 | M | — | TODO |
+| 012 | Inmersión offline-first (outbox) y en el manifest | P2 | M | — | DONE (rama `advisor/012-immersion-offline-manifest`) |
 | 013 | Los 37 mazos engVid entran en la Ruta o dejan de publicarse | P1 | M | — | TODO |
 | 014 | El placement de invitado llega a la cuenta; fallos visibles | P2 | S | 007 | TODO |
 | 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | TODO |

@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 next dev --webpack",
     "content-index:generate": "tsx scripts/generate-content-index.ts",
+    "immersion-index:generate": "tsx --env-file=.env.local scripts/generate-immersion-index.ts",
     "sync:engvid": "tsx --env-file=.env.local scripts/sync-engvid-lessons.ts",
     "essential-words:catalog-index": "node scripts/essential-words/generate-catalog-index.mjs",
     "validate:chunk-catalog": "tsx scripts/chunks/validate-content-graph.ts",
-    "prebuild": "pnpm content-index:generate && pnpm essential-words:level-index && pnpm essential-words:catalog-index",
+    "prebuild": "pnpm content-index:generate && pnpm immersion-index:generate && pnpm essential-words:level-index && pnpm essential-words:catalog-index",
     "build": "npm run lint:design-tokens && next build",
     "start": "next start",
     "lint": "eslint .",

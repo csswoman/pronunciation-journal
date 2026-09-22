@@ -10,6 +10,7 @@ export type LearningSurface =
   | 'pronunciation_path'
   | 'oral_mission'
   | 'tracking'
+  | 'immersion'
 
 export type LearningSignal =
   | 'exposure'
