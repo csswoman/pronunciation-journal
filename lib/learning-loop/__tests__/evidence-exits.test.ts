@@ -11,4 +11,12 @@ describe('learning-loop evidence exits', () => {
     expect(new Set(EVIDENCE_EXIT_CONTRACTS.map((contract) => contract.adapter)).size)
       .toBe(EVIDENCE_EXIT_CONTRACTS.length)
   })
+
+  it('attributes immersion to its persisted progress row, not an unwritten activity session', async () => {
+    const manifest = await buildLearningContentManifest()
+    const immersion = manifest.find((entry) => entry.surface === 'immersion' && entry.practice.status === 'activity_only')
+    expect(immersion?.owners).toEqual(['immersion_lesson_progress'])
+    expect(EVIDENCE_EXIT_CONTRACTS.find((contract) => contract.adapter === 'immersion_quiz'))
+      .toMatchObject({ domainWriter: 'immersion_lesson_progress', sessionWriter: null })
+  }, 30_000)
 })

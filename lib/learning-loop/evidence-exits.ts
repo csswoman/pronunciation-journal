@@ -20,9 +20,9 @@ export const EVIDENCE_EXIT_CONTRACTS: readonly EvidenceExitContract[] = [
   { adapter: 'user_deck_word_bank_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'word_bank' },
   { adapter: 'word_rain_activity', answerWriter: null, sessionWriter: 'recordActivitySession' },
   { adapter: 'word_search_activity', answerWriter: null, sessionWriter: 'recordActivitySession' },
-  // activity_only: registra quiz_score pero no PracticeAnswer/activity_session
-  // todavía — ver el comentario en content-manifest.ts#immersionEntries.
-  { adapter: 'immersion_quiz', answerWriter: null, sessionWriter: null },
+  // activity_only: registra quiz_score en immersion_lesson_progress, no una
+  // PracticeAnswer/activity_session — ver immersion-entries.ts.
+  { adapter: 'immersion_quiz', answerWriter: null, sessionWriter: null, domainWriter: 'immersion_lesson_progress' },
 ]
 
 export function auditEvidenceExits(entries: readonly LearningContentManifestEntry[]): string[] {

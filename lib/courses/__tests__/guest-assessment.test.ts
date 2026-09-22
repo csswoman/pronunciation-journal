@@ -86,12 +86,25 @@ describe("claimGuestPlacement", () => {
     await expect(claimGuestPlacement("u3")).resolves.toBe(false);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(window.localStorage.getItem("assessment:guest:placement:placement")).not.toBeNull();
-    expect(window.localStorage.getItem("assessment:guest:placement:posted")).toBe(result.completedAt);
+    expect(window.localStorage.getItem("assessment:guest:placement:posted:u3")).toBe(result.completedAt);
 
     persistMock.mockResolvedValueOnce(undefined);
     await expect(claimGuestPlacement("u3")).resolves.toBe(true);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(window.localStorage.getItem("assessment:guest:placement:placement")).toBeNull();
+  });
+
+  it("does not let a failed local claim for one account suppress another account's server claim", async () => {
+    window.localStorage.setItem("assessment:guest:placement:placement", JSON.stringify(result));
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal("fetch", fetchMock);
+    persistMock.mockRejectedValueOnce(new Error("dexie down"));
+
+    await expect(claimGuestPlacement("u3")).resolves.toBe(false);
+    await expect(claimGuestPlacement("u4")).resolves.toBe(true);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(persistMock).toHaveBeenLastCalledWith("u4", result.conceptSignals, "A2");
   });
 
   it("keeps the guest key when the POST returns a server error", async () => {
@@ -102,6 +115,6 @@ describe("claimGuestPlacement", () => {
     await expect(claimGuestPlacement("u4")).resolves.toBe(false);
 
     expect(window.localStorage.getItem("assessment:guest:placement:placement")).not.toBeNull();
-    expect(window.localStorage.getItem("assessment:guest:placement:posted")).toBeNull();
+    expect(window.localStorage.getItem("assessment:guest:placement:posted:u4")).toBeNull();
   });
 });

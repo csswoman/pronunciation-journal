@@ -13,6 +13,7 @@ type RemoteContentSrs = {
   state: string
   interval: number
   repetitions: number
+  fsrs_real_reviews: number | null
   next_review_at: string
   last_review_at: string | null
   updated_at: string
@@ -48,6 +49,7 @@ export function contentSrsPayload(
     state: schedule.state,
     interval: schedule.interval,
     repetitions: schedule.repetitions,
+    fsrs_real_reviews: schedule.fsrsRealReviews ?? null,
     next_review_at: schedule.nextReview,
     last_review_at: schedule.lastReview ?? null,
     updated_at: schedule.lastReview ?? new Date().toISOString(),
@@ -64,6 +66,7 @@ function toLocalRow(row: RemoteContentSrs): SRSData | null {
     ease: 2.5,
     interval: row.interval,
     repetitions: row.repetitions,
+    fsrsRealReviews: row.fsrs_real_reviews ?? undefined,
     nextReview: row.next_review_at,
     lastReview: row.last_review_at ?? undefined,
     stability: row.stability,
@@ -83,7 +86,7 @@ export async function hydrateContentSrs(userId: string): Promise<void> {
   const { data, error } = await getSupabaseBrowserClient()
     // Generated Supabase types lag this migration until it is applied remotely.
     .from('content_srs' as never)
-    .select('user_id, content_id, namespace, stability, difficulty, state, interval, repetitions, next_review_at, last_review_at, updated_at')
+    .select('user_id, content_id, namespace, stability, difficulty, state, interval, repetitions, fsrs_real_reviews, next_review_at, last_review_at, updated_at')
     .eq('user_id' as never, userId)
 
   if (error) throw error

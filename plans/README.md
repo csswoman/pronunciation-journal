@@ -21,10 +21,10 @@ fila al terminar.
 | 010 | Home propone el checkpoint cuando el alumno está listo | P2 | M | 007, 008 | DONE (rama `advisor/010-checkpoint-readiness`) |
 | 011 | Daily incluye temas vencidos; repaso de temas sin target fantasma | P2 | M | — | DONE (rama `advisor/011-daily-topic-srs`) |
 | 012 | Inmersión offline-first (outbox) y en el manifest | P2 | M | — | DONE (rama `advisor/012-immersion-offline-manifest`) |
-| 013 | Los 37 mazos engVid entran en la Ruta o dejan de publicarse | P1 | M | — | TODO |
+| 013 | Los 37 mazos engVid entran en la Ruta o dejan de publicarse | P1 | M | — | DONE (mazos conservados como borradores no publicados) |
 | 014 | El placement de invitado llega a la cuenta; fallos visibles | P2 | S | 007 | DONE (rama `advisor/014-guest-claim`) |
 | 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | DONE |
-| 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | TODO |
+| 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | DONE (Home y Daily comparten `useDailyPlan`) |
 | 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | DONE |
 | 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | DONE |
 | 019 | SRS de chunks y frases del sistema sincroniza vía outbox | P3 | L | — | DONE |

@@ -51,7 +51,7 @@ export function immersionEntries(): LearningContentManifestEntry[] {
         adapter: 'immersion_quiz',
         reason: 'Quiz score se registra (immersion_lesson_progress.quiz_score) pero no como PracticeAnswer/activity_session auditable todavía.',
       },
-      owners: ['activity_sessions'] as const,
+      owners: ['immersion_lesson_progress'] as const,
     }
   })
 }

@@ -30,6 +30,7 @@ export type ProgressOwner =
   | 'word_bank'
   | 'tracked_items'
   | 'activity_sessions'
+  | 'immersion_lesson_progress'
 
 export type LearningTargetRef =
   | { namespace: 'topic'; id: string }

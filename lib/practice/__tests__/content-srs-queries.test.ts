@@ -19,6 +19,7 @@ const remoteRow = {
   state: 'Review',
   interval: 3,
   repetitions: 2,
+  fsrs_real_reviews: 2,
   next_review_at: '2026-09-25T12:00:00.000Z',
   last_review_at: '2026-09-22T12:00:00.000Z',
   updated_at: '2026-09-22T12:00:00.000Z',
@@ -45,6 +46,7 @@ describe('hydrateContentSrs', () => {
         userId: 'user-1',
         wordId: 'chunk:hello-there',
         state: 'Review',
+        fsrsRealReviews: 2,
         nextReview: remoteRow.next_review_at,
       })
   })
