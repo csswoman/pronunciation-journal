@@ -37,3 +37,22 @@ Si el operador pide rama, usa `codex/027-audit-runtime-learning-exits` desde `de
 ## STOP y mantenimiento
 
 Detente si una superficie no expone un punto público testeable: documenta el hue y limita el test a un componente con interacción real, sin declarar cobertura runtime desde un mock de escritores. Las futuras superficies entran tanto al inventario como a la prueba de roundtrip pertinente.
+
+## Avance de ejecución (2026-09-22)
+
+El inventario comprobable está en `lib/learning-loop/__tests__/runtime-exit-inventory.test.ts`. Cada fila registra propietario, identidad, actividad, reconciliación, señal prohibida y caso existente. La prueba falla si falta cualquiera de las diez superficies o se elimina su caso. El nivel de cada caso es explícito:
+
+| Superficie | Cobertura actual | Límite pendiente |
+|---|---|---|
+| PracticeSession | Interacción de componente | Falta comprobar el outbox real desde el hook. |
+| Essential Words | Runtime con escritores simulados | Falta enlazar el motor con `savePracticeAnswer` y `recordActivitySession` reales. |
+| Chunks | Contrato de atribución | Falta roundtrip desde la acción de práctica. |
+| Cursos | Roundtrip local con escritores reales | La prueba llama a los escritores; falta invocar el productor de quiz. |
+| Misiones | Persistencia con escritores simulados | Falta roundtrip local desde el productor. |
+| Focus | Contrato de evidencia | Falta interacción de componente con outbox real. |
+| `-ed` | Persistencia de intentos | Falta interacción de componente con outbox real. |
+| Inmersión | Productor real → respuesta y actividad en outbox | Falta incluir la reconciliación del paso exacto en el mismo caso. |
+| Juegos | Productor real → solo actividad en outbox | Cubierto para Word Rain y Word Search. |
+| Reader | Productor real → respuesta y actividad en outbox | El flush remoto se reemplaza; los escritores son reales. |
+
+Gate antes de PR: `pnpm test:learning-loop:integration` además de `pnpm audit:learning-loop`. El segundo solo comprueba catálogo y salidas declaradas. La integración tardó 14.5 s en esta ejecución de Windows (2 archivos, 16 tests). No se añade a `prepush` hasta cerrar las brechas de productores indicadas arriba. En esta máquina, `tsx scripts/audit-learning-loop.mjs` necesita `NODE_OPTIONS=--conditions=react-server` por el import de `server-only` en `decks.ts`; con esa condición reportó 4125 entradas y 0 incidencias.

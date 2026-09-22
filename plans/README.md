@@ -23,7 +23,7 @@ son históricas.
 | 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | DONE |
 | 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | TODO |
 | 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | DONE |
-| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | TODO |
+| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | IN PROGRESS |
 
 Orden recomendado: **021 → 020 → 022 → 023 → 024 → 025 → 026 → 027**.
 020 puede ejecutarse en paralelo con 021. 023–025 pueden ejecutarse por separado

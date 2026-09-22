@@ -49,6 +49,7 @@ const pairCoverage = listAllDecks().reduce((report, { slug }) => {
 })
 
 console.log('[learning-loop] coverage')
+console.log('  Static catalog and declared-exit checks only; runtime persistence requires pnpm test:learning-loop:integration before PR.')
 for (const [surface, count] of Object.entries(summary)) {
   console.log(`  ${surface}: ${count}`)
 }

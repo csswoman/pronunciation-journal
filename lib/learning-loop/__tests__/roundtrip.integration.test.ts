@@ -1,6 +1,10 @@
 // @vitest-environment node
 import 'fake-indexeddb/auto'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+vi.mock('@/lib/sync/sync-manager', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/lib/sync/sync-manager')>(),
+  flushOutbox: vi.fn().mockResolvedValue({ synced: 0, failed: 0, skipped: 0 }),
+}))
 import { db } from '@/lib/db'
 import { topicId, type EvidenceAttribution } from '@/lib/practice/attribution'
 import { candidate, selectDailyCandidates } from '@/lib/practice/daily-plan/policy'
@@ -13,6 +17,9 @@ import type {
   SessionResult,
 } from '@/lib/practice/types'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { recordGameActivity } from '@/lib/progress/game-activity'
+import { recordImmersionQuizAttempt } from '@/lib/immersion/progress-queries'
+import { completeReader } from '@/lib/practice/reader/complete-reader'
 import { projectProgress, type ProgressFact } from '@/lib/progress/projections'
 
 const USER = '00000000-0000-4000-8000-000000000076'
@@ -208,5 +215,82 @@ describe('integrated learning-loop local round-trip', () => {
     expect(afterFailure.learning.evidence).toEqual([
       expect.objectContaining({ targetId: TARGET, correct: false, modality: 'contextual_use' }),
     ])
+  })
+
+  it('isolates replay-safe answers by user and keeps skipped attempts out of learning evidence', async () => {
+    const otherUser = '00000000-0000-4000-8000-000000000077'
+    const skipped = { ...answer('shared-attempt', true), status: 'skipped' as const, userAnswer: 'skip' }
+    await savePracticeAnswer(USER, skipped)
+    await savePracticeAnswer(USER, skipped)
+    await savePracticeAnswer(otherUser, answer('shared-attempt', true))
+
+    const own = await db.syncOutbox.where('userId').equals(USER).toArray()
+    const other = await db.syncOutbox.where('userId').equals(otherUser).toArray()
+    expect(own.filter((entry) => entry.table === 'answer_history')).toHaveLength(1)
+    expect(other.filter((entry) => entry.table === 'answer_history')).toHaveLength(1)
+    expect(own.find((entry) => entry.table === 'answer_history')?.payload).toMatchObject({
+      id: 'shared-attempt', user_id: USER, grade: null, is_correct: false,
+    })
+    expect(other.find((entry) => entry.table === 'answer_history')?.payload)
+      .toMatchObject({ id: 'shared-attempt', user_id: otherUser, is_correct: true })
+
+    const selected = [dailyStep('study_deck:a1:present-simple', 'route_next', TARGET).step]
+    const outcome = await recordActivitySession(USER, {
+      activitySessionId: 'skipped-session',
+      practiceContext: 'courses',
+      sessionResult: session([result(skipped, STARTED_AT)]),
+      dailyPlanSteps: selected,
+      metadata: { dailyTargetId: 'a1:present-simple' },
+    })
+    expect(outcome.reconciledStepIds).toEqual([])
+    expect(projectProgress([{ id: 'skipped-session', signal: 'objective_evidence', occurredAt: STARTED_AT, provenance: 'activity_sessions' }]).learning.evidencedTargets).toBe(0)
+  })
+
+  it.each(['word_rain', 'word_search'] as const)('records %s activity without answer evidence', async (source) => {
+    await recordGameActivity(USER, source, 1_250, `${source}-fixture`)
+    const outbox = await db.syncOutbox.where('userId').equals(USER).toArray()
+    expect(outbox.filter((entry) => entry.table === 'answer_history')).toEqual([])
+    expect(outbox.filter((entry) => entry.table === 'activity_sessions')).toEqual([
+      expect.objectContaining({ payload: expect.objectContaining({
+        user_id: USER, source, exercises_total: 0, duration_ms: 1_250, reconciled_step_ids: [],
+      }) }),
+    ])
+  })
+
+  it('persists immersion quiz selections once per attempt with stable ids', async () => {
+    const attempt = {
+      attemptId: 'immersion-attempt-1', lessonId: 'lesson-1', canonicalTopic: TOPIC,
+      answers: [{ questionId: 'q1', question: 'Meaning?', selectedAnswer: 'A', correctAnswer: 'A', isCorrect: true, timeMs: 900 }],
+    }
+    await recordImmersionQuizAttempt(USER, attempt)
+    await recordImmersionQuizAttempt(USER, attempt)
+    const outbox = await db.syncOutbox.where('userId').equals(USER).toArray()
+    expect(outbox.filter((entry) => entry.table === 'answer_history')).toEqual([
+      expect.objectContaining({ payload: expect.objectContaining({
+        id: 'immersion-attempt-1:q1', user_id: USER, user_answer: 'A',
+        exercise_payload: expect.objectContaining({ immersionLessonId: 'lesson-1', questionId: 'q1' }),
+      }) }),
+    ])
+    expect(outbox.filter((entry) => entry.table === 'activity_sessions')).toEqual([
+      expect.objectContaining({ payload: expect.objectContaining({
+        id: 'immersion-attempt-1', user_id: USER, source: 'immersion', exercises_total: 1,
+      }) }),
+    ])
+  })
+
+  it('persists a completed Reader task but no target mastery from its activity', async () => {
+    await completeReader({ userId: USER, passageId: 'passage-1', correct: true, context: 'practice' })
+    const outbox = await db.syncOutbox.where('userId').equals(USER).toArray()
+    expect(outbox.filter((entry) => entry.table === 'answer_history')).toEqual([
+      expect.objectContaining({ payload: expect.objectContaining({
+        user_id: USER, content_id: 'passage-1', is_correct: true,
+      }) }),
+    ])
+    expect(outbox.filter((entry) => entry.table === 'activity_sessions')).toEqual([
+      expect.objectContaining({ payload: expect.objectContaining({
+        user_id: USER, source: 'practice', exercises_total: 1, reconciled_step_ids: [],
+      }) }),
+    ])
+    expect(projectProgress([{ id: 'reader-session', signal: 'objective_evidence', occurredAt: STARTED_AT, provenance: 'activity_sessions' }]).learning.evidencedTargets).toBe(0)
   })
 })
