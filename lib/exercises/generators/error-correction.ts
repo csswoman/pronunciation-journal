@@ -103,7 +103,7 @@ export function generateErrorCorrectionFromDeck(
   deck: GrammarStudyDeckData,
   limit: number,
 ): ErrorCorrectionExercise[] {
-  const sourceRef = { source: 'text_fragments' as const, id: `grammar-deck:${deckSlug}` }
+  const sourceRef = { source: 'grammar_deck' as const, id: `grammar-deck:${deckSlug}` }
   const normalizedTopic = normalizeReviewTopic(topic)
   return extractAuthoredErrorPairs(deck).pairs.slice(0, Math.max(0, limit)).map((pair) => ({
     id: exerciseId('error_correction', sourceRef.id, `${pair.cardId}:${pair.blockIndex}:${pair.lineIndex}:${pair.bad}:${pair.good}`),

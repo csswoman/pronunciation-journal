@@ -8,7 +8,8 @@ import { shouldOfferMission } from './mission-cadence'
 import { recentMissionAvoidance } from './mission-avoidance'
 import { loadRecentMissionSessions } from '@/lib/ai-practice/missions/recent-sessions'
 import { capPronunciationSteps, DAILY_PLAN_STEP_COUNT, MAX_DUE_STEPS, RESERVED_CHUNK_NEW_SLOTS, WORD_REVIEW_WORD_COUNT } from './constants'
-import { fetchDueReviewWords, fetchDueSounds, fetchNewWords, fetchSavedOrFamiliarWords, fetchWeakestSoundProgress } from './fetchers'
+import { fetchDueReviewWords, fetchDueSounds, fetchDueTopics, fetchNewWords, fetchSavedOrFamiliarWords, fetchWeakestSoundProgress } from './fetchers'
+import { buildDueTopicSteps } from './due-topics'
 import { dayOfYear, getSemanticContentKey } from './selectors'
 import { getWordCategoryIndex } from '@/lib/lexicon/word-index-client'
 import { biasWordsBySound } from './sound-word-bridge'
@@ -76,6 +77,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     completedLessons,
     wordIndex,
     levelResolution,
+    dueTopics,
   ] = await Promise.all([
     getAllSounds(),
     fetchNewWords(userId, WORD_REVIEW_WORD_COUNT),
@@ -87,7 +89,10 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     readCompletedLessons().catch(() => []),
     getWordCategoryIndex(),
     getEffectiveLearnerLevel(userId),
+    fetchDueTopics(userId).catch(() => []),
   ])
+
+  const dueTopicSteps = buildDueTopicSteps(dueTopics)
 
   const aiState = localLearningState?.state ?? null
   const hasProgress = weakest != null
@@ -182,7 +187,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     ...(pronunciationChunkStep ? [pronunciationChunkStep] : []),
     ...candidateSteps,
   ]
-  const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0 || dueChunkStep !== null
+  const hasDueSrs = dueWords.length > 0 || dueSounds.length > 0 || dueChunkStep !== null || dueTopicSteps.length > 0
 
   if (hasDueSrs) {
     const hubPlan = await buildReviewPlan(userId, { dueWords, dueSounds, learnerLevel })
@@ -243,6 +248,12 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
       ...(step.kind === 'mission' ? { requiredCapability: 'speech_recognition' as const } : {}),
     }),
   )
+
+  // Temas de gramática vencidos: cada paso ya trae su propia selection
+  // (reason: 'due', source: 'topic_srs') desde buildTopicReviewStep.
+  for (const step of dueTopicSteps) {
+    if (step.selection) candidates.push(candidate(step, step.selection))
+  }
 
   const targetPracticeCount = DAILY_PLAN_STEP_COUNT - 1
   let finalSteps = capPronunciationSteps(
