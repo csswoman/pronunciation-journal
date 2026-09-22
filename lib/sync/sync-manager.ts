@@ -51,6 +51,7 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   lesson_completions: 'user_id,course_slug,lesson_slug',
   learning_items: 'user_id,id',
   immersion_lesson_progress: 'user_id,lesson_id',
+  content_srs: 'user_id,namespace,content_id',
 }
 
 /**

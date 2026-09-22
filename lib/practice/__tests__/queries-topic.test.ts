@@ -87,7 +87,7 @@ describe('savePracticeAnswer source SRS routing', () => {
       sourceRef: { source: 'text_fragments', id: 'frag-9' },
     })
 
-    expect(fragmentSrsMock).toHaveBeenCalledWith('frag-9', expect.any(Number))
+    expect(fragmentSrsMock).toHaveBeenCalledWith('user-1', 'frag-9', expect.any(Number))
     expect(wordBankSrsMock).not.toHaveBeenCalled()
   })
 

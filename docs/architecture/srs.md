@@ -5,7 +5,7 @@ estos sistemas con contenido, ejercicios, Plan diario, Repaso y Progreso está
 definida en [`integrated-learning-loop.md`](integrated-learning-loop.md). Ningún
 SRS convierte exposición, completion o guardado en dominio por sí solo.
 
-Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un dominio distinto y no se solapan.
+Cinco sistemas de repetición espaciada conviven en la app. Cada uno tiene un dominio distinto y no se solapan.
 
 | Sistema | Almacenamiento | Algoritmo | Clave |
 | --- | --- | --- | --- |
@@ -13,6 +13,7 @@ Cuatro sistemas de repetición espaciada conviven en la app. Cada uno tiene un d
 | Contrastes de fonemas | `user_contrast_progress` (Supabase) | SM-2 simplificado | `contrast_id` |
 | Essential Words (NGSL / `c1k:`) | `srsData` (Dexie, offline-first) | SM-2 cliente | `c1k:<word>` |
 | Temas / conceptos del curso | `topic_srs` (Supabase) | SM-2 cliente | `normalizeTopic()` |
+| Chunks y frases del sistema | `content_srs` (Supabase ⇄ Dexie) | FSRS cliente | `(user_id, namespace, content_id)` |
 
 ---
 
@@ -125,6 +126,29 @@ Cada ítem lleva `kind: 'new' | 'learning' | 'review'` (antes era un booleano `i
 **Trazabilidad:** `answer_history.topic` (nullable) guarda el tema del ejercicio que originó la respuesta. Migración: `supabase/migrations/20260618130000_answer_history_topic.sql`.
 
 **Lectura para el Review Hub:** `lib/review/srs-history-queries.ts` lee temas vencidos/débiles y los expone como cuarto dominio junto a vocabulario, fonemas y Essential Words.
+
+---
+
+## 5. `content_srs` — Chunks y frases del sistema
+
+**Propósito:** Conserva el calendario FSRS de chunks comunicativos y frases
+canónicas del sistema por alumno. El contenido sigue siendo del catálogo; solo
+el schedule pertenece al usuario.
+
+**Tabla:** `content_srs` (Supabase ⇄ Dexie), con clave
+`(user_id, namespace, content_id)`. `namespace` distingue `chunks` de
+`text_fragments`, y las políticas RLS solo permiten operar sobre las filas del
+usuario autenticado.
+
+**Algoritmo y escritura:** `upsertChunkSrs` y `upsertFragmentSrs` calculan FSRS
+en cliente, guardan `srsData` en Dexie y en la misma transacción añaden un
+`upsert` a `syncOutbox`. Así el repaso funciona sin conexión y el estado llega
+al otro dispositivo cuando se restablece la red.
+
+**Reconciliación:** al iniciar sesión, `hydrateContentSrs(userId)` compara
+`content_srs.updated_at` con `srsData.lastReview` local y reemplaza solo la
+fila local más antigua. Es una política de último cambio ganador: no fusiona
+dos calendarios divergentes.
 
 ---
 
