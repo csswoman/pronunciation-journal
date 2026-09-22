@@ -11,3 +11,7 @@ export function readGuestStudyLevel(): CefrLevel {
 export function saveGuestStudyLevel(level: CefrLevel): void {
   window.localStorage.setItem(STORAGE_KEY, level);
 }
+
+export function clearGuestStudyLevel(): void {
+  window.localStorage.removeItem(STORAGE_KEY);
+}

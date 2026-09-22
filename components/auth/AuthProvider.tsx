@@ -96,6 +96,7 @@ export default function AuthProvider({
     let cancelled = false;
     let cleanupSyncListeners = () => {};
     const hydrationPromises = new Map<string, Promise<void>>();
+    let guestClaimRetryTimeout: ReturnType<typeof setTimeout> | null = null;
 
     void import("@/lib/db").then(async ({ ensureDbReady }) => {
       await ensureDbReady().catch(() => {});
@@ -111,15 +112,35 @@ export default function AuthProvider({
           const { claimGuestPronunciationDiagnostic } = await import(
             "@/lib/pronunciation/assessment/guest-transfer"
           );
-          await claimGuestPlacement(userId);
+          const claimed = await claimGuestPlacement(userId);
           await claimGuestPronunciationDiagnostic(userId);
+
+          if (!claimed) {
+            guestClaimRetryTimeout = setTimeout(() => {
+              if (currentUserIdRef.current === userId) {
+                void claimGuestPlacement(userId);
+              }
+            }, 15_000);
+          }
 
           const { data } = await getSupabaseBrowserClient()
             .from("user_profiles" as never)
-            .select("cefr_level")
+            .select("cefr_level, cefr_level_source")
             .eq("id", userId)
             .maybeSingle();
-          const profile = data as { cefr_level?: string } | null;
+          const profile = data as { cefr_level?: string; cefr_level_source?: string } | null;
+
+          if (!claimed && (!profile?.cefr_level_source || profile?.cefr_level_source === "starter_default")) {
+            const { readGuestStudyLevel, clearGuestStudyLevel } = await import(
+              "@/lib/preferences/guest-study-level"
+            );
+            const guestLevel = readGuestStudyLevel();
+            if (guestLevel !== "A1") {
+              const { applyManualCefrLevel } = await import("@/lib/users/queries");
+              await applyManualCefrLevel(userId, guestLevel);
+              clearGuestStudyLevel();
+            }
+          }
 
           const [
             { db, ensureDbReady },
@@ -228,6 +249,7 @@ export default function AuthProvider({
     return () => {
       cancelled = true;
       cleanupSyncListeners();
+      if (guestClaimRetryTimeout) clearTimeout(guestClaimRetryTimeout);
       subscription.unsubscribe();
     };
   }, [initialUser, router, supabaseEnabled]);
