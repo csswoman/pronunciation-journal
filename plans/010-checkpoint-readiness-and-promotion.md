@@ -8,6 +8,19 @@
 > **Drift check (ejecutar primero)**:
 > `git diff --stat c869029c..HEAD -- lib/home lib/courses/curriculum.ts lib/courses/assessment.ts components/courses/CoursePathAsideProgress.tsx components/courses/CoursePathLevelPicker.tsx components/courses/CoursePathProgressClient.tsx "app/(authenticated)/page.tsx" components/home`
 > Ante discrepancia con "Current state", STOP.
+>
+> **Nota de re-planning (2026-09-21)**: un primer intento de ejecución disparó
+> STOP por drift real. `lib/home/queries.ts` fue reescrito: `getUserProfileLevel`
+> (ahora línea 333, antes 313) ya no lee `user_profiles` directo — delega a
+> `getEffectiveLearnerLevelServer` (`lib/learner-level/server-queries.ts`) y
+> devuelve `CefrLevel` **mayúsculas** (`"A1"|"A2"|"B1"|"B2"|"C1"`, tipo en
+> `lib/essential-words/types.ts`), con C2 ya colapsado a C1 dentro de la
+> función. Esto es distinto del `CefrLevelId` minúsculas (`"a1"..."c2"`, en
+> `lib/courses/types.ts`) que usa `LEVEL_ASSESSMENT_CONTRACTS` y que este plan
+> asume en `computeCheckpointReadiness`. Decisión (ver "Maintenance notes"):
+> mantener el clamp existente y reutilizar `getUserProfileLevel` tal cual —
+> no se añade una segunda fuente de nivel sin clamp. El plan de abajo ya
+> incorpora esta decisión; los pasos 1-3 fueron ajustados en consecuencia.
 
 ## Status
 
@@ -99,7 +112,7 @@ import { LEVEL_ASSESSMENT_CONTRACTS } from '@/lib/courses/curriculum'
 import type { CefrLevelId } from '@/lib/courses/types'
 
 export interface CheckpointReadinessInput {
-  level: CefrLevelId                       // nivel resuelto del alumno
+  level: CefrLevelId                       // nivel resuelto del alumno (ya en minúsculas, ver nota de mapeo abajo)
   completedLessonSlugs: ReadonlySet<string>
   /** slugs de deck cuyo topic_srs está mastered o review con repetitions >= 2 */
   evidencedDeckSlugs: ReadonlySet<string>
@@ -113,13 +126,24 @@ export interface CheckpointReadiness {
   completedRequired: number
   evidencedRequired: number
   missingSlugs: string[]
-  reason: 'ready' | 'lessons_missing' | 'no_evidence' | 'recent_attempt' | 'max_level'
+  reason: 'ready' | 'lessons_missing' | 'no_evidence' | 'recent_attempt'
 }
 export function computeCheckpointReadiness(input): CheckpointReadiness
 ```
 
+**Nota de mapeo de nivel (importante, ver drift note al inicio del plan)**:
+la única fuente de "nivel resuelto" disponible en Home es
+`getUserProfileLevel` (`lib/home/queries.ts:333`), que devuelve `CefrLevel`
+**mayúsculas** (`"A1"|"A2"|"B1"|"B2"|"C1"`) y ya colapsa C2→C1 internamente.
+Al llamar a `computeCheckpointReadiness` desde `getCheckpointReadiness`
+(Step 2), convierte con `.toLowerCase() as CefrLevelId` (mismo patrón que
+`lib/practice/daily-plan/composer.ts:94`). Como el valor de entrada nunca
+puede ser `"c2"` (ya viene clamped a C1), **no existe un caso `max_level`
+alcanzable** por este camino — por eso se quitó esa rama de `reason` arriba.
+Si en el futuro se decide dar un nivel sin clamp a checkpoint, es un cambio
+deliberado y separado (ver "Maintenance notes").
+
 Reglas (deterministas y visibles):
-- `c2` → `max_level`, `ready: false`.
 - `required = LEVEL_ASSESSMENT_CONTRACTS[level].requiredLessonSlugs`.
 - `ready` si **todas** las requeridas están completadas **y** al menos la
   mitad (redondeo hacia arriba) tienen evidencia en `evidencedDeckSlugs`, y
@@ -128,13 +152,16 @@ Reglas (deterministas y visibles):
 
 Test `lib/home/__tests__/checkpoint-readiness.test.ts` (patrón:
 `primary-action.test.ts`): ready; faltan lecciones; sin evidencia; intento
-reciente; c2.
+reciente. (4 casos — el caso `c2`/`max_level` se eliminó, ver nota de mapeo
+de nivel arriba.)
 
 **Verify**: `pnpm vitest run lib/home/__tests__/checkpoint-readiness.test.ts` → all pass.
 
 ### Step 2: Query servidor
 
-En `lib/home/queries.ts` añade `getCheckpointReadiness(userId, level: CefrLevelId)`:
+En `lib/home/queries.ts` añade `getCheckpointReadiness(userId, level: CefrLevelId)`
+(el caller pasa `level` ya en minúsculas — ver Step 3 para cómo obtenerlo
+desde `getUserProfileLevel`):
 - lee `lesson_completions` (`lesson_slug`) del usuario;
 - lee `topic_srs` del usuario y mapea a slug de deck con `deckSlugForTopic`
   (mira cómo lo hace `lib/progress/topic-progress.ts:buildTopicStatusByDeck`
@@ -148,11 +175,15 @@ En `lib/home/queries.ts` añade `getCheckpointReadiness(userId, level: CefrLevel
 ### Step 3: Home muestra el CTA
 
 1. En `app/(authenticated)/page.tsx`, junto a `getHomePlacementState`, llama
-   a `getCheckpointReadiness(userId, learnerLevel)` (el nivel resuelto ya se
-   obtiene en la página o en `lib/home/queries.ts:313`; reutilízalo) solo si
-   `placementState.hasPlacement`. Envuélvelo con el mismo helper de
-   tolerancia a fallos que usa la página para las otras queries (busca
-   `"placement state"` en la página para ver el patrón).
+   a `getUserProfileLevel(userId)` (`lib/home/queries.ts:333`; reutiliza la
+   llamada si la página ya la hace para otro propósito — busca
+   `getUserProfileLevel` en la página primero) y conviértelo con
+   `.toLowerCase() as CefrLevelId` antes de pasarlo a
+   `getCheckpointReadiness(userId, level)`, solo si
+   `placementState.hasPlacement` y el nivel resuelto no es `null`. Envuélvelo
+   con el mismo helper de tolerancia a fallos que usa la página para las
+   otras queries (busca `"placement state"` en la página para ver el
+   patrón).
 2. Crea `components/home/HomeCheckpointCard.tsx` que reciba
    `readiness: CheckpointReadiness` y renderice:
    - si `ready`: título "Listo para el checkpoint {nivel siguiente}",
@@ -204,7 +235,9 @@ Si el usuario navega un nivel distinto al suyo, muestra el texto
 
 ## STOP conditions
 
-- Los extractos no coinciden.
+- Los extractos no coinciden (nota: la discrepancia de tipos `CefrLevel` vs
+  `CefrLevelId` ya fue resuelta arriba — no es motivo de un nuevo STOP; solo
+  detente si algo más no coincide).
 - `lesson_completions` no guarda los slugs con el mismo formato que
   `REQUIRED_ASSESSMENT_SLUGS` (comprueba con una fila real o con
   `recordLessonComplete`): reporta el formato antes de mapear.
@@ -217,4 +250,13 @@ Si el usuario navega un nivel distinto al suyo, muestra el texto
   solo sitio (`computeCheckpointReadiness`) para poder ajustarla.
 - `failureFallback` sigue sin aplicarse (un checkpoint fallido no baja el
   nivel). Decisión deferida al propietario; anotada como follow-up.
-- Revisor: el CTA nunca debe aparecer sin placement previo ni para `c2`.
+- Revisor: el CTA nunca debe aparecer sin placement previo.
+- Nivel de checkpoint usa el mismo clamp C2→C1 que el resto de Home
+  (`getUserProfileLevel`), a propósito (decisión 2026-09-21, ver drift note
+  inicial): un alumno en C1/C2 real nunca ve el CTA de checkpoint desde esta
+  ruta porque nunca hay `nextLevel` más allá de C1 en `LEVEL_ASSESSMENT_CONTRACTS`
+  en la práctica. Si se decide en el futuro dar un nivel sin clamp
+  específicamente para checkpoint (para permitir un checkpoint C1→C2 real),
+  es un plan separado: requeriría traer `getEffectiveLearnerLevelServer`
+  directo, no reutilizar `getUserProfileLevel`, y volver a evaluar si tiene
+  sentido reintroducir el caso `max_level`.
