@@ -20,7 +20,7 @@ son históricas.
 | 021 | Cada respuesta de teoría cuenta una sola vez | P1 | S | — | DONE |
 | 022 | La práctica externa resuelve solo targets diarios equivalentes | P1 | M | 021 | TODO |
 | 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | DONE |
-| 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | TODO |
+| 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | DONE |
 | 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | TODO |
 | 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | TODO |
 | 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | TODO |

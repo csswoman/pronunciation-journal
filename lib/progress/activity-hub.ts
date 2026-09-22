@@ -6,6 +6,7 @@ import {
   saveResolvedIds,
 } from '@/lib/daily/plan-storage'
 import { reconcileDailySteps } from '@/lib/progress/daily-reconcile'
+import { reconcileFocusDailySteps } from '@/lib/focus/evidence'
 import {
   practiceContextToSource,
   type ActivitySource,
@@ -121,11 +122,14 @@ export function buildSessionTelemetry(
   const skillTags = input.explicitSkillTags ?? deriveSkillTags(practiceContext, sessionResult)
   const correct = sessionResult.results.filter((r) => r.isCorrect).length
   const planSteps = input.dailyPlanSteps ?? []
-  const reconciledStepIds = input.explicitReconciledStepIds ?? (
+  const baseReconciledStepIds = input.explicitReconciledStepIds ?? (
     practiceContext === 'daily'
       ? []
       : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
   )
+  const reconciledStepIds = input.explicitReconciledStepIds
+    ? baseReconciledStepIds
+    : [...new Set([...baseReconciledStepIds, ...reconcileFocusDailySteps(planSteps, sessionResult.results)])]
 
   return {
     activitySession: {

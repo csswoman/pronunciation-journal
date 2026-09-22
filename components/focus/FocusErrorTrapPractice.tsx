@@ -9,21 +9,24 @@
 import { useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import type { ErrorTrapBody } from '@/lib/focus/types'
-import type { FocusPracticeAction } from '@/lib/focus/practice-progress'
+import type { ExerciseResult } from '@/lib/practice/types'
 
-export function FocusErrorTrapPractice({ body, onProgress }: { body: ErrorTrapBody; onProgress: (action: FocusPracticeAction) => void }) {
+export function FocusErrorTrapPractice({ body, contentId, onResult, onComplete, onRestart }: {
+  body: ErrorTrapBody
+  contentId: string
+  onResult: (result: ExerciseResult) => void
+  onComplete: (results: ExerciseResult[]) => void
+  onRestart: () => void
+}) {
   const [index, setIndex] = useState(0)
   const [guess, setGuess] = useState<boolean | null>(null)
   const [checked, setChecked] = useState(false)
   const [correct, setCorrect] = useState(0)
-  const startedRef = useRef(false)
+  const rowsRef = useRef<ExerciseResult[]>([])
+  const startedAt = useRef(Date.now())
   const sentences = body.sentences
   const item = sentences[index]
   const choose = (hasError: boolean) => {
-    if (!startedRef.current) {
-      startedRef.current = true
-      onProgress({ kind: 'started' })
-    }
     setGuess(hasError)
   }
 
@@ -32,7 +35,7 @@ export function FocusErrorTrapPractice({ body, onProgress }: { body: ErrorTrapBo
       <h3 className="font-display text-h3 text-fg">Trampa terminada</h3>
       <p className="mt-2 text-body text-fg-muted">Detectaste {correct} de {sentences.length} oraciones correctamente.</p>
       {sentences.length > 0 && <p className="mt-2 font-semibold text-fg">Puntuación: {Math.round(correct / sentences.length * 100)} %</p>}
-      <Button className="mt-5" variant="secondary" onClick={() => { setIndex(0); setGuess(null); setChecked(false); setCorrect(0) }}>Repetir trampa</Button>
+      <Button className="mt-5" variant="secondary" onClick={() => { rowsRef.current = []; startedAt.current = Date.now(); onRestart(); setIndex(0); setGuess(null); setChecked(false); setCorrect(0) }}>Repetir trampa</Button>
     </div>
   )
 
@@ -54,8 +57,24 @@ export function FocusErrorTrapPractice({ body, onProgress }: { body: ErrorTrapBo
         {item.explanation && <p className="mt-2 text-body-sm text-fg-muted">{item.explanation}</p>}
       </div>}
       <Button className="mt-5" disabled={guess === null} onClick={() => {
-        if (!checked) { setChecked(true); onProgress({ kind: 'answered', exerciseId: `trap-${index}` }); if (isCorrect) setCorrect((value) => value + 1) }
-        else { if (index === sentences.length - 1) onProgress({ kind: 'completed' }); setIndex((value) => value + 1); setGuess(null); setChecked(false) }
+        if (!checked) {
+          const result: ExerciseResult = {
+            exerciseId: `trap-${index}`, slug: 'multiple_choice', exerciseTypeId: 17,
+            isCorrect, userAnswer: guess ? 'has_error' : 'no_error', timeMs: Date.now() - startedAt.current,
+            status: 'answered', contentId: `${contentId}:trap-${index}`, context: 'practice',
+            sourceRef: { source: 'focus_content', id: contentId },
+            exercisePayload: { type: 'focus_error_trap', sentence: item.text, expectedAnswer: item.hasError ? 'has_error' : 'no_error' },
+            completedAt: new Date(),
+          }
+          rowsRef.current = [...rowsRef.current, result]
+          onResult(result)
+          setChecked(true)
+          if (isCorrect) setCorrect((value) => value + 1)
+        } else {
+          if (index === sentences.length - 1) onComplete(rowsRef.current)
+          startedAt.current = Date.now()
+          setIndex((value) => value + 1); setGuess(null); setChecked(false)
+        }
       }}>{checked ? 'Siguiente oración' : 'Comprobar'}</Button>
     </div>
   )
