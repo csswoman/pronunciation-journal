@@ -27,6 +27,7 @@ function makeSoundWord(id: number, soundId: number): SoundWord {
 vi.mock('@/lib/review/client-queries', () => ({
   fetchRecentFailedSentences: vi.fn().mockResolvedValue([]),
   fetchFailedSentenceWords: vi.fn().mockResolvedValue([]),
+  fetchDueTopics: vi.fn().mockResolvedValue([]),
 }))
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
