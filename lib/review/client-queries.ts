@@ -119,8 +119,10 @@ export async function fetchAggregatedReviewSummaryClient(
     getTopicsDueCount(),
   ])
 
-  const totalDue = wordsDue + chunksDue + essentialWordsResult + topicsResult
-  const hasPendingReview = totalDue > 0
+  const executable = wordsDue + chunksDue + topicsResult
+  const elsewhere = essentialWordsResult
+  const totalDue = executable + elsewhere
+  const hasPendingReview = executable > 0
 
   let primaryQueue: AggregatedReviewSummary['primaryQueue'] = null
   let headline = 'Todo al día'
@@ -157,7 +159,8 @@ export async function fetchAggregatedReviewSummaryClient(
       dueLessons: 0,
       essentialWordsDue: essentialWordsResult,
       chunksDue,
-      reviewable: totalDue,
+      executable,
+      elsewhere,
       total: totalDue,
     },
     primaryQueue,
