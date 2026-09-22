@@ -22,6 +22,12 @@ describe('buildTopicReviewStep', () => {
     }]))
     expect(step?.exercises).toHaveLength(3)
     expect(step?.exercises.map((exercise) => exercise.slug)).toEqual(['error_correction', 'multiple_choice', 'multiple_choice'])
+    expect(step?.exercises.every((exercise) => exercise.sourceRef?.source !== 'text_fragments')).toBe(true)
+    expect(step?.selection).toEqual({
+      reason: 'due',
+      targetRefs: ['topic:grammar:present simple'],
+      source: 'topic_srs',
+    })
   })
 
   it('keeps the quiz-only fallback when no authored pair is valid', () => {

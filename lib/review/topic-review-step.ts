@@ -7,12 +7,13 @@ export function buildTopicReviewStep(topic: string, deckSlug: string, deck: Gram
   const errorCorrection = generateErrorCorrectionFromDeck(deckSlug, topic, deck, 1)
   const quiz = deck.quiz?.slice(0, 3 - errorCorrection.length) ?? []
   if (quiz.length === 0 && errorCorrection.length === 0) return null
-  const sourceRef = { source: 'text_fragments' as const, id: `grammar-deck:${deckSlug}` }
+  const sourceRef = { source: 'grammar_deck' as const, id: `grammar-deck:${deckSlug}` }
+  const normalizedTopic = normalizeReviewTopic(topic)
   const multipleChoice = quiz.map((question, index) => fromGenericExercise({
     id: `topic-review:${deckSlug}:${index}`,
     type: 'multiple_choice' as const,
     sourceRef,
-    topic: normalizeReviewTopic(topic),
+    topic: normalizedTopic,
     question: question.q,
     options: question.options,
     answerIndex: question.answer,
@@ -22,5 +23,14 @@ export function buildTopicReviewStep(topic: string, deckSlug: string, deck: Gram
     ...errorCorrection.map((exercise) => fromGenericExercise(exercise, 'review')),
     ...multipleChoice,
   ]
-  return { id: `review_topic:${deckSlug}`, kind: 'concept', title: deck.meta.title, subtitle: topic, icon: 'book-open', exercises, estMinutes: 3 }
+  return {
+    id: `review_topic:${deckSlug}`,
+    kind: 'concept',
+    title: deck.meta.title,
+    subtitle: topic,
+    icon: 'book-open',
+    exercises,
+    estMinutes: 3,
+    selection: { reason: 'due', targetRefs: [`topic:${normalizedTopic}`], source: 'topic_srs' },
+  }
 }
