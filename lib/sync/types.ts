@@ -20,6 +20,7 @@ export type SyncTable =
   | 'essential_word_blank_quality'
   | 'focus_sprints'
   | 'focus_content'
+  | 'immersion_lesson_progress'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
 export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event' | 'apply_essential_word_contrast_observation'

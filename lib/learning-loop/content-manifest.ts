@@ -5,6 +5,7 @@ import { loadEssentialWords } from '@/lib/essential-words/data'
 import { essentialWordId } from '@/lib/essential-words/types'
 import { LEARNING_CHUNKS } from '@/lib/chunk-of-day/catalog'
 import { listMissions } from '@/lib/ai-practice/missions/registry'
+import { immersionEntries, IMMERSION_NON_EVALUABLE_ALLOWANCES } from './immersion-entries'
 import { buildPronunciationPathCurriculum } from '@/lib/pronunciation/path/curriculum'
 import { CONTENT_MAP } from '@/lib/pronunciation/targets/content-map'
 import { getTarget, PRONUNCIATION_TARGETS } from '@/lib/pronunciation/targets/registry'
@@ -25,6 +26,7 @@ export const NON_EVALUABLE_CONTENT_ALLOWLIST: readonly NonEvaluableContentAllowa
     contentId: 'tracking-source:lesson',
     reason: 'Tracking stores intent and links to the exact lesson; the saved row itself is not an exercise.',
   },
+  ...IMMERSION_NON_EVALUABLE_ALLOWANCES,
 ]
 
 function pronunciationRefs(ids: readonly PronunciationTargetId[]) {
@@ -233,6 +235,7 @@ export async function buildLearningContentManifest(): Promise<LearningContentMan
     ...pronunciationEntries(),
     ...missionEntries(),
     ...trackingEntries(),
+    ...immersionEntries(),
   ]
 }
 
@@ -294,7 +297,7 @@ export function summarizeLearningContentManifest(
 ): Record<LearningSurface, number> {
   const summary = Object.fromEntries([
     'course_path', 'grammar_deck', 'mini_lesson', 'essential_words', 'chunks',
-    'sound_lab', 'pronunciation_path', 'oral_mission', 'tracking',
+    'sound_lab', 'pronunciation_path', 'oral_mission', 'tracking', 'immersion',
   ].map((surface) => [surface, 0])) as Record<LearningSurface, number>
   for (const entry of entries) summary[entry.surface] += 1
   return summary

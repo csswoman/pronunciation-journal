@@ -18,6 +18,7 @@ describe('learning domain contracts', () => {
       'pronunciation_path',
       'oral_mission',
       'tracking',
+      'immersion',
     ]
     for (const surface of requiredSurfaces) {
       expect(entries.some((entry) => entry.surface === surface), `${surface} has no contract`).toBe(true)
