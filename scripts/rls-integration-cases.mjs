@@ -53,12 +53,14 @@ export async function cleanupAdditionalRlsRows(admin, users) {
     await admin.from("pronunciation_feedback_evidence").delete().eq("user_id", user.id);
     await admin.from("essential_word_contrast_observations").delete().eq("user_id", user.id);
     await admin.from("essential_word_blank_quality").delete().eq("user_id", user.id);
+    await admin.from("content_srs").delete().eq("user_id", user.id);
+    await admin.from("immersion_lesson_progress").delete().eq("user_id", user.id);
     await admin.from("user_roles").delete().eq("user_id", user.id);
   }
 }
 
 export async function runAdditionalRlsCases(ctx) {
-  const { userA, userB, admin, wordA, assertNoError, assertHasError } = ctx;
+  const { userA, userB, admin, wordA, assert, assertNoError, assertHasError } = ctx;
   let journalDay = 1;
   const journalRow = (user) => ({
     id: randomUUID(),
@@ -93,6 +95,39 @@ export async function runAdditionalRlsCases(ctx) {
     evaluator_version: "rls-test",
     outcome: "unscored",
   }));
+  await assertOwnRowIsolation(
+    ctx,
+    "content_srs",
+    (user) => ({
+      user_id: user.id,
+      content_id: `rls-chunk-${randomUUID()}`,
+      namespace: "chunks",
+      stability: 2.5,
+      difficulty: 5,
+      state: "Review",
+      interval: 1,
+      repetitions: 1,
+      fsrs_real_reviews: 1,
+      next_review_at: new Date(Date.now() + 86_400_000).toISOString(),
+    }),
+    "content_id"
+  );
+
+  const immersionLesson = await admin.from("immersion_lessons").select("id").limit(1).maybeSingle();
+  assertNoError(immersionLesson, "read an immersion lesson for RLS progress coverage");
+  assert(immersionLesson.data?.id, "missing seeded immersion lesson for RLS progress coverage");
+  await assertOwnRowIsolation(
+    ctx,
+    "immersion_lesson_progress",
+    (user) => ({
+      user_id: user.id,
+      lesson_id: immersionLesson.data.id,
+      watched: true,
+      watched_at: new Date().toISOString(),
+      quiz_score: 0.8,
+    }),
+    "lesson_id"
+  );
 
   const learningItem = await assertOwnRowIsolation(ctx, "learning_items", (user) => ({
     id: `rls-item-${randomUUID()}`,
