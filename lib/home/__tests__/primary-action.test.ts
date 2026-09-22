@@ -52,4 +52,35 @@ describe('resolvePrimaryAction', () => {
     })
     expect(action.href).toBe('/assessment')
   })
+
+  it("offers the checkpoint as the secondary action once ready and the plan is done", () => {
+    const action = resolvePrimaryAction({
+      ...base,
+      planDoneToday: true,
+      checkpointReady: true,
+      checkpointHref: '/assessment?mode=checkpoint&level=a1',
+    })
+    expect(action.label).toBe('Hacer el checkpoint')
+    expect(action.href).toBe('/assessment?mode=checkpoint&level=a1')
+    expect(action.variant).toBe('secondary')
+  })
+
+  it("does not offer the checkpoint while the daily plan is still pending", () => {
+    const action = resolvePrimaryAction({
+      ...base,
+      planDoneToday: false,
+      checkpointReady: true,
+      checkpointHref: '/assessment?mode=checkpoint&level=a1',
+    })
+    expect(action.href).toBe('/daily')
+  })
+
+  it("falls back to free practice when checkpointReady is true but no href is given", () => {
+    const action = resolvePrimaryAction({
+      ...base,
+      planDoneToday: true,
+      checkpointReady: true,
+    })
+    expect(action.href).toBe('/practice')
+  })
 })

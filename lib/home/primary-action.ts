@@ -15,6 +15,10 @@ export interface PrimaryActionInput {
   dueCount: number
   /** Estimated minutes for today's session. */
   estimatedMinutes: number
+  /** Ready for the level checkpoint (see `lib/home/checkpoint-readiness.ts`). */
+  checkpointReady?: boolean
+  /** `/assessment?mode=checkpoint&level={level}` — required when checkpointReady is true. */
+  checkpointHref?: string
 }
 
 export interface PrimaryAction {
@@ -37,6 +41,14 @@ export function resolvePrimaryAction(input: PrimaryActionInput): PrimaryAction {
   }
 
   if (input.planDoneToday) {
+    if (input.checkpointReady && input.checkpointHref) {
+      return {
+        label: 'Hacer el checkpoint',
+        sublabel: 'Ya completaste la sesión de hoy',
+        href: input.checkpointHref,
+        variant: 'secondary',
+      }
+    }
     return {
       label: 'Práctica libre',
       sublabel: 'Ya completaste la sesión de hoy',

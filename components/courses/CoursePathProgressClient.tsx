@@ -32,8 +32,9 @@ import { useLoadingWords } from "@/hooks/useLoadingWords";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
+import { useLearnerLevelId } from "@/hooks/useLearnerLevelId";
 import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
-import type { CoursePathLevel } from "@/lib/courses/types";
+import type { CefrLevelId, CoursePathLevel } from "@/lib/courses/types";
 import type { ImmersionLesson } from "@/lib/immersion/types";
 import { cn } from "@/lib/cn";
 
@@ -74,6 +75,9 @@ export default function CoursePathProgressClient({
   const [loadError, setLoadError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+  const navigatedLevelId = level.id as CefrLevelId;
+  const learnerLevelId = useLearnerLevelId(navigatedLevelId);
+  const isNavigatingOwnLevel = learnerLevelId === navigatedLevelId;
 
   useEffect(() => {
     try {
@@ -214,11 +218,11 @@ export default function CoursePathProgressClient({
                 Test de ubicación
               </Link>
               <Link
-                href={`/assessment?mode=checkpoint&level=${level.id}`}
+                href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
                 className="course-path__text-link font-semibold text-primary hover:underline text-xs sm:text-sm"
-                title="Evaluación de salida del nivel seleccionado"
+                title="Evaluación de salida de tu nivel"
               >
-                Checkpoint
+                {isNavigatingOwnLevel ? "Checkpoint" : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
               </Link>
             </div>
           </div>
