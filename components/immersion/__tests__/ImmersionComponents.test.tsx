@@ -112,10 +112,11 @@ describe('ImmersionCatalog', () => {
 
 describe('LessonStudyPanel', () => {
   const sampleLesson = FIXTURE_LESSONS[0];
+  const onQuizComplete = vi.fn().mockResolvedValue(undefined);
 
   it('renders timestamps and triggers onSeek', () => {
     const onSeek = vi.fn();
-    render(<LessonStudyPanel lesson={sampleLesson} onSeek={onSeek} />);
+    render(<LessonStudyPanel lesson={sampleLesson} onSeek={onSeek} onQuizComplete={onQuizComplete} />);
 
     expect(screen.getByText(/Puntos clave/i)).toBeInTheDocument();
     expect(screen.getByText(sampleLesson.timestamps[0].label)).toBeInTheDocument();
@@ -127,12 +128,38 @@ describe('LessonStudyPanel', () => {
 
   it('switches tabs to vocabulary and shows key items', () => {
     const onSeek = vi.fn();
-    render(<LessonStudyPanel lesson={sampleLesson} onSeek={onSeek} />);
+    render(<LessonStudyPanel lesson={sampleLesson} onSeek={onSeek} onQuizComplete={onQuizComplete} />);
 
     const vocabTab = screen.getByText(/Vocabulario/i);
     fireEvent.click(vocabTab);
 
     expect(screen.getByText(sampleLesson.keyVocabulary[0].word)).toBeInTheDocument();
     expect(screen.getByText(sampleLesson.keyVocabulary[0].ipa)).toBeInTheDocument();
+  });
+
+  it('forwards the selected quiz option only after the complete quiz', () => {
+    const onSeek = vi.fn();
+    const recordQuiz = vi.fn().mockResolvedValue(undefined);
+    const twoQuestionLesson: ImmersionLesson = {
+      ...sampleLesson,
+      quiz: [
+        ...sampleLesson.quiz,
+        { id: 'q2', question: '¿Qué es una amistad?', options: ['Una relación', 'Una ciudad'], correctIndex: 0, explanation: 'Una amistad es una relación.' },
+      ],
+    };
+    render(<LessonStudyPanel lesson={twoQuestionLesson} onSeek={onSeek} onQuizComplete={recordQuiz} />);
+
+    fireEvent.click(screen.getByText(/Comprobación/i));
+    fireEvent.click(screen.getByRole('button', { name: 'Conocido' }));
+    expect(recordQuiz).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Una relación' }));
+
+    expect(recordQuiz).toHaveBeenCalledWith(expect.objectContaining({
+      canonicalTopic: undefined,
+      answers: expect.arrayContaining([
+        expect.objectContaining({ questionId: 'q1', selectedAnswer: 'Conocido', isCorrect: true }),
+        expect.objectContaining({ questionId: 'q2', selectedAnswer: 'Una relación', isCorrect: true }),
+      ]),
+    }));
   });
 });

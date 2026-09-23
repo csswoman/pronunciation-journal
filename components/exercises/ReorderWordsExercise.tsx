@@ -213,9 +213,8 @@ function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) 
         isAnswer && chips.length > 0 && 'border-primary bg-primary-soft/20',
         !isAnswer && 'justify-center py-2',
         isDropZoneActive && 'ring-2 ring-primary/50',
-        'select-none',
+        'select-none touch-none',
       )}
-      style={{ touchAction: 'none' }}
       aria-label={isAnswer ? 'Tu respuesta' : 'Palabras disponibles'}
     >
       {isAnswer && chips.length === 0 && targetIndex < 0 && (

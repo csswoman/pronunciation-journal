@@ -16,6 +16,7 @@ import Badge from '@/components/ui/Badge';
 import { YouTubeLessonPlayer, type YouTubePlayerHandle } from './YouTubeLessonPlayer';
 import { LessonStudyPanel } from './LessonStudyPanel';
 import type { ImmersionLesson } from '@/lib/immersion/types';
+import { useImmersionProgress } from '@/lib/immersion/use-immersion-progress';
 
 interface ImmersionLessonDetailClientProps {
   lesson: ImmersionLesson;
@@ -23,6 +24,7 @@ interface ImmersionLessonDetailClientProps {
 
 export function ImmersionLessonDetailClient({ lesson }: ImmersionLessonDetailClientProps) {
   const playerRef = useRef<YouTubePlayerHandle>(null);
+  const { markWatched, recordQuiz } = useImmersionProgress(lesson.id);
 
   function handleSeekTo(seconds: number) {
     playerRef.current?.seekTo(seconds);
@@ -70,12 +72,12 @@ export function ImmersionLessonDetailClient({ lesson }: ImmersionLessonDetailCli
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Left Column: Official YouTube Embed + Creator Attribution (7 cols on desktop) */}
         <div className="lg:col-span-7">
-          <YouTubeLessonPlayer ref={playerRef} lesson={lesson} />
+          <YouTubeLessonPlayer ref={playerRef} lesson={lesson} onMarkWatched={markWatched} />
         </div>
 
         {/* Right Column: Interactive Study Panel (5 cols on desktop) */}
         <div className="lg:col-span-5">
-          <LessonStudyPanel lesson={lesson} onSeek={handleSeekTo} />
+          <LessonStudyPanel lesson={lesson} onSeek={handleSeekTo} onQuizComplete={recordQuiz} />
         </div>
       </div>
     </div>
