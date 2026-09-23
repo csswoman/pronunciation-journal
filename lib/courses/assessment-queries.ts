@@ -23,7 +23,9 @@ export async function saveAssessmentResult(
     total: result.total,
     passed: result.passed,
     topic_scores: {
-      version: 2,
+      version: 3,
+      listeningScore: result.listeningScore,
+      listeningTotal: result.listeningTotal,
       topics: result.topicScores,
       concepts: result.conceptSignals.map((signal) => ({
         lessonSlug: signal.lessonSlug,

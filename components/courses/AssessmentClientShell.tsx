@@ -7,7 +7,7 @@
 // </AssessmentClientShell>
 
 import type { Dispatch, SetStateAction } from "react";
-import type { AssessmentQuestion } from "@/lib/courses/assessment";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
 import {
@@ -36,15 +36,18 @@ interface AssessmentClientShellProps {
     sectionConcepts: AssessmentConcept[];
     selfRatings: Record<string, ConceptSelfRating>;
     setSelfRatings: Dispatch<SetStateAction<Record<string, ConceptSelfRating>>>;
-    currentQuestion: AssessmentQuestion | undefined;
+    currentQuestion: ClientAssessmentQuestion | undefined;
     questionIndex: number;
     answers: Record<string, number>;
     setAnswers: Dispatch<SetStateAction<Record<string, number>>>;
+    onAudioReadyChange: (questionId: string, ready: boolean) => void;
   };
   footer: {
     status?: string;
+    statusRole?: "status" | "alert";
     primaryLabel: string;
     primaryDisabled: boolean;
+    secondaryDisabled: boolean;
     onBack: () => void;
     onPrimary: () => void;
   };
@@ -112,15 +115,18 @@ export function AssessmentClientShell({
                     [prompt.currentQuestion!.id]: optionIndex,
                   }))
                 }
+                onAudioReadyChange={prompt.onAudioReadyChange}
               />
             )}
 
             <AssessmentFooter
               status={footer.status}
+              statusRole={footer.statusRole}
               showBack={!showingLevelPrompt && !showingInventory}
               backLabel={prompt.questionIndex > 0 ? "Anterior" : "Volver a temas"}
               primaryLabel={footer.primaryLabel}
               primaryDisabled={footer.primaryDisabled}
+              secondaryDisabled={footer.secondaryDisabled}
               onBack={footer.onBack}
               onPrimary={footer.onPrimary}
             />

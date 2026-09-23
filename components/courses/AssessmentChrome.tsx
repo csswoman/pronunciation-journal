@@ -98,26 +98,30 @@ export function AssessmentCoverage({ placementStartIndex, sectionIndex, levels }
 
 export function AssessmentFooter({
   status,
+  statusRole,
   showBack,
   backLabel,
   primaryLabel,
   primaryDisabled,
+  secondaryDisabled,
   onBack,
   onPrimary,
 }: {
   status?: string;
+  statusRole?: "status" | "alert";
   showBack: boolean;
   backLabel?: string;
   primaryLabel: string;
   primaryDisabled: boolean;
+  secondaryDisabled: boolean;
   onBack: () => void;
   onPrimary: () => void;
 }) {
   return (
     <footer className="assessment-footer">
-      {status ? <p>{status}</p> : <span aria-hidden />}
+      {status ? <p role={statusRole}>{status}</p> : <span aria-hidden />}
       <div className="assessment-footer-actions">
-        {showBack && <button type="button" className="assessment-secondary-action" onClick={onBack}>{backLabel}</button>}
+        {showBack && <button type="button" className="assessment-secondary-action" disabled={secondaryDisabled} onClick={onBack}>{backLabel}</button>}
         <button type="button" disabled={primaryDisabled} onClick={onPrimary}>{primaryLabel}</button>
       </div>
     </footer>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AlertCircle, CheckCircle2, RefreshCw } from "@/components/icons";
 import type { AssessmentResult } from "@/lib/courses/assessment";
+import type { CefrLevelId } from "@/lib/courses/types";
 
 // Planned structure:
 // <AssessmentResultView>
@@ -44,7 +45,11 @@ export function AssessmentResultView({
         <h1>
           {planOnly ? "Empezamos por aquí" : mode === "checkpoint" && result.passed ? `Avanzas a ${result.assignedLevel}` : `Tu nivel actual es ${result.assignedLevel}`}
         </h1>
-        <p>{planOnly ? "Marcaste estos temas como nuevos. No hace falta responder preguntas todavía." : `Acertaste ${result.score} de ${result.total} preguntas.`}</p>
+        <p>
+          {planOnly
+            ? "Marcaste estos temas como nuevos. No hace falta responder preguntas todavía."
+            : `Acertaste ${result.score} de ${result.total} preguntas. Comprensión auditiva: ${result.listeningScore} de ${result.listeningTotal}. Este resultado no evalúa producción oral.`}
+        </p>
         {result.evaluatedLevels && result.evaluatedLevels.length > 0 && (
           <div className="assessment-result-meta" aria-label="Cobertura de la evaluación">
             <span>Evaluado: {result.evaluatedLevels[0].toUpperCase()}–{result.evaluatedLevels.at(-1)?.toUpperCase()}</span>
@@ -77,13 +82,79 @@ export function AssessmentResultView({
         {saving && <small>Guardando nivel…</small>}
         {saveError && (
           <div className="assessment-save-error" role="alert">
-            <span>No se pudo guardar el nivel.</span>
+            <span>No se pudo guardar el progreso en este dispositivo.</span>
             <button type="button" onClick={onRetry}>
               <RefreshCw size={14} aria-hidden />
               Reintentar
             </button>
           </div>
         )}
+      </section>
+    </div>
+  );
+}
+
+// Planned structure:
+// <AssessmentSectionFeedbackView>
+//   <checkpoint outcome + score />
+//   <missed topics to review />
+//   <continue to next level />
+// </AssessmentSectionFeedbackView>
+
+export function AssessmentSectionFeedbackView({
+  result,
+  level,
+  nextLevel,
+  canContinueAfterFailure,
+  onContinue,
+}: {
+  result: AssessmentResult;
+  level: CefrLevelId;
+  nextLevel: CefrLevelId;
+  canContinueAfterFailure: boolean;
+  onContinue: () => void;
+}) {
+  const passed = result.passedLevels.includes(level);
+  const incorrect = result.total - result.score;
+  const missedTopics = result.topicScores.filter((topic) => topic.correct < topic.total);
+
+  return (
+    <div className="assessment-page assessment-page--result">
+      <section className="assessment-result">
+        {passed
+          ? <CheckCircle2 className="assessment-result-icon assessment-result-icon--success" size={28} aria-hidden />
+          : <AlertCircle className="assessment-result-icon assessment-result-icon--error" size={28} aria-hidden />}
+        <p className="assessment-kicker">Resumen del checkpoint</p>
+        <h1>{passed ? `Checkpoint ${level.toUpperCase()} completado` : `Revisa el nivel ${level.toUpperCase()}`}</h1>
+        <p>
+          Acertaste {result.score} de {result.total}; {incorrect} {incorrect === 1 ? "incorrecta" : "incorrectas"}.
+          {result.listeningTotal > 0 && (
+            <> Comprensión auditiva: {result.listeningScore} de {result.listeningTotal}.</>
+          )}
+        </p>
+        {!passed && canContinueAfterFailure && (
+          <p>Elegiste explorar todos los niveles, así que puedes continuar. Este bloque no cuenta como aprobado.</p>
+        )}
+        <div className="assessment-result-sections">
+          <section>
+            <h2>Para repasar</h2>
+            {missedTopics.length > 0 ? (
+              <ul>
+                {missedTopics.map((topic) => {
+                  const topicIncorrect = topic.total - topic.correct;
+                  return (
+                    <li key={topic.lessonSlug}>
+                      {topic.title}: {topic.correct} de {topic.total} correctas, {topicIncorrect} {topicIncorrect === 1 ? "incorrecta" : "incorrectas"}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : <p>No hay temas marcados para repasar en este bloque.</p>}
+          </section>
+        </div>
+        <button type="button" onClick={onContinue}>
+          Continuar con {nextLevel.toUpperCase()}
+        </button>
       </section>
     </div>
   );

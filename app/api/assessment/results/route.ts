@@ -32,6 +32,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const checkpointLevel = body.checkpointLevel ?? body.evaluatedLevel ?? undefined;
+  const evaluatedLevels = body.evaluatedLevels
+    ?? (body.mode === "placement" && body.evaluatedLevel
+      ? ASSESSMENT_LEVEL_ORDER.slice(0, ASSESSMENT_LEVEL_ORDER.indexOf(body.evaluatedLevel) + 1)
+      : undefined);
 
   if (body.mode === "checkpoint") {
     if (!checkpointLevel) {
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const { questions, concepts } = buildServerAssessment(body.mode, checkpointLevel);
+    const { questions, concepts } = buildServerAssessment(body.mode, checkpointLevel, evaluatedLevels);
     const serverResult = scoreAssessment(
       questions,
       body.answers,
@@ -73,7 +77,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       if (
         body.result.assignedLevel !== serverResult.assignedLevel ||
         body.result.score !== serverResult.score ||
-        body.result.passed !== serverResult.passed
+        body.result.passed !== serverResult.passed ||
+        body.result.listeningScore !== serverResult.listeningScore ||
+        body.result.listeningTotal !== serverResult.listeningTotal
       ) {
         logServerError("Client assessment result differs from server rescore", new Error("Rescore mismatch"), {
           endpoint: "/api/assessment/results",
@@ -87,8 +93,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       user.id,
       body.mode,
       serverResult,
-      checkpointLevel,
+      body.mode === "checkpoint"
+        ? checkpointLevel
+        : serverResult.evaluatedLevels?.at(-1),
     );
+    return NextResponse.json({ ok: true, result: serverResult }, { headers: SECURE_HEADERS });
   } catch (error) {
     logServerError("Assessment result save failed", error, {
       endpoint: "/api/assessment/results",
@@ -97,6 +106,4 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
     return publicErrorResponse(500, "Failed to save assessment result");
   }
-
-  return NextResponse.json({ ok: true }, { headers: SECURE_HEADERS });
 }

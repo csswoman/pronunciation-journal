@@ -1,31 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
-import {
-  ASSESSMENT_LEVEL_ORDER,
-  groupQuestionsByLevel,
-  levelPassed,
-  type AssessmentQuestion,
-  type AssessmentResult,
-} from "@/lib/courses/assessment";
+import type { AssessmentResult, ClientAssessmentQuestion } from "@/lib/courses/assessment";
+import { ASSESSMENT_LEVEL_ORDER, groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
-import { AssessmentErrorState, AssessmentResultView } from "./AssessmentViews";
+import {
+  AssessmentErrorState,
+  AssessmentResultView,
+  AssessmentSectionFeedbackView,
+} from "./AssessmentViews";
 import { AssessmentClientShell } from "./AssessmentClientShell";
 import { useAssessmentFlow } from "./useAssessmentFlow";
-import {
-  assessmentFooterCopy,
-  buildAssessmentResult,
-  persistLocalAssessmentCache,
-  reportedLevelIsAbove,
-  saveAssessmentLevel,
-} from "./assessment-client-helpers";
-import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { assessmentFooterCopy, reportedLevelIsAbove } from "./assessment-client-helpers";
+import { useAssessmentScoring } from "./useAssessmentScoring";
 
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
-  questions: AssessmentQuestion[];
+  questions: ClientAssessmentQuestion[];
   concepts?: AssessmentConcept[];
   checkpointLabel?: string;
   userId?: string;
@@ -43,9 +36,13 @@ export default function AssessmentClient({
   useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
-  const [result, setResult] = useState<AssessmentResult | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(false);
+  const [sectionFeedback, setSectionFeedback] = useState<{
+    result: AssessmentResult;
+    level: CefrLevelId;
+    nextLevel: CefrLevelId;
+    canContinueAfterFailure: boolean;
+  } | null>(null);
+  const [audioReadyQuestionId, setAudioReadyQuestionId] = useState<string | null>(null);
   const sections = groupQuestionsByLevel(questions);
   const flow = useAssessmentFlow({ mode, sections, initialLevel });
   const section = sections[flow.sectionIndex];
@@ -55,78 +52,67 @@ export default function AssessmentClient({
   const showingInventory = mode === "placement" && flow.placementStep === "inventory";
   const showingLevelPrompt = mode === "placement" && flow.placementStep === "level";
   const visibleQuestions = mode === "placement" ? section?.questions ?? [] : questions;
-  const answered = visibleQuestions.filter((q) => answers[q.id] !== undefined).length;
+  const answered = visibleQuestions.filter((question) => answers[question.id] !== undefined).length;
   const currentQuestion = visibleQuestions[flow.questionIndex];
-  const currentQuestionAnswered = currentQuestion ? answers[currentQuestion.id] !== undefined : false;
-  const ratedConcepts = sectionConcepts.filter(
-    (c) => selfRatings[c.lessonSlug] !== undefined,
-  ).length;
+  const currentQuestionAnswered = Boolean(currentQuestion)
+    && answers[currentQuestion.id] !== undefined
+    && (!currentQuestion.audioSrc || audioReadyQuestionId === currentQuestion.id);
+  const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
   const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
-  const progressTotal = showingInventory
-    ? sectionConcepts.length
-    : showingLevelPrompt
-      ? 1
-      : visibleQuestions.length;
+  const progressTotal = showingInventory ? sectionConcepts.length : showingLevelPrompt ? 1 : visibleQuestions.length;
+  const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
+  const scoring = useAssessmentScoring({
+    mode,
+    concepts,
+    checkpointLabel,
+    userId,
+    checkpointLevel,
+    answers,
+    selfRatings,
+  });
 
-  function completeAssessment(attemptedQuestions: AssessmentQuestion[]) {
-    const nextResult = buildAssessmentResult({
-      mode,
-      questions,
-      attemptedQuestions,
-      answers,
-      concepts,
-      selfRatings,
-    });
-    setResult(nextResult);
-    if (attemptedQuestions.length > 0) {
-      const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
-      persistLocalAssessmentCache({
-        userId,
-        mode,
-        checkpointLabel,
-        nextResult,
-        answers,
-        selfRatings,
-        checkpointLevel,
-      });
-      try {
-        saveGuestStudyLevel(nextResult.assignedLevel);
-      } catch {
-        /* no-op */
-      }
-      if (userId) {
-        void saveAssessmentLevel({
-          mode,
-          questions,
-          userId,
-          nextResult,
-          setSaving,
-          setSaveError,
-          answers,
-          selfRatings,
-          checkpointLevel,
-        });
-      }
-    }
-  }
+  const handleAudioReadyChange = useCallback((questionId: string, ready: boolean) => {
+    setAudioReadyQuestionId(ready ? questionId : null);
+  }, []);
 
-  function finishSection() {
+  async function finishSection() {
+    if (!section) return;
     if (mode === "checkpoint") {
-      completeAssessment(questions);
+      await scoring.completeAssessment(questions);
       return;
     }
-    const passed = levelPassed(section.level, section.questions, answers);
+
+    const attemptedQuestions = sections
+      .slice(flow.placementStartIndex, flow.sectionIndex + 1)
+      .flatMap((item) => item.questions);
     const isLast = flow.sectionIndex === sections.length - 1;
-    if ((passed || flow.selfReportedLevel === "full") && !isLast) {
-      flow.goToNextSection();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
+    scoring.setSaving(true);
+    scoring.setEvaluationError(false);
+    try {
+      const sectionResult = await scoring.requestServerResult("/api/assessment/score", section.questions);
+      const sectionPassed = sectionResult.passedLevels.includes(section.level);
+      if (!isLast && (sectionPassed || flow.selfReportedLevel === "full")) {
+        setSectionFeedback({
+          result: sectionResult,
+          level: section.level,
+          nextLevel: sections[flow.sectionIndex + 1].level,
+          canContinueAfterFailure: !sectionPassed,
+        });
+        return;
+      }
+
+      const sameQuestions = attemptedQuestions.length === section.questions.length;
+      const finalResult = userId
+        ? await scoring.requestServerResult("/api/assessment/results", attemptedQuestions)
+        : sameQuestions
+          ? sectionResult
+          : await scoring.requestServerResult("/api/assessment/score", attemptedQuestions);
+      scoring.displayVerifiedResult(finalResult, attemptedQuestions);
+    } catch {
+      scoring.setEvaluationError(true);
+    } finally {
+      scoring.setSaving(false);
     }
-    completeAssessment(
-      sections
-        .slice(flow.placementStartIndex, flow.sectionIndex + 1)
-        .flatMap((item) => item.questions),
-    );
   }
 
   function handleBack() {
@@ -142,15 +128,10 @@ export default function AssessmentClient({
       return;
     }
     if (showingInventory) {
-      const allUnknown =
-        sectionConcepts.length > 0 &&
-        sectionConcepts.every((c) => selfRatings[c.lessonSlug] === "unknown");
+      const allUnknown = sectionConcepts.length > 0
+        && sectionConcepts.every((concept) => selfRatings[concept.lessonSlug] === "unknown");
       if (allUnknown && !reportedLevelIsAbove(section.level, flow.selfReportedLevel)) {
-        completeAssessment(
-          sections
-            .slice(flow.placementStartIndex, flow.sectionIndex)
-            .flatMap((item) => item.questions),
-        );
+        void scoring.completeAssessment([]);
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
@@ -163,10 +144,10 @@ export default function AssessmentClient({
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    finishSection();
+    void finishSection();
   }
 
-  const { footerStatus, primaryLabel } = assessmentFooterCopy({
+  const footer = assessmentFooterCopy({
     showingLevelPrompt,
     showingInventory,
     selfReportedLevel: flow.selfReportedLevel,
@@ -175,41 +156,35 @@ export default function AssessmentClient({
     questionIndex: flow.questionIndex,
     visibleQuestionsLength: visibleQuestions.length,
     mode,
-    sectionIndex: flow.sectionIndex,
-    sectionsLength: sections.length,
-    sectionLevel: section?.level ?? "a1",
-    sectionQuestions: section?.questions ?? [],
-    answers,
-    nextSectionLevel: sections[flow.sectionIndex + 1]?.level,
   });
 
-  if (result) {
-    const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
+  if (scoring.result) {
     return (
       <AssessmentResultView
         mode={mode}
-        result={result}
+        result={scoring.result}
         userId={userId}
-        saving={saving}
-        saveError={saveError}
-        onRetry={() => {
-          if (!userId) return;
-          void saveAssessmentLevel({
-            mode,
-            questions,
-            userId,
-            nextResult: result,
-            setSaving,
-            setSaveError,
-            answers,
-            selfRatings,
-            checkpointLevel,
-          });
+        saving={scoring.saving}
+        saveError={scoring.saveError}
+        onRetry={scoring.retryPersistence}
+      />
+    );
+  }
+  if (sectionFeedback) {
+    return (
+      <AssessmentSectionFeedbackView
+        result={sectionFeedback.result}
+        level={sectionFeedback.level}
+        nextLevel={sectionFeedback.nextLevel}
+        canContinueAfterFailure={sectionFeedback.canContinueAfterFailure}
+        onContinue={() => {
+          setSectionFeedback(null);
+          flow.goToNextSection();
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
     );
   }
-
   if (!section) return <AssessmentErrorState />;
 
   return (
@@ -234,15 +209,20 @@ export default function AssessmentClient({
         questionIndex: flow.questionIndex,
         answers,
         setAnswers,
+        onAudioReadyChange: handleAudioReadyChange,
       }}
       footer={{
-        status: footerStatus,
-        primaryLabel,
-        primaryDisabled: showingLevelPrompt
+        status: scoring.evaluationError
+          ? "No se pudo comprobar el resultado. Tus respuestas siguen aquí; puedes reintentar."
+          : footer.footerStatus,
+        statusRole: scoring.evaluationError ? "alert" : "status",
+        primaryLabel: scoring.evaluationError ? "Reintentar corrección" : scoring.saving ? "Comprobando…" : footer.primaryLabel,
+        primaryDisabled: scoring.saving || (showingLevelPrompt
           ? flow.selfReportedLevel === null
           : showingInventory
             ? ratedConcepts !== sectionConcepts.length
-            : !currentQuestionAnswered,
+            : !currentQuestionAnswered),
+        secondaryDisabled: scoring.saving,
         onBack: handleBack,
         onPrimary: handlePrimary,
       }}

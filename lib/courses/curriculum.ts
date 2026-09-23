@@ -484,6 +484,8 @@ export interface LevelAssessmentContract {
   questionTypes: AssessmentQuestionType[];
   minimumCorrect: number;
   questionCount: number;
+  minimumListeningCorrect: number;
+  listeningQuestionCount: number;
   requiredLessonSlugs: string[];
   failureFallback: CefrLevelId;
 }
@@ -540,12 +542,12 @@ const REQUIRED_ASSESSMENT_SLUGS: Record<CefrLevelId, string[]> = {
 };
 
 export const LEVEL_ASSESSMENT_CONTRACTS: Record<CefrLevelId, LevelAssessmentContract> = {
-  a1: { level: "a1", questionTypes: ["grammar", "vocabulary"], minimumCorrect: 4, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a1, failureFallback: "a1" },
-  a2: { level: "a2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a2, failureFallback: "a1" },
-  b1: { level: "b1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b1, failureFallback: "a2" },
-  b2: { level: "b2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b2, failureFallback: "b1" },
-  c1: { level: "c1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c1, failureFallback: "b2" },
-  c2: { level: "c2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 5, questionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c2, failureFallback: "c1" },
+  a1: { level: "a1", questionTypes: ["grammar", "vocabulary"], minimumCorrect: 10, questionCount: 14, minimumListeningCorrect: 3, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a1, failureFallback: "a1" },
+  a2: { level: "a2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 12, questionCount: 14, minimumListeningCorrect: 4, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.a2, failureFallback: "a1" },
+  b1: { level: "b1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 12, questionCount: 14, minimumListeningCorrect: 4, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b1, failureFallback: "a2" },
+  b2: { level: "b2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 12, questionCount: 14, minimumListeningCorrect: 4, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.b2, failureFallback: "b1" },
+  c1: { level: "c1", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 12, questionCount: 14, minimumListeningCorrect: 4, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c1, failureFallback: "b2" },
+  c2: { level: "c2", questionTypes: ["grammar", "vocabulary", "reading"], minimumCorrect: 12, questionCount: 14, minimumListeningCorrect: 4, listeningQuestionCount: 6, requiredLessonSlugs: REQUIRED_ASSESSMENT_SLUGS.c2, failureFallback: "c1" },
 };
 
 export interface AssessmentSection {

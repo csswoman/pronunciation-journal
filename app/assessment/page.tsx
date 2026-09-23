@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import AssessmentClient from "@/components/courses/AssessmentClient";
 import { buildServerAssessment } from "@/lib/courses/server-assessment";
+import { toClientAssessmentQuestions } from "@/lib/courses/assessment";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
@@ -36,7 +37,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
   return (
     <AssessmentClient
       mode={mode}
-      questions={questions}
+      questions={toClientAssessmentQuestions(questions)}
       concepts={concepts}
       checkpointLabel={checkpointLevel?.toUpperCase()}
       userId={user?.id}

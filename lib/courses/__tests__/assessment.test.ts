@@ -1,12 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 vi.mock("server-only", () => ({}));
 import {
   buildAssessmentQuestions,
   groupQuestionsByLevel,
   levelPassed,
   scoreAssessment,
+  toClientAssessmentQuestions,
 } from "../assessment";
 import { buildServerAssessment } from "../server-assessment";
+import { allListeningItems, LISTENING_BANK, listeningAudioSrc } from "../listening-bank";
 
 const quizzes = {
   "a1-verbo-to-be": [{ q: "I ___ ready.", options: ["am", "is"], answer: 0 }],
@@ -25,8 +29,10 @@ const concepts = [
 
 describe("curriculum assessments", () => {
   it("builds checkpoint questions from authored deck quizzes", () => {
-    expect(buildAssessmentQuestions("checkpoint", quizzes, "a1")).toHaveLength(8);
-    expect(buildAssessmentQuestions("checkpoint", quizzes, "a1").filter((question) => question.passage)).toHaveLength(2);
+    const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    expect(questions).toHaveLength(14);
+    expect(questions.filter((question) => question.passage)).toHaveLength(2);
+    expect(questions.filter((question) => question.type === "listening")).toHaveLength(6);
   });
 
   it("samples every authored concept before taking additional questions", () => {
@@ -35,9 +41,9 @@ describe("curriculum assessments", () => {
       [...questions, { ...questions[0], q: `${questions[0].q} again` }],
     ]));
     const questions = buildAssessmentQuestions("checkpoint", expandedQuizzes, "a1");
-    const authored = questions.filter((question) => !question.passage);
+    const authored = questions.filter((question) => !question.passage && question.type !== "listening");
 
-    expect(authored).toHaveLength(8);
+    expect(authored).toHaveLength(6);
     expect(new Set(authored.slice(0, 6).map((question) => question.lessonSlug))).toEqual(
       new Set(Object.keys(quizzes)),
     );
@@ -50,8 +56,63 @@ describe("curriculum assessments", () => {
 
     expect(result.assignedLevel).toBe("A2");
     expect(result.passed).toBe(true);
-    expect(result.score).toBe(8);
-    expect(result.topicScores).toHaveLength(7);
+    expect(result.score).toBe(14);
+    expect(result.listeningScore).toBe(6);
+    expect(result.listeningTotal).toBe(6);
+    expect(result.topicScores).toHaveLength(8);
+  });
+
+  it("requires listening evidence even when enough written answers are correct", () => {
+    const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    const answers = Object.fromEntries(questions
+      .filter((question) => question.type !== "listening")
+      .map((question) => [question.id, question.answer]));
+    questions.filter((question) => question.type === "listening").slice(0, 2)
+      .forEach((question) => { answers[question.id] = question.answer; });
+    const result = scoreAssessment(questions, answers, "checkpoint", "a1");
+
+    expect(result.score).toBe(10);
+    expect(result.listeningScore).toBe(2);
+    expect(result.passed).toBe(false);
+    expect(result.passedLevels).toEqual([]);
+  });
+
+  it("does not pass when listening answers are omitted", () => {
+    const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    const answers = Object.fromEntries(questions
+      .filter((question) => question.type !== "listening")
+      .map((question) => [question.id, question.answer]));
+    const result = scoreAssessment(questions, answers, "checkpoint", "a1");
+
+    expect(result.listeningScore).toBe(0);
+    expect(result.listeningTotal).toBe(6);
+    expect(result.passed).toBe(false);
+  });
+
+  it("keeps answer keys and explanations out of the client projection", () => {
+    const serverQuestions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    const clientQuestions = toClientAssessmentQuestions(serverQuestions);
+    const publicListeningQuestion = clientQuestions.find((question) => question.audioSrc);
+
+    expect(clientQuestions.map((question) => question.id)).toEqual(serverQuestions.map((question) => question.id));
+    expect(publicListeningQuestion).toMatchObject({ audioSrc: "/listening/a1-listening-cafe.wav" });
+    expect(publicListeningQuestion).not.toHaveProperty("answer");
+    expect(publicListeningQuestion).not.toHaveProperty("explanation");
+    const serialized = JSON.stringify(clientQuestions);
+    expect(serialized).not.toContain("transcript");
+    expect(allListeningItems().flatMap((item) => item.lines).every((line) => !serialized.includes(line.text))).toBe(true);
+  });
+
+  it("has three clips and a playable audio asset for every CEFR level", () => {
+    expect(allListeningItems()).toHaveLength(18);
+    for (const [level, clips] of Object.entries(LISTENING_BANK)) {
+      expect(clips).toHaveLength(3);
+      for (const clip of clips) {
+        expect(clip.level).toBe(level);
+        expect(clip.questions).toHaveLength(2);
+        expect(existsSync(join(process.cwd(), "public", listeningAudioSrc(clip.id).slice(1)))).toBe(true);
+      }
+    }
   });
 
   it("keeps the evaluated level when a checkpoint is failed", () => {
@@ -60,7 +121,7 @@ describe("curriculum assessments", () => {
 
     expect(result.assignedLevel).toBe("A1");
     expect(result.passed).toBe(false);
-    expect(result.needsReview).toHaveLength(7);
+    expect(result.needsReview).toHaveLength(8);
   });
 
   it("marks confident but incorrect knowledge for review", () => {
@@ -156,7 +217,12 @@ describe("curriculum assessments", () => {
 
   it("builds server assessment with questions and concepts", () => {
     const { questions, concepts } = buildServerAssessment("placement");
+    const rebuiltQuestions = buildServerAssessment("placement").questions;
     expect(questions.length).toBeGreaterThan(0);
     expect(concepts.length).toBeGreaterThan(0);
+    expect(groupQuestionsByLevel(questions).map((section) => [section.level, section.questions.length]))
+      .toEqual(["a1", "a2", "b1", "b2", "c1", "c2"].map((level) => [level, 14]));
+    expect(questions.map((question) => [question.id, question.answer]))
+      .toEqual(rebuiltQuestions.map((question) => [question.id, question.answer]));
   });
 });

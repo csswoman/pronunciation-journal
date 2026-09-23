@@ -94,6 +94,7 @@ describe("assessment results route", () => {
     mocks.validateBody.mockResolvedValueOnce({
       data: {
         mode: "placement",
+        evaluatedLevels: ["a1"],
         evaluatedLevel: "a1",
         answers: { "a1:reading:1": 0, "a1:reading:2": 1 },
       },
@@ -105,7 +106,10 @@ describe("assessment results route", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body).toEqual({ ok: true });
+    expect(body).toMatchObject({
+      ok: true,
+      result: { total: 14, listeningScore: 0, listeningTotal: 6, passed: false },
+    });
     expect(mocks.persistAssessmentOutcome).toHaveBeenCalledWith(
       "u1",
       "placement",
@@ -121,8 +125,11 @@ describe("assessment results route", () => {
         assignedLevel: "B1",
         passed: true,
         passedLevels: ["a1"],
+        evaluatedLevels: ["a1"],
         score: 1,
         total: 1,
+        listeningScore: 0,
+        listeningTotal: 0,
         topicScores: [],
         strengths: [],
         needsReview: [],
@@ -155,6 +162,7 @@ describe("assessment results route", () => {
   it("accepts null checkpointLevel for placement payloads", () => {
     expect(AssessmentResultSchema.safeParse({
       mode: "placement",
+      evaluatedLevels: ["a1"],
       answers: { "a1:reading:1": 0 },
       checkpointLevel: null,
     }).success).toBe(true);

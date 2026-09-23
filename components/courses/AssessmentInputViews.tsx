@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { AlertCircle, Check } from "@/components/icons";
-import type { AssessmentQuestion } from "@/lib/courses/assessment";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
 
@@ -76,8 +77,30 @@ export function AssessmentInventory({ concepts, selfRatings, onRate }: { concept
   );
 }
 
-export function AssessmentQuestionView({ question, index, answer, onAnswer }: { question?: AssessmentQuestion; index: number; answer?: number; onAnswer: (optionIndex: number) => void }) {
+export function AssessmentQuestionView({
+  question,
+  index,
+  answer,
+  onAnswer,
+  onAudioReadyChange,
+}: {
+  question?: ClientAssessmentQuestion;
+  index: number;
+  answer?: number;
+  onAnswer: (optionIndex: number) => void;
+  onAudioReadyChange?: (questionId: string, ready: boolean) => void;
+}) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [audioState, setAudioState] = useState<"ready" | "loading" | "playing" | "played" | "error">("ready");
+
+  useEffect(() => {
+    setAudioState("ready");
+    if (question?.audioSrc) onAudioReadyChange?.(question.id, false);
+  }, [question?.id, question?.audioSrc, onAudioReadyChange]);
+
   if (!question) return null;
+  const audioReady = !question.audioSrc || audioState === "played";
+
   return (
     <div className="assessment-questions">
       <fieldset className="assessment-question">
@@ -86,12 +109,54 @@ export function AssessmentQuestionView({ question, index, answer, onAnswer }: { 
           <span>{String(index + 1).padStart(2, "0")}</span>
           <div>{question.passage && <p className="assessment-passage">{question.passage}</p>}<h2>{question.prompt}</h2></div>
         </div>
+        {question.audioSrc && (
+          <div className="assessment-audio">
+            <audio
+              ref={audioRef}
+              controls
+              preload="none"
+              src={question.audioSrc}
+              aria-label="Audio en inglés para la pregunta"
+              onPlay={() => setAudioState("loading")}
+              onPlaying={() => setAudioState((current) => current === "played" ? current : "playing")}
+              onEnded={() => {
+                setAudioState("played");
+                onAudioReadyChange?.(question.id, true);
+              }}
+              onError={() => {
+                setAudioState("error");
+                onAudioReadyChange?.(question.id, false);
+              }}
+            />
+            <p className="assessment-audio-status" role={audioState === "error" ? "alert" : "status"}>
+              {audioState === "error"
+                ? "No se pudo cargar el audio. Tu respuesta anterior se conserva; reintenta para responder esta pregunta."
+                : audioState === "loading" || audioState === "playing"
+                  ? "Reproduce el audio completo para habilitar la respuesta."
+                  : audioState === "played"
+                    ? "Audio reproducido. Ya puedes responder."
+                    : "Escucha el audio completo para habilitar las respuestas."}
+            </p>
+            {audioState === "error" && (
+              <button
+                type="button"
+                className="assessment-audio-retry"
+                onClick={() => {
+                  setAudioState("ready");
+                  audioRef.current?.load();
+                }}
+              >
+                Reintentar audio
+              </button>
+            )}
+          </div>
+        )}
         <div className="assessment-options">
           {question.options.map((option, optionIndex) => {
             const selected = answer === optionIndex;
             return (
               <label key={option} className={selected ? "assessment-option assessment-option--selected" : "assessment-option"}>
-                <input type="radio" name={question.id} checked={selected} onChange={() => onAnswer(optionIndex)} />
+                <input type="radio" name={question.id} checked={selected} disabled={!audioReady} onChange={() => onAnswer(optionIndex)} />
                 <span className="assessment-option-marker" aria-hidden>{selected && <Check size={14} />}</span>
                 <span>{option}</span>
               </label>

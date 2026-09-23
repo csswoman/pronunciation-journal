@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { assessmentAnchorIndex, type AssessmentQuestion } from "@/lib/courses/assessment";
+import { assessmentAnchorIndex } from "@/lib/courses/assessment-shared";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 export type AssessmentPlacementStep = "level" | "inventory" | "questions";
@@ -12,7 +13,7 @@ export function useAssessmentFlow({
   initialLevel,
 }: {
   mode: "placement" | "checkpoint";
-  sections: Array<{ level: CefrLevelId; questions: AssessmentQuestion[] }>;
+  sections: Array<{ level: CefrLevelId; questions: ClientAssessmentQuestion[] }>;
   initialLevel?: CefrLevelId | null;
 }) {
   const initialStartIndex = initialLevel ? assessmentAnchorIndex(initialLevel, sections) : 0;

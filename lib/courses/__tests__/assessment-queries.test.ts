@@ -27,6 +27,8 @@ const result: AssessmentResult = {
   passedLevels: ["a1", "a2"],
   score: 8,
   total: 10,
+  listeningScore: 0,
+  listeningTotal: 0,
   topicScores: [{ lessonSlug: "intro", title: "Intro", correct: 1, total: 2 }],
   strengths: [],
   needsReview: [{ lessonSlug: "intro", title: "Intro" }],
@@ -60,7 +62,9 @@ describe("assessment persistence", () => {
 
     expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
       topic_scores: {
-        version: 2,
+        version: 3,
+        listeningScore: result.listeningScore,
+        listeningTotal: result.listeningTotal,
         topics: result.topicScores,
         concepts: result.conceptSignals,
       },
