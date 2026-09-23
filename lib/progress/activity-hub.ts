@@ -42,6 +42,7 @@ export type ActivitySessionInput = {
     lessonSlug?: string
     coachTool?: string
     dailyTargetId?: string
+    immersionLessonId?: string
     quizPassed?: boolean
     mediaType?: string
     gameId?: string

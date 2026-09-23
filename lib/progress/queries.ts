@@ -680,10 +680,7 @@ export interface SkillProfileSnapshot {
 
 export async function loadSkillProfile(userId: string): Promise<SkillProfileSnapshot | null> {
   try {
-    const [insights, skillData] = await Promise.all([
-      getCoachInsights(userId),
-      getSkillProfileData(userId),
-    ])
+    const skillData = await getSkillProfileData(userId)
     const learnerLevel = await getEffectiveLearnerLevelServer(userId)
     return {
       cefr: learnerLevel.level,

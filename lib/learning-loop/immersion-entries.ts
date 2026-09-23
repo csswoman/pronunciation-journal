@@ -39,19 +39,12 @@ export function immersionEntries(): LearningContentManifestEntry[] {
       title: lesson.title,
       signals: ['exposure', 'completion'] as const,
       targetRefs: [{ namespace: 'topic' as const, id: canonicalTopic }],
-      // El quiz de inmersión hoy solo escribe quiz_score (ver
-      // lib/immersion/progress-queries.ts); no llama savePracticeAnswer ni
-      // recordActivitySession, así que no hay evidence exit auditable
-      // todavía — marcarlo 'objective' sería una afirmación falsa que
-      // evidence-exits.ts detectaría igual. Follow-up (LOOP-01 completo en
-      // plans/012-immersion-offline-first-and-in-manifest.md): promoverlo a
-      // 'objective' cuando el quiz registre PracticeAnswer por pregunta.
       practice: {
-        status: 'activity_only' as const,
+        status: 'objective' as const,
         adapter: 'immersion_quiz',
-        reason: 'Quiz score se registra (immersion_lesson_progress.quiz_score) pero no como PracticeAnswer/activity_session auditable todavía.',
+        reason: 'Cada opción elegida del quiz se conserva como PracticeAnswer y el intento completo como activity_session.',
       },
-      owners: ['immersion_lesson_progress'] as const,
+      owners: ['immersion_lesson_progress', 'activity_sessions'] as const,
     }
   })
 }
