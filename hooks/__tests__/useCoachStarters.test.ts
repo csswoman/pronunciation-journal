@@ -15,10 +15,20 @@ vi.mock("@/lib/preferences/guest-study-level", () => ({
   readGuestStudyLevel: () => "A1",
 }));
 
+vi.mock("@/lib/learner-level/client-queries", () => ({
+  getEffectiveLearnerLevelForViewer: vi.fn(async () => ({
+    level: "A1",
+    source: "manual",
+    confidence: null,
+    isPlaced: false,
+    updatedAt: null,
+  })),
+}));
+
 describe("useCoachStarters", () => {
-  it("resolves starters and returns refresh function", () => {
+  it("resolves starters and returns refresh function", async () => {
     const { result } = renderHook(() => useCoachStarters(true));
-    expect(result.current.starters).not.toBeNull();
+    await waitFor(() => expect(result.current.starters).not.toBeNull());
     expect(result.current.starters?.length).toBe(4);
     expect(result.current.loading).toBe(false);
     expect(typeof result.current.refresh).toBe("function");
@@ -29,26 +39,25 @@ describe("useCoachStarters", () => {
     let isOpen = false;
     const { result, rerender } = renderHook(() => useCoachStarters(isOpen));
 
-    const initialStarters = result.current.starters;
-    expect(initialStarters).not.toBeNull();
+    await waitFor(() => expect(result.current.starters).not.toBeNull());
 
     isOpen = true;
     rerender();
 
     await waitFor(() => {
-      expect(result.current.starters).toBeDefined();
+      expect(result.current.starters).not.toBeNull();
     });
   });
 
-  it("re-resolves starters when refresh is invoked", () => {
+  it("re-resolves starters when refresh is invoked", async () => {
     const { result } = renderHook(() => useCoachStarters(true));
-    expect(result.current.starters).not.toBeNull();
+    await waitFor(() => expect(result.current.starters).not.toBeNull());
 
     act(() => {
       result.current.refresh();
     });
 
-    expect(result.current.starters).not.toBeNull();
+    await waitFor(() => expect(result.current.starters).not.toBeNull());
     expect(result.current.starters?.length).toBe(4);
   });
 });

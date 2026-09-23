@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+vi.mock('server-only', () => ({}))
 import { buildLearningContentManifest } from '../content-manifest'
 import { auditEvidenceExits } from '../evidence-exits'
 import type { LearningSurface } from '../types'
