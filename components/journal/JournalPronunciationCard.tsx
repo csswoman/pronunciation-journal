@@ -79,9 +79,6 @@ export function JournalPronunciationCard({
         })
       : activeTopicWords
 
-  const remainingCount =
-    savedWords.length > 3 ? savedWords.length - 3 : savedWords.length === 0 ? 1 : 0
-
   return (
     <PastelCard
       tone="coral"
