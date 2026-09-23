@@ -91,12 +91,23 @@ html[data-theme="dark"], .dark {
   --cta-bg-hover:     oklch(0.92 0.005 85);
 
   /* Derivados del acento (Dark theme) */
-  --accent-text:   color-mix(in oklch, var(--accent) 45%, white);
-  --accent-soft:   color-mix(in oklch, var(--accent) 26%, #0d1018);
+  --accent-text:   color-mix(in oklch, var(--accent) 55%, white);
+  --accent-soft:   color-mix(in oklch, var(--accent) 22%, #0d1018);
   --accent-border: color-mix(in oklch, var(--accent) 55%, #0d1018);
 
   --primary-text:  var(--accent-text);
   --primary-soft:  var(--accent-soft);
+
+  /* Acentos aclarados para legibilidad en dark (misma familia de tono) */
+  --accent-red-dark: oklch(0.68 0.19 27);
+  --accent-orange-dark: oklch(0.68 0.17 38);
+  --accent-amber-dark: oklch(0.72 0.15 49);
+  --accent-green-dark: oklch(0.68 0.15 150);
+  --accent-emerald-dark: oklch(0.68 0.13 166);
+  --accent-teal-dark: oklch(0.70 0.11 223);
+  --accent-blue-dark: oklch(0.72 0.16 263);
+  --accent-purple-dark: oklch(0.72 0.18 293);
+  --accent-pink-dark: oklch(0.70 0.17 4);
 }
 
 :root {
@@ -271,3 +282,15 @@ html[data-accent="teal"] { --accent: var(--accent-teal); }
 html[data-accent="blue"] { --accent: var(--accent-blue); }
 html[data-accent="purple"] { --accent: var(--accent-purple); }
 html[data-accent="pink"] { --accent: var(--accent-pink); }
+
+/* Accent attributes — dark theme (aclarados para contraste sobre fondos dark) */
+html[data-theme="dark"][data-accent="red"], .dark[data-accent="red"] { --accent: var(--accent-red-dark); }
+html[data-theme="dark"][data-accent="orange"], .dark[data-accent="orange"] { --accent: var(--accent-orange-dark); }
+html[data-theme="dark"][data-accent="amber"], .dark[data-accent="amber"] { --accent: var(--accent-amber-dark); }
+html[data-theme="dark"][data-accent="green"], .dark[data-accent="green"] { --accent: var(--accent-green-dark); }
+html[data-theme="dark"][data-accent="emerald"], .dark[data-accent="emerald"] { --accent: var(--accent-emerald-dark); }
+html[data-theme="dark"][data-accent="teal"], .dark[data-accent="teal"] { --accent: var(--accent-teal-dark); }
+html[data-theme="dark"][data-accent="blue"], .dark[data-accent="blue"] { --accent: var(--accent-blue-dark); }
+html[data-theme="dark"][data-accent="purple"], .dark[data-accent="purple"] { --accent: var(--accent-purple-dark); }
+html[data-theme="dark"][data-accent="pink"], .dark[data-accent="pink"] { --accent: var(--accent-pink-dark); }
+html[data-theme="dark"]:not([data-accent]), .dark:not([data-accent]) { --accent: var(--accent-blue-dark); }
