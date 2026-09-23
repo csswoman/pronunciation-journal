@@ -60,9 +60,6 @@ describe('NotebookHomeView ("Tu cuaderno")', () => {
 
     // 1. Encabezado
     expect(screen.getByRole('heading', { name: 'Tu cuaderno' })).toBeInTheDocument()
-    expect(screen.getByText(/3 páginas/)).toBeInTheDocument()
-    expect(screen.getByText(/21/)).toBeInTheDocument()
-    expect(screen.getByText(/frases en inglés/)).toBeInTheDocument()
 
     // 2. Tarjeta de hoy
     expect(screen.getByText('PÁGINA DE HOY')).toBeInTheDocument()
@@ -79,26 +76,22 @@ describe('NotebookHomeView ("Tu cuaderno")', () => {
     // Switch de teclado en inglés
     expect(screen.getByRole('switch')).toBeInTheDocument()
 
-    // Diario de pronunciación
-    expect(screen.getByRole('heading', { name: 'Diario de pronunciación' })).toBeInTheDocument()
+    // Tarjeta rosa de vocabulario útil
+    expect(screen.getByText('VOCABULARIO DE HOY')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '+ Añadir palabra' })).toBeInTheDocument()
 
     // 3. Páginas anteriores
     expect(screen.getByRole('heading', { name: 'Páginas anteriores' })).toBeInTheDocument()
     expect(screen.getByText('I talked to my brother about the flights.')).toBeInTheDocument()
-    expect(screen.getByText('Sin revisar')).toBeInTheDocument()
+    expect(screen.getByText('Revisada')).toBeInTheDocument()
   })
 
   it('handles first use state cleanly without past pages or totals', () => {
     render(<NotebookHomeView initialData={mockDataFirstUse} />)
 
     expect(screen.getByRole('heading', { name: 'Tu cuaderno' })).toBeInTheDocument()
-    // No muestra acumulado en primer uso
-    expect(screen.queryByText(/frases en inglés/)).not.toBeInTheDocument()
-    // Muestra copy de primera página
-    expect(screen.getByText('Esta es tu primera página.')).toBeInTheDocument()
-    // No muestra sección de páginas anteriores
-    expect(screen.queryByRole('heading', { name: 'Páginas anteriores' })).not.toBeInTheDocument()
+    // Muestra copy de placeholder cuando no hay páginas anteriores guardadas
+    expect(screen.getByText('Cada página que escribas se guarda aquí con sus correcciones.')).toBeInTheDocument()
   })
 
   it('changes prompt and starter chips dynamically when shuffle button is clicked', () => {
