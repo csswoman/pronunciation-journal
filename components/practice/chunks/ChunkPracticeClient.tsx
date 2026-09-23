@@ -12,7 +12,6 @@ import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import PracticeSession from '@/components/practice/PracticeSession'
 import { useUserPreferences } from '@/hooks/useUserPreferences'
-import { normalizeCEFR } from '@/lib/exercises/cefr'
 import type { ChunkPracticeSession } from '@/lib/chunk-of-day/queries'
 import type { ChunkEvidenceRecord } from '@/lib/db'
 import Button from '@/components/ui/Button'
@@ -27,11 +26,11 @@ type State = { status: 'loading' } | { status: 'error' } | {
 export function ChunkPracticeClient() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
-  const { preferences } = useUserPreferences()
+  const { learnerLevel } = useUserPreferences()
   const [state, setState] = useState<State>({ status: 'loading' })
   const [practicing, setPracticing] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
-  const level = normalizeCEFR(preferences?.cefr_level ?? 'B1')
+  const level = learnerLevel?.level ?? 'A1'
   const focusedChunkId = searchParams.get('chunk')
   const pronunciationFocus = searchParams.get('focus') === 'pronunciation'
 

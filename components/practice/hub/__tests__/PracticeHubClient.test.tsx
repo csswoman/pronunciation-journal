@@ -26,7 +26,10 @@ vi.mock('@/lib/essential-words/level-count', () => ({
 }))
 
 vi.mock('@/lib/learner-level/client-queries', () => ({
-  getEffectiveLearnerLevel: vi.fn(async () => ({ level: 'A1', source: 'starter_default' })),
+  getEffectiveLearnerLevelForViewer: vi.fn(async () => ({
+    level: 'A1',
+    source: 'starter_default',
+  })),
 }))
 
 vi.mock('@/lib/immersion/progress-queries', () => ({
@@ -50,10 +53,10 @@ describe('PracticeHubClient', () => {
     await waitFor(() => {
       expect(screen.getByText('5')).toBeInTheDocument()
       expect(screen.getByText(/palabras esperan repaso/i)).toBeInTheDocument()
+      expect(screen.getByText('2 pendientes')).toBeInTheDocument()
     })
 
     expect(screen.getByText('Palabras esenciales')).toBeInTheDocument()
-    expect(screen.getByText('2 pendientes')).toBeInTheDocument()
     expect(screen.getByText('TUS MAZOS')).toBeInTheDocument()
     expect(screen.getByText(/Empezar repaso/)).toBeInTheDocument()
     expect(screen.getByText('Laboratorio de sonidos')).toBeInTheDocument()

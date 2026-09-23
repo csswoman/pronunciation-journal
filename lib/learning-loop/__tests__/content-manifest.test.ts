@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+vi.mock('server-only', () => ({}))
 import {
   buildLearningContentManifest,
   NON_EVALUABLE_CONTENT_ALLOWLIST,
@@ -10,6 +11,7 @@ import { loadEssentialWords } from '@/lib/essential-words/data'
 import { listAllDecks } from '@/lib/courses/grammar-deck/decks'
 import { getAllMiniLessons } from '@/lib/content/lessons'
 import { listMissions } from '@/lib/ai-practice/missions/registry'
+import { GENERATED_IMMERSION_INDEX } from '@/lib/learning-loop/generated-immersion-index'
 
 describe('learning-loop content manifest', () => {
   it('projects every authored surface without dangling targets or hidden gaps', async () => {
@@ -22,15 +24,22 @@ describe('learning-loop content manifest', () => {
       essential_words: new Set(loadEssentialWords().map((word) => word.word.trim().toLowerCase())).size,
       oral_mission: listMissions().length,
       tracking: 3,
+      immersion: GENERATED_IMMERSION_INDEX.length,
+      user_decks: 1,
+      games: 2,
     })
     expect(validateLearningContentManifest(manifest)).toEqual([])
   }, 30000)
 
   it('keeps the non-evaluable allowlist explicit and live', async () => {
     const manifest = await buildLearningContentManifest()
-    expect(NON_EVALUABLE_CONTENT_ALLOWLIST).toEqual([
-      expect.objectContaining({ contentId: 'tracking-source:lesson' }),
-    ])
+    const immersionWithoutTopic = GENERATED_IMMERSION_INDEX.filter(
+      (lesson) => !lesson.metadata?.canonicalTopic,
+    ).length
+    expect(NON_EVALUABLE_CONTENT_ALLOWLIST).toEqual(
+      expect.arrayContaining([expect.objectContaining({ contentId: 'tracking-source:lesson' })]),
+    )
+    expect(NON_EVALUABLE_CONTENT_ALLOWLIST).toHaveLength(1 + immersionWithoutTopic)
     expect(validateLearningContentManifest(manifest, [])).toContainEqual(
       expect.objectContaining({
         code: 'unallowlisted_non_evaluable_content',

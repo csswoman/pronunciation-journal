@@ -21,6 +21,7 @@ import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
+import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 
 const DailyStepSession = dynamic(
   () => import('@/components/daily/DailyStepSession'),
@@ -46,6 +47,7 @@ interface HomeLayoutProps {
   secondaryLesson?: MiniLesson | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
+  checkpointReadiness?: CheckpointReadiness | null;
   primaryAction: PrimaryAction;
   previewWords?: Array<{ text: string }>;
   immersionSummary?: HomeImmersionSummary | null;
@@ -60,6 +62,7 @@ export default function HomeLayout({
   weakestPhoneme = null,
   placementState,
   pronunciationDiagnosticState,
+  checkpointReadiness = null,
   primaryAction,
   previewWords = [],
   immersionSummary = null,
@@ -127,6 +130,7 @@ export default function HomeLayout({
       immersionSummary={immersionSummary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
+      checkpointReadiness={checkpointReadiness}
       onStartStep={runner.startStep}
       planState={dailyPlan}
     />

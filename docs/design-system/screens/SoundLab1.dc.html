@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1000px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">PRÁCTICA · PRONUNCIACIÓN</span>
+      <h1 class="num" style="margin: 0; font-size: 44px; line-height: 46px; color: {{t.textStrong}};">Laboratorio de sonidos</h1>
+      <span style="font-size: 16px; color: {{t.muted}};">2 de 40 sonidos en curso · los de mayor impacto primero.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 12px;">
+      <div class="tabs">
+        <button class="tab tab--on">Sonidos</button><button class="tab">Pares mínimos</button><button class="tab">Entonación</button><button class="tab">Ruta</button><button class="tab">Tabla IPA</button>
+      </div>
+      <button class="btn-acc" style="height: 50px; padding: 0 22px; font-size: 16px;">Continuar con <span class="ipa" style="font-weight: 500;">/iː/</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Práctica recomendada -->
+  <section class="card butter compact" style="flex-direction: row; align-items: center; gap: 20px;">
+    <span class="ipa" style="width: 74px; height: 74px; border-radius: 50%; background: rgba(18,21,28,.10); box-shadow: inset 0 0 0 2px #12151c; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">/ɹ/</span>
+    <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+      <span class="lbl-ink">TU PRÁCTICA RECOMENDADA</span>
+      <span class="num" style="font-size: 30px; line-height: 31px;">Where are you from?</span>
+      <span class="ipa" style="font-size: 16px; color: #2c3445;">/wɛər ɑːr juː frɒm/</span>
+      <span style="font-size: 15px; color: #4a5263;">¿De dónde eres? · una frase cotidiana para apoyar el sonido.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+      <button aria-label="Escuchar la frase" style="width: 52px; height: 52px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+      <button class="btn-ink">Practicar esta frase</button>
+    </div>
+  </section>
+
+  <!-- Filtros -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <label class="sfield" style="width: 300px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex-grow: 1;">Buscar sonido o palabra…</span>
+    </label>
+    <div class="tabs" style="background: {{t.raised}};">
+      <button class="tab tab--on" style="font-size: 14px;">Por impacto</button><button class="tab" style="font-size: 14px;">Vocales</button><button class="tab" style="font-size: 14px;">Consonantes</button>
+    </div>
+    <span style="flex-grow: 1;"></span>
+    <button class="chip-n" style="height: 40px; display: inline-flex; align-items: center; gap: 8px; border: 0;"><span style="width: 34px; height: 20px; border-radius: 999px; background: {{t.border}}; display: flex; align-items: center; padding: 0 2px;"><span style="width: 16px; height: 16px; border-radius: 50%; background: {{t.surface}};"></span></span>Solo difíciles</button>
+    <button class="chip-n" style="height: 40px; border: 0;">Estado: todos</button>
+  </div>
+
+  <!-- Sección -->
+  <div style="display: flex; align-items: baseline; gap: 10px;">
+    <h2 class="num" style="margin: 0; font-size: 26px; color: {{t.textStrong}};">Sonidos que no existen en español</h2>
+    <span class="chip-n">12 sonidos</span>
+    <span style="font-size: 14px; color: {{t.muted}};">Los que más cuestan a hispanohablantes. Empieza por aquí.</span>
+  </div>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 18px;">
+
+    <section class="card lilac" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 12px; font-weight: 700;">EN CURSO</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #cbbcf5; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/æ/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>cat</strong> · vocal</span>
+      <div class="segs" style="display: flex; gap: 3px;"><span style="flex-grow: 1; height: 7px; border-radius: 999px; background: #12151c;"></span><span style="flex-grow: 1; height: 7px; border-radius: 999px; background: #12151c;"></span><span style="flex-grow: 1; height: 7px; border-radius: 999px; background: rgba(18,21,28,.16);"></span><span style="flex-grow: 1; height: 7px; border-radius: 999px; background: rgba(18,21,28,.16);"></span><span style="flex-grow: 1; height: 7px; border-radius: 999px; background: rgba(18,21,28,.16);"></span></div>
+      <span style="font-size: 13px; color: #4a5263;">2 de 5 ejercicios</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>cat</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>bad</span></div>
+    </section>
+
+    <section class="card lilac" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-t" style="font-size: 12px;">Sin practicar</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #cbbcf5; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/ʊ/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>book</strong> · vocal</span>
+      <span style="font-size: 13px; color: #4a5263;">5 ejercicios · 3 min</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>book</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>put</span></div>
+    </section>
+
+    <section class="card lilac" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-t" style="font-size: 12px;">Sin practicar</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #cbbcf5; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/ʌ/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>cup</strong> · vocal</span>
+      <span style="font-size: 13px; color: #4a5263;">5 ejercicios · 3 min</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>cup</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>love</span></div>
+    </section>
+
+    <section class="card butter" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 12px; font-weight: 700;">HOY</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #f8e08e; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/ə/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>about</strong> · vocal neutra</span>
+      <span style="font-size: 13px; color: #4a5263;">El sonido del plan de hoy</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>about</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>sofa</span></div>
+    </section>
+
+    <section class="card sky" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="padding: 4px 10px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 12px; font-weight: 700;">DOMINADO</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/v/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>van</strong> · consonante</span>
+      <span style="font-size: 13px; color: #4a5263;">5 de 5 · repaso en 4 días</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>van</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>very</span></div>
+    </section>
+
+    <section class="card sky" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-t" style="font-size: 12px;">Sin practicar</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/θ/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>think</strong> · consonante</span>
+      <span style="font-size: 13px; color: #4a5263;">5 ejercicios · 3 min</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>think</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>three</span></div>
+    </section>
+
+    <section class="card sky" style="padding: 18px; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="chip-t" style="font-size: 12px;">Sin practicar</span>
+        <span style="flex-grow: 1;"></span>
+        <button aria-label="Escuchar el sonido" style="width: 38px; height: 38px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></button>
+      </div>
+      <span class="ipa" style="font-size: 42px; font-weight: 700; line-height: 46px;">/ð/</span>
+      <span style="font-size: 15px; font-weight: 600;">como en <strong>this</strong> · consonante</span>
+      <span style="font-size: 13px; color: #4a5263;">5 ejercicios · 3 min</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>this</span><span class="wpill"><i><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg></i>that</span></div>
+    </section>
+
+    <section class="card neutral" style="padding: 18px; gap: 10px; justify-content: center; align-items: flex-start;">
+      <span class="lbl">RESTO DEL GRUPO</span>
+      <span class="num" style="font-size: 34px; color: {{t.textStrong}};">+5 sonidos</span>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span class="chip-n ipa">/ɜr/</span><span class="chip-n ipa">/ʒ/</span><span class="chip-n ipa">/h/</span><span class="chip-n ipa">/ŋ/</span><span class="chip-n ipa">/ɹ/</span>
+      </div>
+      <button class="btn-n" style="height: 42px;">Ver todos</button>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

@@ -8,6 +8,7 @@
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { ArrowUpRight } from '@/components/icons';
+import Button from '@/components/ui/Button';
 import type { ImmersionLesson } from '@/lib/immersion/types';
 
 export interface YouTubePlayerHandle {
@@ -16,11 +17,11 @@ export interface YouTubePlayerHandle {
 
 interface YouTubeLessonPlayerProps {
   lesson: ImmersionLesson;
-  onTimeUpdate?: (seconds: number) => void;
+  onMarkWatched: () => void;
 }
 
 export const YouTubeLessonPlayer = forwardRef<YouTubePlayerHandle, YouTubeLessonPlayerProps>(
-  function YouTubeLessonPlayer({ lesson }, ref) {
+  function YouTubeLessonPlayer({ lesson, onMarkWatched }, ref) {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -77,16 +78,21 @@ export const YouTubeLessonPlayer = forwardRef<YouTubePlayerHandle, YouTubeLesson
             </div>
           </div>
 
-          <a
-            href={lesson.teacherChannelUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border-default bg-surface-sunken px-4 py-1.5 text-tiny font-medium text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg focus-ring"
-            aria-label={`Visitar canal de YouTube de ${lesson.teacher}`}
-          >
-            <span>Canal oficial</span>
-            <ArrowUpRight className="size-3.5" />
-          </a>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="secondary" size="sm" onClick={onMarkWatched}>
+              Marcar como visto
+            </Button>
+            <a
+              href={lesson.teacherChannelUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border-default bg-surface-sunken px-4 py-1.5 text-tiny font-medium text-fg-muted transition-colors hover:bg-surface-raised hover:text-fg focus-ring"
+              aria-label={`Visitar canal de YouTube de ${lesson.teacher}`}
+            >
+              <span>Canal oficial</span>
+              <ArrowUpRight className="size-3.5" />
+            </a>
+          </div>
         </div>
       </div>
     );

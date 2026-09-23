@@ -1,5 +1,8 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { computeSM2, type SM2Progress } from "@/lib/srs/compute";
+import { recordActivitySession } from "@/lib/progress/activity-hub";
+import { savePracticeAnswer } from "@/lib/practice/queries";
+import type { SessionResult } from "@/lib/practice/types";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 // Re-exported so existing consumers (e.g. StudyModalWordBank) keep their import.
@@ -24,6 +27,7 @@ export interface StudySource {
   label: string;
   loadCards(): Promise<StudyCardData[]>;
   saveProgress(cardId: string, q: number, current: SM2Progress | null): Promise<SM2Progress>;
+  recordSession?(sessionResult: SessionResult): Promise<void>;
 }
 
 // ── wordBankSource: reads from word_bank, optionally filtered by deck ────────
@@ -90,20 +94,27 @@ export function wordBankSource(opts: {
 
     async saveProgress(cardId: string, q: number, current: SM2Progress | null): Promise<SM2Progress> {
       const next = computeSM2(current, q);
-      const supabase = getSupabaseBrowserClient();
-      await supabase
-        .from("word_bank")
-        .update({
-          ease_factor: next.ease_factor,
-          interval_days: next.interval_days,
-          repetitions: next.repetitions,
-          next_review_at: next.next_review_at,
-          srs_status: next.status,
-          last_reviewed_at: next.last_reviewed_at,
-        })
-        .eq("id", cardId)
-        .eq("user_id", opts.userId);
+      await savePracticeAnswer(opts.userId, {
+        exerciseId: `user-deck:${opts.deckId ?? 'all'}:${cardId}:${crypto.randomUUID()}`,
+        slug: 'identify',
+        exerciseTypeId: 11,
+        isCorrect: q >= 3,
+        userAnswer: String(q),
+        timeMs: 0,
+        status: 'answered',
+        contentId: cardId,
+        context: 'practice',
+        sourceRef: { source: 'word_bank', id: cardId },
+      });
       return next;
+    },
+
+    async recordSession(sessionResult: SessionResult): Promise<void> {
+      await recordActivitySession(opts.userId, {
+        practiceContext: 'practice',
+        sessionResult,
+        metadata: { deckId: opts.deckId },
+      });
     },
   };
 }

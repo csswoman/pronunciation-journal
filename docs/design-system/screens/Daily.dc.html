@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .act { display: flex; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 16px; color: var(--text); text-decoration: none }
+    .act__n { width: 36px; height: 36px; border-radius: 50%; background: var(--raised); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0 }
+    .stat { display: flex; flex-direction: column; gap: 1px }
+    .stat span:first-child { font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #4a5263 }
+    .vr { width: 1px; align-self: stretch; background: rgba(18,21,28,.18) }
+    .tile2 { border-radius: 16px; padding: 12px 14px; border: 2px solid var(--border); background: transparent; color: var(--text); display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1760px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 22px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">HOY · JUEVES 17 DE SEPTIEMBRE</span>
+      <h1 class="num" style="margin: 0; font-size: 46px; line-height: 48px; color: {{t.textStrong}};">Tu día completo</h1>
+      <span style="font-size: 16px; color: {{t.muted}};">El plan, la lección y la práctica extra.</span>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <span style="padding: 8px 14px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 14px; font-weight: 700;">Racha de 1 día</span>
+      <button class="btn-acc" style="height: 52px; padding: 0 24px; font-size: 16px;">Empezar la sesión · 17 min
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 22px; align-items: start;">
+
+    <!-- COLUMNA PRINCIPAL -->
+    <div style="display: flex; flex-direction: column; gap: 22px; min-width: 0;">
+
+      <!-- Sonido del día + estado del plan -->
+      <section class="card sky compact" style="gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <span class="ipa" style="width: 88px; height: 88px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: inset 0 0 0 2px #12151c;">/ə/</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span class="lbl-ink">SONIDO DEL DÍA</span>
+            <span class="num" style="font-size: 30px; line-height: 31px;">La vocal neutra</span>
+            <span style="font-size: 15px; color: #2c3445;">Aparece en <strong>about</strong>, <strong>sofa</strong>, <strong>problem</strong>.</span>
+          </div>
+          <span style="flex-grow: 1;"></span>
+          <div class="stat"><span>ACTIVIDADES</span><span class="num" style="font-size: 26px;">0 / 5</span></div>
+          <span class="vr"></span>
+          <div class="stat"><span>TE QUEDA</span><span class="num" style="font-size: 26px;">17 min</span></div>
+          <span class="vr"></span>
+          <div class="stat"><span>MAÑANA</span><span class="num" style="font-size: 26px;">29 repasos</span></div>
+          <button aria-label="Escuchar el sonido" style="width: 52px; height: 52px; border: 0; border-radius: 50%; background: #12151c; color: #b9d3fb; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16 9a4 4 0 0 1 0 6" fill="none"></path></svg></button>
+        </div>
+      </section>
+
+      <!-- Sesión de hoy -->
+      <section class="card neutral" style="gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+            <span class="lbl">EL PLAN</span>
+            <h2 class="num" style="margin: 0; font-size: 30px; color: {{t.textStrong}};">Tu sesión de hoy</h2>
+          </div>
+          <span class="chip-n">5 actividades · 17 min</span>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+            <span style="flex-grow: 1; height: 8px; border-radius: 999px; background: {{s.bg}};"></span>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <a href="#" class="act" style="background: {{t.raised}};">
+            <span class="act__n" style="background: {{accent}}; color: #ffffff;">1</span>
+            <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Práctica del sonido <span class="ipa" style="font-weight: 400;">/ɪ/</span></span>
+              <span style="font-size: 14px; color: {{t.muted}};">Tu sonido a reforzar hoy, como en ‘ship’ · 3 ejercicios</span>
+            </span>
+            <span style="padding: 5px 12px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 13px; font-weight: 600;">Siguiente</span>
+            <span style="font-size: 14px; color: {{t.muted}};">3 min</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </a>
+          <a href="#" class="act">
+            <span class="act__n">2</span>
+            <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Repaso de palabras</span>
+              <span style="font-size: 14px; color: {{t.muted}};">Afianza 6 palabras de tu vocabulario · 1 ejercicio</span>
+            </span>
+            <span style="font-size: 14px; color: {{t.muted}};">2 min</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </a>
+          <a href="#" class="act">
+            <span class="act__n">3</span>
+            <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Estructura: pronombres sujeto</span>
+              <span style="font-size: 14px; color: {{t.muted}};">I, you, he, she, it, we, they como sujeto · 3 ejercicios</span>
+            </span>
+            <span style="font-size: 14px; color: {{t.muted}};">4 min</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </a>
+          <a href="#" class="act">
+            <span class="act__n">4</span>
+            <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Lectura en contexto</span>
+              <span style="font-size: 14px; color: {{t.muted}};">Tus palabras recientes dentro de un texto</span>
+            </span>
+            <span style="font-size: 14px; color: {{t.muted}};">3 min</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </a>
+          <a href="#" class="act">
+            <span class="act__n">5</span>
+            <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Escribe en tu diario</span>
+              <span style="font-size: 14px; color: {{t.muted}};">Reflexión al final del día</span>
+            </span>
+            <span style="padding: 5px 12px; border-radius: 999px; background: #f8e08e; color: #12151c; font-size: 13px; font-weight: 700;">Opcional</span>
+            <span style="font-size: 14px; color: {{t.muted}};">5 min</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+          </a>
+        </div>
+
+        <div class="inset" style="flex-direction: row; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 14px; font-weight: 700;">Palabras que te tocan hoy:</span>
+          <span class="chip-n">asynchronous</span><span class="chip-n">bundle</span><span class="chip-n">deploy</span>
+          <span style="font-size: 14px; color: {{t.muted}};">+3 más</span>
+          <span style="flex-grow: 1;"></span>
+          <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.muted}};">Palabras esenciales <strong style="color: {{t.text}};">2 / 1000</strong></span>
+          <span style="width: 120px; height: 8px; border-radius: 999px; background: {{t.border}}; overflow: hidden;"><span style="display: block; width: 2%; height: 100%; background: {{accent}};"></span></span>
+        </div>
+      </section>
+
+      <!-- Lección de hoy -->
+      <section class="card butter">
+        <svg class="deco" style="right: -26px; bottom: -30px;" width="200" height="160" viewBox="0 0 200 160" fill="none" stroke="#12151c" stroke-width="2"><path d="M-6 126c44-52 74 16 116-24s54 4 94-34"></path><path d="M100 26c32-22 52 22 22 34s-40-18-4-28"></path></svg>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="chip-ink">LA LECCIÓN DE HOY</span>
+          <span class="chip-t">4 min de lectura</span>
+        </div>
+        <h2 class="t" style="font-size: 34px; line-height: 35px;">Las tres reglas de la ‑s final</h2>
+        <div class="ipa" style="font-size: 17px; color: #2c3445;">/s/ · /z/ · /ɪz/</div>
+        <span style="font-size: 16px; max-width: 620px;">Cuándo suena /s/, cuándo /z/ y cuándo añade una sílaba entera, en plurales y en la tercera persona.</span>
+        <div class="inset" style="flex-direction: row; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <span style="padding: 5px 12px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 14px; font-weight: 600;">cats <span class="ipa" style="font-weight: 400; color: #4a5263;">/s/</span></span>
+          <span style="padding: 5px 12px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 14px; font-weight: 600;">dogs <span class="ipa" style="font-weight: 400; color: #4a5263;">/z/</span></span>
+          <span style="padding: 5px 12px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 14px; font-weight: 600;">watches <span class="ipa" style="font-weight: 400; color: #4a5263;">/ɪz/</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn-ink">Ver la lección</button>
+          <button class="btn-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>Guardar</button>
+          <button class="btn-out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1-5a8 8 0 1 1 17-6z"></path></svg>Preguntar al coach</button>
+        </div>
+      </section>
+
+      <!-- Inmersión -->
+      <section class="card neutral">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 44px; height: 44px; border-radius: 14px; background: #a8e6c9; color: #12151c; display: flex; align-items: center; justify-content: center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="14" height="12" rx="2"></rect><path d="m17 10 4-2v8l-4-2"></path></svg></span>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+            <span class="t-sm" style="color: {{t.textStrong}};">¿Viste o escuchaste algo en inglés?</span>
+            <span class="sub" style="font-size: 14px;">Regístralo y cuenta como exposición real.</span>
+          </div>
+          <span class="chip-n">0 min esta semana</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;">
+          <button class="tile2" style="border-color: #12151c; background: #f7b7a6; color: #12151c;"><span style="width: 30px; height: 30px; border-radius: 9px; background: rgba(18,21,28,.12); display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="m16 10 5-3v10l-5-3"></path></svg></span>Video</button>
+          <button class="tile2"><span style="width: 30px; height: 30px; border-radius: 9px; background: {{t.raised}}; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="m8 7 4-4 4 4"></path></svg></span>Serie</button>
+          <button class="tile2"><span style="width: 30px; height: 30px; border-radius: 9px; background: {{t.raised}}; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 16v-4a8 8 0 0 1 16 0v4"></path><rect x="3" y="15" width="4" height="6" rx="1.5"></rect><rect x="17" y="15" width="4" height="6" rx="1.5"></rect></svg></span>Podcast</button>
+          <button class="tile2"><span style="width: 30px; height: 30px; border-radius: 9px; background: {{t.raised}}; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"></path></svg></span>Lectura</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span style="font-size: 14px; color: {{t.muted}};">Cuánto tiempo</span>
+          <div style="display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: {{t.raised}};">
+            <span style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: {{t.muted}};">15</span>
+            <span style="padding: 7px 14px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-size: 14px; font-weight: 700;">30 min</span>
+            <span style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: {{t.muted}};">45</span>
+            <span style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: {{t.muted}};">60</span>
+          </div>
+          <label style="flex-grow: 1; min-width: 240px; height: 48px; padding: 0 16px; border-radius: 14px; background: {{t.raised}}; box-shadow: inset 0 0 0 1px {{t.border}}; color: {{t.muted}}; display: flex; align-items: center; font-size: 15px;">Título del video, serie o canal (opcional)</label>
+          <button class="btn-acc" style="height: 48px;">Registrar 30 min</button>
+        </div>
+      </section>
+
+      <!-- Práctica extra -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: stretch;">
+        <section class="card coral" style="gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;"><span class="chip-ink">PRÁCTICA EXTRA</span><span class="chip-t">Recomendado</span></div>
+          <h3 class="t" style="font-size: 30px; line-height: 31px;">Sigue con <span class="ipa" style="font-weight: 800;">/ə/</span></h3>
+          <span style="font-size: 15px; color: #4a5263;">Refuerza el sonido del plan de hoy con 8 pares mínimos.</span>
+          <div style="flex-grow: 1;"></div>
+          <div><button class="btn-ink">Empezar · 4 min</button></div>
+        </section>
+        <section class="card neutral compact" style="gap: 10px;">
+          <span class="lbl">SI TE SOBRA TIEMPO</span>
+          <a href="#" class="row" style="border-top: 0; text-decoration: none; color: inherit;">Práctica libre<span style="flex-grow: 1;"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg></a>
+          <a href="#" class="row" style="text-decoration: none; color: inherit;">Cursos y teoría<span style="flex-grow: 1;"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg></a>
+          <a href="#" class="row" style="text-decoration: none; color: inherit;">Juegos de vocabulario<span style="flex-grow: 1;"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg></a>
+          <a href="#" class="row" style="text-decoration: none; color: inherit;">¿Cómo estudiar hoy?<span style="flex-grow: 1;"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg></a>
+        </section>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+
+      <section class="card mint compact" style="gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="lbl-ink">RACHA DIARIA</span></div>
+        <div style="display: flex; align-items: flex-end; gap: 18px;">
+          <div style="display: flex; flex-direction: column;"><span class="num" style="font-size: 50px; line-height: 46px;">1</span><span style="font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #2c3445;">ACTUAL</span></div>
+          <div style="display: flex; flex-direction: column;"><span class="num" style="font-size: 32px; line-height: 32px; color: #2c3445;">4</span><span style="font-size: 12px; font-weight: 700; letter-spacing: .1em; color: #2c3445;">MEJOR</span></div>
+        </div>
+        <div class="inset" style="padding: 12px 14px; font-size: 14px;">Objetivo de hoy cumplido. Vuelve mañana para sumar otro día.</div>
+      </section>
+
+      <section class="card lilac compact" style="gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="lbl-ink">TU SEMANA</span><span style="flex-grow: 1;"></span><span class="chip-t">4 de 7 días</span></div>
+        <div style="display: flex; justify-content: space-between;">
+          <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+            <span style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+              <span style="width: 34px; height: 34px; box-sizing: border-box; border-radius: 11px; background: {{d.bg}}; border: {{d.border}};"></span>
+              <span style="font-size: 12px; font-weight: 700;">{{d.label}}</span>
+            </span>
+          </sc-for>
+        </div>
+        <span style="font-size: 13px; color: #4a5263;">El tono indica cuánto practicaste ese día.</span>
+      </section>
+
+      <section class="card neutral compact" style="gap: 12px;">
+        <span class="lbl">ESTA SEMANA</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+          <div class="inset" style="padding: 12px 14px;"><span class="num" style="font-size: 28px; color: {{t.textStrong}};">53</span><span style="font-size: 13px; color: {{t.muted}};">ejercicios</span></div>
+          <div class="inset" style="padding: 12px 14px;"><span class="num" style="font-size: 28px; color: {{t.textStrong}};">8</span><span style="font-size: 13px; color: {{t.muted}};">por día</span></div>
+        </div>
+        <div class="inset" style="padding: 12px 14px; flex-direction: row; align-items: center; gap: 10px;">
+          <span class="num" style="font-size: 28px; color: {{t.textStrong}};">0</span>
+          <span style="font-size: 13px; color: {{t.muted}};">palabras nuevas · añade una hoy</span>
+        </div>
+        <a href="#" style="font-size: 15px; font-weight: 600; color: {{t.text}}; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">Ver progreso completo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+      </section>
+
+      <section class="card sky compact" style="gap: 10px;">
+        <span class="lbl-ink">MAÑANA</span>
+        <div style="display: flex; align-items: baseline; gap: 8px;"><span class="num" style="font-size: 40px; line-height: 40px;">29</span><span style="font-size: 15px; font-weight: 600;">repasos</span></div>
+        <span style="font-size: 14px; color: #2c3445;">Si haces hoy la sesión completa, mañana bajan a 23.</span>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1760}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    const t = themes[this.props.tema] || themes.Claro;
+    const levels = [2, 3, 3, 0, 4, 0, 0];
+    const labels = ["V", "S", "D", "L", "M", "X", "J"];
+    const shades = ["transparent", "rgba(18,21,28,.18)", "rgba(18,21,28,.35)", "rgba(18,21,28,.6)", "#12151c"];
+    return {
+      t: t,
+      accent: accents[this.props.acento] || "#2563eb",
+      steps: Array.from({ length: 5 }, () => ({ bg: t.border })),
+      week: labels.map((label, i) => ({ label: label, bg: shades[levels[i]], border: levels[i] === 0 ? "2px dashed rgba(18,21,28,.35)" : "0" }))
+    };
+  }
+}
+</script>
+</body>
+</html>

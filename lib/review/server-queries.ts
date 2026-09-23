@@ -241,7 +241,7 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     queueCounts,
     sessionCandidates,
     counts: queueCounts,
-    nothingDue: queueCounts.reviewable === 0,
+    nothingDue: queueCounts.executable === 0,
     canStartReview,
   }
 }
@@ -252,7 +252,7 @@ export async function getAggregatedReviewSummary(userId: string): Promise<Aggreg
     soundsDueCount: soundsDue.length,
   })
 
-  const hasPendingReview = queueCounts.reviewable > 0
+  const hasPendingReview = queueCounts.executable > 0
 
   let primaryQueue: AggregatedReviewSummary['primaryQueue'] = null
   let headline = 'Todo al día'
@@ -290,7 +290,7 @@ export async function getAggregatedReviewSummary(userId: string): Promise<Aggreg
 
   return {
     hasPendingReview,
-    totalDue: queueCounts.reviewable,
+    totalDue: queueCounts.executable,
     queueCounts,
     primaryQueue,
     headline,

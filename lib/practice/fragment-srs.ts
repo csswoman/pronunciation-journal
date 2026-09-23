@@ -1,7 +1,9 @@
 import { deriveFsrsState } from "@/lib/srs/fsrs-migrate";
 import { scheduleFsrsReview, type Grade } from "@/lib/srs/fsrs-schedule";
 import { nextFsrsRealReviews } from "@/lib/srs/fsrs-optimizer-eligibility";
-import { getSRSData, saveSRSData } from "@/lib/db";
+import { db, getSRSData, saveSRSData } from "@/lib/db";
+import { contentSrsPayload } from "@/lib/practice/content-srs-queries";
+import { enqueue } from "@/lib/sync/sync-manager";
 import type { SRSData } from "@/lib/types";
 
 /**
@@ -52,19 +54,19 @@ function withFsrsState(
 
 /**
  * Apply an FSRS review to the local SRS state for a system `text_fragments`
- * sentence. These fragments are system content (`user_id = null`), so their
- * per-user review state lives client-side in Dexie rather than in a Supabase
- * per-user table — offline-first by construction. Mirrors `gradeEssentialWord`.
+ * sentence. The fragment remains system content while its schedule is owned by
+ * the learner, so Dexie mirrors it to Supabase through the offline outbox.
  *
  * `quality` is the 0–5 legacy grade, mapped to an FSRS Grade internally.
  */
 export async function upsertFragmentSrs(
+  userId: string,
   fragmentId: string,
   quality: number,
 ): Promise<void> {
   const id = fragmentSrsId(fragmentId);
   const now = new Date();
-  const current: SRSData = (await getSRSData(id)) ?? {
+  const current: SRSData = (await getSRSData(id, userId)) ?? {
     wordId: id,
     word: id,
     ease: 2.5,
@@ -82,7 +84,7 @@ export async function upsertFragmentSrs(
     now,
   });
 
-  await saveSRSData({
+  const next = {
     ...current,
     stability: scheduled.stability,
     difficulty: scheduled.difficulty,
@@ -91,5 +93,16 @@ export async function upsertFragmentSrs(
     nextReview: scheduled.dueAt.toISOString(),
     lastReview: now.toISOString(),
     repetitions: current.repetitions + (grade === "Again" ? 0 : 1),
+  };
+  await db.transaction("rw", [db.srsData, db.syncOutbox], async () => {
+    await saveSRSData(next, userId);
+    await enqueue(
+      userId,
+      "content_srs",
+      "upsert",
+      contentSrsPayload(userId, "text_fragments", fragmentId, next),
+      undefined,
+      "user_id,namespace,content_id",
+    );
   });
 }

@@ -6,24 +6,44 @@
 //   <GenericExerciseView /> | <ExerciseResult />
 // </FocusExerciseRunner>
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { GenericExerciseView } from '@/components/practice/session/GenericExerciseView'
 import { fromGenericExercise } from '@/lib/practice/adapters'
+import { buildExerciseResult } from '@/components/practice/session/session-state-helpers'
 import type { FocusContent } from '@/lib/focus/types'
-import type { FocusPracticeAction } from '@/lib/focus/practice-progress'
-import type { PracticeSubmitHandler } from '@/lib/practice/types'
+import type { ExerciseResult, PracticeSubmitHandler } from '@/lib/practice/types'
 
-export function FocusExerciseRunner({ content, onProgress }: { content: FocusContent; onProgress: (action: FocusPracticeAction) => void }) {
+export function FocusExerciseRunner({ content, onResult, onComplete, onRestart }: {
+  content: FocusContent
+  onResult: (result: ExerciseResult) => void
+  onComplete: (results: ExerciseResult[]) => void
+  onRestart: () => void
+}) {
   const exercises = useMemo(() => content.exercises.map((exercise) => fromGenericExercise(exercise, 'practice')), [content])
   const [index, setIndex] = useState(0)
   const [results, setResults] = useState<Array<boolean | null>>([])
+  const resultRows = useRef<ExerciseResult[]>([])
+  const startedAt = useRef(Date.now())
 
-  const onSubmit: PracticeSubmitHandler = (correct, _answer, extras) => {
-    const answered = !extras?.status || extras.status === 'answered'
+  const onSubmit: PracticeSubmitHandler = (correct, answer, extras) => {
+    const exercise = exercises[index]
+    if (!exercise) return
+    const result = buildExerciseResult({
+      current: exercise,
+      isCorrect: correct,
+      userAnswer: answer,
+      timeMs: Date.now() - startedAt.current,
+      context: 'practice',
+      extras,
+    })
+    const answered = result.status === 'answered'
     setResults((previous) => [...previous, answered ? correct : null])
-    if (answered) onProgress({ kind: 'answered', exerciseId: exercises[index].contentId })
-    if (index === exercises.length - 1) onProgress({ kind: 'completed' })
+    const nextRows = [...resultRows.current, result]
+    resultRows.current = nextRows
+    onResult(result)
+    if (index === exercises.length - 1) onComplete(nextRows)
+    startedAt.current = Date.now()
     setIndex((previous) => previous + 1)
   }
 
@@ -39,7 +59,7 @@ export function FocusExerciseRunner({ content, onProgress }: { content: FocusCon
         <h3 className="font-display text-h3 text-fg">Práctica terminada</h3>
         <p className="mt-2 text-body text-fg-muted">{correct} de {answered} respuestas correctas{results.length > answered ? ` · ${results.length - answered} omitidas` : ''}.</p>
         {answered > 0 && <p className="mt-2 text-body font-semibold text-fg">Puntuación: {Math.round(correct / answered * 100)} %</p>}
-        <Button className="mt-5" variant="secondary" onClick={() => { setIndex(0); setResults([]) }}>Repetir ejercicios</Button>
+        <Button className="mt-5" variant="secondary" onClick={() => { resultRows.current = []; startedAt.current = Date.now(); onRestart(); setIndex(0); setResults([]) }}>Repetir ejercicios</Button>
       </div>
     )
   }

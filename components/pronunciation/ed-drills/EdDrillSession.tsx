@@ -8,12 +8,14 @@
 //   <Phase3LadderCard />
 // </EdDrillSession>
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { ED_DRILL_CATALOG } from '@/lib/pronunciation/ed-drills/catalog'
 import { readClusterProgress, recordAttempt } from '@/lib/pronunciation/ed-drills/progress'
 import { selectNextItem } from '@/lib/pronunciation/ed-drills/selector'
-import type { EdDrillItem, EdEnvironment, UserEdClusterProgress } from '@/lib/pronunciation/ed-drills/types'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { buildSessionResult } from '@/lib/practice/session-result'
+import type { EdCluster, EdClusterAttempt, EdDrillItem, EdEnvironment, UserEdClusterProgress } from '@/lib/pronunciation/ed-drills/types'
 import { ClusterProgressPills } from './ClusterProgressPills'
 import { Phase1PerceptionCard } from './Phase1PerceptionCard'
 import { Phase2LinkingCard } from './Phase2LinkingCard'
@@ -27,17 +29,26 @@ interface Props {
    * paso como hecho). En la ruta suelta se omite y la sesión ofrece repetir.
    */
   onComplete?: () => void
+  /** Daily assigns one exact corrective cluster; the standalone route adapts. */
+  cluster?: EdCluster
+  /** Exact Daily step to reconcile only after evaluated practice. */
+  dailyStepId?: string
 }
 
-export function EdDrillSession({ onComplete }: Props = {}) {
+export function EdDrillSession({ onComplete, cluster, dailyStepId }: Props = {}) {
   const auth = useAuthOptional()
   const userId = auth?.user?.id
   const [phase, setPhase] = useState<SessionPhase>(1)
+  const [attempts, setAttempts] = useState<EdClusterAttempt[]>([])
   const [progressByCluster, setProgressByCluster] = useState<Map<EdDrillItem['cluster'], UserEdClusterProgress>>(new Map())
+  const sessionId = useRef(crypto.randomUUID())
+  const completedRef = useRef(false)
 
   const item = useMemo(
-    () => selectNextItem(ED_DRILL_CATALOG, progressByCluster) ?? ED_DRILL_CATALOG[0],
-    [progressByCluster],
+    () => ED_DRILL_CATALOG.find((entry) => entry.cluster === cluster)
+      ?? selectNextItem(ED_DRILL_CATALOG, progressByCluster)
+      ?? ED_DRILL_CATALOG[0],
+    [cluster, progressByCluster],
   )
   const progress = progressByCluster.get(item.cluster)
 
@@ -53,12 +64,46 @@ export function EdDrillSession({ onComplete }: Props = {}) {
   const persistAttempt = useCallback(async (
     correct: boolean,
     level: EdEnvironment,
+    attemptPhase: 1 | 2,
     suspectedEpenthesis = false,
   ) => {
-    if (!userId) return
-    const next = await recordAttempt(userId, item.cluster, { correct, level, suspectedEpenthesis })
-    setProgressByCluster((current) => new Map(current).set(item.cluster, next))
+    if (!userId) return null
+    const next = await recordAttempt(userId, item.cluster, { correct, level, phase: attemptPhase, suspectedEpenthesis })
+    setProgressByCluster((current) => new Map(current).set(item.cluster, next.progress))
+    setAttempts((current) => [...current, next.attempt])
+    return next.attempt
   }, [item.cluster, userId])
+
+  const completeSession = useCallback(async () => {
+    if (completedRef.current) return
+    completedRef.current = true
+    if (userId && attempts.length > 0) {
+      const results = attempts.map((attempt) => ({
+        exerciseId: `ed_cluster:${attempt.cluster}:phase:${attempt.phase}:${attempt.id}`,
+        // This is an activity-only projection. It has no exerciseTypeId and is
+        // never inserted into answer_history, so it does not claim a generic
+        // exercise type for the specialised -ed task.
+        slug: 'pick_sound' as const,
+        exerciseTypeId: null,
+        isCorrect: attempt.isCorrect,
+        userAnswer: attempt.isCorrect ? 'correct' : 'incorrect',
+        timeMs: 0,
+        status: 'answered' as const,
+        contentId: `ed_cluster:${attempt.cluster}`,
+        context: dailyStepId ? 'daily' as const : 'practice' as const,
+        exercisePayload: { phase: attempt.phase, suspectedEpenthesis: attempt.suspectedEpenthesis },
+        completedAt: new Date(attempt.occurredAt),
+      }))
+      await recordActivitySession(userId, {
+        practiceContext: dailyStepId ? 'daily' : 'practice',
+        sessionResult: buildSessionResult(results),
+        activitySessionId: sessionId.current,
+        explicitSkillTags: ['pronunciation', 'listening'],
+        explicitReconciledStepIds: dailyStepId ? [dailyStepId] : [],
+      })
+    }
+    setPhase('complete')
+  }, [attempts, dailyStepId, userId])
 
   if (phase === 'complete') {
     return (
@@ -79,9 +124,9 @@ export function EdDrillSession({ onComplete }: Props = {}) {
   return (
     <section className="layout-stack-md w-full" aria-label="Ed Ladder Drill">
       <ClusterProgressPills progressByCluster={progressByCluster} />
-      {phase === 1 ? <Phase1PerceptionCard item={item} onComplete={(correct) => { void persistAttempt(correct, 1); setPhase(2) }} /> : null}
-      {phase === 2 ? <Phase2LinkingCard item={item} onComplete={(result) => { if (result.scored) void persistAttempt(result.correct, 1, result.suspectedEpenthesis); setPhase(3) }} /> : null}
-      {phase === 3 ? <Phase3LadderCard item={item} unlockedLevel={progress?.unlockedLevel ?? 1} onComplete={() => setPhase('complete')} /> : null}
+      {phase === 1 ? <Phase1PerceptionCard item={item} onComplete={async (correct) => { await persistAttempt(correct, 1, 1); setPhase(2) }} /> : null}
+      {phase === 2 ? <Phase2LinkingCard item={item} onComplete={async (result) => { if (result.scored) await persistAttempt(result.correct, 1, 2, result.suspectedEpenthesis); setPhase(3) }} /> : null}
+      {phase === 3 ? <Phase3LadderCard item={item} unlockedLevel={progress?.unlockedLevel ?? 1} onComplete={() => { void completeSession() }} /> : null}
     </section>
   )
 }

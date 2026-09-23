@@ -178,9 +178,7 @@ export async function savePracticeAnswer(
         attributionVersion: attributionVersion ?? ATTRIBUTION_VERSION,
       })
     } else if (allowSrs && answer.sourceRef?.source === 'text_fragments') {
-      // System sentences carry no per-user Supabase row; their review state is
-      // local (Dexie srsData), so this write is direct rather than via the outbox.
-      await upsertFragmentSrs(answer.sourceRef.id, grade)
+      await upsertFragmentSrs(userId, answer.sourceRef.id, grade)
     } else if (allowSrs && answer.sourceRef?.source === 'chunks') {
       await upsertChunkSrs(userId, answer.sourceRef.id, grade)
     }

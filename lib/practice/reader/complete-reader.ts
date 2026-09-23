@@ -27,6 +27,7 @@ export async function completeReader({
     timeMs: 0,
     contentId: passageId,
     context,
+    exercisePayload: { taskSkill: 'reading' },
     completedAt: new Date(),
   }
 

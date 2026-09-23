@@ -4,14 +4,18 @@ import type { SRSData } from '@/lib/types'
 const dbMocks = vi.hoisted(() => ({
   getSRSData: vi.fn(),
   saveSRSData: vi.fn(),
+  transaction: vi.fn(async (_mode: string, _tables: unknown[], work: () => Promise<void>) => work()),
 }))
-vi.mock('@/lib/db', () => dbMocks)
+const syncMocks = vi.hoisted(() => ({ enqueue: vi.fn() }))
+vi.mock('@/lib/db', () => ({ ...dbMocks, db: { srsData: {}, syncOutbox: {}, transaction: dbMocks.transaction } }))
+vi.mock('@/lib/sync/sync-manager', () => syncMocks)
 
 import { chunkSrsId, upsertChunkSrs } from '../srs'
 
 beforeEach(() => {
   vi.clearAllMocks()
   dbMocks.getSRSData.mockResolvedValue(undefined)
+  syncMocks.enqueue.mockResolvedValue(1)
 })
 
 describe('chunk SRS', () => {
@@ -24,5 +28,13 @@ describe('chunk SRS', () => {
     expect(saved.wordId).toBe('chunk:001-hello')
     expect(saved.repetitions).toBe(1)
     expect(new Date(saved.nextReview).getTime()).toBeGreaterThan(Date.now())
+    expect(syncMocks.enqueue).toHaveBeenCalledWith(
+      'user-1',
+      'content_srs',
+      'upsert',
+      expect.objectContaining({ content_id: '001-hello', namespace: 'chunks', user_id: 'user-1' }),
+      undefined,
+      'user_id,namespace,content_id',
+    )
   })
 })

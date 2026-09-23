@@ -87,6 +87,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ed_cluster_attempts: {
+        Row: {
+          cluster: string
+          environment_level: number
+          id: string
+          is_correct: boolean
+          occurred_at: string
+          phase: number
+          suspected_epenthesis: boolean
+          user_id: string
+        }
+        Insert: {
+          cluster: string
+          environment_level: number
+          id: string
+          is_correct: boolean
+          occurred_at: string
+          phase: number
+          suspected_epenthesis?: boolean
+          user_id: string
+        }
+        Update: {
+          cluster?: string
+          environment_level?: number
+          id?: string
+          is_correct?: boolean
+          occurred_at?: string
+          phase?: number
+          suspected_epenthesis?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       answer_history: {
         Row: {
           answered_at: string | null

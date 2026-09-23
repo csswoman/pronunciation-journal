@@ -15,13 +15,15 @@
 //   {(status === 'game_over' || status === 'victory') && <WordRainResults />}
 // </WordRainSession>
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CefrLevel } from '@/lib/essential-words/types'
 import { CEFR_LEVELS } from '@/lib/essential-words/types'
 import { DIFFICULTY_BY_LEVEL, type RainWord, type WordRainStats, type WordRainStatus } from '@/lib/exercises/word-rain/types'
 import { loadWordRainWords } from '@/lib/exercises/word-rain/word-loader'
 import { useUserPreferences } from '@/hooks/useUserPreferences'
+import { useAuthOptional } from '@/components/auth/AuthProvider'
+import { recordGameActivity } from '@/lib/progress/game-activity'
 import Button from '@/components/ui/Button'
 import { CloudRain, Play } from '@/components/icons'
 import WordRainHeader from './WordRainHeader'
@@ -31,7 +33,11 @@ import WordRainResults from './WordRainResults'
 
 export default function WordRainSession() {
   const router = useRouter()
-  const { preferences, loading: prefsLoading } = useUserPreferences()
+  const auth = useAuthOptional()
+  const user = auth?.user ?? null
+  const { learnerLevel, loading: prefsLoading } = useUserPreferences()
+  const gameStartedAtRef = useRef<number | null>(null)
+  const hasRecordedActivityRef = useRef(false)
 
   const [selectedLevel, setSelectedLevel] = useState<CefrLevel>('A2')
   const [hasInitializedLevel, setHasInitializedLevel] = useState(false)
@@ -50,14 +56,14 @@ export default function WordRainSession() {
 
   // Sync default level from user profile once loaded
   useEffect(() => {
-    if (!prefsLoading && preferences?.cefr_level && !hasInitializedLevel) {
-      const userLevel = preferences.cefr_level as CefrLevel
+    if (!prefsLoading && learnerLevel && !hasInitializedLevel) {
+      const userLevel = learnerLevel.level as CefrLevel
       if (CEFR_LEVELS.includes(userLevel)) {
         setSelectedLevel(userLevel)
       }
       setHasInitializedLevel(true)
     }
-  }, [prefsLoading, preferences?.cefr_level, hasInitializedLevel])
+  }, [prefsLoading, learnerLevel, hasInitializedLevel])
 
   const startNewGame = useCallback(async (level: CefrLevel) => {
     setIsLoadingWords(true)
@@ -71,6 +77,8 @@ export default function WordRainSession() {
       setMaxStreak(0)
       setSavedWords([])
       setMissedCount(0)
+      gameStartedAtRef.current = Date.now()
+      hasRecordedActivityRef.current = false
       setStatus('playing')
     } finally {
       setIsLoadingWords(false)
@@ -87,6 +95,14 @@ export default function WordRainSession() {
     setSavedWords((prev) => [word, ...prev])
   }, [])
 
+  const recordFinishedGame = useCallback((gameId: string) => {
+    if (!user?.id || hasRecordedActivityRef.current) return
+    hasRecordedActivityRef.current = true
+    const startedAt = gameStartedAtRef.current ?? Date.now()
+    void recordGameActivity(user.id, 'word_rain', Date.now() - startedAt, gameId)
+      .catch((err) => console.warn('[WordRainSession] activity record failed', err))
+  }, [user?.id])
+
   const handleLifeLost = useCallback(() => {
     setStreak(0)
     setMissedCount((prev) => prev + 1)
@@ -94,14 +110,16 @@ export default function WordRainSession() {
       const nextLives = prev - 1
       if (nextLives <= 0) {
         setStatus('game_over')
+        recordFinishedGame(`word-rain:${selectedLevel}`)
       }
       return Math.max(0, nextLives)
     })
-  }, [])
+  }, [recordFinishedGame, selectedLevel])
 
   const handleGameFinished = useCallback((isVictory: boolean) => {
     setStatus(isVictory ? 'victory' : 'game_over')
-  }, [])
+    recordFinishedGame(`word-rain:${selectedLevel}`)
+  }, [recordFinishedGame, selectedLevel])
 
   const currentConfig = DIFFICULTY_BY_LEVEL[selectedLevel] ?? DIFFICULTY_BY_LEVEL.A2
   const totalAttacked = savedWords.length + missedCount

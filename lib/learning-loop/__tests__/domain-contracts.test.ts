@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+vi.mock('server-only', () => ({}))
 import { buildLearningContentManifest } from '../content-manifest'
 import { auditEvidenceExits } from '../evidence-exits'
 import type { LearningSurface } from '../types'
@@ -18,6 +19,9 @@ describe('learning domain contracts', () => {
       'pronunciation_path',
       'oral_mission',
       'tracking',
+      'immersion',
+      'user_decks',
+      'games',
     ]
     for (const surface of requiredSurfaces) {
       expect(entries.some((entry) => entry.surface === surface), `${surface} has no contract`).toBe(true)

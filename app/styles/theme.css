@@ -100,18 +100,20 @@
   --spacing-space-8:  var(--space-8);
   --spacing-space-10: var(--space-10);
 
-  /* ── 6. Radios ─────────────────────────────────────────────────────────── */
-  --radius-xs:   6px;
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   14px;
-  --radius-xl:   20px;
-  --radius-2xl:  24px;
-  --radius-3xl:  28px;
-  --radius-full: 9999px;
+  /* ── 6. Radios (referencian tokens.css; xl = 28px, único radio de tarjeta) ── */
+  --radius-xs:   var(--radius-xs);
+  --radius-sm:   var(--radius-sm);
+  --radius-md:   var(--radius-md);
+  --radius-lg:   var(--radius-lg);
+  --radius-xl:   var(--radius-xl);
+  --radius-2xl:  var(--radius-xl); /* alias legacy: 24px → 28px (radius-xl nuevo) */
+  --radius-3xl:  var(--radius-xl); /* alias legacy: 28px → 28px (radius-xl nuevo) */
+  --radius-pill: var(--radius-full);
+  --radius-full: var(--radius-full);
 
   /* ── 7. Tipografía ─────────────────────────────────────────────────────── */
   --font-display: var(--font-display);
+  --font-heading: var(--font-display);
   --font-body:    var(--font-sans);
   --font-phonetic: var(--font-ipa);
 
@@ -127,6 +129,22 @@
   --text-overline: var(--text-size-overline);
   --text-ipa-lg:   var(--text-size-ipa-lg);
   --text-ipa:      var(--text-size-ipa);
+
+  /* Legacy 4-tier heading scale (components/ui/Typography.tsx H1–H4) — was
+     never wired into Tailwind's font-size theme, so text-h1..h4 silently
+     produced no utility class app-wide. */
+  --text-h1: var(--text-size-h1);
+  --text-h2: var(--text-size-h2);
+  --text-h3: var(--text-size-h3);
+  --text-h4: var(--text-size-h4);
+
+  /* Same gap: label/kicker/tiny (group labels, badges, mono captions) and
+     the display-word/display-ipa pair were defined but never exposed. */
+  --text-label:  var(--text-size-label);
+  --text-kicker: var(--text-size-kicker);
+  --text-tiny:   var(--text-size-tiny);
+  --text-display-word: var(--text-size-display-word);
+  --text-display-ipa:  var(--text-size-display-ipa);
 
   /* ── 8. Sombras (solo flotantes) ────────────────────────────────────────── */
   --shadow-sm: 0 1px 2px   oklch(0 0 0 / 0.05);

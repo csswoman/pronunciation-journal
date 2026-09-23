@@ -279,7 +279,8 @@ export function createEmptyState(userId: string, deviceId: string): UserLearning
     userId,
     updatedAt: new Date().toISOString(),
     deviceId,
-    level: { cefrEstimate: "B1", confidence: 0.5 },
+    // Sin evidencia; AuthProvider lo sustituye por el nivel del perfil.
+    level: { cefrEstimate: "A1", confidence: 0 },
     vocabulary: { knownCount: 0, strugglingWords: [], savedWords: [] },
     grammar: { weakTopics: [] },
     theory: { concepts: [] },

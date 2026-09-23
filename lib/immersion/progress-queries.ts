@@ -1,7 +1,12 @@
 // Progreso de inmersión: espejo Dexie ⇄ Supabase, mismo patrón que
 // lib/courses/queries.ts para completedLessons.
 import { db, type ImmersionLessonProgressRecord } from '@/lib/db'
+import { buildSessionResult } from '@/lib/practice/session-result'
+import { savePracticeAnswer } from '@/lib/practice/queries'
+import type { ExerciseResult } from '@/lib/practice/types'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { enqueue } from '@/lib/sync/sync-manager'
 
 type RemoteImmersionProgress = {
   user_id: string
@@ -74,31 +79,136 @@ export async function loadImmersionProgressMap(
 export async function markImmersionLessonWatched(
   userId: string,
   lessonId: string,
-  quizScore?: number,
 ): Promise<void> {
   const now = new Date().toISOString()
-  const record: ImmersionLessonProgressRecord = {
-    key: progressKey(userId, lessonId),
-    userId,
-    lessonId,
-    watched: true,
-    watchedAt: now,
-    quizScore,
-    updatedAt: now,
-  }
-
-  await db.immersionLessonProgress.put(record)
-
-  const { error } = await getSupabaseBrowserClient().from('immersion_lesson_progress').upsert(
-    {
-      user_id: userId,
-      lesson_id: lessonId,
+  await db.transaction('rw', [db.immersionLessonProgress, db.syncOutbox], async () => {
+    const existing = await db.immersionLessonProgress.get(progressKey(userId, lessonId))
+    const record: ImmersionLessonProgressRecord = {
+      key: progressKey(userId, lessonId),
+      userId,
+      lessonId,
       watched: true,
-      watched_at: now,
-      quiz_score: quizScore ?? null,
-      updated_at: now,
+      watchedAt: now,
+      quizScore: existing?.quizScore,
+      updatedAt: now,
+    }
+    await db.immersionLessonProgress.put(record)
+    await enqueue(
+      userId,
+      'immersion_lesson_progress',
+      'upsert',
+      {
+        user_id: userId,
+        lesson_id: lessonId,
+        watched: true,
+        watched_at: now,
+        quiz_score: existing?.quizScore ?? null,
+        updated_at: now,
+      },
+      undefined,
+      'user_id,lesson_id',
+    )
+  })
+}
+
+/** Stores a quiz score without claiming that the learner watched the video. */
+export async function recordImmersionQuizScore(
+  userId: string,
+  lessonId: string,
+  quizScore: number,
+): Promise<void> {
+  const now = new Date().toISOString()
+  await db.transaction('rw', [db.immersionLessonProgress, db.syncOutbox], async () => {
+    const existing = await db.immersionLessonProgress.get(progressKey(userId, lessonId))
+    const record: ImmersionLessonProgressRecord = {
+      key: progressKey(userId, lessonId),
+      userId,
+      lessonId,
+      watched: existing?.watched ?? false,
+      watchedAt: existing?.watchedAt,
+      quizScore,
+      updatedAt: now,
+    }
+    await db.immersionLessonProgress.put(record)
+    await enqueue(
+      userId,
+      'immersion_lesson_progress',
+      'upsert',
+      {
+        user_id: userId,
+        lesson_id: lessonId,
+        watched: record.watched,
+        watched_at: record.watchedAt ?? null,
+        quiz_score: quizScore,
+        updated_at: now,
+      },
+      undefined,
+      'user_id,lesson_id',
+    )
+  })
+}
+
+export interface ImmersionQuizAnswerInput {
+  questionId: string
+  question: string
+  selectedAnswer: string
+  correctAnswer: string
+  isCorrect: boolean
+  timeMs: number
+}
+
+export interface ImmersionQuizAttemptInput {
+  attemptId: string
+  lessonId: string
+  canonicalTopic?: string
+  answers: ImmersionQuizAnswerInput[]
+}
+
+/**
+ * Persists the exact options selected in one completed immersion quiz.
+ * A caller-owned attempt id makes retries replay-safe without treating the
+ * aggregate quiz score as reconstructed per-question evidence.
+ */
+export async function recordImmersionQuizAttempt(
+  userId: string,
+  input: ImmersionQuizAttemptInput,
+): Promise<void> {
+  const completedAt = new Date()
+  const results: ExerciseResult[] = input.answers.map((answer) => ({
+    attemptId: `${input.attemptId}:${answer.questionId}`,
+    exerciseId: `immersion:${input.lessonId}:${answer.questionId}`,
+    slug: 'multiple_choice',
+    exerciseTypeId: 17,
+    isCorrect: answer.isCorrect,
+    userAnswer: answer.selectedAnswer,
+    timeMs: answer.timeMs,
+    status: 'answered',
+    contentId: `immersion:${input.lessonId}:${answer.questionId}`,
+    context: 'practice',
+    exercisePayload: {
+      taskSkill: 'reading',
+      immersionLessonId: input.lessonId,
+      questionId: answer.questionId,
+      question: answer.question,
+      correctAnswer: answer.correctAnswer,
     },
-    { onConflict: 'user_id,lesson_id' },
-  )
-  if (error) throw error
+    topic: input.canonicalTopic,
+    completedAt,
+  }))
+
+  await Promise.all(results.map((result) => savePracticeAnswer(userId, result)))
+
+  const hasRecordedSession = await db.syncOutbox
+    .where('userId').equals(userId)
+    .and((entry) => entry.table === 'activity_sessions' && entry.payload.id === input.attemptId)
+    .first()
+  if (hasRecordedSession) return
+
+  await recordActivitySession(userId, {
+    practiceContext: 'practice',
+    source: 'immersion',
+    activitySessionId: input.attemptId,
+    sessionResult: buildSessionResult(results),
+    metadata: { immersionLessonId: input.lessonId },
+  })
 }

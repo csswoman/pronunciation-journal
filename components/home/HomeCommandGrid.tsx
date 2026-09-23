@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { ArrowRight } from "@/components/icons";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readWelcomeTourCompleted } from "@/lib/home/onboarding";
@@ -22,6 +20,7 @@ import HomePlanRationale from "@/components/home/HomePlanRationale";
 import HomePlanDone from "@/components/home/HomePlanDone";
 import HomePlacementPrompt from "@/components/home/HomePlacementPrompt";
 import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
+import HomeCheckpointCard from "@/components/home/HomeCheckpointCard";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson, DailyStep, useDailyPlan } from "@/hooks/useDailyPlan";
@@ -29,6 +28,7 @@ import type { HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/consta
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { PrimaryAction } from "@/lib/home/primary-action";
+import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 import type { SessionArc } from "@/lib/practice/types";
 
 const HomeDailyCard = dynamic(() => import("@/components/home/HomeDailyCard"), {
@@ -59,6 +59,7 @@ export interface HomeCommandGridProps {
   immersionSummary?: HomeImmersionSummary | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
+  checkpointReadiness?: CheckpointReadiness | null;
   onStartStep?: (step: DailyStep) => void;
   planState?: ReturnType<typeof useDailyPlan>;
 }
@@ -73,6 +74,7 @@ export default function HomeCommandGrid({
   streak = null,
   placementState,
   pronunciationDiagnosticState,
+  checkpointReadiness = null,
   onStartStep,
   planState,
   immersionSummary = null,
@@ -133,7 +135,7 @@ export default function HomeCommandGrid({
       <HomeHeader streakDays={streak ?? 0} onOpenTour={() => setTourOpen(true)} />
 
       {/* Cuadrícula principal de 2 columnas */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-5.5 items-start">
         {/* Columna Principal (Izquierda) */}
         <div className="flex flex-col gap-8 min-w-0">
           <div className={showPostPlan ? "hidden" : "contents"}>
@@ -178,16 +180,6 @@ export default function HomeCommandGrid({
                 </>
               }
             />
-            {/* Home ejecuta el paso siguiente; /daily despliega el día entero. */}
-            {planSettled && !planEmpty ? (
-              <Link
-                href="/daily"
-                className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-start rounded-md px-1 font-label text-body-sm text-fg-muted transition-colors hover:text-primary"
-              >
-                Ver el día completo
-                <ArrowRight size={16} aria-hidden />
-              </Link>
-            ) : null}
           </div>
 
           {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
@@ -209,6 +201,10 @@ export default function HomeCommandGrid({
               {needsPlacement ? <HomePlacementPrompt compact /> : null}
               {needsPronunciation ? <HomePronunciationPrompt compact /> : null}
             </div>
+          ) : null}
+
+          {placementState.hasPlacement && checkpointReadiness ? (
+            <HomeCheckpointCard readiness={checkpointReadiness} />
           ) : null}
 
           {/* Fila secundaria: Palabras esenciales + Registro de inmersión */}

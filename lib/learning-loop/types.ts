@@ -10,6 +10,9 @@ export type LearningSurface =
   | 'pronunciation_path'
   | 'oral_mission'
   | 'tracking'
+  | 'immersion'
+  | 'user_decks'
+  | 'games'
 
 export type LearningSignal =
   | 'exposure'
@@ -27,6 +30,7 @@ export type ProgressOwner =
   | 'word_bank'
   | 'tracked_items'
   | 'activity_sessions'
+  | 'immersion_lesson_progress'
 
 export type LearningTargetRef =
   | { namespace: 'topic'; id: string }

@@ -11,6 +11,9 @@ export type ActivitySource =
   | 'courses'
   | 'ai_coach'
   | 'immersion'
+  | 'games'
+  | 'word_rain'
+  | 'word_search'
 
 export type SkillTag =
   | 'speaking'
@@ -19,6 +22,7 @@ export type SkillTag =
   | 'pronunciation'
   | 'listening'
   | 'reading'
+  | 'writing'
 
 export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   essential_words: 'Essential Words',
@@ -30,6 +34,9 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   courses: 'Ruta',
   ai_coach: 'AI Coach',
   immersion: 'Inmersión',
+  games: 'Juegos',
+  word_rain: 'Lluvia de palabras',
+  word_search: 'Sopa de letras',
 }
 
 export type ImmersionMediaType = 'video' | 'series' | 'podcast' | 'reading'

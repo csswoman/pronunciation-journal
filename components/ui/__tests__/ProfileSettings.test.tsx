@@ -17,7 +17,8 @@ vi.mock("@/components/auth/AuthProvider", () => ({
 
 vi.mock("@/hooks/useUserPreferences", () => ({
   useUserPreferences: () => ({
-    preferences: { full_name: "Learner", avatar_url: "", cefr_level: "A2", interests: [] },
+    preferences: { full_name: "Learner", avatar_url: "", interests: [] },
+    learnerLevel: { level: "A2", source: "manual", confidence: null, isPlaced: false, updatedAt: null },
     loading: false,
     updateFullName: vi.fn(),
     updateAvatar: vi.fn(),

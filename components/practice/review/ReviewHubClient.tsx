@@ -76,7 +76,8 @@ export function ReviewHubClient({ summary }: Props) {
   const effectiveChunksDue =
     clientChunksDue !== null ? Math.max(clientChunksDue, initialChunks) : initialChunks
   const chunksDifference = effectiveChunksDue - initialChunks
-  const totalReviewable = (queueCounts.reviewable ?? 0) + Math.max(0, chunksDifference)
+  const totalReviewable = (queueCounts.executable ?? 0) + Math.max(0, chunksDifference)
+  const elsewhereCount = queueCounts.elsewhere ?? 0
 
   const canStart = (totalReviewable > 0 || summary.canStartReview) && !isSessionActive
   const showMomentum = !isSessionActive && totalReviewable > 0
@@ -97,6 +98,7 @@ export function ReviewHubClient({ summary }: Props) {
           showMomentum={showMomentum}
           showAllClear={showAllClear}
           totalReviewable={totalReviewable}
+          elsewhereCount={elsewhereCount}
         />
 
         <div className="page-dashboard__main">

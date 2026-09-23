@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { StudySessionHeader } from "./StudySessionHeader";
 import { StudySessionCard } from "./StudySessionCard";
 import { StudyRatingBar } from "./StudyRatingBar";
@@ -16,14 +16,19 @@ interface StudyModalWordBankProps {
 export function StudyModalWordBank({ source, onClose }: StudyModalWordBankProps) {
   const {
     phase, queue, currentIndex, currentCard, flipped, stats, progress,
-    setFlipped, handleRate, advanceCard, resetSession,
+    setFlipped, handleRate, advanceCard, completeSession, resetSession,
   } = useStudySession(source);
+
+  const handleClose = useCallback(() => {
+    void completeSession();
+    onClose();
+  }, [completeSession, onClose]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        handleClose();
         return;
       }
       if (phase !== "studying") return;
@@ -34,18 +39,18 @@ export function StudyModalWordBank({ source, onClose }: StudyModalWordBankProps)
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [phase, advanceCard, onClose]);
+  }, [phase, advanceCard, handleClose]);
 
   if (phase === "loading") return <StudyLoadingScreen />;
   if (phase === "studying" && queue.length === 0) {
-    return <StudyEmptyScreen label={source.label} onClose={onClose} />;
+    return <StudyEmptyScreen label={source.label} onClose={handleClose} />;
   }
   if (phase === "done") {
     return (
       <StudyDoneScreen
         stats={stats}
         label={source.label}
-        onClose={onClose}
+        onClose={handleClose}
         onStudyAgain={resetSession}
       />
     );
@@ -58,7 +63,7 @@ export function StudyModalWordBank({ source, onClose }: StudyModalWordBankProps)
         currentIndex={currentIndex}
         total={queue.length}
         progress={progress}
-        onClose={onClose}
+        onClose={handleClose}
       />
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 pb-2 min-h-0">

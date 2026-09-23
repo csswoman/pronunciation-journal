@@ -21,6 +21,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, ChevronUp } from "@/components/icons";
 import PastelCard from "@/components/layout/PastelCard";
+import Chip from "@/components/ui/Chip";
 import type { DailyStep, DailyStepStatus } from "@/hooks/useDailyPlan";
 import {
   localizeDailyStepSubtitle,
@@ -52,6 +53,7 @@ export default function HomeHeroCard({
   allDone,
   onStartStep,
   inProgressStepId = null,
+  primaryActionHref,
   arc,
   needsPlacement = false,
   needsPronunciation = false,
@@ -111,31 +113,29 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <PastelCard tone="sky" className="flex flex-col gap-5 p-5 sm:p-6 motion-reduce:shadow-none">
+      <PastelCard tone="sky" className="flex flex-col gap-5 p-6 sm:p-7 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="flex flex-col gap-4 min-w-0 flex-1">
+          <div className="flex flex-col gap-2 min-w-0 flex-1">
             {/* Header: Kicker de actividad con chip + Métricas de la sesión */}
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 font-sans text-caption font-bold text-paper select-none">
+                <Chip variant="ink" className="uppercase tracking-wide">
                   {allDone
                     ? "Sesión completada"
                     : isMidSession
                       ? "Sesión en curso"
                       : "Sesión de hoy"}
-                </span>
+                </Chip>
                 {!allDone ? (
-                  <span className="inline-flex items-center rounded-full border border-ink/40 bg-transparent px-3 py-1 font-sans text-caption font-medium text-ink select-none">
+                  <Chip variant="outline">
                     {isCurrentOptional
                       ? "Actividad opcional"
                       : `Actividad ${Math.max(1, currentRequiredIndex + 1)} de ${requiredCount}`}
-                  </span>
+                  </Chip>
                 ) : null}
                 {isMidSession && !allDone ? (
-                  <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-sans text-caption font-bold text-on-primary select-none">
-                    En curso
-                  </span>
+                  <Chip variant="status">En curso</Chip>
                 ) : null}
               </div>
               <h2 className="font-heading text-h1 font-bold text-ink text-balance">
@@ -207,24 +207,39 @@ export default function HomeHeroCard({
               onStartStep={onStartStep}
             />
 
-            {steps.length > 2 ? (
-              <button
-                type="button"
-                onClick={() => setShowSecondarySteps((prev) => !prev)}
-                aria-expanded={showSecondarySteps}
-                className="press-feedback focus-ring inline-flex items-center justify-between w-full pt-1 pb-0.5 text-left font-body-sm font-medium text-ink-secondary transition-colors hover:text-ink"
-              >
-                <span>
-                  {showSecondarySteps
-                    ? "Ver menos actividades"
-                    : `Ver todas las actividades (${steps.length}) · ${totalMinutes} min`}
-                </span>
-                {showSecondarySteps ? (
-                  <ChevronUp size={18} aria-hidden />
+            {steps.length > 2 || primaryActionHref ? (
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1 pb-0.5">
+                {steps.length > 2 ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowSecondarySteps((prev) => !prev)}
+                    aria-expanded={showSecondarySteps}
+                    className="press-feedback focus-ring inline-flex items-center gap-1.5 text-left font-body-sm font-medium text-ink-secondary transition-colors hover:text-ink"
+                  >
+                    <span>
+                      {showSecondarySteps
+                        ? "Ver menos actividades"
+                        : `Ver todas las actividades (${steps.length}) · ${totalMinutes} min`}
+                    </span>
+                    {showSecondarySteps ? (
+                      <ChevronUp size={18} aria-hidden />
+                    ) : (
+                      <ChevronDown size={18} aria-hidden />
+                    )}
+                  </button>
                 ) : (
-                  <ChevronDown size={18} aria-hidden />
+                  <span />
                 )}
-              </button>
+                {primaryActionHref ? (
+                  <Link
+                    href={primaryActionHref}
+                    className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-colors hover:bg-ink-secondary"
+                  >
+                    Ver el día completo
+                    <ArrowRight size={16} aria-hidden />
+                  </Link>
+                ) : null}
+              </div>
             ) : null}
           </div>
         ) : null}

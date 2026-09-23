@@ -1,4 +1,10 @@
 /* Design Tokens — English Journal
+   AUTO-GENERATED from docs/design-system/tokens.json by scripts/build-tokens.ts.
+   Run `npm run tokens` to regenerate. Do not hand-edit values that exist in
+   tokens.json — edit tokens.json instead. Hand-maintained sections (legacy
+   aliases, --ej-* aliases, motion, --layout-*, extra text sizes) are appended
+   below and preserved across regeneration; see docs/design-system/MIGRATION.md.
+
    3-layer architecture:
    1. Neutrals (responsive to data-theme="light|dark")
    2. Fijos + Pastel de contenido (fixed hues across themes)
@@ -10,18 +16,18 @@
   --sidebar-width: 256px;
 
   /* ── 1. Neutros (Light) ────────────────────────────────────────────────── */
-  --bg:             oklch(0.97 0.006 85);   /* #f6f4ef */
-  --bg-sidebar:     oklch(0.94 0.008 85);   /* #efebe3 */
-  --surface:        oklch(1 0 0);           /* #ffffff */
-  --surface-raised: oklch(0.95 0.007 85);   /* #f1eee7 */
-  --field:          oklch(0.93 0.008 85);   /* #ebe7de */
-  --border:         oklch(0.89 0.010 85);   /* #e2ddd2 */
-  --border-strong:  oklch(0.74 0.015 85);   /* #b9b2a4 */
-  --text-strong:    oklch(0.12 0.010 265);  /* #0a0c11 */
-  --text:           oklch(0.17 0.010 265);  /* #12151c */
-  --text-secondary: oklch(0.29 0.020 265);  /* #2c3445 */
-  --text-muted:     oklch(0.40 0.018 265);  /* #4a5263 */
-  --text-faint:     oklch(0.49 0.015 265);  /* #636a78 */
+  --bg:                oklch(0.97 0.007 89); /* #f6f4ef */
+  --bg-sidebar:        oklch(0.94 0.012 85); /* #efebe3 */
+  --surface:           oklch(1 0 0); /* #ffffff */
+  --surface-raised:    oklch(0.98 0.006 85); /* #faf8f4 */
+  --field:             oklch(0.98 0.006 85); /* #fbf9f5 */
+  --border:            oklch(0.92 0.014 85); /* #eae5db */
+  --border-strong:     oklch(0.83 0.022 86); /* #cfc8b9 */
+  --text-strong:       oklch(0.15 0.011 268); /* #0a0c11 */
+  --text:              oklch(0.20 0.015 267); /* #12151c */
+  --text-secondary:    oklch(0.33 0.032 265); /* #2c3445 */
+  --text-muted:        oklch(0.44 0.030 265); /* #4a5263 */
+  --text-faint:        oklch(0.52 0.024 264); /* #636a78 */
 
   /* Legacy aliases for compatibility */
   --text-primary:     var(--text);
@@ -50,18 +56,18 @@ html[data-theme="dark"], .dark {
   color-scheme: dark;
 
   /* ── 1. Neutros (Dark) ─────────────────────────────────────────────────── */
-  --bg:             oklch(0.14 0.015 260);  /* #0d1018 */
-  --bg-sidebar:     oklch(0.16 0.015 260);  /* #11151f */
-  --surface:        oklch(0.18 0.018 260);  /* #141925 */
-  --surface-raised: oklch(0.22 0.020 260);  /* #1b2130 */
-  --field:          oklch(0.21 0.018 260);  /* #1a1f2c */
-  --border:         oklch(0.27 0.022 260);  /* #262d3d */
-  --border-strong:  oklch(0.31 0.025 260);  /* #2f3749 */
-  --text-strong:    oklch(1 0 0);           /* #ffffff */
-  --text:           oklch(0.95 0.008 260);  /* #eef1f7 */
-  --text-secondary: oklch(0.84 0.012 260);  /* #c9cfdb */
-  --text-muted:     oklch(0.74 0.015 260);  /* #aab2c4 */
-  --text-faint:     oklch(0.58 0.018 260);  /* #7c8499 */
+  --bg:                oklch(0.17 0.017 269); /* #0d1018 */
+  --bg-sidebar:        oklch(0.20 0.021 268); /* #11151f */
+  --surface:           oklch(0.21 0.025 267); /* #141925 */
+  --surface-raised:    oklch(0.25 0.030 267); /* #1b2130 */
+  --field:             oklch(0.24 0.026 268); /* #1a1f2c */
+  --border:            oklch(0.30 0.031 266); /* #262d3d */
+  --border-strong:     oklch(0.34 0.034 266); /* #2f3749 */
+  --text-strong:       oklch(1 0 0); /* #ffffff */
+  --text:              oklch(0.96 0.009 265); /* #eef1f7 */
+  --text-secondary:    oklch(0.85 0.018 264); /* #c9cfdb */
+  --text-muted:        oklch(0.76 0.027 267); /* #aab2c4 */
+  --text-faint:        oklch(0.61 0.033 269); /* #7c8499 */
 
   --text-primary:     var(--text);
   --text-tertiary:    var(--text-muted);
@@ -95,42 +101,37 @@ html[data-theme="dark"], .dark {
 
 :root {
   /* ── 2. Fijos (Iguales en ambos temas) ────────────────────────────────── */
-  --ink:           oklch(0.17 0.010 265);  /* #12151c */
-  --ink-secondary: oklch(0.29 0.020 265);  /* #2c3445 */
-  --ink-muted:     oklch(0.40 0.018 265);  /* #4a5263 */
-  --paper:         oklch(1 0 0);           /* #ffffff */
-  --on-accent:     oklch(1 0 0);           /* #ffffff */
+  --ink:           oklch(0.20 0.015 267); /* #12151c */
+  --ink-secondary: oklch(0.33 0.032 265); /* #2c3445 */
+  --ink-muted:     oklch(0.44 0.030 265); /* #4a5263 */
+  --paper:         oklch(1 0 0); /* #ffffff */
+  --on-accent:     oklch(1 0 0); /* #ffffff */
 
   /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
-  /* sky (sesión de hoy, cursos, ruta, lecciones guiadas) */
-  --sky:      oklch(0.85 0.07 250);  /* #b9d3fb */
-  --sky-deep: oklch(0.78 0.10 250);  /* #9ec0f6 */
-  --sky-soft: oklch(0.96 0.02 250);  /* #eaf2fe */
+  --sky:      oklch(0.86 0.063 259); /* #b9d3fb */
+  --sky-deep: oklch(0.80 0.085 260); /* #9ec0f6 */
+  --sky-soft: oklch(0.96 0.018 258); /* #eaf2fe */
 
-  /* butter (frases, expresiones, lecciones teóricas, hitos) */
-  --butter:      oklch(0.90 0.10 90);   /* #f8e08e */
-  --butter-deep: oklch(0.84 0.13 90);   /* #efd06a */
-  --butter-soft: oklch(0.96 0.04 90);   /* #fdf3cf */
+  --butter:      oklch(0.91 0.105 94); /* #f8e08e */
+  --butter-deep: oklch(0.86 0.126 93); /* #efd06a */
+  --butter-soft: oklch(0.96 0.048 94); /* #fdf3cf */
 
-  /* coral (vocabulario, palabras, pronunciación) */
-  --coral:      oklch(0.80 0.08 30);   /* #f7b7a6 */
-  --coral-deep: oklch(0.73 0.11 30);   /* #ee9f8b */
-  --coral-soft: oklch(0.93 0.03 30);   /* #fde4dc */
+  --coral:      oklch(0.83 0.079 35); /* #f7b7a6 */
+  --coral-deep: oklch(0.78 0.099 35); /* #ee9f8b */
+  --coral-soft: oklch(0.94 0.030 39); /* #fde4dc */
 
-  /* lilac (progreso, mazos, gramática) */
-  --lilac:      oklch(0.81 0.07 290);  /* #cbbcf5 */
-  --lilac-deep: oklch(0.73 0.10 290);  /* #b1a0ea */
-  --lilac-soft: oklch(0.94 0.02 290);  /* #ece6fd */
+  --lilac:      oklch(0.83 0.080 297); /* #cbbcf5 */
+  --lilac-deep: oklch(0.75 0.106 294); /* #b1a0ea */
+  --lilac-soft: oklch(0.94 0.031 298); /* #ece6fd */
 
-  /* mint (inmersión, práctica, registro, racha, Coach) */
-  --mint:      oklch(0.87 0.07 160);  /* #a8e6c9 */
-  --mint-deep: oklch(0.80 0.10 160);  /* #86d6b0 */
-  --mint-soft: oklch(0.96 0.02 160);  /* #e3f6ec */
+  --mint:      oklch(0.87 0.075 164); /* #a8e6c9 */
+  --mint-deep: oklch(0.81 0.096 163); /* #86d6b0 */
+  --mint-soft: oklch(0.96 0.024 163); /* #e3f6ec */
 
-  /* ── English Journal ej-* aliases ─────────────────────────────────────── */
-  --ej-sky:       var(--sky);
-  --ej-sky-deep:  var(--sky-deep);
-  --ej-sky-soft:  var(--sky-soft);
+  /* ── English Journal ej-* aliases (legacy — ver MIGRATION.md) ──────────── */
+  --ej-sky:      var(--sky);
+  --ej-sky-deep: var(--sky-deep);
+  --ej-sky-soft: var(--sky-soft);
   --ej-butter:      var(--butter);
   --ej-butter-deep: var(--butter-deep);
   --ej-butter-soft: var(--butter-soft);
@@ -162,15 +163,15 @@ html[data-theme="dark"], .dark {
   --info-soft:       var(--sky-soft);
 
   /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
-  --accent-blue:    oklch(0.53 0.20 254); /* #2563eb (predeterminado) */
-  --accent-red:     oklch(0.57 0.22 27);  /* #dc2626 */
-  --accent-orange:  oklch(0.55 0.19 38);  /* #c2410c */
-  --accent-amber:   oklch(0.53 0.15 65);  /* #b45309 */
-  --accent-green:   oklch(0.52 0.15 142); /* #15803d */
-  --accent-emerald: oklch(0.50 0.13 165); /* #047857 */
-  --accent-teal:    oklch(0.50 0.11 210); /* #0e7490 */
-  --accent-purple:  oklch(0.48 0.24 285); /* #7c3aed */
-  --accent-pink:    oklch(0.50 0.21 345); /* #be185d */
+  --accent-red: oklch(0.58 0.215 27); /* #dc2626 */
+  --accent-orange: oklch(0.55 0.174 38); /* #c2410c */
+  --accent-amber: oklch(0.56 0.146 49); /* #b45309 */
+  --accent-green: oklch(0.53 0.137 150); /* #15803d */
+  --accent-emerald: oklch(0.51 0.105 166); /* #047857 */
+  --accent-teal: oklch(0.52 0.094 223); /* #0e7490 */
+  --accent-blue: oklch(0.55 0.215 263); /* #2563eb */
+  --accent-purple: oklch(0.54 0.247 293); /* #7c3aed */
+  --accent-pink: oklch(0.52 0.199 4); /* #be185d */
 
   /* Default accent = blue */
   --accent:         var(--accent-blue);
@@ -187,7 +188,7 @@ html[data-theme="dark"], .dark {
   --primary-text:  var(--accent-text);
   --primary-soft:  var(--accent-soft);
 
-  /* ── 6. Motion ─────────────────────────────────────────────────────────── */
+  /* ── 6. Motion (sin equivalente en tokens.json — hand-maintained) ──────── */
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-celebrate: 420ms;
@@ -196,21 +197,21 @@ html[data-theme="dark"], .dark {
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── 7. Escala de Espaciado (4, 8, 12, 16, 20, 22, 24, 28, 40) ────────── */
-  --space-1:  0.25rem;  /* 4px */
-  --space-2:  0.5rem;   /* 8px */
-  --space-3:  0.75rem;  /* 12px */
-  --space-4:  1rem;     /* 16px */
-  --space-5:  1.25rem;  /* 20px */
-  --space-22: 1.375rem; /* 22px — gap de grid */
-  --space-6:  1.5rem;   /* 24px — padding tarjeta */
-  --space-28: 1.75rem;  /* 28px — tarjeta principal */
-  --space-8:  2rem;     /* 32px */
-  --space-10: 2.5rem;   /* 40px — margen de página */
+  /* ── 7. Escala de Espaciado ─────────────────────────────────────────────── */
+  --space-1: 4px; /* Entre título y subtítulo apilados. */
+  --space-2: 8px; /* Entre chips y botones en fila. */
+  --space-3: 12px; /* Entre icono y texto; gap interno de tarjetas compactas. */
+  --space-4: 16px; /* Padding de insets (cajas de ejemplo). */
+  --space-5: 20px; /* Gap entre bloques dentro de una tarjeta. */
+  --space-gap: 22px; /* Gap del grid bento entre tarjetas. */
+  --space-6: 24px; /* Padding de tarjetas. */
+  --space-7: 28px; /* Padding de la tarjeta principal. */
+  --space-8: 40px; /* Margen lateral del contenido principal. */
 
+  /* --layout-* (sin equivalente en tokens.json — hand-maintained, ver MIGRATION.md) */
   --layout-page-inline: var(--space-4);
   --layout-page-block: var(--space-4);
-  --layout-page-block-end: var(--space-10);
+  --layout-page-block-end: var(--space-8);
   --layout-header-gap: var(--space-2);
   --layout-header-pb: var(--space-4);
   --layout-section-gap: var(--space-5);
@@ -222,40 +223,40 @@ html[data-theme="dark"], .dark {
   --layout-canvas-max: 80rem;
   --layout-session-max: 45rem;
 
-  /* ── 8. Radios de Borde (6, 12, 14, 20, 28, 999) ─────────────────────── */
-  --radius-xs:   6px;     /* kbd */
-  --radius-sm:   8px;
-  --radius-md:   12px;    /* nav, campos */
-  --radius-lg:   14px;    /* filas, tiles */
-  --radius-xl:   20px;    /* insets */
-  --radius-2xl:  24px;
-  --radius-3xl:  28px;    /* tarjetas */
-  --radius-full: 9999px;  /* botones y chips */
+  /* ── 8. Radios de Borde ─────────────────────────────────────────────────── */
+  --radius-xs: 6px; /* Atajos de teclado (Ctrl K). */
+  --radius-sm: 12px; /* Items de navegación, campos. */
+  --radius-md: 14px; /* Filas de actividad, tiles de icono. */
+  --radius-lg: 20px; /* Insets y paneles dentro de tarjetas. */
+  --radius-xl: 28px; /* Tarjetas bento. */
+  --radius-full: 999px; /* Botones, chips, barras de progreso. */
+  --radius-pill: var(--radius-full); /* alias del nombre en tokens.json */
 
   /* ── 9. Tipografía ────────────────────────────────────────────────────── */
-  --font-display:  var(--font-display, 'Bricolage Grotesque', sans-serif);
-  --font-sans:     var(--font-body, 'Figtree', sans-serif);
-  --font-ipa:      var(--font-phonetic, 'Noto Sans', sans-serif);
+  --font-display:  var(--font-display, "Bricolage Grotesque", "Figtree", system-ui, sans-serif);
+  --font-sans:     var(--font-body, "Figtree", system-ui, sans-serif);
+  --font-ipa:      var(--font-phonetic, "Noto Sans", "Figtree", sans-serif);
 
-  --text-size-hero: 3.75rem;        /* 60px / 60px 800 */
-  --text-size-display: 2.875rem;    /* 46px / 48px 800 */
-  --text-size-headline: 2.25rem;    /* 36px / 37px 800 */
-  --text-size-numeral: 2.125rem;    /* 34px / 36px 800 */
+  --text-size-hero: 60px;
+  --text-size-display: 46px;
+  --text-size-headline: 36px;
+  --text-size-numeral: 34px;
+  --text-size-title: 19px;
+  --text-size-body-lg: 17px;
+  --text-size-body: 15px;
+  --text-size-body-sm: 14px;
+  --text-size-caption: 13px;
+  --text-size-overline: 12px;
+  --text-size-ipa-lg: 20px;
+  --text-size-ipa: 18px;
+  /* Extra text sizes used by existing components, not in tokens.json spec */
   --text-size-h1: 2.25rem;
   --text-size-h2: 1.625rem;
   --text-size-h3: 1.375rem;
   --text-size-h4: 1.25rem;
-  --text-size-title: 1.1875rem;    /* 19px / 24px 700 */
-  --text-size-body-lg: 1.0625rem;  /* 17px / 26px 500 */
-  --text-size-body: 0.9375rem;     /* 15px / 22px 400 */
-  --text-size-body-sm: 0.875rem;   /* 14px / 20px 400 */
-  --text-size-label: 0.875rem;     /* 14px / 20px 600 */
-  --text-size-caption: 0.8125rem;  /* 13px / 18px 600 */
-  --text-size-overline: 0.75rem;   /* 12px / 16px 700 0.14em MAYÚSCULAS */
+  --text-size-label: 0.875rem;
   --text-size-kicker: 0.75rem;
   --text-size-tiny: 0.75rem;
-  --text-size-ipa-lg: 1.25rem;     /* 20px / 28px 400 */
-  --text-size-ipa: 1.125rem;       /* 18px / 26px 400 */
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
 }

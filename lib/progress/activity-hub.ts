@@ -6,12 +6,13 @@ import {
   saveResolvedIds,
 } from '@/lib/daily/plan-storage'
 import { reconcileDailySteps } from '@/lib/progress/daily-reconcile'
+import { reconcileFocusDailySteps } from '@/lib/focus/evidence'
 import {
   practiceContextToSource,
   type ActivitySource,
   type SkillTag,
 } from '@/lib/progress/activity-types'
-import { skillsForSlug } from '@/lib/progress/skill-matrix'
+import { resolveAnswerSkills } from '@/lib/progress/skill-matrix'
 import { updateConceptSignalsWithEvidence } from '@/lib/courses/assessment-profile'
 import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumIndex'
 import type { ConceptSignal } from '@/lib/courses/concept-profile'
@@ -41,20 +42,25 @@ export type ActivitySessionInput = {
     lessonSlug?: string
     coachTool?: string
     dailyTargetId?: string
+    immersionLessonId?: string
     quizPassed?: boolean
     mediaType?: string
+    gameId?: string
+    deckId?: string
     notes?: string
   }
 }
 
 /**
- * Derive practiced skills from exercise slugs only.
- * Context is provenance for activity_sessions.source — it must not invent skills.
+ * Derive practiced skills from each evaluated task's persisted metadata.
+ * Context remains provenance for activity_sessions.source; it never invents skills.
  */
 export function deriveSkillTags(_context: PracticeContext, result: SessionResult): SkillTag[] {
   const tags = new Set<SkillTag>()
   for (const r of result.results) {
-    for (const t of skillsForSlug(r.slug)) tags.add(t)
+    const isEvaluated = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
+    if (!isEvaluated) continue
+    for (const t of resolveAnswerSkills(r.slug, r.exercisePayload)) tags.add(t)
   }
   return [...tags]
 }
@@ -119,11 +125,14 @@ export function buildSessionTelemetry(
   const skillTags = input.explicitSkillTags ?? deriveSkillTags(practiceContext, sessionResult)
   const correct = sessionResult.results.filter((r) => r.isCorrect).length
   const planSteps = input.dailyPlanSteps ?? []
-  const reconciledStepIds = input.explicitReconciledStepIds ?? (
+  const baseReconciledStepIds = input.explicitReconciledStepIds ?? (
     practiceContext === 'daily'
       ? []
       : reconcileDailySteps(planSteps, sessionResult, practiceContext, input.metadata)
   )
+  const reconciledStepIds = input.explicitReconciledStepIds
+    ? baseReconciledStepIds
+    : [...new Set([...baseReconciledStepIds, ...reconcileFocusDailySteps(planSteps, sessionResult.results)])]
 
   return {
     activitySession: {
@@ -192,19 +201,16 @@ export async function recordActivitySession(
   // Aggregate lesson exercise evidence for concept signals (Pieza 7)
   const lessonStats = new Map<string, { correct: number; total: number }>()
 
-  if (input.metadata?.lessonSlug) {
-    const correct = sessionResult.results.filter((r) => r.isCorrect).length
-    const total = sessionResult.results.length
-    if (total > 0) {
-      lessonStats.set(input.metadata.lessonSlug, { correct, total })
-    }
-  }
-
   for (const r of sessionResult.results) {
+    const isEvaluable = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
+    if (!isEvaluable) continue
+
     const payload = r.exercisePayload as Record<string, unknown> | undefined
     const slugFromPayload = (payload?.lessonSlug as string | undefined) ?? (payload?.deckSlug as string | undefined)
     const slugFromSourceRef = r.sourceRef?.source === 'grammar_deck' ? r.sourceRef.id : undefined
-    const slug = slugFromPayload ?? slugFromSourceRef
+    // Metadata describes the session, not every answer. An explicit result-level
+    // slug wins so each evaluable answer contributes to one concept at most.
+    const slug = slugFromPayload ?? slugFromSourceRef ?? input.metadata?.lessonSlug
     if (slug) {
       const curr = lessonStats.get(slug) ?? { correct: 0, total: 0 }
       curr.total += 1

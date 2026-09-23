@@ -9,20 +9,24 @@
 //   <QuizResetAction /> (Allows learner to retry the micro-quiz)
 // </LessonQuizTab>
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check, RefreshCw } from '@/components/icons';
 import Button from '@/components/ui/Button';
+import type { ImmersionQuizAttemptInput } from '@/lib/immersion/progress-queries';
 import type { ImmersionLesson } from '@/lib/immersion/types';
 
 interface LessonQuizTabProps {
   lesson: ImmersionLesson;
-  onQuizComplete: (scorePercent: number) => void;
+  onQuizComplete: (attempt: Omit<ImmersionQuizAttemptInput, 'lessonId'>) => Promise<void>;
 }
 
 /** Pestaña de comprobación: preguntas de opción múltiple con feedback pedagógico inmediato. */
 export function LessonQuizTab({ lesson, onQuizComplete }: LessonQuizTabProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [quizSubmitted, setQuizSubmitted] = useState<Record<string, boolean>>({});
+  const attemptIdRef = useRef(crypto.randomUUID());
+  const startedAtRef = useRef(Date.now());
+  const completionRecordedRef = useRef(false);
 
   function handleSelectOption(questionId: string, optionIndex: number) {
     if (quizSubmitted[questionId]) return;
@@ -34,16 +38,36 @@ export function LessonQuizTab({ lesson, onQuizComplete }: LessonQuizTabProps) {
 
     const allAnswered = lesson.quiz.every((q) => nextSubmitted[q.id]);
     if (allAnswered && lesson.quiz.length > 0) {
-      const correctCount = lesson.quiz.filter(
-        (q) => nextSelected[q.id] === q.correctIndex,
-      ).length;
-      onQuizComplete(Math.round((correctCount / lesson.quiz.length) * 100));
+      if (!completionRecordedRef.current) {
+        completionRecordedRef.current = true;
+        void onQuizComplete({
+          attemptId: attemptIdRef.current,
+          canonicalTopic: lesson.metadata?.canonicalTopic,
+          answers: lesson.quiz.map((question) => {
+            const selectedIndex = nextSelected[question.id];
+            return {
+              questionId: question.id,
+              question: question.question,
+              selectedAnswer: selectedIndex == null ? '' : question.options[selectedIndex] ?? '',
+              correctAnswer: question.options[question.correctIndex] ?? '',
+              isCorrect: selectedIndex === question.correctIndex,
+              timeMs: Date.now() - startedAtRef.current,
+            };
+          }),
+        }).catch((error) => {
+          completionRecordedRef.current = false;
+          console.error('[LessonQuizTab] No se pudo registrar el quiz de inmersión:', error);
+        });
+      }
     }
   }
 
   function handleResetQuiz() {
     setSelectedAnswers({});
     setQuizSubmitted({});
+    attemptIdRef.current = crypto.randomUUID();
+    startedAtRef.current = Date.now();
+    completionRecordedRef.current = false;
   }
 
   const allCompleted = lesson.quiz.length > 0 && lesson.quiz.every((q) => quizSubmitted[q.id]);

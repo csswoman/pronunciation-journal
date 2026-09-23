@@ -31,6 +31,7 @@ function recognitionExercise(target: LearningChunk, catalog: readonly LearningCh
   return {
     id: `chunk:${target.id}:recognition`,
     type: 'multiple_choice',
+    exerciseType: { domain: 'vocabulary', mode: 'multiple_choice' },
     sourceRef: { source: 'chunks', id: target.id },
     level: target.learning.cefr,
     question: target.learning.recognitionCueEs,

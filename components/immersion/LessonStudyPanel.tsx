@@ -13,21 +13,21 @@ import { useState } from 'react';
 import { HelpCircle, Timer, Bookmark } from '@/components/icons';
 import { ListenButton } from '@/components/ui/ListenButton';
 import { speakWord } from '@/lib/word-bank/speech';
-import { useImmersionProgress } from '@/lib/immersion/use-immersion-progress';
 import type { ImmersionLesson } from '@/lib/immersion/types';
 import { LessonQuizTab } from './LessonQuizTab';
 import { LessonVocabularyTab } from './LessonVocabularyTab';
+import type { ImmersionQuizAttemptInput } from '@/lib/immersion/progress-queries';
 
 interface LessonStudyPanelProps {
   lesson: ImmersionLesson;
   onSeek: (seconds: number) => void;
+  onQuizComplete: (attempt: Omit<ImmersionQuizAttemptInput, 'lessonId'>) => Promise<void>;
 }
 
 type TabType = 'timestamps' | 'vocabulary' | 'phrases' | 'quiz';
 
-export function LessonStudyPanel({ lesson, onSeek }: LessonStudyPanelProps) {
+export function LessonStudyPanel({ lesson, onSeek, onQuizComplete }: LessonStudyPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>('timestamps');
-  const { markWatched } = useImmersionProgress(lesson.id);
 
   function formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);
@@ -151,7 +151,7 @@ export function LessonStudyPanel({ lesson, onSeek }: LessonStudyPanelProps) {
 
       {/* Tab 4: Micro-Quiz */}
       {activeTab === 'quiz' && (
-        <LessonQuizTab lesson={lesson} onQuizComplete={markWatched} />
+        <LessonQuizTab lesson={lesson} onQuizComplete={onQuizComplete} />
       )}
     </div>
   );

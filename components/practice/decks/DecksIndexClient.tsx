@@ -9,7 +9,7 @@ import {
 import { cn } from '@/lib/cn'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { ListPagination } from '@/components/ui/ListPagination'
-import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/decks'
+import type { DeckSummary, DeckLevel } from '@/lib/courses/grammar-deck/types'
 
 interface Props {
   decks: DeckSummary[]

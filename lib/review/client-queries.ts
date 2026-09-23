@@ -54,6 +54,35 @@ export async function fetchFailedSentenceWords(
   return getWordBankEntriesByIds(ids)
 }
 
+/** A grammar topic overdue for SRS review, ordered by how overdue it is. */
+export interface DueTopic {
+  topic: string
+  nextReviewAt: string
+}
+
+/**
+ * Overdue grammar topics (`topic_srs`, same condition as countDueTopicsServer).
+ * Returns [] on error so the daily plan degrades gracefully offline.
+ */
+export async function fetchDueTopics(userId: string, limit = 3): Promise<DueTopic[]> {
+  const supabase = getSupabaseBrowserClient()
+  const today = new Date().toISOString()
+
+  const { data, error } = await supabase
+    .from('topic_srs')
+    .select('topic, next_review_at')
+    .eq('user_id', userId)
+    .in('srs_status', ['review', 'mastered'])
+    .lte('next_review_at', today)
+    .order('next_review_at', { ascending: true })
+    .limit(limit)
+
+  if (error || !data) return []
+  return data
+    .filter((row): row is { topic: string; next_review_at: string } => !!row.topic && !!row.next_review_at)
+    .map((row) => ({ topic: row.topic, nextReviewAt: row.next_review_at }))
+}
+
 /**
  * Count word_bank SRS items whose next review falls within the next 24h.
  * Returns 0 on error so the recap card degrades gracefully offline.
@@ -119,8 +148,10 @@ export async function fetchAggregatedReviewSummaryClient(
     getTopicsDueCount(),
   ])
 
-  const totalDue = wordsDue + chunksDue + essentialWordsResult + topicsResult
-  const hasPendingReview = totalDue > 0
+  const executable = wordsDue + chunksDue + topicsResult
+  const elsewhere = essentialWordsResult
+  const totalDue = executable + elsewhere
+  const hasPendingReview = executable > 0
 
   let primaryQueue: AggregatedReviewSummary['primaryQueue'] = null
   let headline = 'Todo al día'
@@ -157,7 +188,8 @@ export async function fetchAggregatedReviewSummaryClient(
       dueLessons: 0,
       essentialWordsDue: essentialWordsResult,
       chunksDue,
-      reviewable: totalDue,
+      executable,
+      elsewhere,
       total: totalDue,
     },
     primaryQueue,

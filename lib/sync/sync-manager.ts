@@ -50,6 +50,9 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   journal_entries: 'id',
   lesson_completions: 'user_id,course_slug,lesson_slug',
   learning_items: 'user_id,id',
+  immersion_lesson_progress: 'user_id,lesson_id',
+  content_srs: 'user_id,namespace,content_id',
+  ed_cluster_attempts: 'id',
 }
 
 /**
@@ -74,6 +77,7 @@ const TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY: ReadonlySet<SyncTable> = new 
   'pronunciation_assessments',
   'attempt_logs',
   'srs_review_events',
+  'ed_cluster_attempts',
 ])
 
 let flushInFlight: Promise<SyncFlushResult> | null = null

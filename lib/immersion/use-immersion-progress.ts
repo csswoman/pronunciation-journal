@@ -5,18 +5,22 @@
 // excluir lecciones ya vistas. Se dispara al completar el video o el quiz.
 import { useCallback, useRef } from 'react';
 import { useAuthOptional } from '@/components/auth/AuthProvider';
-import { markImmersionLessonWatched } from './progress-queries';
+import {
+  markImmersionLessonWatched,
+  recordImmersionQuizAttempt,
+  recordImmersionQuizScore,
+  type ImmersionQuizAttemptInput,
+} from './progress-queries';
 
 export function useImmersionProgress(lessonId: string) {
   const auth = useAuthOptional();
   const userId = auth?.user?.id ?? null;
   const markedRef = useRef(false);
 
-  const markWatched = useCallback(
-    (quizScorePercent?: number) => {
+  const markWatched = useCallback(() => {
       if (!userId || markedRef.current) return;
       markedRef.current = true;
-      markImmersionLessonWatched(userId, lessonId, quizScorePercent).catch((err) => {
+      markImmersionLessonWatched(userId, lessonId).catch((err) => {
         console.error('[useImmersionProgress] Error marking lesson watched:', err);
         markedRef.current = false;
       });
@@ -24,5 +28,15 @@ export function useImmersionProgress(lessonId: string) {
     [userId, lessonId],
   );
 
-  return { markWatched };
+  const recordQuiz = useCallback(async (input: Omit<ImmersionQuizAttemptInput, 'lessonId'>) => {
+    if (!userId) return
+    const correct = input.answers.filter((answer) => answer.isCorrect).length
+    const scorePercent = Math.round((correct / input.answers.length) * 100)
+    await Promise.all([
+      recordImmersionQuizAttempt(userId, { ...input, lessonId }),
+      recordImmersionQuizScore(userId, lessonId, scorePercent),
+    ])
+  }, [userId, lessonId])
+
+  return { markWatched, recordQuiz };
 }

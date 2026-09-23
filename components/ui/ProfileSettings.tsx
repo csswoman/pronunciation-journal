@@ -33,6 +33,7 @@ import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/gues
 import type { CefrLevel } from "@/lib/essential-words/types";
 import type { AssessmentConcept } from "@/lib/courses/concept-profile";
 import type { FocusLevel } from "@/lib/learning-focus/types";
+import { learnerLevelSourceLabel } from "@/lib/learner-level/labels";
 import LearningFocusTopicsSheet from "@/components/home/LearningFocusTopicsSheet";
 import {
   claimTheoryTopics,
@@ -43,6 +44,7 @@ export default function ProfileSettings() {
   const { user } = useAuth();
   const {
     preferences,
+    learnerLevel,
     loading,
     updateFullName,
     updateAvatar,
@@ -86,7 +88,7 @@ export default function ProfileSettings() {
           .toUpperCase();
 
   const emailDisplay = isGuest ? "Sesión temporal en este dispositivo" : user?.email;
-  const level = isGuest ? guestLevel : preferences?.cefr_level ?? "A1";
+  const level = isGuest ? guestLevel : learnerLevel?.level === "C2" ? "C1" : learnerLevel?.level ?? "A1";
 
   const showToast = (message: string, type: "success" | "error" = "success") => {
     setToast({ message, type });
@@ -200,6 +202,11 @@ export default function ProfileSettings() {
                   : "Ajusta tus recomendaciones. Tu progreso se conserva independientemente de estas opciones."
               }
             />
+            {!isGuest && learnerLevel ? (
+              <p className="-mt-4 px-0.5 font-caption text-fg-muted">
+                {learnerLevelSourceLabel[learnerLevel.source]}
+              </p>
+            ) : null}
 
             <LearningFocusTopicsSheet
               open={topicsOpen}

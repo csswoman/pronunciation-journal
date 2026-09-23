@@ -11,3 +11,5 @@ export {
   getDueSoundsForReview as fetchDueSounds,
   getAllPracticedSounds as fetchAllPracticedSounds,
 } from '@/lib/sounds/queries'
+
+export { fetchDueTopics, type DueTopic } from '@/lib/review/client-queries'

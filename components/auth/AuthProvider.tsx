@@ -96,6 +96,7 @@ export default function AuthProvider({
     let cancelled = false;
     let cleanupSyncListeners = () => {};
     const hydrationPromises = new Map<string, Promise<void>>();
+    let guestClaimRetryTimeout: ReturnType<typeof setTimeout> | null = null;
 
     void import("@/lib/db").then(async ({ ensureDbReady }) => {
       await ensureDbReady().catch(() => {});
@@ -111,39 +112,57 @@ export default function AuthProvider({
           const { claimGuestPronunciationDiagnostic } = await import(
             "@/lib/pronunciation/assessment/guest-transfer"
           );
-          await claimGuestPlacement(userId);
+          const claimed = await claimGuestPlacement(userId);
           await claimGuestPronunciationDiagnostic(userId);
 
-          const { data } = await getSupabaseBrowserClient()
-            .from("user_profiles" as never)
-            .select("cefr_level")
-            .eq("id", userId)
-            .maybeSingle();
-          const profile = data as { cefr_level?: string } | null;
+          if (!claimed) {
+            guestClaimRetryTimeout = setTimeout(() => {
+              if (currentUserIdRef.current === userId) {
+                void claimGuestPlacement(userId);
+              }
+            }, 15_000);
+          }
+
+          const { getEffectiveLearnerLevel } = await import("@/lib/learner-level/client-queries");
+          let resolution = await getEffectiveLearnerLevel(userId);
+
+          if (!claimed && resolution.source === "starter_default") {
+            const { readGuestStudyLevel, clearGuestStudyLevel } = await import(
+              "@/lib/preferences/guest-study-level"
+            );
+            const guestLevel = readGuestStudyLevel();
+            if (guestLevel !== "A1") {
+              const { applyManualCefrLevel } = await import("@/lib/users/queries");
+              await applyManualCefrLevel(userId, guestLevel);
+              clearGuestStudyLevel();
+              resolution = await getEffectiveLearnerLevel(userId);
+            }
+          }
 
           const [
             { db, ensureDbReady },
             { getUserLearningState },
             { hydrateFromRemote },
-            { normalizeCEFR },
             { hydrateLessonCompletions },
             { hydrateImmersionProgress },
+            { hydrateContentSrs },
           ] = await Promise.all([
             import("@/lib/db"),
             import("@/lib/ai-practice/load-state"),
             import("@/lib/ai-practice/queries"),
-            import("@/lib/exercises/cefr"),
             import("@/lib/courses/queries"),
             import("@/lib/immersion/progress-queries"),
+            import("@/lib/practice/content-srs-queries"),
           ]);
 
           await ensureDbReady();
           await hydrateFromRemote(userId);
           await hydrateLessonCompletions(userId);
           await hydrateImmersionProgress(userId);
-          if (!profile?.cefr_level) return;
+          await hydrateContentSrs(userId);
+          if (resolution.source === "unknown") return;
 
-          const nextLevel = normalizeCEFR(profile.cefr_level);
+          const nextLevel = resolution.level;
           const existing = await db.learningState.get(userId);
           if (existing) {
             await db.learningState.put({
@@ -228,6 +247,7 @@ export default function AuthProvider({
     return () => {
       cancelled = true;
       cleanupSyncListeners();
+      if (guestClaimRetryTimeout) clearTimeout(guestClaimRetryTimeout);
       subscription.unsubscribe();
     };
   }, [initialUser, router, supabaseEnabled]);

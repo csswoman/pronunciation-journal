@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { BookOpen, Volume2, BrainCircuit } from "@/components/icons"
 
 import type { SkillProfileData, CoachInsights } from '@/lib/progress/queries'
+import type { LearnerLevelResolution } from '@/lib/learner-level/core'
+import { learnerLevelSourceLabel } from '@/lib/learner-level/labels'
 
 import {
   ProgressCard,
@@ -13,6 +15,7 @@ import {
 interface Props {
   data: SkillProfileData
   coach: CoachInsights
+  learnerLevel: LearnerLevelResolution
 }
 
 const STATUS_CONFIG: {
@@ -137,37 +140,13 @@ function LexiconPanel({
   )
 }
 
-function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
-  const hasData = coach.weakTopics.length > 0 || coach.cefrEstimate !== null || coach.profileLevel !== null
-
-  if (!hasData) {
-    return (
-      <ProgressCard>
-        <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Diagnóstico de gramática" />
-        <p className="text-caption text-fg-muted">
-          Conversa con el AI Coach para estructurar tu diagnóstico de gramática.
-        </p>
-      </ProgressCard>
-    )
-  }
-
-  // Un solo nivel: el estimado por el coach manda; si no, el declarado en el perfil.
-  const level = coach.cefrEstimate ?? coach.profileLevel
-  const levelSub =
-    coach.cefrEstimate && coach.profileLevel && coach.cefrEstimate !== coach.profileLevel
-      ? `Estimado por coach (${coach.cefrEstimate}), perfil (${coach.profileLevel})`
-      : coach.cefrEstimate
-        ? 'Nivel estimado por tu práctica'
-        : 'Nivel actual en tu perfil'
-
+function CoachInsightsPanel({ coach, learnerLevel }: { coach: CoachInsights; learnerLevel: LearnerLevelResolution }) {
   return (
     <ProgressCard>
       <ProgressCardHeader icon={<BrainCircuit size={16} />} eyebrow="AI Coach" title="Diagnóstico de gramática" />
-      {level && (
-        <div className="mt-1 mb-3">
-          <ProgressBigNumber value={level} sub={levelSub} />
-        </div>
-      )}
+      <div className="mt-1 mb-3">
+        <ProgressBigNumber value={learnerLevel.level} sub={learnerLevelSourceLabel[learnerLevel.source]} />
+      </div>
       {coach.weakTopics.length > 0 && (
         <div className="flex flex-col gap-1.5">
           <p className="font-kicker font-medium text-fg-muted">Temas a reforzar</p>
@@ -181,6 +160,11 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
           ))}
         </div>
       )}
+      {coach.weakTopics.length === 0 && (
+        <p className="text-caption text-fg-muted">
+          Conversa con el AI Coach para estructurar tu diagnóstico de gramática.
+        </p>
+      )}
       <Link href="/practice/decks" className="mt-1 inline-flex min-h-[44px] items-center text-body-sm font-semibold text-primary transition-opacity hover:opacity-80 focus-ring">
         Practicar estos temas →
       </Link>
@@ -188,14 +172,12 @@ function CoachInsightsPanel({ coach }: { coach: CoachInsights }) {
   )
 }
 
-export function SkillProfileCard({ data, coach }: Props) {
+export function SkillProfileCard({ data, coach, learnerLevel }: Props) {
   const hasAnyData =
     Object.values(data.wordsByStatus).some((v) => v > 0) ||
     data.weakestPhonemes.length > 0 ||
     data.essentialWords.studied > 0 ||
-    coach.weakTopics.length > 0 ||
-    coach.cefrEstimate !== null ||
-    coach.profileLevel !== null
+    true
 
   if (!hasAnyData) {
     return (
@@ -223,7 +205,7 @@ export function SkillProfileCard({ data, coach }: Props) {
           wordsByStatus={data.wordsByStatus}
           essentialWords={data.essentialWords}
         />
-        <CoachInsightsPanel coach={coach} />
+        <CoachInsightsPanel coach={coach} learnerLevel={learnerLevel} />
       </div>
     </section>
   )

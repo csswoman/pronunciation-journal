@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .gitem { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 16px; color: var(--text); text-decoration: none; cursor: pointer }
+    .gitem--on { background: #f8e08e; color: #12151c }
+    .gitem--soon { opacity: .6 }
+    .gic { width: 38px; height: 38px; border-radius: 12px; color: #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .opt2 { border: 2px solid var(--border); border-radius: 16px; background: transparent; color: var(--text); padding: 14px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; text-align: left }
+    .opt2--on { border-color: #12151c; background: #b9d3fb; color: #12151c }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 940px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">PRÁCTICA RÁPIDA</span>
+      <h1 class="num" style="margin: 0; font-size: 46px; line-height: 48px; color: {{t.textStrong}};">Juegos</h1>
+      <span style="font-size: 16px; color: {{t.muted}};">Mecánicas cortas para ganar reflejos con el vocabulario que ya tienes.</span>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <span class="chip-n">14 partidas</span>
+      <span style="padding: 8px 14px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 14px; font-weight: 700;">38 palabras ganadas jugando</span>
+    </div>
+  </header>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start;">
+
+    <!-- Sidebar de juegos -->
+    <section class="card neutral" style="gap: 6px; padding: 14px;">
+      <span class="lbl" style="padding: 4px 8px;">DISPONIBLES</span>
+      <a href="#" class="gitem gitem--on">
+        <span class="gic" style="background: rgba(18,21,28,.12);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M3 9h18M9 3v18"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-size: 16px; font-weight: 700;">Sopa de letras</span>
+          <span style="font-size: 13px; color: #4a5263;">8 palabras · 5 min</span>
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+      <a href="#" class="gitem">
+        <span class="gic" style="background: #b9d3fb;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 14a5 5 0 1 1 3-9 6 6 0 0 1 11 3 4 4 0 0 1-1 8H7M9 18v3M13 18v3M17 18v3"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-size: 16px; font-weight: 700;">Lluvia de palabras</span>
+          <span style="font-size: 13px; color: {{t.muted}};">mecanografía · 3 vidas</span>
+        </span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+      </a>
+
+      <div style="height: 1px; background: {{t.border}}; margin: 8px 8px;"></div>
+      <span class="lbl" style="padding: 4px 8px;">EN CAMINO</span>
+      <div class="gitem gitem--soon">
+        <span class="gic" style="background: {{t.raised}};"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 12h10M4 8h4M16 16h4"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-size: 15px; font-weight: 700;">Cadena de sonidos</span>
+          <span style="font-size: 13px; color: {{t.muted}};">encadena por el último sonido</span>
+        </span>
+        <span class="chip-n" style="font-size: 12px;">pronto</span>
+      </div>
+      <div class="gitem gitem--soon">
+        <span class="gic" style="background: {{t.raised}};"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 4h10v6a5 5 0 0 1-10 0z"></path><path d="M12 15v4M8 21h8"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-size: 15px; font-weight: 700;">Duelo de frases</span>
+          <span style="font-size: 13px; color: {{t.muted}};">bloques frecuentes a contrarreloj</span>
+        </span>
+        <span class="chip-n" style="font-size: 12px;">pronto</span>
+      </div>
+      <div class="gitem gitem--soon">
+        <span class="gic" style="background: {{t.raised}};"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M17 9a4 4 0 0 1 0 6"></path></svg></span>
+        <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px;">
+          <span style="font-size: 15px; font-weight: 700;">Invasores de fonemas</span>
+          <span style="font-size: 13px; color: {{t.muted}};">arcade de discriminación auditiva</span>
+        </span>
+        <span class="chip-n" style="font-size: 12px;">pronto</span>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <div class="inset" style="background: {{t.raised}}; gap: 4px;">
+        <span style="font-size: 13px; color: {{t.muted}};">Tu mejor tablero</span>
+        <span class="num" style="font-size: 22px; color: {{t.textStrong}};">8 de 8 · 3:12</span>
+      </div>
+    </section>
+
+    <!-- Juego seleccionado -->
+    <div style="display: flex; flex-direction: column; gap: 22px; min-width: 0;">
+
+      <section class="card butter compact" style="flex-direction: row; align-items: center; gap: 18px;">
+        <span style="width: 64px; height: 64px; border-radius: 20px; background: rgba(18,21,28,.12); box-shadow: inset 0 0 0 2px #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#12151c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M3 9h18M9 3v18"></path></svg></span>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px;">
+          <span class="lbl-ink">PRÁCTICA DE VOCABULARIO</span>
+          <span class="num" style="font-size: 34px; line-height: 35px;">Sopa de letras</span>
+          <span style="font-size: 15px; color: #4a5263;">Encuentra las palabras, entrena ortografía y escucha cómo suenan.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+          <span class="chip-t">9 partidas jugadas</span>
+          <span class="chip-t">mejor: 3:12</span>
+        </div>
+      </section>
+
+      <section class="card neutral" style="gap: 18px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span class="lbl">1 · CÓMO BUSCAR</span>
+            <span style="flex-grow: 1;"></span>
+            <span style="font-size: 13px; color: {{t.muted}};">8 palabras por tablero</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+            <button class="opt2 opt2--on">
+              <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;">Con la lista a la vista<span style="flex-grow: 1;"></span><span style="width: 24px; height: 24px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span></span>
+              <span style="font-size: 14px; color: #4a5263;">Ves las palabras y su IPA al lado del tablero.</span>
+            </button>
+            <button class="opt2">
+              <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;">Solo con pistas<span style="padding: 3px 10px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700;">DIFÍCIL</span></span>
+              <span style="font-size: 14px; color: {{t.muted}};">Deduces cada palabra desde su definición en inglés.</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: {{t.border}};"></div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <span class="lbl">2 · DE DÓNDE SALEN LAS PALABRAS</span>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;">
+            <button class="opt2 opt2--on" style="gap: 8px;">
+              <span class="gic" style="background: rgba(18,21,28,.12); width: 34px; height: 34px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+              <span style="font-size: 15px; font-weight: 700;">Diccionario</span>
+            </button>
+            <button class="opt2" style="gap: 8px;">
+              <span class="gic" style="background: {{t.raised}}; width: 34px; height: 34px; color: {{t.text}};"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path></svg></span>
+              <span style="font-size: 15px; font-weight: 700;">Mis mazos</span>
+            </button>
+            <button class="opt2" style="gap: 8px;">
+              <span class="gic" style="background: {{t.raised}}; width: 34px; height: 34px; color: {{t.text}};"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M17 9a4 4 0 0 1 0 6"></path></svg></span>
+              <span style="font-size: 15px; font-weight: 700;">Por sonido</span>
+            </button>
+            <button class="opt2" style="gap: 8px;">
+              <span class="gic" style="background: {{t.raised}}; width: 34px; height: 34px; color: {{t.text}};"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path></svg></span>
+              <span style="font-size: 15px; font-weight: 700;">Con IA</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="inset" style="gap: 12px; background: {{t.raised}};">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span style="font-size: 15px; font-weight: 700;">Área del diccionario</span>
+            <label style="flex-grow: 1; min-width: 240px; height: 48px; padding: 0 16px; border-radius: 14px; background: {{t.surface}}; box-shadow: inset 0 0 0 1px {{t.borderStrong}}; display: flex; align-items: center; gap: 10px; font-size: 15px;">
+              Frontend Dev<span style="color: {{t.muted}};">81 palabras</span>
+              <span style="flex-grow: 1;"></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg>
+            </label>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <span class="wpill">fork</span><span class="wpill">middleware</span><span class="wpill">hydration</span><span class="wpill">portal</span>
+            <span style="font-size: 14px; color: {{t.muted}}; align-self: center;">+77 · se eligen 8 al azar</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="btn-acc" style="height: 56px; padding: 0 28px; font-size: 17px;">Comenzar partida
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+          <span style="font-size: 14px; color: {{t.muted}};">Las palabras que encuentres se guardan en tu vocabulario.</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":940}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

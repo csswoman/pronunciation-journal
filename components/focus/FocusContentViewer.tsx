@@ -8,10 +8,15 @@
 // </FocusContentViewer>
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { recordFocusPractice } from '@/lib/focus/queries'
 import type { FocusPracticeAction } from '@/lib/focus/practice-progress'
+import { withFocusEvidence } from '@/lib/focus/evidence'
+import { savePracticeAnswer } from '@/lib/practice/queries'
+import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { buildSessionResult } from '@/lib/practice/session-result'
+import type { ExerciseResult } from '@/lib/practice/types'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import PastelCard, { type PastelTone } from '@/components/layout/PastelCard'
@@ -46,18 +51,54 @@ export function FocusContentViewer({ content, sprintId }: FocusContentViewerProp
   const { user } = useAuth()
   const [practicing, setPracticing] = useState(false)
   const [progressError, setProgressError] = useState(false)
+  const executionId = useRef(crypto.randomUUID())
+  const persistenceQueue = useRef(Promise.resolve())
   const meta = VIEWER_META[content.kind]
   const { Icon } = meta
-  const onProgress = (action: FocusPracticeAction) => {
+  const onProgress = useCallback((action: FocusPracticeAction) => {
     void recordFocusPractice(user?.id ?? 'guest-local-user', sprintId, content.id, action)
       .then((saved: boolean) => { if (!saved) setProgressError(true) })
       .catch(() => setProgressError(true))
-  }
+  }, [content.id, sprintId, user?.id])
 
   const startExercises = () => {
     setPracticing(true)
     if (content.exercises.length > 0) onProgress({ kind: 'started' })
   }
+
+  const restartExecution = useCallback(() => {
+    executionId.current = crypto.randomUUID()
+  }, [])
+
+  const onResult = useCallback((raw: ExerciseResult) => {
+    const result = withFocusEvidence(content, raw, {
+      attemptId: `${executionId.current}:${raw.exerciseId}`,
+      allowTarget: raw.slug !== 'speak_word',
+    })
+    onProgress({ kind: 'answered', exerciseId: raw.exerciseId })
+    if (!user) return
+    persistenceQueue.current = persistenceQueue.current
+      .then(() => savePracticeAnswer(user.id, result))
+      .catch(() => setProgressError(true))
+  }, [content, onProgress, user])
+
+  const onComplete = useCallback((rawResults: ExerciseResult[]) => {
+    const results = rawResults.map((raw) => withFocusEvidence(content, raw, {
+      attemptId: `${executionId.current}:${raw.exerciseId}`,
+      allowTarget: raw.slug !== 'speak_word',
+    }))
+    onProgress({ kind: 'completed' })
+    if (!user || results.length === 0) return
+    const activitySessionId = `focus:${executionId.current}`
+    persistenceQueue.current = persistenceQueue.current
+      .then(async () => { await recordActivitySession(user.id, {
+          practiceContext: 'practice',
+          activitySessionId,
+          sessionResult: buildSessionResult(results),
+        })
+      })
+      .catch(() => setProgressError(true))
+  }, [content, onProgress, user])
 
   return (
     <main className="page-shell page-shell--session">
@@ -92,9 +133,9 @@ export function FocusContentViewer({ content, sprintId }: FocusContentViewerProp
         />
       </section>
       <section id="focus-exercises-section" className="mt-8" aria-label="Ejercicios de este contenido">
-        {content.kind === 'error_trap' ? <FocusErrorTrapPractice body={content.body as ErrorTrapBody} onProgress={onProgress} />
-          : content.kind === 'song' ? <FocusSongVoicePractice body={content.body as SongBody} onProgress={onProgress} />
-            : practicing ? <FocusExerciseRunner content={content} onProgress={onProgress} />
+        {content.kind === 'error_trap' ? <FocusErrorTrapPractice body={content.body as ErrorTrapBody} contentId={content.id} onResult={onResult} onComplete={onComplete} onRestart={restartExecution} />
+          : content.kind === 'song' ? <FocusSongVoicePractice body={content.body as SongBody} contentId={content.id} onResult={onResult} onComplete={onComplete} onRestart={restartExecution} />
+            : practicing ? <FocusExerciseRunner content={content} onResult={onResult} onComplete={onComplete} onRestart={restartExecution} />
               : <Button onClick={startExercises}>Comenzar ejercicios</Button>}
         {progressError && <p className="mt-3 text-body-sm text-error" role="alert">No se pudo guardar el avance del sprint en este dispositivo. Puedes seguir practicando.</p>}
       </section>

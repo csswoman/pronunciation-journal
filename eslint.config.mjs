@@ -98,6 +98,20 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  // E — Learner level: UI and non-canonical query layers must use the resolver.
+  {
+    files: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}", "hooks/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}"],
+    ignores: ["lib/learner-level/**", "lib/courses/assessment-queries.ts", "app/api/**"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "CallExpression[callee.property.name='select'][arguments.0.type='Literal'][arguments.0.value=/^cefr_level(?:,|$)/]",
+          message: "Lee el nivel con getEffectiveLearnerLevel(Server).",
+        },
+      ],
+    },
+  },
   ...tseslint.configs.recommended,
   {
     files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],

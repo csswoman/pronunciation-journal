@@ -79,7 +79,7 @@ export function NotebookHomeView({
       <header className="flex flex-col gap-3 py-1">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex flex-col gap-1 min-w-0">
-            <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted select-none">
+            <span className="font-kicker uppercase tracking-wider text-secondary select-none">
               CUADERNO DE INGLÉS
             </span>
             <h1 className="font-heading text-hero sm:text-display font-extrabold text-fg leading-none tracking-tight">

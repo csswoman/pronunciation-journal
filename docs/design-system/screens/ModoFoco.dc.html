@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .pick { position: relative; border-radius: 24px; padding: 20px; border: 2px solid var(--border); background: var(--surface); color: var(--text); display: flex; flex-direction: column; gap: 10px; cursor: pointer; text-align: left }
+    .pick--on { border-color: #12151c; color: #12151c }
+    .pick--coral.pick--on { background: #f7b7a6 }
+    .pick--lilac.pick--on { background: #cbbcf5 }
+    .box { width: 30px; height: 30px; border-radius: 10px; border: 2px solid var(--borderStrong); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .pick--on .box { border-color: #12151c; background: #12151c; color: #fff }
+    .ev { font-size: 14px; color: var(--muted) }
+    .pick--on .ev { color: #4a5263 }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1120px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">MODO FOCO</span>
+      <h1 class="num" style="margin: 0; font-size: 46px; line-height: 48px; color: {{t.textStrong}};">¿Qué quieres afianzar?</h1>
+      <span style="font-size: 16px; color: {{t.muted}}; max-width: 620px;">Elige hasta dos cosas que se te resisten. Durante el sprint, tus historias, ejercicios y diálogos giran alrededor de ellas.</span>
+    </div>
+    <div class="tabs">
+      <button class="tab tab--on">Sugerencias</button><button class="tab">Catálogo</button><button class="tab">Con mis palabras</button>
+    </div>
+  </header>
+
+  <div style="display: flex; align-items: baseline; gap: 10px;">
+    <h2 class="num" style="margin: 0; font-size: 24px; color: {{t.textStrong}};">Según tu práctica</h2>
+    <span style="font-size: 14px; color: {{t.muted}};">Esto sale de tus fallos reales en los últimos 30 días.</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;">
+
+    <!-- Seleccionada: sonido -->
+    <button class="pick pick--coral pick--on">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="padding: 5px 12px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .04em;">SONIDO</span>
+        <span style="padding: 5px 11px; border-radius: 999px; background: rgba(18,21,28,.12); font-size: 13px; font-weight: 600;">A2</span>
+        <span style="flex-grow: 1;"></span>
+        <span class="box"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span>
+      </div>
+      <span class="num ipa" style="font-size: 30px; line-height: 31px;">/ə/ vs /ɪ/</span>
+      <span style="font-size: 15px;">Dos vocales que en español caen en la misma “e” o “i”.</span>
+      <div class="inset" style="gap: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <span class="num" style="font-size: 26px;">0 %</span>
+          <span style="font-size: 14px; color: #4a5263;">de acierto · 16 intentos en 30 días</span>
+        </div>
+        <div style="display: flex; gap: 3px;">
+          <sc-for list="{{fails}}" as="f" hint-placeholder-count="16">
+            <span style="flex-grow: 1; height: 8px; border-radius: 999px; background: {{f.bg}};"></span>
+          </sc-for>
+        </div>
+        <span style="font-size: 13px; color: #4a5263;">Los 16 intentos fallaron. Es tu mayor hueco ahora mismo.</span>
+      </div>
+    </button>
+
+    <!-- Seleccionada: gramática -->
+    <button class="pick pick--lilac pick--on">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="padding: 5px 12px; border-radius: 999px; background: #12151c; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .04em;">GRAMÁTICA</span>
+        <span style="padding: 5px 11px; border-radius: 999px; background: rgba(18,21,28,.12); font-size: 13px; font-weight: 600;">A2</span>
+        <span style="flex-grow: 1;"></span>
+        <span class="box"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span>
+      </div>
+      <span class="num" style="font-size: 30px; line-height: 31px;">Pasado simple</span>
+      <span style="font-size: 15px;">Se te cae la ‑ed y las formas irregulares se mezclan.</span>
+      <div class="inset" style="gap: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 24px; height: 24px; border-radius: 50%; background: #f7b7a6; color: #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+          <span style="font-size: 15px; text-decoration: line-through; color: #4a5263;">Yesterday I go to the office</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="width: 24px; height: 24px; border-radius: 50%; background: #a8e6c9; color: #12151c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"></path></svg></span>
+          <span style="font-size: 15px; font-weight: 600;">Yesterday I <strong>went</strong> to the office</span>
+        </div>
+        <span style="font-size: 13px; color: #4a5263;">7 correcciones tuyas en este tema.</span>
+      </div>
+    </button>
+
+    <!-- No seleccionadas -->
+    <button class="pick">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700; letter-spacing: .04em;">SONIDO</span>
+        <span class="chip-n">A2</span>
+        <span style="flex-grow: 1;"></span>
+        <span class="box"></span>
+      </div>
+      <span class="num ipa" style="font-size: 30px; line-height: 31px; color: {{t.textStrong}};">/ɛ/ vs /ɪ/</span>
+      <span style="font-size: 15px; color: {{t.muted}};">Confundes <strong style="color: {{t.text}};">bed</strong> con <strong style="color: {{t.text}};">bid</strong> al hablar rápido.</span>
+      <div class="inset" style="gap: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <span class="num" style="font-size: 26px; color: {{t.textStrong}};">20 %</span>
+          <span class="ev">de acierto · 11 intentos en 30 días</span>
+        </div>
+        <div style="height: 8px; border-radius: 999px; background: {{t.border}}; overflow: hidden;"><span style="display: block; width: 20%; height: 100%; background: {{accent}};"></span></div>
+      </div>
+    </button>
+
+    <button class="pick">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="padding: 5px 12px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700; letter-spacing: .04em;">SONIDO</span>
+        <span class="chip-n">A2</span>
+        <span class="chip-n">frecuente en español</span>
+        <span style="flex-grow: 1;"></span>
+        <span class="box"></span>
+      </div>
+      <span class="num" style="font-size: 30px; line-height: 31px; color: {{t.textStrong}};">ship vs sheep</span>
+      <span style="font-size: 15px; color: {{t.muted}};">La vocal corta frente a la larga: el oído no las separa solo.</span>
+      <div class="inset" style="gap: 8px; padding: 12px 14px;">
+        <span class="ev">Sin intentos todavía. Lo sugerimos porque casi nadie lo distingue sin practicarlo.</span>
+        <div style="display: flex; gap: 6px;"><span class="chip-n ipa">/ɪ/</span><span class="chip-n ipa">/iː/</span></div>
+      </div>
+    </button>
+  </div>
+
+  <div style="height: 1px; background: {{t.border}};"></div>
+
+  <!-- Duración -->
+  <div style="display: flex; align-items: center; gap: 18px;">
+    <div style="display: flex; flex-direction: column; gap: 2px; width: 190px;">
+      <span class="lbl">DURACIÓN DEL SPRINT</span>
+      <span style="font-size: 14px; color: {{t.muted}};">Puedes cambiarla luego.</span>
+    </div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+      <button style="border: 2px solid {{t.border}}; border-radius: 18px; background: transparent; color: {{t.text}}; padding: 12px 16px; display: flex; align-items: baseline; gap: 10px; cursor: pointer;">
+        <span class="num" style="font-size: 26px;">3</span><span style="font-size: 14px; font-weight: 600;">días · prueba rápida</span>
+      </button>
+      <button style="border: 2px solid #12151c; border-radius: 18px; background: #f8e08e; color: #12151c; padding: 12px 16px; display: flex; align-items: baseline; gap: 10px; cursor: pointer;">
+        <span class="num" style="font-size: 26px;">7</span><span style="font-size: 14px; font-weight: 700;">días · recomendado</span>
+      </button>
+      <button style="border: 2px solid {{t.border}}; border-radius: 18px; background: transparent; color: {{t.text}}; padding: 12px 16px; display: flex; align-items: baseline; gap: 10px; cursor: pointer;">
+        <span class="num" style="font-size: 26px;">14</span><span style="font-size: 14px; font-weight: 600;">días · afianzar bien</span>
+      </button>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1;"></div>
+
+  <!-- Barra de confirmación -->
+  <section class="card neutral" style="padding: 18px 20px; gap: 14px;">
+    <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; gap: 3px;">
+        <span style="font-size: 17px; font-weight: 700; color: {{t.textStrong}};">Tu sprint de 7 días</span>
+        <span style="font-size: 14px; color: {{t.muted}};">~6 min al día · 42 min en total · 2 de 2 focos elegidos</span>
+      </div>
+      <span style="width: 1px; height: 42px; background: {{t.border}};"></span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 14px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 14px; font-weight: 700;"><span class="ipa">/ə/ vs /ɪ/</span>
+        <span style="width: 24px; height: 24px; border-radius: 50%; background: rgba(18,21,28,.15); display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+      </span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 14px; border-radius: 999px; background: #cbbcf5; color: #12151c; font-size: 14px; font-weight: 700;">Pasado simple
+        <span style="width: 24px; height: 24px; border-radius: 50%; background: rgba(18,21,28,.15); display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+      </span>
+      <span style="flex-grow: 1;"></span>
+      <button class="btn-n" style="height: 52px;">Ver el desglose</button>
+      <button class="btn-acc" style="height: 52px; padding: 0 26px; font-size: 16px;">Activar el sprint
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+    <div class="inset" style="flex-direction: row; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 14px;">
+      <span style="font-size: 14px; font-weight: 700;">Cada día verás:</span>
+      <span class="chip-n">1 historia con tus focos</span>
+      <span class="chip-n">3 ejercicios</span>
+      <span class="chip-n">1 diálogo guiado</span>
+      <span class="chip-n">2 pares mínimos</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return {
+      t: themes[this.props.tema] || themes.Claro,
+      accent: accents[this.props.acento] || "#2563eb",
+      fails: Array.from({ length: 16 }, () => ({ bg: "rgba(18,21,28,.55)" }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -7,8 +7,7 @@ import type { EvaluationResult } from "@/lib/exercises/design";
 import { evaluateExercise } from "@/lib/exercises/evaluator";
 import { multipleChoiceToDesign } from "@/lib/ai-practice/tools/to-design";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { db } from "@/lib/db";
-import { getUserLearningState } from "@/lib/ai-practice/load-state";
+import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-queries";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import ExerciseFeedback from "./ExerciseFeedback";
 
@@ -30,14 +29,8 @@ export default function MultipleChoiceWidget({ args, status, onAnswer, onNext, o
   const design = useMemo(() => multipleChoiceToDesign(args), [args]);
 
   useEffect(() => {
-    const userId = user?.id;
-    if (!userId) return;
-    void (async () => {
-      const row = await db.learningState.get(userId);
-      if (row?.state?.level?.cefrEstimate) { setUserLevel(row.state.level.cefrEstimate); return; }
-      const state = await getUserLearningState(userId);
-      setUserLevel(state.level.cefrEstimate);
-    })();
+    void getEffectiveLearnerLevelForViewer(user?.id ?? null)
+      .then((resolution) => setUserLevel(resolution.level));
   }, [user?.id]);
 
   function handleSelect(idx: number) {

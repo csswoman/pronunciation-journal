@@ -7,6 +7,10 @@ import type { CefrLevelId } from "@/lib/courses/types";
 const GUEST_PLACEMENT_KEY = "assessment:guest:placement:placement";
 const claims = new Map<string, Promise<boolean>>();
 
+function postedKeyForUser(userId: string): string {
+  return `assessment:guest:placement:posted:${userId}`;
+}
+
 export interface StoredGuestAssessment extends AssessmentResult {
   completedAt?: string;
   answers?: Record<string, number>;
@@ -29,19 +33,29 @@ async function claim(userId: string): Promise<boolean> {
     if (!validated.success) return false;
 
     const result = validated.data as AssessmentResult;
-    const response = await fetch("/api/assessment/results", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mode: "placement",
-        evaluatedLevel: result.conceptSignals.at(-1)?.level ?? null,
-        answers,
-        selfRatings,
-        checkpointLevel,
-        result,
-      }),
-    });
-    if (!response.ok) return false;
+    const postedMark = completedAt ?? "unknown";
+    const postedKey = postedKeyForUser(userId);
+    const alreadyPosted = window.localStorage.getItem(postedKey) === postedMark;
+
+    if (!alreadyPosted) {
+      const response = await fetch("/api/assessment/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "placement",
+          evaluatedLevel: result.conceptSignals.at(-1)?.level ?? null,
+          answers,
+          selfRatings,
+          checkpointLevel,
+          result,
+        }),
+      });
+      if (!response.ok) {
+        console.error("[guest-assessment] claim POST failed", response.status);
+        return false;
+      }
+      window.localStorage.setItem(postedKey, postedMark);
+    }
 
     await persistAssessmentConceptProfile(userId, result.conceptSignals, result.assignedLevel);
     window.localStorage.setItem(
@@ -49,8 +63,10 @@ async function claim(userId: string): Promise<boolean> {
       JSON.stringify({ ...result, completedAt: completedAt ?? new Date().toISOString() }),
     );
     window.localStorage.removeItem(GUEST_PLACEMENT_KEY);
+    window.localStorage.removeItem(postedKey);
     return true;
-  } catch {
+  } catch (error) {
+    console.error("[guest-assessment] claim failed", error);
     return false;
   }
 }

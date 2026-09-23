@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { resolveLearnerLevel } from '../core'
 
 describe('resolveLearnerLevel', () => {
-  it('keeps a manual level above a practice estimate', () => {
+  it('keeps a manual level', () => {
     expect(resolveLearnerLevel({
-      profileLevel: 'A2', profileSource: 'manual', practiceLevel: 'B2', practiceConfidence: 0.9,
+      profileLevel: 'A2', profileSource: 'manual',
     })).toMatchObject({ level: 'A2', source: 'manual', isPlaced: false })
   })
 
@@ -13,14 +13,18 @@ describe('resolveLearnerLevel', () => {
       .toMatchObject({ level: 'B1', source: 'placement', isPlaced: true })
   })
 
-  it('uses supported practice evidence over the starter default', () => {
-    expect(resolveLearnerLevel({
-      profileLevel: 'A1', profileSource: 'starter_default', practiceLevel: 'B1', practiceConfidence: 0.7,
-    })).toMatchObject({ level: 'B1', source: 'practice_estimate', confidence: 0.7 })
+  it('ignores local practice estimate', () => {
+    expect(resolveLearnerLevel({ profileSource: 'starter_default' }))
+      .toMatchObject({ level: 'A1', source: 'starter_default' })
   })
 
-  it('does not promote a weak estimate', () => {
-    expect(resolveLearnerLevel({ practiceLevel: 'C1', practiceConfidence: 0.2 }))
-      .toMatchObject({ level: 'A1', source: 'starter_default' })
+  it('distinguishes a failed profile read from the starter default', () => {
+    expect(resolveLearnerLevel({ readFailed: true }))
+      .toMatchObject({ level: 'A1', source: 'unknown', isPlaced: false })
+  })
+
+  it('keeps known placement provenance after a partial read failure', () => {
+    expect(resolveLearnerLevel({ profileLevel: 'B2', profileSource: 'placement', readFailed: true }))
+      .toMatchObject({ level: 'B2', source: 'placement', isPlaced: true })
   })
 })

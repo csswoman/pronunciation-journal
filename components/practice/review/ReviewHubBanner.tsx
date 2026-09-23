@@ -4,6 +4,7 @@
 //   <AllClearNotice />
 // </ReviewHubBanner>
 
+import Link from 'next/link'
 import { Sparkles } from '@/components/icons'
 import { cn } from '@/lib/cn'
 
@@ -11,9 +12,10 @@ interface Props {
   showMomentum: boolean
   showAllClear: boolean
   totalReviewable: number
+  elsewhereCount?: number
 }
 
-export function ReviewHubBanner({ showMomentum, showAllClear, totalReviewable }: Props) {
+export function ReviewHubBanner({ showMomentum, showAllClear, totalReviewable, elsewhereCount = 0 }: Props) {
   if (!showMomentum && !showAllClear) return null
 
   return (
@@ -30,6 +32,18 @@ export function ReviewHubBanner({ showMomentum, showAllClear, totalReviewable }:
             {' '}
             {totalReviewable === 1 ? 'pendiente listo' : 'pendientes listos'} para repasar hoy
           </p>
+          {elsewhereCount > 0 ? (
+            <p className="m-0 mt-1 font-caption text-fg-muted">
+              +{elsewhereCount} más en{' '}
+              <Link href="/practice/essential-words" className="text-primary hover:underline">
+                Palabras esenciales
+              </Link>
+              {' '}o{' '}
+              <Link href="/practice/immersion" className="text-primary hover:underline">
+                Inmersión
+              </Link>
+            </p>
+          ) : null}
         </div>
       ) : null}
 

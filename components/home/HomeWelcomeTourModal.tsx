@@ -100,7 +100,7 @@ export default function HomeWelcomeTourModal({
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <p className="font-mono text-caption text-fg-subtle uppercase">Bienvenida</p>
-                <h2 id="tour-modal-title" className="text-h3 font-bold text-fg">
+                <h2 id="tour-modal-title" className="font-heading text-h3 font-bold text-fg">
                   Domina la pronunciación del inglés
                 </h2>
                 <p className="text-body-sm text-fg-muted">
@@ -131,7 +131,7 @@ export default function HomeWelcomeTourModal({
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <p className="font-mono text-caption text-fg-subtle uppercase">Personalización</p>
-                <h2 id="tour-modal-title" className="text-h3 font-bold text-fg">
+                <h2 id="tour-modal-title" className="font-heading text-h3 font-bold text-fg">
                   ¿Cuál es tu nivel aproximado?
                 </h2>
                 <p className="text-body-sm text-fg-muted">
@@ -186,7 +186,7 @@ export default function HomeWelcomeTourModal({
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <p className="font-mono text-caption text-fg-subtle uppercase">Navegación</p>
-                <h2 id="tour-modal-title" className="text-h3 font-bold text-fg">
+                <h2 id="tour-modal-title" className="font-heading text-h3 font-bold text-fg">
                   Dónde encontrar cada función
                 </h2>
                 <p className="text-body-sm text-fg-muted">

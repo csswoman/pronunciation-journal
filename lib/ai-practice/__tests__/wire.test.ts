@@ -105,8 +105,8 @@ describe("buildSystemPrompt language policy", () => {
     }
   });
 
-  it("defaults to English when there is no learning state yet", () => {
-    expect(buildSystemPrompt(null)).toContain("Write your prose in ENGLISH");
+  it("defaults to Spanish (A1) when there is no learning state yet", () => {
+    expect(buildSystemPrompt(null)).toContain("Write your prose in SPANISH");
   });
 
   it("lets an explicit preference override the level default", () => {

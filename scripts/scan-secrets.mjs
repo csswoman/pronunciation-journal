@@ -43,7 +43,7 @@ const SECRET_ASSIGNMENT =
 const PATTERNS = [
   { name: "Google API key", regex: /AIza[0-9A-Za-z_-]{30,}/g },
   { name: "Supabase JWT-like key", regex: /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/g },
-  { name: "OpenAI API key", regex: /sk-[A-Za-z0-9_-]{32,}/g },
+  { name: "OpenAI API key", regex: /\bsk-[A-Za-z0-9]{32,}\b/g },
   { name: "Private key block", regex: /-----BEGIN (?:RSA |EC |OPENSSH |)?PRIVATE KEY-----/g },
 ];
 

@@ -14,6 +14,7 @@ import { ChevronDown } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
+import { useLearnerLevelId } from "@/hooks/useLearnerLevelId";
 import type { CefrLevelId, CoursePathLevel } from "@/lib/courses/types";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
@@ -72,7 +73,15 @@ function LevelCardTab({
   );
 }
 
-function AssessmentActions({ selectedLevelId }: { selectedLevelId: CefrLevelId }) {
+function AssessmentActions({
+  selectedLevelId,
+  learnerLevelId,
+}: {
+  selectedLevelId: CefrLevelId;
+  learnerLevelId: CefrLevelId;
+}) {
+  const isNavigatingOwnLevel = learnerLevelId === selectedLevelId;
+
   return (
     <>
       <Link
@@ -83,11 +92,13 @@ function AssessmentActions({ selectedLevelId }: { selectedLevelId: CefrLevelId }
         Test de ubicación
       </Link>
       <Link
-        href={`/assessment?mode=checkpoint&level=${selectedLevelId}`}
+        href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
         className="course-path__text-link"
-        title="Evaluación de salida del nivel seleccionado"
+        title="Evaluación de salida de tu nivel"
       >
-        Checkpoint del nivel
+        {isNavigatingOwnLevel
+          ? "Checkpoint del nivel"
+          : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
       </Link>
     </>
   );
@@ -99,6 +110,7 @@ export default function CoursePathLevelPicker({
   mobileSearch,
 }: CoursePathLevelPickerProps) {
   const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
+  const learnerLevelId = useLearnerLevelId(selectedLevelId);
 
   useEffect(() => {
     let cancelled = false;
@@ -211,7 +223,7 @@ export default function CoursePathLevelPicker({
               })}
             </nav>
             <div className="course-path__level-picker-mobile-actions">
-              <AssessmentActions selectedLevelId={selectedLevelId} />
+              <AssessmentActions selectedLevelId={selectedLevelId} learnerLevelId={learnerLevelId} />
             </div>
           </div>
         </details>

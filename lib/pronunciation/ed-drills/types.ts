@@ -51,3 +51,15 @@ export interface UserEdClusterProgress {
   epenthesisWarningsCount: number
   lastPracticedAt: string
 }
+
+/** Evaluated local choice; it is not acoustic pronunciation evidence. */
+export interface EdClusterAttempt {
+  id: string
+  userId: string
+  cluster: EdCluster
+  phase: 1 | 2
+  environmentLevel: EdEnvironment
+  isCorrect: boolean
+  suspectedEpenthesis: boolean
+  occurredAt: string
+}

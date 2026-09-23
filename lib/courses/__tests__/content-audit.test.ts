@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 import { auditDeck } from "../content-audit";
 import { GrammarStudyDeckSchema } from "../grammar-deck/schema";
 import { targetId } from "@/lib/pronunciation/targets/registry";

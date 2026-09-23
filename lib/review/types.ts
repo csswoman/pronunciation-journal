@@ -56,8 +56,10 @@ export interface ReviewQueueCounts {
   dueLessons: number
   essentialWordsDue: number
   chunksDue?: number
-  /** Items that can start a review session (excludes display-only failures). */
-  reviewable: number
+  /** Items the Repaso session itself can execute (has real exercises for). */
+  executable: number
+  /** Items counted but practiced on their own surface (Essential Words, Inmersión); Repaso only links to them. */
+  elsewhere: number
   total: number
 }
 

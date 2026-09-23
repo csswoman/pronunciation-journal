@@ -30,11 +30,14 @@ create index if not exists immersion_lessons_level_topic_idx
 
 alter table public.immersion_lessons enable row level security;
 
--- Any authenticated learner can read the whole catalog. Writes only happen
--- from scripts/sync-engvid-lessons.ts using the service_role key, never from
--- the client — there is intentionally no insert/update/delete policy here.
+grant select on table public.immersion_lessons to anon, authenticated;
+
+-- Public catalog content readable by all learners (anon and authenticated). Writes
+-- only happen from scripts/sync-engvid-lessons.ts using the service_role key.
 drop policy if exists "immersion_lessons_select_authenticated" on public.immersion_lessons;
-create policy "immersion_lessons_select_authenticated"
+drop policy if exists "immersion_lessons_select_public" on public.immersion_lessons;
+create policy "immersion_lessons_select_public"
   on public.immersion_lessons for select
-  to authenticated
+  to anon, authenticated
   using (true);
+

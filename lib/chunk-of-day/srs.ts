@@ -1,7 +1,9 @@
-import { getSRSData, saveSRSData } from '@/lib/db'
+import { db, getSRSData, saveSRSData } from '@/lib/db'
+import { contentSrsPayload } from '@/lib/practice/content-srs-queries'
 import { deriveFsrsState } from '@/lib/srs/fsrs-migrate'
 import { nextFsrsRealReviews } from '@/lib/srs/fsrs-optimizer-eligibility'
 import { scheduleFsrsReview, type Grade } from '@/lib/srs/fsrs-schedule'
+import { enqueue } from '@/lib/sync/sync-manager'
 import type { SRSData } from '@/lib/types'
 
 const PREFIX = 'chunk:'
@@ -42,7 +44,7 @@ export async function upsertChunkSrs(userId: string, chunkId: string, quality: n
       }
   const grade = qualityToGrade(Math.max(0, Math.min(5, Math.round(quality))))
   const scheduled = scheduleFsrsReview({ ...state, grade, now })
-  await saveSRSData({
+  const next = {
     ...current,
     stability: scheduled.stability,
     difficulty: scheduled.difficulty,
@@ -52,5 +54,16 @@ export async function upsertChunkSrs(userId: string, chunkId: string, quality: n
     nextReview: scheduled.dueAt.toISOString(),
     lastReview: now.toISOString(),
     repetitions: current.repetitions + (grade === 'Again' ? 0 : 1),
-  }, userId)
+  }
+  await db.transaction('rw', [db.srsData, db.syncOutbox], async () => {
+    await saveSRSData(next, userId)
+    await enqueue(
+      userId,
+      'content_srs',
+      'upsert',
+      contentSrsPayload(userId, 'chunks', chunkId, next),
+      undefined,
+      'user_id,namespace,content_id',
+    )
+  })
 }

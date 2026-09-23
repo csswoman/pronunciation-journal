@@ -10,7 +10,7 @@ const summary = {
   failedSentences: [], weakWords: [], dueWords: [], soundsDue: [], dueTopics: [], weakTopics: [],
   dueLessons: [], essentialWordsDue: [], canStartReview: false, nothingDue: true,
   counts: { failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
-    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, reviewable: 0, total: 0 },
+    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, executable: 0, elsewhere: 0, total: 0 },
 } as ReviewHubSummary
 
 const mockStartReview = vi.fn()

@@ -1,13 +1,44 @@
 # Planes de implementación
 
-Dos series. La primera (001–004, peso y carga) está cerrada. La segunda
+Tres series. La primera (001–004, peso y carga) está cerrada. La segunda
 (005–019) sale de la auditoría pedagógica del 2026-09-18 sobre `c869029c`:
 cómo se evalúa y avanza el nivel, si el contenido está conectado al ciclo de
-evidencia, y qué ve el usuario que no proviene de datos reales.
+evidencia, y qué ve el usuario que no proviene de datos reales. La tercera
+(020–027) sale de la auditoría de cableado del 2026-09-22 sobre `eb4cb5d3`.
 
 Cada ejecutor: lee el plan completo antes de empezar, respeta sus STOP
-conditions, una rama por plan (`advisor/NNN-slug` desde `dev`) y actualiza tu
-fila al terminar.
+conditions y actualiza su fila al terminar. Los planes nuevos usan ramas
+`codex/NNN-slug` desde `dev` solo si el operador pide crear una rama; no hacen
+commit ni push sin instrucción explícita. Las ramas `advisor/*` de la serie 2
+son históricas.
+
+## Serie 3 — plan diario y evidencia evaluable (2026-09-22, `eb4cb5d3`)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 020 | Progreso muestra participación en Daily sin afirmar planes completos | P1 | M | — | DONE |
+| 021 | Cada respuesta de teoría cuenta una sola vez | P1 | S | — | DONE |
+| 022 | La práctica externa resuelve solo targets diarios equivalentes | P1 | M | 021 | DONE |
+| 023 | Los drills de -ed guardan intentos y actividad recuperable | P1 | L | 022 | DONE |
+| 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | DONE |
+| 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | DONE |
+| 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | DONE |
+| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | IN PROGRESS |
+
+Orden recomendado: **021 → 020 → 022 → 023 → 024 → 025 → 026 → 027**.
+020 puede ejecutarse en paralelo con 021. 023–025 pueden ejecutarse por separado
+después de 022, pero comparten el contrato de `activity_sessions`: revisar
+solapamientos antes de integrarlos. 027 se ejecuta al final para probar los
+caminos de producción ya implementados.
+
+La comprobación de catálogo actual (`node_modules/.bin/tsx.cmd
+scripts/audit-learning-loop.mjs`) pasa con 4.125 entradas y 0 incidencias;
+comprueba declaraciones, no llamadas runtime. Los tests focalizados de
+reconciliación, actividad y evidence exits pasan (3 archivos, 13 tests). En este
+checkout `pnpm audit:learning-loop` intentó reinstalar `node_modules` y abortó
+sin TTY; los planes permiten usar los binarios locales existentes, dejando
+constancia de esa sustitución. No se ha verificado la aplicación de migraciones
+en Supabase remoto.
 
 ## Serie 2 — evaluación, progresión y contenido honesto (2026-09-18, `c869029c`)
 
@@ -16,18 +47,18 @@ fila al terminar.
 | 005 | Eliminar datos inventados en Home, Diario, Daily, landing y enlaces rotos | P1 | M | — | DONE (rama `advisor/005-remove-fabricated-ui-data`) |
 | 006 | Progreso no presenta cobertura ni volumen como dominio | P1 | S | — | DONE |
 | 007 | El nivel y su procedencia solo los escribe el servidor tras re-puntuar | P1 | M | — | DONE |
-| 008 | Todas las pantallas leen el nivel por `resolveLearnerLevel`; estado "desconocido" | P1 | M | — (mejor tras 007) | TODO |
-| 009 | Retirar el estimador de nivel por precisión de pronunciación y la semilla B1 | P2 | S | — (mejor tras 008) | TODO |
-| 010 | Home propone el checkpoint cuando el alumno está listo | P2 | M | 007, 008 | TODO |
-| 011 | Daily incluye temas vencidos; repaso de temas sin target fantasma | P2 | M | — | TODO |
-| 012 | Inmersión offline-first (outbox) y en el manifest | P2 | M | — | TODO |
-| 013 | Los 37 mazos engVid entran en la Ruta o dejan de publicarse | P1 | M | — | TODO |
-| 014 | El placement de invitado llega a la cuenta; fallos visibles | P2 | S | 007 | TODO |
-| 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | TODO |
-| 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | TODO |
-| 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | TODO |
-| 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | TODO |
-| 019 | SRS de chunks y frases del sistema sincroniza vía outbox | P3 | L | — | TODO |
+| 008 | Todas las pantallas leen el nivel por `resolveLearnerLevel`; estado "desconocido" | P1 | M | — (mejor tras 007) | DONE |
+| 009 | Retirar el estimador de nivel por precisión de pronunciación y la semilla B1 | P2 | S | — (mejor tras 008) | DONE |
+| 010 | Home propone el checkpoint cuando el alumno está listo | P2 | M | 007, 008 | DONE (rama `advisor/010-checkpoint-readiness`) |
+| 011 | Daily incluye temas vencidos; repaso de temas sin target fantasma | P2 | M | — | DONE (rama `advisor/011-daily-topic-srs`) |
+| 012 | Inmersión offline-first (outbox) y en el manifest | P2 | M | — | DONE (rama `advisor/012-immersion-offline-manifest`) |
+| 013 | Los 37 mazos engVid entran en la Ruta o dejan de publicarse | P1 | M | — | DONE (mazos conservados como borradores no publicados) |
+| 014 | El placement de invitado llega a la cuenta; fallos visibles | P2 | S | 007 | DONE (rama `advisor/014-guest-claim`) |
+| 015 | El contador de Repaso solo promete colas ejecutables | P2 | M | — | DONE |
+| 016 | La vista previa del plan diario en Home refleja el plan real | P2 | M | — | DONE (Home y Daily comparten `useDailyPlan`) |
+| 017 | Mini-lecciones ordenadas por nivel y candidatas del Plan diario | P3 | M | 008 | DONE |
+| 018 | Mazos personales, juegos, word-rain y word-search registran actividad | P3 | L | 012 | DONE |
+| 019 | SRS de chunks y frases del sistema sincroniza vía outbox | P3 | L | — | DONE |
 
 Orden recomendado: 013 → 005 → 006 → 007 → 008 → 009 → 011 → 012 → 010 → 014 → 015 → 016 → 017 → 018 → 019.
 

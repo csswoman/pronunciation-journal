@@ -8,7 +8,7 @@ vi.mock("next/link", () => ({
 }));
 
 describe("SkillProfileCard", () => {
-  it("shows a single level (coach estimate) with the profile level as context", () => {
+  it("shows the canonical level and its provenance", () => {
     render(
       <SkillProfileCard
         data={{
@@ -18,19 +18,17 @@ describe("SkillProfileCard", () => {
         }}
         coach={{
           weakTopics: [],
-          profileLevel: "A2",
-          cefrEstimate: "B1",
           avgAccuracy: null,
         }}
+        learnerLevel={{ level: "B1", source: "placement", confidence: null, isPlaced: true, updatedAt: null }}
       />,
     );
 
     expect(screen.getByText("B1")).toBeInTheDocument();
-    expect(screen.getByText("Estimado por coach (B1), perfil (A2)")).toBeInTheDocument();
-    expect(screen.queryByText("Nivel actual en tu perfil")).not.toBeInTheDocument();
+    expect(screen.getByText("Según tu evaluación")).toBeInTheDocument();
   });
 
-  it("falls back to the profile level when there is no coach estimate", () => {
+  it("explains a temporarily unavailable learner-level read", () => {
     render(
       <SkillProfileCard
         data={{
@@ -40,14 +38,13 @@ describe("SkillProfileCard", () => {
         }}
         coach={{
           weakTopics: [],
-          profileLevel: "A2",
-          cefrEstimate: null,
           avgAccuracy: null,
         }}
+        learnerLevel={{ level: "A1", source: "unknown", confidence: null, isPlaced: false, updatedAt: null }}
       />,
     );
 
-    expect(screen.getByText("A2")).toBeInTheDocument();
-    expect(screen.getByText("Nivel actual en tu perfil")).toBeInTheDocument();
+    expect(screen.getByText("A1")).toBeInTheDocument();
+    expect(screen.getByText("No pudimos leer tu nivel ahora")).toBeInTheDocument();
   });
 });

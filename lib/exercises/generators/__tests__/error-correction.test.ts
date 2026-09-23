@@ -45,7 +45,7 @@ describe('authored error correction', () => {
     expect(first).toHaveLength(1)
     expect(first[0]).toMatchObject({
       type: 'error_correction', sentence: 'She work here.', correctSentence: 'She works here.',
-      topic: 'grammar:present simple', sourceRef: { source: 'text_fragments', id: 'grammar-deck:a1-present' },
+      topic: 'grammar:present simple', sourceRef: { source: 'grammar_deck', id: 'grammar-deck:a1-present' },
     })
   })
 })

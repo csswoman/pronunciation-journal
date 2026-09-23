@@ -5,7 +5,7 @@ import {
   recordDailyStepCompletion,
 } from '@/lib/progress/activity-hub'
 import { buildSessionResult } from '@/lib/practice/session-result'
-import type { ExerciseResult } from '@/lib/practice/types'
+import type { ExerciseResult, PracticeResultStatus } from '@/lib/practice/types'
 
 const { enqueueMock, updateConceptSignalsWithEvidenceMock } = vi.hoisted(() => ({
   enqueueMock: vi.fn(),
@@ -19,6 +19,12 @@ vi.mock('@/lib/sync/sync-manager', () => ({
 vi.mock('@/lib/courses/assessment-profile', () => ({
   updateConceptSignalsWithEvidence: updateConceptSignalsWithEvidenceMock,
 }))
+
+function lessonResult(
+  exerciseId: string,
+  isCorrect: boolean,
+  options: { lessonSlug?: string; status?: PracticeResultStatus } = {},
+): ExerciseResult { return { exerciseId, slug: 'multiple_choice', exerciseTypeId: 17, isCorrect, timeMs: 1200, contentId: exerciseId, context: 'courses', completedAt: new Date('2026-08-27T12:00:00Z'), status: options.status, exercisePayload: options.lessonSlug ? { lessonSlug: options.lessonSlug } : undefined } }
 
 describe('buildSessionTelemetry', () => {
   it('normalizes a mixed session into summary, answers, skills, and reconciled steps', () => {
@@ -213,6 +219,75 @@ describe('recordActivitySession concept signals (Pieza 7)', () => {
 })
 
 describe('concept evidence metadata', () => {
+  it('counts payload evidence once when it matches the session lesson metadata', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const results: ExerciseResult[] = [
+      lessonResult('ex-1', true, { lessonSlug: 'present-perfect' }),
+      lessonResult('ex-2', false, { lessonSlug: 'present-perfect' }),
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'courses',
+      sessionResult: buildSessionResult(results),
+      metadata: { lessonSlug: 'present-perfect' },
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith('user-1', [expect.objectContaining({ lessonSlug: 'present-perfect', correct: 1, total: 2 })])
+  })
+
+  it('uses explicit evidence without metadata and only falls back for unlabelled results', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const results: ExerciseResult[] = [
+      lessonResult('ex-1', true, { lessonSlug: 'past-simple' }),
+      lessonResult('ex-2', false, { lessonSlug: 'present-perfect' }),
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'courses',
+      sessionResult: buildSessionResult(results),
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith('user-1', expect.arrayContaining([expect.objectContaining({ lessonSlug: 'past-simple', correct: 1, total: 1 }), expect.objectContaining({ lessonSlug: 'present-perfect', correct: 0, total: 1 })]))
+  })
+
+  it('does not let session metadata attribute explicitly labelled answers to another lesson', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const results: ExerciseResult[] = [
+      lessonResult('ex-1', true, { lessonSlug: 'past-simple' }),
+      lessonResult('ex-2', false),
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'courses',
+      sessionResult: buildSessionResult(results),
+      metadata: { lessonSlug: 'present-perfect' },
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith('user-1', expect.arrayContaining([expect.objectContaining({ lessonSlug: 'past-simple', correct: 1, total: 1 }), expect.objectContaining({ lessonSlug: 'present-perfect', correct: 0, total: 1 })]))
+  })
+
+  it('excludes skipped, unscored, and evaluator-failed lesson results from concept evidence', async () => {
+    enqueueMock.mockResolvedValue(1)
+    updateConceptSignalsWithEvidenceMock.mockClear()
+    const results: ExerciseResult[] = [
+      lessonResult('ex-1', true, { lessonSlug: 'present-perfect', status: 'answered' }),
+      ...(['skipped', 'unscored', 'evaluator_failed'] as const).map((status) =>
+        lessonResult(`excluded-${status}`, true, { lessonSlug: 'present-perfect', status }),
+      ),
+    ]
+
+    await recordActivitySession('user-1', {
+      practiceContext: 'courses',
+      sessionResult: buildSessionResult(results),
+      metadata: { lessonSlug: 'present-perfect' },
+    })
+
+    expect(updateConceptSignalsWithEvidenceMock).toHaveBeenCalledWith('user-1', [expect.objectContaining({ lessonSlug: 'present-perfect', correct: 1, total: 1 })])
+  })
+
   it('resolves level and title from the curriculum instead of hardcoding a1', async () => {
     enqueueMock.mockResolvedValue(1)
     updateConceptSignalsWithEvidenceMock.mockClear()

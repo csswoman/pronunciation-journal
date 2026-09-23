@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Figtree:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: 'Figtree', system-ui, sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    svg { flex-shrink: 0; }
+    .ipa { font-family: 'Noto Sans', sans-serif; }
+    .card { position: relative; overflow: hidden; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 12px; color: #12151c; box-sizing: border-box; }
+    .sky { background: #b9d3fb } .butter { background: #f8e08e } .coral { background: #f7b7a6 } .lilac { background: #cbbcf5 } .mint { background: #a8e6c9 }
+    .neutral { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--border) }
+    .compact { border-radius: 24px; padding: 18px 20px; gap: 10px }
+    .chip-ink { padding: 7px 14px; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: .04em }
+    .chip-t { padding: 6px 12px; border-radius: 999px; background: rgba(18,21,28,.10); font-size: 13px; font-weight: 600 }
+    .chip-o { padding: 6px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600 }
+    .chip-n { padding: 6px 12px; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--border); color: var(--text); font-size: 13px; font-weight: 600 }
+    .t { margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 31px; letter-spacing: -.025em }
+    .t-sm { margin: 0; font-size: 19px; font-weight: 700 }
+    .sub { font-size: 15px; color: #4a5263 }
+    .neutral .sub { color: var(--muted) }
+    .btn-ink { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: #12151c; color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-out { height: 46px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; box-shadow: inset 0 0 0 1.5px #12151c; color: #12151c; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .btn-acc { height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--accent); color: #ffffff; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px }
+    .btn-n { height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--borderStrong); color: var(--text); font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px }
+    .ghost { position: absolute; right: 4px; bottom: -40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 128px; line-height: 1; color: transparent; -webkit-text-stroke: 2px rgba(18,21,28,.25); pointer-events: none }
+    .disc { width: 64px; height: 64px; border-radius: 50%; background: rgba(18,21,28,.10); display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
+    .deco { position: absolute; pointer-events: none; opacity: .28 }
+    .mini { width: 100px; padding: 8px 10px; box-sizing: border-box; background: #ffffff; border: 2px solid #12151c; border-radius: 12px }
+    .inset { background: rgba(255,255,255,.55); border-radius: 18px; padding: 14px 16px }
+    .neutral .inset { background: var(--raised) }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 2px; font-size: 15px; font-weight: 600; border-top: 1px solid var(--border) }
+    .lbl { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--muted) }
+    .lbl-ink { font-size: 12px; font-weight: 700; letter-spacing: .14em }
+    .seg { display: flex; gap: 3px }
+    .seg span { flex-grow: 1; height: 8px; border-radius: 999px; background: rgba(18,21,28,.14) }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .tabs { display: flex; gap: 3px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border) }
+    .tab { padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text); border: 0; background: transparent; cursor: pointer }
+    .tab--on { background: var(--accent); color: #fff; font-weight: 700 }
+    .wpill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #ffffff; box-shadow: inset 0 0 0 1.5px #12151c; font-size: 13px; font-weight: 600; color: #12151c }
+    .wpill i { width: 20px; height: 20px; border-radius: 50%; background: #12151c; color: #fff; display: flex; align-items: center; justify-content: center }
+    .sfield { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--muted); font-size: 15px }
+  </style>
+  <style>
+    .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.03em }
+    .hd { display: grid; grid-template-columns: 30px 260px minmax(0,1fr) 150px 120px 34px; gap: 14px; align-items: center; padding: 0 14px 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--muted) }
+    .rw { display: grid; grid-template-columns: 30px 260px minmax(0,1fr) 150px 120px 34px; gap: 14px; align-items: center; padding: 11px 14px; border-radius: 14px; color: var(--text); text-decoration: none; border-top: 1px solid var(--border) }
+    .rw:hover { background: var(--raised) }
+    .dot { width: 30px; height: 30px; border-radius: 10px; color: #12151c; display: flex; align-items: center; justify-content: center }
+    .w { font-size: 16px; font-weight: 700 }
+    .mg { font-size: 14px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+    .st { font-size: 13px; color: var(--muted) }
+    .seg { display: flex; gap: 2px }
+    .seg span { width: 12px; height: 6px; border-radius: 999px; background: var(--border) }
+    .seg span.on { background: var(--text) }
+    .more { width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer }
+    .gc { border-radius: 18px; padding: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); display: flex; flex-direction: column; gap: 6px; color: var(--text) }
+  </style>
+</helmet>
+<div style="--surface: {{t.surface}}; --raised: {{t.raised}}; --border: {{t.border}}; --borderStrong: {{t.borderStrong}}; --text: {{t.text}}; --muted: {{t.muted}}; --accent: {{accent}}; width: 1420px; height: 1020px; box-sizing: border-box; padding: 34px 40px 40px; background: {{t.bg}}; color: {{t.text}}; display: flex; flex-direction: column; gap: 18px;">
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+      <span class="lbl">GUARDADOS</span>
+      <h1 class="num" style="margin: 0; font-size: 42px; line-height: 44px; color: {{t.textStrong}};">Mi inglés</h1>
+      <span style="font-size: 15px; color: {{t.muted}};">42 guardados · 1 vence hoy</span>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button class="btn-n" style="height: 46px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Guardar <span class="chip-n" style="font-size: 12px; padding: 3px 8px;">N</span></button>
+      <button class="btn-acc" style="height: 46px;">Repasar 1
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Barra de herramientas con cambio de vista -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none;">
+      <button class="tab tab--on" style="font-size: 14px;">Todo 42</button><button class="tab" style="font-size: 14px;">Palabras 24</button><button class="tab" style="font-size: 14px;">Frases 9</button><button class="tab" style="font-size: 14px;">Lecciones 5</button><button class="tab" style="font-size: 14px;">Del coach 4</button>
+    </div>
+    <label class="sfield" style="width: 240px; height: 42px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <span style="flex-grow: 1; font-size: 14px;">Buscar…</span>
+    </label>
+    <span style="flex-grow: 1;"></span>
+    <span class="chip-n">Vence antes</span>
+    <span class="chip-n">Seleccionar</span>
+    <div class="tabs" style="background: {{t.raised}}; box-shadow: none; padding: 3px;">
+      <button class="tab tab--on" aria-label="Vista de lista" style="padding: 7px 11px; display: flex; align-items: center; gap: 7px; font-size: 13px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>Lista</button>
+      <button class="tab" aria-label="Vista de cuadrícula" style="padding: 7px 11px; display: flex; align-items: center; gap: 7px; font-size: 13px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect><rect x="13" y="13" width="8" height="8" rx="2"></rect></svg>Cuadrícula</button>
+    </div>
+  </div>
+
+  <!-- Vista de lista -->
+  <section class="card neutral" style="padding: 14px 10px; gap: 0;">
+    <div class="hd">
+      <span></span><span>PALABRA O FRASE</span><span>SIGNIFICADO</span><span>ORIGEN</span><span>REPASO</span><span></span>
+    </div>
+
+    <a href="#" class="rw" style="border-top: 0; background: {{t.raised}};">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">keen</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/kiːn/</span></span>
+      <span class="mg">entusiasmado, interesado</span>
+      <span class="st">Diccionario</span>
+      <span style="display: flex; align-items: center; gap: 8px;"><span style="padding: 3px 9px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 12px; font-weight: 700;">hoy</span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f8e08e;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1-5a8 8 0 1 1 17-6z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">Having said that…</span></span>
+      <span class="mg">Dicho esto / Sin embargo</span>
+      <span class="st">Coach · 2 veces</span>
+      <span class="seg"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">cut corners</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/kʌt ˈkɔːrnərz/</span></span>
+      <span class="mg">hacer las cosas a medias, escatimar</span>
+      <span class="st">Inmersión</span>
+      <span style="display: flex; align-items: center; gap: 8px;"><span style="padding: 3px 9px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 12px; font-weight: 700;">dominada</span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">poise</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/pɔɪz/</span></span>
+      <span class="mg">equilibrar, sostener con firmeza</span>
+      <span class="st">Diccionario</span>
+      <span class="seg"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #a8e6c9;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">Por qué “cut corners” no lleva artículo</span></span>
+      <span class="mg">Expresión fija: objeto en plural y sin determinante</span>
+      <span class="st">Coach · martes</span>
+      <span class="st">—</span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #b9d3fb;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">Las tres reglas de la ‑s final</span></span>
+      <span class="mg">Mini lección de pronunciación · 4 min</span>
+      <span class="st">Mini lecciones</span>
+      <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 56px; height: 6px; border-radius: 999px; background: {{t.border}}; overflow: hidden;"><span style="display: block; width: 50%; height: 100%; background: {{t.text}};"></span></span><span class="st">50 %</span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">thoroughly</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/ˈθʌrəli/</span></span>
+      <span class="mg">a fondo, minuciosamente</span>
+      <span class="st">Diario de pronunciación</span>
+      <span class="seg"><span class="on"></span><span></span><span></span><span></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f8e08e;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1-5a8 8 0 1 1 17-6z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">It goes without saying…</span></span>
+      <span class="mg">Está de más decir que…</span>
+      <span class="st">Frase del día</span>
+      <span class="seg"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">clothes</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/kloʊðz/</span></span>
+      <span class="mg">ropa</span>
+      <span class="st">Diario de pronunciación</span>
+      <span class="seg"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <a href="#" class="rw">
+      <span class="dot" style="background: #f7b7a6;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M2 5h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"></path></svg></span>
+      <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0;"><span class="w">world</span><span class="ipa" style="font-size: 13px; color: {{t.muted}};">/wɜːrld/</span></span>
+      <span class="mg">mundo</span>
+      <span class="st">Diario de pronunciación</span>
+      <span class="seg"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></span>
+      <button class="more" aria-label="Opciones"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="12" cy="19" r="1.7"></circle></svg></button>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px 2px; border-top: 1px solid {{t.border}};">
+      <span style="font-size: 13px; color: {{t.muted}};">10 de 42</span>
+      <span style="flex-grow: 1;"></span>
+      <button class="btn-n" style="height: 38px; font-size: 13px;">Cargar más</button>
+    </div>
+  </section>
+
+  <!-- Variante en cuadrícula -->
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <span class="lbl">LA MISMA LISTA EN VISTA DE CUADRÍCULA</span>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px;">
+      <div class="gc">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="dot" style="width: 24px; height: 24px; border-radius: 8px; background: #f7b7a6;"></span><span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: {{t.muted}};">PALABRA</span><span style="flex-grow: 1;"></span><span style="padding: 2px 8px; border-radius: 999px; background: #f7b7a6; color: #12151c; font-size: 11px; font-weight: 700;">hoy</span></div>
+        <span style="font-size: 17px; font-weight: 700;">keen</span>
+        <span class="ipa" style="font-size: 13px; color: {{t.muted}};">/kiːn/</span>
+        <span style="font-size: 13px; color: {{t.muted}};">entusiasmado</span>
+      </div>
+      <div class="gc">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="dot" style="width: 24px; height: 24px; border-radius: 8px; background: #f8e08e;"></span><span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: {{t.muted}};">FRASE</span></div>
+        <span style="font-size: 16px; font-weight: 700; line-height: 20px;">Having said that…</span>
+        <span style="font-size: 13px; color: {{t.muted}};">Dicho esto</span>
+        <span class="seg"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+      </div>
+      <div class="gc">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="dot" style="width: 24px; height: 24px; border-radius: 8px; background: #f7b7a6;"></span><span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: {{t.muted}};">PALABRA</span><span style="flex-grow: 1;"></span><span style="padding: 2px 8px; border-radius: 999px; background: #a8e6c9; color: #12151c; font-size: 11px; font-weight: 700;">ok</span></div>
+        <span style="font-size: 17px; font-weight: 700;">cut corners</span>
+        <span class="ipa" style="font-size: 13px; color: {{t.muted}};">/kʌt ˈkɔːrnərz/</span>
+        <span style="font-size: 13px; color: {{t.muted}};">escatimar</span>
+      </div>
+      <div class="gc">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="dot" style="width: 24px; height: 24px; border-radius: 8px; background: #a8e6c9;"></span><span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: {{t.muted}};">DEL COACH</span></div>
+        <span style="font-size: 15px; font-weight: 700; line-height: 19px;">“cut corners” sin artículo</span>
+        <span style="font-size: 13px; color: {{t.muted}};">Expresión fija en plural</span>
+      </div>
+      <div class="gc">
+        <div style="display: flex; align-items: center; gap: 8px;"><span class="dot" style="width: 24px; height: 24px; border-radius: 8px; background: #b9d3fb;"></span><span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: {{t.muted}};">LECCIÓN</span></div>
+        <span style="font-size: 15px; font-weight: 700; line-height: 19px;">Las tres reglas de la ‑s</span>
+        <span style="font-size: 13px; color: {{t.muted}};">50 % · 4 min</span>
+        <span style="width: 56px; height: 6px; border-radius: 999px; background: {{t.border}}; overflow: hidden;"><span style="display: block; width: 50%; height: 100%; background: {{t.text}};"></span></span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["Claro","Oscuro"],"default":"Claro"},"acento":{"editor":"enum","options":["Rojo","Naranja","Ámbar","Verde","Esmeralda","Turquesa","Azul","Violeta","Rosa"],"default":"Azul"},"$preview":{"width":1420,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const themes = {
+      Claro: { bg: "#f6f4ef", surface: "#ffffff", raised: "#f1eee7", border: "#e2ddd2", borderStrong: "#b9b2a4", textStrong: "#0a0c11", text: "#12151c", muted: "#4a5263" },
+      Oscuro: { bg: "#0d1018", surface: "#141925", raised: "#1b2130", border: "#262d3d", borderStrong: "#2f3749", textStrong: "#ffffff", text: "#eef1f7", muted: "#aab2c4" }
+    };
+    const accents = { "Rojo": "#dc2626", "Naranja": "#c2410c", "Ámbar": "#b45309", "Verde": "#15803d", "Esmeralda": "#047857", "Turquesa": "#0e7490", "Azul": "#2563eb", "Violeta": "#7c3aed", "Rosa": "#be185d" };
+    return { t: themes[this.props.tema] || themes.Claro, accent: accents[this.props.acento] || "#2563eb" };
+  }
+}
+</script>
+</body>
+</html>

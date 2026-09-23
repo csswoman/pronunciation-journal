@@ -24,11 +24,19 @@ import { ListPagination } from "@/components/ui/ListPagination";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { LessonLevel, LessonCategory, MiniLesson } from "@/lib/content/schemas";
 import { MINI_LESSON_CATEGORY_LABELS } from "@/lib/content/mini-lesson-labels";
+import type { CefrLevelId } from "@/lib/courses/types";
+import { groupMiniLessonsByLearnerLevel } from "@/lib/content/mini-lesson-order";
 
 const PAGE_SIZE_DESKTOP = 12;
 const PAGE_SIZE_MOBILE = 8;
 
-export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] }) {
+export default function MiniLessonsBrowser({
+  lessons,
+  learnerLevel = null,
+}: {
+  lessons: MiniLesson[];
+  learnerLevel?: CefrLevelId | null;
+}) {
   const [selectedLevel, setSelectedLevel] = useState<LessonLevel | "all">("all");
   const [selectedCategory, setSelectedCategory] = useState<LessonCategory | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,12 +72,31 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
 
   const hasActiveFilters =
     selectedLevel !== "all" || selectedCategory !== "all" || searchQuery.trim().length > 0;
-  const totalPages = Math.max(1, Math.ceil(filteredLessons.length / pageSize));
+
+  // Sin filtros activos: ordenar por nivel del alumno (nada se oculta, solo
+  // se reordena) — "Para tu nivel" primero, luego el resto por nivel CEFR,
+  // y las lecciones sin equivalencia (habla conectada / general) al final.
+  const orderedLessons = useMemo(() => {
+    if (hasActiveFilters || !learnerLevel) return filteredLessons;
+    const { forYourLevel, byLevel, general } = groupMiniLessonsByLearnerLevel(
+      filteredLessons,
+      learnerLevel,
+    );
+    const forYourLevelIds = new Set(forYourLevel.map((l) => l.id));
+    const rest = byLevel.flatMap((group) => group.lessons.filter((l) => !forYourLevelIds.has(l.id)));
+    return [...forYourLevel, ...rest, ...general];
+  }, [filteredLessons, hasActiveFilters, learnerLevel]);
+  const totalPages = Math.max(1, Math.ceil(orderedLessons.length / pageSize));
 
   const paginatedLessons = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
-    return filteredLessons.slice(start, start + pageSize);
-  }, [filteredLessons, currentPage, pageSize]);
+    return orderedLessons.slice(start, start + pageSize);
+  }, [orderedLessons, currentPage, pageSize]);
+
+  const forYourLevelCount = useMemo(() => {
+    if (hasActiveFilters || !learnerLevel) return 0;
+    return groupMiniLessonsByLearnerLevel(filteredLessons, learnerLevel).forYourLevel.length;
+  }, [filteredLessons, hasActiveFilters, learnerLevel]);
 
   const levelCounts = useMemo(() => {
     const counts: Record<string, number> = { all: lessons.length };
@@ -150,6 +177,10 @@ export default function MiniLessonsBrowser({ lessons }: { lessons: MiniLesson[] 
                 </button>
               )}
             </div>
+
+            {!hasActiveFilters && currentPage === 1 && forYourLevelCount > 0 && (
+              <p className="mini-lessons__section-label">Para tu nivel</p>
+            )}
 
             {filteredLessons.length === 0 ? (
               <p className="mini-lessons__empty">

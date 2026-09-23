@@ -17,6 +17,10 @@ export const EVIDENCE_EXIT_CONTRACTS: readonly EvidenceExitContract[] = [
   { adapter: 'oral_mission_launch', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'pronunciation_feedback_evidence' },
   { adapter: 'tracking_word_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'word_bank' },
   { adapter: 'tracking_phrase_shadow', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'pronunciation_feedback_evidence_when_targeted' },
+  { adapter: 'user_deck_word_bank_review', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'word_bank' },
+  { adapter: 'word_rain_activity', answerWriter: null, sessionWriter: 'recordActivitySession' },
+  { adapter: 'word_search_activity', answerWriter: null, sessionWriter: 'recordActivitySession' },
+  { adapter: 'immersion_quiz', answerWriter: 'savePracticeAnswer', sessionWriter: 'recordActivitySession', domainWriter: 'immersion_lesson_progress' },
 ]
 
 export function auditEvidenceExits(entries: readonly LearningContentManifestEntry[]): string[] {

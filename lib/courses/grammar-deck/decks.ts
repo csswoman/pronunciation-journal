@@ -1,16 +1,17 @@
+import 'server-only';
+
 // Server-side loader for authored grammar study decks.
 //
 // Each lesson's deck lives as one JSON file per slug under public/grammar-decks/
 // — outside the JS module graph — read from disk and validated with Zod.
 // Mirrors lib/content/lessons.ts: throws loudly in dev, logs + falls back in prod.
-//
-// The `fs` import makes this module server-only by construction.
 
 import fs from "fs";
 import path from "path";
 import { z } from "zod";
 import { GrammarStudyDeckSchema } from "./schema";
-import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink } from "./types";
+import type { GrammarDeckMeta, GrammarStudyDeckData, GrammarRelatedLink, DeckLevel, DeckTone, DeckSummary } from "./types";
+export type { DeckLevel, DeckTone, DeckSummary };
 import { getLevelById } from "@/lib/courses/curriculumIndex";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import { getTarget, targetId } from "@/lib/pronunciation/targets/registry";
@@ -123,25 +124,6 @@ export function getDecksForTarget(targetId: string): DeckSoundRef[] {
   }
   return refs;
 }
-
-export type DeckLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'biz' | 'tech' | 'cs' | 'chunks' | 'false-friends' | 'other'
-export type DeckTone = 'butter' | 'lilac' | 'mint' | 'coral' | 'sky'
-
-export interface DeckSummary {
-  slug: string
-  level: DeckLevel
-  title: string
-  shortTitle: string
-  eyebrow: string
-  cardCount: number
-  durationMinutes: number
-  sampleWords: string[]
-  tone: DeckTone
-  iconName: string
-  hasQuiz: boolean
-  hasSounds: boolean
-}
-
 function slugToLevel(slug: string): DeckLevel {
   if (slug.startsWith('a1-')) return 'a1'
   if (slug.startsWith('a2-')) return 'a2'
