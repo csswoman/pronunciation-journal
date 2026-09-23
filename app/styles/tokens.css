@@ -257,8 +257,6 @@ html[data-theme="dark"], .dark {
   --text-size-label: 0.875rem;
   --text-size-kicker: 0.75rem;
   --text-size-tiny: 0.75rem;
-  /* Kicker font shorthand: 14px bold mono, used for eyebrow labels above titles. */
-  --font-kicker: 700 0.875rem/1.4 var(--font-mono-var, "Fira Code"), monospace;
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
 }
