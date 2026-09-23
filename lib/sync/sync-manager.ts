@@ -260,6 +260,16 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
       break
     }
     case 'upsert': {
+      if (entry.table === 'user_learning_state') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generated Supabase types predate the learning-state merge RPC.
+        const res = await supabase.rpc('merge_user_learning_state_snapshot' as any, {
+          p_user_id: String(payload.user_id),
+          p_state: payload.state as Record<string, unknown>,
+          p_updated_at: String(payload.updated_at),
+        })
+        error = res.error
+        break
+      }
       const res = await supabase.from(table).upsert(payload as never, onConflict ? { onConflict } : undefined)
       error = res.error
       break

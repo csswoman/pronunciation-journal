@@ -4,6 +4,7 @@
 //   catalog  — authenticated can read; writes stay service_role
 //   denied   — anon/authenticated cannot read or write
 import { randomUUID } from "node:crypto";
+import { runJournalLearningStateRlsCases } from "./rls-journal-learning-state.mjs";
 
 const SEED_PREFIX = "rls-int-";
 
@@ -71,6 +72,11 @@ export async function runAdditionalRlsCases(ctx) {
   });
 
   await assertOwnRowIsolation(ctx, "journal_entries", journalRow);
+  const journalPatternAccess = await userA.client.from("journal_error_pattern_events").select("entry_id").limit(0);
+  assertNoError(journalPatternAccess, "user A can query own journal pattern events");
+
+  await runJournalLearningStateRlsCases(ctx);
+
   await assertOwnRowIsolation(ctx, "lesson_completions", (user) => ({
     user_id: user.id,
     course_slug: "rls-course",

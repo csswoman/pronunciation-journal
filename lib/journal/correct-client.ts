@@ -1,5 +1,6 @@
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
 import type { JournalCorrectRequest, JournalCorrectionResponse } from '@/lib/journal/correction'
+import { refreshLearningStateFromRemote } from '@/lib/ai-practice/queries'
 
 export type { JournalCorrectRequest, JournalCorrectionResponse }
 
@@ -53,5 +54,10 @@ export async function correctJournalEntry(
     )
   }
 
-  return res.json() as Promise<JournalCorrectionResponse>
+  const correction = await res.json() as JournalCorrectionResponse
+  // The server commits recurrence atomically with the correction. Refresh the
+  // local Dexie snapshot after confirmation; later auth hydration recovers it
+  // when the response itself was lost.
+  await refreshLearningStateFromRemote()
+  return correction
 }

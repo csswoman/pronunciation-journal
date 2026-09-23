@@ -29,9 +29,41 @@ export interface ErrorRecurrenceEntry {
 
 export interface ErrorRecurrenceQueue {
   entries: ErrorRecurrenceEntry[]
+  /** Server-mergeable removals prevent older device snapshots from resurrecting repaired patterns. */
+  removedAtByPattern?: Partial<Record<ErrorPatternId, number>>
 }
 
 export const EMPTY_RECURRENCE_QUEUE: ErrorRecurrenceQueue = { entries: [] }
+
+/** Merge device snapshots without treating omission as deletion. */
+export function mergeErrorRecurrenceQueues(
+  local: ErrorRecurrenceQueue | undefined,
+  remote: ErrorRecurrenceQueue | undefined,
+  preferRemoteOnTie: boolean,
+): ErrorRecurrenceQueue {
+  const tombstones = { ...local?.removedAtByPattern }
+  for (const [pattern, removedAt] of Object.entries(remote?.removedAtByPattern ?? {})) {
+    if (removedAt !== undefined) {
+      const key = pattern as ErrorPatternId
+      tombstones[key] = Math.max(tombstones[key] ?? -1, removedAt)
+    }
+  }
+
+  const candidates = new Map<ErrorPatternId, ErrorRecurrenceEntry>()
+  for (const entry of local?.entries ?? []) candidates.set(entry.patternId, entry)
+  for (const entry of remote?.entries ?? []) {
+    const current = candidates.get(entry.patternId)
+    if (!current || entry.lastFailedAt > current.lastFailedAt ||
+      (entry.lastFailedAt === current.lastFailedAt && preferRemoteOnTie)) {
+      candidates.set(entry.patternId, entry)
+    }
+  }
+
+  const entries = [...candidates.values()]
+    .filter((entry) => (tombstones[entry.patternId] ?? -1) < entry.lastFailedAt)
+
+  return { entries, removedAtByPattern: tombstones }
+}
 
 /** Record a fresh failure: resets the pattern to the shortest interval. */
 export function recordErrorPattern(
@@ -49,6 +81,7 @@ export function recordErrorPattern(
   }
   return {
     entries: [...queue.entries.filter((e) => e.patternId !== patternId), entry],
+    removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
   }
 }
 
@@ -93,13 +126,17 @@ export function markPatternRehearsed(
           lastFailedAt: now,
         },
       ],
+      removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
     }
   }
 
   const nextStage = existing.stage + 1
   // Cleared the final interval — the pattern is considered repaired.
   if (nextStage >= RECURRENCE_INTERVALS_DAYS.length) {
-    return { entries: others }
+    return {
+      entries: others,
+      removedAtByPattern: { ...queue.removedAtByPattern, [patternId]: now },
+    }
   }
 
   return {
@@ -111,5 +148,16 @@ export function markPatternRehearsed(
         dueAt: now + RECURRENCE_INTERVALS_DAYS[nextStage]! * DAY_MS,
       },
     ],
+    removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
   }
+}
+
+function withoutPattern(
+  tombstones: ErrorRecurrenceQueue['removedAtByPattern'],
+  patternId: ErrorPatternId,
+): ErrorRecurrenceQueue['removedAtByPattern'] {
+  if (!tombstones?.[patternId]) return tombstones
+  const next = { ...tombstones }
+  delete next[patternId]
+  return next
 }
