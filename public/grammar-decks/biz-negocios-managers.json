@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Pedir", "value": "Could you take the lead on this?", "highlights": ["take the lead on"] },
-            { "key": "Asignar", "value": "I'd like you to handle the client.", "highlights": ["I'd like you to"] },
-            { "key": "Plazo", "value": "We need this by end of day.", "highlights": ["by end of day"] }
+            {
+              "key": "Pedir",
+              "value": "Could you take the lead on this?",
+              "highlights": [
+                "take the lead on"
+              ]
+            },
+            {
+              "key": "Asignar",
+              "value": "I'd like you to handle the client.",
+              "highlights": [
+                "I'd like you to"
+              ]
+            },
+            {
+              "key": "Plazo",
+              "value": "We need this by end of day.",
+              "highlights": [
+                "by end of day"
+              ]
+            }
           ]
         }
       ],
@@ -34,9 +52,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Positivo", "value": "You did a great job on...", "highlights": ["You did a great job"] },
-            { "key": "Mejorar", "value": "One thing to work on is...", "highlights": ["One thing to work on"] },
-            { "key": "Sugerir", "value": "It might help to...", "highlights": ["It might help to"] }
+            {
+              "key": "Positivo",
+              "value": "You did a great job on...",
+              "highlights": [
+                "You did a great job"
+              ]
+            },
+            {
+              "key": "Mejorar",
+              "value": "One thing to work on is...",
+              "highlights": [
+                "One thing to work on"
+              ]
+            },
+            {
+              "key": "Sugerir",
+              "value": "It might help to...",
+              "highlights": [
+                "It might help to"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +86,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Abrir", "value": "Let's get started. Today's agenda is...", "highlights": ["Let's get started"] },
-            { "key": "Encauzar", "value": "Let's stay on topic. · Let's park that.", "highlights": ["Let's stay on topic"] },
-            { "key": "Cerrar", "value": "To sum up, the action items are...", "highlights": ["action items"] }
+            {
+              "key": "Abrir",
+              "value": "Let's get started. Today's agenda is...",
+              "highlights": [
+                "Let's get started"
+              ]
+            },
+            {
+              "key": "Encauzar",
+              "value": "Let's stay on topic. · Let's park that.",
+              "highlights": [
+                "Let's stay on topic"
+              ]
+            },
+            {
+              "key": "Cerrar",
+              "value": "To sum up, the action items are...",
+              "highlights": [
+                "action items"
+              ]
+            }
           ]
         }
       ]
@@ -66,10 +120,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Let's hear both sides.", "note": "neutralidad" },
-            { "variant": "good", "text": "I understand where you're coming from.", "note": "empatía" },
-            { "variant": "good", "text": "How can we find common ground?", "note": "buscar acuerdo" },
-            { "variant": "bad", "text": "You're overreacting.", "note": "evítalo" }
+            {
+              "variant": "good",
+              "text": "Let's hear both sides.",
+              "note": "neutralidad"
+            },
+            {
+              "variant": "good",
+              "text": "I understand where you're coming from.",
+              "note": "empatía"
+            },
+            {
+              "variant": "good",
+              "text": "How can we find common ground?",
+              "note": "buscar acuerdo"
+            },
+            {
+              "variant": "bad",
+              "text": "You're overreacting.",
+              "note": "evítalo"
+            }
           ]
         }
       ]
@@ -83,9 +153,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reconocer", "value": "I really appreciate your effort.", "highlights": ["I really appreciate"] },
-            { "key": "Animar", "value": "We're making great progress.", "highlights": ["making great progress"] },
-            { "key": "Metas", "value": "Let's aim to... · Our goal this quarter is...", "highlights": ["Our goal this quarter"] }
+            {
+              "key": "Reconocer",
+              "value": "I really appreciate your effort.",
+              "highlights": [
+                "I really appreciate"
+              ]
+            },
+            {
+              "key": "Animar",
+              "value": "We're making great progress.",
+              "highlights": [
+                "making great progress"
+              ]
+            },
+            {
+              "key": "Metas",
+              "value": "Let's aim to... · Our goal this quarter is...",
+              "highlights": [
+                "Our goal this quarter"
+              ]
+            }
           ]
         }
       ]
@@ -99,12 +187,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Resumir", "value": "In short, we hit our targets.", "highlights": ["In short"] },
-            { "key": "Datos", "value": "Revenue is up 12% on last quarter.", "highlights": ["up 12%"] },
-            { "key": "Recomendar", "value": "My recommendation would be to...", "highlights": ["My recommendation would be"] }
+            {
+              "key": "Resumir",
+              "value": "In short, we hit our targets.",
+              "highlights": [
+                "In short"
+              ]
+            },
+            {
+              "key": "Datos",
+              "value": "Revenue is up 12% on last quarter.",
+              "highlights": [
+                "up 12%"
+              ]
+            },
+            {
+              "key": "Recomendar",
+              "value": "My recommendation would be to...",
+              "highlights": [
+                "My recommendation would be"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is most appropriate when assigning a task to a team member in a professional, respectful way?",
+      "options": [
+        "I'd like you to handle the client.",
+        "You have to do the client work now."
+      ],
+      "answer": 0,
+      "explain": "El uso de 'I'd like you to' suena profesional y respetuoso, lo cual es fundamental para una delegación efectiva."
+    },
+    {
+      "q": "If a meeting is drifting away from the main agenda, which phrase should you use to keep the team focused?",
+      "options": [
+        "Let's park that.",
+        "Stop talking about that."
+      ],
+      "answer": 0,
+      "explain": "'Let's park that' es una expresión profesional muy útil para posponer temas secundarios y mantener el enfoque en la agenda principal."
+    },
+    {
+      "q": "When giving constructive feedback, how should you introduce an area for improvement?",
+      "options": [
+        "One thing to work on is...",
+        "You are doing this all wrong."
+      ],
+      "answer": 0,
+      "explain": "La estructura 'One thing to work on is...' es constructiva y ayuda a mejorar el desempeño sin desanimar al colaborador."
     }
   ]
 }

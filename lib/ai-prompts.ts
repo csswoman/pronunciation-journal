@@ -869,3 +869,52 @@ CANDIDATE VIDEO (Observable metadata):
 Classify the pedagogical relationship strictly using only the observable evidence.`
 }
 
+// ── Grammar & Elective Decks: Quiz Generation ──
+
+export const GRAMMAR_DECK_QUIZ_SYSTEM_PROMPT = `You are an expert English teacher designing assessment quizzes for English language learners.
+For a given grammar or elective lesson deck (with title, concepts, rules, and example sentences), generate exactly 3 multiple-choice quiz questions.
+
+Rules:
+1. Each question must test understanding of key phrases, collocations, grammatical structures, or workplace communication nuances taught in the deck.
+2. Provide exactly 2 plausible options ("options": [string, string]) for each question.
+3. "answer": 0 or 1 (the 0-indexed index of the correct option in "options").
+4. "explain": A concise, encouraging explanation in Spanish (1-2 sentences) explaining why the chosen option is correct.
+5. Questions can be in English (testing language choice in context) or Spanish (testing conceptual/pragmatic understanding).
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "quiz": [
+    {
+      "q": "The sentence or question prompt with a blank '___' or question text",
+      "options": ["correctOption", "distractorOption"],
+      "answer": 0,
+      "explain": "Explicación clara en español..."
+    }
+  ]
+}`
+
+export function buildGrammarDeckQuizPrompt(deck: {
+  title: string
+  eyebrow?: string
+  cards: Array<{
+    title?: string
+    lede?: string
+    rules?: Array<{ key: string; value: string }>
+  }>
+}): string {
+  const cardsText = deck.cards
+    .map((c) => {
+      const rules = c.rules?.map((r) => `  - ${r.key}: ${r.value}`).join('\n') ?? ''
+      return `Section: ${c.title ?? ''}\nSummary: ${c.lede ?? ''}\n${rules}`
+    })
+    .join('\n\n')
+
+  return `Deck Title: ${deck.eyebrow ?? ''} - ${deck.title}
+
+Content & Rules:
+${cardsText}
+
+Generate 3 high-quality quiz questions for this deck.`
+}
+
+

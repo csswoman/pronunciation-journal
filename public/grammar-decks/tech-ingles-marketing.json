@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "target audience", "value": "público objetivo", "highlights": ["target audience"] },
-            { "key": "brand awareness", "value": "notoriedad de marca", "highlights": ["brand awareness"] },
-            { "key": "lead", "value": "cliente potencial · generate leads", "highlights": ["lead"] },
-            { "key": "funnel", "value": "embudo de conversión", "highlights": ["funnel"] }
+            {
+              "key": "target audience",
+              "value": "público objetivo",
+              "highlights": [
+                "target audience"
+              ]
+            },
+            {
+              "key": "brand awareness",
+              "value": "notoriedad de marca",
+              "highlights": [
+                "brand awareness"
+              ]
+            },
+            {
+              "key": "lead",
+              "value": "cliente potencial · generate leads",
+              "highlights": [
+                "lead"
+              ]
+            },
+            {
+              "key": "funnel",
+              "value": "embudo de conversión",
+              "highlights": [
+                "funnel"
+              ]
+            }
           ]
         }
       ]
@@ -31,10 +55,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "SEO", "value": "search engine optimization", "highlights": ["SEO"] },
-            { "key": "CTR / CTA", "value": "click-through rate · call to action", "highlights": ["CTA"] },
-            { "key": "engagement", "value": "interacción de la audiencia", "highlights": ["engagement"] },
-            { "key": "ROI", "value": "return on investment", "highlights": ["ROI"] }
+            {
+              "key": "SEO",
+              "value": "search engine optimization",
+              "highlights": [
+                "SEO"
+              ]
+            },
+            {
+              "key": "CTR / CTA",
+              "value": "click-through rate · call to action",
+              "highlights": [
+                "CTA"
+              ]
+            },
+            {
+              "key": "engagement",
+              "value": "interacción de la audiencia",
+              "highlights": [
+                "engagement"
+              ]
+            },
+            {
+              "key": "ROI",
+              "value": "return on investment",
+              "highlights": [
+                "ROI"
+              ]
+            }
           ]
         }
       ]
@@ -48,9 +96,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Imperativo", "value": "Discover · Get started · Don't miss out", "highlights": ["Discover"] },
-            { "key": "Beneficio", "value": "Save time · Boost your results", "highlights": ["Boost"] },
-            { "key": "Urgencia", "value": "Limited offer · Only today", "highlights": ["Limited offer"] }
+            {
+              "key": "Imperativo",
+              "value": "Discover · Get started · Don't miss out",
+              "highlights": [
+                "Discover"
+              ]
+            },
+            {
+              "key": "Beneficio",
+              "value": "Save time · Boost your results",
+              "highlights": [
+                "Boost"
+              ]
+            },
+            {
+              "key": "Urgencia",
+              "value": "Limited offer · Only today",
+              "highlights": [
+                "Limited offer"
+              ]
+            }
           ]
         }
       ],
@@ -68,9 +134,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Subir", "value": "rise · increase · soar · climb", "highlights": ["soar"] },
-            { "key": "Bajar", "value": "fall · drop · decline · plummet", "highlights": ["plummet"] },
-            { "key": "Grado", "value": "sharply · slightly · steadily", "highlights": ["sharply"] }
+            {
+              "key": "Subir",
+              "value": "rise · increase · soar · climb",
+              "highlights": [
+                "soar"
+              ]
+            },
+            {
+              "key": "Bajar",
+              "value": "fall · drop · decline · plummet",
+              "highlights": [
+                "plummet"
+              ]
+            },
+            {
+              "key": "Grado",
+              "value": "sharply · slightly · steadily",
+              "highlights": [
+                "sharply"
+              ]
+            }
           ]
         }
       ]
@@ -84,10 +168,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Campaign A performed better than B.", "note": "comparativo" },
-            { "variant": "good", "text": "This was our most successful launch.", "note": "superlativo" },
-            { "variant": "good", "text": "Engagement was twice as high.", "note": "twice as ... as" },
-            { "variant": "good", "text": "Conversions rose by 30%.", "note": "rise by + cifra" }
+            {
+              "variant": "good",
+              "text": "Campaign A performed better than B.",
+              "note": "comparativo"
+            },
+            {
+              "variant": "good",
+              "text": "This was our most successful launch.",
+              "note": "superlativo"
+            },
+            {
+              "variant": "good",
+              "text": "Engagement was twice as high.",
+              "note": "twice as ... as"
+            },
+            {
+              "variant": "good",
+              "text": "Conversions rose by 30%.",
+              "note": "rise by + cifra"
+            }
           ]
         }
       ]
@@ -101,12 +201,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Plantear", "value": "Our goal is to... · The idea is to...", "highlights": ["Our goal is to"] },
-            { "key": "Justificar", "value": "The data suggests that...", "highlights": ["The data suggests"] },
-            { "key": "Cerrar", "value": "This will help us reach a wider audience.", "highlights": ["This will help us"] }
+            {
+              "key": "Plantear",
+              "value": "Our goal is to... · The idea is to...",
+              "highlights": [
+                "Our goal is to"
+              ]
+            },
+            {
+              "key": "Justificar",
+              "value": "The data suggests that...",
+              "highlights": [
+                "The data suggests"
+              ]
+            },
+            {
+              "key": "Cerrar",
+              "value": "This will help us reach a wider audience.",
+              "highlights": [
+                "This will help us"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which term refers to the potential customers that a marketing campaign aims to attract?",
+      "options": [
+        "lead",
+        "funnel"
+      ],
+      "answer": 0,
+      "explain": "Un 'lead' es un cliente potencial, mientras que el 'funnel' es el proceso o embudo por el que pasan hasta la compra."
+    },
+    {
+      "q": "If you want to describe a metric that has increased very quickly and significantly, which verb should you use?",
+      "options": [
+        "soar",
+        "drop"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'soar' implica un aumento rápido y fuerte, mientras que 'drop' significa caer."
+    },
+    {
+      "q": "Which phrase is the most appropriate to justify a marketing proposal based on analytics?",
+      "options": [
+        "The data suggests that...",
+        "Don't miss out..."
+      ],
+      "answer": 0,
+      "explain": "Usamos 'The data suggests that' para respaldar una idea con hechos, mientras que 'Don't miss out' es una técnica de urgencia para el cliente."
     }
   ]
 }
