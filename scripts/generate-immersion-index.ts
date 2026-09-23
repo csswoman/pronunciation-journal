@@ -51,8 +51,13 @@ async function main() {
     .order('slug', { ascending: true })
 
   if (error) {
-    console.error('[generate-immersion-index] error leyendo immersion_lessons:', error)
-    process.exitCode = 1
+    console.warn('[generate-immersion-index] error leyendo immersion_lessons:', error.message ?? error)
+    if (fs.existsSync(outPath)) {
+      console.warn('[generate-immersion-index] conservando índice existente')
+      return
+    }
+    console.warn('[generate-immersion-index] sin índice previo; generando vacío')
+    writeIndex(outPath, [])
     return
   }
 
