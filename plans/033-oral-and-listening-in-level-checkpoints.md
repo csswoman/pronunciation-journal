@@ -6,7 +6,7 @@
 
 ## Status
 
-- **Execution**: IN PROGRESS — banco e integración A1–C2 implementados; cada nivel aprobado ahora muestra su puntaje, errores y temas para repasar antes de avanzar. Falta ejecutar el test de UI actualizado y completar la comprobación interactiva de audio/teclado en navegador.
+- **Execution**: IN PROGRESS — banco e integración A1–C2 implementados; cada nivel aprobado ahora muestra su puntaje, errores y temas para repasar antes de avanzar. Suite focalizada verificada (7 archivos, 64 tests, 2026-09-23). Falta solo la comprobación interactiva de audio/teclado en navegador.
 - **Priority**: P2
 - **Effort**: L
 - **Risk**: MED
@@ -48,7 +48,7 @@ Los contratos de nivel contemplan gramática, vocabulario y lectura, pero ningun
 - [x] El modo invitado usa el endpoint de puntuación sin persistencia remota; placement avanza solo tras la respuesta de puntuación del servidor.
 - [x] Cada nivel aprobado muestra el puntaje de ese bloque, sus errores por tema y la comprensión auditiva antes de ofrecer el avance al siguiente nivel.
 - [x] `pnpm type-check` y `pnpm lint` pasan después del resumen por nivel.
-- [ ] Suite focalizada actualizada (7 archivos), incluido el test UI que confirma el resumen antes de avanzar.
+- [x] Suite focalizada actualizada (7 archivos), incluido el test UI que confirma el resumen antes de avanzar. Verificado 2026-09-23: 7 archivos, 64 tests pasan.
 - [ ] Comprobación manual de audio y accesibilidad en navegador documentada.
 - [x] `plans/README.md` refleja el resultado real.
 
