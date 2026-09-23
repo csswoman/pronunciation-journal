@@ -48,6 +48,20 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     icon: 'BookOpen',
   },
   {
+    id: 'chunks',
+    label: 'Chunks en contexto',
+    description: 'Practica expresiones frecuentes con escucha, recuperación y producción',
+    href: '/practice/chunks',
+    icon: 'Layers',
+  },
+  {
+    id: 'ed-drills',
+    label: 'Escalera de -ed',
+    description: 'Escucha, enlaza y practica las terminaciones -ed en habla conectada',
+    href: '/practice/ed-drills',
+    icon: 'Ear',
+  },
+  {
     id: 'courses',
     label: 'Ruta',
     description: 'Continúa un curso guiado',
