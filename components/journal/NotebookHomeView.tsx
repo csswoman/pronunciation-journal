@@ -27,6 +27,7 @@ import { JournalPronunciationCard } from './JournalPronunciationCard'
 import { JournalPronunciationModal } from './JournalPronunciationModal'
 import { NotebookPastGrid } from './NotebookPastGrid'
 import { JournalHistoryModal } from './JournalHistoryModal'
+import { JournalEntryViewerModal } from './JournalEntryViewerModal'
 
 const EMPTY_WORDS: string[] = []
 
@@ -54,6 +55,7 @@ export function NotebookHomeView({
   const [data, setData] = useState<NotebookHome>(initialData)
   const [isPronunciationModalOpen, setIsPronunciationModalOpen] = useState(false)
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
+  const [selectedEntryDate, setSelectedEntryDate] = useState<string | null>(null)
   const [pronunciationWords, setPronunciationWords] = useState<string[]>(savedPronunciationWords)
   const [insertedPhrase, setInsertedPhrase] = useState<string | undefined>(undefined)
 
@@ -146,7 +148,11 @@ export function NotebookHomeView({
       />
 
       {/* ── Sección Inferior: Páginas anteriores ── */}
-      <NotebookPastGrid pastPages={data.pastPages} onViewAll={() => setIsHistoryModalOpen(true)} />
+      <NotebookPastGrid
+        pastPages={data.pastPages}
+        onViewAll={() => setIsHistoryModalOpen(true)}
+        onSelectEntry={(date) => setSelectedEntryDate(date)}
+      />
 
       {userId && (
         <JournalHistoryModal
@@ -154,8 +160,24 @@ export function NotebookHomeView({
           onClose={() => setIsHistoryModalOpen(false)}
           userId={userId}
           excludeDate={todayDate}
+          onSelectEntry={(date) => {
+            setIsHistoryModalOpen(false)
+            setSelectedEntryDate(date)
+          }}
         />
       )}
+
+      <JournalEntryViewerModal
+        isOpen={!!selectedEntryDate}
+        entryDate={selectedEntryDate}
+        userId={userId}
+        onClose={() => setSelectedEntryDate(null)}
+        onBackToHistory={() => {
+          setSelectedEntryDate(null)
+          setIsHistoryModalOpen(true)
+        }}
+        onSelectEntry={(date) => setSelectedEntryDate(date)}
+      />
     </div>
   )
 }

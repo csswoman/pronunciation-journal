@@ -9,10 +9,12 @@ import { listLocalJournalEntries } from '@/lib/journal/queries'
 export function JournalHistoryList({
   userId,
   excludeDate,
+  onSelectEntry,
 }: {
   userId: string
   /** Today's entry lives in the editor — keep it out of "past" lists. */
   excludeDate?: string
+  onSelectEntry?: (entryDate: string) => void
 }) {
   const entries = useLiveQuery(() => listLocalJournalEntries(userId), [userId])
   const past = (entries ?? []).filter((entry) => entry.entryDate !== excludeDate)
@@ -54,47 +56,63 @@ export function JournalHistoryList({
           const dateLabel = formatJournalDate(entry.entryDate)
           const firstLine = entry.content.trim().split('\n')[0] || entry.prompt
 
+          const contentNode = (
+            <>
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                {/* Icono de libreta en círculo verde */}
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-mint-deep/60 text-ink shadow-2xs">
+                  <Notebook size={22} className="text-ink" aria-hidden />
+                </div>
+
+                {/* Fecha + Frase/Título principal */}
+                <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+                  <span className="font-sans text-caption font-medium text-ink-secondary">
+                    {dateLabel}
+                  </span>
+                  <h3 className="font-heading text-body-md sm:text-body-lg font-bold text-ink truncate leading-snug">
+                    {firstLine}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Badge Guardada / Borrador + Chevron */}
+              <div className="flex items-center gap-3 shrink-0">
+                {isReviewed ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-mint-deep px-3.5 py-1 font-sans text-caption font-bold text-ink select-none shadow-2xs">
+                    <Check size={14} aria-hidden /> Guardada
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/40 bg-transparent px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
+                    <Pencil size={14} aria-hidden /> Borrador
+                  </span>
+                )}
+                <ChevronRight
+                  size={18}
+                  className="text-ink-secondary transition-transform group-hover:translate-x-0.5 group-hover:text-ink"
+                  aria-hidden
+                />
+              </div>
+            </>
+          )
+
+          const itemClassName =
+            'focus-ring group flex w-full items-center justify-between gap-4 rounded-2xl bg-mint-soft p-4 sm:p-5 text-left transition-all hover:bg-mint-soft/90 hover:scale-[1.005] shadow-2xs cursor-pointer'
+
           return (
             <li key={entry.id}>
-              <Link
-                href={`/journal/${entry.entryDate}`}
-                className="focus-ring group flex items-center justify-between gap-4 rounded-2xl bg-mint-soft p-4 sm:p-5 transition-all hover:bg-mint-soft/90 hover:scale-[1.005] shadow-2xs"
-              >
-                <div className="flex items-center gap-4 min-w-0 flex-1">
-                  {/* Icono de libreta en círculo verde */}
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-mint-deep/60 text-ink shadow-2xs">
-                    <Notebook size={22} className="text-ink" aria-hidden />
-                  </div>
-
-                  {/* Fecha + Frase/Título principal */}
-                  <div className="flex flex-col min-w-0 flex-1 gap-0.5">
-                    <span className="font-sans text-caption font-medium text-ink-secondary">
-                      {dateLabel}
-                    </span>
-                    <h3 className="font-heading text-body-md sm:text-body-lg font-bold text-ink truncate leading-snug">
-                      {firstLine}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Badge Guardada / Borrador + Chevron */}
-                <div className="flex items-center gap-3 shrink-0">
-                  {isReviewed ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-mint-deep px-3.5 py-1 font-sans text-caption font-bold text-ink select-none shadow-2xs">
-                      <Check size={14} aria-hidden /> Guardada
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/40 bg-transparent px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
-                      <Pencil size={14} aria-hidden /> Borrador
-                    </span>
-                  )}
-                  <ChevronRight
-                    size={18}
-                    className="text-ink-secondary transition-transform group-hover:translate-x-0.5 group-hover:text-ink"
-                    aria-hidden
-                  />
-                </div>
-              </Link>
+              {onSelectEntry ? (
+                <button
+                  type="button"
+                  onClick={() => onSelectEntry(entry.entryDate)}
+                  className={itemClassName}
+                >
+                  {contentNode}
+                </button>
+              ) : (
+                <Link href={`/journal/${entry.entryDate}`} className={itemClassName}>
+                  {contentNode}
+                </Link>
+              )}
             </li>
           )
         })}

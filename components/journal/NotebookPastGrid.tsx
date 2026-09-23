@@ -17,6 +17,7 @@ import type { NotebookHome } from '@/lib/journal/notebook-types'
 interface NotebookPastGridProps {
   pastPages: NotebookHome['pastPages']
   onViewAll: () => void
+  onSelectEntry?: (entryDate: string) => void
 }
 
 function parseDateParts(dateStr: string): { month: string; day: string } {
@@ -34,7 +35,7 @@ function parseDateParts(dateStr: string): { month: string; day: string } {
   }
 }
 
-export function NotebookPastGrid({ pastPages, onViewAll }: NotebookPastGridProps) {
+export function NotebookPastGrid({ pastPages, onViewAll, onSelectEntry }: NotebookPastGridProps) {
   const displayPages = pastPages.length > 0 ? pastPages : []
 
   return (
@@ -75,13 +76,8 @@ export function NotebookPastGrid({ pastPages, onViewAll }: NotebookPastGridProps
             const errorCount = page.errorCount ?? 3
             const wordCount = page.sentences ? page.sentences * 10 || 62 : 62
 
-            return (
-              <Link
-                key={page.id}
-                href={`/journal/${entryDateKey}`}
-                aria-label={`Página del ${entryDateKey}: ${page.firstLine}`}
-                className="focus-ring group flex items-center justify-between gap-3.5 rounded-2xl border border-border-default bg-surface-sunken/60 p-4 transition-all hover:border-border-strong hover:bg-surface-sunken shadow-2xs"
-              >
+            const cardContent = (
+              <>
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
                   {/* Bloque verde MINT de fecha (contenedor con redondeado sútil) */}
                   <div className="flex flex-col items-center justify-center rounded-lg bg-mint text-ink px-3 py-2 shrink-0 w-12 text-center select-none shadow-2xs">
@@ -115,6 +111,29 @@ export function NotebookPastGrid({ pastPages, onViewAll }: NotebookPastGridProps
                     aria-hidden
                   />
                 </div>
+              </>
+            )
+
+            const cardClassName =
+              'focus-ring group flex items-center justify-between gap-3.5 rounded-2xl border border-border-default bg-surface-sunken/60 p-4 text-left transition-all hover:border-border-strong hover:bg-surface-sunken shadow-2xs cursor-pointer'
+
+            return onSelectEntry ? (
+              <button
+                key={page.id}
+                type="button"
+                onClick={() => onSelectEntry(entryDateKey)}
+                className={cardClassName}
+              >
+                {cardContent}
+              </button>
+            ) : (
+              <Link
+                key={page.id}
+                href={`/journal/${entryDateKey}`}
+                aria-label={`Página del ${entryDateKey}: ${page.firstLine}`}
+                className={cardClassName}
+              >
+                {cardContent}
               </Link>
             )
           })

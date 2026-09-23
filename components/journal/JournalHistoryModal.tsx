@@ -18,9 +18,16 @@ interface JournalHistoryModalProps {
   onClose: () => void
   userId: string
   excludeDate?: string
+  onSelectEntry?: (entryDate: string) => void
 }
 
-export function JournalHistoryModal({ isOpen, onClose, userId, excludeDate }: JournalHistoryModalProps) {
+export function JournalHistoryModal({
+  isOpen,
+  onClose,
+  userId,
+  excludeDate,
+  onSelectEntry,
+}: JournalHistoryModalProps) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
@@ -67,7 +74,11 @@ export function JournalHistoryModal({ isOpen, onClose, userId, excludeDate }: Jo
           </button>
         </div>
 
-        <JournalHistoryList userId={userId} excludeDate={excludeDate} />
+        <JournalHistoryList
+          userId={userId}
+          excludeDate={excludeDate}
+          onSelectEntry={onSelectEntry}
+        />
       </div>
     </div>
   )
