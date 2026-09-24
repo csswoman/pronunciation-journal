@@ -12,6 +12,7 @@ import {
   AssessmentSectionFeedbackView,
 } from "./AssessmentViews";
 import { AssessmentClientShell } from "./AssessmentClientShell";
+import type { AssessmentTopicPreview } from "./AssessmentCheckpointResultView";
 import { useAssessmentFlow } from "./useAssessmentFlow";
 import { assessmentFooterCopy, reportedLevelIsAbove } from "./assessment-client-helpers";
 import { useAssessmentScoring } from "./useAssessmentScoring";
@@ -23,6 +24,7 @@ interface AssessmentClientProps {
   checkpointLabel?: string;
   userId?: string;
   initialLevel?: CefrLevelId | null;
+  nextLevelTopics?: AssessmentTopicPreview[];
 }
 
 export default function AssessmentClient({
@@ -32,6 +34,7 @@ export default function AssessmentClient({
   checkpointLabel,
   userId,
   initialLevel,
+  nextLevelTopics = [],
 }: AssessmentClientProps) {
   useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -167,6 +170,7 @@ export default function AssessmentClient({
         saving={scoring.saving}
         saveError={scoring.saveError}
         onRetry={scoring.retryPersistence}
+        nextLevelTopics={nextLevelTopics}
       />
     );
   }
@@ -176,6 +180,13 @@ export default function AssessmentClient({
         result={sectionFeedback.result}
         level={sectionFeedback.level}
         nextLevel={sectionFeedback.nextLevel}
+        nextLevelTopics={concepts
+          .filter((concept) => concept.level === sectionFeedback.nextLevel)
+          .slice(0, 4)
+          .map((concept) => ({
+            title: concept.title,
+            ...(concept.goal ? { description: concept.goal } : {}),
+          }))}
         canContinueAfterFailure={sectionFeedback.canContinueAfterFailure}
         onContinue={() => {
           setSectionFeedback(null);

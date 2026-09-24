@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import AssessmentClient from "@/components/courses/AssessmentClient";
 import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import { toClientAssessmentQuestions } from "@/lib/courses/assessment";
-import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
+import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
+import { getLevelById, parseCefrLevelId } from "@/lib/courses/curriculumIndex";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import "@/app/styles/assessment.css";
@@ -20,6 +21,19 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
   const { questions, concepts } = buildServerAssessment(mode, checkpointLevel ?? undefined);
 
   if (questions.length === 0) notFound();
+
+  const checkpointIndex = checkpointLevel ? ASSESSMENT_LEVEL_ORDER.indexOf(checkpointLevel) : -1;
+  const nextLevelId = checkpointIndex >= 0 ? ASSESSMENT_LEVEL_ORDER[checkpointIndex + 1] : undefined;
+  const nextLevelTopics = nextLevelId
+    ? getLevelById(nextLevelId)?.units
+      .flatMap((unit) => unit.lessons)
+      .filter((lesson) => !lesson.isOptional)
+      .slice(0, 4)
+      .map((lesson) => ({
+        title: lesson.title,
+        ...(lesson.description ? { description: lesson.description } : {}),
+      })) ?? []
+    : [];
 
   let initialLevel = null;
   if (mode === "placement" && user) {
@@ -42,6 +56,7 @@ export default async function AssessmentPage({ searchParams }: AssessmentPagePro
       checkpointLabel={checkpointLevel?.toUpperCase()}
       userId={user?.id}
       initialLevel={initialLevel}
+      nextLevelTopics={nextLevelTopics}
     />
   );
 }

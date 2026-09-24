@@ -23,7 +23,12 @@ export function buildServerAssessment(
     ? [checkpointLevel ?? "a1"]
     : evaluatedLevels ?? sections.map((section) => section.level);
   const questions = buildAssessmentQuestions(mode, quizzes, checkpointLevel)
-    .filter((question) => includedLevels.includes(question.level));
+    .filter((question) => includedLevels.includes(question.level))
+    .map((question) => ({
+      ...question,
+      topicTitle: getLessonBySlug(question.lessonSlug)?.title
+        ?? question.lessonSlug.replace(/^[a-z]\d-/, "").replaceAll("-", " "),
+    }));
   const concepts: AssessmentConcept[] = mode === "placement"
     ? sections.flatMap((section) => section.items.slice(0, 6).map((item) => {
         const meta = getDeckBySlug(item.lessonSlug)?.meta;

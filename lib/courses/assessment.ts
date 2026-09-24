@@ -5,6 +5,19 @@ import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { LEVEL_ASSESSMENT_CONTRACTS, buildAssessment } from "@/lib/courses/curriculum";
 import { LISTENING_BANK, listeningAudioSrc } from "@/lib/courses/listening-bank";
 import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
+import {
+  buildAssessmentResultDetails,
+  deriveAssessmentNeedsReview,
+  resolveAssessmentTopicTitle,
+  type AssessmentLevelScore,
+  type AssessmentQuestionFeedback,
+  type AssessmentQuestionOutcome,
+} from "@/lib/courses/assessment-result-details";
+export type {
+  AssessmentLevelScore,
+  AssessmentQuestionFeedback,
+  AssessmentQuestionOutcome,
+} from "@/lib/courses/assessment-result-details";
 export { ASSESSMENT_LEVEL_ORDER, assessmentAnchorIndex, groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import {
   deriveConceptSignal,
@@ -17,6 +30,7 @@ export interface AssessmentQuestion {
   id: string;
   level: CefrLevelId;
   lessonSlug: string;
+  topicTitle?: string;
   prompt: string;
   options: string[];
   answer: number;
@@ -40,8 +54,11 @@ export interface AssessmentResult {
   listeningTotal: number;
   topicScores: Array<{ lessonSlug: string; title: string; correct: number; total: number }>;
   strengths: Array<{ lessonSlug: string; title: string }>;
-  needsReview: Array<{ lessonSlug: string; title: string }>;
+  needsReview: Array<{ lessonSlug: string; title: string; lessonHref?: string }>;
   conceptSignals: ConceptSignal[];
+  levelScores?: AssessmentLevelScore[];
+  questionOutcomes?: AssessmentQuestionOutcome[];
+  questionFeedback?: AssessmentQuestionFeedback[];
 }
 
 const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
@@ -118,10 +135,6 @@ const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
     },
   ],
 };
-
-function lessonTitle(slug: string): string {
-  return slug.replace(/^[a-z]\d-/, "").replaceAll("-", " ");
-}
 
 function nextLevel(level: CefrLevelId): CefrLevelId {
   const index = ASSESSMENT_LEVEL_ORDER.indexOf(level);
@@ -255,9 +268,10 @@ export function scoreAssessment(
   const score = questions.filter((question) => answers[question.id] === question.answer).length;
   const topicScores = [...topicMap].map(([lessonSlug, value]) => ({
     lessonSlug,
-    title: lessonTitle(lessonSlug),
+    title: resolveAssessmentTopicTitle(questions, lessonSlug),
     ...value,
   }));
+  const resultDetails = buildAssessmentResultDetails(questions, answers);
   const assessedAt = new Date().toISOString();
   const conceptSignals = concepts.map((concept) => deriveConceptSignal(
     concept,
@@ -265,25 +279,7 @@ export function scoreAssessment(
     topicMap.get(concept.lessonSlug) ?? { correct: 0, total: 0 },
     assessedAt,
   ));
-  const needsReviewByLesson = new Map(
-    topicScores
-      .filter((topic) => topic.correct < topic.total)
-      .map(({ lessonSlug, title }) => [lessonSlug, { lessonSlug, title }]),
-  );
-
-  // Starter plan (no questions answered): inventory "learn" topics become the plan.
-  // After a scored quiz, "Para reforzar" must reflect missed answers only — not
-  // humble self-ratings on topics the quiz never asked about.
-  if (questions.length === 0) {
-    for (const signal of conceptSignals) {
-      if (signal.status === "learn") {
-        needsReviewByLesson.set(signal.lessonSlug, {
-          lessonSlug: signal.lessonSlug,
-          title: signal.title,
-        });
-      }
-    }
-  }
+  const needsReview = deriveAssessmentNeedsReview(topicScores, conceptSignals, questions.length === 0);
 
   return {
     assignedLevel: assigned.toUpperCase() as CefrLevel,
@@ -299,7 +295,8 @@ export function scoreAssessment(
     strengths: topicScores
       .filter((topic) => topic.correct === topic.total)
       .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
-    needsReview: [...needsReviewByLesson.values()],
+    needsReview,
     conceptSignals,
+    ...resultDetails,
   };
 }

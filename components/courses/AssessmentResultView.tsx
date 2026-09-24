@@ -1,16 +1,87 @@
 "use client";
 
 import Link from "next/link";
-import { AlertCircle, CheckCircle2, RefreshCw } from "@/components/icons";
+import { RefreshCw } from "@/components/icons";
 import type { AssessmentResult } from "@/lib/courses/assessment";
+import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
 import type { CefrLevelId } from "@/lib/courses/types";
+import { AssessmentCheckpointResultView, type AssessmentTopicPreview } from "./AssessmentCheckpointResultView";
+import { AssessmentPlacementResultView } from "./AssessmentPlacementResultView";
 
 // Planned structure:
 // <AssessmentResultView>
-//   <icon + copy />
-//   <strengths | needs review />
-//   <cta + save status />
+//   <assessment result header />
+//   <checkpoint pass/review | placement result />
+//   <save status />
 // </AssessmentResultView>
+
+interface AssessmentResultViewProps {
+  mode: "placement" | "checkpoint";
+  result: AssessmentResult;
+  userId?: string;
+  saving: boolean;
+  saveError: boolean;
+  onRetry: () => void;
+  nextLevelTopics?: AssessmentTopicPreview[];
+}
+
+function AssessmentResultHeader({
+  mode,
+  level,
+  total,
+  userId,
+}: {
+  mode: "placement" | "checkpoint";
+  level?: CefrLevelId;
+  total: number;
+  userId?: string;
+}) {
+  const title = mode === "placement"
+    ? total > 0 ? `Prueba de nivel · ${total} preguntas` : "Plan de inicio"
+    : `Examen de nivel ${level?.toUpperCase() ?? "A1"} · ${total} preguntas`;
+
+  return (
+    <header className="assessment-result-header">
+      <Link href={userId ? "/courses" : "/login"} className="assessment-result-exit">
+        <span aria-hidden>×</span>
+        {mode === "placement" ? "Salir de la prueba" : "Salir del examen"}
+      </Link>
+      <span className="assessment-result-label">{title}</span>
+    </header>
+  );
+}
+
+function AssessmentResultSaveStatus({
+  userId,
+  saving,
+  saveError,
+  onRetry,
+}: {
+  userId?: string;
+  saving: boolean;
+  saveError: boolean;
+  onRetry: () => void;
+}) {
+  return (
+    <div className="assessment-result-save-status" aria-live="polite">
+      {!userId && (
+        <small className="assessment-guest-note">
+          Progreso guardado en este dispositivo. <Link href="/login">Inicia sesión</Link> si deseas sincronizarlo.
+        </small>
+      )}
+      {saving && <small>Guardando el resultado en este dispositivo…</small>}
+      {saveError && (
+        <div className="assessment-save-error" role="alert">
+          <span>No se pudo guardar el progreso en este dispositivo.</span>
+          <button type="button" onClick={onRetry}>
+            <RefreshCw size={14} aria-hidden />
+            Reintentar
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function AssessmentResultView({
   mode,
@@ -19,143 +90,72 @@ export function AssessmentResultView({
   saving,
   saveError,
   onRetry,
-}: {
-  mode: "placement" | "checkpoint";
-  result: AssessmentResult;
-  userId?: string;
-  saving: boolean;
-  saveError: boolean;
-  onRetry: () => void;
-}) {
-  const recommendedSlug = result.needsReview[0]?.lessonSlug;
-  const planOnly = mode === "placement" && result.total === 0 && result.conceptSignals.some((signal) => signal.status === "learn");
-  const recommendedHref = `/courses?level=${result.assignedLevel.toLowerCase()}${
-    recommendedSlug ? `#lesson-${recommendedSlug}` : ""
-  }`;
+  nextLevelTopics = [],
+}: AssessmentResultViewProps) {
+  const level = result.evaluatedLevels?.[0] ?? "a1";
+  const levelIndex = ASSESSMENT_LEVEL_ORDER.indexOf(level);
+  const nextLevel = levelIndex >= 0 ? ASSESSMENT_LEVEL_ORDER[levelIndex + 1] ?? null : null;
 
   return (
-    <div className="assessment-page assessment-page--result">
-      <section className="assessment-result">
-        {result.passed
-          ? <CheckCircle2 className="assessment-result-icon assessment-result-icon--success" size={28} aria-hidden />
-          : <AlertCircle className="assessment-result-icon assessment-result-icon--error" size={28} aria-hidden />}
-        <p className="assessment-kicker">
-          {planOnly ? "Tu plan de inicio" : mode === "checkpoint" ? (result.passed ? "Checkpoint aprobado" : "Conviene reforzar") : "Resultado"}
-        </p>
-        <h1>
-          {planOnly ? "Empezamos por aquí" : mode === "checkpoint" && result.passed ? `Avanzas a ${result.assignedLevel}` : `Tu nivel actual es ${result.assignedLevel}`}
-        </h1>
-        <p>
-          {planOnly
-            ? "Marcaste estos temas como nuevos. No hace falta responder preguntas todavía."
-            : `Acertaste ${result.score} de ${result.total} preguntas. Comprensión auditiva: ${result.listeningScore} de ${result.listeningTotal}. Este resultado no evalúa producción oral.`}
-        </p>
-        {result.evaluatedLevels && result.evaluatedLevels.length > 0 && (
-          <div className="assessment-result-meta" aria-label="Cobertura de la evaluación">
-            <span>Evaluado: {result.evaluatedLevels[0].toUpperCase()}–{result.evaluatedLevels.at(-1)?.toUpperCase()}</span>
-            <span>Confianza orientativa: {result.confidence === "high" ? "alta" : result.confidence === "medium" ? "media" : "inicial"}</span>
-            <small>Se basa en los bloques y respuestas completados, no es una certificación.</small>
-          </div>
-        )}
-        <div className="assessment-result-sections">
-          {result.strengths.length > 0 && (
-            <section>
-              <h2>Fortalezas</h2>
-              <ul>{result.strengths.map((topic) => <li key={topic.lessonSlug}>{topic.title}</li>)}</ul>
-            </section>
-          )}
-          {result.needsReview.length > 0 && (
-            <section>
-              <h2>{planOnly ? "Para empezar" : "Para reforzar"}</h2>
-              <ul>{result.needsReview.map((topic) => <li key={topic.lessonSlug}>{topic.title}</li>)}</ul>
-            </section>
-          )}
-        </div>
-        <Link href={recommendedHref}>
-          {result.needsReview.length > 0 ? "Ver lecciones recomendadas" : "Ir a mi ruta"}
-        </Link>
-        {!userId && (
-          <small className="assessment-guest-note">
-            Progreso guardado en este dispositivo. <Link href="/login">Inicia sesión</Link> si deseas sincronizar en la nube.
-          </small>
-        )}
-        {saving && <small>Guardando nivel…</small>}
-        {saveError && (
-          <div className="assessment-save-error" role="alert">
-            <span>No se pudo guardar el progreso en este dispositivo.</span>
-            <button type="button" onClick={onRetry}>
-              <RefreshCw size={14} aria-hidden />
-              Reintentar
-            </button>
-          </div>
-        )}
-      </section>
+    <div className="assessment-page assessment-page--result assessment-results">
+      <AssessmentResultHeader mode={mode} level={level} total={result.total} userId={userId} />
+      {mode === "checkpoint" ? (
+        <AssessmentCheckpointResultView
+          result={result}
+          level={level}
+          nextLevel={nextLevel}
+          nextLevelTopics={nextLevelTopics}
+        />
+      ) : (
+        <AssessmentPlacementResultView result={result} />
+      )}
+      <AssessmentResultSaveStatus
+        userId={userId}
+        saving={saving}
+        saveError={saveError}
+        onRetry={onRetry}
+      />
     </div>
   );
 }
 
 // Planned structure:
 // <AssessmentSectionFeedbackView>
-//   <checkpoint outcome + score />
-//   <missed topics to review />
-//   <continue to next level />
+//   <assessment section header />
+//   <checkpoint pass/review details />
 // </AssessmentSectionFeedbackView>
 
 export function AssessmentSectionFeedbackView({
   result,
   level,
   nextLevel,
+  nextLevelTopics = [],
   canContinueAfterFailure,
   onContinue,
 }: {
   result: AssessmentResult;
   level: CefrLevelId;
   nextLevel: CefrLevelId;
+  nextLevelTopics?: AssessmentTopicPreview[];
   canContinueAfterFailure: boolean;
   onContinue: () => void;
 }) {
-  const passed = result.passedLevels.includes(level);
-  const incorrect = result.total - result.score;
-  const missedTopics = result.topicScores.filter((topic) => topic.correct < topic.total);
-
   return (
-    <div className="assessment-page assessment-page--result">
-      <section className="assessment-result">
-        {passed
-          ? <CheckCircle2 className="assessment-result-icon assessment-result-icon--success" size={28} aria-hidden />
-          : <AlertCircle className="assessment-result-icon assessment-result-icon--error" size={28} aria-hidden />}
-        <p className="assessment-kicker">Resumen del checkpoint</p>
-        <h1>{passed ? `Checkpoint ${level.toUpperCase()} completado` : `Revisa el nivel ${level.toUpperCase()}`}</h1>
-        <p>
-          Acertaste {result.score} de {result.total}; {incorrect} {incorrect === 1 ? "incorrecta" : "incorrectas"}.
-          {result.listeningTotal > 0 && (
-            <> Comprensión auditiva: {result.listeningScore} de {result.listeningTotal}.</>
-          )}
+    <div className="assessment-page assessment-page--result assessment-results">
+      <AssessmentResultHeader mode="checkpoint" level={level} total={result.total} />
+      {!result.passed && canContinueAfterFailure && (
+        <p className="assessment-section-continue-note">
+          Elegiste explorar niveles posteriores. Puedes continuar; este bloque seguirá marcado para repasar.
         </p>
-        {!passed && canContinueAfterFailure && (
-          <p>Elegiste explorar todos los niveles, así que puedes continuar. Este bloque no cuenta como aprobado.</p>
-        )}
-        <div className="assessment-result-sections">
-          <section>
-            <h2>Para repasar</h2>
-            {missedTopics.length > 0 ? (
-              <ul>
-                {missedTopics.map((topic) => {
-                  const topicIncorrect = topic.total - topic.correct;
-                  return (
-                    <li key={topic.lessonSlug}>
-                      {topic.title}: {topic.correct} de {topic.total} correctas, {topicIncorrect} {topicIncorrect === 1 ? "incorrecta" : "incorrectas"}
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : <p>No hay temas marcados para repasar en este bloque.</p>}
-          </section>
-        </div>
-        <button type="button" onClick={onContinue}>
-          Continuar con {nextLevel.toUpperCase()}
-        </button>
-      </section>
+      )}
+      <AssessmentCheckpointResultView
+        result={result}
+        level={level}
+        nextLevel={nextLevel}
+        nextLevelTopics={nextLevelTopics}
+        canContinueAfterFailure={canContinueAfterFailure}
+        onContinue={onContinue}
+      />
     </div>
   );
 }

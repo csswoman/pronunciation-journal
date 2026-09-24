@@ -18,6 +18,39 @@ const ConceptSignalSchema = z.object({
   path: ["correct"],
 });
 
+const AssessmentLevelScoreSchema = z.object({
+  level: LEVEL_SCHEMA,
+  correct: z.number().int().min(0).max(84),
+  total: z.number().int().min(1).max(84),
+  minimumCorrect: z.number().int().min(0).max(84),
+  listeningCorrect: z.number().int().min(0).max(36),
+  listeningTotal: z.number().int().min(0).max(36),
+  minimumListeningCorrect: z.number().int().min(0).max(36),
+  thresholdMet: z.boolean(),
+}).strict().refine((score) => score.correct <= score.total, {
+  message: "correct cannot exceed total",
+  path: ["correct"],
+}).refine((score) => score.listeningCorrect <= score.listeningTotal, {
+  message: "listeningCorrect cannot exceed listeningTotal",
+  path: ["listeningCorrect"],
+});
+
+const AssessmentQuestionOutcomeSchema = z.object({
+  questionId: z.string().trim().min(1).max(120),
+  level: LEVEL_SCHEMA,
+  questionNumber: z.number().int().min(1).max(84),
+  correct: z.boolean(),
+}).strict();
+
+const AssessmentQuestionFeedbackSchema = AssessmentQuestionOutcomeSchema.extend({
+  lessonSlug: z.string().trim().min(1).max(200),
+  topicTitle: z.string().trim().min(1).max(200),
+  prompt: z.string().trim().min(1).max(2000),
+  selectedAnswer: z.string().max(500).nullable(),
+  correctAnswer: z.string().trim().min(1).max(500),
+  explanation: z.string().trim().max(4000).optional(),
+}).strict();
+
 export const AssessmentPayloadSchema = z.object({
   assignedLevel: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
   evaluatedLevels: z.array(LEVEL_SCHEMA).max(6).optional(),
@@ -41,8 +74,12 @@ export const AssessmentPayloadSchema = z.object({
   needsReview: z.array(z.object({
     lessonSlug: z.string().min(1).max(200),
     title: z.string().min(1).max(200),
+    lessonHref: z.string().startsWith("/").max(500).optional(),
   }).strict()).max(100),
   conceptSignals: z.array(ConceptSignalSchema).max(100),
+  levelScores: z.array(AssessmentLevelScoreSchema).max(6).optional(),
+  questionOutcomes: z.array(AssessmentQuestionOutcomeSchema).max(84).optional(),
+  questionFeedback: z.array(AssessmentQuestionFeedbackSchema).max(84).optional(),
 }).strict().refine((result) => result.score <= result.total, {
   message: "score cannot exceed total",
   path: ["score"],
