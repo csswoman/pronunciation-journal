@@ -70,6 +70,9 @@ export interface AssessmentLevelScore {
   listeningCorrect: number;
   listeningTotal: number;
   minimumListeningCorrect: number;
+  writtenListeningMet?: boolean;
+  oralRequired?: boolean;
+  oralPassed?: boolean;
   thresholdMet: boolean;
 }
 

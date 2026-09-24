@@ -26,6 +26,9 @@ const AssessmentLevelScoreSchema = z.object({
   listeningCorrect: z.number().int().min(0).max(36),
   listeningTotal: z.number().int().min(0).max(36),
   minimumListeningCorrect: z.number().int().min(0).max(36),
+  writtenListeningMet: z.boolean().optional(),
+  oralRequired: z.boolean().optional(),
+  oralPassed: z.boolean().optional(),
   thresholdMet: z.boolean(),
 }).strict().refine((score) => score.correct <= score.total, {
   message: "correct cannot exceed total",
@@ -78,6 +81,10 @@ export const AssessmentPayloadSchema = z.object({
   }).strict()).max(100),
   conceptSignals: z.array(ConceptSignalSchema).max(100),
   levelScores: z.array(AssessmentLevelScoreSchema).max(6).optional(),
+  oralEvidence: z.object({
+    level: LEVEL_SCHEMA,
+    status: z.enum(["passed", "pending", "not-required"]),
+  }).strict().optional(),
   questionOutcomes: z.array(AssessmentQuestionOutcomeSchema).max(84).optional(),
   questionFeedback: z.array(AssessmentQuestionFeedbackSchema).max(84).optional(),
 }).strict().refine((result) => result.score <= result.total, {
@@ -105,6 +112,7 @@ const AssessmentRequestFields = {
   checkpointLevel: LEVEL_SCHEMA.nullable().optional(),
   answers: AnswersSchema.optional(),
   selfRatings: SelfRatingsSchema.optional(),
+  assessmentAttemptId: z.string().uuid().optional(),
 };
 
 export const AssessmentScoreRequestSchema = z.object({
@@ -119,6 +127,19 @@ export const AssessmentScoreRequestSchema = z.object({
   }
   if (body.mode === "placement" && !hasValidPlacementLevels(body.evaluatedLevels)) {
     context.addIssue({ code: "custom", path: ["evaluatedLevels"], message: "Placement levels must be a contiguous selection" });
+  }
+});
+
+export const AssessmentOralAttemptRequestSchema = z.object({
+  level: z.enum(["a1", "a2"]),
+  assessmentAttemptId: z.string().uuid().optional(),
+  answers: AnswersSchema.optional(),
+}).strict().superRefine((body, context) => {
+  if (!body.assessmentAttemptId && !body.answers) {
+    context.addIssue({ code: "custom", path: ["answers"], message: "Answers are required to start an oral attempt" });
+  }
+  if (body.assessmentAttemptId && body.answers) {
+    context.addIssue({ code: "custom", path: ["answers"], message: "Saved attempt answers cannot be replaced" });
   }
 });
 

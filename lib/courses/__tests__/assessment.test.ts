@@ -49,10 +49,10 @@ describe("curriculum assessments", () => {
     );
   });
 
-  it("promotes to the next level after passing a checkpoint", () => {
+  it("promotes only after written, listening, and oral evidence pass", () => {
     const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
     const answers = Object.fromEntries(questions.map((question) => [question.id, question.answer]));
-    const result = scoreAssessment(questions, answers, "checkpoint", "a1");
+    const result = scoreAssessment(questions, answers, "checkpoint", "a1", [], {}, true);
 
     expect(result.assignedLevel).toBe("A2");
     expect(result.passed).toBe(true);
@@ -60,6 +60,17 @@ describe("curriculum assessments", () => {
     expect(result.listeningScore).toBe(6);
     expect(result.listeningTotal).toBe(6);
     expect(result.topicScores).toHaveLength(8);
+  });
+
+  it("keeps a written and listening pass pending until oral evidence is verified", () => {
+    const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
+    const answers = Object.fromEntries(questions.map((question) => [question.id, question.answer]));
+    const result = scoreAssessment(questions, answers, "checkpoint", "a1");
+
+    expect(result.levelScores?.[0]).toMatchObject({ writtenListeningMet: true, oralRequired: true, oralPassed: false });
+    expect(result.oralEvidence).toEqual({ level: "a1", status: "pending" });
+    expect(result.assignedLevel).toBe("A1");
+    expect(result.passed).toBe(false);
   });
 
   it("requires listening evidence even when enough written answers are correct", () => {

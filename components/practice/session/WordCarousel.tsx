@@ -1,18 +1,16 @@
 // Planned structure:
 // <WordCarousel>
-//   <LoaderCard>
-//     <PhoneticHeaderBadge />
-//     <WordSlot />      (word text + IPA badge with smooth motion)
-//     <ProgressBar />
-//     <LoadingLabel />
-//   </LoaderCard>
+//   <LoaderContainer>
+//     <WordSlot />      (word text + clean IPA text with smooth motion)
+//     <ProgressBar />   (vibrant progress track)
+//     <LoadingLabel />  ("Preparando tu sesión")
+//   </LoaderContainer>
 // </WordCarousel>
 
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
-import { Waves } from '@/components/icons'
 import type { LoadingWord } from '@/hooks/loading-words-data'
 
 interface WordCarouselProps {
@@ -49,20 +47,12 @@ export function WordCarousel({ words }: WordCarouselProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-xs sm:max-w-sm flex-col items-center justify-center p-layout-page-inline py-layout-section-gap">
-      <div className="flex w-full flex-col items-center justify-center gap-5 rounded-2xl bg-surface-raised p-6 sm:p-7 border border-border-subtle/80 shadow-sm transition-colors duration-300">
-        {/* Header badge */}
-        <div className="flex items-center gap-1.5 rounded-full bg-primary-soft/60 px-3 py-1 text-primary border border-primary/10">
-          <Waves className="h-3.5 w-3.5 animate-pulse text-primary shrink-0" />
-          <span className="font-kicker text-[10px] tracking-wider uppercase font-semibold text-primary">
-            Journal Practice
-          </span>
-        </div>
-
+      <div className="flex w-full flex-col items-center justify-center gap-6 text-center">
         {/* Animated Word + IPA Slot */}
-        <div className="flex min-h-20 w-full flex-col items-center justify-center gap-2 py-1">
+        <div className="flex min-h-24 w-full flex-col items-center justify-center gap-2">
           <div
             className={cn(
-              'flex flex-col items-center justify-center gap-1.5 transition-all duration-300',
+              'flex flex-col items-center justify-center gap-2 transition-all duration-300',
               prefersReduced.current
                 ? 'transition-opacity'
                 : 'transition-[opacity,transform,filter] ease-out-expo',
@@ -71,28 +61,28 @@ export function WordCarousel({ words }: WordCarouselProps) {
                 : '-translate-y-2 opacity-0 scale-95 blur-[1px]'
             )}
           >
-            <span className="font-sans text-h3 sm:text-h2 font-bold tracking-tight text-fg text-center">
+            <span className="font-sans text-4xl sm:text-5xl font-bold tracking-tight text-fg text-center">
               {current.text}
             </span>
             {current.ipa && (
-              <span className="font-ipa text-body-md sm:text-body font-medium text-primary bg-primary-soft/40 px-3.5 py-1 rounded-full border border-primary/15 tracking-wide shadow-2xs">
+              <span className="font-ipa text-xl sm:text-2xl font-normal text-sky-400 dark:text-sky-300 tracking-wide text-center">
                 {current.ipa}
               </span>
             )}
           </div>
         </div>
 
-        {/* Indeterminate progress bar */}
-        <div className="flex w-full flex-col items-center gap-2">
+        {/* Indeterminate progress bar & subtitle */}
+        <div className="flex w-full max-w-xs flex-col items-center gap-3 pt-2">
           <div
-            className="relative h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken border border-border-subtle/60"
+            className="relative h-1.5 w-full overflow-hidden rounded-full bg-slate-800/80 border border-border-subtle/30"
             role="progressbar"
             aria-label="Cargando sesión"
             aria-busy="true"
           >
-            <div className="h-full w-2/5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-soft)] animate-loading-slide" />
+            <div className="h-full w-2/5 rounded-full bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)] animate-loading-slide" />
           </div>
-          <span className="font-kicker text-caption text-fg-subtle tracking-wider uppercase pt-1">
+          <span className="font-sans text-body-sm font-normal text-fg-subtle tracking-normal">
             Preparando tu sesión
           </span>
         </div>
@@ -100,4 +90,5 @@ export function WordCarousel({ words }: WordCarouselProps) {
     </div>
   )
 }
+
 

@@ -46,6 +46,27 @@ const failedResult = {
   needsReview: [{ lessonSlug: "a1-topic-one", title: "topic one" }],
 };
 
+const pendingOralResult = {
+  ...passingResult,
+  assignedLevel: "A1",
+  passed: false,
+  passedLevels: [],
+  oralEvidence: { level: "a1", status: "pending" },
+  levelScores: [{
+    level: "a1",
+    correct: 1,
+    total: 1,
+    minimumCorrect: 1,
+    listeningCorrect: 1,
+    listeningTotal: 1,
+    minimumListeningCorrect: 1,
+    writtenListeningMet: true,
+    oralRequired: true,
+    oralPassed: false,
+    thresholdMet: false,
+  }],
+};
+
 function responseWithResult(result: typeof passingResult | typeof failedResult) {
   return { ok: true, json: async () => ({ result }) };
 }
@@ -105,7 +126,26 @@ describe("AssessmentClient", () => {
         removeItem: (key: string) => store.delete(key),
       },
     });
-    fetchMock.mockResolvedValue(responseWithResult(passingResult));
+    fetchMock.mockImplementation(async (input: string | URL | Request) => {
+      if (String(input).startsWith("/api/assessment/oral/attempts?level=")) {
+        return { ok: true, json: async () => ({ attemptId: null }) };
+      }
+      if (String(input) === "/api/assessment/oral/attempts") {
+        return {
+          ok: true,
+          json: async () => ({
+            attemptId: "df7539d3-0346-4432-8e93-884eaf79da44",
+            challenge: {
+              id: "c6d5ab28-911a-4dbd-aa36-28c2e6cb60f6",
+              level: "a1",
+              prompt: "Describe a fictional person.",
+              expiresAt: new Date(Date.now() + 60_000).toISOString(),
+            },
+          }),
+        };
+      }
+      return responseWithResult(passingResult);
+    });
     persistAssessmentConceptProfileMock.mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.load = vi.fn();
     window.localStorage.clear();
@@ -202,37 +242,37 @@ describe("AssessmentClient", () => {
     expect(screen.queryByText("Past simple")).not.toBeInTheDocument();
   });
 
-  it("keeps submission disabled until every question is answered", () => {
+  it("keeps submission disabled until every question is answered", async () => {
     render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
 
     const submit = screen.getByRole("button", { name: "Ver resultado" });
     expect(submit).toBeDisabled();
 
     fireEvent.click(screen.getByText("Right"));
-    expect(submit).toBeEnabled();
+    await waitFor(() => expect(submit).toBeEnabled());
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "1");
   });
 
-  it("promotes the learner and persists the new level after a passed checkpoint", async () => {
+  it("starts the oral checkpoint before a written pass can promote the learner", async () => {
     render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
 
     fireEvent.click(screen.getByText("Right"));
-    fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
+    const submit = screen.getByRole("button", { name: "Ver resultado" });
+    await waitFor(() => expect(submit).toBeEnabled());
+    fireEvent.click(submit);
 
-    expect(await screen.findByRole("heading", { name: "Ya estás en A2" })).toBeInTheDocument();
-    expect(screen.getByText("Nivel superado")).toBeInTheDocument();
-    expect(screen.getByText("1 de 1 correctas")).toBeInTheDocument();
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(await screen.findByRole("heading", { name: "Di una respuesta breve en inglés" })).toBeInTheDocument();
+    expect(screen.getByText("Describe a fictional person.")).toBeInTheDocument();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
     expect(fetchMock).toHaveBeenCalledWith(
-      "/api/assessment/results",
+      "/api/assessment/oral/attempts",
       expect.objectContaining({
         method: "POST",
         body: expect.stringContaining('"answers":{"a1:topic-one":1}'),
       }),
     );
-    expect(persistAssessmentConceptProfileMock).toHaveBeenCalledWith("user-1", [], "A2");
-    expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"assignedLevel":"A2"');
-    expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toContain('"answers":{"a1:topic-one":1}');
+    expect(persistAssessmentConceptProfileMock).not.toHaveBeenCalled();
+    expect(window.localStorage.getItem("assessment:user-1:checkpoint:A1")).toBeNull();
   });
 
   it("uses an error state for a failed checkpoint result", async () => {
@@ -247,9 +287,10 @@ describe("AssessmentClient", () => {
     expect(document.querySelector(".assessment-result-icon--success")).not.toBeInTheDocument();
   });
 
-  it("offers retry when saving the verified result to Dexie fails", async () => {
+  it("offers retry when saving a non-pilot checkpoint result to Dexie fails", async () => {
     persistAssessmentConceptProfileMock.mockRejectedValueOnce(new Error("Dexie unavailable"));
-    render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} userId="user-1" />);
+    const b1Questions = [{ ...questions[0], id: "b1:topic-one", level: "b1" as const }];
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="B1" questions={b1Questions} userId="user-1" />);
 
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
@@ -262,23 +303,24 @@ describe("AssessmentClient", () => {
       "/api/assessment/results",
       expect.objectContaining({
         method: "POST",
-        body: expect.stringContaining('"answers":{"a1:topic-one":1}'),
+        body: expect.stringContaining('"answers":{"b1:topic-one":1}'),
       }),
     );
     await waitFor(() => expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument());
   });
 
-  it("completes as a guest from server score without authenticated persistence", async () => {
+  it("keeps a guest's written and listening pass pending until sign-in for oral evidence", async () => {
+    fetchMock.mockResolvedValueOnce(responseWithResult(pendingOralResult));
     render(<AssessmentClient mode="checkpoint" checkpointLabel="A1" questions={questions} />);
 
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
-    expect(await screen.findByRole("heading", { name: "Ya estás en A2" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Inicia sesión" }))
-      .toHaveAttribute("href", "/login");
+    expect(await screen.findByRole("heading", { name: "Falta verificar la tarea oral" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Iniciar sesión y repetir" }))
+      .toHaveAttribute("href", "/login?intent=save");
     expect(window.localStorage.getItem("assessment:guest:checkpoint:A1"))
-      .toContain('"assignedLevel":"A2"');
+      .toContain('"assignedLevel":"A1"');
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/assessment/score",
       expect.objectContaining({

@@ -5,6 +5,8 @@ import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { LEVEL_ASSESSMENT_CONTRACTS, buildAssessment } from "@/lib/courses/curriculum";
 import { LISTENING_BANK, listeningAudioSrc } from "@/lib/courses/listening-bank";
 import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
+import { requiresCheckpointOralEvidence, type AssessmentOralEvidenceStatus } from "@/lib/courses/assessment-oral-shared";
+import { buildAssessmentOralResultDetails } from "@/lib/courses/assessment-oral-result";
 import {
   buildAssessmentResultDetails,
   deriveAssessmentNeedsReview,
@@ -59,6 +61,7 @@ export interface AssessmentResult {
   levelScores?: AssessmentLevelScore[];
   questionOutcomes?: AssessmentQuestionOutcome[];
   questionFeedback?: AssessmentQuestionFeedback[];
+  oralEvidence?: AssessmentOralEvidenceStatus;
 }
 
 const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
@@ -224,7 +227,10 @@ export function scoreAssessment(
   checkpointLevel?: CefrLevelId,
   concepts: AssessmentConcept[] = [],
   selfRatings: Record<string, ConceptSelfRating> = {},
+  oralEvidencePassed = false,
 ): AssessmentResult {
+  const oralRequired = mode === "checkpoint" && checkpointLevel !== undefined
+    && requiresCheckpointOralEvidence(checkpointLevel);
   const passedLevels: CefrLevelId[] = [];
   const topicMap = new Map<string, { correct: number; total: number }>();
   let listeningScore = 0;
@@ -254,6 +260,7 @@ export function scoreAssessment(
       completeQuestionSet
       && correct >= contract.minimumCorrect
       && listeningCorrect >= contract.minimumListeningCorrect
+      && (!oralRequired || level !== checkpointLevel || oralEvidencePassed)
     ) passedLevels.push(level);
     else break;
   }
@@ -272,6 +279,9 @@ export function scoreAssessment(
     ...value,
   }));
   const resultDetails = buildAssessmentResultDetails(questions, answers);
+  const oralResultDetails = buildAssessmentOralResultDetails({
+    levelScores: resultDetails.levelScores, mode, checkpointLevel, oralEvidencePassed,
+  });
   const assessedAt = new Date().toISOString();
   const conceptSignals = concepts.map((concept) => deriveConceptSignal(
     concept,
@@ -298,5 +308,6 @@ export function scoreAssessment(
     needsReview,
     conceptSignals,
     ...resultDetails,
+    ...oralResultDetails,
   };
 }

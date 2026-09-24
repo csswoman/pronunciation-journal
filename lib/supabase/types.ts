@@ -200,6 +200,60 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_oral_attempts: {
+        Row: {
+          answers: Json
+          challenge_expires_at: string | null
+          challenge_id: string | null
+          completed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          item_id: string | null
+          level: string
+          oral_audio_sha256: string | null
+          rubric_version: string | null
+          self_ratings: Json
+          status: string
+          used_item_ids: string[]
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          challenge_expires_at?: string | null
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          item_id?: string | null
+          level: string
+          oral_audio_sha256?: string | null
+          rubric_version?: string | null
+          self_ratings?: Json
+          status?: string
+          used_item_ids?: string[]
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          challenge_expires_at?: string | null
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          item_id?: string | null
+          level?: string
+          oral_audio_sha256?: string | null
+          rubric_version?: string | null
+          self_ratings?: Json
+          status?: string
+          used_item_ids?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       attempt_logs: {
         Row: {
           assessment: Json

@@ -65,7 +65,7 @@ describe("assessment score route", () => {
     );
   });
 
-  it("accepts a checkpoint only when its listening minimum is met", async () => {
+  it("keeps an otherwise passing checkpoint pending until oral evidence is verified", async () => {
     const { questions } = buildServerAssessment("checkpoint", "a1");
     mocks.validateBody.mockResolvedValueOnce({
       data: {
@@ -78,7 +78,12 @@ describe("assessment score route", () => {
 
     const response = await POST(reqWith({}) as never);
     const body = await response.json();
-    expect(body.result).toMatchObject({ passed: true, listeningScore: 6, assignedLevel: "A2" });
+    expect(body.result).toMatchObject({
+      passed: false,
+      listeningScore: 6,
+      assignedLevel: "A1",
+      oralEvidence: { level: "a1", status: "pending" },
+    });
   });
 
   it("returns same-origin and rate-limit errors before scoring", async () => {

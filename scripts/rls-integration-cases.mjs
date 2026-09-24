@@ -72,6 +72,50 @@ export async function runAdditionalRlsCases(ctx) {
   });
 
   await assertOwnRowIsolation(ctx, "journal_entries", journalRow);
+  const oralAttempt = await admin.from("assessment_oral_attempts").insert({
+    user_id: userA.id,
+    level: "a1",
+    answers: { "rls-question": 0 },
+    status: "oral_pending",
+    expires_at: new Date(Date.now() + 60_000).toISOString(),
+  }).select("id").single();
+  assertNoError(oralAttempt, "service role seeds an oral checkpoint attempt");
+  const aReadsOralAttempt = await userA.client
+    .from("assessment_oral_attempts").select("id").eq("id", oralAttempt.data.id);
+  assertNoError(aReadsOralAttempt, "user A reads own oral checkpoint attempt");
+  assert(aReadsOralAttempt.data.length === 1, "user A cannot read own oral checkpoint attempt");
+  const bReadsOralAttempt = await userB.client
+    .from("assessment_oral_attempts").select("id").eq("id", oralAttempt.data.id);
+  assertNoError(bReadsOralAttempt, "user B reads user A oral checkpoint attempt");
+  assert(bReadsOralAttempt.data.length === 0, "user B can read user A oral checkpoint attempt");
+  const aWritesOralAttempt = await userA.client.from("assessment_oral_attempts").insert({
+    user_id: userA.id,
+    level: "a1",
+    answers: { "rls-question": 0 },
+    status: "oral_pending",
+    expires_at: new Date(Date.now() + 60_000).toISOString(),
+  });
+  assertHasError(aWritesOralAttempt, "authenticated user can insert an oral checkpoint attempt");
+  const bWritesOralAttempt = await userB.client.from("assessment_oral_attempts").insert({
+    user_id: userA.id,
+    level: "a1",
+    answers: { "rls-question": 0 },
+    status: "oral_pending",
+    expires_at: new Date(Date.now() + 60_000).toISOString(),
+  });
+  assertHasError(bWritesOralAttempt, "user B can write an oral checkpoint attempt for user A");
+  const aUpdatesOralAttempt = await userA.client.from("assessment_oral_attempts")
+    .update({ status: "completed" }).eq("id", oralAttempt.data.id).select("id");
+  assertNoError(aUpdatesOralAttempt, "user A updates own oral checkpoint attempt");
+  assert(aUpdatesOralAttempt.data.length === 0, "user A can update own oral checkpoint attempt");
+  const aDeletesOralAttempt = await userA.client.from("assessment_oral_attempts")
+    .delete().eq("id", oralAttempt.data.id).select("id");
+  assertNoError(aDeletesOralAttempt, "user A deletes own oral checkpoint attempt");
+  assert(aDeletesOralAttempt.data.length === 0, "user A can delete own oral checkpoint attempt");
+  const persistedAttempt = await admin.from("assessment_oral_attempts")
+    .select("status").eq("id", oralAttempt.data.id).single();
+  assertNoError(persistedAttempt, "service role reads seeded oral checkpoint attempt");
+  assert(persistedAttempt.data.status === "oral_pending", "user A changed oral checkpoint attempt status");
   const journalPatternAccess = await userA.client.from("journal_error_pattern_events").select("entry_id").limit(0);
   assertNoError(journalPatternAccess, "user A can query own journal pattern events");
 

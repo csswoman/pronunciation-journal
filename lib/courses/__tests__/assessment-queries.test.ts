@@ -62,12 +62,45 @@ describe("assessment persistence", () => {
 
     expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
       topic_scores: {
-        version: 3,
+        version: 4,
         listeningScore: result.listeningScore,
         listeningTotal: result.listeningTotal,
+        levelScores: [],
+        oralEvidence: null,
         topics: result.topicScores,
         concepts: result.conceptSignals,
       },
+    }));
+  });
+
+  it("persists oral evidence and the written-listening threshold breakdown", async () => {
+    const oralResult: AssessmentResult = {
+      ...result,
+      evaluatedLevels: ["a1"],
+      oralEvidence: { level: "a1", status: "passed" },
+      levelScores: [{
+        level: "a1",
+        correct: 12,
+        total: 14,
+        minimumCorrect: 10,
+        listeningCorrect: 4,
+        listeningTotal: 6,
+        minimumListeningCorrect: 3,
+        writtenListeningMet: true,
+        oralRequired: true,
+        oralPassed: true,
+        thresholdMet: true,
+      }],
+    };
+
+    await saveAssessmentResult("u1", "checkpoint", oralResult, "a1");
+
+    expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
+      topic_scores: expect.objectContaining({
+        version: 4,
+        oralEvidence: { level: "a1", status: "passed" },
+        levelScores: oralResult.levelScores,
+      }),
     }));
   });
 
