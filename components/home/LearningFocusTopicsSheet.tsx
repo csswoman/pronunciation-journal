@@ -2,18 +2,30 @@
 
 // Planned structure:
 // <LearningFocusTopicsSheet>
-//   <header />
-//   <topic checkbox list />
-//   <footer actions />
+//   <backdrop />
+//   <dialog container>
+//     <LearningFocusSheetHeader />
+//     <dialog body: scrollable grouped topic list with LearningFocusTopicItem />
+//     <quick test banner />
+//     <dialog footer: cancel and dynamic save buttons />
+//   </dialog container>
 // </LearningFocusTopicsSheet>
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { COURSE_PATH_CURRICULUM } from '@/lib/courses/curriculum'
+import Link from 'next/link'
 import type { AssessmentConcept } from '@/lib/courses/concept-profile'
 import type { CefrLevelId } from '@/lib/courses/types'
-import { cn } from '@/lib/cn'
 import { useDialogFocus } from '@/hooks/useDialogFocus'
 import type { FocusLevel } from '@/lib/learning-focus/types'
+import { Lightbulb } from '@/components/icons'
+import { LearningFocusSheetHeader } from './LearningFocusSheetHeader'
+import { LearningFocusTopicItem } from './LearningFocusTopicItem'
+import {
+  collectLevelTopics,
+  findConceptBySlug,
+  GROUP_LABEL_OVERRIDES,
+  type TopicItem,
+} from './learningFocusSheetHelpers'
 
 type LearningFocusTopicsSheetProps = {
   open: boolean
@@ -21,24 +33,6 @@ type LearningFocusTopicsSheetProps = {
   claimedSlugs: Set<string>
   onClose: () => void
   onClaim: (concepts: AssessmentConcept[]) => Promise<void>
-}
-
-function collectLessons(level: FocusLevel): AssessmentConcept[] {
-  const track = COURSE_PATH_CURRICULUM.levels.find((item) => item.id === level)
-  if (!track) return []
-
-  const concepts: AssessmentConcept[] = []
-  for (const unit of track.units) {
-    for (const lesson of unit.lessons) {
-      if (!lesson.slug) continue
-      concepts.push({
-        lessonSlug: lesson.slug,
-        level: level as CefrLevelId,
-        title: lesson.title,
-      })
-    }
-  }
-  return concepts
 }
 
 export default function LearningFocusTopicsSheet({
@@ -49,15 +43,52 @@ export default function LearningFocusTopicsSheet({
   onClaim,
 }: LearningFocusTopicsSheetProps) {
   const { dialogRef } = useDialogFocus<HTMLDivElement>(open, onClose, '[aria-label="Cerrar"]')
+  const [activeLevel, setActiveLevel] = useState<CefrLevelId>(level)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
 
-  const lessons = useMemo(() => collectLessons(level), [level])
-
   useEffect(() => {
     if (!open) return
+    setActiveLevel(level)
     setSelected(new Set(claimedSlugs))
-  }, [open, claimedSlugs])
+  }, [open, level, claimedSlugs])
+
+  const topics = useMemo(() => collectLevelTopics(activeLevel), [activeLevel])
+
+  const groupedTopics = useMemo(() => {
+    const map = new Map<string, { label: string; items: TopicItem[] }>()
+    for (const topic of topics) {
+      const existing = map.get(topic.group)
+      if (existing) {
+        existing.items.push(topic)
+      } else {
+        const label = GROUP_LABEL_OVERRIDES[topic.group] ?? topic.group.toUpperCase()
+        map.set(topic.group, { label, items: [topic] })
+      }
+    }
+    return Array.from(map.values())
+  }, [topics])
+
+  const claimedInLevel = useMemo(
+    () => topics.filter((t) => claimedSlugs.has(t.lessonSlug)),
+    [topics, claimedSlugs],
+  )
+  const newSelectedInLevel = useMemo(
+    () => topics.filter((t) => selected.has(t.lessonSlug) && !claimedSlugs.has(t.lessonSlug)),
+    [topics, selected, claimedSlugs],
+  )
+
+  const totalTopics = topics.length || 1
+  const claimedPercent = Math.min(100, Math.round((claimedInLevel.length / totalTopics) * 100))
+  const newPercent = Math.min(
+    100 - claimedPercent,
+    Math.round((newSelectedInLevel.length / totalTopics) * 100),
+  )
+
+  const allNewSelected = useMemo(
+    () => Array.from(selected).filter((slug) => !claimedSlugs.has(slug)),
+    [selected, claimedSlugs],
+  )
 
   const toggleLesson = useCallback(
     (slug: string) => {
@@ -73,13 +104,14 @@ export default function LearningFocusTopicsSheet({
   )
 
   const handleSave = useCallback(async () => {
-    const concepts = lessons.filter(
-      (lesson) => selected.has(lesson.lessonSlug) && !claimedSlugs.has(lesson.lessonSlug),
-    )
-    if (concepts.length === 0) {
+    if (allNewSelected.length === 0) {
       onClose()
       return
     }
+    const concepts = allNewSelected
+      .map((slug) => findConceptBySlug(slug))
+      .filter((c): c is AssessmentConcept => c !== null)
+
     setSaving(true)
     try {
       await onClaim(concepts)
@@ -87,11 +119,9 @@ export default function LearningFocusTopicsSheet({
     } finally {
       setSaving(false)
     }
-  }, [claimedSlugs, lessons, onClaim, onClose, selected])
+  }, [allNewSelected, onClaim, onClose])
 
   if (!open) return null
-
-  const levelLabel = level.toUpperCase()
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center">
@@ -108,72 +138,87 @@ export default function LearningFocusTopicsSheet({
         aria-modal="true"
         aria-labelledby="focus-topics-title"
         tabIndex={-1}
-        className="relative z-10 flex max-h-[min(85dvh,640px)] w-full flex-col rounded-t-2xl bg-card-bg sm:mx-4 sm:max-w-md sm:rounded-2xl sm:shadow-xl"
+        className="relative z-10 flex max-h-[min(92dvh,780px)] w-full flex-col rounded-t-3xl border border-border-subtle bg-card-bg shadow-2xl sm:mx-4 sm:max-w-xl sm:rounded-3xl md:max-w-2xl"
       >
-        <div className="flex flex-col gap-1.5 border-b border-border-subtle px-layout-card-pad pt-layout-card-pad pb-4">
-          <h2 id="focus-topics-title" className="text-body-lg font-semibold tracking-tight text-fg">
-            Temas que ya sé
-          </h2>
-          <p className="text-caption leading-relaxed text-fg-muted">
-            Marca lo que ya dominas en {levelLabel}. Los temas ya guardados no se pueden quitar
-            por ahora.
-          </p>
-        </div>
+        <LearningFocusSheetHeader
+          activeLevel={activeLevel}
+          onSelectLevel={setActiveLevel}
+          claimedCount={claimedInLevel.length}
+          totalCount={topics.length}
+          newSelectedCount={newSelectedInLevel.length}
+          claimedPercent={claimedPercent}
+          newPercent={newPercent}
+          onClose={onClose}
+        />
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-layout-card-pad py-3">
-          {lessons.length === 0 ? (
-            <p className="text-body-sm text-fg-muted">No hay temas de teoría para este nivel.</p>
+        <div className="main-scrollbar min-h-0 flex-1 overflow-y-auto px-6 py-5 sm:px-7">
+          {groupedTopics.length === 0 ? (
+            <p className="py-4 text-center text-body text-fg-muted">
+              No hay temas disponibles para este nivel.
+            </p>
           ) : (
-            <ul className="flex flex-col gap-1">
-              {lessons.map((lesson) => {
-                const alreadyClaimed = claimedSlugs.has(lesson.lessonSlug)
-                const checked = alreadyClaimed || selected.has(lesson.lessonSlug)
-                return (
-                  <li key={lesson.lessonSlug}>
-                    <label
-                      className={cn(
-                        'focus-within:ring-primary flex items-start gap-3 rounded-md px-2 py-2 transition-colors',
-                        alreadyClaimed
-                          ? 'cursor-default opacity-80'
-                          : 'cursor-pointer hover:bg-surface-sunken',
-                      )}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        disabled={alreadyClaimed}
-                        onChange={() => toggleLesson(lesson.lessonSlug)}
-                        className="mt-0.5 size-4 shrink-0 accent-primary disabled:cursor-not-allowed"
+            <div className="flex flex-col gap-6">
+              {groupedTopics.map((group) => (
+                <div key={group.label} className="flex flex-col gap-2.5">
+                  <h3 className="font-mono text-caption font-bold tracking-wider text-fg-muted/70 uppercase">
+                    {group.label}
+                  </h3>
+                  <div className="flex flex-col gap-1.5">
+                    {group.items.map((lesson) => (
+                      <LearningFocusTopicItem
+                        key={lesson.lessonSlug}
+                        slug={lesson.lessonSlug}
+                        title={lesson.title}
+                        keywords={lesson.keywords}
+                        alreadyClaimed={claimedSlugs.has(lesson.lessonSlug)}
+                        isSelected={selected.has(lesson.lessonSlug)}
+                        onToggle={toggleLesson}
                       />
-                      <span className="min-w-0 flex-1">
-                        <span className="text-body-sm text-fg">{lesson.title}</span>
-                        {alreadyClaimed ? (
-                          <span className="mt-0.5 block text-tiny text-fg-muted">Ya guardado</span>
-                        ) : null}
-                      </span>
-                    </label>
-                  </li>
-                )
-              })}
-            </ul>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-border-subtle px-layout-card-pad pt-4 pb-[calc(var(--layout-card-pad)+env(safe-area-inset-bottom,0px))] sm:pb-layout-card-pad">
-          <button
-            type="button"
-            onClick={() => void handleSave()}
-            disabled={saving}
-            className="focus-ring w-full rounded-md bg-cta-bg py-3 text-body-sm font-semibold text-cta-fg transition-opacity hover:opacity-85 disabled:opacity-60"
-          >
-            {saving ? 'Guardando…' : 'Guardar'}
-          </button>
+        <div className="px-6 pb-3 sm:px-7">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3 sm:py-3.5">
+            <div className="flex min-w-0 items-center gap-3">
+              <Lightbulb size={18} className="shrink-0 text-amber-400" />
+              <span className="text-body-sm text-fg-muted">
+                Ponte a prueba con el test de inglés para calibrar tu nivel.
+              </span>
+            </div>
+            <Link
+              href="/assessment"
+              onClick={onClose}
+              className="shrink-0 text-body-sm font-semibold text-primary underline-offset-4 hover:underline"
+            >
+              Hacer test
+            </Link>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 border-t border-border-subtle px-6 pt-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:px-7 sm:pb-6">
           <button
             type="button"
             onClick={onClose}
-            className="focus-ring w-full rounded-md py-3 text-body-sm font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg"
+            className="flex-1 rounded-full border border-border-subtle bg-surface-raised py-3.5 px-5 text-body font-semibold text-fg transition-colors hover:bg-surface-sunken"
           >
             Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSave()}
+            disabled={saving || allNewSelected.length === 0}
+            className="flex-1 rounded-full bg-(--accent-pink) py-3.5 px-5 text-body font-semibold text-white shadow-md transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            {saving
+              ? 'Guardando…'
+              : allNewSelected.length > 0
+                ? `Guardar ${allNewSelected.length} ${allNewSelected.length === 1 ? 'tema' : 'temas'}`
+                : 'Guardar'}
           </button>
         </div>
       </div>
