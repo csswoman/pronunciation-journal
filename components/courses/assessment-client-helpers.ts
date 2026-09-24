@@ -1,4 +1,4 @@
-import type { AssessmentResult } from "@/lib/courses/assessment";
+import type { AssessmentResult, ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
 import {
   deriveConceptSignal,
@@ -21,6 +21,26 @@ export function reportedLevelIsAbove(
 ): boolean {
   if (!isConcreteCefrLevel(reported)) return false;
   return ASSESSMENT_LEVEL_ORDER.indexOf(reported) > ASSESSMENT_LEVEL_ORDER.indexOf(sectionLevel);
+}
+
+export function buildAssessmentCoverageLevels(params: {
+  questions: ClientAssessmentQuestion[];
+  concepts: AssessmentConcept[];
+  answers: Record<string, number>;
+  selfRatings: Record<string, ConceptSelfRating>;
+}) {
+  const { questions, concepts, answers, selfRatings } = params;
+  return ASSESSMENT_LEVEL_ORDER.map((level) => {
+    const levelQuestions = questions.filter((question) => question.level === level);
+    const levelConcepts = concepts.filter((concept) => concept.level === level);
+    return {
+      level,
+      answeredQuestionCount: levelQuestions.filter((question) => answers[question.id] !== undefined).length,
+      questionCount: levelQuestions.length,
+      ratedTopicCount: levelConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length,
+      topicCount: levelConcepts.length,
+    };
+  });
 }
 
 export function buildStarterPlanResult(
@@ -108,12 +128,15 @@ export function assessmentFooterCopy(params: {
     mode,
   } = params;
 
+  const remaining = sectionConceptsLength - ratedConcepts;
   const footerStatus = showingLevelPrompt
     ? selfReportedLevel
-      ? "Referencia seleccionada."
-      : "Elige una opción para continuar."
-    : showingInventory && ratedConcepts !== sectionConceptsLength
-      ? `Faltan ${sectionConceptsLength - ratedConcepts} temas.`
+      ? "Nivel de partida listo."
+      : "Elige un nivel aproximado para empezar."
+    : showingInventory && remaining > 0
+      ? remaining === 1
+        ? "Valora 1 tema restante para continuar."
+        : `Valora ${remaining} temas restantes para continuar.`
       : undefined;
 
   const isLastQuestion = questionIndex >= visibleQuestionsLength - 1;

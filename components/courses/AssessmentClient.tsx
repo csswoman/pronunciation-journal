@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
 import type { AssessmentResult, ClientAssessmentQuestion } from "@/lib/courses/assessment";
-import { ASSESSMENT_LEVEL_ORDER, groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
+import { groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
 import {
@@ -14,9 +14,10 @@ import {
 import { AssessmentClientShell } from "./AssessmentClientShell";
 import type { AssessmentTopicPreview } from "./AssessmentCheckpointResultView";
 import { useAssessmentFlow } from "./useAssessmentFlow";
-import { assessmentFooterCopy, reportedLevelIsAbove } from "./assessment-client-helpers";
+import {
+  assessmentFooterCopy, buildAssessmentCoverageLevels, reportedLevelIsAbove,
+} from "./assessment-client-helpers";
 import { useAssessmentScoring } from "./useAssessmentScoring";
-
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
   questions: ClientAssessmentQuestion[];
@@ -55,6 +56,7 @@ export default function AssessmentClient({
   const showingInventory = mode === "placement" && flow.placementStep === "inventory";
   const showingLevelPrompt = mode === "placement" && flow.placementStep === "level";
   const visibleQuestions = mode === "placement" ? section?.questions ?? [] : questions;
+  const coverageLevels = buildAssessmentCoverageLevels({ questions, concepts, answers, selfRatings });
   const answered = visibleQuestions.filter((question) => answers[question.id] !== undefined).length;
   const currentQuestion = visibleQuestions[flow.questionIndex];
   const currentQuestionAnswered = Boolean(currentQuestion)
@@ -220,6 +222,7 @@ export default function AssessmentClient({
         questionIndex: flow.questionIndex,
         answers,
         setAnswers,
+        audioReadyQuestionId,
         onAudioReadyChange: handleAudioReadyChange,
       }}
       footer={{
@@ -238,7 +241,7 @@ export default function AssessmentClient({
         onPrimary: handlePrimary,
       }}
       coverage={{
-        placementLevels: [...ASSESSMENT_LEVEL_ORDER],
+        levels: coverageLevels,
         placementStartIndex: flow.placementStartIndex,
         sectionIndex: flow.sectionIndex,
       }}

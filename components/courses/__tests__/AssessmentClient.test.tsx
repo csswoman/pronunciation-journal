@@ -132,7 +132,7 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "Comprobar con preguntas" }));
 
     expect(screen.getByRole("heading", { name: "Empezamos por aquí" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Para empezar" })).toBeInTheDocument();
+    expect(screen.getByText("Para empezar")).toBeInTheDocument();
     expect(screen.getByText("Present simple")).toBeInTheDocument();
     expect(screen.queryByText("Choose one")).not.toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -179,9 +179,9 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Comprobar nivel" }));
 
-    expect(await screen.findByRole("heading", { name: "Checkpoint A1 completado" })).toBeInTheDocument();
-    expect(screen.getByText(/Acertaste 1 de 1; 0 incorrectas/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Continuar con A2" }));
+    expect(await screen.findByRole("heading", { name: "Ya estás en A2" })).toBeInTheDocument();
+    expect(screen.getByText(/1 de 1 correctas/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Empezar A2" }));
 
     await screen.findByText("Past simple");
     expect(screen.getByText("Past simple")).toBeInTheDocument();
@@ -219,8 +219,9 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
-    expect(await screen.findByRole("heading", { name: "Avanzas a A2" })).toBeInTheDocument();
-    expect(screen.getByText("topic one")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Ya estás en A2" })).toBeInTheDocument();
+    expect(screen.getByText("Nivel superado")).toBeInTheDocument();
+    expect(screen.getByText("1 de 1 correctas")).toBeInTheDocument();
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/assessment/results",
@@ -241,7 +242,7 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByText("Wrong"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
-    expect(await screen.findByRole("heading", { name: "Tu nivel actual es A1" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Falta afinar la comprensión auditiva" })).toBeInTheDocument();
     expect(document.querySelector(".assessment-result-icon--error")).toBeInTheDocument();
     expect(document.querySelector(".assessment-result-icon--success")).not.toBeInTheDocument();
   });
@@ -273,7 +274,7 @@ describe("AssessmentClient", () => {
     fireEvent.click(screen.getByText("Right"));
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }));
 
-    expect(await screen.findByRole("heading", { name: "Avanzas a A2" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Ya estás en A2" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Inicia sesión" }))
       .toHaveAttribute("href", "/login");
     expect(window.localStorage.getItem("assessment:guest:checkpoint:A1"))

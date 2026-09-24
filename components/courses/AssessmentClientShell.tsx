@@ -10,6 +10,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
+import type { AssessmentCoverageLevel } from "./AssessmentChrome";
 import {
   AssessmentCoverage,
   AssessmentFooter,
@@ -40,6 +41,7 @@ interface AssessmentClientShellProps {
     questionIndex: number;
     answers: Record<string, number>;
     setAnswers: Dispatch<SetStateAction<Record<string, number>>>;
+    audioReadyQuestionId: string | null;
     onAudioReadyChange: (questionId: string, ready: boolean) => void;
   };
   footer: {
@@ -52,7 +54,7 @@ interface AssessmentClientShellProps {
     onPrimary: () => void;
   };
   coverage: {
-    placementLevels: CefrLevelId[];
+    levels: AssessmentCoverageLevel[];
     placementStartIndex: number;
     sectionIndex: number;
   };
@@ -105,9 +107,11 @@ export function AssessmentClientShell({
               <AssessmentQuestionView
                 question={prompt.currentQuestion}
                 index={prompt.questionIndex}
+                total={chrome.progressTotal}
                 answer={
                   prompt.currentQuestion ? prompt.answers[prompt.currentQuestion.id] : undefined
                 }
+                audioReadyQuestionId={prompt.audioReadyQuestionId}
                 onAnswer={(optionIndex) =>
                   prompt.currentQuestion &&
                   prompt.setAnswers((current) => ({
@@ -133,9 +137,10 @@ export function AssessmentClientShell({
           </div>
           {mode === "placement" && !showingLevelPrompt && (
             <AssessmentCoverage
-              levels={coverage.placementLevels}
+              levels={coverage.levels}
               placementStartIndex={coverage.placementStartIndex}
               sectionIndex={coverage.sectionIndex}
+              showingInventory={showingInventory}
             />
           )}
         </div>
