@@ -35,6 +35,12 @@ beforeEach(() => {
   });
 });
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => "/",
+}));
+
 vi.mock("next/dynamic", () => ({
   default: (
     loader: () => Promise<{ default: ComponentType<Record<string, unknown>> }>,
@@ -134,6 +140,7 @@ vi.mock("@/components/home/GuestSaveProgressBanner", () => ({
     </div>
   ),
 }));
+vi.mock("@/components/home/HomeWelcomeTourModal", () => ({ default: () => null }));
 
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 

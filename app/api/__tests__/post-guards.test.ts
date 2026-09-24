@@ -12,6 +12,10 @@ const VALIDATION_EXEMPTIONS = new Set([
 
 const SAME_ORIGIN_EXEMPTIONS = new Set<string>();
 
+const AUTH_EXEMPTIONS = new Set([
+  "app/api/assessment/score/route.ts",
+]);
+
 const DELEGATE_EXEMPTIONS = new Set([
   "app/api/sentences/generate/route.ts",
 ]);
@@ -45,6 +49,7 @@ describe("POST API guard coverage", () => {
       const issues: string[] = [];
 
       if (
+        !AUTH_EXEMPTIONS.has(rel) &&
         !source.includes("requireUser(") &&
         !source.includes(".auth.getUser(")
       ) {

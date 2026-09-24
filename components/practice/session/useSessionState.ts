@@ -47,6 +47,7 @@ export function useSessionState(config: PracticeConfig) {
   const { startTimeRef, feedbackTimerRef, clearFeedbackTimer } = useSessionTimers(phase, currentIndex)
   const completedRef = useRef(false)
   const submittingRef = useRef(false)
+  const sessionIdRef = useRef(crypto.randomUUID())
 
   const finish = useCallback((final: ExerciseResult[]) => {
     void final
@@ -81,7 +82,11 @@ export function useSessionState(config: PracticeConfig) {
       setProgressSaveStatus((prev) => (prev === 'error' ? prev : 'saving'))
       void (async () => {
         try {
-          await recordActivitySession(user.id, { practiceContext: context, sessionResult })
+          await recordActivitySession(user.id, {
+            practiceContext: context,
+            sessionResult,
+            activitySessionId: sessionIdRef.current,
+          })
           await drainOutbox(user.id)
         } catch (err) {
           console.error('[PracticeSession] recordActivitySession failed', err)
@@ -108,14 +113,17 @@ export function useSessionState(config: PracticeConfig) {
       const totalInteractionMs = Date.now() - startTimeRef.current
       const responseTimeMs = extras?.responseTimeMs ?? totalInteractionMs
 
+      const attemptId = extras?.attemptId ?? `${sessionIdRef.current}:${currentIndex}:${current.id}`
       const result = buildExerciseResult({
         current,
         isCorrect,
         userAnswer,
         timeMs: responseTimeMs,
         context,
+        attemptId,
         extras: {
           ...extras,
+          attemptId,
           responseTimeMs,
           totalInteractionMs,
         },

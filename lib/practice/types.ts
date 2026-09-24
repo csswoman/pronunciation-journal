@@ -343,6 +343,7 @@ export type PedagogicalFeedback = {
 }
 
 export type PracticeSubmitExtras = {
+  attemptId?: string
   score?: number
   feedback?: PedagogicalFeedback
   status?: PracticeResultStatus

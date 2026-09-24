@@ -213,6 +213,7 @@ export async function savePracticeAnswer(
 }
 
 export interface LessonQuizAnswerInput {
+  attemptId?: string
   questionId: string
   courseSlug: string
   lessonSlug: string
@@ -224,14 +225,20 @@ export interface LessonQuizAnswerInput {
   topic?: string
 }
 
+export interface RecordLessonQuizOptions {
+  attemptId?: string
+}
+
 export async function recordLessonQuizAttempt(
   userId: string,
   answers: LessonQuizAnswerInput[],
+  options?: RecordLessonQuizOptions,
 ): Promise<{ passed: boolean; correct: number; total: number }> {
   const completedAt = new Date()
   const isQuarantined = answers[0]?.lessonSlug ? QUARANTINED_LESSON_SLUGS.has(answers[0].lessonSlug) : false
 
   const results: ExerciseResult[] = answers.map((answer) => ({
+    attemptId: answer.attemptId ?? (options?.attemptId ? `${options.attemptId}:${answer.questionId}` : undefined),
     exerciseId: answer.questionId,
     slug: 'multiple_choice',
     exerciseTypeId: 17,
@@ -256,9 +263,27 @@ export async function recordLessonQuizAttempt(
   }
 
   const sessionResult = buildSessionResult(results)
+  const activitySessionId = options?.attemptId ?? answers[0]?.attemptId
+
+  if (activitySessionId) {
+    const hasRecordedSession = await db.syncOutbox
+      .where('userId').equals(userId)
+      .and((entry) => entry.table === 'activity_sessions' && entry.payload.id === activitySessionId)
+      .first()
+    if (hasRecordedSession) {
+      const correct = sessionResult.results.filter((r) => r.isCorrect).length
+      return {
+        passed: isLessonQuizPassed(correct, sessionResult.results.length),
+        correct,
+        total: sessionResult.results.length,
+      }
+    }
+  }
+
   await recordActivitySession(userId, {
     practiceContext: 'courses',
     sessionResult,
+    activitySessionId,
     metadata: {
       lessonSlug: answers[0]?.lessonSlug,
       dailyTargetId: answers[0] ? `${answers[0].courseSlug}:${answers[0].lessonSlug}` : undefined,

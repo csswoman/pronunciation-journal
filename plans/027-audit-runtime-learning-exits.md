@@ -56,10 +56,10 @@ El inventario `lib/learning-loop/__tests__/runtime-exit-inventory.test.ts` regis
 | Juegos | runtime | `roundtrip.integration.test.ts` (sin cambios). |
 | Reader | runtime | `roundtrip.integration.test.ts` (sin cambios). |
 
-### Hallazgos (fuera de alcance, sin corregir)
+### Hallazgos (corregidos)
 
-- **Cursos no es replay-safe**: `LessonQuizAnswerInput` no lleva `attemptId`, así que `savePracticeAnswer` genera un id por llamada (`lib/practice/queries.ts:122`). Reenviar el mismo quiz duplica las respuestas. El caso `does not accept a retried submission as replay-safe` fija el comportamiento actual; si se corrige, ese test debe invertirse.
-- **PracticeSession genera el id por submit**: `buildExerciseResult` no fija `attemptId`. Solo `submittingRef` impide el doble envío dentro de la misma sesión montada.
+- **Cursos replay-safe**: `LessonQuizAnswerInput` y `recordLessonQuizAttempt` ahora aceptan y propagan `attemptId` (`lib/practice/queries.ts`). El reenvío del mismo quiz con `attemptId` no duplica respuestas ni sesiones en el outbox (`producer-roundtrip.integration.test.ts: accepts a retried submission as replay-safe with stable attemptId`).
+- **PracticeSession idempotente**: `buildExerciseResult` y `useSessionState` asignan un `attemptId` determinista por ejercicio (`${sessionId}:${index}:${exerciseId}`) y `activitySessionId: sessionId`, garantizando idempotencia en `answer_history` y `activity_sessions` en el outbox más allá de `submittingRef`.
 
 ### Gates
 

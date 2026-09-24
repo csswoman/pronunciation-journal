@@ -69,6 +69,7 @@ export default function MiniLessonQuiz({ questions, slug, shuffleOptions = false
   const [selected, setSelected] = useState<Record<number, number>>({});
   const [answerTimesMs, setAnswerTimesMs] = useState<Record<number, number>>({});
   const completionRecorded = useRef(false);
+  const quizAttemptIdRef = useRef(crypto.randomUUID());
   const startedAt = useRef(Date.now());
   const { playTap, playCorrect, playWrong } = useUISounds();
 
@@ -116,6 +117,7 @@ export default function MiniLessonQuiz({ questions, slug, shuffleOptions = false
             const selectedIndex = selected[index];
             const selectedAnswer = selectedIndex == null ? "" : q.options[selectedIndex] ?? "";
             return {
+              attemptId: `${quizAttemptIdRef.current}:${index + 1}`,
               questionId: `${slug}:quiz:${index + 1}`,
               courseSlug: COURSE_SLUG,
               lessonSlug: slug,
@@ -127,6 +129,7 @@ export default function MiniLessonQuiz({ questions, slug, shuffleOptions = false
               topic: theoryTopicForMiniLesson(slug),
             };
           }),
+          { attemptId: quizAttemptIdRef.current },
         );
       } catch (error) {
         console.error("[MiniLessonQuiz] recordLessonQuizAttempt failed", error);

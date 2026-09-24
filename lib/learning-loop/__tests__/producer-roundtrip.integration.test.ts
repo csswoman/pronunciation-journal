@@ -46,7 +46,8 @@ beforeEach(async () => {
 afterEach(() => db.close())
 
 describe('course quiz producer', () => {
-  const quiz = (questionId: string, isCorrect: boolean): LessonQuizAnswerInput => ({
+  const quiz = (questionId: string, isCorrect: boolean, attemptId?: string): LessonQuizAnswerInput => ({
+    attemptId,
     questionId, courseSlug: 'a1', lessonSlug: 'a1-presente-simple', question: 'She ___ here.',
     selectedAnswer: isCorrect ? 'works' : 'work', correctAnswer: 'works', isCorrect, timeMs: 800, topic: 'present simple',
   })
@@ -67,11 +68,12 @@ describe('course quiz producer', () => {
     expect([...loadResolvedIds(USER)]).toEqual(['study_deck:a1:a1-presente-simple'])
   })
 
-  it('does not accept a retried submission as replay-safe (answer ids are generated per call)', async () => {
-    await recordLessonQuizAttempt(USER, [quiz('q1', true)])
-    await recordLessonQuizAttempt(USER, [quiz('q1', true)])
-    // Known gap: LessonQuizAnswerInput carries no attemptId, so a retry is new evidence.
-    expect(await outbox('answer_history')).toHaveLength(2)
+  it('accepts a retried submission as replay-safe with stable attemptId', async () => {
+    const attempt = [quiz('q1', true, 'quiz-attempt-1:q1')]
+    await recordLessonQuizAttempt(USER, attempt, { attemptId: 'quiz-attempt-1' })
+    await recordLessonQuizAttempt(USER, attempt, { attemptId: 'quiz-attempt-1' })
+    expect(await outbox('answer_history')).toHaveLength(1)
+    expect(await outbox('activity_sessions')).toHaveLength(1)
   })
 
   it('opening a lesson without answering writes no evidence and resolves nothing', async () => {
