@@ -42,6 +42,7 @@ export function useAssessmentScoring({
   async function requestServerResult(
     endpoint: AssessmentEndpoint,
     attemptedQuestions: ClientAssessmentQuestion[],
+    assessmentAttemptId?: string,
   ): Promise<AssessmentResult> {
     const evaluatedLevels = ASSESSMENT_LEVEL_ORDER.filter((level) =>
       attemptedQuestions.some((question) => question.level === level),
@@ -50,6 +51,7 @@ export function useAssessmentScoring({
       mode,
       ...(evaluatedLevels.length > 0 ? { evaluatedLevels } : {}),
       ...(checkpointLevel ? { checkpointLevel } : {}),
+      ...(assessmentAttemptId ? { assessmentAttemptId } : {}),
       answers,
       selfRatings,
     };

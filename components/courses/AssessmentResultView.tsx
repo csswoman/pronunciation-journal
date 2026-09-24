@@ -104,6 +104,7 @@ export function AssessmentResultView({
           result={result}
           level={level}
           nextLevel={nextLevel}
+          userId={userId}
           nextLevelTopics={nextLevelTopics}
         />
       ) : (

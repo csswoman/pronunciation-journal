@@ -23,6 +23,7 @@ interface AssessmentCheckpointResultViewProps {
   result: AssessmentResult;
   level: CefrLevelId;
   nextLevel: CefrLevelId | null;
+  userId?: string;
   nextLevelTopics?: AssessmentTopicPreview[];
   canContinueAfterFailure?: boolean;
   onContinue?: () => void;
@@ -36,11 +37,13 @@ export function AssessmentCheckpointResultView({
   result,
   level,
   nextLevel,
+  userId,
   nextLevelTopics = [],
   canContinueAfterFailure = false,
   onContinue,
 }: AssessmentCheckpointResultViewProps) {
   const passed = result.passed;
+  const oralPending = result.oralEvidence?.status === "pending";
   const levelScore = result.levelScores?.find((score) => score.level === level);
   const correctPercent = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
   const answersToThreshold = levelScore ? Math.max(0, levelScore.minimumCorrect - result.score) : 0;
@@ -55,16 +58,22 @@ export function AssessmentCheckpointResultView({
   const firstReviewHref = result.needsReview.find((topic) => topic.lessonSlug === firstReviewSlug)?.lessonHref
     ?? `/courses?level=${level}`;
   const retryHref = `/assessment?mode=checkpoint&level=${level}`;
-  const practiceHref = passed
-    ? `/courses?level=${(nextLevel ?? result.assignedLevel.toLowerCase()).toLowerCase()}`
-    : firstReviewHref;
-  const continueLabel = passed
-    ? nextLevel ? `Empezar ${nextLevel.toUpperCase()}` : "Ir a practicar"
+  const practiceHref = oralPending
+    ? userId ? retryHref : "/login?intent=save"
+    : passed
+      ? `/courses?level=${(nextLevel ?? result.assignedLevel.toLowerCase()).toLowerCase()}`
+      : firstReviewHref;
+  const continueLabel = oralPending
+    ? userId ? "Completar la parte oral" : "Iniciar sesión y repetir"
+    : passed
+      ? nextLevel ? `Empezar ${nextLevel.toUpperCase()}` : "Ir a practicar"
     : canContinueAfterFailure && nextLevel
       ? `Continuar con ${nextLevel.toUpperCase()}`
       : "Empezar repaso";
-  const outcomeTitle = passed
-    ? nextLevel ? `Ya estás en ${nextLevel.toUpperCase()}` : `Checkpoint ${level.toUpperCase()} aprobado`
+  const outcomeTitle = oralPending
+    ? "Falta verificar la tarea oral"
+    : passed
+      ? nextLevel ? `Ya estás en ${nextLevel.toUpperCase()}` : `Checkpoint ${level.toUpperCase()} aprobado`
     : answersToThreshold > 0
       ? `Te faltaron ${answersToThreshold} ${answersToThreshold === 1 ? "respuesta" : "respuestas"}`
       : "Falta afinar la comprensión auditiva";
@@ -77,11 +86,18 @@ export function AssessmentCheckpointResultView({
             {passed
               ? <CheckCircle2 className="assessment-result-icon assessment-result-icon--success" size={20} aria-hidden />
               : <AlertCircle className="assessment-result-icon assessment-result-icon--error" size={20} aria-hidden />}
-            <Badge label={passed ? "Nivel superado" : "Para repasar"} variant={passed ? "success" : "warning"} />
+            <Badge
+              label={oralPending ? "Parte oral pendiente" : passed ? "Nivel superado" : "Para repasar"}
+              variant={passed ? "success" : "warning"}
+            />
           </div>
           <h1>{outcomeTitle}</h1>
           <p>
-            {passed
+            {oralPending
+              ? userId
+                ? "Tus respuestas escritas y de escucha alcanzaron el mínimo. El nivel no cambia hasta comprobar la tarea oral; puedes reanudar este intento desde tu cuenta durante 24 horas."
+                : "Esta sesión sin cuenta no guarda tus respuestas en la nube. Inicia sesión y repite el checkpoint para guardar el intento y completar la parte oral."
+              : passed
               ? `Aprobaste el examen de nivel ${level.toUpperCase()}. ${nextLevel ? `Ahora puedes continuar con los temas de ${nextLevel.toUpperCase()}.` : "Puedes seguir practicando este nivel."}`
               : "Ya tienes una base. Repasa las respuestas que fallaste y vuelve a intentarlo cuando estos temas estén más frescos."}
           </p>

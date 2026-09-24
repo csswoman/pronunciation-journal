@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
-import type { AssessmentResult, ClientAssessmentQuestion } from "@/lib/courses/assessment";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import { groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -18,6 +18,10 @@ import {
   assessmentFooterCopy, buildAssessmentCoverageLevels, reportedLevelIsAbove,
 } from "./assessment-client-helpers";
 import { useAssessmentScoring } from "./useAssessmentScoring";
+import { AssessmentOralCheckpoint } from "./AssessmentOralCheckpoint";
+import { type AssessmentOralPilotLevel } from "@/lib/courses/assessment-oral-shared";
+import { useAssessmentOralFlow } from "./useAssessmentOralFlow";
+import { useAssessmentCompletion, type AssessmentSectionFeedbackState } from "./useAssessmentCompletion";
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
   questions: ClientAssessmentQuestion[];
@@ -40,13 +44,9 @@ export default function AssessmentClient({
   useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
-  const [sectionFeedback, setSectionFeedback] = useState<{
-    result: AssessmentResult;
-    level: CefrLevelId;
-    nextLevel: CefrLevelId;
-    canContinueAfterFailure: boolean;
-  } | null>(null);
+  const [sectionFeedback, setSectionFeedback] = useState<AssessmentSectionFeedbackState | null>(null);
   const [audioReadyQuestionId, setAudioReadyQuestionId] = useState<string | null>(null);
+  const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
   const sections = groupQuestionsByLevel(questions);
   const flow = useAssessmentFlow({ mode, sections, initialLevel });
   const section = sections[flow.sectionIndex];
@@ -65,7 +65,6 @@ export default function AssessmentClient({
   const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
   const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
   const progressTotal = showingInventory ? sectionConcepts.length : showingLevelPrompt ? 1 : visibleQuestions.length;
-  const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
   const scoring = useAssessmentScoring({
     mode,
     concepts,
@@ -75,50 +74,23 @@ export default function AssessmentClient({
     answers,
     selfRatings,
   });
+  const oralFlow = useAssessmentOralFlow({ mode, userId, checkpointLevel, answers, questions, scoring });
+  const { finishSection } = useAssessmentCompletion({
+    mode,
+    userId,
+    questions,
+    sections,
+    sectionIndex: flow.sectionIndex,
+    placementStartIndex: flow.placementStartIndex,
+    selfReportedLevel: flow.selfReportedLevel,
+    oralFlow,
+    scoring,
+    setSectionFeedback,
+  });
 
   const handleAudioReadyChange = useCallback((questionId: string, ready: boolean) => {
     setAudioReadyQuestionId(ready ? questionId : null);
   }, []);
-
-  async function finishSection() {
-    if (!section) return;
-    if (mode === "checkpoint") {
-      await scoring.completeAssessment(questions);
-      return;
-    }
-
-    const attemptedQuestions = sections
-      .slice(flow.placementStartIndex, flow.sectionIndex + 1)
-      .flatMap((item) => item.questions);
-    const isLast = flow.sectionIndex === sections.length - 1;
-    scoring.setSaving(true);
-    scoring.setEvaluationError(false);
-    try {
-      const sectionResult = await scoring.requestServerResult("/api/assessment/score", section.questions);
-      const sectionPassed = sectionResult.passedLevels.includes(section.level);
-      if (!isLast && (sectionPassed || flow.selfReportedLevel === "full")) {
-        setSectionFeedback({
-          result: sectionResult,
-          level: section.level,
-          nextLevel: sections[flow.sectionIndex + 1].level,
-          canContinueAfterFailure: !sectionPassed,
-        });
-        return;
-      }
-
-      const sameQuestions = attemptedQuestions.length === section.questions.length;
-      const finalResult = userId
-        ? await scoring.requestServerResult("/api/assessment/results", attemptedQuestions)
-        : sameQuestions
-          ? sectionResult
-          : await scoring.requestServerResult("/api/assessment/score", attemptedQuestions);
-      scoring.displayVerifiedResult(finalResult, attemptedQuestions);
-    } catch {
-      scoring.setEvaluationError(true);
-    } finally {
-      scoring.setSaving(false);
-    }
-  }
 
   function handleBack() {
     if (flow.questionIndex > 0) flow.goToPreviousQuestion();
@@ -162,6 +134,19 @@ export default function AssessmentClient({
     visibleQuestionsLength: visibleQuestions.length,
     mode,
   });
+
+  const oralContent = oralFlow.attemptId && checkpointLevel && oralFlow.needsOralEvidence
+    ? (
+      <AssessmentOralCheckpoint
+        key={oralFlow.attemptId}
+        level={checkpointLevel as AssessmentOralPilotLevel}
+        attemptId={oralFlow.attemptId}
+        initialChallenge={oralFlow.initialChallenge}
+        onComplete={oralFlow.completeAttempt}
+        onDefer={oralFlow.deferAttempt}
+      />
+    )
+    : undefined;
 
   if (scoring.result) {
     return (
@@ -225,17 +210,19 @@ export default function AssessmentClient({
         audioReadyQuestionId,
         onAudioReadyChange: handleAudioReadyChange,
       }}
+      oralContent={oralContent}
       footer={{
-        status: scoring.evaluationError
-          ? "No se pudo comprobar el resultado. Tus respuestas siguen aquí; puedes reintentar."
-          : footer.footerStatus,
-        statusRole: scoring.evaluationError ? "alert" : "status",
+        status: oralFlow.startError
+          ?? (scoring.evaluationError
+            ? "No se pudo comprobar el resultado. Tus respuestas siguen aquí; puedes reintentar."
+            : footer.footerStatus),
+        statusRole: oralFlow.startError || scoring.evaluationError ? "alert" : "status",
         primaryLabel: scoring.evaluationError ? "Reintentar corrección" : scoring.saving ? "Comprobando…" : footer.primaryLabel,
         primaryDisabled: scoring.saving || (showingLevelPrompt
           ? flow.selfReportedLevel === null
           : showingInventory
             ? ratedConcepts !== sectionConcepts.length
-            : !currentQuestionAnswered),
+            : !currentQuestionAnswered || !oralFlow.pendingLookupDone),
         secondaryDisabled: scoring.saving,
         onBack: handleBack,
         onPrimary: handlePrimary,
