@@ -6,6 +6,7 @@
 
 ## Estado
 
+- **Ejecución**: DONE (2026-09-23). Las diez superficies tienen un caso que ejecuta los escritores reales contra el outbox.
 - Prioridad: P2. Esfuerzo: M. Riesgo: LOW. Categoría: tests/DX.
 - Depende de: 022, 023, 024, 025 y 026. Planificado en `eb4cb5d3` (2026-09-22).
 
@@ -38,21 +39,28 @@ Si el operador pide rama, usa `codex/027-audit-runtime-learning-exits` desde `de
 
 Detente si una superficie no expone un punto público testeable: documenta el hue y limita el test a un componente con interacción real, sin declarar cobertura runtime desde un mock de escritores. Las futuras superficies entran tanto al inventario como a la prueba de roundtrip pertinente.
 
-## Avance de ejecución (2026-09-22)
+## Resultado (2026-09-23)
 
-El inventario comprobable está en `lib/learning-loop/__tests__/runtime-exit-inventory.test.ts`. Cada fila registra propietario, identidad, actividad, reconciliación, señal prohibida y caso existente. La prueba falla si falta cualquiera de las diez superficies o se elimina su caso. El nivel de cada caso es explícito:
+El inventario `lib/learning-loop/__tests__/runtime-exit-inventory.test.ts` registra propietario, identidad, actividad, reconciliación, señal prohibida y caso de cada superficie. Falla si falta una superficie, si se elimina su caso o si una fila deja de ser de nivel `runtime`. Ninguna prueba del inventario simula `savePracticeAnswer` ni `recordActivitySession`; solo se reemplazan auth, TTS/voz, sonidos de UI y el `flushOutbox` de red.
 
-| Superficie | Cobertura actual | Límite pendiente |
+| Superficie | Nivel | Caso |
 |---|---|---|
-| PracticeSession | Interacción de componente | Falta comprobar el outbox real desde el hook. |
-| Essential Words | Runtime con escritores simulados | Falta enlazar el motor con `savePracticeAnswer` y `recordActivitySession` reales. |
-| Chunks | Contrato de atribución | Falta roundtrip desde la acción de práctica. |
-| Cursos | Roundtrip local con escritores reales | La prueba llama a los escritores; falta invocar el productor de quiz. |
-| Misiones | Persistencia con escritores simulados | Falta roundtrip local desde el productor. |
-| Focus | Contrato de evidencia | Falta interacción de componente con outbox real. |
-| `-ed` | Persistencia de intentos | Falta interacción de componente con outbox real. |
-| Inmersión | Productor real → respuesta y actividad en outbox | Falta incluir la reconciliación del paso exacto en el mismo caso. |
-| Juegos | Productor real → solo actividad en outbox | Cubierto para Word Rain y Word Search. |
-| Reader | Productor real → respuesta y actividad en outbox | El flush remoto se reemplaza; los escritores son reales. |
+| PracticeSession | hook-runtime | `useSessionState.roundtrip.test.tsx`: submit público → respuestas, outbox y reconciliación. |
+| Essential Words | runtime | `runtime-writers.integration.test.ts`: la misma cadena de `submitGrade`/`finishSession` con escritores reales. |
+| Chunks | hook-runtime | `useSessionState.roundtrip.test.tsx`: ejercicios reales de chunk → `content_srs` canónico y solo su paso. |
+| Cursos | runtime | `producer-roundtrip.integration.test.ts`: `recordLessonQuizAttempt` → respuestas y el study deck exacto. |
+| Misiones | runtime | `producer-roundtrip.integration.test.ts`: reducer → `persistMissionSession` → evidencia de pronunciación real. |
+| Focus | component-runtime | `FocusContentViewer.roundtrip.test.tsx`: clics reales del runner → evidencia de topic y paso exacto. |
+| `-ed` | component-runtime | `EdDrillSession.roundtrip.test.tsx`: clics de las tres fases → intento, actividad y paso explícito. |
+| Inmersión | runtime | `producer-roundtrip.integration.test.ts`: productor → respuesta, actividad y reconciliación de la lección exacta. |
+| Juegos | runtime | `roundtrip.integration.test.ts` (sin cambios). |
+| Reader | runtime | `roundtrip.integration.test.ts` (sin cambios). |
 
-Gate antes de PR: `pnpm test:learning-loop:integration` además de `pnpm audit:learning-loop`. El segundo solo comprueba catálogo y salidas declaradas. La integración tardó 14.5 s en esta ejecución de Windows (2 archivos, 16 tests). No se añade a `prepush` hasta cerrar las brechas de productores indicadas arriba. En esta máquina, `tsx scripts/audit-learning-loop.mjs` necesita `NODE_OPTIONS=--conditions=react-server` por el import de `server-only` en `decks.ts`; con esa condición reportó 4125 entradas y 0 incidencias.
+### Hallazgos (fuera de alcance, sin corregir)
+
+- **Cursos no es replay-safe**: `LessonQuizAnswerInput` no lleva `attemptId`, así que `savePracticeAnswer` genera un id por llamada (`lib/practice/queries.ts:122`). Reenviar el mismo quiz duplica las respuestas. El caso `does not accept a retried submission as replay-safe` fija el comportamiento actual; si se corrige, ese test debe invertirse.
+- **PracticeSession genera el id por submit**: `buildExerciseResult` no fija `attemptId`. Solo `submittingRef` impide el doble envío dentro de la misma sesión montada.
+
+### Gates
+
+Antes de PR: `pnpm test:learning-loop:integration` (4 archivos, 24 tests, ~15 s en Windows) y `pnpm audit:learning-loop`. El audit solo revisa catálogo y salidas declaradas, y así lo indica su salida. Las pruebas de componentes están en la suite normal (`pnpm test`), así que ya corren en CI y en `prepush`. La integración ya es un paso de CI (`Verify learning-loop integrations`); no se añade a `prepush`. En esta máquina, `tsx scripts/audit-learning-loop.mjs` necesita `NODE_OPTIONS=--conditions=react-server` por el import de `server-only` en `decks.ts`; con esa condición reporta 4125 entradas y 0 incidencias.
