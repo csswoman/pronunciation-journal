@@ -730,12 +730,23 @@ export function buildFocusSongUserPrompt(input: {
   return `Write a 16-line rhythmic song/rhyme for level ${input.level.toUpperCase()} focused on practicing: ${gapsList}.`
 }
 
-export function buildReaderAudioPrompt(passageText: string): string {
-  return `Please read the following English story aloud with clear, natural pronunciation and articulate phrasing at a moderate pace suitable for language learning:\n\n${passageText.trim()}`
+export interface SpeechGenerationPrompt {
+  transcript: string
+  style: string
 }
 
-export function buildMissionAudioPrompt(lineText: string): string {
-  return `Please speak the following conversational dialogue line aloud with natural pronunciation, expressive intonation, and native cadence suitable for language learning:\n\n${lineText.trim()}`
+export function buildReaderAudioPrompt(passageText: string): SpeechGenerationPrompt {
+  return {
+    transcript: passageText.trim(),
+    style: 'Clear, natural English pronunciation with articulate phrasing at a moderate pace suitable for language learning.',
+  }
+}
+
+export function buildMissionAudioPrompt(lineText: string): SpeechGenerationPrompt {
+  return {
+    transcript: lineText.trim(),
+    style: 'Natural conversational English with expressive intonation and native cadence suitable for language learning.',
+  }
 }
 
 export const IMMERSION_ENRICH_SYSTEM_PROMPT = `You are an ESL curriculum designer building study material for Spanish-speaking learners around a real English video lesson from engVid.

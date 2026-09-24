@@ -5,8 +5,10 @@ import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, pu
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
 import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
 import { withGeminiTimeout } from "@/lib/gemini/client";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
 import { logServerError } from "@/lib/api/logging";
 import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
+import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -70,9 +72,14 @@ async function transcribeWithFallback(
   targetWord?: string
 ): Promise<string> {
   let lastError: unknown;
+  let budgetDenied = false;
   const prompt = buildTranscriptionPrompt(targetWord);
 
-  for (const modelName of FALLBACK_MODELS) {
+  for (const modelName of filterAvailable(FALLBACK_MODELS)) {
+    if (!(await reserveModel(modelName, "/api/gemini/transcribe"))) {
+      budgetDenied = true;
+      continue;
+    }
     try {
       const thinkingConfig = getFastThinkingConfig(modelName);
       const result = await withGeminiTimeout(
@@ -93,10 +100,15 @@ async function transcribeWithFallback(
       return (result.text ?? "").trim();
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(modelName, err);
+      await recordModelFailure(modelName, "/api/gemini/transcribe");
       if (!shouldTryNextModel(err)) throw err;
     }
   }
 
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
   throw lastError ?? new Error("All fallback models failed");
 }
 

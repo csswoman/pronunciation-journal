@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+vi.mock('server-only', () => ({}))
 import { buildHistory, buildToolConfig, encodeChunk, streamWithFallback } from '../chat-route'
 
 async function readStream(run: (controller: ReadableStreamDefaultController) => unknown): Promise<string> {

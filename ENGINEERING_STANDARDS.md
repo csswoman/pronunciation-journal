@@ -34,7 +34,7 @@ Complemento operativo de `CLAUDE.md`.
 
 ### Feature folders (inventario)
 
-`ai-coach`, `ai-practice`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
+`ai-coach`, `ai-practice`, `ai-usage`, `api`, `auth`, `chunk-of-day`, `content`, `courses`,
 `daily`, `db`, `decks`, `degradation`, `essential-words`, `exercises`,
 `false-friends`, `focus`, `gemini`, `home`, `images`, `immersion`, `ipa`, `journal`,
 `learner-level`, `learning-focus`, `learning-loop`, `lexicon`, `navigation`, `offline`, `phoneme-practice`,
@@ -131,6 +131,10 @@ lib/ai-practice/tools/registry.ts
 
 - Las rutas `/api/gemini/*` usan `lib/gemini/fallback.ts` para el orden de
   modelos y la clasificación de reintentos.
+- Cada intento incluye `feature` y una reserva con `reserveModel`; los bucles de
+  chat, transcripción y word bank también reservan antes de llamar al SDK.
+- `filterAvailable` salta modelos en cooldown tras `429`; el presupuesto diario
+  se contabiliza por modelo y feature en `ai_usage_daily`.
 - Los prompts viven en `lib/ai-prompts.ts`, no inline en las rutas.
 - Los límites de frecuencia permanecen en cada endpoint salvo que exista una
   decisión explícita para compartirlos.

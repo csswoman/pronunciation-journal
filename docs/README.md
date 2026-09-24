@@ -11,6 +11,8 @@ diseño y planes de producto.
 | [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, Plan diario, Repaso y Progreso |
 | [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
+| [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
+| [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |

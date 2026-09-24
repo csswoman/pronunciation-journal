@@ -45,6 +45,16 @@ export const AI_QUOTA_EXHAUSTED_MESSAGE =
 export const AI_COACH_RATE_LIMITED_MESSAGE =
   "Enviaste varios mensajes muy seguidos. Espera unos segundos y vuelve a intentarlo — tu conversación sigue aquí.";
 
+export function aiDailyLimitMessage(resetAt: Date): string {
+  const resetTime = new Intl.DateTimeFormat("es-PE", {
+    timeZone: "America/Los_Angeles",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(resetAt);
+  return `Alcanzaste el límite diario de solicitudes de IA. Se restablece a las ${resetTime}, hora del Pacífico.`;
+}
+
 export function publicAiErrorMessage(
   status?: number,
   message = "",

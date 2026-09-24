@@ -7,6 +7,8 @@
 import { GoogleGenAI } from "@google/genai";
 import type { GenerateContentParameters } from "@google/genai";
 import { FALLBACK_MODELS, getFastThinkingConfig, shouldTryNextModel } from "./fallback";
+import { filterAvailable, markCooldownFromError } from "./cooldown";
+import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
 
 export { getErrorStatus, shouldTryNextModel } from "./fallback";
 
@@ -33,6 +35,10 @@ export type GeminiCallParams = Omit<GenerateContentParameters, "model">;
 export interface CallWithFallbackOptions {
   /** Hard deadline per model attempt. Default: 30 s. */
   timeoutMs?: number;
+  /** Model order for this task. Defaults to the high-throughput chain. */
+  models?: readonly string[];
+  /** Stable route/feature label used for shared daily quota reservations. */
+  feature?: string;
   /**
    * Return true to try the next fallback model after this error.
    * Defaults to `shouldTryNextModel` from `./fallback`.
@@ -59,11 +65,21 @@ export async function callWithFallback<T>(
   parse: (text: string) => T,
   options: CallWithFallbackOptions = {}
 ): Promise<T> {
-  const { timeoutMs = DEFAULT_GEMINI_TIMEOUT_MS, shouldRetry = shouldTryNextModel } = options;
+  const {
+    timeoutMs = DEFAULT_GEMINI_TIMEOUT_MS,
+    shouldRetry = shouldTryNextModel,
+    models = FALLBACK_MODELS,
+    feature = "gemini-unattributed",
+  } = options;
   const ai = new GoogleGenAI({ apiKey });
   let lastError: unknown;
+  let budgetDenied = false;
 
-  for (const model of FALLBACK_MODELS) {
+  for (const model of filterAvailable(models)) {
+    if (!(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      continue;
+    }
     try {
       const thinkingConfig = getFastThinkingConfig(model);
       const effectiveConfig = thinkingConfig
@@ -78,10 +94,15 @@ export async function callWithFallback<T>(
       return parse(result.text);
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(model, err);
+      await recordModelFailure(model, feature);
       if (!shouldRetry(err)) throw err;
     }
   }
 
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
   throw lastError ?? new Error("All fallback models failed");
 }
 

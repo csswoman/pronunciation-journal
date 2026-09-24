@@ -44,7 +44,8 @@ async function generateSentencesWithGemini(
         responseMimeType: "application/json",
       },
     },
-    (text) => SentencesResponseSchema.parse(JSON.parse(stripJsonFences(text)))
+    (text) => SentencesResponseSchema.parse(JSON.parse(stripJsonFences(text))),
+    { feature: "/api/gemini/generate-sentences" },
   );
 
   return parsed.filter((s) => s.trim().split(/\s+/).length >= MIN_TOKENS);

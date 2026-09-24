@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "type-check:listening-audio": "tsc --noEmit -p tsconfig.listening-audio.json",
     "generate:listening-audio": "tsx scripts/generate-listening-audio.ts",
+    "ai:usage-report": "tsx --env-file-if-exists=.env.local scripts/ai-usage-report.ts",
     "prepush": "pnpm lint && pnpm type-check && pnpm audit:hard-rules && pnpm check:migrations && pnpm scan:secrets && pnpm audit:learning-loop && pnpm validate:essential-words && pnpm validate:essential-words-generators && pnpm validate:chunk-catalog && pnpm test",
     "check:migrations": "node scripts/check-migrations.mjs",
     "scan:secrets": "node scripts/scan-secrets.mjs",

@@ -35,7 +35,10 @@ export async function callGeminiJson<T>({
   }
 
   try {
-    const result = await callWithFallback(apiKey, params, parse, fallbackOptions);
+    const result = await callWithFallback(apiKey, params, parse, {
+      ...fallbackOptions,
+      feature: fallbackOptions?.feature ?? endpoint,
+    });
     return { data: result, response: null };
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;

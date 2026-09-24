@@ -5,6 +5,7 @@ vi.mock("server-only", () => ({}));
 const mocks = vi.hoisted(() => ({
   authUserId: "u1",
   rateLimit: vi.fn(),
+  checkDailyAiUserLimit: vi.fn(),
   getAssessmentProfileLevel: vi.fn(),
   persistAssessmentOutcome: vi.fn(),
   getAssessmentOralAttempt: vi.fn(),
@@ -20,6 +21,7 @@ vi.mock("@/lib/api/guards", () => ({
   requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: mocks.authUserId }, error: null }),
   rateLimit: mocks.rateLimit,
+  checkDailyAiUserLimit: mocks.checkDailyAiUserLimit,
   SECURE_HEADERS: { "Cache-Control": "no-store" },
   publicErrorResponse: (status: number, message: string) => Response.json({ error: message }, { status }),
 }));
@@ -117,6 +119,7 @@ beforeEach(() => {
   mocks.authUserId = "u1";
   savedAttempt = makeAttempt();
   mocks.rateLimit.mockResolvedValue({ limited: false, error: null });
+  mocks.checkDailyAiUserLimit.mockResolvedValue({ limited: false, error: null });
   mocks.getAssessmentProfileLevel.mockResolvedValue("A1");
   mocks.persistAssessmentOutcome.mockResolvedValue(undefined);
   mocks.getAssessmentOralAttempt.mockImplementation(async (userId: string, id: string) =>
@@ -164,6 +167,10 @@ describe("oral assessment evidence route", () => {
 
     expect(firstResponse.status).toBe(200);
     expect(firstBody).toMatchObject({ passed: true, result: { oralEvidence: { status: "passed" } } });
+    expect(mocks.checkDailyAiUserLimit).toHaveBeenCalledWith(
+      { id: "u1" },
+      "/api/assessment/oral/evidence",
+    );
     expect(replayResponse.status).toBe(200);
     expect(replayBody.passed).toBe(true);
     expect(mocks.transcribeAssessmentOralAudio).toHaveBeenCalledOnce();

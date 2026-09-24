@@ -11,6 +11,7 @@ import { passageEmbedsTargets } from "@/lib/practice/reader/refinement";
 import { getUserInterests } from "@/lib/users/server-queries";
 import { logServerError } from "@/lib/api/logging";
 import type { ReaderQuestion } from "@/lib/practice/reader/types";
+import { QUALITY_FALLBACK_MODELS } from "@/lib/gemini/fallback";
 
 const RequestSchema = z.object({
   targets: z.array(z.string().min(1).max(40)).min(1).max(10),
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       },
     },
     parse: makeReaderParser(body.targets),
-    fallbackOptions: { shouldRetry: readerShouldRetry },
+    fallbackOptions: { shouldRetry: readerShouldRetry, models: QUALITY_FALLBACK_MODELS },
     failureMessage: "Failed to generate reader",
   });
   if (response) return response;

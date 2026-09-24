@@ -3,12 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
   callWithFallback: vi.fn(),
+  checkLayeredRateLimit: vi.fn(),
 }))
 
 vi.mock('@/lib/api/guards', () => ({
   requireSameOrigin: () => null,
   requireUser: async () => ({ user: { id: 'u1' }, error: null }),
-  checkLayeredRateLimit: () => ({ limited: false, error: null }),
+  checkLayeredRateLimit: mocks.checkLayeredRateLimit,
   rateLimit: () => ({ limited: false, error: null }),
   validateBody: mocks.validateBody,
   publicErrorResponse: (status: number, message: string) =>
@@ -31,10 +32,24 @@ function reqWith(): Request {
 beforeEach(() => {
   mocks.validateBody.mockReset()
   mocks.callWithFallback.mockReset()
+  mocks.checkLayeredRateLimit.mockReset().mockReturnValue({ limited: false, error: null })
   process.env.GEMINI_API_KEY = 'test'
 })
 
 describe('grade-production route', () => {
+  it('returns the daily quota response before validating or calling Gemini', async () => {
+    mocks.checkLayeredRateLimit.mockReturnValueOnce({
+      limited: true,
+      error: Response.json({ error: 'Alcanzaste el límite diario de solicitudes de IA.' }, { status: 429 }),
+    })
+
+    const res = await POST(reqWith() as never)
+
+    expect(res.status).toBe(429)
+    expect(mocks.validateBody).not.toHaveBeenCalled()
+    expect(mocks.callWithFallback).not.toHaveBeenCalled()
+  })
+
   it('rounds a valid AI score and returns the grade', async () => {
     mocks.validateBody.mockResolvedValueOnce({
       data: {

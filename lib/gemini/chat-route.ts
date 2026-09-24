@@ -1,7 +1,9 @@
 import { GoogleGenAI, type Content, type FunctionCallingConfigMode, type FunctionDeclaration } from "@google/genai";
 import { TOOL_DECLARATIONS } from "@/lib/ai-practice/tools/registry";
 import { FALLBACK_MODELS, getFastThinkingConfig, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
+import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
 
 type ChatMessage = {
   role: "user" | "model" | "tool";
@@ -110,7 +112,9 @@ export async function streamWithFallback(
   selection: ChatToolSelection,
   controller: ReadableStreamDefaultController,
   abortSignal: AbortSignal,
-  limits: StreamLimitOverrides = {}
+  limits: StreamLimitOverrides = {},
+  models: readonly string[] = FALLBACK_MODELS,
+  feature = "/api/gemini",
 ): Promise<void> {
   let bytesStreamed = 0;
   let chunksStreamed = 0;
@@ -131,8 +135,9 @@ export async function streamWithFallback(
     return;
   }
 
-  for (const model of FALLBACK_MODELS) {
+  for (const model of filterAvailable(models)) {
     if (abortSignal.aborted) break;
+    if (!(await reserveModel(model, feature))) continue;
 
     let annotateTurnName: string | null = null;
     try {
@@ -224,6 +229,8 @@ export async function streamWithFallback(
         safeClose();
         return;
       }
+      markCooldownFromError(model, err);
+      await recordModelFailure(model, feature);
       if (!shouldTryNextModel(err)) break;
     }
   }
@@ -237,11 +244,18 @@ export async function sendMessageWithFallback(
   systemPrompt: string,
   history: Content[],
   lastMessage: string,
-  selection: ChatToolSelection
+  selection: ChatToolSelection,
+  models: readonly string[] = FALLBACK_MODELS,
+  feature = "/api/gemini",
 ): Promise<string> {
   let lastError: unknown;
+  let budgetDenied = false;
 
-  for (const model of FALLBACK_MODELS) {
+  for (const model of filterAvailable(models)) {
+    if (!(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      continue;
+    }
     try {
       const chat = ai.chats.create({
         model,
@@ -257,9 +271,14 @@ export async function sendMessageWithFallback(
       return responseText;
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(model, err);
+      await recordModelFailure(model, feature);
       if (!shouldTryNextModel(err)) throw err;
     }
   }
 
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
   throw lastError || new Error("All fallback models failed");
 }

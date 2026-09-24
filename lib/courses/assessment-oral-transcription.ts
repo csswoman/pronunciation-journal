@@ -18,7 +18,7 @@ export async function transcribeAssessmentOralAudio(
       config: { temperature: 0, maxOutputTokens: 180 },
     },
     (text) => text.trim(),
-    { timeoutMs: 15_000 },
+    { timeoutMs: 15_000, feature: "assessment-oral-transcription" },
   );
   return transcript.trim();
 }

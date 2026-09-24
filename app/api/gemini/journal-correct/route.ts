@@ -10,6 +10,7 @@ import {
 } from '@/lib/journal/correction'
 import type { ScheduledTopic } from '@/lib/journal/correction'
 import { applyJournalFeedback } from '@/lib/journal/apply-feedback'
+import { QUALITY_FALLBACK_MODELS } from '@/lib/gemini/fallback'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const origin = requireSameOrigin(request); if (origin) return origin
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (entry.status !== 'submitted') return NextResponse.json({ error: 'Journal entry must be submitted before correction' }, { status: 409 })
 
   const interests = await getUserInterests(user.id)
-  const result = await callGeminiJson({ endpoint: '/api/gemini/journal-correct', userId: user.id, params: { contents: buildJournalCorrectionPrompt(parsed.data.content, interests), config: { systemInstruction: JOURNAL_CORRECTION_SYSTEM_PROMPT, responseMimeType: 'application/json', temperature: 0.1, maxOutputTokens: 1400 } }, parse: (raw) => journalCorrectionResultSchema.parse(parseGeminiJson(raw, (json) => json)), failureMessage: 'Failed to correct journal entry' })
+  const result = await callGeminiJson({ endpoint: '/api/gemini/journal-correct', userId: user.id, params: { contents: buildJournalCorrectionPrompt(parsed.data.content, interests), config: { systemInstruction: JOURNAL_CORRECTION_SYSTEM_PROMPT, responseMimeType: 'application/json', temperature: 0.1, maxOutputTokens: 1400 } }, parse: (raw) => journalCorrectionResultSchema.parse(parseGeminiJson(raw, (json) => json)), fallbackOptions: { models: QUALITY_FALLBACK_MODELS }, failureMessage: 'Failed to correct journal entry' })
   if (result.response) return result.response
 
   let scheduledTopics: ScheduledTopic[] = []

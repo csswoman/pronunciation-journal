@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_daily: {
+        Row: {
+          cache_hits: number
+          day: string
+          failures: number
+          feature: string
+          model: string
+          requests: number
+        }
+        Insert: {
+          cache_hits?: number
+          day: string
+          failures?: number
+          feature: string
+          model: string
+          requests?: number
+        }
+        Update: {
+          cache_hits?: number
+          day?: string
+          failures?: number
+          feature?: string
+          model?: string
+          requests?: number
+        }
+        Relationships: []
+      }
+      ai_response_cache: {
+        Row: {
+          created_at: string
+          feature: string
+          key: string
+          payload: Json
+        }
+        Insert: {
+          created_at?: string
+          feature: string
+          key: string
+          payload: Json
+        }
+        Update: {
+          created_at?: string
+          feature?: string
+          key?: string
+          payload?: Json
+        }
+        Relationships: []
+      }
       activity_sessions: {
         Row: {
           accuracy_pct: number
@@ -1927,6 +1975,19 @@ export type Database = {
           allowed: boolean
           retry_after_seconds: number
         }[]
+      }
+      ai_usage_record: {
+        Args: {
+          p_cache_hit_delta?: number
+          p_failure_delta?: number
+          p_feature: string
+          p_model: string
+        }
+        Returns: undefined
+      }
+      ai_usage_try_reserve: {
+        Args: { p_feature: string; p_limit: number; p_model: string }
+        Returns: boolean
       }
       get_activity_totals: {
         Args: never

@@ -6,6 +6,7 @@ import {
 } from "@/lib/ai-prompts";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
 import { parseGeminiJson, respondWithGeminiJson } from "@/lib/gemini/json-route";
+import { QUALITY_FALLBACK_MODELS } from "@/lib/gemini/fallback";
 import type { ProductionGradeResult } from "@/lib/exercises/production-grade";
 import { isErrorPatternId } from "@/lib/exercises/error-patterns";
 
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       },
     },
     parse: parseGradeJson,
+    fallbackOptions: { models: QUALITY_FALLBACK_MODELS },
     failureMessage: "Failed to grade production",
   });
 }

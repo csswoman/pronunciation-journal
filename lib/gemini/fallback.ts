@@ -1,28 +1,24 @@
-export const ENABLE_PREVIEW_MODELS =
-  process.env.GEMINI_ENABLE_PREVIEW_MODELS === 'true'
-
 export const BASE_MODELS = [
-  // Confirmed fast lite — goes first to avoid 404 round-trips on unavailable aliases
+  // High-volume tasks use models with the largest confirmed free quotas first.
   'gemini-3.1-flash-lite',
-  'gemini-flash-latest',
-  // Heavier fallbacks if lite quota is exhausted
-  'gemini-2.5-flash',
-  'gemini-3.7-flash',
-  // Last-resort: may not be available in all regions/keys
-  'gemini-2.5-flash-lite',
   'gemini-3.5-flash-lite',
-  'gemini-3.5-flash',
-  'gemini-3.6-flash',
+  // Legacy fallback; current access is restricted to existing users.
+  'gemini-2.5-flash-lite',
 ] as const
 
-export const PREVIEW_MODELS = ['gemini-3.1-flash-lite-preview'] as const
+/** Quality-sensitive turns keep one low-quota Flash model as a last resort. */
+export const QUALITY_FALLBACK_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-3.8-flash',
+] as const
 
-export const FALLBACK_MODELS: readonly string[] = ENABLE_PREVIEW_MODELS
-  ? ['gemini-3.1-flash-lite-preview', ...BASE_MODELS]
-  : [...BASE_MODELS]
+/** Reserved for future measured, low-volume tasks where first-pass quality matters most. */
+export const PREMIUM_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash-lite'] as const
+
+export const FALLBACK_MODELS: readonly string[] = BASE_MODELS
 
 const THINKING_MODELS = new Set([
-  'gemini-2.5-flash',
   'gemini-3.5-flash',
   'gemini-3.7-flash',
 ])

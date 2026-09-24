@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { requireSameOrigin, requireUser, rateLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
+import { requireSameOrigin, requireUser, rateLimit, checkDailyAiUserLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 import { getAssessmentProfileLevel, persistAssessmentOutcome } from "@/lib/courses/assessment-queries";
 import { scoreAssessment } from "@/lib/courses/assessment";
@@ -64,6 +64,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     meta: { endpoint: "/api/assessment/oral/evidence", userId: user.id },
   });
   if (limited) return rateLimitError;
+  const dailyLimit = await checkDailyAiUserLimit(user, "/api/assessment/oral/evidence");
+  if (dailyLimit.limited) return dailyLimit.error;
 
   const contentLength = Number(request.headers.get("content-length"));
   if (Number.isFinite(contentLength) && contentLength > ASSESSMENT_ORAL_AUDIO_MAX_BYTES + 65_536) {

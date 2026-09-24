@@ -6,16 +6,68 @@
 // </GeminiAudio>
 
 import { GoogleGenAI } from "@google/genai";
-import { buildReaderAudioPrompt, buildMissionAudioPrompt } from "@/lib/ai-prompts";
+import type { GenerateContentParameters } from "@google/genai";
+import { createHash } from "node:crypto";
+import {
+  buildReaderAudioPrompt,
+  buildMissionAudioPrompt,
+} from "@/lib/ai-prompts";
+import { shouldTryNextModel } from "@/lib/gemini/fallback";
+import { withGeminiTimeout } from "@/lib/gemini/client";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
+import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
 
-/** Default sampling rate for Gemini 2.5/3.1 speech synthesis. */
+/** Fallback sample rate for raw PCM responses from Gemini speech synthesis. */
 export const DEFAULT_SAMPLE_RATE = 24_000;
 
 export const AUDIO_MODELS = [
-  "gemini-2.5-flash-preview-tts",
-  "gemini-2.5-flash",
-  "gemini-3.1-flash-tts-preview",
+  "gemini-3.8-flash-lite-tts",
+  "gemini-3.8-flash-tts",
 ] as const;
+
+export const AUDIO_CACHE_VERSION = "tts-v2";
+export const MIN_TTS_MODEL_INTERVAL_MS = 20_000;
+
+const lastModelStartedAt = new Map<string, number>();
+let synthesisQueue: Promise<void> = Promise.resolve();
+
+function enqueueSynthesis<T>(task: () => Promise<T>): Promise<T> {
+  const result = synthesisQueue.then(task, task);
+  synthesisQueue = result.then(() => undefined, () => undefined);
+  return result;
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function waitForModelSlot(model: string): Promise<void> {
+  const lastStartedAt = lastModelStartedAt.get(model);
+  if (lastStartedAt !== undefined) {
+    const delayMs = lastStartedAt + MIN_TTS_MODEL_INTERVAL_MS - Date.now();
+    if (delayMs > 0) await wait(delayMs);
+  }
+  lastModelStartedAt.set(model, Date.now());
+}
+
+/** Cache identity includes the feature, normalized spoken text, voice, model and manual version. */
+export function buildSpeechCacheKey(
+  feature: string,
+  text: string,
+  voice: string,
+  model: string,
+): string {
+  const normalizedText = text.normalize("NFKC").trim().replace(/\s+/g, " ");
+  return createHash("sha256")
+    .update(JSON.stringify([feature, AUDIO_CACHE_VERSION, normalizedText, voice, model]))
+    .digest("hex");
+}
+
+/** Reset queue timing in unit tests after all queued work has completed. */
+export function _resetSpeechQueueStateForTests(): void {
+  lastModelStartedAt.clear();
+  synthesisQueue = Promise.resolve();
+}
 
 /**
  * Prepends a standard 44-byte canonical WAV header to linear PCM 16-bit audio data.
@@ -68,23 +120,50 @@ export interface GenerateSpeechOptions {
   voice?: string;
   models?: readonly string[];
   timeoutMs?: number;
+  feature?: string;
+  onModelUsed?: (model: string) => void;
 }
 
 async function synthesizeGeminiSpeech(
   apiKey: string,
-  prompt: string,
+  prompt: { transcript: string; style: string },
   options: GenerateSpeechOptions = {}
 ): Promise<Buffer> {
-  const { voice = "Puck", models = AUDIO_MODELS, timeoutMs = 45_000 } = options;
+  return enqueueSynthesis(() => synthesizeGeminiSpeechQueued(apiKey, prompt, options));
+}
+
+async function synthesizeGeminiSpeechQueued(
+  apiKey: string,
+  prompt: { transcript: string; style: string },
+  options: GenerateSpeechOptions,
+): Promise<Buffer> {
+  const {
+    voice = "Puck",
+    models = AUDIO_MODELS,
+    timeoutMs = 45_000,
+    feature = "tts-unattributed",
+  } = options;
   const ai = new GoogleGenAI({ apiKey });
 
   let lastError: unknown;
+  let budgetDenied = false;
 
-  for (const model of models) {
+  for (const model of filterAvailable(models)) {
+    if (!(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      continue;
+    }
     try {
-      const callPromise = ai.models.generateContent({
+      await waitForModelSlot(model);
+      // SDK 2.23 does not type the GenerateContent speechMetadata field yet,
+      // but the Gemini API accepts it and keeps style directions out of speech.
+      const contents = [{
+        role: "user" as const,
+        parts: [{ text: prompt.transcript, speechMetadata: { style: prompt.style } }],
+      }] as unknown as GenerateContentParameters["contents"];
+      const response = await withGeminiTimeout(ai.models.generateContent({
         model,
-        contents: prompt,
+        contents,
         config: {
           responseModalities: ["AUDIO"],
           speechConfig: {
@@ -95,13 +174,7 @@ async function synthesizeGeminiSpeech(
             },
           },
         },
-      });
-
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error(`Audio generation timeout (${model})`)), timeoutMs);
-      });
-
-      const response = await Promise.race([callPromise, timeoutPromise]);
+      }), timeoutMs);
       const candidate = response.candidates?.[0];
       const audioPart = candidate?.content?.parts?.find(
         (p) => p.inlineData?.data && p.inlineData?.mimeType?.toLowerCase().startsWith("audio/")
@@ -120,18 +193,27 @@ async function synthesizeGeminiSpeech(
         rawBuffer.length > 12 &&
         rawBuffer.toString("ascii", 0, 4) === "RIFF"
       ) {
+        options.onModelUsed?.(model);
         return rawBuffer;
       }
 
       // Convert PCM to standard WAV
       const sampleRate = parseSampleRateFromMime(mime, DEFAULT_SAMPLE_RATE);
+      options.onModelUsed?.(model);
       return pcmToWav(rawBuffer, sampleRate);
     } catch (err) {
       lastError = err;
-      // Try next fallback model
+      markCooldownFromError(model, err);
+      await recordModelFailure(model, feature);
+      const invalidAudio = String((err as { message?: unknown })?.message ?? "")
+        .includes("did not return audio data in parts");
+      if (!invalidAudio && !shouldTryNextModel(err)) throw err;
     }
   }
 
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily TTS model budget exhausted"), { status: 429 });
+  }
   throw lastError ?? new Error("All TTS audio models failed to generate speech");
 }
 

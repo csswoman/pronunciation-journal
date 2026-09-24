@@ -54,7 +54,7 @@ practice session, nothing interrupts it.
 | Auth & cloud data | Supabase (Postgres + RLS on every table) |
 | Offline / local state | Dexie (IndexedDB) with a background sync outbox |
 | Client state | Zustand (ephemeral UI only) |
-| AI | Google Gemini via server-only API routes, with a model fallback chain |
+| AI | Google Gemini Free Tier via server routes, with Lite-first fallback, daily model and user budgets |
 | Spaced repetition | `ts-fsrs` (FSRS) client-side |
 | Testing | Vitest + Testing Library; Playwright for a11y |
 | Delivery | PWA (Serwist) with offline fallback |
@@ -75,7 +75,8 @@ practice session, nothing interrupts it.
   checks, secret scanning, and design-token linting.
 - **Security.** Global security headers including CSP in `next.config.mjs`;
   `service_role` never reaches the client; per-user scoping on caches; API cost
-  controls via a Supabase rate-limit RPC.
+  controls via Supabase rate-limit and daily model-reservation RPCs; Gemini
+  endpoints also enforce daily per-user request caps.
 
 ### Repository layout
 

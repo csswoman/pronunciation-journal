@@ -16,7 +16,7 @@ export async function fetchMissionLineAudio(
     return line.modelAudio.path
   }
 
-  const cacheKey = `${missionId}:${line.id}`
+  const cacheKey = `mission-audio-cache-v2:${missionId}:${line.id}:${voice ?? "Puck"}:${line.text.normalize("NFKC").trim().replace(/\s+/g, " ")}`
   const cachedUrl = memoryAudioCache.get(cacheKey)
   if (cachedUrl) {
     return cachedUrl

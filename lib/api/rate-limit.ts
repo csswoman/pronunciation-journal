@@ -4,6 +4,8 @@ import type { User } from "@supabase/supabase-js";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 import { SECURE_HEADERS } from "@/lib/api/headers";
 import { logServerError } from "@/lib/api/logging";
+import { aiDailyLimitMessage } from "@/lib/degradation/messages";
+import { getNextPacificMidnight, getPacificDateKey } from "@/lib/api/pacific-time";
 
 export type RateLimitResult =
   | { limited: false; error: null }
@@ -166,6 +168,53 @@ function consumeMemory(key: string, max: number, windowMs: number): ConsumeResul
   return { allowed: true, retryAfter: 0 };
 }
 
+function positiveEnvLimit(name: string, fallback: number): number {
+  const value = Number.parseInt(process.env[name] ?? "", 10);
+  return Number.isSafeInteger(value) && value > 0 ? value : fallback;
+}
+
+function isGeminiEndpoint(endpoint: string): boolean {
+  return endpoint === "/api/gemini" || endpoint.startsWith("/api/gemini/");
+}
+
+function dailyLimitResponse(resetAt: Date, retryAfter: number): NextResponse {
+  return NextResponse.json(
+    {
+      error: aiDailyLimitMessage(resetAt),
+      code: "AI_DAILY_LIMIT",
+      retryable: true,
+      retryAfterSeconds: retryAfter,
+      resetAt: resetAt.toISOString(),
+    },
+    {
+      status: 429,
+      headers: { ...SECURE_HEADERS, "Retry-After": String(Math.max(1, retryAfter)) },
+    },
+  );
+}
+
+/** Daily AI allowance shared across model-backed endpoints for one user. */
+export async function checkDailyAiUserLimit(user: User, endpoint: string): Promise<RateLimitResult> {
+  const now = new Date();
+  const resetAt = getNextPacificMidnight(now);
+  const retryAfter = Math.max(1, Math.ceil((resetAt.getTime() - now.getTime()) / 1000));
+  const isAnon = isAnonymousUser(user);
+  const dailyLimit = isAnon
+    ? positiveEnvLimit("GEMINI_DAILY_LIMIT_ANONYMOUS", 15)
+    : positiveEnvLimit("GEMINI_DAILY_LIMIT_PER_USER", 150);
+  const dailyKey = `gemini:user:daily:${getPacificDateKey(now)}:${user.id}`;
+  const dailyCheck = await consumeKey(dailyKey, dailyLimit, 86_400_000);
+  if (!dailyCheck.allowed) {
+    logServerError("Daily AI user allowance reached", new Error("Daily AI request limit"), {
+      endpoint,
+      userId: user.id,
+      status: 429,
+    }, "warn");
+    return { limited: true, error: dailyLimitResponse(resetAt, retryAfter) };
+  }
+  return { limited: false, error: null };
+}
+
 /**
  * A 429 from *our own* throttle, not the provider's. The `retryable` flag and
  * `retryAfterSeconds` let the client recover in place (wait, retry the same
@@ -249,6 +298,13 @@ export async function checkLayeredRateLimit({
       };
     }
     return throttled("Too many requests. Please wait before retrying.", userCheck.retryAfter);
+  }
+
+  // Apply a project-protecting daily allowance across all Gemini endpoints,
+  // but keep unrelated AI-adjacent routes (such as words/preview) untouched.
+  if (isGeminiEndpoint(endpoint)) {
+    const dailyCheck = await checkDailyAiUserLimit(user, endpoint);
+    if (dailyCheck.limited) return dailyCheck;
   }
 
   // 4. Global emergency limit. It is deliberately last so a client already

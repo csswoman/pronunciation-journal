@@ -1,5 +1,39 @@
-import { describe, it, expect } from "vitest";
-import { pcmToWav, parseSampleRateFromMime } from "../audio";
+import { beforeEach, describe, it, expect, vi } from "vitest";
+
+const mocks = vi.hoisted(() => ({
+  generateContent: vi.fn(),
+  reserveModel: vi.fn(),
+  recordModelFailure: vi.fn(),
+}));
+
+vi.mock("@google/genai", () => ({
+  GoogleGenAI: class {
+    models = { generateContent: mocks.generateContent };
+    constructor(options: unknown) { void options; }
+  },
+}));
+vi.mock("@/lib/ai-usage/budget", () => ({
+  reserveModel: mocks.reserveModel,
+  recordModelFailure: mocks.recordModelFailure,
+}));
+
+import {
+  _resetSpeechQueueStateForTests,
+  buildSpeechCacheKey,
+  generateMissionSpeech,
+  parseSampleRateFromMime,
+  pcmToWav,
+} from "../audio";
+
+beforeEach(() => {
+  vi.useRealTimers();
+  _resetSpeechQueueStateForTests();
+  mocks.generateContent.mockReset().mockResolvedValue({
+    candidates: [{ content: { parts: [{ inlineData: { data: "AQID", mimeType: "audio/pcm;rate=24000" } }] } }],
+  });
+  mocks.reserveModel.mockReset().mockResolvedValue(true);
+  mocks.recordModelFailure.mockReset().mockResolvedValue(undefined);
+});
 
 describe("lib/gemini/audio", () => {
   describe("pcmToWav", () => {
@@ -38,5 +72,43 @@ describe("lib/gemini/audio", () => {
       expect(parseSampleRateFromMime(undefined)).toBe(24000);
       expect(parseSampleRateFromMime("audio/pcm;rate=invalid", 22050)).toBe(22050);
     });
+  });
+
+  it("serializes concurrent TTS requests and spaces calls to the same model by 20 seconds", async () => {
+    vi.useFakeTimers();
+    const starts: number[] = [];
+    let inFlight = 0;
+    let maxInFlight = 0;
+    mocks.generateContent.mockImplementation(async () => {
+      starts.push(Date.now());
+      inFlight += 1;
+      maxInFlight = Math.max(maxInFlight, inFlight);
+      await Promise.resolve();
+      inFlight -= 1;
+      return {
+        candidates: [{ content: { parts: [{ inlineData: { data: "AQID", mimeType: "audio/pcm;rate=24000" } }] } }],
+      };
+    });
+
+    const request = () => generateMissionSpeech("test-key", "A long scripted line.", {
+      feature: "/api/gemini/mission-audio",
+      models: ["gemini-3.8-flash-lite-tts"],
+    });
+    const pending = Promise.all([request(), request(), request()]);
+    await vi.runAllTimersAsync();
+    const results = await pending;
+
+    expect(results).toHaveLength(3);
+    expect(maxInFlight).toBe(1);
+    expect(starts[1]! - starts[0]!).toBeGreaterThanOrEqual(20_000);
+    expect(starts[2]! - starts[1]!).toBeGreaterThanOrEqual(20_000);
+    expect(mocks.reserveModel).toHaveBeenCalledTimes(3);
+  });
+
+  it("keys stored speech by normalized text, voice, exact model and version", () => {
+    const base = buildSpeechCacheKey("/api/gemini/mission-audio", "  Hello   there ", "Puck", "model-a");
+    expect(buildSpeechCacheKey("/api/gemini/mission-audio", "Hello there", "Puck", "model-a")).toBe(base);
+    expect(buildSpeechCacheKey("/api/gemini/mission-audio", "Hello there", "Kore", "model-a")).not.toBe(base);
+    expect(buildSpeechCacheKey("/api/gemini/mission-audio", "Hello there", "Puck", "model-b")).not.toBe(base);
   });
 });

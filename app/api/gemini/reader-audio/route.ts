@@ -10,12 +10,14 @@ import {
 } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
-import { generateReaderSpeech } from "@/lib/gemini/audio";
+import { AUDIO_MODELS, buildSpeechCacheKey, generateReaderSpeech } from "@/lib/gemini/audio";
+import { recordSharedCacheHit } from "@/lib/ai-usage/budget";
 import {
   getPassageAudioServer,
   updatePassageAudioServer,
 } from "@/lib/practice/reader/server-queries";
 import { logServerError } from "@/lib/api/logging";
+import { getErrorStatus } from "@/lib/gemini/fallback";
 
 export const maxDuration = 60;
 
@@ -46,34 +48,49 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, RequestSchema);
   if (validationError) return validationError;
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return publicErrorResponse(503, "AI audio service is currently unavailable");
-  }
-
   try {
     const supabase = await createSupabaseServerClient();
-    const storagePath = `${user.id}/${body.passageId}.wav`;
+    const storageClient = tryGetSupabaseAdminClient() ?? supabase;
+    const voice = body.voice ?? "Puck";
 
-    // 1. Idempotency / cache check: If audio already exists in DB or Storage, return it
+    // Load canonical text, then resolve only cache entries for the requested voice/model.
     const existingDbRecord = await getPassageAudioServer(body.passageId, user.id).catch(() => null);
-    if (existingDbRecord?.audioUrl) {
-      return NextResponse.json({ audioUrl: existingDbRecord.audioUrl }, { headers: SECURE_HEADERS });
-    }
-
-    // If text to speak is not provided, read it from the database record
     const textToRead = (body.passageText ?? existingDbRecord?.passage ?? "").trim();
     if (!textToRead) {
       return publicErrorResponse(400, "Passage text is missing or not found");
     }
 
-    // 2. Generate high-fidelity speech audio via Gemini TTS
+    for (const model of AUDIO_MODELS) {
+      const cachePath = `${user.id}/${buildSpeechCacheKey("/api/gemini/reader-audio", textToRead, voice, model)}.wav`;
+      const folder = cachePath.slice(0, cachePath.lastIndexOf("/"));
+      const fileName = cachePath.slice(cachePath.lastIndexOf("/") + 1);
+      const { data: existingFiles } = await storageClient.storage
+        .from("reader-audio")
+        .list(folder, { search: fileName, limit: 5 })
+        .catch(() => ({ data: null }));
+      if (existingFiles?.some((file) => file.name === fileName)) {
+        await recordSharedCacheHit("/api/gemini/reader-audio");
+        const { data: publicData } = storageClient.storage.from("reader-audio").getPublicUrl(cachePath);
+        if (existingDbRecord?.audioUrl !== publicData.publicUrl) {
+          await updatePassageAudioServer(body.passageId, user.id, publicData.publicUrl).catch(() => undefined);
+        }
+        return NextResponse.json({ audioUrl: publicData.publicUrl }, { headers: SECURE_HEADERS });
+      }
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return publicErrorResponse(503, "AI audio service is currently unavailable");
+
+    let modelUsed: string | undefined;
     const wavBuffer = await generateReaderSpeech(apiKey, textToRead, {
-      voice: body.voice ?? "Puck",
+      voice,
+      feature: "/api/gemini/reader-audio",
+      onModelUsed: (model) => { modelUsed = model; },
     });
+    if (!modelUsed) throw new Error("TTS response did not identify its model");
+    const storagePath = `${user.id}/${buildSpeechCacheKey("/api/gemini/reader-audio", textToRead, voice, modelUsed)}.wav`;
 
     // 3. Upload WAV audio to Supabase Storage
-    const storageClient = tryGetSupabaseAdminClient() ?? supabase;
     const { error: uploadError } = await storageClient.storage
       .from("reader-audio")
       .upload(storagePath, wavBuffer, {
@@ -113,6 +130,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       operation: "generateAudio",
       userId: user.id,
     });
-    return publicErrorResponse(500, "Failed to generate reading audio");
+    const status = getErrorStatus(err) ?? 500;
+    return publicErrorResponse(status === 429 ? 429 : 500, status === 429
+      ? "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico."
+      : "Failed to generate reading audio");
   }
 }

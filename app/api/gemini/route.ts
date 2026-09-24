@@ -6,7 +6,7 @@ import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromW
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
 import { getUserInterests } from "@/lib/users/server-queries";
-import { getErrorStatus } from "@/lib/gemini/fallback";
+import { getErrorStatus, QUALITY_FALLBACK_MODELS } from "@/lib/gemini/fallback";
 import {
   buildHistory,
   encodeChunk,
@@ -100,6 +100,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const history = buildHistory(body.messages.slice(0, -1));
   const ai = new GoogleGenAI({ apiKey });
+  const modelOrder = body.missionId ? QUALITY_FALLBACK_MODELS : undefined;
 
   try {
     if (body.stream) {
@@ -115,7 +116,10 @@ export async function POST(request: NextRequest): Promise<Response> {
             lastUserText,
             selection,
             controller,
-            timeoutController.signal
+            timeoutController.signal,
+            undefined,
+            modelOrder,
+            "/api/gemini"
           )
             .catch((err) => {
               logServerError("Gemini chat stream failed", err, {
@@ -148,7 +152,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       systemPrompt,
       history,
       lastUserText,
-      selection
+      selection,
+      modelOrder,
+      "/api/gemini"
     );
     return Response.json({ content: responseText }, { headers: SECURE_HEADERS });
   } catch (err: unknown) {

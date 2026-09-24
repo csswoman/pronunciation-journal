@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
   callWithFallback: vi.fn(),
+  cache: new Map<string, unknown>(),
+  recordSharedCacheHit: vi.fn(),
 }))
 
 vi.mock('@/lib/api/guards', () => ({
@@ -20,6 +22,15 @@ vi.mock('@/lib/gemini/client', () => ({
   callWithFallback: mocks.callWithFallback,
   getErrorStatus: () => 500,
   stripJsonFences: (text: string) => text,
+}))
+vi.mock('@/lib/ai-usage/response-cache', () => ({
+  buildAiResponseCacheKey: (feature: string, input: unknown) => `${feature}:${JSON.stringify(input)}`,
+  getAiResponseCache: async (_feature: string, key: string) => mocks.cache.get(key) ?? null,
+  normalizeAiCacheText: (value: string) => value.trim().replace(/\s+/g, ' '),
+  setAiResponseCache: async (_feature: string, key: string, payload: unknown) => { mocks.cache.set(key, payload) },
+}))
+vi.mock('@/lib/ai-usage/budget', () => ({
+  recordSharedCacheHit: mocks.recordSharedCacheHit,
 }))
 
 import { POST } from '../route'
@@ -58,6 +69,8 @@ const validPuzzle = {
 beforeEach(() => {
   mocks.validateBody.mockReset()
   mocks.callWithFallback.mockReset()
+  mocks.cache.clear()
+  mocks.recordSharedCacheHit.mockReset()
   process.env.GEMINI_API_KEY = 'test'
 })
 
@@ -93,5 +106,23 @@ describe('word-search route', () => {
 
     expect(res.status).toBe(500)
     expect(body.error).toBe('No se pudo generar la búsqueda de palabras con IA')
+  })
+
+  it('serves a repeated normalized query from shared cache without another SDK call', async () => {
+    mocks.validateBody.mockResolvedValue({
+      data: { topic: 'kitchen', level: 'intermediate', count: 6 },
+      error: null,
+    })
+    mocks.callWithFallback.mockImplementation(async (_key, _params, parse) =>
+      parse(JSON.stringify(validPuzzle))
+    )
+
+    const first = await POST(reqWith() as never)
+    const second = await POST(reqWith() as never)
+
+    expect(first.status).toBe(200)
+    expect(second.status).toBe(200)
+    expect(mocks.callWithFallback).toHaveBeenCalledTimes(1)
+    expect(mocks.recordSharedCacheHit).toHaveBeenCalledWith('/api/gemini/word-search')
   })
 })

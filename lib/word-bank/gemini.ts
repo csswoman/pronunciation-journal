@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import type { WordEnrichment } from "@/lib/word-bank/types";
 
 import { FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
+import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
 
 const SYSTEM_PROMPT = `You are an English learning assistant for Spanish speakers.
 
@@ -107,9 +109,15 @@ async function callGeminiOnce(
   ai: GoogleGenAI,
   prompt: string,
   systemInstruction = SYSTEM_PROMPT,
+  feature = "word-bank-enrichment",
 ): Promise<string> {
   let lastError: unknown;
-  for (const modelName of FALLBACK_MODELS) {
+  let budgetDenied = false;
+  for (const modelName of filterAvailable(FALLBACK_MODELS)) {
+    if (!(await reserveModel(modelName, feature))) {
+      budgetDenied = true;
+      continue;
+    }
     try {
       const thinkingConfig = getFastThinkingConfig(modelName);
       const result = await ai.models.generateContent({
@@ -128,8 +136,13 @@ async function callGeminiOnce(
       return result.text;
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(modelName, err);
+      await recordModelFailure(modelName, feature);
       if (!shouldTryNextModel(err)) throw err;
     }
+  }
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
   }
   throw lastError ?? new Error("All fallback models failed");
 }
@@ -168,12 +181,12 @@ export async function lookupWordWithGemini(text: string): Promise<WordEnrichment
   const prompt = `Word: "${text}"`;
 
   try {
-    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
+    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT, "word-bank-lookup");
     return parseEnrichment(raw);
   } catch (err) {
     if (!isParseError(err) && !isRetryableApiError(err)) throw err;
     console.warn("[word-bank] lookup attempt 1 failed, retrying:", err);
-    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
+    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT, "word-bank-lookup");
     return parseEnrichment(raw);
   }
 }
