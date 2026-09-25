@@ -2,8 +2,9 @@
 // <LandingProgress>
 //   asymmetric heading (kicker, Bricolage title left, description right)
 //   signal cards ×4 (1: exposure, 2: intent, 3: evidence, 4: mastery) with Bricolage numbers
-//   callout banner (lilac-soft card with check icon + /θ/ milestone note)
+//   <PastelCard tone="lilac"> (check icon + milestone note left, 3-step timeline right)
 import { Check } from "lucide-react";
+import PastelCard from "@/components/layout/PastelCard";
 import { LANDING_SIGNALS } from "@/lib/landing/content";
 
 const NUMBER_STYLES = [
@@ -63,20 +64,73 @@ export function LandingProgress() {
         ))}
       </ol>
 
-      {/* Lilac Soft Milestone Callout Banner */}
-      <div className="mt-8 flex items-center gap-4 rounded-2xl border border-[var(--lilac-deep)]/40 bg-[var(--lilac-soft)] p-5 text-sm font-medium text-ink sm:mt-10 sm:p-6 sm:text-base sm:gap-5 leading-snug">
-        <span
-          aria-hidden="true"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-black/10 text-ink"
-        >
-          <Check className="size-4" strokeWidth={2.5} />
-        </span>
-        <p>
-          Cuando tu perfil dice que mejoraste la{" "}
-          <strong className="font-ipa font-bold text-base sm:text-lg">/θ/</strong>, es porque lo
-          demostraste en días distintos.
-        </p>
-      </div>
+      {/* Lilac PastelCard Milestone Callout */}
+      <PastelCard
+        tone="lilac"
+        className="mt-8 flex flex-col justify-between gap-6 p-6 sm:mt-10 sm:p-8 lg:flex-row lg:items-center rounded-3xl"
+      >
+        {/* Left Info */}
+        <div className="flex items-center gap-4 text-sm font-medium text-ink sm:gap-5 sm:text-base leading-snug">
+          <span
+            aria-hidden="true"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ink text-white shadow-xs"
+          >
+            <Check className="size-4" strokeWidth={2.5} />
+          </span>
+          <p className="max-w-[42ch]">
+            Cuando tu perfil dice que mejoraste la{" "}
+            <span className="inline-flex items-center justify-center rounded-lg bg-white px-2 py-0.5 font-ipa font-bold text-ink border border-black/10 shadow-2xs mx-0.5 text-base sm:text-lg">
+              /θ/
+            </span>
+            , es porque lo{" "}
+            <strong className="font-bold text-ink">demostraste en días distintos.</strong>
+          </p>
+        </div>
+
+        {/* Right Step Flow Timeline */}
+        <div className="flex items-start gap-2 sm:gap-3 shrink-0 self-start lg:self-auto pt-1 pb-1">
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="flex size-7 items-center justify-center rounded-full bg-black/10 text-ink">
+              <Check className="size-3.5" strokeWidth={2.5} />
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-ink-secondary">Día 1</span>
+          </div>
+
+          <div className="flex h-7 items-center" aria-hidden="true">
+            <span className="w-4 sm:w-8 border-t-2 border-dashed border-black/20" />
+          </div>
+
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="flex size-7 items-center justify-center rounded-full bg-black/10 text-ink">
+              <Check className="size-3.5" strokeWidth={2.5} />
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-ink-secondary">Día 4</span>
+          </div>
+
+          <div className="flex h-7 items-center" aria-hidden="true">
+            <span className="w-4 sm:w-8 border-t-2 border-dashed border-black/20" />
+          </div>
+
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="flex size-7 items-center justify-center rounded-full bg-black/10 text-ink">
+              <Check className="size-3.5" strokeWidth={2.5} />
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-ink-secondary">Día 11</span>
+          </div>
+
+          <div className="flex h-7 items-center" aria-hidden="true">
+            <span className="w-4 sm:w-8 border-t-2 border-dashed border-black/20" />
+          </div>
+
+          <div className="flex h-7 items-center">
+            <div className="flex h-7 items-center gap-1.5 rounded-full bg-ink px-3.5 font-display text-xs font-bold text-white shadow-2xs whitespace-nowrap">
+              <span className="font-ipa font-bold !text-white">/θ/</span>
+              <span className="!text-white">dominada</span>
+            </div>
+          </div>
+        </div>
+      </PastelCard>
     </section>
   );
 }
+
