@@ -67,6 +67,33 @@ export const IPA_TO_ARPABET: Record<string, readonly string[]> = {
   z: ['Z'], 'ʒ': ['ZH'],
 }
 
+/**
+ * Tokens que espeak emite como una sola unidad pero que en ARPAbet son varios
+ * fonemas. Sin esto, cualquier palabra con «r» («for», «car», «here») produciría
+ * una abstención espuria: el benchmark mediría este bug, no el modelo.
+ *
+ * Verificado contra el `vocab.json` del modelo el 2026-09-25; todos existen.
+ */
+export const COMPOSITE_EXPANSIONS: Record<string, readonly string[]> = {
+  // Vocales rotizadas
+  'ɑːɹ': ['ɑː', 'ɹ'],
+  'ɔːɹ': ['ɔː', 'ɹ'],
+  'oːɹ': ['oː', 'ɹ'],
+  'ɛɹ': ['ɛ', 'ɹ'],
+  'ɪɹ': ['ɪ', 'ɹ'],
+  'ʊɹ': ['ʊ', 'ɹ'],
+  // Centrantes: espeak las escribe juntas, el ARPAbet las separa
+  'iə': ['iː', 'ə'],
+  'eə': ['ɛ', 'ə'],
+  'ʊə': ['ʊ', 'ə'],
+  'aɪɚ': ['aɪ', 'ɚ'],
+  'aɪə': ['aɪ', 'ə'],
+  // Secuencias consonánticas y de deslizamiento
+  'əl': ['ə', 'l'],
+  ju: ['j', 'uː'],
+  ts: ['t', 's'],
+}
+
 /** Diacríticos de longitud/tono que espeak añade y que no cambian el fonema. */
 const STRIPPABLE = /[ˈˌː]/g
 

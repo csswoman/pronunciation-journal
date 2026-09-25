@@ -28,21 +28,22 @@ son históricas.
 | 035 | Aprovechar la IA gratuita sin agotar el servicio (fases A/B/C) | P1 | M | — | IN PROGRESS (fases A–C en código; migraciones pendientes de aplicar y validar) |
 | 036 | Salida estructurada y prompts ajustados al nivel | P2 | M | 035 fase A | DONE (20 rutas JSON; eval 11/12 frente a 8/12; 5313 tests) |
 | 037 | AI Coach y ejercicios más rápidos, variados y con menos llamadas a IA | P1 | L | 035 fase A | DONE (fases A, B y C) |
-| 038 | Feedback de pronunciación por sonido (estilo ELSA) sin cuota de IA | P2 | L | fase A: —; fases B/C: 039 fase A | fase A DONE · fase B: B1+B2 DONE, B3 BLOQUEADA (la dueña debe aceptar la licencia de L2-ARCTIC) · fase C sin abrir |
+| 038 | Feedback de pronunciación por sonido (estilo ELSA) sin cuota de IA | P2 | L | fase A: —; fases B/C: 039 fase A | DONE (fase A + B, no-ship): la puerta exigía 4 fonemas y solo pasó /z/; sin fase C |
 | 039 | Voces locales (Kokoro) y entrenamiento de percepción con muchas voces (HVPT) | P1 | L | — | TODO |
 | 040 | Las correcciones del AI Coach alimentan la cola de errores repetidos | P1 | S | — | TODO |
 | 041 | Banco de ejercicios pregenerados con la cuota diaria que sobra | P2 | M–L | 035 fase B, 037 fases A/B1 | TODO |
 | 042 | Botón "Esta corrección está mal" y casos de evaluación reales | P2 | S–M | 036, 040 | TODO |
 | 043 | Drills de gramática A1–C1 (4 técnicas) con corrección tolerante y local | P1 | L | — (comparte pieza con 037 C1) | TODO |
 
-Orden recomendado: **040 → 035 fase A → 037 fase A → 039 → 035 fase B → 037 fases B/C → 041 → 036 → 042 → 038 fases B/C**.
+Orden recomendado: **040 → 035 fase A → 037 fase A → 039 → 035 fase B → 037 fases B/C → 041 → 036 → 042**.
 040 va primero porque es pequeño, no gasta requests y no depende de nada.
 043 puede ir en cualquier momento: no gasta requests y su fase A es el paso 3 de 037 C1 (hacerla antes ahorra trabajo a 037).
-La fase A de 038 (textos honestos + comparar tu grabación con el modelo) puede hacerse en cualquier momento.
+038 salió del orden: la fase A ya está en producción y la fase B cerró en no-ship, así que no queda nada suyo por hacer.
 Cada plan de la serie 5 termina con un **paso de documentación** (README, `CLAUDE.md`,
 `ENGINEERING_STANDARDS.md`, `docs/architecture/`, `docs/README.md`): una fase no está DONE hasta actualizar
-lo que cambió. 039 prepara la CSP, el Web Worker y la descarga bajo demanda que reutiliza 038. 038 fase B es un spike con puerta
-de decisión sobre L2-ARCTIC (hablantes de español); la fase C solo se ejecuta si pasa.
+lo que cambió. 038 fase B ya corrió su benchmark contra L2-ARCTIC (hablantes de español) y **no pasó la puerta**:
+la fase C queda cerrada y 039 ya no tiene que preparar nada para ella. Resultados por fonema en
+`lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
 
 ### Backlog propuesto (sin plan todavía)
 

@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   assessRecognizedPhonemes,
+  expandComposites,
   type RecognizedPhoneme,
 } from '../phoneme-ctc-evaluator'
 import {
   arpabetCandidates,
+  COMPOSITE_EXPANSIONS,
   IPA_TO_ARPABET,
   PRIORITY_ARPABET,
   satisfies,
@@ -52,6 +54,42 @@ describe('phoneme-arpabet folding', () => {
   it('no adivina con tokens fuera del inventario del inglés', () => {
     expect(arpabetCandidates('iɛ5')).toEqual([])
     expect(arpabetCandidates('tɕh')).toEqual([])
+  })
+
+  it('cada parte de un compuesto es un fonema conocido', () => {
+    for (const [composite, parts] of Object.entries(COMPOSITE_EXPANSIONS)) {
+      for (const part of parts) {
+        expect(arpabetCandidates(part), `«${composite}» → «${part}» sin mapeo`).not.toEqual([])
+      }
+    }
+  })
+})
+
+describe('expandComposites', () => {
+  it('parte la vocal rotizada en vocal + /r/ y reparte el tramo', () => {
+    const result = expandComposites([{ ipa: 'ɔːɹ', startMs: 100, endMs: 200, confidence: 0.8 }])
+    expect(result).toEqual([
+      { ipa: 'ɔː', startMs: 100, endMs: 150, confidence: 0.8 },
+      { ipa: 'ɹ', startMs: 150, endMs: 200, confidence: 0.8 },
+    ])
+  })
+
+  it('deja intacto lo que no es compuesto', () => {
+    const token = { ipa: 'v', startMs: 0, endMs: 80, confidence: 0.9 }
+    expect(expandComposites([token])).toEqual([token])
+  })
+
+  it('«for» se alinea con AO R en vez de abstenerse', () => {
+    const result = assessRecognizedPhonemes(
+      ['F', 'AO', 'R'],
+      [
+        { ipa: 'f', startMs: 0, endMs: 60, confidence: 0.9 },
+        { ipa: 'ɔːɹ', startMs: 60, endMs: 180, confidence: 0.9 },
+      ],
+      'test-v1',
+    )
+    expect(result.phonemes.map((p) => p.verdict)).toEqual(['match', 'match', 'match'])
+    expect(result.phonemes.some((p) => p.abstained)).toBe(false)
   })
 })
 

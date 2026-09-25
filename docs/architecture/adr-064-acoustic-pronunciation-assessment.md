@@ -1,6 +1,6 @@
 # ADR 064: Acoustic pronunciation assessment — validate before shipping
 
-- **Status**: Steps 1-3 executed; Step 4 vendor research done, then re-run as a real formant-based benchmark against speechocean762 — **NO-SHIP for all 4 vowel contrasts** (see Decision); Steps 5-6 not applicable. Reopened 2026-09-25 by plan 038 with a fourth candidate (on-device phoneme CTC): candidate vetted, benchmark **not run** — corpus access needs the owner (see Candidate 4).
+- **Status**: Steps 1-3 executed; Step 4 vendor research done, then re-run as a real formant-based benchmark against speechocean762 — **NO-SHIP for all 4 vowel contrasts** (see Decision); Steps 5-6 not applicable. Reopened 2026-09-25 by plan 038 with a fourth candidate (on-device phoneme CTC) and benchmarked against L2-ARCTIC's Spanish-L1 speakers — **NO-SHIP again**: 1 of the 4 phonemes the gate required passed (see Decision).
 - **Plan**: `plans/064-validate-acoustic-pronunciation-assessment.md`
 - **Depends on**: plan 063 (`docs/architecture/exercises.md` row "3 — Future acoustic analysis")
 
@@ -295,22 +295,41 @@ window-placement error are conflated in these numbers) or sourcing a corpus with
 Until such a follow-up plan ships a passing benchmark, this app must not claim acoustic
 pronunciation assessment anywhere in product copy.
 
-**Plan 038 phase B (2026-09-25): no decision yet — the benchmark could not run.** Candidate 4
-above clears every desk check the plan required (permissive license, 196.9 MB quantized, full
-ARPAbet coverage of the Spanish-L1 priority contrasts), so there is no STOP condition on the
-model. What is missing is the ground truth: L2-ARCTIC is CC BY-NC 4.0 and both distribution
-routes require a person to accept the license and hand over contact details or an authenticated
-account. Until the owner does that, `decision-phoneme-ctc.md` has nothing to report and phase C
-stays closed. The no-ship decision above remains in force: **no production surface shows a
-per-sound verdict.** Plan 038 phase A only removed unearned claims; it added no new signal.
-Blockers, the pre-registered gate and the steps to unblock are in
-`lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
+**Plan 038 phase B decision (2026-09-25), on-device phoneme CTC: NO-SHIP.** The benchmark ran for
+real against L2-ARCTIC's manually annotated subset, all four Spanish-L1 speakers — 600 utterances,
+20,050 expected phonemes, 3,151 annotated human errors. Against the gate pre-registered before the
+corpus was downloaded (flagged-error precision ≥ 0.80, false alarm ≤ 5%, ≥ 30 annotated errors per
+phoneme, ≥ 4 phonemes passing):
+
+- **Overall: 35.2% precision on flagged errors, 10.0% false alarm, 28.7% recall.** About two of
+  every three corrections the model would offer are wrong.
+- **Exactly one phoneme passes: /z/** (96.8% precision, 1.3% false alarm on 502 annotated errors),
+  and only at 12.2% recall — trustworthy but mostly silent.
+- **/ð/ is the pre-registration story.** It passed at 85.7% on the first two speakers and came in at
+  **79.5%** with all four: under the line by half a point. The threshold was fixed beforehand, so it
+  fails, and that is the right answer.
+- The Spanish-L1 priority contrasts fail hardest: /ɪ/ 35.2%, /iː/ 14.6%, /v/ 54.2%, /h/ 28.2%.
+  /θ/ reaches 78.9% precision but flags 28.6% of correct productions.
+- **Latency is not the blocker**: p50 1151 ms, p95 2248 ms on CPU, inside the 3 s budget. Abstention
+  1.1%, so the espeak→ARPAbet folding covered the inventory — this measured the model, not a mapping
+  gap.
+
+One passing phoneme against a gate of four means **phase C does not open** and no production surface
+gains a per-sound verdict. The earlier NO-SHIP therefore stands, now for a second, independent
+approach. Plan 038 phase A only removed unearned claims; it added no signal. Full per-phoneme table,
+caveats and reproduction steps: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
+
+Two paths remain for a future plan, neither opened here: **fine-tune** a phoneme model on L2-ARCTIC
+(what the F1 ≈ 0.60–0.72 published systems do), or a **vendor** such as Azure AI Speech
+Pronunciation Assessment, which sends user audio to a third party and needs the explicit owner
+approval this ADR requires. Note that L2-ARCTIC is CC BY-NC 4.0: fine-tuning on it constrains the
+result to non-commercial use.
 
 ## Links
 
 - Plan: `plans/064-validate-acoustic-pronunciation-assessment.md`
 - Plan 038 (candidate 4): `plans/038-elsa-style-phoneme-feedback-on-device.md`
-- **Phoneme-CTC status, blockers and how to unblock**: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`
+- **Phoneme-CTC verdict and full per-phoneme results**: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`
 - Prior deferral: `docs/architecture/exercises.md` (row "3 — Future acoustic analysis")
 - Honest-signal contract: `lib/pronunciation/spoken-attempt.ts`
 - Evaluator contract: `lib/pronunciation/acoustic-evaluator.ts`

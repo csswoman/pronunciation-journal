@@ -22,6 +22,9 @@ allowBuilds:
   '@google/genai': true
   canvas: true
   esbuild: true
+  # Necesita su postinstall para bajar el binario nativo de CPU. Solo se usa en
+  # el benchmark del plan 038 (Node, fuera del bundle de la app).
+  onnxruntime-node: true
   protobufjs: true
   sharp: true
   unrs-resolver: true

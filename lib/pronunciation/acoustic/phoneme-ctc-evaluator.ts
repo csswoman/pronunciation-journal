@@ -10,7 +10,12 @@
  * La inferencia se inyecta (`RecognizedPhoneme[]`): este módulo es aritmética
  * pura y se testea con salida simulada, sin descargar 197 MB de modelo.
  */
-import { arpabetCandidates, bareArpabet, satisfies } from './phoneme-arpabet-folding'
+import {
+  arpabetCandidates,
+  bareArpabet,
+  COMPOSITE_EXPANSIONS,
+  satisfies,
+} from './phoneme-arpabet-folding'
 
 /** Un fonema reconocido por el modelo, con su tramo temporal. */
 export interface RecognizedPhoneme {
@@ -48,6 +53,25 @@ export interface PhonemeCtcAssessment {
   phonemes: PhonemeAssessment[]
   /** Reconocidos que no corresponden a ningún esperado (epéntesis, "e-school"). */
   additions: RecognizedPhoneme[]
+}
+
+/**
+ * Parte los tokens que espeak emite juntos y el ARPAbet separa («ɔːɹ» → AO + R),
+ * repartiendo el tramo temporal a partes iguales y conservando la confianza del
+ * frame original, que es la única evidencia que hay para ambas partes.
+ */
+export function expandComposites(recognized: RecognizedPhoneme[]): RecognizedPhoneme[] {
+  return recognized.flatMap((token) => {
+    const parts = COMPOSITE_EXPANSIONS[token.ipa]
+    if (!parts) return [token]
+    const step = (token.endMs - token.startMs) / parts.length
+    return parts.map((ipa, i) => ({
+      ipa,
+      startMs: Math.round(token.startMs + i * step),
+      endMs: Math.round(token.startMs + (i + 1) * step),
+      confidence: token.confidence,
+    }))
+  })
 }
 
 type Op = 'match' | 'sub' | 'del' | 'ins'
@@ -116,10 +140,11 @@ function backtrack(
  */
 export function assessRecognizedPhonemes(
   expectedArpabet: string[],
-  recognized: RecognizedPhoneme[],
+  rawRecognized: RecognizedPhoneme[],
   evaluatorVersion: string,
 ): PhonemeCtcAssessment {
   const expected = expectedArpabet.map(bareArpabet).filter(Boolean)
+  const recognized = expandComposites(rawRecognized)
   const dp = buildCostTable(expected, recognized)
   const steps = backtrack(dp, expected, recognized)
 
