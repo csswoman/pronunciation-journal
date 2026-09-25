@@ -30,6 +30,9 @@ export interface LandingPractice {
 export interface LandingSignal {
   title: string;
   description: string;
+  statusKicker: string;
+  progressLevel: number;
+  tone: "default" | "butter" | "coral" | "mint";
 }
 
 export const LANDING_STATS: readonly LandingStat[] = [
@@ -87,21 +90,33 @@ export const LANDING_SIGNALS: readonly LandingSignal[] = [
     title: "Leer es exposición",
     description:
       "Abrir una lección cuenta como haberla visto. Nada más: no mueve tu nivel.",
+    statusKicker: "No mueve tu nivel",
+    progressLevel: 0,
+    tone: "default",
   },
   {
     title: "Guardar es intención",
     description:
       "Una palabra guardada dice qué te importa y entra en la cola. Todavía no es dominio.",
+    statusKicker: "Entra en tu cola",
+    progressLevel: 1,
+    tone: "butter",
   },
   {
     title: "Practicar es evidencia",
     description:
       "Solo el ejercicio evaluado mueve tu perfil, con errores comunes ya catalogados.",
+    statusKicker: "Mueve tu perfil",
+    progressLevel: 2,
+    tone: "coral",
   },
   {
     title: "El dominio se gana con el tiempo",
     description:
       "Requiere acertar en sesiones separadas. No se infiere de clics ni de rachas.",
+    statusKicker: "Confirma el dominio",
+    progressLevel: 4,
+    tone: "mint",
   },
 ] as const;
 
