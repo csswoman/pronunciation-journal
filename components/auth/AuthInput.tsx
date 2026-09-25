@@ -39,10 +39,10 @@ export function AuthInput({
   const masked = isPasswordField && !showPassword;
 
   const baseClass =
-    "w-full bg-surface-sunken rounded-sm text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-14";
+    "w-full bg-white dark:bg-surface-sunken rounded-xl text-fg text-base px-4 py-3.5 outline-none transition-all placeholder:text-fg-subtle focus:bg-white dark:focus:bg-surface-raised pr-12";
   const borderClass = error
-    ? "border border-error focus:border-error focus-visible:ring-error"
-    : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
+    ? "border border-error focus:border-error focus-visible:ring-2 focus-visible:ring-error"
+    : "border border-border-subtle focus:border-[var(--accent-purple)] focus-visible:ring-2 focus-visible:ring-[var(--accent-purple)]/20";
 
   // Wide tracking only while masked bullets are visible — not on the empty placeholder
   const maskedClass =
@@ -74,7 +74,7 @@ export function AuthInput({
 
   return (
     <div>
-      <label htmlFor={inputId} className="block mb-1.5 text-body-sm font-medium text-fg-muted">
+      <label htmlFor={inputId} className="block mb-2 text-base font-semibold text-fg-muted">
         {label}
       </label>
       <div className="relative">

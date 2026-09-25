@@ -189,7 +189,6 @@ async function HomePageContent() {
       secondaryLesson={homeLessons.secondary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
-      checkpointReadiness={checkpointReadiness}
       primaryAction={primaryAction}
       previewWords={queue.preview}
       immersionSummary={immersionSummary}

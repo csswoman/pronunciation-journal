@@ -1,38 +1,1294 @@
 [
-  { "chunkId": "001-hey-how-s-it-going", "markedText": "Hey, **how**'s it going?", "anchors": [{ "owner": "essential_words", "id": "c1k:how" }] },
-  { "chunkId": "002-what-s-up", "markedText": "What's **up**?", "anchors": [{ "owner": "essential_words", "id": "c1k:up" }] },
-  { "chunkId": "005-nice-to-meet-you", "markedText": "Nice to **meet** you.", "anchors": [{ "owner": "essential_words", "id": "c1k:meet" }] },
-  { "chunkId": "013-where-are-you-from", "markedText": "**Where** are you from?", "anchors": [{ "owner": "essential_words", "id": "c1k:where" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "055-that-s-amazing", "markedText": "That's **amazing**.", "anchors": [{ "owner": "essential_words", "id": "c1k:amaze" }] },
-  { "chunkId": "064-that-s-true", "markedText": "That's **true**.", "anchors": [{ "owner": "essential_words", "id": "c1k:true" }], "pronunciationTargetIds": ["segmental.contrast./ð/|/θ/"] },
-  { "chunkId": "090-can-you-help-me-with-this", "markedText": "Can you **help** me with this?", "anchors": [{ "owner": "essential_words", "id": "c1k:help" }] },
-  { "chunkId": "105-can-you-say-that-again", "markedText": "Can you **say** that again?", "anchors": [{ "owner": "essential_words", "id": "c1k:say" }] },
-  { "chunkId": "109-how-do-you-spell-that", "markedText": "How do you **spell** that?", "anchors": [{ "owner": "essential_words", "id": "c1k:spell" }] },
-  { "chunkId": "127-what-s-your-favorite", "markedText": "What's your **favorite**...?", "anchors": [{ "owner": "essential_words", "id": "c1k:favorite" }] },
-  { "chunkId": "148-check-please", "markedText": "**Check**, please.", "anchors": [{ "owner": "essential_words", "id": "c1k:check" }] },
-  { "chunkId": "205-where-were-you", "markedText": "Where **were** you?", "anchors": [{ "owner": "essential_words", "id": "c1k:be" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "216-i-m-sorry-about-that", "markedText": "I'm **sorry** about that.", "anchors": [{ "owner": "essential_words", "id": "c1k:sorry" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "233-i-m-going-to", "markedText": "I'm **going** to...", "anchors": [{ "owner": "essential_words", "id": "c1k:go" }] },
-  { "chunkId": "256-i-hope-so", "markedText": "I **hope** so.", "anchors": [{ "owner": "essential_words", "id": "c1k:hope" }] },
-  { "chunkId": "285-when-are-you-leaving", "markedText": "When are you **leaving**?", "anchors": [{ "owner": "essential_words", "id": "c1k:leave" }] },
-  { "chunkId": "295-take-care", "markedText": "**Take** care.", "anchors": [{ "owner": "essential_words", "id": "c1k:take" }] },
-  { "chunkId": "296-talk-to-you-later", "markedText": "**Talk** to you later.", "anchors": [{ "owner": "essential_words", "id": "c1k:talk" }] },
-  { "chunkId": "301-for-here-or-to-go", "markedText": "For **here** or to go?", "anchors": [{ "owner": "essential_words", "id": "c1k:here" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "302-to-go-please", "markedText": "To **go**, please.", "anchors": [{ "owner": "essential_words", "id": "c1k:go" }] },
-  { "chunkId": "303-can-i-get-a", "markedText": "Can I **get** a...", "anchors": [{ "owner": "essential_words", "id": "c1k:get" }] },
-  { "chunkId": "304-keep-the-change", "markedText": "Keep the **change**.", "anchors": [{ "owner": "essential_words", "id": "c1k:change" }] },
-  { "chunkId": "305-where-is-the-restroom", "markedText": "Where is the **restroom**?", "anchors": [{ "owner": "essential_words", "id": "c1k:room" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "306-i-m-just-looking-thanks", "markedText": "I'm just **looking**, thanks.", "anchors": [{ "owner": "essential_words", "id": "c1k:look" }] },
-  { "chunkId": "307-have-a-nice-day", "markedText": "Have a nice **day**!", "anchors": [{ "owner": "essential_words", "id": "c1k:day" }] },
-  { "chunkId": "308-you-too", "markedText": "**You** too!", "anchors": [{ "owner": "essential_words", "id": "c1k:you" }] },
-  { "chunkId": "309-i-ll-be-right-back", "markedText": "I'll be **right** back.", "anchors": [{ "owner": "essential_words", "id": "c1k:right" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "310-just-a-second", "markedText": "Just a **second**.", "anchors": [{ "owner": "essential_words", "id": "c1k:second" }] },
-  { "chunkId": "311-no-worries", "markedText": "No **worries**.", "anchors": [{ "owner": "essential_words", "id": "c1k:worry" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "312-see-you-tomorrow", "markedText": "See you **tomorrow**!", "anchors": [{ "owner": "essential_words", "id": "c1k:tomorrow" }], "pronunciationTargetIds": ["segmental.phoneme./ɹ/"] },
-  { "chunkId": "313-what-time-is-it", "markedText": "What **time** is it?", "anchors": [{ "owner": "essential_words", "id": "c1k:time" }] },
-  { "chunkId": "314-how-much-is-this", "markedText": "How **much** is this?", "anchors": [{ "owner": "essential_words", "id": "c1k:much" }] },
-  { "chunkId": "315-i-don-t-know", "markedText": "I don't **know**.", "anchors": [{ "owner": "essential_words", "id": "c1k:know" }] },
-  { "chunkId": "316-take-your-time", "markedText": "Take your **time**.", "anchors": [{ "owner": "essential_words", "id": "c1k:time" }] },
-  { "chunkId": "317-come-on-in", "markedText": "**Come** on in!", "anchors": [{ "owner": "essential_words", "id": "c1k:come" }] },
-  { "chunkId": "318-nice-to-see-you", "markedText": "Nice to **see** you!", "anchors": [{ "owner": "essential_words", "id": "c1k:see" }] }
+  {
+    "chunkId": "001-hey-how-s-it-going",
+    "markedText": "Hey, **how**'s it going?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:how"
+      }
+    ]
+  },
+  {
+    "chunkId": "002-what-s-up",
+    "markedText": "What's **up**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:up"
+      }
+    ]
+  },
+  {
+    "chunkId": "005-nice-to-meet-you",
+    "markedText": "Nice to **meet** you.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:meet"
+      }
+    ]
+  },
+  {
+    "chunkId": "013-where-are-you-from",
+    "markedText": "**Where** are you from?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:where"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "055-that-s-amazing",
+    "markedText": "That's **amazing**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:amaze"
+      }
+    ]
+  },
+  {
+    "chunkId": "064-that-s-true",
+    "markedText": "That's **true**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:true"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "090-can-you-help-me-with-this",
+    "markedText": "Can you **help** me with this?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:help"
+      }
+    ]
+  },
+  {
+    "chunkId": "105-can-you-say-that-again",
+    "markedText": "Can you **say** that again?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:say"
+      }
+    ]
+  },
+  {
+    "chunkId": "109-how-do-you-spell-that",
+    "markedText": "How do you **spell** that?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:spell"
+      }
+    ]
+  },
+  {
+    "chunkId": "127-what-s-your-favorite",
+    "markedText": "What's your **favorite**...?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:favorite"
+      }
+    ]
+  },
+  {
+    "chunkId": "148-check-please",
+    "markedText": "**Check**, please.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:check"
+      }
+    ]
+  },
+  {
+    "chunkId": "205-where-were-you",
+    "markedText": "Where **were** you?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:be"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "216-i-m-sorry-about-that",
+    "markedText": "I'm **sorry** about that.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sorry"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "233-i-m-going-to",
+    "markedText": "I'm **going** to...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:go"
+      }
+    ]
+  },
+  {
+    "chunkId": "256-i-hope-so",
+    "markedText": "I **hope** so.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:hope"
+      }
+    ]
+  },
+  {
+    "chunkId": "285-when-are-you-leaving",
+    "markedText": "When are you **leaving**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:leave"
+      }
+    ]
+  },
+  {
+    "chunkId": "295-take-care",
+    "markedText": "**Take** care.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:take"
+      }
+    ]
+  },
+  {
+    "chunkId": "296-talk-to-you-later",
+    "markedText": "**Talk** to you later.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:talk"
+      }
+    ]
+  },
+  {
+    "chunkId": "301-for-here-or-to-go",
+    "markedText": "For **here** or to go?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:here"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "302-to-go-please",
+    "markedText": "To **go**, please.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:go"
+      }
+    ]
+  },
+  {
+    "chunkId": "303-can-i-get-a",
+    "markedText": "Can I **get** a...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:get"
+      }
+    ]
+  },
+  {
+    "chunkId": "304-keep-the-change",
+    "markedText": "Keep the **change**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:change"
+      }
+    ]
+  },
+  {
+    "chunkId": "305-where-is-the-restroom",
+    "markedText": "Where is the **restroom**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:room"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "306-i-m-just-looking-thanks",
+    "markedText": "I'm just **looking**, thanks.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:look"
+      }
+    ]
+  },
+  {
+    "chunkId": "307-have-a-nice-day",
+    "markedText": "Have a nice **day**!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:day"
+      }
+    ]
+  },
+  {
+    "chunkId": "308-you-too",
+    "markedText": "**You** too!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:you"
+      }
+    ]
+  },
+  {
+    "chunkId": "309-i-ll-be-right-back",
+    "markedText": "I'll be **right** back.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:right"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "310-just-a-second",
+    "markedText": "Just a **second**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:second"
+      }
+    ]
+  },
+  {
+    "chunkId": "311-no-worries",
+    "markedText": "No **worries**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:worry"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "312-see-you-tomorrow",
+    "markedText": "See you **tomorrow**!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:tomorrow"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "313-what-time-is-it",
+    "markedText": "What **time** is it?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:time"
+      }
+    ]
+  },
+  {
+    "chunkId": "314-how-much-is-this",
+    "markedText": "How **much** is this?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:much"
+      }
+    ]
+  },
+  {
+    "chunkId": "315-i-don-t-know",
+    "markedText": "I don't **know**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:know"
+      }
+    ]
+  },
+  {
+    "chunkId": "316-take-your-time",
+    "markedText": "Take your **time**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:time"
+      }
+    ]
+  },
+  {
+    "chunkId": "317-come-on-in",
+    "markedText": "**Come** on in!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:come"
+      }
+    ]
+  },
+  {
+    "chunkId": "318-nice-to-see-you",
+    "markedText": "Nice to **see** you!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:see"
+      }
+    ]
+  },
+  {
+    "chunkId": "003-long-time-no-see",
+    "markedText": "Long **time** no see!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:time"
+      }
+    ]
+  },
+  {
+    "chunkId": "004-how-have-you-been",
+    "markedText": "**How** have you been?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:how"
+      }
+    ]
+  },
+  {
+    "chunkId": "008-mind-if-i-sit-here",
+    "markedText": "Mind if I **sit** here?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sit"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "009-is-this-seat-taken",
+    "markedText": "Is this **seat** taken?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:seat"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "011-so-tell-me-about-yourself",
+    "markedText": "So, **tell** me about yourself.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:tell"
+      }
+    ]
+  },
+  {
+    "chunkId": "015-i-love-your-jacket",
+    "markedText": "I **love** your jacket.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:love"
+      }
+    ]
+  },
+  {
+    "chunkId": "021-how-s-your-day-going",
+    "markedText": "How's your **day** going?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:day"
+      }
+    ]
+  },
+  {
+    "chunkId": "022-busy-day-huh",
+    "markedText": "Busy **day**, huh?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:day"
+      }
+    ]
+  },
+  {
+    "chunkId": "026-i-usually-wake-up-around-seven",
+    "markedText": "I **usually** wake up around seven.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:usually"
+      }
+    ]
+  },
+  {
+    "chunkId": "027-i-work-from-home",
+    "markedText": "I **work** from home.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:work"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "029-i-m-not-a-morning-person",
+    "markedText": "I'm not a **morning** person.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:morning"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "030-i-try-to-exercise-every-day",
+    "markedText": "I **try** to exercise every day.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:try"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "031-in-my-free-time-i-like-to",
+    "markedText": "In my **free** time, I like to...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:free"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "037-it-depends-on-the-day",
+    "markedText": "It depends on the **day**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:day"
+      }
+    ]
+  },
+  {
+    "chunkId": "038-most-days-i",
+    "markedText": "**Most** days, I...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:most"
+      }
+    ]
+  },
+  {
+    "chunkId": "042-in-my-opinion",
+    "markedText": "In my **opinion**,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:opinion"
+      }
+    ]
+  },
+  {
+    "chunkId": "045-i-guess-so",
+    "markedText": "I **guess** so.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:guess"
+      }
+    ]
+  },
+  {
+    "chunkId": "047-that-makes-sense",
+    "markedText": "That makes **sense**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sense"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "051-no-way",
+    "markedText": "No **way**!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:way"
+      }
+    ]
+  },
+  {
+    "chunkId": "054-i-can-t-believe-it",
+    "markedText": "I can't **believe** it.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:believe"
+      }
+    ]
+  },
+  {
+    "chunkId": "056-that-sounds-great",
+    "markedText": "That sounds **great**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:great"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "058-i-m-so-glad-to-hear-that",
+    "markedText": "I'm so glad to **hear** that.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:hear"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "059-i-m-sorry-to-hear-that",
+    "markedText": "I'm **sorry** to hear that.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sorry"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "061-i-totally-agree",
+    "markedText": "I totally **agree**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:agree"
+      }
+    ]
+  },
+  {
+    "chunkId": "094-no-problem-at-all",
+    "markedText": "No **problem** at all.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:problem"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "006-it-s-nice-to-finally-meet-you",
+    "markedText": "It's nice to finally **meet** you.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:meet"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "007-i-don-t-think-we-ve-met",
+    "markedText": "I don't **think** we've met.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:think"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "010-what-brings-you-here",
+    "markedText": "What brings you **here**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:here"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "014-how-do-you-two-know-each-other",
+    "markedText": "How do you two **know** each other?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:know"
+      }
+    ]
+  },
+  {
+    "chunkId": "018-it-s-boiling-out-there",
+    "markedText": "It's boiling out **there**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:there"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "019-can-you-believe-this-weather",
+    "markedText": "Can you **believe** this weather?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:believe"
+      }
+    ]
+  },
+  {
+    "chunkId": "023-same-old-same-old",
+    "markedText": "Same old, **same** old.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:same"
+      }
+    ]
+  },
+  {
+    "chunkId": "025-things-could-be-worse",
+    "markedText": "Things **could** be worse.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:could"
+      }
+    ]
+  },
+  {
+    "chunkId": "032-i-spend-most-of-my-time",
+    "markedText": "I **spend** most of my time...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:spend"
+      }
+    ]
+  },
+  {
+    "chunkId": "039-i-never-really",
+    "markedText": "I **never** really...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:never"
+      }
+    ]
+  },
+  {
+    "chunkId": "041-if-you-ask-me",
+    "markedText": "If you **ask** me,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:ask"
+      }
+    ]
+  },
+  {
+    "chunkId": "043-from-my-point-of-view",
+    "markedText": "From my **point** of view,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:point"
+      }
+    ]
+  },
+  {
+    "chunkId": "044-as-far-as-i-know",
+    "markedText": "As **far** as I know,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:far"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "048-that-s-a-good-point",
+    "markedText": "That's a good **point**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:point"
+      }
+    ]
+  },
+  {
+    "chunkId": "049-i-see-what-you-mean",
+    "markedText": "I see what you **mean**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:mean"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "017-it-s-freezing-today",
+    "markedText": "It's freezing **today**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:today"
+      }
+    ]
+  },
+  {
+    "chunkId": "020-i-hope-it-doesn-t-rain",
+    "markedText": "I hope it doesn't **rain**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:rain"
+      }
+    ]
+  },
+  {
+    "chunkId": "024-can-t-complain",
+    "markedText": "Can't **complain**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:complain"
+      }
+    ]
+  },
+  {
+    "chunkId": "052-seriously",
+    "markedText": "**Seriously**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:seriously"
+      }
+    ]
+  },
+  {
+    "chunkId": "053-that-s-crazy",
+    "markedText": "That's **crazy**!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:crazy"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "057-that-sounds-awful",
+    "markedText": "That sounds **awful**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:awful"
+      }
+    ]
+  },
+  {
+    "chunkId": "063-exactly",
+    "markedText": "**Exactly**!",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:exactly"
+      }
+    ]
+  },
+  {
+    "chunkId": "068-i-don-t-think-so",
+    "markedText": "I don't **think** so.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:think"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "077-that-s-because",
+    "markedText": "That's **because**...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:because"
+      }
+    ]
+  },
+  {
+    "chunkId": "078-the-reason-is",
+    "markedText": "The **reason** is...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:reason"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "086-could-you-do-me-a-favor",
+    "markedText": "Could you do me a **favor**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:favor"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "089-can-i-ask-you-something",
+    "markedText": "Can I **ask** you something?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:ask"
+      }
+    ]
+  },
+  {
+    "chunkId": "091-let-me-know-if-you-need-anything",
+    "markedText": "Let me know if you **need** anything.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:need"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "097-would-you-like-some-help",
+    "markedText": "Would you like some **help**?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:help"
+      }
+    ]
+  },
+  {
+    "chunkId": "099-go-ahead",
+    "markedText": "Go **ahead**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:ahead"
+      }
+    ]
+  },
+  {
+    "chunkId": "100-after-you",
+    "markedText": "**After** you.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:after"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "101-sorry-what-was-that",
+    "markedText": "**Sorry**, what was that?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sorry"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "102-could-you-repeat-that",
+    "markedText": "Could you **repeat** that?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:repeat"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "106-sorry-i-didn-t-catch-that",
+    "markedText": "Sorry, I didn't **catch** that.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:catch"
+      }
+    ]
+  },
+  {
+    "chunkId": "107-could-you-speak-a-bit-slower",
+    "markedText": "Could you **speak** a bit slower?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:speak"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  },
+  {
+    "chunkId": "113-how-s-everything-going",
+    "markedText": "How's **everything** going?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:everything"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "114-what-s-new-with-you",
+    "markedText": "What's **new** with you?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:new"
+      }
+    ]
+  },
+  {
+    "chunkId": "116-what-do-you-usually-do-on-weekends",
+    "markedText": "What do you **usually** do on weekends?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:usually"
+      }
+    ]
+  },
+  {
+    "chunkId": "117-how-often-do-you",
+    "markedText": "How **often** do you...?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:often"
+      }
+    ]
+  },
+  {
+    "chunkId": "120-why-do-you-say-that",
+    "markedText": "Why do you **say** that?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:say"
+      }
+    ]
+  },
+  {
+    "chunkId": "016-nice-weather-we-re-having-isn-t-it",
+    "markedText": "Nice **weather** we're having, isn't it?",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:weather"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "033-i-m-really-into-cooking",
+    "markedText": "I'm **really** into cooking.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:really"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "034-i-ve-been-really-busy-lately",
+    "markedText": "I've been really **busy** lately.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:busy"
+      }
+    ]
+  },
+  {
+    "chunkId": "040-to-be-honest-i",
+    "markedText": "To be **honest**, I...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:honest"
+      }
+    ]
+  },
+  {
+    "chunkId": "046-i-m-not-so-sure-about-that",
+    "markedText": "I'm not so **sure** about that.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sure"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "050-i-never-thought-about-it-that-way",
+    "markedText": "I never thought about it that **way**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:way"
+      }
+    ]
+  },
+  {
+    "chunkId": "062-i-couldn-t-agree-more",
+    "markedText": "I couldn't **agree** more.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:agree"
+      }
+    ]
+  },
+  {
+    "chunkId": "065-fair-enough",
+    "markedText": "**Fair** enough.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:fair"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "066-i-see-your-point-but",
+    "markedText": "I see your **point**, but...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:point"
+      }
+    ]
+  },
+  {
+    "chunkId": "067-i-m-not-sure-i-agree",
+    "markedText": "I'm not **sure** I agree.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:sure"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.phoneme./ɹ/"
+    ]
+  },
+  {
+    "chunkId": "070-it-s-not-that-simple",
+    "markedText": "It's not that **simple**.",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:simple"
+      }
+    ]
+  },
+  {
+    "chunkId": "071-on-the-other-hand",
+    "markedText": "On the other **hand**,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:hand"
+      }
+    ]
+  },
+  {
+    "chunkId": "074-actually-i-think",
+    "markedText": "Actually, I **think**...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:think"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "076-the-thing-is",
+    "markedText": "The **thing** is,...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:thing"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./ð/|/θ/"
+    ]
+  },
+  {
+    "chunkId": "079-what-i-mean-is",
+    "markedText": "What I **mean** is...",
+    "anchors": [
+      {
+        "owner": "essential_words",
+        "id": "c1k:mean"
+      }
+    ],
+    "pronunciationTargetIds": [
+      "segmental.contrast./iː/|/ɪ/"
+    ]
+  }
 ]

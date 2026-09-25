@@ -57,6 +57,14 @@ export function useAssessmentFlow({
     setQuestionIndex((current) => current + 1);
   }
 
+  function resetFlow() {
+    setSectionIndex(initialStartIndex);
+    setPlacementStartIndex(initialStartIndex);
+    setQuestionIndex(0);
+    setPlacementStep(mode === "placement" ? (initialLevel ? "inventory" : "level") : "questions");
+    setSelfReportedLevel(initialLevel ?? null);
+  }
+
   return {
     sectionIndex,
     placementStartIndex,
@@ -70,5 +78,6 @@ export function useAssessmentFlow({
     goBackToInventory,
     goToPreviousQuestion,
     goToNextQuestion,
+    resetFlow,
   };
 }

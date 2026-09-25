@@ -1,18 +1,21 @@
 import Link from "next/link";
+import { RotateCcw } from "@/components/icons";
 import type { AssessmentQuestionFeedback, AssessmentResult } from "@/lib/courses/assessment";
-import Badge from "@/components/ui/Badge";
 import PastelCard from "@/components/layout/PastelCard";
+import SpeakButton from "@/components/courses/grammar-deck/SpeakButton";
+import { getTopicReviewExample } from "@/lib/courses/assessment-topic-examples";
 import { AssessmentLevelBreakdown } from "./AssessmentLevelBreakdown";
 import { AssessmentQuestionFeedbackList } from "./AssessmentQuestionFeedbackList";
 
 // Planned structure:
 // <AssessmentPlacementResultView>
 //   <starting level summary + level breakdown />
-//   <review topics sorted by evaluated errors />
+//   <review topics sorted by evaluated errors (with sentence examples and audio) />
 // </AssessmentPlacementResultView>
 
 interface AssessmentPlacementResultViewProps {
   result: AssessmentResult;
+  onRedo?: () => void;
 }
 
 function formatTopicTitle(title: string): string {
@@ -26,7 +29,7 @@ function getTopicFeedback(
   return (result.questionFeedback ?? []).filter((item) => item.lessonSlug === lessonSlug);
 }
 
-export function AssessmentPlacementResultView({ result }: AssessmentPlacementResultViewProps) {
+export function AssessmentPlacementResultView({ result, onRedo }: AssessmentPlacementResultViewProps) {
   const planOnly = result.total === 0 && result.conceptSignals.some((signal) => signal.status === "learn");
   const questionFeedback = result.questionFeedback ?? [];
   const reviewTopics = result.needsReview
@@ -42,26 +45,23 @@ export function AssessmentPlacementResultView({ result }: AssessmentPlacementRes
       };
     })
     .sort((left, right) => right.incorrect - left.incorrect || left.title.localeCompare(right.title));
-  const firstReviewHref = reviewTopics[0]
-    ? reviewTopics[0].lessonHref ?? `/courses?level=${(reviewTopics[0].level ?? result.assignedLevel).toLowerCase()}`
-    : `/courses?level=${result.assignedLevel.toLowerCase()}`;
   const correctPercent = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
 
   return (
     <div className="assessment-placement-result">
       <div className="assessment-placement-result__summary">
         <PastelCard tone="lilac" className="assessment-placement-hero">
-          <Badge label="Tu punto de partida" variant="info" />
+          <span className="assessment-hero-kicker">TU PUNTO DE PARTIDA</span>
           <h1>{planOnly ? "Empezamos por aquí" : `Empiezas en ${result.assignedLevel}`}</h1>
           <p>
             {planOnly
               ? "Marcaste estos temas como nuevos. Puedes empezar por una lección corta y volver a evaluar tu nivel más adelante."
-              : "Tus respuestas sitúan tu punto de partida aquí. El resultado orienta tu ruta y no es una certificación."}
+              : `Tienes una base sólida de ${result.assignedLevel === "A1" ? "fundamentos" : "A1"} y ya entiendes buena parte del ${result.assignedLevel}. Tu plan arranca ahí, reforzando primero lo que más te costó.`}
           </p>
 
           {result.total > 0 && (
             <div className="assessment-placement-score">
-              <strong>{correctPercent}%</strong>
+              <strong>{correctPercent} %</strong>
               <div>
                 <b>{result.score} de {result.total} correctas</b>
                 <small>
@@ -81,13 +81,23 @@ export function AssessmentPlacementResultView({ result }: AssessmentPlacementRes
           )}
 
           <div className="assessment-result-actions">
-            <Link href={firstReviewHref} className="assessment-result-action assessment-result-action--primary">
+            <Link href="/daily" className="assessment-result-action assessment-result-action--primary">
               {reviewTopics.length > 0 ? "Ir a practicar" : "Ver mi ruta"}<span aria-hidden>→</span>
             </Link>
             {questionFeedback.length > 0 && (
-              <Link href="#assessment-placement-reviews" className="assessment-result-action assessment-result-action--secondary">
-                Ver qué repasar
-              </Link>
+              <a href="#assessment-question-feedback" className="assessment-result-action assessment-result-action--secondary">
+                Ver mis respuestas
+              </a>
+            )}
+            {onRedo && (
+              <button
+                type="button"
+                onClick={onRedo}
+                className="assessment-result-action assessment-result-action--secondary assessment-result-action--redo"
+              >
+                <RotateCcw size={15} aria-hidden />
+                Hacer de nuevo
+              </button>
             )}
           </div>
         </PastelCard>
@@ -101,8 +111,8 @@ export function AssessmentPlacementResultView({ result }: AssessmentPlacementRes
             <h2 id="assessment-placement-reviews-title">Qué repasar primero</h2>
             <p>
               {planOnly
-                ? "Ordenado por los temas que marcaste como nuevos."
-                : "Ordenado por los temas con más respuestas incorrectas."}
+                ? "Ordenado por los temas que marcaste como nuevos. Cada tema tiene una práctica corta que ya está en tu plan."
+                : "Ordenado por lo que más te frenó. Cada tema tiene una práctica corta que ya está en tu plan."}
             </p>
           </div>
           {reviewTopics.length > 0 && (
@@ -114,44 +124,53 @@ export function AssessmentPlacementResultView({ result }: AssessmentPlacementRes
 
         {reviewTopics.length > 0 ? (
           <div className="assessment-placement-topics">
-            {reviewTopics.map((topic) => (
-              <article className="assessment-placement-topic" key={topic.lessonSlug}>
-                <div className="assessment-placement-topic__badges">
-                  <Badge
-                    label={topic.incorrect > 0
-                      ? `${topic.incorrect} ${topic.incorrect === 1 ? "fallo" : "fallos"}`
-                      : "Para empezar"}
-                    variant={topic.incorrect > 0 ? "error" : "info"}
-                  />
-                  {topic.level && <Badge label={`nivel · ${topic.level.toUpperCase()}`} variant="neutral" />}
-                </div>
-                <h3>{formatTopicTitle(topic.title)}</h3>
-                {topic.feedback[0]?.explanation && (
-                  <p className="assessment-placement-topic__hint">{topic.feedback[0].explanation}</p>
-                )}
-                <div className="assessment-placement-topic__actions">
-                  <Link
-                    href={topic.lessonHref ?? `/courses?level=${(topic.level ?? result.assignedLevel).toLowerCase()}`}
-                    className="assessment-placement-topic__practice"
-                  >
-                    Practicar este tema
-                  </Link>
-                  {topic.feedback.length > 0 && (
-                    <details className="assessment-placement-topic__details">
-                      <summary>
-                        Ver {topic.feedback.length === 1 ? "corrección" : `${topic.feedback.length} correcciones`}
-                      </summary>
-                      <AssessmentQuestionFeedbackList
-                        items={topic.feedback}
-                        title={`Correcciones: ${formatTopicTitle(topic.title)}`}
-                        compact
-                        showHeading={false}
-                      />
-                    </details>
+            {reviewTopics.map((topic) => {
+              const example = getTopicReviewExample(topic.lessonSlug, topic.feedback[0]);
+              return (
+                <article className="assessment-placement-topic" key={topic.lessonSlug}>
+                  <div className="assessment-placement-topic__badges">
+                    <span className="assessment-badge-pill assessment-badge-pill--fallos">
+                      {topic.incorrect > 0
+                        ? `${topic.incorrect} ${topic.incorrect === 1 ? "fallo" : "fallos"}`
+                        : "Para empezar"}
+                    </span>
+                    {topic.level && (
+                      <span className="assessment-badge-pill assessment-badge-pill--neutral">
+                        {`gramática · ${topic.level.toUpperCase()}`}
+                      </span>
+                    )}
+                  </div>
+                  <h3>{formatTopicTitle(topic.title)}</h3>
+                  <p className="assessment-placement-topic__hint">
+                    {example.explanation ?? topic.feedback[0]?.explanation ?? "Repasa la estructura y uso principal de este tema."}
+                  </p>
+
+                  {example.phrase && (
+                    <div className="assessment-topic-example">
+                      <div className="assessment-topic-example__top">
+                        <strong className="assessment-topic-example__phrase">{example.phrase}</strong>
+                        <SpeakButton text={example.phrase} size="sm" className="assessment-topic-example__speak" />
+                      </div>
+                      {example.ipa && (
+                        <span className="assessment-topic-example__ipa font-ipa">{example.ipa}</span>
+                      )}
+                      {example.translation && (
+                        <p className="assessment-topic-example__translation">{example.translation}</p>
+                      )}
+                    </div>
                   )}
-                </div>
-              </article>
-            ))}
+
+                  <div className="assessment-placement-topic__actions">
+                    <Link
+                      href={topic.lessonHref ?? `/courses?level=${(topic.level ?? result.assignedLevel).toLowerCase()}`}
+                      className="assessment-placement-topic__practice-pill"
+                    >
+                      Practicar · {example.minutes ?? 5} min
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <p className="assessment-placement-reviews__empty">
@@ -159,6 +178,15 @@ export function AssessmentPlacementResultView({ result }: AssessmentPlacementRes
           </p>
         )}
       </section>
+
+      {questionFeedback.length > 0 && (
+        <AssessmentQuestionFeedbackList
+          id="assessment-question-feedback"
+          title="Tus respuestas evaluadas"
+          items={questionFeedback}
+        />
+      )}
     </div>
   );
 }
+

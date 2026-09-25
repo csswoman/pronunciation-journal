@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AssessmentPayloadSchema } from "@/lib/courses/assessment-schema";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { ClientAssessmentQuestion, AssessmentResult } from "@/lib/courses/assessment";
@@ -9,6 +9,7 @@ import type { CefrLevelId } from "@/lib/courses/types";
 import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import {
   buildStarterPlanResult,
+  getSavedAssessmentResult,
   persistLocalAssessmentCache,
   persistVerifiedAssessmentLocally,
 } from "./assessment-client-helpers";
@@ -38,6 +39,13 @@ export function useAssessmentScoring({
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [evaluationError, setEvaluationError] = useState(false);
+
+  useEffect(() => {
+    const saved = getSavedAssessmentResult({ userId, mode, checkpointLabel });
+    if (saved) {
+      setResult(saved);
+    }
+  }, [userId, mode, checkpointLabel]);
 
   async function requestServerResult(
     endpoint: AssessmentEndpoint,
@@ -121,11 +129,19 @@ export function useAssessmentScoring({
       .finally(() => setSaving(false));
   }
 
+  function reset() {
+    setResult(null);
+    setSaving(false);
+    setSaveError(false);
+    setEvaluationError(false);
+  }
+
   return {
     result,
     saving,
     saveError,
     evaluationError,
+    reset,
     setSaving,
     setEvaluationError,
     requestServerResult,

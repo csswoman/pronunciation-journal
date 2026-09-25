@@ -6,7 +6,7 @@
 
 ## Status
 
-- **Execution status**: IN PROGRESS — A1/A2 server-verified pilot implemented locally; human calibration and launch checks remain open.
+- **Execution status**: IN PROGRESS — A1/A2 server-verified pilot implemented locally; pending a short personal review in the main browser.
 - **Priority**: P2
 - **Effort**: L
 - **Risk**: HIGH
@@ -17,6 +17,8 @@
 ## Why this matters
 
 Un checkpoint con escucha todavía puede promover a quien nunca produjo una frase. La app ya practica habla en otras superficies, pero el examen no la evalúa. La evidencia oral debe corresponder a un objetivo comunicativo del nivel y ser verificable por el servidor. Una transcripción, nota o `passed: true` enviada por el navegador es insuficiente para autorizar la promoción.
+
+Para el uso personal de English Journal, este checkpoint es una comprobación orientativa de una tarea concreta. No certifica ni estima por sí solo el dominio general de un nivel CEFR; no requiere validación psicométrica ni evaluadores externos.
 
 ## Current state
 
@@ -29,30 +31,31 @@ Un checkpoint con escucha todavía puede promover a quien nunca produjo una fras
 - Implemented an A1/A2 pilot. A1 asks the learner to describe a fictional person; A2 asks for a fictional Saturday plan. Prompts explicitly avoid real location, plans, or personal information.
 - The server owns each task and rubric, transcribes submitted audio through Gemini, checks the requested details, and gates A1/A2 promotion on the saved attempt. Raw audio and the transcript are not stored by English Journal; the audio digest, rubric version, answers, and attempt state are persisted for retry and audit.
 - Checkpoint results now persist oral status and the written/listening threshold breakdown. Attempts can be resumed on the same account for 24 hours; challenge IDs expire after five minutes. Authenticated clients can read their own attempt, while writes remain server-only under RLS.
-- The rubric is a literal transcript-content check. It does not establish acoustic pronunciation quality or mastery, and its promotion threshold has not been calibrated with human-reviewed samples.
-- The migration remains local and has not been pushed. Real-browser microphone, accessibility, and unsupported-device acceptance remains untested. Do not treat the A1/A2 pilot rubric as launch-approved until those checks and the human sample review are complete.
-- Before launch, confirm that the product audience meets the current Gemini Developer API age restrictions and verify the project’s service tier. Google’s terms and data handling differ between unpaid and paid services.
+- The rubric is a literal transcript-content check. It does not establish acoustic pronunciation quality or mastery. For this personal pilot, review a few outcomes yourself; do not describe that as formal calibration.
+- The migration remains local and has not been pushed. A short real-browser microphone smoke test remains open: grant permission, record one response, and confirm the no-microphone path preserves the rest of the attempt.
+- Before sharing the app with other learners, review the then-current Gemini API age, service, and data conditions. This is a one-time check before broader use, not an ongoing compliance workstream for the personal pilot.
 - Focused Vitest, `pnpm type-check`, `pnpm lint`, `pnpm audit:hard-rules`, and `pnpm check:migrations` passed. The RLS audit detects this table’s isolation case and still warns about three pre-existing tables. The live RLS integration script has not been run.
 
 ## Scope and steps
 
-1. Especifica por nivel A1–C2 una tarea oral breve y evaluable: prompt, contenido esperado, criterio mínimo, posibilidad de reintento y qué evidencia representa (inteligibilidad/uso de la estructura, no precisión acústica inexistente). Prioriza un piloto A1/A2 **sin habilitar promoción oral para los otros niveles** hasta tener tareas y umbrales validados; el criterio final exige cobertura A1–C2.
+1. Mantén el piloto en A1/A2: una tarea breve por nivel con prompt, contenido esperado, criterio mínimo y reintento. La evidencia indica si se resolvió esa tarea concreta; no representa pronunciación acústica ni dominio general CEFR. B1–C2 no necesitan tareas ni puertas orales mientras el uso siga siendo personal.
 2. Define un flujo de envío de audio autenticado y ligado a usuario, intento, nivel e ítem con caducidad y límites de tamaño/tiempo. Reutiliza transcripción del servidor si cumple el contrato; calcula la evaluación del objetivo en el servidor. Nunca aceptes una nota o transcripción enviada por el cliente como evidencia autoritativa. Protege el audio según el contrato de privacidad y retención vigente; no lo guardes automáticamente si no es necesario.
 3. Añade una condición oral independiente al scorer y a la ruta de persistencia. Una puntuación escrita o auditiva perfecta no promociona si falta la evidencia oral requerida. La evaluación oral fallida o indisponible debe permanecer pendiente, sin falsificar un aprobado ni degradar automáticamente el nivel por una falla técnica.
 4. Integra captura, permiso, reproducción/reintento y feedback accesible en el flujo de checkpoint. Ofrece un estado honesto para dispositivos sin micrófono o sin servicio de transcripción. El usuario puede conservar el resto del intento y terminar la tarea oral más tarde; documenta cualquier cambio a la persistencia de intentos.
-5. Prueba manipulación de payload, ID ajeno, replay, expiración, fallo de transcripción, audio vacío, reintento y dos dispositivos. Añade evaluación humana de una muestra por nivel antes de fijar umbrales de promoción y registra los límites de fiabilidad de la señal.
+5. Conserva las pruebas automáticas de manipulación de payload, ID ajeno, replay, expiración, fallo de transcripción, audio vacío y reintento. Como comprobación personal, revisa solo tres resultados en el navegador principal: respuesta completa, respuesta a la que le falte un detalle y audio que no se transcriba bien. Confirma que el resultado parece razonable y que puedes reintentar; corrige únicamente errores evidentes. No hacen falta evaluadores externos, muestras por nivel, métricas de calibración ni pruebas manuales en varios dispositivos.
 
 ## Done criteria
 
-- [ ] La promoción A1–C2 exige una tarea oral evaluada por el servidor, con criterios adecuados por nivel.
+- [x] El piloto A1/A2 exige evidencia oral evaluada por el servidor; B1–C2 no tienen una puerta oral ni quedan dentro del alcance personal actual.
 - [x] Sin audio válido, la promoción queda pendiente y el progreso previo se conserva.
 - [x] El cliente no puede inventar un aprobado oral ni reutilizar evidencia de otro intento.
 - [x] Tests focalizados de scorer, endpoint, captura y fallos técnicos, `pnpm type-check` y `pnpm lint` pasan.
-- [ ] Prueba manual de micrófono, accesibilidad y comportamiento sin soporte documentada.
+- [ ] Smoke test en el navegador principal: permiso de micrófono, una grabación válida y el camino sin micrófono conserva el intento.
+- [ ] Revisión personal de tres resultados (completo, incompleto, mala transcripción) anotada brevemente en este plan; no requiere validación externa.
 - [x] `plans/README.md` refleja el resultado real.
 
 ## STOP conditions
 
 - La transcripción o evaluación solo puede verificarse en el navegador.
-- No hay criterio oral fiable para un nivel que se pretende promover.
+- No hay criterio oral definido para un nivel A1/A2 que se pretende promover.
 - El flujo técnico trata falta de micrófono/transcripción como error del alumno.

@@ -58,3 +58,13 @@
 | Refinement 1 | Restaurar presupuesto separado y holgado para publishedChunksGzipKB en bundle-budget.json | Completed |
 | Refinement 2 | Validación de red con prueba Playwright que registre JS en navegación fría | Completed |
 | Refinement 3 | Evitar doble invocación en ReviewSessionRunner bajo React Strict Mode con ref y test | Completed |
+| Plan 032 - Step 1 | Seleccionar chunks representativos de A2 y B1 en data.ts y validar lemas en Essential Words | Completed |
+| Plan 032 - Step 2 | Generar y añadir entradas a lib/chunk-of-day/content-graph.json (116 chunks: 36 A1, 50 A2, 30 B1) | Completed |
+| Plan 032 - Step 3 | Crear y ampliar suite intermediate-graph.test.ts para validar resolución y enrutamiento en A2/B1 | Completed |
+| Plan 032 - Step 4 | Verificación final (validate:chunk-catalog, type-check, tests, lint, audit:hard-rules) | Completed |
+| Assessment Result | Persistir resultado tras completar test con opción de hacer de nuevo (placement & checkpoint) | Completed |
+| Landing Fix 1 | Limpiar etiquetas de depuración visibles en LandingClose.tsx y LandingPractices.tsx | Completed |
+| Landing Fix 2 | Conectar reproducción de audio interactiva en LandingHeroCard.tsx y limpiar tokens crudos | Completed |
+| Landing Fix 3 | Unificar botones y CTAs con tokens semánticos oficiales y retirar btn-landing-primary | Completed |
+| Landing Fix 5 | Pulido final de accesibilidad, consistencia responsive y verificación completa | Completed |
+| Landing Theme | Añadir selector de modo claro/oscuro (ThemeToggle) en navbar y footer, y corregir contraste de paneles en dark mode | Completed |

@@ -10,6 +10,11 @@ import { getTodaysMiniLesson } from '@/lib/content/lessons'
 import { getDailyStreak } from '@/lib/daily/streak'
 import { getWeeklyProgressData, type WeeklyProgressData } from '@/lib/progress/weekly-queries'
 import { getSupabaseServerUser } from '@/lib/supabase/session'
+import { getUserProfileLevel } from '@/lib/home/queries'
+import { getHomePlacementState } from '@/lib/home/placement-state'
+import { getCheckpointReadiness } from '@/lib/home/checkpoint-readiness-query'
+import type { CheckpointReadiness } from '@/lib/home/checkpoint-readiness'
+import type { CefrLevelId } from '@/lib/courses/types'
 
 export default async function DailyPage({
   searchParams,
@@ -36,6 +41,7 @@ export default async function DailyPage({
 
   let streak: number | null = null
   let weeklyProgress: WeeklyProgressData | null = null
+  let checkpointReadiness: CheckpointReadiness | null = null
 
   try {
     const user = await getSupabaseServerUser()
@@ -43,6 +49,19 @@ export default async function DailyPage({
       // El corte semanal ya incluye la racha: una sola pasada en vez de dos.
       weeklyProgress = await getWeeklyProgressData(user.id)
       streak = weeklyProgress.streak.currentStreak
+
+      try {
+        const [profileLevel, placementState] = await Promise.all([
+          getUserProfileLevel(user.id),
+          getHomePlacementState(user.id),
+        ])
+        const resolvedLevelId = profileLevel ? (profileLevel.toLowerCase() as CefrLevelId) : null
+        if (placementState.hasPlacement && resolvedLevelId) {
+          checkpointReadiness = await getCheckpointReadiness(user.id, resolvedLevelId)
+        }
+      } catch {
+        checkpointReadiness = null
+      }
     }
   } catch {
     weeklyProgress = null
@@ -64,6 +83,7 @@ export default async function DailyPage({
       initialStepId={step}
       streak={streak}
       weeklyProgress={weeklyProgress}
+      checkpointReadiness={checkpointReadiness}
     />
   )
 }

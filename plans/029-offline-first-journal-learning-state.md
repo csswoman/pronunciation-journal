@@ -6,7 +6,7 @@
 
 ## Status
 
-- **Execution status**: DONE (implementación y migración local; no se verificó aplicación en Supabase remoto)
+- **Execution status**: DONE (implementación y migración aplicada en Supabase remoto el 2026-09-23)
 
 - **Priority**: P1
 - **Effort**: L

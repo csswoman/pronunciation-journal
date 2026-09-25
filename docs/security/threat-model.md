@@ -20,7 +20,8 @@ Fecha: 2026-07-01
 - Grants: `anon` no conserva grants heredados amplios sobre tablas, secuencias o funciones del schema `public`.
 - Secretos: `pnpm scan:secrets` corre en CI y puede ejecutarse localmente antes de commit.
 - Service role: uso server-only para rate limit RPC, caches compartidas y trabajos de backend.
-- Headers/CSP: definidos globalmente en `next.config.mjs`.
+- Headers: definidos globalmente en `next.config.mjs`. La CSP se genera por request con nonce en
+  `proxy.ts` (`connect-src`, `script-src`, `worker-src`); cualquier dominio o permiso nuevo se añade ahí.
 
 ## Riesgos y Owners
 

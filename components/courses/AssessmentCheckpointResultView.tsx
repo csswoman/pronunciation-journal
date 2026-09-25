@@ -27,6 +27,7 @@ interface AssessmentCheckpointResultViewProps {
   nextLevelTopics?: AssessmentTopicPreview[];
   canContinueAfterFailure?: boolean;
   onContinue?: () => void;
+  onRedo?: () => void;
 }
 
 function formatTopicTitle(title: string): string {
@@ -41,6 +42,7 @@ export function AssessmentCheckpointResultView({
   nextLevelTopics = [],
   canContinueAfterFailure = false,
   onContinue,
+  onRedo,
 }: AssessmentCheckpointResultViewProps) {
   const passed = result.passed;
   const oralPending = result.oralEvidence?.status === "pending";
@@ -154,7 +156,13 @@ export function AssessmentCheckpointResultView({
           </div>
 
           {!passed && !onContinue && (
-            <Link href={retryHref} className="assessment-checkpoint-retry">Volver a intentarlo</Link>
+            onRedo ? (
+              <button type="button" onClick={onRedo} className="assessment-checkpoint-retry">
+                Volver a intentarlo
+              </button>
+            ) : (
+              <Link href={retryHref} className="assessment-checkpoint-retry">Volver a intentarlo</Link>
+            )
           )}
         </PastelCard>
 

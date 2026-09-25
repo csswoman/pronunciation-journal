@@ -2,6 +2,7 @@
 // <DailyProgressSidebar>
 //   <StreakCard />              (racha actual / mejor)
 //   <WeeklyConsistencyCard />   (7 días)
+//   [if checkpointReadiness] <DailyCheckpointCard /> (rumbo al checkpoint)
 //   <ThisWeekCard />            (ejercicios y palabras de la semana)
 //   link → /progress
 //
@@ -14,13 +15,16 @@ import { ArrowRight } from '@/components/icons'
 import { StreakCard } from '@/components/progress/StreakCard'
 import { ThisWeekCard } from '@/components/progress/ThisWeekCard'
 import WeeklyConsistencyCard from './WeeklyConsistencyCard'
+import DailyCheckpointCard from './DailyCheckpointCard'
 import type { WeeklyProgressData } from '@/lib/progress/weekly-queries'
+import type { CheckpointReadiness } from '@/lib/home/checkpoint-readiness'
 
 interface Props {
   data: WeeklyProgressData
+  checkpointReadiness?: CheckpointReadiness | null
 }
 
-export default function DailyProgressSidebar({ data }: Props) {
+export default function DailyProgressSidebar({ data, checkpointReadiness }: Props) {
   return (
     <aside
       aria-label="Tu progreso semanal"
@@ -32,6 +36,9 @@ export default function DailyProgressSidebar({ data }: Props) {
         completedDays7={data.completedDays7}
         rate7={data.rate7}
       />
+      {checkpointReadiness ? (
+        <DailyCheckpointCard readiness={checkpointReadiness} />
+      ) : null}
       <ThisWeekCard stats={data.summary} />
 
       <Link

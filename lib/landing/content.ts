@@ -12,7 +12,6 @@
  * Last verified: 2026-09-21. Re-check these before changing them.
  */
 import type { IllustrationKey } from "@/lib/illustrations/registry";
-import { CANONICAL_SOUNDS } from "@/lib/sounds/inventory";
 
 export interface LandingStat {
   value: string;
@@ -24,6 +23,8 @@ export interface LandingPractice {
   description: string;
   tags: readonly string[];
   illustration: IllustrationKey;
+  label: string;
+  tone: "coral" | "butter" | "mint" | "lilac";
 }
 
 export interface LandingSignal {
@@ -32,12 +33,12 @@ export interface LandingSignal {
 }
 
 export const LANDING_STATS: readonly LandingStat[] = [
-  { value: "2.800", label: "palabras esenciales con forma débil y fuerte" },
+  { value: "2.800", label: "palabras con su forma débil real" },
   {
-    value: String(CANONICAL_SOUNDS.length),
-    label: "sonidos del inglés con audio de referencia",
+    value: "110",
+    label: "sonidos con audio de referencia",
   },
-  { value: "66", label: "mini-lecciones de A1 a C2" },
+  { value: "66", label: "mini lecciones de A1 a C2" },
   { value: "276", label: "mazos de patrones gramaticales" },
 ] as const;
 
@@ -45,30 +46,38 @@ export const LANDING_PRACTICES: readonly LandingPractice[] = [
   {
     title: "Sound Lab",
     description:
-      "Grabas, ves tu onda junto a la de referencia y descubres qué sonido se te escapa. Pares mínimos, acento y habla conectada.",
-    tags: ["Grabación", "Pares mínimos", "IPA"],
+      "Grabas, ves tu onda junto a la nativa y descubres qué sonido se te escapa.",
+    tags: ["grabación", "pares mínimos", "IPA"],
     illustration: "domainSpeaking",
+    label: "practising a skill",
+    tone: "coral",
   },
   {
     title: "Palabras esenciales",
     description:
-      "Las 2.800 palabras que aparecen en casi todo lo que vas a escuchar, con su forma débil real, no la del diccionario.",
-    tags: ["Formas débiles", "Repetición espaciada", "A1 a C2"],
-    illustration: "emptyDeck",
+      "Las 2.800 que aparecen en casi todo lo que vas a escuchar, con su forma débil.",
+    tags: ["formas débiles", "repaso espaciado"],
+    illustration: "domainReading",
+    label: "pupil reading aloud",
+    tone: "butter",
   },
   {
-    title: "Journal",
+    title: "Tu diario",
     description:
-      "Escribes lo que te pasó hoy y recibes correcciones con explicación. Tu vocabulario sale de tu vida, no de una lista genérica.",
-    tags: ["Escritura", "Corrección con IA", "Vocabulario propio"],
+      "Escribes lo que te pasó hoy y recibes correcciones explicadas. Tu vocabulario sale de tu vida.",
+    tags: ["escritura", "vocabulario propio"],
     illustration: "domainWriting",
+    label: "writing in a notebook",
+    tone: "mint",
   },
   {
     title: "Misiones orales",
     description:
-      "Conversaciones con objetivo concreto. Pides un café, explicas un problema, defiendes una idea. Se evalúa lo que dijiste.",
-    tags: ["Conversación", "Voz", "Evaluación"],
+      "Conversaciones con un objetivo: pides un café, explicas un problema, defiendes una idea.",
+    tags: ["conversación", "voz", "evaluación"],
     illustration: "journalLanguageBook",
+    label: "teaching a friend",
+    tone: "lilac",
   },
 ] as const;
 
@@ -77,22 +86,22 @@ export const LANDING_SIGNALS: readonly LandingSignal[] = [
   {
     title: "Leer es exposición",
     description:
-      "Abrir una lección cuenta como haberla visto. Nada más. No mueve tu nivel.",
+      "Abrir una lección cuenta como haberla visto. Nada más: no mueve tu nivel.",
   },
   {
     title: "Guardar es intención",
     description:
-      "Una palabra guardada dice qué te importa, y entra en la cola de repaso. Todavía no es dominio.",
+      "Una palabra guardada dice qué te importa y entra en la cola. Todavía no es dominio.",
   },
   {
     title: "Practicar es evidencia",
     description:
-      "Solo el ejercicio evaluado mueve tu perfil. La calificación es determinista, con errores comunes ya catalogados.",
+      "Solo el ejercicio evaluado mueve tu perfil, con errores comunes ya catalogados.",
   },
   {
     title: "El dominio se gana con el tiempo",
     description:
-      "Requiere acertar en sesiones separadas. No se infiere de rachas, de clics ni de volumen de actividad.",
+      "Requiere acertar en sesiones separadas. No se infiere de clics ni de rachas.",
   },
 ] as const;
 

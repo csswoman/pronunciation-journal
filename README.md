@@ -73,7 +73,8 @@ practice session, nothing interrupts it.
 - **Guardrails as code.** ESLint rules and audit scripts enforce the hard rules
   above (`pnpm audit:hard-rules`), plus RLS coverage checks, migration safety
   checks, secret scanning, and design-token linting.
-- **Security.** Global security headers including CSP in `next.config.mjs`;
+- **Security.** Global security headers in `next.config.mjs` and a per-request
+  nonce-based CSP in `proxy.ts`;
   `service_role` never reaches the client; per-user scoping on caches; API cost
   controls via Supabase rate-limit and daily model-reservation RPCs; Gemini
   endpoints also enforce daily per-user request caps.

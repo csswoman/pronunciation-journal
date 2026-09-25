@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { RefreshCw } from "@/components/icons";
+import { RefreshCw, RotateCcw } from "@/components/icons";
 import type { AssessmentResult } from "@/lib/courses/assessment";
 import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
 import type { CefrLevelId } from "@/lib/courses/types";
@@ -22,6 +22,7 @@ interface AssessmentResultViewProps {
   saving: boolean;
   saveError: boolean;
   onRetry: () => void;
+  onRedo?: () => void;
   nextLevelTopics?: AssessmentTopicPreview[];
 }
 
@@ -30,11 +31,13 @@ function AssessmentResultHeader({
   level,
   total,
   userId,
+  onRedo,
 }: {
   mode: "placement" | "checkpoint";
   level?: CefrLevelId;
   total: number;
   userId?: string;
+  onRedo?: () => void;
 }) {
   const title = mode === "placement"
     ? total > 0 ? `Prueba de nivel · ${total} preguntas` : "Plan de inicio"
@@ -46,7 +49,20 @@ function AssessmentResultHeader({
         <span aria-hidden>×</span>
         {mode === "placement" ? "Salir de la prueba" : "Salir del examen"}
       </Link>
-      <span className="assessment-result-label">{title}</span>
+      <div className="assessment-result-header__side">
+        <span className="assessment-result-label">{title}</span>
+        {onRedo && (
+          <button
+            type="button"
+            onClick={onRedo}
+            className="assessment-result-redo"
+            title="Repetir la evaluación"
+          >
+            <RotateCcw size={13} aria-hidden />
+            <span>Hacer de nuevo</span>
+          </button>
+        )}
+      </div>
     </header>
   );
 }
@@ -90,6 +106,7 @@ export function AssessmentResultView({
   saving,
   saveError,
   onRetry,
+  onRedo,
   nextLevelTopics = [],
 }: AssessmentResultViewProps) {
   const level = result.evaluatedLevels?.[0] ?? "a1";
@@ -98,7 +115,13 @@ export function AssessmentResultView({
 
   return (
     <div className="assessment-page assessment-page--result assessment-results">
-      <AssessmentResultHeader mode={mode} level={level} total={result.total} userId={userId} />
+      <AssessmentResultHeader
+        mode={mode}
+        level={level}
+        total={result.total}
+        userId={userId}
+        onRedo={onRedo}
+      />
       {mode === "checkpoint" ? (
         <AssessmentCheckpointResultView
           result={result}
@@ -106,9 +129,10 @@ export function AssessmentResultView({
           nextLevel={nextLevel}
           userId={userId}
           nextLevelTopics={nextLevelTopics}
+          onRedo={onRedo}
         />
       ) : (
-        <AssessmentPlacementResultView result={result} />
+        <AssessmentPlacementResultView result={result} onRedo={onRedo} />
       )}
       <AssessmentResultSaveStatus
         userId={userId}

@@ -4,7 +4,7 @@ import { assessPlannedChunkMix, auditA1ChunkPilot, observedChunkActionShare, pil
 
 describe('auditoría del piloto A1', () => {
   it('requiere 25–40 chunks A1 con anclas y respuesta de práctica', () => {
-    const pilot = LEARNING_CHUNKS.filter((chunk) => chunk.contentGraph.anchors.length > 0)
+    const pilot = LEARNING_CHUNKS.filter((chunk) => chunk.learning.cefr === 'A1' && chunk.contentGraph.anchors.length > 0)
     const audit = auditA1ChunkPilot(pilot)
     expect(audit).toMatchObject({
       chunkCount: 36,

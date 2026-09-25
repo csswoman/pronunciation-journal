@@ -11,6 +11,7 @@ import { createHash } from "node:crypto";
 import {
   buildReaderAudioPrompt,
   buildMissionAudioPrompt,
+  buildListeningAudioPrompt,
 } from "@/lib/ai-prompts";
 import { shouldTryNextModel } from "@/lib/gemini/fallback";
 import { withGeminiTimeout } from "@/lib/gemini/client";
@@ -239,3 +240,15 @@ export async function generateMissionSpeech(
   return synthesizeGeminiSpeech(apiKey, buildMissionAudioPrompt(lineText), options);
 }
 
+/**
+ * Generates natural spoken audio for a single listening-assessment dialogue line.
+ * Returned as a WAV Buffer; callers may strip the 44-byte header to concatenate
+ * multiple lines into one clip.
+ */
+export async function generateListeningSpeech(
+  apiKey: string,
+  lineText: string,
+  options: GenerateSpeechOptions = {}
+): Promise<Buffer> {
+  return synthesizeGeminiSpeech(apiKey, buildListeningAudioPrompt(lineText), options);
+}

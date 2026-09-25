@@ -15,7 +15,7 @@ import { AssessmentClientShell } from "./AssessmentClientShell";
 import type { AssessmentTopicPreview } from "./AssessmentCheckpointResultView";
 import { useAssessmentFlow } from "./useAssessmentFlow";
 import {
-  assessmentFooterCopy, buildAssessmentCoverageLevels, reportedLevelIsAbove,
+  assessmentFooterCopy, buildAssessmentCoverageLevels, clearSavedAssessmentResult, reportedLevelIsAbove,
 } from "./assessment-client-helpers";
 import { useAssessmentScoring } from "./useAssessmentScoring";
 import { AssessmentOralCheckpoint } from "./AssessmentOralCheckpoint";
@@ -148,6 +148,17 @@ export default function AssessmentClient({
     )
     : undefined;
 
+  const handleRedo = useCallback(() => {
+    clearSavedAssessmentResult({ userId, mode, checkpointLabel });
+    scoring.reset();
+    setAnswers({});
+    setSelfRatings({});
+    setSectionFeedback(null);
+    setAudioReadyQuestionId(null);
+    flow.resetFlow();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [userId, mode, checkpointLabel, scoring, flow]);
+
   if (scoring.result) {
     return (
       <AssessmentResultView
@@ -157,6 +168,7 @@ export default function AssessmentClient({
         saving={scoring.saving}
         saveError={scoring.saveError}
         onRetry={scoring.retryPersistence}
+        onRedo={handleRedo}
         nextLevelTopics={nextLevelTopics}
       />
     );

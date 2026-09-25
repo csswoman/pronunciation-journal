@@ -107,6 +107,42 @@ export function persistLocalAssessmentCache(params: {
   );
 }
 
+export function getSavedAssessmentResult(params: {
+  userId?: string;
+  mode: "placement" | "checkpoint";
+  checkpointLabel?: string;
+}): AssessmentResult | null {
+  if (typeof window === "undefined") return null;
+  const { userId, mode, checkpointLabel } = params;
+  const key = `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && "assignedLevel" in parsed && "score" in parsed) {
+      return parsed as AssessmentResult;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearSavedAssessmentResult(params: {
+  userId?: string;
+  mode: "placement" | "checkpoint";
+  checkpointLabel?: string;
+}): void {
+  if (typeof window === "undefined") return;
+  const { userId, mode, checkpointLabel } = params;
+  const key = `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`;
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* localStorage may be restricted */
+  }
+}
+
 export function assessmentFooterCopy(params: {
   showingLevelPrompt: boolean;
   showingInventory: boolean;

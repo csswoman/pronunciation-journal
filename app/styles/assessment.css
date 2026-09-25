@@ -415,7 +415,7 @@
 .assessment-audio {
   display: grid;
   gap: var(--space-2);
-  margin: var(--space-4) 0 0 2.75rem;
+  margin: var(--space-4) 0 0 0;
 }
 
 .assessment-audio audio {
@@ -456,7 +456,7 @@
   display: grid;
   gap: var(--space-2);
   margin-top: var(--space-4);
-  padding-left: 2.75rem;
+  padding-left: 0;
 }
 
 .assessment-option {
@@ -771,6 +771,43 @@
   color: var(--text-secondary);
 }
 
+.assessment-result-header__side {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.assessment-result-redo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  min-height: calc(var(--space-8) + var(--space-1));
+  padding: var(--space-2) var(--space-3-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  background: var(--surface);
+  font-size: var(--text-size-caption);
+  line-height: 1.35;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast),
+    color var(--dur-fast),
+    border-color var(--dur-fast);
+}
+
+.assessment-result-redo:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.assessment-result-redo:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .assessment-checkpoint-result,
 .assessment-placement-result {
   display: grid;
@@ -814,14 +851,29 @@
   color: var(--error);
 }
 
+.assessment-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-size-kicker);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
 .assessment-checkpoint-hero h1,
 .assessment-placement-hero h1 {
   margin: 0;
-  color: var(--text-strong);
+  color: var(--ink);
   font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
-  font-size: var(--text-size-display-ipa);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: var(--text-size-h1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.1;
   text-wrap: balance;
 }
@@ -830,8 +882,8 @@
 .assessment-placement-hero > p {
   max-width: 65ch;
   margin: 0;
-  color: var(--text-secondary);
-  font-size: var(--text-size-body);
+  color: var(--ink-secondary);
+  font-size: var(--text-size-body-lg);
   line-height: 1.55;
   text-wrap: pretty;
 }
@@ -846,9 +898,9 @@
 
 .assessment-checkpoint-score > strong,
 .assessment-placement-score > strong {
-  color: var(--text-strong);
+  color: var(--ink);
   font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
-  font-size: var(--text-size-numeral);
+  font-size: 3.25rem;
   font-variant-numeric: tabular-nums;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -864,42 +916,42 @@
 
 .assessment-checkpoint-score b,
 .assessment-placement-score b {
-  color: var(--text-strong);
-  font-size: var(--text-size-body);
+  color: var(--ink);
+  font-size: var(--text-size-body-lg);
+  font-weight: 700;
 }
 
 .assessment-checkpoint-score small,
 .assessment-placement-score small {
-  color: var(--text-muted);
-  font-size: var(--text-size-caption);
+  color: var(--ink-secondary);
+  font-size: var(--text-size-body-sm);
   line-height: 1.45;
 }
 
 .assessment-result-progress {
   display: block;
   width: 100%;
-  height: var(--space-2);
+  height: var(--space-3);
   margin-block: var(--space-2) 0;
   overflow: hidden;
-  border: 0;
+  border: 1px solid color-mix(in oklch, var(--ink) 25%, transparent);
   border-radius: var(--radius-full);
-  background: var(--surface);
-  accent-color: var(--primary);
+  background: color-mix(in oklch, var(--ink) 12%, transparent);
 }
 
 .assessment-result-progress::-webkit-progress-bar {
   border-radius: var(--radius-full);
-  background: var(--surface);
+  background: color-mix(in oklch, var(--ink) 12%, transparent);
 }
 
 .assessment-result-progress::-webkit-progress-value,
 .assessment-result-progress::-moz-progress-bar {
   border-radius: var(--radius-full);
-  background: var(--primary);
+  background: var(--ink);
 }
 
 .assessment-checkpoint-listening-note {
-  color: var(--text-secondary) !important;
+  color: var(--ink-secondary) !important;
   font-size: var(--text-size-caption) !important;
 }
 
@@ -909,7 +961,7 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   margin-top: auto;
-  padding-top: var(--space-2);
+  padding-top: var(--space-3);
 }
 
 .assessment-result-action {
@@ -917,10 +969,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: calc(var(--space-8) + var(--space-1));
-  padding: var(--space-3) var(--space-5);
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-full);
-  font-size: var(--text-size-body-sm);
+  font-size: var(--text-size-body);
   font-weight: 700;
   line-height: 1.3;
   text-decoration: none;
@@ -936,8 +988,8 @@
 }
 
 .assessment-result-action--primary {
-  color: var(--on-primary);
-  background: var(--primary);
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 .assessment-result-action--primary:hover {
@@ -945,13 +997,18 @@
 }
 
 .assessment-result-action--secondary {
-  border: 1px solid var(--border-strong);
-  color: var(--text);
-  background: transparent;
+  border: 1.5px solid color-mix(in oklch, var(--ink) 24%, transparent);
+  color: var(--ink);
+  background: color-mix(in oklch, var(--paper) 75%, transparent);
 }
 
 .assessment-result-action--secondary:hover {
-  background: var(--surface);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.assessment-result-action--redo {
+  cursor: pointer;
 }
 
 .assessment-result-action:focus-visible,
@@ -972,12 +1029,53 @@
   background: var(--surface);
 }
 
+.assessment-level-breakdown {
+  position: relative;
+  max-height: 27rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--dur-fast) ease;
+}
+
+.assessment-level-breakdown:hover {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.assessment-level-breakdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.assessment-level-breakdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.assessment-level-breakdown::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--radius-full);
+  transition: background-color var(--dur-fast) ease;
+}
+
+.assessment-level-breakdown:hover::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+}
+
+.assessment-level-breakdown h2 {
+  position: sticky;
+  top: calc(-1 * var(--space-6));
+  z-index: 2;
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) 0;
+  padding: var(--space-6) var(--space-6) var(--space-3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
 .assessment-checkpoint-side h2,
-.assessment-level-breakdown h2,
 .assessment-question-feedback h2,
 .assessment-placement-reviews h2 {
   margin: 0;
-  color: var(--text-strong);
+  color: var(--text-primary);
   font-size: var(--text-size-title);
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -1066,9 +1164,18 @@
   display: inline-flex;
   align-items: center;
   min-height: calc(var(--space-8) + var(--space-1));
+  padding: 0;
+  border: none;
+  background: transparent;
   color: var(--text-secondary);
   font-size: var(--text-size-caption);
+  text-decoration: underline;
   text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.assessment-checkpoint-retry:hover {
+  color: var(--text);
 }
 
 .assessment-checkpoint-no-errors {
@@ -1096,7 +1203,7 @@
 
 .assessment-question-feedback__topic {
   margin: 0;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: var(--text-size-caption);
   font-weight: 600;
@@ -1105,7 +1212,7 @@
 
 .assessment-question-feedback__prompt {
   margin: var(--space-3) 0;
-  color: var(--text-strong);
+  color: var(--text-primary);
   font-size: var(--text-size-body-sm);
   font-weight: 650;
   line-height: 1.5;
@@ -1124,7 +1231,7 @@
 }
 
 .assessment-question-feedback__answer > span:first-child {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 
 .assessment-question-feedback__wrong {
@@ -1135,7 +1242,7 @@
 }
 
 .assessment-question-feedback__answer strong {
-  color: var(--text-strong);
+  color: var(--text-primary);
 }
 
 .assessment-question-feedback__explanation {
@@ -1174,19 +1281,29 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.assessment-placement-reviews__heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  font-size: 2.125rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 .assessment-placement-reviews__heading p {
   margin: var(--space-1) 0 0;
   color: var(--text-secondary);
-  font-size: var(--text-size-body-sm);
+  font-size: var(--text-size-body);
   line-height: 1.5;
 }
 
 .assessment-placement-reviews__count {
   flex: 0 0 auto;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   font-size: var(--text-size-caption);
   font-variant-numeric: tabular-nums;
 }
@@ -1194,7 +1311,7 @@
 .assessment-placement-topics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .assessment-placement-topic {
@@ -1203,10 +1320,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-6);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background: var(--surface-raised);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
 }
 
 .assessment-placement-topic__badges,
@@ -1217,54 +1334,116 @@
   gap: var(--space-2);
 }
 
+.assessment-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-size-caption);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.assessment-badge-pill--fallos {
+  background: color-mix(in oklch, var(--coral) 35%, transparent);
+  color: var(--text-primary);
+  border: 1px solid color-mix(in oklch, var(--coral) 60%, transparent);
+}
+
+.assessment-badge-pill--neutral {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
 .assessment-placement-topic h3 {
   margin: 0;
-  color: var(--text-strong);
-  font-size: var(--text-size-body);
-  font-weight: 700;
-  line-height: 1.35;
+  color: var(--text-primary);
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.3;
   text-wrap: balance;
 }
 
 .assessment-placement-topic__hint {
   margin: 0;
   color: var(--text-secondary);
-  font-size: var(--text-size-caption);
+  font-size: var(--text-size-body-sm);
   line-height: 1.55;
   text-wrap: pretty;
 }
 
+.assessment-topic-example {
+  width: 100%;
+  margin: var(--space-2) 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  gap: var(--space-1);
+}
+
+.assessment-topic-example__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.assessment-topic-example__phrase {
+  color: var(--text-primary);
+  font-size: var(--text-size-body);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.assessment-topic-example__speak {
+  flex-shrink: 0;
+}
+
+.assessment-topic-example__ipa {
+  color: var(--text-tertiary);
+  font-size: var(--text-size-caption);
+  font-family: var(--font-ipa), sans-serif;
+}
+
+.assessment-topic-example__translation {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+  line-height: 1.45;
+}
+
 .assessment-placement-topic__actions {
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-top: auto;
   padding-top: var(--space-2);
 }
 
-.assessment-placement-topic__practice,
-.assessment-placement-topic summary {
+.assessment-placement-topic__practice-pill {
   display: inline-flex;
   align-items: center;
-  min-height: calc(var(--space-8) + var(--space-1));
-  color: var(--text);
-  font-size: var(--text-size-caption);
-  font-weight: 650;
-  text-decoration: underline;
-  text-decoration-color: var(--border-strong);
-  text-underline-offset: 0.2em;
-  cursor: pointer;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.45rem 1.25rem;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: var(--text-size-body-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--surface);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-fast),
+    border-color var(--dur-fast);
 }
 
-.assessment-placement-topic__details {
-  width: 100%;
-}
-
-.assessment-placement-topic__details[open] {
-  width: 100%;
-}
-
-.assessment-placement-topic__details[open] .assessment-question-feedback {
-  margin-top: var(--space-3);
+.assessment-placement-topic__practice-pill:hover {
+  background: var(--surface-raised);
+  border-color: var(--text-primary);
 }
 
 .assessment-placement-reviews__empty {
@@ -1274,16 +1453,24 @@
   line-height: 1.5;
 }
 
-.assessment-level-breakdown > ol > li {
+.assessment-level-breakdown__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assessment-level-breakdown__item {
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.assessment-level-breakdown > ol > li:first-child {
+.assessment-level-breakdown__item:first-child {
   padding-top: 0;
 }
 
-.assessment-level-breakdown > ol > li:last-child {
+.assessment-level-breakdown__item:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
@@ -1295,24 +1482,28 @@
   gap: var(--space-3);
 }
 
-.assessment-level-breakdown__heading > strong {
-  color: var(--text-strong);
-  font-size: var(--text-size-body-sm);
+.assessment-level-breakdown__name {
+  color: var(--text-primary);
+  font-size: var(--text-size-body);
+  font-weight: 700;
 }
 
-.assessment-level-breakdown__status,
-.assessment-level-breakdown__score {
-  color: var(--text-muted);
-  font-size: var(--text-size-caption);
-}
-
-.assessment-level-breakdown__status--passed {
+.assessment-level-breakdown__stat {
   color: var(--text-secondary);
+  font-size: var(--text-size-body-sm);
+  font-variant-numeric: tabular-nums;
 }
 
-.assessment-level-breakdown__score {
-  margin: var(--space-1) 0 0;
-  font-variant-numeric: tabular-nums;
+.assessment-level-breakdown__pill-untested {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.65rem;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+  font-weight: 600;
 }
 
 .assessment-level-breakdown__questions {
@@ -1326,11 +1517,11 @@
 
 .assessment-level-breakdown__mark {
   display: inline-grid;
-  width: var(--space-6);
-  height: var(--space-6);
+  width: 1.625rem;
+  height: 1.625rem;
   place-items: center;
   border-radius: var(--radius-xs);
-  color: var(--text-strong);
+  color: var(--ink);
   font-size: var(--text-size-tiny);
   font-style: normal;
   font-weight: 700;
@@ -1338,26 +1529,35 @@
 }
 
 .assessment-level-breakdown__mark--correct {
-  background: var(--feedback-correct);
+  background: var(--mint);
+  color: var(--ink);
 }
 
 .assessment-level-breakdown__mark--wrong {
-  background: var(--feedback-wrong);
+  background: var(--coral);
+  color: var(--ink);
+}
+
+.assessment-level-breakdown__feedback {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
+  line-height: 1.5;
 }
 
 .assessment-level-breakdown__legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-4);
   margin: var(--space-4) 0 0;
-  color: var(--text-muted);
-  font-size: var(--text-size-tiny);
+  color: var(--text-secondary);
+  font-size: var(--text-size-caption);
 }
 
-.assessment-level-breakdown__legend span {
+.assessment-level-breakdown__legend-item {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .assessment-level-breakdown__legend .assessment-level-breakdown__mark {
@@ -1561,33 +1761,44 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .assessment-badge-kind {
   display: inline-flex;
-  min-height: calc(var(--space-7) + 2px);
   align-items: center;
-  padding: 0 var(--space-3.5);
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 var(--space-4);
   border-radius: var(--radius-full);
   background: var(--ink);
   color: var(--paper);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .assessment-meta-step {
   display: inline-flex;
-  min-height: calc(var(--space-7) + 2px);
   align-items: center;
-  padding: 0 var(--space-3.5);
-  border: 1px solid var(--border-strong);
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 var(--space-4);
+  border: 1.5px solid color-mix(in oklch, var(--ink) 25%, transparent);
   border-radius: var(--radius-full);
   color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
-  font-weight: 500;
-  background: transparent;
+  font-weight: 600;
+  line-height: 1;
+  background: color-mix(in oklch, var(--paper) 45%, transparent);
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .assessment-question {
@@ -1600,7 +1811,7 @@
 
 .assessment-question h2 {
   margin: var(--space-3) 0 var(--space-4);
-  color: var(--text-strong);
+  color: var(--ink);
   font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-display-ipa);
   font-weight: 750;
@@ -1613,10 +1824,11 @@
   margin: 0 0 var(--space-4);
   padding: var(--space-4);
   border-radius: var(--radius-lg);
-  color: var(--text-secondary);
+  color: var(--ink);
   font-size: var(--text-size-body);
   font-style: italic;
   line-height: 1.6;
+  background: color-mix(in oklch, var(--paper) 60%, transparent);
 }
 
 .assessment-audio {
@@ -1625,11 +1837,11 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: var(--space-4);
-  margin-top: var(--space-4);
+  margin: var(--space-4) 0 0 0;
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-xl);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--paper);
+  border: 1px solid color-mix(in oklch, var(--ink) 10%, transparent);
 }
 
 .assessment-audio-toggle {
@@ -1686,17 +1898,50 @@
   font-variant-numeric: tabular-nums;
 }
 
+.assessment-audio-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.assessment-audio-btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in oklch, var(--ink) 15%, transparent);
+  background: color-mix(in oklch, var(--paper) 60%, transparent);
+  color: var(--ink);
+  font-size: var(--text-size-caption);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.assessment-audio-btn-action:hover {
+  background: color-mix(in oklch, var(--ink) 8%, transparent);
+}
+
+.assessment-audio-btn-action:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.assessment-audio-time {
+  margin-left: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
 .assessment-audio-seekbar {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  height: 0.625rem;
-  overflow: hidden;
-  border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-full);
-  background: var(--surface-sunken);
+  height: 1.5rem;
   cursor: pointer;
   user-select: none;
+  touch-action: none;
 }
 
 .assessment-audio-seekbar:focus-visible {
@@ -1704,12 +1949,40 @@
   outline-offset: 2px;
 }
 
+.assessment-audio-seekbar-track {
+  position: relative;
+  width: 100%;
+  height: 0.625rem;
+  overflow: visible;
+  border: 1.5px solid color-mix(in oklch, var(--ink) 25%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--ink) 6%, transparent);
+}
+
 .assessment-audio-seekbar-fill {
   height: 100%;
   border-radius: var(--radius-full);
   background: var(--sky-deep);
-  transition: width 60ms linear;
   pointer-events: none;
+}
+
+.assessment-audio-seekbar-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  pointer-events: none;
+  transition: transform 100ms ease;
+}
+
+.assessment-audio-seekbar:hover .assessment-audio-seekbar-thumb,
+.assessment-audio-seekbar:focus-visible .assessment-audio-seekbar-thumb {
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
 .assessment-audio .assessment-audio-media {
@@ -1726,20 +1999,20 @@
 .assessment-options {
   display: grid;
   gap: var(--space-3);
-  margin-top: var(--space-4);
+  margin: var(--space-4) 0 0 0;
   padding: var(--space-5) var(--space-6);
   border-radius: var(--radius-xl);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--paper);
+  border: 1px solid color-mix(in oklch, var(--ink) 10%, transparent);
 }
 
 .assessment-option {
   display: grid;
   grid-template-columns: var(--space-6) minmax(0, 1fr);
   align-items: center;
-  gap: var(--space-3.5);
+  gap: var(--space-3);
   min-height: 2.75rem;
-  padding: var(--space-2) var(--space-2.5);
+  padding: var(--space-2) var(--space-3);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--ink);
@@ -1750,7 +2023,7 @@
 }
 
 .assessment-option:hover {
-  background: var(--surface-raised);
+  background: color-mix(in oklch, var(--ink) 5%, transparent);
 }
 
 .assessment-option:has(input:disabled) {
@@ -1759,8 +2032,8 @@
 
 .assessment-option--selected {
   color: var(--ink);
-  background: var(--surface-raised);
-  border-color: var(--border-default);
+  background: color-mix(in oklch, var(--ink) 6%, transparent);
+  border-color: color-mix(in oklch, var(--ink) 18%, transparent);
 }
 
 .assessment-option input {
@@ -1778,7 +2051,7 @@
   width: 1.375rem;
   height: 1.375rem;
   place-items: center;
-  border: 2px solid var(--border-strong);
+  border: 2px solid color-mix(in oklch, var(--ink) 30%, transparent);
   border-radius: var(--radius-full);
   color: var(--paper);
   background: transparent;
@@ -2036,7 +2309,7 @@
 
   .pastel-card.assessment-question-card {
     padding: var(--space-4);
-    gap: var(--space-3.5);
+    gap: var(--space-3);
   }
 
   .assessment-question h2 {
@@ -2047,7 +2320,7 @@
   .assessment-options {
     gap: var(--space-2);
     margin-top: var(--space-3);
-    padding: var(--space-1.5);
+    padding: var(--space-3);
   }
 
   .assessment-option {
@@ -2056,9 +2329,19 @@
     min-height: 3.25rem;
     padding: var(--space-2.5) var(--space-3);
     font-size: var(--text-size-body);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
-    background: var(--surface-raised);
+    background: transparent;
+  }
+
+  .assessment-option:hover {
+    background: color-mix(in oklch, var(--ink) 5%, transparent);
+  }
+
+  .assessment-option--selected {
+    color: var(--ink);
+    background: color-mix(in oklch, var(--ink) 6%, transparent);
+    border-color: color-mix(in oklch, var(--ink) 18%, transparent);
   }
 
   .assessment-audio {

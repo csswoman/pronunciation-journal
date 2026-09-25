@@ -929,3 +929,12 @@ Generate 3 high-quality quiz questions for this deck.`
 }
 
 
+
+export function buildListeningAudioPrompt(lineText: string): SpeechGenerationPrompt {
+  return {
+    transcript: lineText.trim(),
+    style: 'Clear, carefully articulated English with authentic intonation at a moderate pace suitable for a listening comprehension assessment.',
+  }
+}
+export const ASSESSMENT_ORAL_TRANSCRIPTION_PROMPT =
+  "Transcribe only the English words that are clearly audible in this recording. Do not infer missing words, answer the speaker's task, or add commentary. Return an empty string when no speech is intelligible.";
