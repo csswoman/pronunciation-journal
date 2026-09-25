@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   generateContent: vi.fn(),
   reserveModel: vi.fn(),
   recordModelFailure: vi.fn(),
+  recordModelSuccess: vi.fn(),
 }));
 
 vi.mock("@google/genai", () => ({
@@ -15,6 +16,7 @@ vi.mock("@google/genai", () => ({
 vi.mock("@/lib/ai-usage/budget", () => ({
   reserveModel: mocks.reserveModel,
   recordModelFailure: mocks.recordModelFailure,
+  recordModelSuccess: mocks.recordModelSuccess,
 }));
 
 import { callWithFallback } from "../client";
@@ -24,6 +26,7 @@ describe("callWithFallback daily budget", () => {
     mocks.generateContent.mockReset().mockResolvedValue({ text: "ok" });
     mocks.reserveModel.mockReset().mockResolvedValue(true);
     mocks.recordModelFailure.mockReset().mockResolvedValue(undefined);
+    mocks.recordModelSuccess.mockReset().mockResolvedValue(undefined);
   });
 
   it("skips a model with no reserved capacity without calling its SDK method", async () => {

@@ -13,10 +13,9 @@ import {
   buildMissionAudioPrompt,
   buildListeningAudioPrompt,
 } from "@/lib/ai-prompts";
-import { shouldTryNextModel } from "@/lib/gemini/fallback";
-import { withGeminiTimeout } from "@/lib/gemini/client";
+import { getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
 import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
-import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
+import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
 /** Fallback sample rate for raw PCM responses from Gemini speech synthesis. */
 export const DEFAULT_SAMPLE_RATE = 24_000;
@@ -30,25 +29,21 @@ export const AUDIO_CACHE_VERSION = "tts-v2";
 export const MIN_TTS_MODEL_INTERVAL_MS = 20_000;
 
 const lastModelStartedAt = new Map<string, number>();
-let synthesisQueue: Promise<void> = Promise.resolve();
+const inFlightSpeech = new Map<string, Promise<Buffer>>();
 
-function enqueueSynthesis<T>(task: () => Promise<T>): Promise<T> {
-  const result = synthesisQueue.then(task, task);
-  synthesisQueue = result.then(() => undefined, () => undefined);
-  return result;
-}
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function waitForModelSlot(model: string): Promise<void> {
+function claimModelSlot(model: string): { claimedAt?: number; retryAfterMs?: number } {
+  const now = Date.now();
   const lastStartedAt = lastModelStartedAt.get(model);
   if (lastStartedAt !== undefined) {
-    const delayMs = lastStartedAt + MIN_TTS_MODEL_INTERVAL_MS - Date.now();
-    if (delayMs > 0) await wait(delayMs);
+    const retryAfterMs = lastStartedAt + MIN_TTS_MODEL_INTERVAL_MS - now;
+    if (retryAfterMs > 0) return { retryAfterMs };
   }
-  lastModelStartedAt.set(model, Date.now());
+  lastModelStartedAt.set(model, now);
+  return { claimedAt: now };
+}
+
+function releaseModelSlot(model: string, claimedAt: number): void {
+  if (lastModelStartedAt.get(model) === claimedAt) lastModelStartedAt.delete(model);
 }
 
 /** Cache identity includes the feature, normalized spoken text, voice, model and manual version. */
@@ -67,7 +62,7 @@ export function buildSpeechCacheKey(
 /** Reset queue timing in unit tests after all queued work has completed. */
 export function _resetSpeechQueueStateForTests(): void {
   lastModelStartedAt.clear();
-  synthesisQueue = Promise.resolve();
+  inFlightSpeech.clear();
 }
 
 /**
@@ -130,10 +125,23 @@ async function synthesizeGeminiSpeech(
   prompt: { transcript: string; style: string },
   options: GenerateSpeechOptions = {}
 ): Promise<Buffer> {
-  return enqueueSynthesis(() => synthesizeGeminiSpeechQueued(apiKey, prompt, options));
+  const voice = options.voice ?? "Puck";
+  const feature = options.feature ?? "tts-unattributed";
+  const models = options.models ?? AUDIO_MODELS;
+  const dedupeKey = createHash("sha256")
+    .update(JSON.stringify([feature, AUDIO_CACHE_VERSION, prompt.transcript, voice, models]))
+    .digest("hex");
+  const existing = inFlightSpeech.get(dedupeKey);
+  if (existing) return existing;
+
+  const task = synthesizeGeminiSpeechNow(apiKey, prompt, options).finally(() => {
+    if (inFlightSpeech.get(dedupeKey) === task) inFlightSpeech.delete(dedupeKey);
+  });
+  inFlightSpeech.set(dedupeKey, task);
+  return task;
 }
 
-async function synthesizeGeminiSpeechQueued(
+async function synthesizeGeminiSpeechNow(
   apiKey: string,
   prompt: { transcript: string; style: string },
   options: GenerateSpeechOptions,
@@ -148,21 +156,31 @@ async function synthesizeGeminiSpeechQueued(
 
   let lastError: unknown;
   let budgetDenied = false;
+  let shortestRetryAfterMs: number | undefined;
+  const deadlineAt = Date.now() + timeoutMs;
 
   for (const model of filterAvailable(models)) {
-    if (!(await reserveModel(model, feature))) {
-      budgetDenied = true;
+    if (Date.now() >= deadlineAt) break;
+    const slot = claimModelSlot(model);
+    if (slot.claimedAt === undefined) {
+      shortestRetryAfterMs = Math.min(shortestRetryAfterMs ?? Number.POSITIVE_INFINITY, slot.retryAfterMs ?? MIN_TTS_MODEL_INTERVAL_MS);
       continue;
     }
+    if (!(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      releaseModelSlot(model, slot.claimedAt);
+      continue;
+    }
+    const startedAt = Date.now();
     try {
-      await waitForModelSlot(model);
+      const remainingMs = Math.max(1, deadlineAt - Date.now());
       // SDK 2.23 does not type the GenerateContent speechMetadata field yet,
       // but the Gemini API accepts it and keeps style directions out of speech.
       const contents = [{
         role: "user" as const,
         parts: [{ text: prompt.transcript, speechMetadata: { style: prompt.style } }],
       }] as unknown as GenerateContentParameters["contents"];
-      const response = await withGeminiTimeout(ai.models.generateContent({
+      const response = await ai.models.generateContent({
         model,
         contents,
         config: {
@@ -174,8 +192,10 @@ async function synthesizeGeminiSpeechQueued(
               },
             },
           },
+          httpOptions: { timeout: remainingMs },
+          abortSignal: AbortSignal.timeout(remainingMs),
         },
-      }), timeoutMs);
+      });
       const candidate = response.candidates?.[0];
       const audioPart = candidate?.content?.parts?.find(
         (p) => p.inlineData?.data && p.inlineData?.mimeType?.toLowerCase().startsWith("audio/")
@@ -195,23 +215,34 @@ async function synthesizeGeminiSpeechQueued(
         rawBuffer.toString("ascii", 0, 4) === "RIFF"
       ) {
         options.onModelUsed?.(model);
+        void recordModelSuccess(model, feature, Date.now() - startedAt);
         return rawBuffer;
       }
 
       // Convert PCM to standard WAV
       const sampleRate = parseSampleRateFromMime(mime, DEFAULT_SAMPLE_RATE);
       options.onModelUsed?.(model);
+      void recordModelSuccess(model, feature, Date.now() - startedAt);
       return pcmToWav(rawBuffer, sampleRate);
     } catch (err) {
       lastError = err;
       markCooldownFromError(model, err);
-      await recordModelFailure(model, feature);
+      void recordModelFailure(model, feature, getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
       const invalidAudio = String((err as { message?: unknown })?.message ?? "")
         .includes("did not return audio data in parts");
       if (!invalidAudio && !shouldTryNextModel(err)) throw err;
     }
   }
 
+  if (Date.now() >= deadlineAt) {
+    throw Object.assign(new Error(`Gemini TTS timed out after ${timeoutMs}ms`), { status: 504 });
+  }
+  if (!lastError && shortestRetryAfterMs !== undefined) {
+    throw Object.assign(new Error("TTS capacity is busy; use local speech and retry later"), {
+      status: 503,
+      retryAfterMs: shortestRetryAfterMs,
+    });
+  }
   if (budgetDenied && !lastError) {
     throw Object.assign(new Error("Daily TTS model budget exhausted"), { status: 429 });
   }

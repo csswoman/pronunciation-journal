@@ -1,6 +1,7 @@
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
 import type { JournalCorrectRequest, JournalCorrectionResponse } from '@/lib/journal/correction'
 import { refreshLearningStateFromRemote } from '@/lib/ai-practice/queries'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 export type { JournalCorrectRequest, JournalCorrectionResponse }
 
@@ -34,11 +35,11 @@ export async function correctJournalEntry(
 
   let res: Response
   try {
-    res = await fetch('/api/gemini/journal-correct', {
+    res = await fetchWithTimeout('/api/gemini/journal-correct', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
-    })
+    }, 30_000)
   } catch {
     throw new JournalCorrectionError(
       publicAiErrorMessage(undefined, '', JOURNAL_AI_UNAVAILABLE_MESSAGE),

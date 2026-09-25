@@ -75,6 +75,9 @@ export function useStreamingChat({
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
+    const requestTimeout = window.setTimeout(() => {
+      controller.abort(new DOMException("La respuesta de IA tardó demasiado.", "TimeoutError"));
+    }, 35_000);
     const thisId = ++streamIdRef.current;
     setIsStreaming(true);
 
@@ -221,6 +224,7 @@ export function useStreamingChat({
       setMessages(messagesRef.current.slice(0, -2));
       lastFailedSendRef.current = { text, options };
     } finally {
+      window.clearTimeout(requestTimeout);
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
     // `learningState` omitted on purpose: the server resolves it, and including

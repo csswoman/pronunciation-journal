@@ -8,6 +8,10 @@ type UsageRow = {
   requests: number;
   failures: number;
   cache_hits: number;
+  successes: number;
+  latency_ms_total: number;
+  last_status: number | null;
+  last_error_code: string | null;
 };
 
 function firstDayInWindow(today: string): string {
@@ -24,6 +28,11 @@ function printReport(title: string, rows: UsageRow[]): void {
     requests: row.requests,
     failures: row.failures,
     cache_hits: row.cache_hits,
+    avg_latency_ms: row.successes + row.failures > 0
+      ? Math.round(row.latency_ms_total / (row.successes + row.failures))
+      : null,
+    last_status: row.last_status,
+    last_error: row.last_error_code,
   })));
 }
 
@@ -39,7 +48,7 @@ async function main(): Promise<void> {
 
   const { data, error } = await supabase
     .from("ai_usage_daily")
-    .select("day, model, feature, requests, failures, cache_hits")
+    .select("day, model, feature, requests, failures, cache_hits, successes, latency_ms_total, last_status, last_error_code")
     .gte("day", firstDayInWindow(today))
     .lte("day", today)
     .order("day", { ascending: true });
@@ -62,10 +71,18 @@ async function main(): Promise<void> {
       requests: 0,
       failures: 0,
       cache_hits: 0,
+      successes: 0,
+      latency_ms_total: 0,
+      last_status: null,
+      last_error_code: null,
     };
     total.requests += row.requests;
     total.failures += row.failures;
     total.cache_hits += row.cache_hits;
+    total.successes += row.successes;
+    total.latency_ms_total += row.latency_ms_total;
+    total.last_status = row.last_status;
+    total.last_error_code = row.last_error_code;
     sevenDayTotals.set(key, total);
   }
 

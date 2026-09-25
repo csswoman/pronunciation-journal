@@ -4,11 +4,10 @@ import { z } from "zod";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
 import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
-import { withGeminiTimeout } from "@/lib/gemini/client";
 import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
 import { logServerError } from "@/lib/api/logging";
 import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
-import { recordModelFailure, reserveModel } from "@/lib/ai-usage/budget";
+import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
 // ---------------------------------------------------------------------------
 // Request schema
@@ -74,16 +73,19 @@ async function transcribeWithFallback(
   let lastError: unknown;
   let budgetDenied = false;
   const prompt = buildTranscriptionPrompt(targetWord);
+  const deadlineAt = Date.now() + 30_000;
 
-  for (const modelName of filterAvailable(FALLBACK_MODELS)) {
+  for (const modelName of filterAvailable(FALLBACK_MODELS).slice(0, 2)) {
+    if (Date.now() >= deadlineAt) break;
     if (!(await reserveModel(modelName, "/api/gemini/transcribe"))) {
       budgetDenied = true;
       continue;
     }
+    const startedAt = Date.now();
     try {
       const thinkingConfig = getFastThinkingConfig(modelName);
-      const result = await withGeminiTimeout(
-        ai.models.generateContent({
+      const remainingMs = Math.max(1, Math.min(14_000, deadlineAt - Date.now()));
+      const result = await ai.models.generateContent({
           model: modelName,
           contents: [
             { text: prompt },
@@ -93,21 +95,26 @@ async function transcribeWithFallback(
             temperature: 0,
             maxOutputTokens: 24,
             ...(thinkingConfig ? { thinkingConfig } : {}),
+            httpOptions: { timeout: remainingMs },
+            abortSignal: AbortSignal.timeout(remainingMs),
           },
-        }),
-        45_000
-      );
+        });
+      void recordModelSuccess(modelName, "/api/gemini/transcribe", Date.now() - startedAt);
       return (result.text ?? "").trim();
     } catch (err: unknown) {
       lastError = err;
       markCooldownFromError(modelName, err);
-      await recordModelFailure(modelName, "/api/gemini/transcribe");
+      void recordModelFailure(modelName, "/api/gemini/transcribe", getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
+      if (Date.now() >= deadlineAt) break;
       if (!shouldTryNextModel(err)) throw err;
     }
   }
 
   if (budgetDenied && !lastError) {
     throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
+  if (Date.now() >= deadlineAt) {
+    throw Object.assign(new Error("Gemini transcription timed out after 30000ms"), { status: 504 });
   }
   throw lastError ?? new Error("All fallback models failed");
 }

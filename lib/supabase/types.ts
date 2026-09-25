@@ -20,24 +20,39 @@ export type Database = {
           day: string
           failures: number
           feature: string
+          last_attempt_at: string | null
+          last_error_code: string | null
+          last_status: number | null
+          latency_ms_total: number
           model: string
           requests: number
+          successes: number
         }
         Insert: {
           cache_hits?: number
           day: string
           failures?: number
           feature: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          last_status?: number | null
+          latency_ms_total?: number
           model: string
           requests?: number
+          successes?: number
         }
         Update: {
           cache_hits?: number
           day?: string
           failures?: number
           feature?: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          last_status?: number | null
+          latency_ms_total?: number
           model?: string
           requests?: number
+          successes?: number
         }
         Relationships: []
       }
@@ -1982,6 +1997,17 @@ export type Database = {
           p_failure_delta?: number
           p_feature: string
           p_model: string
+        }
+        Returns: undefined
+      }
+      ai_usage_record_outcome: {
+        Args: {
+          p_error_code?: string | null
+          p_feature: string
+          p_latency_ms: number
+          p_model: string
+          p_status?: number | null
+          p_success: boolean
         }
         Returns: undefined
       }

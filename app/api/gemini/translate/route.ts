@@ -42,7 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const cacheKey = buildAiResponseCacheKey(feature, normalizeAiCacheText(data.text));
   const cached = ResponseSchema.safeParse(await getAiResponseCache<unknown>(feature, cacheKey));
   if (cached.success) {
-    await recordSharedCacheHit(feature);
+    void recordSharedCacheHit(feature);
     return NextResponse.json(cached.data);
   }
 
@@ -63,6 +63,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   });
 
   if (result.response) return result.response;
-  await setAiResponseCache(feature, cacheKey, result.data);
+  void setAiResponseCache(feature, cacheKey, result.data);
   return NextResponse.json(result.data);
 }

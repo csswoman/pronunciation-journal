@@ -22,6 +22,7 @@ import { getMyWords } from '@/lib/word-bank/queries'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => void) {
   const { user } = useAuth()
@@ -180,7 +181,7 @@ export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => 
     setAiError(null)
 
     try {
-      const response = await fetch('/api/gemini/word-search', {
+      const response = await fetchWithTimeout('/api/gemini/word-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +191,7 @@ export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => 
           knownWords: myWords.slice(0, 10).map((entry) => entry.text),
           excludeWords: Array.from(recentWordsRef.current).slice(0, 25),
         }),
-      })
+      }, 30_000)
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))

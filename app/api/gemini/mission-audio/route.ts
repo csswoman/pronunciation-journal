@@ -53,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const isCatalogMission = body.missionId?.startsWith("scripted.");
     const feature = "/api/gemini/mission-audio";
 
-    for (const model of AUDIO_MODELS) {
+    const cachedAudio = (await Promise.all(AUDIO_MODELS.map(async (model) => {
       const cacheKey = buildSpeechCacheKey(feature, body.lineText, voice, model);
       const cachePath = isCatalogMission
         ? `catalog/${cacheKey}.wav`
@@ -65,10 +65,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         .list(folder, { search: fileName, limit: 5 })
         .catch(() => ({ data: null }));
       if (existingFiles?.some((file) => file.name === fileName)) {
-        await recordSharedCacheHit(feature);
         const { data: publicData } = storageClient.storage.from("mission-audio").getPublicUrl(cachePath);
-        return NextResponse.json({ audioUrl: publicData.publicUrl }, { headers: SECURE_HEADERS });
+        return publicData.publicUrl;
       }
+      return null;
+    }))).find((url): url is string => Boolean(url));
+    if (cachedAudio) {
+      void recordSharedCacheHit(feature);
+      return NextResponse.json({ audioUrl: cachedAudio }, { headers: SECURE_HEADERS });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
@@ -115,8 +119,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       userId: user.id,
     });
     const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status === 429 ? 429 : 500, status === 429
-      ? "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico."
-      : "Failed to generate mission line audio");
+    if (status === 429) {
+      return publicErrorResponse(429, "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico.");
+    }
+    if (status === 503 || status === 504) {
+      return publicErrorResponse(status, "El audio HD está ocupado. Usa la voz del dispositivo o vuelve a intentarlo en unos segundos.");
+    }
+    return publicErrorResponse(500, "Failed to generate mission line audio");
   }
 }

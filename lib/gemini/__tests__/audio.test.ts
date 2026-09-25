@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   generateContent: vi.fn(),
   reserveModel: vi.fn(),
   recordModelFailure: vi.fn(),
+  recordModelSuccess: vi.fn(),
 }));
 
 vi.mock("@google/genai", () => ({
@@ -15,6 +16,7 @@ vi.mock("@google/genai", () => ({
 vi.mock("@/lib/ai-usage/budget", () => ({
   reserveModel: mocks.reserveModel,
   recordModelFailure: mocks.recordModelFailure,
+  recordModelSuccess: mocks.recordModelSuccess,
 }));
 
 import {
@@ -33,6 +35,7 @@ beforeEach(() => {
   });
   mocks.reserveModel.mockReset().mockResolvedValue(true);
   mocks.recordModelFailure.mockReset().mockResolvedValue(undefined);
+  mocks.recordModelSuccess.mockReset().mockResolvedValue(undefined);
 });
 
 describe("lib/gemini/audio", () => {
@@ -74,13 +77,10 @@ describe("lib/gemini/audio", () => {
     });
   });
 
-  it("serializes concurrent TTS requests and spaces calls to the same model by 20 seconds", async () => {
-    vi.useFakeTimers();
-    const starts: number[] = [];
+  it("deduplicates concurrent requests for the same speech", async () => {
     let inFlight = 0;
     let maxInFlight = 0;
     mocks.generateContent.mockImplementation(async () => {
-      starts.push(Date.now());
       inFlight += 1;
       maxInFlight = Math.max(maxInFlight, inFlight);
       await Promise.resolve();
@@ -95,14 +95,12 @@ describe("lib/gemini/audio", () => {
       models: ["gemini-3.8-flash-lite-tts"],
     });
     const pending = Promise.all([request(), request(), request()]);
-    await vi.runAllTimersAsync();
     const results = await pending;
 
     expect(results).toHaveLength(3);
     expect(maxInFlight).toBe(1);
-    expect(starts[1]! - starts[0]!).toBeGreaterThanOrEqual(20_000);
-    expect(starts[2]! - starts[1]!).toBeGreaterThanOrEqual(20_000);
-    expect(mocks.reserveModel).toHaveBeenCalledTimes(3);
+    expect(mocks.generateContent).toHaveBeenCalledTimes(1);
+    expect(mocks.reserveModel).toHaveBeenCalledTimes(1);
   });
 
   it("keys stored speech by normalized text, voice, exact model and version", () => {

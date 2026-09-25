@@ -67,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const cacheKey = buildAiResponseCacheKey(feature, cacheInput)
   const cached = WordSearchResponseSchema.safeParse(await getAiResponseCache<unknown>(feature, cacheKey))
   if (cached.success) {
-    await recordSharedCacheHit(feature)
+    void recordSharedCacheHit(feature)
     return NextResponse.json(cached.data)
   }
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!validated.success) {
     return NextResponse.json({ error: 'No se pudo generar la búsqueda de palabras con IA' }, { status: 500 })
   }
-  await setAiResponseCache(feature, cacheKey, validated.data)
+  void setAiResponseCache(feature, cacheKey, validated.data)
 
   return NextResponse.json(validated.data)
 }

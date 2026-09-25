@@ -12,6 +12,12 @@ Flash Lite primero y, solo en la cadena de calidad, un Gemini Flash de último
 recurso. `PREMIUM_MODELS` está reservado para tareas futuras de bajo volumen.
 No se activa un modelo si no aparece en el presupuesto gratuito permitido.
 
+Las solicitudes interactivas usan como máximo dos intentos dentro de un plazo
+total de 25–30 segundos. Cada llamada pasa `abortSignal` y el timeout HTTP al
+SDK, de modo que el servidor deja de esperar al modelo anterior antes de
+probar el siguiente. Los clientes también cancelan su `fetch` si la ruta no
+termina dentro de su plazo.
+
 `filterAvailable` omite durante 60 segundos un modelo que respondió `429` (o
 durante el `Retry-After`/`retryDelay` que devolvió Google). Si todos están en
 cooldown, se intenta la cadena original para evitar un bloqueo permanente en
@@ -31,7 +37,8 @@ Flash Lite de 500 RPD, 16 para los modelos con 20 RPD y 8 para cada modelo TTS
 con 10 RPD. Los valores fuente están en el inventario.
 Si la reserva falla por una caída de Supabase, la app registra el problema y
 permite continuar para no tumbar la función de IA; un ID fuera del allowlist se
-rechaza.
+rechaza. La RPC tiene un plazo de 750 ms y abre un circuito local durante 30 s
+si Supabase no responde, evitando añadir el mismo retraso antes de cada modelo.
 
 ## Tope diario por persona
 
@@ -47,7 +54,8 @@ este límite.
 ## Informe
 
 `pnpm ai:usage-report` imprime la fecha actual y los últimos siete días por
-modelo y feature (`requests`, `failures`, `cache_hits`). Requiere la migración
+modelo y feature (`requests`, `failures`, `cache_hits`, latencia media y último
+error). Requiere la migración
 aplicada y `SUPABASE_SERVICE_ROLE_KEY`; si no hay configuración, muestra tablas
 vacías e indica que la consulta no pudo conectarse.
 
@@ -58,7 +66,8 @@ vacías e indica que la consulta no pudo conectarse.
 entrada normalizada; la tabla guarda solo la clave, el feature y el resultado
 validado, nunca la entrada. El Diario y las transcripciones no usan esta caché.
 Los aciertos se registran con el modelo sintético `cache` para que el informe no
-los confunda con solicitudes a Gemini.
+los confunda con solicitudes a Gemini. Las lecturas tienen un plazo de 750 ms y
+las escrituras de caché y telemetría no retrasan la respuesta al usuario.
 
 ## Síntesis de voz
 
@@ -66,9 +75,11 @@ Los assets grabados de las líneas guionizadas se resuelven antes de pedir voz a
 servidor. Reader y Mission revisan Storage antes de sintetizar; las rutas usan
 Gemini TTS solo para audio largo y guionizado. Las líneas sin asset reproducible
 conservan `speechSynthesis` como salida del cliente mientras la precarga está
-pendiente o falla. `lib/gemini/audio.ts` serializa síntesis por instancia y deja
-al menos 20 segundos entre inicios del mismo modelo. Cada intento pide reserva
-con su feature.
+pendiente o falla. `lib/gemini/audio.ts` deduplica solicitudes idénticas y deja
+al menos 20 segundos entre inicios del mismo modelo. Puede usar los dos modelos
+TTS en paralelo; si ambos están ocupados, devuelve capacidad ocupada de forma
+inmediata para que la superficie use `speechSynthesis`, en lugar de mantener la
+ruta abierta en una cola. Cada intento pide reserva con su feature.
 
 La clave de cada WAV incluye feature, versión `tts-v2`, texto normalizado, voz y
 modelo exacto que lo generó. Cambiar prompt, voz o modelo produce otro objeto,

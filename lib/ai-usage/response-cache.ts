@@ -2,7 +2,10 @@ import "server-only";
 import { createHash } from "node:crypto";
 import type { Json } from "@/lib/supabase/types";
 import { logServerError } from "@/lib/api/logging";
+import { withOperationTimeout } from "@/lib/api/timeout";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
+
+const CACHE_IO_TIMEOUT_MS = 750;
 
 const CACHE_PROMPT_VERSIONS: Record<string, string> = {
   "/api/gemini/translate": "translate-v1",
@@ -26,12 +29,16 @@ export async function getAiResponseCache<T>(feature: string, key: string): Promi
   if (!supabase) return null;
 
   try {
-    const { data, error } = await supabase
-      .from("ai_response_cache")
-      .select("feature, payload")
-      .eq("key", key)
-      .eq("feature", feature)
-      .maybeSingle();
+    const { data, error } = await withOperationTimeout(
+      supabase
+        .from("ai_response_cache")
+        .select("feature, payload")
+        .eq("key", key)
+        .eq("feature", feature)
+        .maybeSingle(),
+      CACHE_IO_TIMEOUT_MS,
+      "AI response cache read",
+    );
     if (error) {
       logServerError("AI response cache read failed", error, {
         endpoint: feature,
@@ -58,11 +65,15 @@ export async function setAiResponseCache(
   if (!supabase) return;
 
   try {
-    const { error } = await supabase.from("ai_response_cache").upsert({
-      key,
-      feature,
-      payload: payload as Json,
-    }, { onConflict: "key" });
+    const { error } = await withOperationTimeout(
+      supabase.from("ai_response_cache").upsert({
+        key,
+        feature,
+        payload: payload as Json,
+      }, { onConflict: "key" }),
+      CACHE_IO_TIMEOUT_MS,
+      "AI response cache write",
+    );
     if (error) {
       logServerError("AI response cache write failed", error, {
         endpoint: feature,

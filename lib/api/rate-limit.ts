@@ -6,6 +6,9 @@ import { SECURE_HEADERS } from "@/lib/api/headers";
 import { logServerError } from "@/lib/api/logging";
 import { aiDailyLimitMessage } from "@/lib/degradation/messages";
 import { getNextPacificMidnight, getPacificDateKey } from "@/lib/api/pacific-time";
+import { withOperationTimeout } from "@/lib/api/timeout";
+
+const RATE_LIMIT_RPC_TIMEOUT_MS = 800;
 
 export type RateLimitResult =
   | { limited: false; error: null }
@@ -97,6 +100,11 @@ type ConsumeResult =
   | { allowed: true; retryAfter: 0 }
   | { allowed: false; retryAfter: number; misconfigured?: boolean };
 
+type RateLimitRpcResult = {
+  allowed: boolean;
+  retry_after_seconds?: number;
+};
+
 async function consumeKey(
   key: string,
   max: number,
@@ -116,11 +124,29 @@ async function consumeKey(
     return consumeMemory(key, max, windowMs);
   }
 
-  const { data, error } = await supabase.rpc("consume_rate_limit", {
-    p_key: key,
-    p_max: max,
-    p_window_ms: windowMs,
-  });
+  let rpcResult: {
+    data: RateLimitRpcResult | RateLimitRpcResult[] | null;
+    error: { message?: string } | null;
+  };
+  try {
+    rpcResult = await withOperationTimeout(
+      supabase.rpc("consume_rate_limit", {
+        p_key: key,
+        p_max: max,
+        p_window_ms: windowMs,
+      }) as unknown as PromiseLike<typeof rpcResult>,
+      RATE_LIMIT_RPC_TIMEOUT_MS,
+      "Rate limit check",
+    );
+  } catch (error) {
+    logServerError("Rate limit database check timed out", error, {
+      endpoint: "rate-limit",
+      operation: "consume",
+    });
+    if (isProd) return { allowed: false, retryAfter: 60, misconfigured: true };
+    return consumeMemory(key, max, windowMs);
+  }
+  const { data, error } = rpcResult;
 
   if (error) {
     logServerError("Rate limit database check failed", error, {
@@ -254,7 +280,18 @@ export async function checkLayeredRateLimit({
   // 1. IP-level limit across sessions (blocks anonymous session rotation)
   const ipMax = isAnon ? maxAnonymous * 2 : maxPermanent * 2;
   const ipKey = `gemini:ip:${endpoint}:${ipHashed}`;
-  const ipCheck = await consumeKey(ipKey, ipMax, windowMs);
+  const userMax = isAnon ? maxAnonymous : maxPermanent;
+  const userKey = `gemini:user:${endpoint}:${user.id}`;
+  const anonIpKey = `gemini:ip_anon:${ipHashed}`;
+  const dailyPromise = isGeminiEndpoint(endpoint)
+    ? checkDailyAiUserLimit(user, endpoint)
+    : Promise.resolve<RateLimitResult>({ limited: false, error: null });
+  const [ipCheck, anonIpCheck, userCheck, dailyCheck] = await Promise.all([
+    consumeKey(ipKey, ipMax, windowMs),
+    isAnon ? consumeKey(anonIpKey, 6, windowMs) : Promise.resolve<ConsumeResult>({ allowed: true, retryAfter: 0 }),
+    consumeKey(userKey, userMax, windowMs),
+    dailyPromise,
+  ]);
   if (!ipCheck.allowed) {
     if (ipCheck.misconfigured) {
       return {
@@ -273,8 +310,6 @@ export async function checkLayeredRateLimit({
 
   // 2. IP-level cumulative anonymous cap
   if (isAnon) {
-    const anonIpKey = `gemini:ip_anon:${ipHashed}`;
-    const anonIpCheck = await consumeKey(anonIpKey, 6, windowMs);
     if (!anonIpCheck.allowed) {
       return throttled(
         "Guest quota exceeded for this network. Please create an account or wait.",
@@ -284,9 +319,6 @@ export async function checkLayeredRateLimit({
   }
 
   // 3. User-level limit (per user, per endpoint)
-  const userMax = isAnon ? maxAnonymous : maxPermanent;
-  const userKey = `gemini:user:${endpoint}:${user.id}`;
-  const userCheck = await consumeKey(userKey, userMax, windowMs);
   if (!userCheck.allowed) {
     if (userCheck.misconfigured) {
       return {
@@ -302,10 +334,7 @@ export async function checkLayeredRateLimit({
 
   // Apply a project-protecting daily allowance across all Gemini endpoints,
   // but keep unrelated AI-adjacent routes (such as words/preview) untouched.
-  if (isGeminiEndpoint(endpoint)) {
-    const dailyCheck = await checkDailyAiUserLimit(user, endpoint);
-    if (dailyCheck.limited) return dailyCheck;
-  }
+  if (dailyCheck.limited) return dailyCheck;
 
   // 4. Global emergency limit. It is deliberately last so a client already
   // blocked by a narrower quota cannot consume capacity for every other user.

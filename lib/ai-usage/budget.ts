@@ -1,6 +1,11 @@
 import "server-only";
 import { logServerError } from "@/lib/api/logging";
+import { withOperationTimeout } from "@/lib/api/timeout";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
+
+const AI_USAGE_RPC_TIMEOUT_MS = 750;
+const AI_USAGE_CIRCUIT_BREAKER_MS = 30_000;
+let unavailableUntil = 0;
 
 /** Daily ceilings are 80% of the Free Tier RPD observed for this project. */
 export const DAILY_BUDGET = {
@@ -15,6 +20,7 @@ export const DAILY_BUDGET = {
 export async function reserveModel(model: string, feature: string): Promise<boolean> {
   const limit = DAILY_BUDGET[model as keyof typeof DAILY_BUDGET];
   if (!limit) return false;
+  if (Date.now() < unavailableUntil) return true;
 
   const supabase = tryGetSupabaseAdminClient();
   if (!supabase) {
@@ -26,12 +32,17 @@ export async function reserveModel(model: string, feature: string): Promise<bool
   }
 
   try {
-    const { data, error } = await supabase.rpc("ai_usage_try_reserve", {
-      p_model: model,
-      p_feature: feature,
-      p_limit: limit,
-    });
+    const { data, error } = await withOperationTimeout(
+      supabase.rpc("ai_usage_try_reserve", {
+        p_model: model,
+        p_feature: feature,
+        p_limit: limit,
+      }),
+      AI_USAGE_RPC_TIMEOUT_MS,
+      "AI usage reservation",
+    );
     if (error) {
+      unavailableUntil = Date.now() + AI_USAGE_CIRCUIT_BREAKER_MS;
       logServerError("AI usage reservation failed; allowing request", error, {
         endpoint: feature,
         operation: "reserveModel",
@@ -47,6 +58,7 @@ export async function reserveModel(model: string, feature: string): Promise<bool
     }
     return data;
   } catch (error) {
+    unavailableUntil = Date.now() + AI_USAGE_CIRCUIT_BREAKER_MS;
     logServerError("AI usage reservation threw; allowing request", error, {
       endpoint: feature,
       operation: "reserveModel",
@@ -55,8 +67,21 @@ export async function reserveModel(model: string, feature: string): Promise<bool
   }
 }
 
-export async function recordModelFailure(model: string, feature: string): Promise<void> {
-  await recordUsage(model, feature, 1, 0);
+export async function recordModelFailure(
+  model: string,
+  feature: string,
+  status?: number,
+  errorCode?: string,
+  latencyMs?: number,
+): Promise<void> {
+  await Promise.all([
+    recordUsage(model, feature, 1, 0),
+    recordModelOutcome(model, feature, false, latencyMs, status, errorCode),
+  ]);
+}
+
+export async function recordModelSuccess(model: string, feature: string, latencyMs: number): Promise<void> {
+  await recordModelOutcome(model, feature, true, latencyMs);
 }
 
 export async function recordCacheHit(model: string, feature: string): Promise<void> {
@@ -78,12 +103,16 @@ async function recordUsage(
   if (!supabase) return;
 
   try {
-    const { error } = await supabase.rpc("ai_usage_record", {
-      p_model: model,
-      p_feature: feature,
-      p_failure_delta: failureDelta,
-      p_cache_hit_delta: cacheHitDelta,
-    });
+    const { error } = await withOperationTimeout(
+      supabase.rpc("ai_usage_record", {
+        p_model: model,
+        p_feature: feature,
+        p_failure_delta: failureDelta,
+        p_cache_hit_delta: cacheHitDelta,
+      }),
+      AI_USAGE_RPC_TIMEOUT_MS,
+      "AI usage telemetry",
+    );
     if (error) {
       logServerError("AI usage telemetry write failed", error, {
         endpoint: feature,
@@ -96,4 +125,47 @@ async function recordUsage(
       operation: "recordUsage",
     }, "warn");
   }
+}
+
+async function recordModelOutcome(
+  model: string,
+  feature: string,
+  success: boolean,
+  latencyMs?: number,
+  status?: number,
+  errorCode?: string,
+): Promise<void> {
+  if (!(model in DAILY_BUDGET)) return;
+  const supabase = tryGetSupabaseAdminClient();
+  if (!supabase || Date.now() < unavailableUntil) return;
+
+  try {
+    const { error } = await withOperationTimeout(
+      supabase.rpc("ai_usage_record_outcome", {
+        p_model: model,
+        p_feature: feature,
+        p_success: success,
+        p_latency_ms: Math.max(0, Math.round(latencyMs ?? 0)),
+        p_status: status ?? null,
+        p_error_code: errorCode?.slice(0, 80) ?? null,
+      }),
+      AI_USAGE_RPC_TIMEOUT_MS,
+      "AI outcome telemetry",
+    );
+    if (error) {
+      logServerError("AI outcome telemetry write failed", error, {
+        endpoint: feature,
+        operation: "recordModelOutcome",
+      }, "warn");
+    }
+  } catch (error) {
+    logServerError("AI outcome telemetry write threw", error, {
+      endpoint: feature,
+      operation: "recordModelOutcome",
+    }, "warn");
+  }
+}
+
+export function _resetAiUsageCircuitForTests(): void {
+  unavailableUntil = 0;
 }

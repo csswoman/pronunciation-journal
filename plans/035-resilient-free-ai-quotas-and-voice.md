@@ -19,7 +19,7 @@
 - **Depends on**: — (036, 037 y 038 dependen de la fase A de este plan)
 - **Category**: IA / resiliencia / costo
 - **Planned at**: commit `866979df`, 2026-09-23 (revisado el mismo día: fases reordenadas, alcance recortado)
-- **Implementation state (2026-09-24)**: fases A–C implementadas en código. Las migraciones aún no están aplicadas; quedan pendientes la prueba de RPC y el reporte contra la base de datos, además de la prueba manual sin `GEMINI_API_KEY`.
+- **Implementation state (2026-09-25)**: fases A–C implementadas. Las dos migraciones originales están aplicadas y `pnpm ai:usage-report` consulta datos reales. Se añadió una migración pendiente para latencia/errores; quedan la prueba atómica explícita de la RPC y la prueba manual sin `GEMINI_API_KEY`.
 
 ## Por qué importa
 
@@ -191,7 +191,9 @@ Actualiza solo lo que la fase cambió; no documentes fases no ejecutadas.
 - [x] Tests de cooldown, presupuesto, límite por usuario, caché y cola TTS pasan.
 - [x] `pnpm type-check` y `pnpm lint` en exit 0.
 - [x] Las migraciones tienen RLS habilitado y ninguna política para `anon`/`authenticated` (auditoría estática).
-- [ ] Aplicar ambas migraciones y verificar la RPC (`true`, luego `false`) y `pnpm ai:usage-report` contra la base de datos.
+- [x] Aplicar las migraciones originales y ejecutar `pnpm ai:usage-report` contra la base de datos.
+- [ ] Verificar explícitamente la RPC de reserva (`true`, luego `false`).
+- [ ] Aplicar `20260925120000_ai_usage_outcomes.sql` para latencia y último error.
 - [ ] Guardar el diario y los ejercicios funciona sin IA (prueba manual con `GEMINI_API_KEY` vacía).
 - [x] Documentación del "Paso final" actualizada para las fases ejecutadas.
 

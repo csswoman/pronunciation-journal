@@ -60,7 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return publicErrorResponse(400, "Passage text is missing or not found");
     }
 
-    for (const model of AUDIO_MODELS) {
+    const cachedAudio = (await Promise.all(AUDIO_MODELS.map(async (model) => {
       const cachePath = `${user.id}/${buildSpeechCacheKey("/api/gemini/reader-audio", textToRead, voice, model)}.wav`;
       const folder = cachePath.slice(0, cachePath.lastIndexOf("/"));
       const fileName = cachePath.slice(cachePath.lastIndexOf("/") + 1);
@@ -69,13 +69,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         .list(folder, { search: fileName, limit: 5 })
         .catch(() => ({ data: null }));
       if (existingFiles?.some((file) => file.name === fileName)) {
-        await recordSharedCacheHit("/api/gemini/reader-audio");
         const { data: publicData } = storageClient.storage.from("reader-audio").getPublicUrl(cachePath);
-        if (existingDbRecord?.audioUrl !== publicData.publicUrl) {
-          await updatePassageAudioServer(body.passageId, user.id, publicData.publicUrl).catch(() => undefined);
-        }
-        return NextResponse.json({ audioUrl: publicData.publicUrl }, { headers: SECURE_HEADERS });
+        return publicData.publicUrl;
       }
+      return null;
+    }))).find((url): url is string => Boolean(url));
+    if (cachedAudio) {
+      void recordSharedCacheHit("/api/gemini/reader-audio");
+      if (existingDbRecord?.audioUrl !== cachedAudio) {
+        void updatePassageAudioServer(body.passageId, user.id, cachedAudio).catch(() => undefined);
+      }
+      return NextResponse.json({ audioUrl: cachedAudio }, { headers: SECURE_HEADERS });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
@@ -131,8 +135,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       userId: user.id,
     });
     const status = getErrorStatus(err) ?? 500;
-    return publicErrorResponse(status === 429 ? 429 : 500, status === 429
-      ? "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico."
-      : "Failed to generate reading audio");
+    if (status === 429) {
+      return publicErrorResponse(429, "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico.");
+    }
+    if (status === 503 || status === 504) {
+      return publicErrorResponse(status, "El audio HD está ocupado. Usa la voz del dispositivo o vuelve a intentarlo en unos segundos.");
+    }
+    return publicErrorResponse(500, "Failed to generate reading audio");
   }
 }
