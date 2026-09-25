@@ -41,9 +41,10 @@ export function AssessmentOralCheckpoint({
   const [message, setMessage] = useState<string | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
 
-  const issueChallenge = useCallback(async () => {
+  const issueChallenge = useCallback(async (): Promise<boolean> => {
     setChallengeLoading(true);
     setMessage(null);
+    setChallenge(null);
     recorder.reset();
     try {
       const response = await fetch("/api/assessment/oral/attempts", {
@@ -57,8 +58,10 @@ export function AssessmentOralCheckpoint({
       } | null;
       if (!response.ok || !body?.challenge) throw new Error("No se pudo iniciar la tarea oral.");
       setChallenge(body.challenge);
+      return true;
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No se pudo iniciar la tarea oral.");
+      return false;
     } finally {
       setChallengeLoading(false);
     }
@@ -101,9 +104,14 @@ export function AssessmentOralCheckpoint({
       formData.append("attemptId", attemptId);
       formData.append("challengeId", challenge.id);
       formData.append("audio", recorder.result.blob, `checkpoint.${extension}`);
-      const response = await fetch("/api/assessment/oral/evidence", { method: "POST", body: formData });
+      const response = await fetch("/api/assessment/oral/evidence", {
+        method: "POST",
+        body: formData,
+        signal: AbortSignal.timeout(65_000),
+      });
       const body = await response.json().catch(() => null) as {
         passed?: boolean;
+        processing?: boolean;
         retryable?: boolean;
         message?: string;
         result?: unknown;
@@ -115,22 +123,25 @@ export function AssessmentOralCheckpoint({
         onComplete(parsed.data as AssessmentResult);
         return;
       }
+      if (response.status === 202 && body?.processing) {
+        setMessage(body.message ?? "El audio sigue en evaluación. Vuelve a consultar en un momento.");
+        return;
+      }
       if (body?.retryable) {
-        setMessage(body.message ?? "No se pudieron confirmar los detalles. Graba otra respuesta.");
-        recorder.reset();
-        setChallenge(null);
+        const renewed = await issueChallenge();
+        if (renewed) setMessage(body.message ?? "No se pudieron confirmar los detalles. Graba otra respuesta.");
         return;
       }
       if (response.status === 409 || response.status === 410) {
-        recorder.reset();
-        setChallenge(null);
-        await issueChallenge();
-        setMessage("El reto venció o ya se había usado. Preparamos uno nuevo para este mismo intento.");
+        const renewed = await issueChallenge();
+        if (renewed) setMessage("El reto venció o ya se había usado. Preparamos uno nuevo para este mismo intento.");
         return;
       }
       setMessage(body?.error ?? body?.message ?? "No se pudo comprobar el audio. Tu checkpoint sigue pendiente.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo comprobar el audio.");
+      setMessage(error instanceof Error && error.name === "TimeoutError"
+        ? "La evaluación tardó demasiado. Tu audio sigue disponible para reintentar."
+        : error instanceof Error ? error.message : "No se pudo comprobar el audio.");
     } finally {
       setSubmitting(false);
     }
@@ -154,31 +165,43 @@ export function AssessmentOralCheckpoint({
     <section className="flex w-full flex-col gap-5" aria-labelledby="assessment-oral-title" aria-busy={submitting || challengeLoading}>
       <PastelCard tone="sky" className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="font-kicker text-text-muted">Checkpoint {level.toUpperCase()} · tarea oral</p>
-          <h2 id="assessment-oral-title" className="text-title font-semibold text-text-strong">
+          <p className="font-kicker text-ink-muted">Checkpoint {level.toUpperCase()} · tarea oral</p>
+          <h2 id="assessment-oral-title" className="font-display text-h3 font-extrabold tracking-tight text-balance text-ink">
             Di una respuesta breve en inglés
           </h2>
-          <p className="text-body-sm text-text-secondary">
-            La parte escrita y de escucha queda guardada mientras completas este último paso.
+          <p className="text-body-sm text-ink-secondary">
+            Tu avance escrito y de escucha queda guardado.
           </p>
         </div>
 
         {challengeLoading ? (
-          <p role="status" className="text-body-sm text-text-secondary">Preparando una tarea para este intento…</p>
+          <p role="status" className="text-body-sm text-ink-secondary">Preparando una tarea para este intento…</p>
         ) : challenge ? (
           <div className="pastel-card-inset rounded-xl p-4">
-            <p className="text-body font-medium">{challenge.prompt}</p>
-            <p className="mt-2 text-caption text-text-muted">Graba hasta 15 segundos. Puedes escuchar tu audio antes de enviarlo.</p>
+            <p className="text-body font-medium text-ink">{challenge.prompt}</p>
+            <p className="mt-2 text-caption text-ink-muted">Graba hasta 15 s; puedes escuchar antes de enviar.</p>
           </div>
         ) : (
-          <div role="alert" className="flex items-start gap-2 text-body-sm text-text-secondary">
+          <div role="alert" className="flex items-start gap-2 text-body-sm text-ink-secondary">
             <AlertCircle size={18} aria-hidden />
             <span>{message ?? "No se pudo preparar la tarea. Puedes reintentarlo."}</span>
           </div>
         )}
 
+        {challenge && (
+          <details className="max-w-prose text-body-sm text-ink-muted">
+            <summary className="min-h-11 cursor-pointer py-3 font-semibold text-ink-secondary focus-ring">
+              Google Gemini transcribe el audio · Ver privacidad
+            </summary>
+            <p className="pb-2 leading-relaxed">
+              Al enviarlo, Google Gemini recibe el audio para transcribirlo. Google puede retenerlo hasta 55 días por seguridad y, en el servicio sin pago, usarlo para mejorar sus productos y permitir revisión humana. English Journal no guarda el audio ni la transcripción. Usa solo los datos ficticios de la consigna; no compartas información personal. Consulta la{" "}
+              <a className="underline underline-offset-2" href="/privacy">política de privacidad</a>.
+            </p>
+          </details>
+        )}
+
         {!recorder.isSupported && !challengeLoading && (
-          <p role="status" className="pastel-card-inset rounded-xl p-4 text-body-sm text-text-secondary">
+          <p role="status" className="pastel-card-inset rounded-xl p-4 text-body-sm text-ink-secondary">
             Este dispositivo no ofrece grabación compatible. Tu examen sigue pendiente; vuelve a este checkpoint desde un dispositivo con micrófono.
           </p>
         )}
@@ -190,14 +213,14 @@ export function AssessmentOralCheckpoint({
                 Detener · {elapsedSeconds}s
               </PillButton>
             ) : (
-              <PillButton variant="outline" size="md" className="min-h-11 px-5" onClick={() => void startRecording()} disabled={submitting}>
+              <PillButton variant={recorder.result ? "outline" : "primary"} size="md" className="min-h-11 px-5" onClick={() => void startRecording()} disabled={submitting}>
                 <Mic size={18} aria-hidden />
                 {recorder.result ? "Grabar otra vez" : "Grabar respuesta"}
               </PillButton>
             )}
             {recorder.result && !recording && (
               <PillButton variant="primary" size="md" className="min-h-11 px-5" onClick={() => void submitRecording()} disabled={submitting} isLoading={submitting}>
-                Enviar audio
+                {submitting ? "Evaluando audio…" : "Enviar audio"}
               </PillButton>
             )}
             {recorder.result && !recording && (
@@ -207,19 +230,9 @@ export function AssessmentOralCheckpoint({
         )}
 
         {recorder.state === "error" && (
-          <p role="alert" className="text-body-sm text-text-secondary">No pudimos abrir el micrófono. Revisa los permisos del navegador.</p>
+          <p role="alert" className="text-body-sm text-ink-secondary">No pudimos abrir el micrófono. Revisa los permisos del navegador.</p>
         )}
-        {message && challenge && <p role="status" aria-live="polite" className="text-body-sm text-text-secondary">{message}</p>}
-        <p className="text-caption text-text-muted">
-          Al enviar, el audio se manda a Google Gemini para transcribirlo. Google
-          puede retener el contenido enviado hasta 55 días para seguridad y, en
-          el servicio sin pago, usarlo para mejorar sus productos y permitir
-          revisión humana. English Journal no guarda el audio ni la
-          transcripción. Usa solo los datos ficticios de la consigna; no
-          compartas información personal. Puedes reanudar este intento durante
-          24 horas. Consulta la{" "}
-          <a className="underline" href="/privacy">política de privacidad</a>.
-        </p>
+        {message && challenge && <p role="alert" className="text-body-sm text-ink-secondary">{message}</p>}
       </PastelCard>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -232,7 +245,7 @@ export function AssessmentOralCheckpoint({
         <PillButton variant="quiet" size="md" className="min-h-11 px-4" onClick={() => void deferAttempt()} disabled={deferLoading}>
           Dejar para después
         </PillButton>
-        <p className="text-caption text-text-muted">Puedes continuar en otro dispositivo al iniciar sesión con esta cuenta.</p>
+        <p className="text-caption text-text-muted">Puedes retomarlo desde otro dispositivo durante 24 h.</p>
       </div>
     </section>
   );

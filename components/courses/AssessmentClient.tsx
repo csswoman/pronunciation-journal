@@ -63,8 +63,6 @@ export default function AssessmentClient({
     && answers[currentQuestion.id] !== undefined
     && (!currentQuestion.audioSrc || audioReadyQuestionId === currentQuestion.id);
   const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
-  const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
-  const progressTotal = showingInventory ? sectionConcepts.length : showingLevelPrompt ? 1 : visibleQuestions.length;
   const scoring = useAssessmentScoring({
     mode,
     concepts,
@@ -75,6 +73,13 @@ export default function AssessmentClient({
     selfRatings,
   });
   const oralFlow = useAssessmentOralFlow({ mode, userId, checkpointLevel, answers, questions, scoring });
+  const includesOralTask = Boolean(userId && oralFlow.needsOralEvidence);
+  const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
+  const progressTotal = showingInventory
+    ? sectionConcepts.length
+    : showingLevelPrompt
+      ? 1
+      : visibleQuestions.length + (includesOralTask ? 1 : 0);
   const { finishSection } = useAssessmentCompletion({
     mode,
     userId,
@@ -208,6 +213,7 @@ export default function AssessmentClient({
         showingInventory,
         progressValue,
         progressTotal,
+        questionTotal: visibleQuestions.length,
       }}
       prompt={{
         selfReportedLevel: flow.selfReportedLevel,

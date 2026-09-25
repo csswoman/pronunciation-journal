@@ -7,11 +7,13 @@ const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
   getAssessmentProfileLevel: vi.fn(),
   persistAssessmentOutcome: vi.fn(),
+  savePendingOralAssessmentResult: vi.fn(),
   createAssessmentOralAttempt: vi.fn(),
   findPendingAssessmentOralAttempt: vi.fn(),
   getAssessmentOralAttempt: vi.fn(),
   issueAssessmentOralChallenge: vi.fn(),
   pruneExpiredAssessmentOralAttempts: vi.fn(),
+  recoverExpiredAssessmentOralChallenges: vi.fn(),
 }));
 
 vi.mock("@/lib/api/guards", () => ({
@@ -26,6 +28,7 @@ vi.mock("@/lib/api/guards", () => ({
 vi.mock("@/lib/courses/assessment-queries", () => ({
   getAssessmentProfileLevel: mocks.getAssessmentProfileLevel,
   persistAssessmentOutcome: mocks.persistAssessmentOutcome,
+  savePendingOralAssessmentResult: mocks.savePendingOralAssessmentResult,
 }));
 
 vi.mock("@/lib/courses/assessment-oral-queries", () => ({
@@ -33,7 +36,9 @@ vi.mock("@/lib/courses/assessment-oral-queries", () => ({
   findPendingAssessmentOralAttempt: mocks.findPendingAssessmentOralAttempt,
   getAssessmentOralAttempt: mocks.getAssessmentOralAttempt,
   issueAssessmentOralChallenge: mocks.issueAssessmentOralChallenge,
+  parseAssessmentOralAnswers: (answers: Record<string, number>) => answers,
   pruneExpiredAssessmentOralAttempts: mocks.pruneExpiredAssessmentOralAttempts,
+  recoverExpiredAssessmentOralChallenges: mocks.recoverExpiredAssessmentOralChallenges,
 }));
 
 vi.mock("@/lib/api/logging", () => ({ logServerError: vi.fn() }));
@@ -86,9 +91,11 @@ beforeEach(() => {
   });
   mocks.getAssessmentProfileLevel.mockResolvedValue("A1");
   mocks.persistAssessmentOutcome.mockResolvedValue(undefined);
+  mocks.savePendingOralAssessmentResult.mockResolvedValue(undefined);
   mocks.findPendingAssessmentOralAttempt.mockResolvedValue(null);
   mocks.getAssessmentOralAttempt.mockResolvedValue(null);
   mocks.pruneExpiredAssessmentOralAttempts.mockResolvedValue(undefined);
+  mocks.recoverExpiredAssessmentOralChallenges.mockResolvedValue(undefined);
   mocks.createAssessmentOralAttempt.mockImplementation(async (input: { id: string }) => ({
     ...storedAttempt(),
     id: input.id,
@@ -147,6 +154,16 @@ describe("oral assessment attempts route", () => {
       level: "a1",
       answers: passingAnswers(),
     }));
+    expect(mocks.savePendingOralAssessmentResult).toHaveBeenCalledWith(
+      "u1",
+      expect.any(String),
+      "a1",
+      expect.objectContaining({ passed: false, oralEvidence: { level: "a1", status: "pending" } }),
+    );
+    expect(mocks.createAssessmentOralAttempt.mock.invocationCallOrder[0])
+      .toBeLessThan(mocks.savePendingOralAssessmentResult.mock.invocationCallOrder[0]);
+    expect(mocks.savePendingOralAssessmentResult.mock.invocationCallOrder[0])
+      .toBeLessThan(mocks.issueAssessmentOralChallenge.mock.invocationCallOrder[0]);
   });
 
   it("does not replace the saved answer set when resuming an attempt", async () => {
@@ -170,9 +187,26 @@ describe("oral assessment attempts route", () => {
     expect(body.attemptId).toBe(attemptId);
     expect(body.challenge.prompt).toContain("fictional person");
     expect(mocks.createAssessmentOralAttempt).not.toHaveBeenCalled();
+    expect(mocks.savePendingOralAssessmentResult).toHaveBeenCalledWith(
+      "u1",
+      attemptId,
+      "a1",
+      expect.objectContaining({ oralEvidence: { level: "a1", status: "pending" } }),
+    );
     expect(mocks.issueAssessmentOralChallenge).toHaveBeenCalledWith(expect.objectContaining({
       userId: "u1",
       attemptId,
     }));
+  });
+
+  it("does not start the oral attempt when the written result could not be saved", async () => {
+    mocks.savePendingOralAssessmentResult.mockRejectedValueOnce(new Error("database unavailable"));
+
+    const response = await POST(reqWith({ level: "a1", answers: passingAnswers() }) as never);
+
+    expect(response.status).toBe(503);
+    expect((await response.json()).error).toContain("guardar tus respuestas");
+    expect(mocks.createAssessmentOralAttempt).toHaveBeenCalledOnce();
+    expect(mocks.issueAssessmentOralChallenge).not.toHaveBeenCalled();
   });
 });

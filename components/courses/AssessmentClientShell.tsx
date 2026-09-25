@@ -30,6 +30,7 @@ interface AssessmentClientShellProps {
     showingInventory: boolean;
     progressValue: number;
     progressTotal: number;
+    questionTotal: number;
   };
   prompt: {
     selfReportedLevel: CefrLevelId | "unsure" | "full" | null;
@@ -109,7 +110,7 @@ export function AssessmentClientShell({
               <AssessmentQuestionView
                 question={prompt.currentQuestion}
                 index={prompt.questionIndex}
-                total={chrome.progressTotal}
+                total={chrome.questionTotal}
                 answer={
                   prompt.currentQuestion ? prompt.answers[prompt.currentQuestion.id] : undefined
                 }

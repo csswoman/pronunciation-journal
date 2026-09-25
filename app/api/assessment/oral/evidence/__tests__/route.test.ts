@@ -8,9 +8,12 @@ const mocks = vi.hoisted(() => ({
   checkDailyAiUserLimit: vi.fn(),
   getAssessmentProfileLevel: vi.fn(),
   persistAssessmentOutcome: vi.fn(),
+  savePendingOralAssessmentResult: vi.fn(),
   getAssessmentOralAttempt: vi.fn(),
   claimAssessmentOralChallenge: vi.fn(),
   resetAssessmentOralChallenge: vi.fn(),
+  releaseAssessmentOralChallenge: vi.fn(),
+  recoverExpiredAssessmentOralChallenges: vi.fn(),
   acceptAssessmentOralEvidence: vi.fn(),
   markAssessmentOralAttemptCompleted: vi.fn(),
   parseAssessmentOralAnswers: vi.fn(),
@@ -29,6 +32,7 @@ vi.mock("@/lib/api/guards", () => ({
 vi.mock("@/lib/courses/assessment-queries", () => ({
   getAssessmentProfileLevel: mocks.getAssessmentProfileLevel,
   persistAssessmentOutcome: mocks.persistAssessmentOutcome,
+  savePendingOralAssessmentResult: mocks.savePendingOralAssessmentResult,
 }));
 
 vi.mock("@/lib/courses/assessment-oral-queries", () => ({
@@ -38,6 +42,8 @@ vi.mock("@/lib/courses/assessment-oral-queries", () => ({
   markAssessmentOralAttemptCompleted: mocks.markAssessmentOralAttemptCompleted,
   parseAssessmentOralAnswers: mocks.parseAssessmentOralAnswers,
   resetAssessmentOralChallenge: mocks.resetAssessmentOralChallenge,
+  releaseAssessmentOralChallenge: mocks.releaseAssessmentOralChallenge,
+  recoverExpiredAssessmentOralChallenges: mocks.recoverExpiredAssessmentOralChallenges,
 }));
 
 vi.mock("@/lib/courses/assessment-oral-transcription", () => ({
@@ -122,6 +128,7 @@ beforeEach(() => {
   mocks.checkDailyAiUserLimit.mockResolvedValue({ limited: false, error: null });
   mocks.getAssessmentProfileLevel.mockResolvedValue("A1");
   mocks.persistAssessmentOutcome.mockResolvedValue(undefined);
+  mocks.savePendingOralAssessmentResult.mockResolvedValue(undefined);
   mocks.getAssessmentOralAttempt.mockImplementation(async (userId: string, id: string) =>
     userId === "u1" && id === attemptId ? { ...savedAttempt } : null);
   mocks.claimAssessmentOralChallenge.mockImplementation(async (input: {
@@ -142,6 +149,10 @@ beforeEach(() => {
     savedAttempt.item_id = null;
     savedAttempt.challenge_expires_at = null;
   });
+  mocks.releaseAssessmentOralChallenge.mockImplementation(async () => {
+    savedAttempt.status = "oral_pending";
+  });
+  mocks.recoverExpiredAssessmentOralChallenges.mockResolvedValue(undefined);
   mocks.acceptAssessmentOralEvidence.mockImplementation(async (input: {
     audioSha256: string;
     rubricVersion: string;
@@ -175,6 +186,12 @@ describe("oral assessment evidence route", () => {
     expect(replayBody.passed).toBe(true);
     expect(mocks.transcribeAssessmentOralAudio).toHaveBeenCalledOnce();
     expect(mocks.persistAssessmentOutcome).toHaveBeenCalledOnce();
+    expect(mocks.savePendingOralAssessmentResult).toHaveBeenCalledWith(
+      "u1",
+      attemptId,
+      "a1",
+      expect.objectContaining({ oralEvidence: { level: "a1", status: "pending" } }),
+    );
     expect(mocks.transcribeAssessmentOralAudio).toHaveBeenCalledWith(
       expect.any(Buffer),
       "audio/webm",
@@ -206,8 +223,21 @@ describe("oral assessment evidence route", () => {
     expect(response.status).toBe(503);
     expect(body.error).toContain("checkpoint sigue pendiente");
     expect(savedAttempt.status).toBe("oral_pending");
-    expect(mocks.resetAssessmentOralChallenge).toHaveBeenCalledOnce();
+    expect(savedAttempt.challenge_id).toBe(challengeId);
+    expect(mocks.releaseAssessmentOralChallenge).toHaveBeenCalledOnce();
+    expect(mocks.resetAssessmentOralChallenge).not.toHaveBeenCalled();
     expect(mocks.persistAssessmentOutcome).not.toHaveBeenCalled();
+  });
+
+  it("accepts the natural wording shown in the A1 prompt", async () => {
+    mocks.transcribeAssessmentOralAudio.mockResolvedValueOnce(
+      "Ana lives in Lima, and a park is near her home.",
+    );
+
+    const response = await POST(requestWithAudio() as never);
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).passed).toBe(true);
   });
 
   it("keeps mismatched speech retryable without turning it into a failed checkpoint", async () => {
@@ -223,6 +253,31 @@ describe("oral assessment evidence route", () => {
     expect(mocks.persistAssessmentOutcome).not.toHaveBeenCalled();
   });
 
+  it("reports an in-flight recording without discarding its challenge", async () => {
+    savedAttempt = makeAttempt({ status: "oral_processing" });
+
+    const response = await POST(requestWithAudio() as never);
+    const body = await response.json();
+
+    expect(response.status).toBe(202);
+    expect(body.processing).toBe(true);
+    expect(savedAttempt.challenge_id).toBe(challengeId);
+    expect(mocks.transcribeAssessmentOralAudio).not.toHaveBeenCalled();
+  });
+
+  it("recovers a processing attempt after its challenge expires", async () => {
+    savedAttempt = makeAttempt({
+      status: "oral_processing",
+      challenge_expires_at: new Date(Date.now() - 1_000).toISOString(),
+    });
+
+    const response = await POST(requestWithAudio() as never);
+
+    expect(response.status).toBe(409);
+    expect(mocks.recoverExpiredAssessmentOralChallenges).toHaveBeenCalledOnce();
+    expect(mocks.transcribeAssessmentOralAudio).not.toHaveBeenCalled();
+  });
+
   it("allows only one of two simultaneous submissions to claim a challenge", async () => {
     let releaseTranscript: ((transcript: string) => void) | undefined;
     mocks.transcribeAssessmentOralAudio.mockImplementationOnce(() => new Promise((resolve) => {
@@ -234,7 +289,8 @@ describe("oral assessment evidence route", () => {
     releaseTranscript?.("Ana lives in Lima. There is a park near her home.");
     const firstResponse = await firstRequest;
 
-    expect(secondResponse.status).toBe(409);
+    expect(secondResponse.status).toBe(202);
+    expect((await secondResponse.json()).processing).toBe(true);
     expect(firstResponse.status).toBe(200);
     expect(mocks.transcribeAssessmentOralAudio).toHaveBeenCalledOnce();
   });

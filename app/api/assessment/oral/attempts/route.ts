@@ -4,14 +4,16 @@ import { requireSameOrigin, requireUser, rateLimit, validateBody, SECURE_HEADERS
 import { logServerError } from "@/lib/api/logging";
 import { AssessmentOralAttemptRequestSchema } from "@/lib/courses/assessment-schema";
 import { scoreAssessment } from "@/lib/courses/assessment";
-import { getAssessmentProfileLevel, persistAssessmentOutcome } from "@/lib/courses/assessment-queries";
+import { getAssessmentProfileLevel, persistAssessmentOutcome, savePendingOralAssessmentResult } from "@/lib/courses/assessment-queries";
 import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import {
   createAssessmentOralAttempt,
   findPendingAssessmentOralAttempt,
   getAssessmentOralAttempt,
   issueAssessmentOralChallenge,
+  parseAssessmentOralAnswers,
   pruneExpiredAssessmentOralAttempts,
+  recoverExpiredAssessmentOralChallenges,
 } from "@/lib/courses/assessment-oral-queries";
 import { getAssessmentOralTasks } from "@/lib/courses/assessment-oral-tasks";
 import { ASSESSMENT_ORAL_ATTEMPT_TTL_MS, ASSESSMENT_ORAL_CHALLENGE_TTL_MS } from "@/lib/courses/assessment-oral-shared";
@@ -62,6 +64,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     const now = new Date().toISOString();
+    await recoverExpiredAssessmentOralChallenges(user.id, level, now);
     const attempt = await findPendingAssessmentOralAttempt(user.id, level, now);
     return NextResponse.json({ attemptId: attempt?.id ?? null }, { headers: SECURE_HEADERS });
   } catch (error) {
@@ -87,6 +90,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const nowDate = new Date();
     const now = nowDate.toISOString();
+    await recoverExpiredAssessmentOralChallenges(user.id, body.level, now);
     let attempt;
 
     if (body.assessmentAttemptId) {
@@ -122,6 +126,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         answers: body.answers,
         expiresAt: new Date(nowDate.getTime() + ASSESSMENT_ORAL_ATTEMPT_TTL_MS).toISOString(),
       });
+    }
+
+    const { questions: savedQuestions } = buildServerAssessment("checkpoint", body.level);
+    const savedResult = scoreAssessment(
+      savedQuestions,
+      parseAssessmentOralAnswers(attempt.answers),
+      "checkpoint",
+      body.level,
+    );
+    try {
+      await savePendingOralAssessmentResult(user.id, attempt.id, body.level, savedResult);
+    } catch (error) {
+      logServerError("Oral checkpoint written result save failed", error, {
+        endpoint: "/api/assessment/oral/attempts",
+        operation: "savePendingResult",
+        userId: user.id,
+      });
+      return publicErrorResponse(503, "No se pudieron guardar tus respuestas escritas. Inténtalo de nuevo.");
     }
 
     const tasks = getAssessmentOralTasks(body.level);

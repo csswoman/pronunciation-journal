@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   insert: vi.fn(),
   upsert: vi.fn(),
+  resultUpsert: vi.fn(),
   tryGetSupabaseAdminClient: vi.fn(),
 }));
 
@@ -18,7 +19,7 @@ vi.mock("@/lib/supabase/service-role", () => ({
   tryGetSupabaseAdminClient: mocks.tryGetSupabaseAdminClient,
 }));
 
-import { persistAssessmentOutcome, saveAssessmentResult } from "../assessment-queries";
+import { persistAssessmentOutcome, saveAssessmentResult, savePendingOralAssessmentResult } from "../assessment-queries";
 import type { AssessmentResult } from "../assessment";
 
 const result: AssessmentResult = {
@@ -48,8 +49,10 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.insert.mockResolvedValue({ error: null });
   mocks.upsert.mockResolvedValue({ error: null });
+  mocks.resultUpsert.mockResolvedValue({ error: null });
   mocks.tryGetSupabaseAdminClient.mockReturnValue({
     from: (table: string) => {
+      if (table === "assessment_results") return { upsert: mocks.resultUpsert };
       expect(table).toBe("user_profiles");
       return { upsert: mocks.upsert };
     },
@@ -104,6 +107,25 @@ describe("assessment persistence", () => {
     }));
   });
 
+  it("upserts a pending oral result by attempt id without promoting the profile", async () => {
+    const pendingResult: AssessmentResult = {
+      ...result,
+      assignedLevel: "A1",
+      passed: false,
+      oralEvidence: { level: "a1", status: "pending" },
+    };
+
+    await savePendingOralAssessmentResult("u1", "attempt-1", "a1", pendingResult);
+
+    expect(mocks.resultUpsert).toHaveBeenCalledWith(expect.objectContaining({
+      id: "attempt-1",
+      passed: false,
+      evaluated_level: "A1",
+      topic_scores: expect.objectContaining({ oralEvidence: { level: "a1", status: "pending" } }),
+    }), { onConflict: "id" });
+    expect(mocks.upsert).not.toHaveBeenCalled();
+  });
+
   it("updates user_profiles exclusively using admin client", async () => {
     await persistAssessmentOutcome("u1", "placement", result, "b1");
 
@@ -150,5 +172,12 @@ describe("assessment persistence", () => {
     mocks.insert.mockResolvedValueOnce({ error: failure });
 
     await expect(saveAssessmentResult("u1", "placement", result)).rejects.toEqual(failure);
+  });
+
+  it("does not report success when the assessment results table is missing", async () => {
+    const failure = { code: "PGRST205", message: "assessment_results not found" };
+    mocks.insert.mockResolvedValueOnce({ error: failure });
+
+    await expect(saveAssessmentResult("u1", "checkpoint", result)).rejects.toEqual(failure);
   });
 });

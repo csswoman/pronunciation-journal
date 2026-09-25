@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Check } from "@/components/icons";
 import Badge from "@/components/ui/Badge";
 import { PillButton } from "@/components/ui/PillButton";
+import { ASSESSMENT_ORAL_PILOT_LEVELS } from "@/lib/courses/assessment-oral-shared";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 // Planned structure:
@@ -45,6 +46,10 @@ export function AssessmentHeader({
   progressValue: number;
   progressTotal: number;
 }) {
+  const includesOralTask = mode === "checkpoint"
+    && Boolean(userId)
+    && ASSESSMENT_ORAL_PILOT_LEVELS.some((level) => level.toUpperCase() === checkpointLabel);
+
   return (
     <header className="assessment-header">
       <Link href={userId ? "/courses" : "/login"} className="assessment-back">
@@ -64,6 +69,8 @@ export function AssessmentHeader({
               ? "Es una referencia inicial, no una nota. Si no estás seguro, empezaremos desde A1 y dejaremos que tus respuestas orienten el resultado."
               : showingInventory
               ? "Sé sincero: después comprobaremos estas ideas con preguntas. Tu respuesta solo ayuda a ordenar el plan."
+              : mode === "checkpoint" && includesOralTask
+                ? "Responde sin traductor y completa la tarea oral."
               : "Responde sin traductor. El resultado adapta tus ejercicios, pero no limita lo que puedes explorar."}
           </p>
         </div>
@@ -71,8 +78,8 @@ export function AssessmentHeader({
           <AssessmentProgress
             value={progressValue}
             total={progressTotal}
-            label={showingInventory ? "Temas valorados" : "Preguntas respondidas"}
-            unit={showingInventory ? "temas" : "respondidas"}
+            label={showingInventory ? "Temas valorados" : includesOralTask ? "Preguntas y tarea oral" : "Preguntas respondidas"}
+            unit={showingInventory ? "temas" : includesOralTask ? "pasos" : "respondidas"}
           />
         ) : null}
       </div>

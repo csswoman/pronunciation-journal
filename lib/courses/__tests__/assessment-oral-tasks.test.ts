@@ -12,9 +12,15 @@ describe("assessment oral pilot tasks", () => {
 
     expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Lima. There's a park near her home."))
       .toBe(true);
+    expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Lima, and a park is near her home."))
+      .toBe(true);
+    expect(scoreAssessmentOralTranscript(task.id, "Anna lives in Lima, and a park is near her home."))
+      .toBe(true);
+    expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Lima. The park is near her home."))
+      .toBe(true);
     expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Quito. There is a park near her home."))
       .toBe(false);
-    expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Lima. The park is near her home."))
+    expect(scoreAssessmentOralTranscript(task.id, "Ana lives in Lima."))
       .toBe(false);
   });
 

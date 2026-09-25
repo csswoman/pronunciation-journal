@@ -70,7 +70,7 @@ al ejecutar.
 | 031 | Writing Nudges: Palabras de repaso como sugerencia activa en el Diario | P2 | M | 028, 029 | DONE (vocabulario opcional y origen de repaso verificado) |
 | 032 | Expandir anclas del content graph de chunks para niveles A2 y B1 | P2 | M | — | DONE (116 chunks: 36 A1, 50 A2, 30 B1) |
 | 033 | Evaluar comprensión auditiva en todos los checkpoints de nivel | P2 | L | — | DONE (18 audios, scoring y feedback por nivel implementados; suite de 7 archivos pasa al 100%) |
-| 034 | Incorporar evidencia oral verificable en checkpoints | P2 | L | 033 | IN PROGRESS (piloto personal A1/A2; pendiente smoke test y revisión propia de tres casos; B1–C2 diferidos) |
+| 034 | Incorporar evidencia oral verificable en checkpoints | P2 | L | 033 | IN PROGRESS (piloto personal A1/A2; falta confirmar una ejecución del checkpoint oral; B1–C2 diferidos) |
 
 Orden recomendado: **028 → 029 → 033 → 034** para cerrar el bucle de reparación
 y hacer que la promoción exija escucha y habla verificables. **030 y 031** pueden

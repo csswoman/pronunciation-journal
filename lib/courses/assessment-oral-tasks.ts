@@ -74,7 +74,11 @@ export function scoreAssessmentOralTranscript(itemId: string, transcript: string
   if (normalized.length < 8) return false;
 
   if (task.level === "a1") {
-    return task.requiredPhrases.every((phrase) => normalized.includes(phrase));
+    const [residence, nearby] = task.requiredPhrases;
+    const place = nearby.replace(/^there is a /, "").replace(/ near her home$/, "");
+    return [residence, residence.replace(/^ana /, "anna ")].some((phrase) => normalized.includes(phrase))
+      && [nearby, `a ${place} is near her home`, `the ${place} is near her home`]
+        .some((phrase) => normalized.includes(phrase));
   }
 
   const [day, activity, detail] = task.requiredPhrases;

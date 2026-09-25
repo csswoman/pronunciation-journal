@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, rateLimit, checkDailyAiUserLimit, SECURE_HEADERS, publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
-import { getAssessmentProfileLevel, persistAssessmentOutcome } from "@/lib/courses/assessment-queries";
+import { getErrorStatus } from "@/lib/gemini/client";
+import { getAssessmentProfileLevel, persistAssessmentOutcome, savePendingOralAssessmentResult } from "@/lib/courses/assessment-queries";
 import { scoreAssessment } from "@/lib/courses/assessment";
 import { buildServerAssessment } from "@/lib/courses/server-assessment";
 import {
@@ -12,6 +13,8 @@ import {
   getAssessmentOralAttempt,
   markAssessmentOralAttemptCompleted,
   parseAssessmentOralAnswers,
+  recoverExpiredAssessmentOralChallenges,
+  releaseAssessmentOralChallenge,
   resetAssessmentOralChallenge,
   type StoredAssessmentOralAttempt,
 } from "@/lib/courses/assessment-oral-queries";
@@ -21,7 +24,7 @@ import { ASSESSMENT_ORAL_AUDIO_MAX_BYTES } from "@/lib/courses/assessment-oral-s
 import { AssessmentPayloadSchema } from "@/lib/courses/assessment-schema";
 
 export const runtime = "nodejs";
-export const maxDuration = 25;
+export const maxDuration = 60;
 
 const ALLOWED_AUDIO_TYPES = new Set(["audio/webm", "audio/ogg", "audio/mp4"]);
 
@@ -114,7 +117,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (currentIndex >= 0 && attemptIndex >= 0 && currentIndex > attemptIndex + 1) {
       return publicErrorResponse(409, "The learner level changed after this oral checkpoint was saved");
     }
-
+    if (saved.status === "oral_pending" || saved.status === "oral_processing") {
+      const { questions } = buildServerAssessment("checkpoint", saved.level as "a1" | "a2");
+      const pendingResult = scoreAssessment(
+        questions,
+        parseAssessmentOralAnswers(saved.answers),
+        "checkpoint",
+        saved.level as "a1" | "a2",
+      );
+      await savePendingOralAssessmentResult(user.id, saved.id, saved.level as "a1" | "a2", pendingResult);
+    }
+    if (saved.status === "oral_processing") {
+      if (saved.challenge_expires_at && saved.challenge_expires_at <= new Date().toISOString()) {
+        await recoverExpiredAssessmentOralChallenges(user.id, saved.level as "a1" | "a2", new Date().toISOString());
+        return publicErrorResponse(409, "El reto oral venció. Prepara otro para este mismo intento.");
+      }
+      return NextResponse.json({ processing: true, message: "El audio todavía se está evaluando. Espera un momento y vuelve a consultar." }, {
+        status: 202,
+        headers: SECURE_HEADERS,
+      });
+    }
     claimed = await claimAssessmentOralChallenge({
       userId: user.id,
       attemptId: validatedAttemptId,
@@ -155,7 +177,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     if (claimed) {
       try {
-        await resetAssessmentOralChallenge({ userId: user.id, attemptId: validatedAttemptId, challengeId: validatedChallengeId });
+        await releaseAssessmentOralChallenge({ userId: user.id, attemptId: validatedAttemptId, challengeId: validatedChallengeId });
       } catch {
         /* Keep the original failure; an expired processing attempt cannot promote. */
       }
@@ -165,6 +187,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       operation: "evaluateAudio",
       userId: user.id,
     });
+    if (getErrorStatus(error) === 429) {
+      return publicErrorResponse(503, "La transcripción está ocupada por ahora. Tu audio sigue disponible para reintentar.");
+    }
+    if (error instanceof Error && error.message.toLowerCase().includes("timeout")) {
+      return publicErrorResponse(504, "La transcripción tardó demasiado. Tu audio sigue disponible para reintentar.");
+    }
     return publicErrorResponse(503, "No se pudo comprobar el audio. Tu checkpoint sigue pendiente; vuelve a intentarlo.");
   }
 }

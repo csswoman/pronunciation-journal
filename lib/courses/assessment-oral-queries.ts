@@ -82,6 +82,21 @@ export async function findPendingAssessmentOralAttempt(
   return data;
 }
 
+export async function recoverExpiredAssessmentOralChallenges(
+  userId: string,
+  level: "a1" | "a2",
+  now: string,
+): Promise<void> {
+  const { error } = await getAdmin()
+    .from("assessment_oral_attempts")
+    .update({ status: "oral_pending", challenge_id: null, item_id: null, challenge_expires_at: null })
+    .eq("user_id", userId)
+    .eq("level", level)
+    .eq("status", "oral_processing")
+    .lte("challenge_expires_at", now);
+  if (error) throw error;
+}
+
 export async function getAssessmentOralAttempt(
   userId: string,
   attemptId: string,
@@ -161,6 +176,21 @@ export async function resetAssessmentOralChallenge(input: {
       item_id: null,
       challenge_expires_at: null,
     })
+    .eq("user_id", input.userId)
+    .eq("id", input.attemptId)
+    .eq("challenge_id", input.challengeId)
+    .eq("status", "oral_processing");
+  if (error) throw error;
+}
+
+export async function releaseAssessmentOralChallenge(input: {
+  userId: string;
+  attemptId: string;
+  challengeId: string;
+}): Promise<void> {
+  const { error } = await getAdmin()
+    .from("assessment_oral_attempts")
+    .update({ status: "oral_pending" })
     .eq("user_id", input.userId)
     .eq("id", input.attemptId)
     .eq("challenge_id", input.challengeId)

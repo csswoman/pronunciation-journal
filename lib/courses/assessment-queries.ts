@@ -3,10 +3,6 @@ import type { CefrLevelId } from "@/lib/courses/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 
-function isMissingAssessmentTable(error: { code?: string } | null): boolean {
-  return error?.code === "PGRST205" || error?.code === "42P01";
-}
-
 export async function getAssessmentProfileLevel(userId: string): Promise<string> {
   const admin = tryGetSupabaseAdminClient();
   if (!admin) return "a1";
@@ -19,14 +15,13 @@ export async function getAssessmentProfileLevel(userId: string): Promise<string>
   return (data?.cefr_level ?? "a1").toLowerCase();
 }
 
-export async function saveAssessmentResult(
+function assessmentResultRow(
   userId: string,
   mode: "placement" | "checkpoint",
   result: AssessmentResult,
   evaluatedLevel?: CefrLevelId,
-): Promise<void> {
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("assessment_results").insert({
+) {
+  return {
     user_id: userId,
     mode,
     evaluated_level: evaluatedLevel?.toUpperCase() ?? null,
@@ -66,9 +61,36 @@ export async function saveAssessmentResult(
         assessedAt: signal.assessedAt,
       })),
     },
-  });
+  };
+}
 
-  if (error && !isMissingAssessmentTable(error)) throw error;
+export async function saveAssessmentResult(
+  userId: string,
+  mode: "placement" | "checkpoint",
+  result: AssessmentResult,
+  evaluatedLevel?: CefrLevelId,
+): Promise<void> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("assessment_results")
+    .insert(assessmentResultRow(userId, mode, result, evaluatedLevel));
+
+  if (error) throw error;
+}
+
+export async function savePendingOralAssessmentResult(
+  userId: string,
+  attemptId: string,
+  level: "a1" | "a2",
+  result: AssessmentResult,
+): Promise<void> {
+  const admin = tryGetSupabaseAdminClient();
+  if (!admin) throw new Error("Supabase admin client unavailable for oral assessment result");
+  const { error } = await admin.from("assessment_results").upsert({
+    id: attemptId,
+    ...assessmentResultRow(userId, "checkpoint", result, level),
+  }, { onConflict: "id" });
+
+  if (error) throw error;
 }
 
 export async function persistAssessmentOutcome(

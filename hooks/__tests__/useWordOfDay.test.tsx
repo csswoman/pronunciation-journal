@@ -75,4 +75,21 @@ describe("useWordOfDay", () => {
     expect(result.current.word?.word).toBe("lumen");
     expect(fetch).not.toHaveBeenCalled();
   });
+
+  it("devuelve una palabra de fallback local cuando la llamada a la API falla", async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockRejectedValueOnce(new Error("Red no disponible / unauthenticated"));
+
+    const { result } = renderHook(() => useWordOfDay("intermediate"));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.word).not.toBeNull();
+    expect(result.current.word?.word.length).toBeGreaterThan(0);
+    expect(result.current.word?.definition.length).toBeGreaterThan(0);
+    expect(result.current.error).toBeNull();
+  });
 });
+
