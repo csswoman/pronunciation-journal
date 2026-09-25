@@ -142,16 +142,32 @@ monetized, it must stop being used.
 
 ## Reproducing
 
+The harness and scripts stay in the repo, but the three packages they need were **removed after this
+run**: `@huggingface/transformers` plus its `onnxruntime-node` native binaries and the cached model
+came to ~443 MB of `node_modules`, which is not worth carrying on every clone and CI run for a
+benchmark that reached a verdict. Reinstall them to re-run.
+
 ```bash
-# The corpus never enters the repo.
+# 1. Dependencies (removed after the 2026-09-25 run).
+pnpm add -D @huggingface/transformers@3.7.6 hyparquet@1.31.1 hyparquet-compressors@1.1.2
+# pnpm will ask to allow onnxruntime-node's postinstall — it fetches the native
+# CPU binary. Add `onnxruntime-node: true` under allowBuilds in pnpm-workspace.yaml.
+
+# 2. Corpus. It never enters the repo.
 mkdir -p D:/datasets/l2-arctic/parquet
 for split in train validation test; do
   curl -L -o "D:/datasets/l2-arctic/parquet/$split.parquet" \
     "https://huggingface.co/datasets/chikingsley/l2-arctic-manual-v5.0-16k/resolve/main/data/$split-00000-of-00001.parquet"
 done
 
+# 3. Run.
 node --import tsx scripts/run-phoneme-ctc-benchmark.mjs --corpus=D:/datasets/l2-arctic/parquet
 ```
 
-Needs `ffmpeg` on PATH. First run downloads ~197 MB of model to the transformers.js cache; 600
-utterances take about 12 minutes on CPU. `--limit=N` caps utterances per speaker.
+Needs `ffmpeg` on PATH. The first run downloads ~197 MB of model into the transformers.js cache,
+which lives inside the package directory (`node_modules/.pnpm/@huggingface+transformers*/.../.cache`),
+not in the repo's `.cache/`. 600 utterances take about 12 minutes on CPU. `--limit=N` caps utterances
+per speaker.
+
+The unit tests under `lib/pronunciation/acoustic/` do **not** need any of this: alignment, folding,
+CTC decoding and the gate are all tested against simulated model output.

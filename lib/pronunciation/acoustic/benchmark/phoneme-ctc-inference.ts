@@ -1,12 +1,16 @@
 /**
- * Inferencia del modelo de fonemas CTC en Node (CPU), para el benchmark del plan
- * 038. No se despliega en la app: la fase C usaría un Web Worker y la variante
- * que se descargue bajo demanda.
+ * Piezas puras de la inferencia del modelo de fonemas CTC, para el benchmark del
+ * plan 038: decodificar audio, normalizar y colapsar los frames CTC.
+ *
+ * La carga del modelo vive en `scripts/run-phoneme-ctc-benchmark.mjs`, no aquí:
+ * `@huggingface/transformers` se quitó del repo tras la pasada del 2026-09-25
+ * (443 MB de `node_modules` para un benchmark ya resuelto). Con este límite, los
+ * tests de este fichero no necesitan instalar nada. Ver `decision-phoneme-ctc.md`.
  *
  * No se usa `pipeline('automatic-speech-recognition')` como sugiere la ficha del
- * modelo: el repo **no publica `tokenizer.json`** y la carga falla. Se decodifica
- * el CTC a mano, que además es lo que hace falta — el pipeline no expone el
- * tramo temporal ni la probabilidad posterior de cada fonema.
+ * modelo: el repo **no publica `tokenizer.json`** y la carga falla. Decodificar
+ * el CTC a mano es además lo que hace falta — el pipeline no expone el tramo
+ * temporal ni la probabilidad posterior de cada fonema.
  */
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
@@ -110,41 +114,11 @@ export function decodeCtcFrames(
     }))
 }
 
-export interface PhonemeCtcSession {
-  recognize: (audioBytes: Uint8Array) => Promise<{ phonemes: RecognizedPhoneme[]; latencyMs: number }>
-}
-
-/**
- * Carga el modelo y devuelve una sesión reutilizable. La primera carga baja
- * ~197 MB a la caché de `@huggingface/transformers`; las siguientes son locales.
- */
-export async function createPhonemeCtcSession(): Promise<PhonemeCtcSession> {
-  const { AutoModelForCTC, Tensor, env } = await import('@huggingface/transformers')
-  env.allowLocalModels = false
-
-  const vocab: Record<string, number> = await fetch(
-    `https://huggingface.co/${PHONEME_CTC_MODEL}/raw/main/vocab.json`,
-  ).then((r) => r.json())
+/** Invierte el `vocab.json` del modelo: id de token → símbolo. */
+export function buildIdToToken(vocab: Record<string, number>): (string | undefined)[] {
   const idToToken: (string | undefined)[] = []
   for (const [token, id] of Object.entries(vocab)) idToToken[id] = token
-
-  const model = await AutoModelForCTC.from_pretrained(PHONEME_CTC_MODEL, {
-    dtype: PHONEME_CTC_DTYPE,
-  })
-
-  return {
-    async recognize(audioBytes: Uint8Array) {
-      const audio = normalizeSamples(decodeAudio(audioBytes))
-      const start = Date.now()
-      const { logits } = await model({
-        input_values: new Tensor('float32', audio, [1, audio.length]),
-      })
-      const latencyMs = Date.now() - start
-      const [, frames, vocabSize] = logits.dims as number[]
-      return {
-        phonemes: decodeCtcFrames(logits.data as Float32Array, frames, vocabSize, idToToken),
-        latencyMs,
-      }
-    },
-  }
+  return idToToken
 }
+
+

@@ -22,9 +22,10 @@ allowBuilds:
   '@google/genai': true
   canvas: true
   esbuild: true
-  # Necesita su postinstall para bajar el binario nativo de CPU. Solo se usa en
-  # el benchmark del plan 038 (Node, fuera del bundle de la app).
-  onnxruntime-node: true
+  # onnxruntime-node: lo arrastra @huggingface/transformers, que solo se instala
+  # para reproducir el benchmark del plan 038 (ver decision-phoneme-ctc.md).
+  # Necesita su postinstall para el binario nativo de CPU: si lo reinstalas,
+  # añade aquí `onnxruntime-node: true`.
   protobufjs: true
   sharp: true
   unrs-resolver: true

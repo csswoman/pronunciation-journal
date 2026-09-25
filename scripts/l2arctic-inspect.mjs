@@ -1,6 +1,13 @@
 // scripts/l2arctic-inspect.mjs
-// Inspección de una réplica en parquet de L2-ARCTIC. Uso:
+// Inspección de una réplica en parquet de L2-ARCTIC: cuenta enunciados y errores
+// anotados por hablante. Sirve como prueba de procedencia — los totales deben
+// coincidir con la tabla del PSI Lab, incluido el irregular 149 de YBAA.
+//
 //   node scripts/l2arctic-inspect.mjs D:/datasets/l2-arctic/parquet
+//
+// Requiere dos paquetes quitados del repo tras la pasada del 2026-09-25:
+//   pnpm add -D hyparquet@1.31.1 hyparquet-compressors@1.1.2
+//
 // El corpus vive fuera del repo (CC BY-NC 4.0); aquí solo se cuenta.
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
