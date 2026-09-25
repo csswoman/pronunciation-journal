@@ -9,11 +9,15 @@ import type { ReviewHubSummary } from '@/lib/review/types'
 const summary = {
   failedSentences: [], weakWords: [], dueWords: [], soundsDue: [], dueTopics: [], weakTopics: [],
   dueLessons: [], essentialWordsDue: [], canStartReview: false, nothingDue: true,
-  counts: { failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
-    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, executable: 0, elsewhere: 0, total: 0 },
+  counts: {
+    failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
+    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, executable: 0, elsewhere: 0, total: 0
+  },
 } as ReviewHubSummary
 
 const mockStartReview = vi.fn()
+const mockStartShortReview = vi.fn()
+const mockStartCategoryReview = vi.fn()
 const mockStartFailedItem = vi.fn()
 const mockStartTopic = vi.fn()
 const mockAdvanceStep = vi.fn()
@@ -27,6 +31,8 @@ vi.mock('@/hooks/useReviewSession', () => ({
     userId: 'test-user',
     sessionKey: 1,
     startReview: mockStartReview,
+    startShortReview: mockStartShortReview,
+    startCategoryReview: mockStartCategoryReview,
     startFailedItem: mockStartFailedItem,
     startTopic: mockStartTopic,
     advanceStep: mockAdvanceStep,
@@ -101,6 +107,28 @@ describe('ReviewSessionRunner', () => {
 
     expect(mockStartTopic).toHaveBeenCalledTimes(1)
     expect(mockStartTopic).toHaveBeenCalledWith('grammar:past-tense')
+  })
+
+  it('dispatches startShortReview for the short_review action', () => {
+    render(
+      <ReviewSessionRunner action={{ type: 'short_review' }} summary={summary} onExit={vi.fn()} />,
+    )
+
+    expect(mockStartShortReview).toHaveBeenCalledTimes(1)
+    expect(mockStartShortReview).toHaveBeenCalledWith(summary)
+  })
+
+  it('dispatches startCategoryReview for the category action', () => {
+    render(
+      <ReviewSessionRunner
+        action={{ type: 'category', category: 'weak_words' }}
+        summary={summary}
+        onExit={vi.fn()}
+      />,
+    )
+
+    expect(mockStartCategoryReview).toHaveBeenCalledTimes(1)
+    expect(mockStartCategoryReview).toHaveBeenCalledWith(summary, 'weak_words')
   })
 
   it('renders loading state correctly', () => {

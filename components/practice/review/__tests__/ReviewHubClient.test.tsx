@@ -40,6 +40,7 @@ const mockSummary: ReviewHubSummary = {
     dueLessons: 0,
     essentialWordsDue: 0,
     total: 5,
+    overdueOneWeek: 0,
   },
   canStartReview: true,
   nothingDue: false,

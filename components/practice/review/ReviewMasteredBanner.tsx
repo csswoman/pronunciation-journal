@@ -9,17 +9,17 @@ import Link from 'next/link'
 import PastelCard from '@/components/layout/PastelCard'
 
 interface ReviewMasteredBannerProps {
-  masteredCount?: number
-  newCount?: number
-  learningCount?: number
-  reviewCount?: number
+  masteredCount: number
+  newCount: number
+  learningCount: number
+  reviewCount: number
 }
 
 export function ReviewMasteredBanner({
-  masteredCount = 64,
-  newCount = 19,
-  learningCount = 42,
-  reviewCount = 35,
+  masteredCount,
+  newCount,
+  learningCount,
+  reviewCount,
 }: ReviewMasteredBannerProps) {
   const total = Math.max(1, newCount + learningCount + reviewCount + masteredCount)
   const newPct = (newCount / total) * 100

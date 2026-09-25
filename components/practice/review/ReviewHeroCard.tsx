@@ -29,7 +29,7 @@ export function ReviewHeroCard({
   weakWordsCount,
   soundsCount,
   sentencesCount,
-  overdueOneWeekCount = 6,
+  overdueOneWeekCount = 0,
   onStartReview,
   onStartShortReview,
   isSessionActive = false,
@@ -46,15 +46,15 @@ export function ReviewHeroCard({
     (c) => c > 0,
   ).length
   const sourcesLabel =
-    sourcesCount === 1
-      ? 'de una fuente'
-      : sourcesCount === 2
-        ? 'de dos fuentes distintas'
-        : sourcesCount === 3
-          ? 'de tres fuentes distintas'
-          : sourcesCount === 4
-            ? 'de cuatro fuentes distintas'
-            : 'de cinco fuentes distintas'
+    sourcesCount === 0
+      ? 'nada pendiente'
+      : sourcesCount === 1
+        ? 'de una fuente'
+        : sourcesCount === 2
+          ? 'de dos fuentes distintas'
+          : sourcesCount === 3
+            ? 'de tres fuentes distintas'
+            : 'de cuatro fuentes distintas'
 
   return (
     <PastelCard tone="coral" className="relative flex flex-col justify-between p-6 sm:p-8 gap-6 shadow-sm border border-black/10">

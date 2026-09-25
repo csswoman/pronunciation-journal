@@ -9,6 +9,7 @@
 //   </TopHeroAndForecastGrid>
 //   <FailedSentencesAndTopicsSection (when items available)>
 //   <ReviewCategoryGrid />
+//   <ReviewLinkedDomainsSection (lessons, essential words, chunks — link out)>
 //   <ReviewMasteredBanner />
 // </ReviewHubClient>
 
@@ -22,6 +23,11 @@ import { ReviewHeroCard } from './ReviewHeroCard'
 import { ReviewForecastCard } from './ReviewForecastCard'
 import { ReviewCategoryGrid } from './ReviewCategoryGrid'
 import { ReviewMasteredBanner } from './ReviewMasteredBanner'
+import { ReviewLessonSection } from './ReviewLessonSection'
+import { ReviewEssentialWordsSection } from './ReviewEssentialWordsSection'
+import { ReviewChunksSection } from './ReviewChunksSection'
+import { useReviewFiltersStore } from '@/lib/stores/reviewFiltersStore'
+import { applyReviewFilters, topicDaysOverdue } from '@/lib/review/filters'
 import type { ReviewHubSummary } from '@/lib/review/types'
 import type { ReviewSessionAction } from './ReviewSessionRunner'
 
@@ -40,11 +46,14 @@ interface Props {
   summary: ReviewHubSummary
 }
 
+const SPANISH_DAY_LABELS = ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+
 export function ReviewHubClient({ summary }: Props) {
   const auth = useAuthOptional()
   const user = auth?.user ?? null
   const [activeSession, setActiveSession] = useState<ReviewSessionAction | null>(null)
   const [clientChunksDue, setClientChunksDue] = useState<number | null>(null)
+  const { sortByOverdue, onlyOverdue } = useReviewFiltersStore()
   const isSessionActive = activeSession !== null
 
   useEffect(() => {
@@ -54,7 +63,7 @@ export function ReviewHubClient({ summary }: Props) {
       .then((due) => {
         if (!cancelled) setClientChunksDue(due)
       })
-      .catch(() => {})
+      .catch(() => { })
     return () => {
       cancelled = true
     }
@@ -71,6 +80,28 @@ export function ReviewHubClient({ summary }: Props) {
   const weakWordsCount = queueCounts.weakWords ?? 0
   const soundsCount = queueCounts.soundsDue ?? 0
   const sentencesCount = queueCounts.failedSentences ?? 0
+  const overdueOneWeekCount = queueCounts.overdueOneWeek ?? 0
+
+  // Real day-by-day forecast from the server; today's real total replaces the
+  // server's own "today" bucket so the client-side chunk hydration stays consistent.
+  const forecastDays = summary.forecast
+    ? summary.forecast.map((count, i) => ({
+      dayLabel: i === 0 ? 'HOY' : SPANISH_DAY_LABELS[new Date(Date.now() + i * 86_400_000).getDay()],
+      count: i === 0 ? totalReviewable : count,
+      isToday: i === 0,
+    }))
+    : undefined
+
+  const wordMastery = summary.wordMastery
+  const filterOptions = { sortByOverdue, onlyOverdue }
+  const filteredDueTopics = applyReviewFilters(summary.dueTopics, topicDaysOverdue, filterOptions)
+  // Weak topics are 'new'/'learning' — they have no meaningful due date yet,
+  // so the overdue filters don't apply to them; they always show as-is.
+  const weakTopics = summary.weakTopics
+  // Failed sentences have no scheduled due date either (they are recent
+  // failures, not SRS items) — the overdue toggle intentionally does not
+  // touch this list rather than pretending it has a real "days overdue".
+  const filteredFailedSentences = summary.failedSentences
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1280px] mx-auto pb-12">
@@ -101,27 +132,28 @@ export function ReviewHubClient({ summary }: Props) {
             weakWordsCount={weakWordsCount}
             soundsCount={soundsCount}
             sentencesCount={sentencesCount}
-            overdueOneWeekCount={6}
+            overdueOneWeekCount={overdueOneWeekCount}
             onStartReview={() => setActiveSession({ type: 'review' })}
+            onStartShortReview={() => setActiveSession({ type: 'short_review' })}
             isSessionActive={isSessionActive}
           />
         </div>
         <div className="lg:col-span-5 flex flex-col">
-          <ReviewForecastCard todayCount={totalReviewable} />
+          <ReviewForecastCard todayCount={totalReviewable} forecastDays={forecastDays} />
         </div>
       </div>
 
       {/* Failed Sentences & Topics Section (If available in summary) */}
-      {(summary.failedSentences.length > 0 || summary.dueTopics.length > 0) && (
+      {(filteredFailedSentences.length > 0 || filteredDueTopics.length > 0 || weakTopics.length > 0) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {summary.failedSentences.length > 0 && (
+          {filteredFailedSentences.length > 0 && (
             <ReviewSectionCard
               title="Oraciones fallidas"
               count={queueCounts.failedSentences}
               emptyMessage="Sin errores recientes en dictados u oraciones."
             >
               <ul className="flex flex-col gap-2">
-                {summary.failedSentences.slice(0, 4).map((item) => (
+                {filteredFailedSentences.slice(0, 4).map((item) => (
                   <li
                     key={item.contentId}
                     className="flex items-start justify-between gap-3 font-body-sm text-fg"
@@ -147,20 +179,46 @@ export function ReviewHubClient({ summary }: Props) {
             </ReviewSectionCard>
           )}
 
-          {summary.dueTopics.length > 0 && (
+          {filteredDueTopics.length > 0 && (
             <ReviewSectionCard
               title="Conceptos pendientes"
               count={queueCounts.dueTopics}
               emptyMessage="Nada de gramática pendiente hoy."
             >
               <ul className="flex flex-col gap-2">
-                {summary.dueTopics.slice(0, 4).map((t) => (
+                {filteredDueTopics.slice(0, 4).map((t) => (
                   <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
                     <span>{t.topic}</span>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
+                      disabled={isSessionActive}
+                      onClick={() => setActiveSession({ type: 'topic', topic: t.topic })}
+                    >
+                      Practicar
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </ReviewSectionCard>
+          )}
+
+          {weakTopics.length > 0 && (
+            <ReviewSectionCard
+              title="Conceptos débiles"
+              count={queueCounts.weakTopics}
+              emptyMessage="Ningún concepto en aprendizaje."
+            >
+              <ul className="flex flex-col gap-2">
+                {weakTopics.slice(0, 4).map((t) => (
+                  <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
+                    <span>{t.topic}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isSessionActive}
                       onClick={() => setActiveSession({ type: 'topic', topic: t.topic })}
                     >
                       Practicar
@@ -176,14 +234,42 @@ export function ReviewHubClient({ summary }: Props) {
       {/* 3-Column Category Grid */}
       <ReviewCategoryGrid
         summary={summary}
-        onStartSession={() => {
-          setActiveSession({ type: 'review' })
-        }}
+        onStartSession={(category) => setActiveSession({ type: 'category', category })}
         isSessionActive={isSessionActive}
+        sortByOverdue={sortByOverdue}
+        onlyOverdue={onlyOverdue}
       />
 
-      {/* Bottom Mint Mastered Card */}
-      <ReviewMasteredBanner />
+      {/* Linked domains: practiced on their own surface, Repaso only signals and links */}
+      {(summary.essentialWordsDue.length > 0 || summary.dueLessons.length > 0 || effectiveChunksDue > 0) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {summary.essentialWordsDue.length > 0 && (
+            <ReviewEssentialWordsSection
+              items={summary.essentialWordsDue}
+              count={queueCounts.essentialWordsDue}
+            />
+          )}
+          {summary.dueLessons.length > 0 && (
+            <ReviewLessonSection lessons={summary.dueLessons} count={queueCounts.dueLessons} />
+          )}
+          {effectiveChunksDue > 0 && (
+            <ReviewChunksSection
+              chunksCount={effectiveChunksDue}
+              onStartReview={() => setActiveSession({ type: 'review' })}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Bottom Mint Mastered Card — real word_bank srs_status distribution */}
+      {wordMastery ? (
+        <ReviewMasteredBanner
+          masteredCount={wordMastery.masteredCount}
+          newCount={wordMastery.newCount}
+          learningCount={wordMastery.learningCount}
+          reviewCount={wordMastery.reviewCount}
+        />
+      ) : null}
     </div>
   )
 }

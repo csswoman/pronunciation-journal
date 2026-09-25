@@ -46,6 +46,14 @@ export interface StrengthStats {
   strong: number;
 }
 
+/** Real srs_status distribution across the user's word bank — powers mastery displays. */
+export interface WordMasteryStats {
+  newCount: number;
+  learningCount: number;
+  reviewCount: number;
+  masteredCount: number;
+}
+
 // ── Audio ────────────────────────────────────────────────────────────────────
 
 export interface AudioFetchResult {

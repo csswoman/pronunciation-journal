@@ -17,28 +17,39 @@ interface ReviewForecastCardProps {
   forecastDays?: DayForecast[]
 }
 
+const SPANISH_DAY_LABELS = ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+
+/** Builds real day labels starting today, using the actual weekday — no invented data. */
+function buildDaysFromToday(todayCount: number): DayForecast[] {
+  const now = new Date()
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(now)
+    date.setDate(date.getDate() + i)
+    return {
+      dayLabel: i === 0 ? 'HOY' : SPANISH_DAY_LABELS[date.getDay()],
+      count: i === 0 ? todayCount : 0,
+      isToday: i === 0,
+    }
+  })
+}
+
 export function ReviewForecastCard({
   todayCount,
   forecastDays,
 }: ReviewForecastCardProps) {
-  // Use provided 7 days or format default 7 days using current todayCount
-  const days = forecastDays ?? [
-    { dayLabel: 'HOY', count: todayCount, isToday: true },
-    { dayLabel: 'V', count: 4, isToday: false },
-    { dayLabel: 'S', count: 6, isToday: false },
-    { dayLabel: 'D', count: 29, isToday: false },
-    { dayLabel: 'L', count: 7, isToday: false },
-    { dayLabel: 'M', count: 2, isToday: false },
-    { dayLabel: 'X', count: 8, isToday: false },
-  ]
+  // Real counts come from the caller (queried per-day); without them, only
+  // today's real count is shown and the rest of the week reads as empty
+  // rather than inventing a shape.
+  const days = forecastDays ?? buildDaysFromToday(todayCount)
 
   // Take strictly 7 days
   const sevenDays = days.slice(0, 7)
   const maxCount = Math.max(1, ...sevenDays.map((d) => d.count))
 
-  // Find peak day for the callout message
-  const peakDay = sevenDays.find((d) => !d.isToday && d.count === Math.max(...sevenDays.filter(x => !x.isToday).map(x => x.count))) || sevenDays[3]
-  const peakReduced = Math.max(0, peakDay.count - 8)
+  const upcomingDays = sevenDays.filter((d) => !d.isToday)
+  const maxUpcoming = upcomingDays.length > 0 ? Math.max(...upcomingDays.map((d) => d.count)) : 0
+  const peakDay = maxUpcoming > 0 ? upcomingDays.find((d) => d.count === maxUpcoming) ?? null : null
+  const peakReduced = peakDay ? Math.max(0, peakDay.count - todayCount) : 0
 
   return (
     <div className="flex flex-col justify-between rounded-3xl border border-border-subtle bg-surface p-6 sm:p-8 shadow-xs gap-6">
@@ -61,9 +72,8 @@ export function ReviewForecastCard({
               <span className="text-sm sm:text-base font-black text-text-strong">{d.count}</span>
               <div className="w-full max-w-[34px] flex-1 flex items-end">
                 <div
-                  className={`w-full rounded-t-md transition-all duration-300 ${
-                    d.isToday ? 'bg-[var(--coral)] dark:bg-[var(--coral-deep)]' : 'bg-border-strong/90 dark:bg-border-strong'
-                  }`}
+                  className={`w-full rounded-t-md transition-all duration-300 ${d.isToday ? 'bg-[var(--coral)] dark:bg-[var(--coral-deep)]' : 'bg-border-strong/90 dark:bg-border-strong'
+                    }`}
                   style={{ height: `${heightPct}%` }}
                 />
               </div>
@@ -85,10 +95,18 @@ export function ReviewForecastCard({
         </span>
       </div>
 
-      {/* Insight Box */}
-      <div className="rounded-2xl border border-border-subtle bg-field p-4 text-xs sm:text-sm text-text-secondary leading-relaxed font-medium">
-        El jueves se juntan <strong className="text-text-strong font-bold">{peakDay.count} repasos</strong>. Si hoy haces 10, ese pico baja a <strong className="text-text-strong font-bold">{peakReduced}</strong>.
-      </div>
+      {/* Insight Box — only shown when there is a real upcoming peak to report */}
+      {peakDay ? (
+        <div className="rounded-2xl border border-border-subtle bg-field p-4 text-xs sm:text-sm text-text-secondary leading-relaxed font-medium">
+          El {peakDay.dayLabel === 'HOY' ? 'próximo pico' : `día ${peakDay.dayLabel}`} se juntan{' '}
+          <strong className="text-text-strong font-bold">{peakDay.count} repasos</strong>. Si hoy haces {todayCount}, ese pico baja a{' '}
+          <strong className="text-text-strong font-bold">{peakReduced}</strong>.
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-border-subtle bg-field p-4 text-xs sm:text-sm text-text-secondary leading-relaxed font-medium">
+          No hay repasos programados para los próximos días.
+        </div>
+      )}
     </div>
   )
 }

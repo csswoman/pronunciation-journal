@@ -10,13 +10,17 @@ import { AlertCircle, BookOpen, Volume2, CheckCircle2 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { WordStrengthBars } from '@/components/vocabulary/words/WordStrengthBars'
 import { getWordStrength } from '@/lib/word-bank/strength'
+import { applyReviewFilters, soundDaysOverdue, wordDaysOverdue } from '@/lib/review/filters'
 import type { ReviewHubSummary } from '@/lib/review/types'
-import type { WordBankEntry, WordStrength } from '@/lib/word-bank/types'
+import type { WordBankEntry } from '@/lib/word-bank/types'
+import type { ReviewCategory } from '@/hooks/useReviewSession'
 
 interface ReviewCategoryGridProps {
   summary: ReviewHubSummary
-  onStartSession: (actionType: 'weak_words' | 'due_words' | 'sounds' | 'sentences') => void
+  onStartSession: (category: ReviewCategory) => void
   isSessionActive?: boolean
+  sortByOverdue?: boolean
+  onlyOverdue?: boolean
 }
 
 function formatIpa(ipa: string | null | undefined): string {
@@ -24,43 +28,26 @@ function formatIpa(ipa: string | null | undefined): string {
   return ipa.startsWith('/') ? ipa : `/${ipa.replace(/^\/|\/$/g, '')}/`
 }
 
-interface DisplayItem {
-  id: string
-  text: string
-  days: string
-  strength: WordStrength
+function formatDaysOverdue(days: number): string {
+  return days <= 0 ? 'hoy' : `${days} d`
 }
 
 export function ReviewCategoryGrid({
   summary,
   onStartSession,
   isSessionActive = false,
+  sortByOverdue = false,
+  onlyOverdue = false,
 }: ReviewCategoryGridProps) {
   const counts = summary.queueCounts ?? summary.counts
+  const filterOptions = { sortByOverdue, onlyOverdue }
 
-  const fallbackWeakWords: DisplayItem[] = [
-    { id: '1', text: 'debounce', days: '2 d', strength: 'weak' },
-    { id: '2', text: 'aggregation', days: '4 d', strength: 'weak' },
-    { id: '3', text: 'derived state', days: '6 d', strength: 'weak' },
-    { id: '4', text: 'bundler', days: '8 d', strength: 'weak' },
-    { id: '5', text: 'memoization', days: '9 d', strength: 'weak' },
-    { id: '6', text: 'hydration', days: '10 d', strength: 'weak' },
-  ]
+  const weakWords = applyReviewFilters(summary.weakWords, wordDaysOverdue, filterOptions)
+  const dueWords = applyReviewFilters(summary.dueWords, wordDaysOverdue, filterOptions)
+  const soundsList = applyReviewFilters(summary.soundsDue, soundDaysOverdue, filterOptions)
 
-  const fallbackDueWords: DisplayItem[] = [
-    { id: '1', text: 'asynchronous', days: 'hoy', strength: 'medium' },
-    { id: '2', text: 'bundle', days: 'hoy', strength: 'medium' },
-    { id: '3', text: 'declarative', days: 'hoy', strength: 'medium' },
-    { id: '4', text: 'dependency array', days: 'hoy', strength: 'medium' },
-    { id: '5', text: 'reconciliation', days: '1 d', strength: 'medium' },
-    { id: '6', text: 'polymorphic', days: '2 d', strength: 'medium' },
-  ]
-
-  const soundsList = summary.soundsDue.length > 0 ? summary.soundsDue : [
-    { soundId: 1, ipa: '/i:/', example: 'sheep', daysOverdue: 67 },
-    { soundId: 2, ipa: '/ə/', example: 'about', daysOverdue: 60 },
-    { soundId: 3, ipa: '/ɛ/', example: 'bed', daysOverdue: 58 },
-  ]
+  const hasFailedSentences = summary.failedSentences.length > 0
+  const hasEssentialWordsDue = summary.essentialWordsDue.length > 0
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -75,48 +62,46 @@ export function ReviewCategoryGrid({
               </span>
               <div>
                 <h4 className="font-extrabold text-xl text-text-strong leading-tight">Palabras débiles</h4>
-                <p className="text-xs sm:text-sm text-text-muted font-medium">fallaste más de la mitad de las veces</p>
+                <p className="text-xs sm:text-sm text-text-muted font-medium">nuevas o en aprendizaje</p>
               </div>
             </div>
             <span className="rounded-full bg-field border border-border-subtle px-3 py-1 text-xs sm:text-sm font-extrabold text-text-muted">
-              {counts.weakWords || 20}
+              {counts.weakWords}
             </span>
           </div>
 
           {/* List - Up to 6 words */}
-          <ul className="space-y-3 pt-1">
-            {summary.weakWords.length > 0
-              ? summary.weakWords.slice(0, 6).map((word: WordBankEntry, idx: number) => (
-                  <li key={word.id || idx} className="flex items-center justify-between gap-3 text-base font-bold">
-                    <span className="text-text-strong">{word.text}</span>
-                    <div className="flex items-center gap-3">
-                      <WordStrengthBars strength={getWordStrength(word)} size={14} />
-                      <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">{(idx + 1) * 2} d</span>
-                    </div>
-                  </li>
-                ))
-              : fallbackWeakWords.map((word) => (
-                  <li key={word.id} className="flex items-center justify-between gap-3 text-base font-bold">
-                    <span className="text-text-strong">{word.text}</span>
-                    <div className="flex items-center gap-3">
-                      <WordStrengthBars strength={word.strength} size={14} />
-                      <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">{word.days}</span>
-                    </div>
-                  </li>
-                ))}
-          </ul>
+          {weakWords.length > 0 ? (
+            <ul className="space-y-3 pt-1">
+              {weakWords.slice(0, 6).map((word: WordBankEntry, idx: number) => (
+                <li key={word.id || idx} className="flex items-center justify-between gap-3 text-base font-bold">
+                  <span className="text-text-strong">{word.text}</span>
+                  <div className="flex items-center gap-3">
+                    <WordStrengthBars strength={getWordStrength(word)} size={14} />
+                    <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">
+                      {formatDaysOverdue(wordDaysOverdue(word))}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="font-body-sm text-text-muted">
+              {onlyOverdue ? 'Ninguna palabra débil está atrasada.' : 'Ninguna palabra en aprendizaje — muy bien.'}
+            </p>
+          )}
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-border-subtle">
           <Link href="/words" className="text-sm sm:text-base font-extrabold text-text-strong underline underline-offset-4 hover:opacity-80">
-            Ver las {counts.weakWords || 20}
+            Ver las {counts.weakWords}
           </Link>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            disabled={isSessionActive}
+            disabled={isSessionActive || counts.weakWords === 0}
             onClick={() => onStartSession('weak_words')}
             className="rounded-full bg-field hover:bg-border-subtle border border-border-subtle px-4 py-2 text-xs sm:text-sm font-extrabold text-text-strong shadow-2xs"
           >
@@ -142,44 +127,42 @@ export function ReviewCategoryGrid({
               </div>
             </div>
             <span className="rounded-full bg-field border border-border-subtle px-3 py-1 text-xs sm:text-sm font-extrabold text-text-muted">
-              {counts.dueWords || 25}
+              {counts.dueWords}
             </span>
           </div>
 
           {/* List - Up to 6 words */}
-          <ul className="space-y-3 pt-1">
-            {summary.dueWords.length > 0
-              ? summary.dueWords.slice(0, 6).map((word: WordBankEntry, idx: number) => (
-                  <li key={word.id || idx} className="flex items-center justify-between gap-3 text-base font-bold">
-                    <span className="text-text-strong">{word.text}</span>
-                    <div className="flex items-center gap-3">
-                      <WordStrengthBars strength={getWordStrength(word)} size={14} />
-                      <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">hoy</span>
-                    </div>
-                  </li>
-                ))
-              : fallbackDueWords.map((word) => (
-                  <li key={word.id} className="flex items-center justify-between gap-3 text-base font-bold">
-                    <span className="text-text-strong">{word.text}</span>
-                    <div className="flex items-center gap-3">
-                      <WordStrengthBars strength={word.strength} size={14} />
-                      <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">{word.days}</span>
-                    </div>
-                  </li>
-                ))}
-          </ul>
+          {dueWords.length > 0 ? (
+            <ul className="space-y-3 pt-1">
+              {dueWords.slice(0, 6).map((word: WordBankEntry, idx: number) => (
+                <li key={word.id || idx} className="flex items-center justify-between gap-3 text-base font-bold">
+                  <span className="text-text-strong">{word.text}</span>
+                  <div className="flex items-center gap-3">
+                    <WordStrengthBars strength={getWordStrength(word)} size={14} />
+                    <span className="text-text-muted font-semibold text-xs sm:text-sm min-w-[32px] text-right">
+                      {formatDaysOverdue(wordDaysOverdue(word))}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="font-body-sm text-text-muted">
+              {onlyOverdue ? 'Ningún vocabulario pendiente está atrasado.' : 'Nada de vocabulario para hoy.'}
+            </p>
+          )}
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-border-subtle">
           <Link href="/words" className="text-sm sm:text-base font-extrabold text-text-strong underline underline-offset-4 hover:opacity-80">
-            Ver las {counts.dueWords || 25}
+            Ver las {counts.dueWords}
           </Link>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            disabled={isSessionActive}
+            disabled={isSessionActive || counts.dueWords === 0}
             onClick={() => onStartSession('due_words')}
             className="rounded-full bg-field hover:bg-border-subtle border border-border-subtle px-4 py-2 text-xs sm:text-sm font-extrabold text-text-strong shadow-2xs"
           >
@@ -206,34 +189,39 @@ export function ReviewCategoryGrid({
                 </div>
               </div>
               <span className="rounded-full bg-field border border-border-subtle px-3 py-1 text-xs sm:text-sm font-extrabold text-text-muted">
-                {counts.soundsDue || soundsList.length}
+                {counts.soundsDue}
               </span>
             </div>
 
             {/* List */}
-            <ul className="space-y-3.5 pt-1">
-              {soundsList.slice(0, 3).map((s, idx) => {
-                const ipa = 'ipa' in s ? formatIpa(s.ipa) : ''
-                const example = 'example' in s ? s.example : ''
-                const daysOverdue = 'daysOverdue' in s ? s.daysOverdue : 4
-                const isOverdueAlert = daysOverdue > 14
-                return (
-                  <li key={idx} className="flex items-center justify-between gap-3 text-base font-bold">
-                    <div className="flex items-center gap-2.5">
-                      <span className="font-ipa font-extrabold text-text-strong text-lg">{ipa}</span>
-                      <span className="text-text-secondary font-bold">{example}</span>
-                    </div>
-                    {isOverdueAlert ? (
-                      <span className="rounded-full bg-[var(--coral)] dark:bg-[var(--coral-deep)] px-3 py-1 text-xs font-black text-[#12151c] shadow-2xs">
-                        {daysOverdue} d
-                      </span>
-                    ) : (
-                      <span className="text-text-muted font-semibold text-xs sm:text-sm text-right">{daysOverdue} d</span>
-                    )}
-                  </li>
-                )
-              })}
-            </ul>
+            {soundsList.length > 0 ? (
+              <ul className="space-y-3.5 pt-1">
+                {soundsList.slice(0, 3).map((s, idx) => {
+                  const ipa = formatIpa(s.ipa)
+                  const daysOverdue = s.daysOverdue
+                  const isOverdueAlert = daysOverdue > 14
+                  return (
+                    <li key={s.soundId || idx} className="flex items-center justify-between gap-3 text-base font-bold">
+                      <div className="flex items-center gap-2.5">
+                        <span className="font-ipa font-extrabold text-text-strong text-lg">{ipa}</span>
+                        <span className="text-text-secondary font-bold">{s.example}</span>
+                      </div>
+                      {isOverdueAlert ? (
+                        <span className="rounded-full bg-[var(--coral)] dark:bg-[var(--coral-deep)] px-3 py-1 text-xs font-black text-[#12151c] shadow-2xs">
+                          {daysOverdue} d
+                        </span>
+                      ) : (
+                        <span className="text-text-muted font-semibold text-xs sm:text-sm text-right">{daysOverdue} d</span>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <p className="font-body-sm text-text-muted">
+                {onlyOverdue ? 'Ningún sonido pendiente está atrasado.' : 'Ningún sonido pendiente hoy.'}
+              </p>
+            )}
           </div>
 
           {/* Footer */}
@@ -245,7 +233,7 @@ export function ReviewCategoryGrid({
               type="button"
               variant="ghost"
               size="sm"
-              disabled={isSessionActive}
+              disabled={isSessionActive || counts.soundsDue === 0}
               onClick={() => onStartSession('sounds')}
               className="rounded-full bg-field hover:bg-border-subtle border border-border-subtle px-4 py-2 text-xs sm:text-sm font-extrabold text-text-strong shadow-2xs"
             >
@@ -254,25 +242,35 @@ export function ReviewCategoryGrid({
           </div>
         </div>
 
-        {/* Sin pendientes section */}
+        {/* Sin pendientes section — reflects the real summary, not a fixed claim */}
         <div className="rounded-2xl border border-border-subtle/80 bg-surface/70 p-4 sm:p-5 space-y-3 shadow-2xs">
           <h5 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-text-muted">
-            SIN PENDIENTES
+            {hasFailedSentences || hasEssentialWordsDue ? 'TAMBIÉN PENDIENTE' : 'SIN PENDIENTES'}
           </h5>
           <div className="space-y-2.5 text-sm sm:text-base text-text-secondary font-bold">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2.5">
-                <CheckCircle2 className="h-5 w-5 text-[var(--mint-deep)] shrink-0 stroke-[2.5]" />
+                <CheckCircle2
+                  className={`h-5 w-5 shrink-0 stroke-[2.5] ${hasFailedSentences ? 'text-[var(--coral-deep)]' : 'text-[var(--mint-deep)]'}`}
+                />
                 Oraciones y dictados
               </span>
-              <span className="text-text-muted text-xs sm:text-sm font-medium">sin errores recientes</span>
+              <span className="text-text-muted text-xs sm:text-sm font-medium">
+                {hasFailedSentences
+                  ? `${counts.failedSentences} sin corregir`
+                  : 'sin errores recientes'}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2.5">
-                <CheckCircle2 className="h-5 w-5 text-[var(--mint-deep)] shrink-0 stroke-[2.5]" />
+                <CheckCircle2
+                  className={`h-5 w-5 shrink-0 stroke-[2.5] ${hasEssentialWordsDue ? 'text-[var(--coral-deep)]' : 'text-[var(--mint-deep)]'}`}
+                />
                 Palabras esenciales
               </span>
-              <span className="text-text-muted text-xs sm:text-sm font-medium">al día</span>
+              <span className="text-text-muted text-xs sm:text-sm font-medium">
+                {hasEssentialWordsDue ? `${counts.essentialWordsDue} pendientes` : 'al día'}
+              </span>
             </div>
           </div>
         </div>
