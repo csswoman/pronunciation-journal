@@ -106,11 +106,11 @@ export function Hero() {
               {/* Title H1 */}
               <h1
                 id="hero-title"
-                className="font-display text-4xl font-extrabold tracking-[-0.03em] text-[var(--ink)] sm:text-5xl lg:text-[64px] lg:leading-[1.08]"
+                className="font-display text-4xl font-extrabold tracking-[-0.03em] text-[var(--ink)] sm:text-5xl lg:text-[64px] lg:leading-[1.12]"
               >
                 Lees inglés sin problema.
                 <br />
-                <span className="mt-2 inline-block w-fit rounded-2xl bg-[var(--butter)] px-3 py-1">
+                <span className="bg-[linear-gradient(180deg,transparent_45%,var(--butter)_45%)] px-1.5 py-0.5 rounded-sm">
                   Ahora que te entiendan.
                 </span>
               </h1>

@@ -40,7 +40,7 @@ export function AudioSlide() {
             <span key={i}>
               {i > 0 && " "}
               {word === highlightedWord ? (
-                <span className="rounded-lg bg-[var(--butter)] text-[var(--ink)] px-2.5 py-0.5 font-extrabold inline-block">
+                <span className="underline decoration-wavy decoration-[var(--butter-deep)] dark:decoration-[var(--butter)] underline-offset-8 decoration-4 font-extrabold text-[var(--text-strong)]">
                   {word}
                 </span>
               ) : (
