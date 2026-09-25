@@ -128,8 +128,8 @@ export function AssessmentOralCheckpoint({
         return;
       }
       if (body?.retryable) {
-        const renewed = await issueChallenge();
-        if (renewed) setMessage(body.message ?? "No se pudieron confirmar los detalles. Graba otra respuesta.");
+        setMessage(body.message ?? "No se pudieron confirmar los detalles. Graba otra respuesta.");
+        recorder.reset();
         return;
       }
       if (response.status === 409 || response.status === 410) {

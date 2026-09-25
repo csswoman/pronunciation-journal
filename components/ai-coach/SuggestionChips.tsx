@@ -1,4 +1,4 @@
-import { Clapperboard, BookOpen, Theater, MessageCircle } from "@/components/icons";
+import { Clapperboard, BookOpen, Theater, MessageCircle, Sparkles, Minus, Lightbulb } from "@/components/icons";
 import type { LucideIcon } from "@/components/icons";
 
 interface SuggestionChip {
@@ -12,6 +12,9 @@ interface SuggestionChipsProps {
 }
 
 const ICON_MAP: Array<{ keywords: string[]; Icon: LucideIcon }> = [
+  { keywords: ["ejemplo", "example", "dame"], Icon: Sparkles },
+  { keywords: ["simple", "más simple", "facil", "fácil"], Icon: Minus },
+  { keywords: ["respondo", "respuesta", "como", "cómo"], Icon: Lightbulb },
   { keywords: ["movie", "film", "watch", "watched", "cinema"], Icon: Clapperboard },
   { keywords: ["book", "read", "reading", "novel"], Icon: BookOpen },
   { keywords: ["role", "roleplay", "play", "act"], Icon: Theater },
@@ -25,7 +28,7 @@ function chipIcon(label: string): LucideIcon {
 
 export default function SuggestionChips({ suggestions, onSelect }: SuggestionChipsProps) {
   return (
-    <div className="flex flex-wrap gap-1.5 px-1">
+    <div className="flex flex-wrap gap-2 px-1 pt-1">
       {suggestions.map((s) => {
         const Icon = chipIcon(s.label);
         return (
@@ -33,9 +36,9 @@ export default function SuggestionChips({ suggestions, onSelect }: SuggestionChi
             key={s.label}
             onClick={() => onSelect(s.prompt)}
             title={s.prompt}
-            className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-border-subtle bg-surface-sunken px-2.5 py-1 text-tiny text-fg-muted transition-colors hover:border-[color:var(--primary)]/30 hover:bg-[var(--primary-100)] hover:text-[color:var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]/40"
+            className="inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border border-border-subtle bg-surface-raised px-3.5 py-1.5 text-xs font-semibold text-fg transition-colors hover:border-primary hover:bg-surface-base hover:text-primary focus-ring active:scale-[0.99]"
           >
-            <Icon size={11} strokeWidth={1.8} className="shrink-0" />
+            <Icon size={13} strokeWidth={2} className="shrink-0 text-fg-muted" />
             <span className="truncate">{s.label}</span>
           </button>
         );

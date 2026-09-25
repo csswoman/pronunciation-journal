@@ -42,11 +42,11 @@ export function CanonicalHeader({
       ) : null}
       <div className="flex flex-row items-center justify-between gap-layout-stack-tight sm:items-end sm:gap-layout-stack-loose">
         <div className="layout-stack-tight min-w-0">
-          <h1 className={cn("text-balance font-display font-extrabold text-fg tracking-tight", isCompact ? "text-h3" : "text-h1")}>
+          <h1 className={cn("text-balance font-extrabold text-fg tracking-tight", isCompact ? "text-h3" : "text-h1")}>
             {title}
           </h1>
           {chromeSubtitle ? (
-            <p className="max-w-prose text-pretty font-display text-body-sm text-fg-muted">
+            <p className="max-w-prose text-pretty text-body-sm text-fg-muted">
               {chromeSubtitle}
             </p>
           ) : null}

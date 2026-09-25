@@ -37,6 +37,12 @@ vi.mock('@/lib/users/server-queries', () => ({
   getUserInterests: vi.fn(async () => []),
 }))
 
+vi.mock('@/lib/ai-usage/budget', () => ({
+  reserveModel: vi.fn(async () => true),
+  recordModelSuccess: vi.fn(),
+  recordModelFailure: vi.fn(),
+}))
+
 vi.mock('@/lib/gemini/fallback', () => ({
   FALLBACK_MODELS: ['model-a', 'model-b'],
   // `chat-route` calls this for every model; without it the route 500s before

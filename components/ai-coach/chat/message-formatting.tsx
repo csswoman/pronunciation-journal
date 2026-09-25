@@ -4,9 +4,9 @@ export function renderInline(text: string): ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|__[^_]+__|~~[^~]+~~|`[^`]+`|(?<![*\w])\*[^*\n]+\*(?!\w)|(?<![_\w])_[^_\n]+_(?!\w))/g)
   return parts.map((part, index) => {
     if (!part) return null
-    if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) return <strong key={index} className="font-semibold text-primary">{part.slice(2, -2)}</strong>
+    if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) return <strong key={index} className="font-semibold text-fg">{part.slice(2, -2)}</strong>
     if (part.startsWith('~~') && part.endsWith('~~') && part.length > 4) return <s key={index} className="text-fg-subtle">{part.slice(2, -2)}</s>
-    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) return <code key={index} className="rounded bg-surface-sunken/70 px-1.5 py-0.5 font-mono text-caption text-primary">{part.slice(1, -1)}</code>
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) return <code key={index} className="inline-block rounded-md bg-[var(--butter,#fef08a)] px-2 py-0.5 font-mono text-xs font-bold text-[var(--ink,#1c1917)] shadow-2xs mx-0.5">{part.slice(1, -1)}</code>
     if ((part.startsWith('*') && part.endsWith('*') && part.length > 2) || (part.startsWith('_') && part.endsWith('_') && part.length > 2)) return <em key={index} className="italic text-fg">{part.slice(1, -1)}</em>
     return part
   })

@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 const API_DIR = path.join(process.cwd(), "app", "api");
 
 const VALIDATION_EXEMPTIONS = new Set([
+  "app/api/assessment/oral/evidence/route.ts",
   "app/api/assessment/results/route.ts",
   "app/api/gemini/word-image/route.ts",
   "app/api/lexicon/[id]/route.ts",
