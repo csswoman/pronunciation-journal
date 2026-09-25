@@ -190,8 +190,8 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
   const [failedSentences, weakWords, dueWords, soundsDueRaw, dueTopicsRaw, weakTopicsRaw, dueLessons, essentialWordsDue] =
     await Promise.all([
       loadFailedSentenceItemsServer(userId, 5),
-      getWeakWordsForReviewServer(userId, 6),
-      getWordsDueForReview(userId, 6),
+      getWeakWordsForReviewServer(userId, 8),
+      getWordsDueForReview(userId, 8),
       getSoundsDueForHome(userId),
       getDueTopicsForReview(userId, 6),
       getWeakTopicsForReview(userId, 6),

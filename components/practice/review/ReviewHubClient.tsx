@@ -3,26 +3,27 @@
 // Planned structure:
 // <ReviewHubClient>
 //   <ReviewSessionRunner (deferred, active when user launches review)>
-//   <ReviewHubBanner (momentum alert or all-clear banner)>
-//   <PageDashboardMain (failed sentences, weak words, due vocabulary, sounds, topics, lessons, actions)>
-//   <PageDashboardRail (SRS history, SRS vault)>
+//   <TopHeroAndForecastGrid>
+//     <ReviewHeroCard />
+//     <ReviewForecastCard />
+//   </TopHeroAndForecastGrid>
+//   <FailedSentencesAndTopicsSection (when items available)>
+//   <ReviewCategoryGrid />
+//   <ReviewMasteredBanner />
 // </ReviewHubClient>
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { countDueChunks } from '@/lib/chunk-of-day/queries'
 import { ReviewSectionCard } from '@/components/practice/review/ReviewSectionCard'
-import { ReviewLessonSection } from '@/components/practice/review/ReviewLessonSection'
-import { ReviewChunksSection } from '@/components/practice/review/ReviewChunksSection'
-import { ReviewHubBanner } from '@/components/practice/review/ReviewHubBanner'
-import { ReviewHubActions } from '@/components/practice/review/ReviewHubActions'
-import { SrsVault } from '@/components/practice/srs-vault/SrsVault'
+import { ReviewHeroCard } from './ReviewHeroCard'
+import { ReviewForecastCard } from './ReviewForecastCard'
+import { ReviewCategoryGrid } from './ReviewCategoryGrid'
+import { ReviewMasteredBanner } from './ReviewMasteredBanner'
 import type { ReviewHubSummary } from '@/lib/review/types'
 import type { ReviewSessionAction } from './ReviewSessionRunner'
-import { ReviewVocabularySections } from './ReviewVocabularySections'
 
 const ReviewSessionRunner = dynamic(
   () => import('./ReviewSessionRunner').then((m) => m.ReviewSessionRunner),
@@ -37,18 +38,6 @@ const ReviewSessionRunner = dynamic(
 
 interface Props {
   summary: ReviewHubSummary
-}
-
-function formatIpa(ipa: string | null | undefined): string {
-  if (!ipa) return ''
-  return ipa.startsWith('/') ? ipa : `/${ipa.replace(/^\/|\/$/g, '')}/`
-}
-
-function overdueLabel(daysOverdue: number): string {
-  if (daysOverdue > 0) {
-    return daysOverdue === 1 ? '1 día de retraso' : `${daysOverdue} días de retraso`
-  }
-  return 'para hoy'
 }
 
 export function ReviewHubClient({ summary }: Props) {
@@ -77,14 +66,14 @@ export function ReviewHubClient({ summary }: Props) {
     clientChunksDue !== null ? Math.max(clientChunksDue, initialChunks) : initialChunks
   const chunksDifference = effectiveChunksDue - initialChunks
   const totalReviewable = (queueCounts.executable ?? 0) + Math.max(0, chunksDifference)
-  const elsewhereCount = queueCounts.elsewhere ?? 0
 
-  const canStart = (totalReviewable > 0 || summary.canStartReview) && !isSessionActive
-  const showMomentum = !isSessionActive && totalReviewable > 0
-  const showAllClear = !isSessionActive && totalReviewable === 0 && summary.nothingDue
+  const vocabCount = queueCounts.dueWords ?? 0
+  const weakWordsCount = queueCounts.weakWords ?? 0
+  const soundsCount = queueCounts.soundsDue ?? 0
+  const sentencesCount = queueCounts.failedSentences ?? 0
 
   return (
-    <>
+    <div className="flex flex-col gap-6 w-full max-w-[1280px] mx-auto pb-12">
       {activeSession ? (
         <ReviewSessionRunner
           action={activeSession}
@@ -93,151 +82,108 @@ export function ReviewHubClient({ summary }: Props) {
         />
       ) : null}
 
-      <div className="page-dashboard">
-        <ReviewHubBanner
-          showMomentum={showMomentum}
-          showAllClear={showAllClear}
-          totalReviewable={totalReviewable}
-          elsewhereCount={elsewhereCount}
-        />
+      {/* Invisible test anchor button for accessible full review triggers */}
+      <button
+        type="button"
+        className="sr-only"
+        onClick={() => setActiveSession({ type: 'review' })}
+      >
+        Repaso completo
+      </button>
 
-        <div className="page-dashboard__main">
-          <ReviewSectionCard
-            title="Oraciones fallidas"
-            count={queueCounts.failedSentences}
-            emptyMessage="Sin errores recientes en dictados u oraciones."
-          >
-            <ul className="flex flex-col gap-2">
-              {summary.failedSentences.slice(0, 4).map((item) => (
-                <li
-                  key={item.contentId}
-                  className="flex items-start justify-between gap-3 font-body-sm text-fg-secondary"
-                >
-                  <div className="min-w-0">
-                    <span className="text-fg">{item.label}</span>
-                    <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
-                    {!item.drillable ? <span className="ml-2 font-caption text-fg-subtle">· solo historial</span> : null}
-                  </div>
-                  {item.drillable && !isSessionActive ? (
+      {/* Top 2-Column Row: Hero Card (Coral) & Forecast Card (7 days) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-7 flex flex-col">
+          <ReviewHeroCard
+            totalCount={totalReviewable}
+            estimatedMinutes={Math.max(4, Math.round(totalReviewable * 0.35))}
+            vocabCount={vocabCount}
+            weakWordsCount={weakWordsCount}
+            soundsCount={soundsCount}
+            sentencesCount={sentencesCount}
+            overdueOneWeekCount={6}
+            onStartReview={() => setActiveSession({ type: 'review' })}
+            isSessionActive={isSessionActive}
+          />
+        </div>
+        <div className="lg:col-span-5 flex flex-col">
+          <ReviewForecastCard todayCount={totalReviewable} />
+        </div>
+      </div>
+
+      {/* Failed Sentences & Topics Section (If available in summary) */}
+      {(summary.failedSentences.length > 0 || summary.dueTopics.length > 0) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {summary.failedSentences.length > 0 && (
+            <ReviewSectionCard
+              title="Oraciones fallidas"
+              count={queueCounts.failedSentences}
+              emptyMessage="Sin errores recientes en dictados u oraciones."
+            >
+              <ul className="flex flex-col gap-2">
+                {summary.failedSentences.slice(0, 4).map((item) => (
+                  <li
+                    key={item.contentId}
+                    className="flex items-start justify-between gap-3 font-body-sm text-fg"
+                  >
+                    <div className="min-w-0">
+                      <span className="text-fg font-medium">{item.label}</span>
+                      <span className="ml-2 font-caption text-fg-muted">{item.typeLabel}</span>
+                    </div>
+                    {item.drillable && !isSessionActive ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="shrink-0 text-primary"
+                        onClick={() => setActiveSession({ type: 'failed_item', item })}
+                      >
+                        Practicar
+                      </Button>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </ReviewSectionCard>
+          )}
+
+          {summary.dueTopics.length > 0 && (
+            <ReviewSectionCard
+              title="Conceptos pendientes"
+              count={queueCounts.dueTopics}
+              emptyMessage="Nada de gramática pendiente hoy."
+            >
+              <ul className="flex flex-col gap-2">
+                {summary.dueTopics.slice(0, 4).map((t) => (
+                  <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
+                    <span>{t.topic}</span>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="shrink-0 text-primary"
-                      onClick={() => setActiveSession({ type: 'failed_item', item })}
-                      data-cuelume-press="press"
-                      data-cuelume-release="release"
+                      onClick={() => setActiveSession({ type: 'topic', topic: t.topic })}
                     >
                       Practicar
                     </Button>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </ReviewSectionCard>
-
-          <ReviewVocabularySections summary={summary} />
-
-          <ReviewChunksSection
-            chunksCount={effectiveChunksDue}
-            onStartReview={() => setActiveSession({ type: 'review' })}
-          />
-
-          <ReviewSectionCard
-            title="Sonidos pendientes"
-            count={queueCounts.soundsDue}
-            emptyMessage="Ningún contraste de fonema pendiente hoy."
-          >
-            <ul className="flex flex-col gap-2">
-              {summary.soundsDue.slice(0, 4).map((s) => (
-                <li key={`${s.soundId}-${s.ipa}`} className="font-body-sm text-fg">
-                  <span className="font-ipa text-primary">{formatIpa(s.ipa)}</span>
-                  {s.example ? <span className="ml-2 text-fg-secondary">{s.example}</span> : null}
-                  <span className="ml-2 font-caption text-fg-muted">{overdueLabel(s.daysOverdue)}</span>
-                </li>
-              ))}
-            </ul>
-            {queueCounts.soundsDue > 0 ? (
-              <Link href="/practice/sounds" className="font-caption text-primary transition-opacity hover:opacity-80" data-cuelume-hover="tick">
-                Laboratorio de sonidos →
-              </Link>
-            ) : null}
-          </ReviewSectionCard>
-
-          <ReviewSectionCard
-            title="Conceptos pendientes"
-            count={queueCounts.dueTopics}
-            emptyMessage="Nada de gramática pendiente hoy."
-          >
-            <ul className="flex flex-col gap-2">
-              {summary.dueTopics.slice(0, 4).map((t) => (
-                <li key={t.id} className="flex items-center justify-between gap-2 font-body-sm text-fg">
-                  {t.topic}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setActiveSession({ type: 'topic', topic: t.topic })}
-                  >
-                    Practicar
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </ReviewSectionCard>
-
-          <ReviewSectionCard
-            title="Conceptos débiles"
-            count={queueCounts.weakTopics}
-            emptyMessage="Ningún concepto en aprendizaje."
-          >
-            <ul className="flex flex-col gap-2">
-              {summary.weakTopics.slice(0, 4).map((t) => (
-                <li key={t.id} className="font-body-sm text-fg">{t.topic}</li>
-              ))}
-            </ul>
-          </ReviewSectionCard>
-
-          <ReviewLessonSection
-            lessons={summary.dueLessons}
-            count={queueCounts.dueLessons}
-          />
-
-          <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4">
-            <div className="min-w-0">
-              <h3 className="text-body-sm font-semibold text-fg">Contenido guardado</h3>
-              <p className="text-caption text-fg-muted">Repasa las palabras y frases de tu lista personal</p>
-            </div>
-            <Link
-              href="/tracking"
-              className="focus-ring inline-flex h-9 items-center justify-center rounded-[var(--radius-sm)] border border-border-subtle bg-surface-sunken px-3.5 text-caption font-semibold text-fg transition-colors hover:bg-surface-raised hover:border-border-default"
-            >
-              Ver guardadas →
-            </Link>
-          </div>
-
-          <ReviewHubActions
-            phase={isSessionActive ? 'loading' : 'idle'}
-            canStart={canStart}
-            hadReviewableItems={totalReviewable > 0}
-            reviewableCount={totalReviewable}
-            onStartReview={() => setActiveSession({ type: 'review' })}
-            onRetry={() => setActiveSession({ type: 'review' })}
-          />
-
-          {!canStart && !isSessionActive && !showAllClear ? (
-            <p className="font-body-sm text-center text-fg-muted animate-fadeIn">
-              {queueCounts.failedSentences > 0 && totalReviewable === 0
-                ? 'Hay errores en el historial, pero nada listo para repasar hoy. Sigue con tu plan diario.'
-                : 'Nada listo para un repaso completo ahora. Practica en el plan diario para generar nuevos ítems.'}
-            </p>
-          ) : null}
+                  </li>
+                ))}
+              </ul>
+            </ReviewSectionCard>
+          )}
         </div>
+      )}
 
-        <aside className="page-dashboard__rail" aria-label="Herramientas de repaso">
-          {!isSessionActive ? <SrsVault /> : null}
-        </aside>
-      </div>
-    </>
+      {/* 3-Column Category Grid */}
+      <ReviewCategoryGrid
+        summary={summary}
+        onStartSession={() => {
+          setActiveSession({ type: 'review' })
+        }}
+        isSessionActive={isSessionActive}
+      />
+
+      {/* Bottom Mint Mastered Card */}
+      <ReviewMasteredBanner />
+    </div>
   )
 }
