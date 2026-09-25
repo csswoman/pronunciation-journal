@@ -35,6 +35,7 @@ export function DeckCarousel({
         >
           <GrammarStudyCard
             card={card}
+            totalCount={cards.length}
             reviewed={reviewed.has(card.id)}
             isLast={isLast}
             onAdvance={onNext}

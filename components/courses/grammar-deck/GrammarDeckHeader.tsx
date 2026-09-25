@@ -1,6 +1,14 @@
+// Planned structure:
+// <GrammarDeckHeader>
+//   <Link backHref>
+//   <HeaderIdentity (icon, eyebrow, title)>
+//   <HeaderProgressSegments (count, multi-segment bars)>
+//   <HeaderActions (download, save)>
+// </GrammarDeckHeader>
+
 import Link from "next/link";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ArrowLeft } from "@/components/icons";
+import { ArrowLeft, Code2 } from "@/components/icons";
 import { TrackingSaveButton } from "@/components/tracking/TrackingSaveButton";
 import { LessonDownloadButton } from "@/components/courses/LessonDownloadButton";
 import { db } from "@/lib/db";
@@ -43,50 +51,67 @@ export default function GrammarDeckHeader({
     undefined,
   );
 
+  const totalSegments = Math.max(totalCount, 1);
+  const segments = Array.from({ length: totalSegments }, (_, i) => i < reviewedCount);
+
   return (
     <header className="grammar-deck__head">
-      <Link href={backHref} className="grammar-deck__back">
-        <ArrowLeft size={14} aria-hidden />
-        {backLabel}
-      </Link>
-      <div className="grammar-deck__identity">
-        <span className="grammar-deck__eyebrow">{subtitle ?? meta.eyebrow}</span>
-        <div className="flex items-center gap-2">
-          <h1 className="grammar-deck__title">
-            {meta.title}
-            {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
-          </h1>
-          {lessonSlug && (
-            <>
-              {levelId && lessonNumber && (
-                <LessonDownloadButton
-                  trackId={levelId}
-                  lessonNumber={lessonNumber}
-                  slug={lessonSlug}
-                  title={fullTitle}
-                  variant="badge"
-                  isDownloaded={Boolean(downloadedRecord)}
-                />
-              )}
-              <TrackingSaveButton
-                kind="lesson"
-                reference={lessonSlug}
-                title={fullTitle}
-                payload={deckHref ? { href: deckHref } : undefined}
-                variant="heart"
+      <div className="grammar-deck__head-bar">
+        <Link href={backHref} className="grammar-deck__back-round" aria-label={backLabel} title={backLabel}>
+          <ArrowLeft size={16} aria-hidden />
+        </Link>
+
+        <div className="grammar-deck__head-center">
+          <div className="grammar-deck__icon-squircle">
+            <Code2 size={16} aria-hidden />
+          </div>
+
+          <div className="grammar-deck__identity">
+            <span className="grammar-deck__eyebrow">{subtitle ?? meta.eyebrow}</span>
+            <h1 className="grammar-deck__title">
+              {meta.title}
+              {meta.titleEmphasis && <em> {meta.titleEmphasis}</em>}
+            </h1>
+          </div>
+        </div>
+
+        <div className="grammar-deck__head-prog-wrap">
+          <span className="grammar-deck__count-label">
+            {reviewedCount} de {totalCount}
+          </span>
+          <div className="grammar-deck__segmented-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+            {segments.map((isFilled, idx) => (
+              <span
+                key={idx}
+                className={`grammar-deck__segment ${isFilled ? "grammar-deck__segment--filled" : ""}`}
               />
-            </>
+            ))}
+          </div>
+        </div>
+
+        <div className="grammar-deck__head-actions">
+          {lessonSlug && levelId && lessonNumber && (
+            <LessonDownloadButton
+              trackId={levelId}
+              lessonNumber={lessonNumber}
+              slug={lessonSlug}
+              title={fullTitle}
+              variant="badge"
+              isDownloaded={Boolean(downloadedRecord)}
+            />
+          )}
+          {lessonSlug && (
+            <TrackingSaveButton
+              kind="lesson"
+              reference={lessonSlug}
+              title={fullTitle}
+              payload={deckHref ? { href: deckHref } : undefined}
+              variant="heart"
+            />
           )}
         </div>
-      </div>
-      <div className="grammar-deck__meta">
-        <div className="grammar-deck__prog" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <span className="grammar-deck__prog-fill" style={{ transform: `scaleX(${pct / 100})` }} />
-        </div>
-        <span className="grammar-deck__count">
-          <b>{String(reviewedCount).padStart(2, "0")}</b> / {String(totalCount).padStart(2, "0")}
-        </span>
       </div>
     </header>
   );
 }
+

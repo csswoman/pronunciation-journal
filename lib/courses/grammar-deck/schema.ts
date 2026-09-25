@@ -40,6 +40,7 @@ const GrammarRuleRowSchema = z.object({
   value: z.string(),
   highlights: z.array(z.string()).optional(),
   hint: z.string().optional(),
+  ipa: z.string().optional(),
 });
 
 const Cell = z.string();
@@ -71,6 +72,12 @@ const GrammarCardBlockSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+const GrammarMeetingQuoteSchema = z.object({
+  kicker: z.string().optional(),
+  quote: z.string(),
+  translation: z.string(),
+});
+
 const GrammarStudyCardSchema = z.object({
   id: z.string().min(1),
   // `index` is assigned by the loader from array position; optional in JSON.
@@ -81,6 +88,7 @@ const GrammarStudyCardSchema = z.object({
   lede: z.string(),
   blocks: z.array(GrammarCardBlockSchema).min(1),
   tip: z.object({ label: z.string(), body: z.string() }).optional(),
+  meetingQuote: GrammarMeetingQuoteSchema.optional(),
 });
 
 const GrammarRelatedSchema = z.object({

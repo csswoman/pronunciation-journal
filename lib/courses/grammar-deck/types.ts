@@ -35,6 +35,7 @@ export interface GrammarRuleRow {
   value: string;
   highlights?: string[];
   hint?: string;
+  ipa?: string;
 }
 
 export interface GrammarPronExample {
@@ -61,6 +62,17 @@ export type GrammarCardBlock =
       note?: string;
     };
 
+export interface GrammarMeetingQuote {
+  kicker?: string;
+  quote: string;
+  translation: string;
+}
+
+export interface GrammarTipConvention {
+  badge: string;
+  text: string;
+}
+
 export interface GrammarStudyCardData {
   id: string;
   index: number;
@@ -70,7 +82,13 @@ export interface GrammarStudyCardData {
   titleItalic?: string[];
   lede: string;
   blocks: GrammarCardBlock[];
-  tip?: { label: string; body: string };
+  tip?: {
+    label: string;
+    body: string;
+    conventionsTitle?: string;
+    conventions?: GrammarTipConvention[];
+  };
+  meetingQuote?: GrammarMeetingQuote;
 }
 
 export interface GrammarRelatedLink {

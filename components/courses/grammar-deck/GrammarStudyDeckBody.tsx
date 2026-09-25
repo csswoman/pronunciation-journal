@@ -196,6 +196,7 @@ export function GrammarStudyDeckBody({
         reviewed={reviewed}
         onSelectCard={handlers.onGoTo}
         immersionLesson={identity.immersionLesson}
+        backHref={identity.backHref}
       />
     </div>
   );
