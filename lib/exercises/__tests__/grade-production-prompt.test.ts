@@ -3,6 +3,8 @@ import {
   GRADE_PRODUCTION_SYSTEM_PROMPT,
   buildGradeProductionUserPrompt,
 } from '@/lib/ai-prompts'
+import { productionGradeResponseSchema } from '@/lib/exercises/production-grade-schema'
+import { z } from 'zod'
 
 describe('GRADE_PRODUCTION_SYSTEM_PROMPT', () => {
   it('documents constraintMet in the rubric', () => {
@@ -13,8 +15,10 @@ describe('GRADE_PRODUCTION_SYSTEM_PROMPT', () => {
     expect(GRADE_PRODUCTION_SYSTEM_PROMPT).toMatch(/correct[\s\S]*constraintMet/)
   })
 
-  it('declares constraintMet in the JSON shape', () => {
-    expect(GRADE_PRODUCTION_SYSTEM_PROMPT).toContain('"constraintMet"')
+  it('declares constraintMet in the structured response schema', () => {
+    expect(z.toJSONSchema(productionGradeResponseSchema)).toMatchObject({
+      properties: { constraintMet: { type: 'boolean' } },
+    })
   })
 })
 

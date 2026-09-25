@@ -209,6 +209,12 @@ type PedagogicalFeedback = {
 }
 ```
 
+La corrección del Diario usa el nivel CEFR efectivo leído en el servidor; si
+falta, usa A2. Ordena los errores por impacto y conserva como máximo **3 en
+A1/A2, 5 en B1 y 8 en B2/C1/C2** antes de persistir la corrección o mostrarla.
+En A1/A2, las explicaciones son concretas y sin jerga gramatical. El texto
+corregido y las palabras sugeridas mantienen el contrato de respuesta existente.
+
 ### Taxonomía estable de errores
 
 `errorCode` es un contrato corto y tipado para feedback y analítica. El texto

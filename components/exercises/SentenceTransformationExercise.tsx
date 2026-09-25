@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button'
 import { gradeProduction, ProductionGradeError } from '@/lib/exercises/grade-production-client'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import { isExactTransformation } from '@/lib/exercises/transformations'
+import { buildTransformationTaskPrompt } from '@/lib/ai-prompts'
 import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
 
@@ -63,9 +64,7 @@ export function SentenceTransformationExercise({
     setError(null)
     try {
       const targetItem = exercise.referenceAnswer ?? exercise.instruction
-      const taskPrompt = exercise.referenceAnswer
-        ? `Transform the original sentence according to the instruction. Original sentence: "${exercise.sourceSentence}". Instruction: "${exercise.instruction}". Reference solution: "${exercise.referenceAnswer}".`
-        : `Transform the original sentence according to the instruction. Original sentence: "${exercise.sourceSentence}". Instruction: "${exercise.instruction}".`
+      const taskPrompt = buildTransformationTaskPrompt(exercise)
 
       const grade = await gradeProduction({
         targetItem,

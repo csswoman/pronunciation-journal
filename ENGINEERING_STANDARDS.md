@@ -136,6 +136,12 @@ lib/ai-practice/tools/registry.ts
 - `filterAvailable` salta modelos en cooldown tras `429`; el presupuesto diario
   se contabiliza por modelo y feature en `ai_usage_daily`.
 - Los prompts viven en `lib/ai-prompts.ts`, no inline en las rutas.
+- Cada ruta que pide JSON pasa su esquema Zod de respuesta como `schema` a
+  `callGeminiJson` / `respondWithGeminiJson` (o `responseJsonSchema` si llama
+  directamente al SDK). Valida la misma forma al parsear. Los prompts explican
+  qué significa cada campo sin repetir plantillas de formato JSON.
+- Tras modificar un prompt JSON, ejecuta `scripts/prompt-eval/run.ts` y compara
+  el resultado con `scripts/prompt-eval/baseline.json`.
 - Los límites de frecuencia permanecen en cada endpoint salvo que exista una
   decisión explícita para compartirlos.
 

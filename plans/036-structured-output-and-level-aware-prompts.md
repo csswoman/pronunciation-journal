@@ -17,6 +17,7 @@
 - **Depends on**: fase A de `plans/035-resilient-free-ai-quotas-and-voice.md`
 - **Category**: IA / calidad pedagógica
 - **Planned at**: commit `866979df`, 2026-09-23
+- **Implementation state (2026-09-25)**: DONE en `dev` (20 rutas JSON con esquema, evaluación 11/12 frente a 8/12, suite completa 5313/5313).
 
 ## Por qué importa
 
@@ -128,13 +129,13 @@ Vuelve a ejecutar `scripts/prompt-eval/run.ts`. El resultado debe tener ≥ tant
 
 ## Criterios de aceptación
 
-- [ ] Todas las rutas JSON envían `responseJsonSchema`.
-- [ ] `grep -rn "Return ONLY valid JSON" lib/ai-prompts.ts` → sin resultados.
-- [ ] Corrección del Diario acotada por nivel.
-- [ ] Ningún texto de prompt en `components/`.
-- [ ] `pnpm test`, `pnpm type-check`, `pnpm lint` en exit 0.
-- [ ] Eval ≥ línea base.
-- [ ] Documentación del paso 7 actualizada.
+- [x] Todas las rutas JSON envían `responseJsonSchema`.
+- [x] `grep -rn "Return ONLY valid JSON" lib/ai-prompts.ts` → sin resultados.
+- [x] Corrección del Diario acotada por nivel.
+- [x] Ningún texto de prompt en `components/`.
+- [x] `pnpm test`, `pnpm type-check`, `pnpm lint` en exit 0.
+- [x] Eval ≥ línea base.
+- [x] Documentación del paso 7 actualizada.
 
 ## STOP conditions
 

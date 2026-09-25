@@ -58,6 +58,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 500,
       },
     },
+    schema: ResponseSchema,
     parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)),
     failureMessage: "No se pudo obtener la traducción en este momento",
   });

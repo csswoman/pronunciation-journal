@@ -52,6 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 800,
       },
     },
+    schema: trackingEnrichResponseSchema,
     parse: (raw) =>
       trackingEnrichResponseSchema.parse(
         parseGeminiJson(raw, (json) => json)

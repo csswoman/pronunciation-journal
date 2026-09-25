@@ -16,5 +16,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (limited) return rateLimitError as NextResponse
   const { data, error } = await validateBody(request, RequestSchema)
   if (error) return error as NextResponse
-  return respondWithGeminiJson({ endpoint: '/api/gemini/generate-transformations', userId: user.id, params: { contents: buildGenerateTransformationsPrompt(data), config: { systemInstruction: GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT, responseMimeType: 'application/json', temperature: 0.4, maxOutputTokens: 1024 } }, parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)), failureMessage: 'Failed to generate transformations' })
+  return respondWithGeminiJson({ endpoint: '/api/gemini/generate-transformations', userId: user.id, params: { contents: buildGenerateTransformationsPrompt(data), config: { systemInstruction: GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT, responseMimeType: 'application/json', temperature: 0.4, maxOutputTokens: 1024 } }, schema: ResponseSchema, parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)), failureMessage: 'Failed to generate transformations' })
 }

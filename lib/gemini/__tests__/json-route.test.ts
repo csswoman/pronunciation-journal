@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AI_QUOTA_EXHAUSTED_MESSAGE } from '@/lib/degradation/messages'
+import { z } from 'zod'
 
 const mocks = vi.hoisted(() => ({
   callWithFallback: vi.fn(),
@@ -32,6 +33,29 @@ describe('gemini json-route helpers', () => {
     const parsed = parseGeminiJson('```json\n{"ok":true}\n```', (json) => json)
 
     expect(parsed).toEqual({ ok: true })
+  })
+
+  it('sends the Zod schema and validates with it before route parsing', async () => {
+    const schema = z.object({ ok: z.boolean() }).strict()
+    const parse = vi.fn((raw: string) => parseGeminiJson(raw, (json) => schema.parse(json)))
+    mocks.callWithFallback.mockImplementationOnce(async (_key, params, parseResponse) => {
+      expect(params.config.responseJsonSchema).toEqual(z.toJSONSchema(schema))
+      expect(() => parseResponse('{"ok":"yes"}')).toThrow(z.ZodError)
+      expect(parse).not.toHaveBeenCalled()
+      return parseResponse('{"ok":true}')
+    })
+
+    const response = await respondWithGeminiJson({
+      endpoint: '/api/test',
+      params: { contents: 'prompt', config: { responseMimeType: 'application/json' } },
+      schema,
+      parse,
+      failureMessage: 'failed',
+    })
+
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ ok: true })
+    expect(parse).toHaveBeenCalledTimes(1)
   })
 
   it.each([

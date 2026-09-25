@@ -44,6 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       contents: prompt,
       config: { systemInstruction: PRONUNCIATION_PHRASES_SYSTEM_PROMPT, responseMimeType: "application/json" },
     },
+    schema: PhrasesResponseSchema,
     parse: parsePhrases,
     failureMessage: "Failed to generate phrases",
     headers: SECURE_HEADERS,

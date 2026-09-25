@@ -1,0 +1,1 @@
+{"id":"grade-b2-perfect","kind":"grade","input":{"targetItem":"however","taskPrompt":"Compare two travel options.","production":"The train is cheaper; however, flying would save us several hours.","modality":"written","level":"B2"},"checks":{"correct":true,"usedTarget":true}}

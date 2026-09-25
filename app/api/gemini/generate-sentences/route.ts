@@ -42,6 +42,7 @@ async function generateSentencesWithGemini(
       config: {
         systemInstruction: SENTENCE_REORDER_SYSTEM_PROMPT,
         responseMimeType: "application/json",
+        responseJsonSchema: z.toJSONSchema(SentencesResponseSchema),
       },
     },
     (text) => SentencesResponseSchema.parse(JSON.parse(stripJsonFences(text))),

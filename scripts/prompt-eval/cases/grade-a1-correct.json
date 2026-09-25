@@ -1,0 +1,1 @@
+{"id":"grade-a1-correct","kind":"grade","input":{"targetItem":"like","taskPrompt":"Say what food you like.","production":"I like apples.","modality":"written","level":"A1"},"checks":{"correct":true,"usedTarget":true}}

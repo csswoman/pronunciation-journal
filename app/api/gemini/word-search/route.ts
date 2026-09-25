@@ -81,6 +81,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         responseMimeType: 'application/json',
       },
     },
+    schema: WordSearchResponseSchema,
     parse: (text) => parseGeminiJson(text, (json) => WordSearchResponseSchema.parse(json)),
     failureMessage: 'No se pudo generar la búsqueda de palabras con IA',
   })

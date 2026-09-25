@@ -94,6 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 1024,
       },
     },
+    schema: ResponseSchema,
     parse: makeReaderParser(body.targets),
     fallbackOptions: { shouldRetry: readerShouldRetry, models: QUALITY_FALLBACK_MODELS },
     failureMessage: "Failed to generate reader",

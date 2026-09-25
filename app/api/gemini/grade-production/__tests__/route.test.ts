@@ -77,6 +77,36 @@ describe('grade-production route', () => {
     expect(body.score).toBe(90)
   })
 
+  it('uses the rubric flags when the model marks an otherwise acceptable A1 answer wrong', async () => {
+    mocks.validateBody.mockResolvedValueOnce({
+      data: {
+        targetItem: 'cat',
+        taskPrompt: 'Say what animal you saw.',
+        production: 'I saw cat yesterday.',
+        modality: 'written',
+        level: 'A1',
+      },
+      error: null,
+    })
+    mocks.callWithFallback.mockImplementationOnce(async (_key, _params, parse) =>
+      parse(JSON.stringify({
+        correct: false,
+        usedTarget: true,
+        grammaticallyCorrect: true,
+        constraintMet: true,
+        feedback: 'Falta un artículo antes de cat.',
+        errorPattern: 'article_use',
+        score: 85,
+      }))
+    )
+
+    const res = await POST(reqWith() as never)
+    const body = await res.json()
+
+    expect(body).toMatchObject({ correct: true, score: 85 })
+    expect(body.errorPattern).toBeUndefined()
+  })
+
   it('rejects malformed AI grades through the response schema', async () => {
     mocks.validateBody.mockResolvedValueOnce({
       data: {

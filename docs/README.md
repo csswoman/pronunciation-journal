@@ -13,6 +13,7 @@ diseño y planes de producto.
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
 | [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
+| [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
