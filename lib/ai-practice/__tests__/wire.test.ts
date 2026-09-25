@@ -258,3 +258,17 @@ describe("buildSystemPrompt recent stems", () => {
       .not.toContain("Do not repeat these exercise sentences");
   });
 });
+
+describe("buildSystemPrompt practice rotation", () => {
+  it("includes the client-selected angle and exact format order", () => {
+    const prompt = buildSystemPrompt(null, {
+      exerciseRequested: true,
+      practiceContext: {
+        angle: "travel",
+        formats: ["fill-blank", "multiple-choice", "fill-blank", "multiple-choice", "speaking"],
+      },
+    });
+    expect(prompt).toContain('scenario angle "travel"');
+    expect(prompt).toContain("fill-blank, multiple-choice, fill-blank, multiple-choice, speaking");
+  });
+});

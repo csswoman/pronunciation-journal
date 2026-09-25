@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { type PromptKey } from "@/lib/api/prompts";
 import { type StarterId } from "@/lib/ai-practice/starters/types";
+import { PRACTICE_ANGLES } from "@/lib/ai-practice/practice-rotation";
 
 // ---------------------------------------------------------------------------
 // Request schema — all strings bounded, unknown keys rejected
@@ -59,6 +60,10 @@ export const GeminiRequestSchema = z.object({
    */
   coachLanguage: z.enum(["es", "en"]).optional(),
   recentStems: z.array(z.string().min(1).max(80)).max(20).optional(),
+  practiceContext: z.object({
+    angle: z.enum(PRACTICE_ANGLES),
+    formats: z.array(z.enum(["multiple-choice", "fill-blank", "speaking"])).length(5),
+  }).strict().optional(),
   stream: z.boolean().optional().default(false),
 }).strict();
 

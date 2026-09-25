@@ -36,4 +36,8 @@ siguiente turno, el cliente lee los 20 más recientes y los envía como
 `recentStems`; el prompt pide no repetir esas oraciones ni variaciones mínimas.
 La tabla es solo local y un fallo de IndexedDB no bloquea el chat.
 
-La rotación de ángulos de la fase B2 aún está pendiente.
+Para cada petición de práctica, el cliente rota entre vida diaria, trabajo,
+viajes, intereses del perfil y errores recientes. Los tres últimos ángulos se
+guardan por cuenta en `practicePrefs`, de modo que tres peticiones consecutivas
+no repiten escenario. También envía el orden exacto de los cinco formatos,
+manteniendo siempre el reparto 2 opción múltiple, 2 huecos y 1 speaking.

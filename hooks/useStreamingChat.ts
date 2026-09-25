@@ -20,6 +20,7 @@ import type { AIConversationMode } from "@/lib/types";
 import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
 import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydratePersistedMessages, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
 import { getRecentCoachStems, saveCoachSeenItems } from "@/lib/ai-practice/coach-seen-items";
+import { rotationForCoachRequest, type PracticeAngle } from "@/lib/ai-practice/practice-rotation";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -55,9 +56,9 @@ export function useStreamingChat({
   const streamIdRef = useRef(0);
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
+  const anonymousAnglesRef = useRef<PracticeAngle[]>([]);
 
-  // Last send that failed before any model text landed. A hidden send (starter,
-  // session summary) leaves nothing on screen, so retry is the only way back in.
+  // Last send that failed before model text landed; hidden sends need retry.
   const lastFailedSendRef = useRef<{ text: string; options?: SendOpts } | null>(null);
 
   const metrics = useCoachSessionMetrics({ mode, userId });
@@ -92,6 +93,14 @@ export function useStreamingChat({
       const recentStems = userIdRef.current
         ? await getRecentCoachStems(userIdRef.current).catch(() => [])
         : [];
+      const practiceContext = await rotationForCoachRequest({
+        text, isStarter: options?.starterId !== undefined,
+        isMission: mode.startsWith("mission:"), userId: userIdRef.current,
+        anonymousAngles: anonymousAnglesRef.current,
+      });
+      if (practiceContext && !userIdRef.current) {
+        anonymousAnglesRef.current = [...anonymousAnglesRef.current, practiceContext.angle].slice(-3);
+      }
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,6 +113,7 @@ export function useStreamingChat({
           // falls back to the CEFR-derived default.
           coachLanguage: useAICoachStore.getState().coachLanguage ?? undefined,
           recentStems,
+          practiceContext,
         }),
         signal: controller.signal,
       });
@@ -246,8 +256,6 @@ export function useStreamingChat({
       window.clearTimeout(requestTimeout);
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-    // `learningState` omitted on purpose: the server resolves it, and including
-    // it rebuilt `sendMessage` after every exercise, re-rendering the panel.
   }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
 
   const retryLastFailedSend = useCallback(async () => {

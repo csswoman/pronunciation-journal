@@ -12,11 +12,11 @@
 
 ## Estado
 
-- **Progreso**: fase A y B1 completas (2026-09-25). La cola vive en `PracticeSession`,
+- **Progreso**: fases A y B completas (2026-09-25). La cola vive en `PracticeSession`,
   que ya recibe todas las tool calls del turno; no se duplicó estado en
   `useStreamingChat`. El set real de cinco tool calls fue verificado contra el
   proveedor. `coachSeenItems` conserva localmente los últimos enunciados para
-  evitar repeticiones. B2 y C pendientes.
+  evitar repeticiones; los ángulos y el orden 2-2-1 rotan en el cliente. Fase C pendiente.
 - **Priority**: P1
 - **Effort**: L (fase A: ~1 día · fase B: 1–2 días · fase C: 1–2 días)
 - **Risk**: MED

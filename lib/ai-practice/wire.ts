@@ -2,6 +2,7 @@ import type { AIMessage, VoiceMetadata } from "./types";
 import { BASE_TUTOR_PROMPT, EXERCISE_SET_INSTRUCTION, VOICE_TURN_INSTRUCTION } from "./prompts";
 import { buildAICoachTeachingPrompt } from "@/lib/ai-prompts";
 import type { CEFRLevel } from "@/lib/exercises/cefr";
+import type { PracticeRotation } from "./practice-rotation";
 import { compactState, selectNextExerciseTopic, type UserLearningState } from "./learning-state";
 import { isExerciseTool } from "./tools/registry";
 import { buildMissionPrompt } from "./missions/prompts";
@@ -37,11 +38,17 @@ export interface SystemPromptOptions {
   exerciseRequested?: boolean;
   learnerLevel?: CEFRLevel;
   recentStems?: readonly string[];
+  practiceContext?: PracticeRotation;
 }
 
 function recentStemsBlock(stems: readonly string[] | undefined): string {
   if (!stems?.length) return "";
   return `\n\nDo not repeat these exercise sentences or minimal variations of them:\n${stems.map((stem) => `- ${stem}`).join("\n")}`;
+}
+
+function practiceContextBlock(context: PracticeRotation | undefined): string {
+  if (!context) return "";
+  return `\n\nFor this set, use the scenario angle "${context.angle}" and emit the five exercise formats in this exact order: ${context.formats.join(", ")}.`;
 }
 
 function interestsBlock(interests: readonly string[] | undefined): string {
@@ -58,7 +65,7 @@ export function buildSystemPrompt(
   learningState: UserLearningState | null,
   options: SystemPromptOptions = {},
 ): string {
-  const { lastTopic, voiceScored, missionId, interests, languagePreference, exerciseRequested, learnerLevel, recentStems } = options;
+  const { lastTopic, voiceScored, missionId, interests, languagePreference, exerciseRequested, learnerLevel, recentStems, practiceContext } = options;
   // No learning state means A1 support, not a fabricated intermediate level.
   const level = learnerLevel ?? learningState?.level.cefrEstimate ?? "A1";
   const language = resolveCoachLanguage(level, languagePreference ?? null);
@@ -74,6 +81,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
   const exerciseSetSuffix = exerciseRequested ? `\n\n${EXERCISE_SET_INSTRUCTION}` : "";
   const interestsSuffix = interestsBlock(interests);
   const recentStemsSuffix = recentStemsBlock(recentStems);
+  const practiceContextSuffix = practiceContextBlock(practiceContext);
 
   const mission = missionId ? getMission(missionId) : null;
   if (mission && isConversationalMission(mission)) {
@@ -84,7 +92,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
     return `${missionPrompt}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
   }
 
-  if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}${exerciseSetSuffix}${recentStemsSuffix}`;
+  if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}${exerciseSetSuffix}${recentStemsSuffix}${practiceContextSuffix}`;
 
   const stateHint = compactState({ ...learningState, level: { ...learningState.level, cefrEstimate: level } });
   const nextHint = (() => {
@@ -100,7 +108,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
 
 ${stateHint}
 
-${nextHint}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}${exerciseSetSuffix}${recentStemsSuffix}`;
+${nextHint}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}${exerciseSetSuffix}${recentStemsSuffix}${practiceContextSuffix}`;
 }
 
 /** Returns the `voice` metadata of the most recent user message, if any. */

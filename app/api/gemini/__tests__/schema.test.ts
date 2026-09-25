@@ -81,3 +81,15 @@ describe("GeminiRequestSchema — recent stems", () => {
     expect(GeminiRequestSchema.safeParse({ ...baseRequest(), recentStems: ["x".repeat(81)] }).success).toBe(false);
   });
 });
+
+describe("GeminiRequestSchema — practice context", () => {
+  it("accepts only a known angle and five known formats", () => {
+    const valid = {
+      angle: "travel",
+      formats: ["multiple-choice", "fill-blank", "multiple-choice", "fill-blank", "speaking"],
+    };
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), practiceContext: valid }).success).toBe(true);
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), practiceContext: { ...valid, angle: "random" } }).success).toBe(false);
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), practiceContext: { ...valid, formats: ["speaking"] } }).success).toBe(false);
+  });
+});
