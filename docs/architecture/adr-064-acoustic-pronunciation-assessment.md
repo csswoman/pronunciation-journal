@@ -303,10 +303,14 @@ routes require a person to accept the license and hand over contact details or a
 account. Until the owner does that, `decision-phoneme-ctc.md` has nothing to report and phase C
 stays closed. The no-ship decision above remains in force: **no production surface shows a
 per-sound verdict.** Plan 038 phase A only removed unearned claims; it added no new signal.
+Blockers, the pre-registered gate and the steps to unblock are in
+`lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
 
 ## Links
 
 - Plan: `plans/064-validate-acoustic-pronunciation-assessment.md`
+- Plan 038 (candidate 4): `plans/038-elsa-style-phoneme-feedback-on-device.md`
+- **Phoneme-CTC status, blockers and how to unblock**: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`
 - Prior deferral: `docs/architecture/exercises.md` (row "3 — Future acoustic analysis")
 - Honest-signal contract: `lib/pronunciation/spoken-attempt.ts`
 - Evaluator contract: `lib/pronunciation/acoustic-evaluator.ts`
