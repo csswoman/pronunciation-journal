@@ -1,5 +1,6 @@
 import type { AIMessage, VoiceMetadata } from "./types";
 import { BASE_TUTOR_PROMPT, VOICE_TURN_INSTRUCTION } from "./prompts";
+import { buildAICoachTeachingPrompt } from "@/lib/ai-prompts";
 import { compactState, selectNextExerciseTopic, type UserLearningState } from "./learning-state";
 import { isExerciseTool } from "./tools/registry";
 import { buildMissionPrompt } from "./missions/prompts";
@@ -49,15 +50,15 @@ export function buildSystemPrompt(
   options: SystemPromptOptions = {},
 ): string {
   const { lastTopic, voiceScored, missionId, interests, languagePreference } = options;
-  // Defaults to A1 (English) when we have no state yet, matching the empty
-  // starter seed — no fabricated B1 guess.
-  const language = resolveCoachLanguage(
-    learningState?.level.cefrEstimate ?? "A1",
-    languagePreference ?? null,
-  );
+  // No learning state means A1 support, not a fabricated intermediate level.
+  const level = learningState?.level.cefrEstimate ?? "A1";
+  const language = resolveCoachLanguage(level, languagePreference ?? null);
   const languageSuffix = `
 
 ${languagePolicyBlock(language)}`;
+  const teachingSuffix = `
+
+${buildAICoachTeachingPrompt(level)}`;
   const voiceSuffix = voiceScored ? `
 
 ${VOICE_TURN_INSTRUCTION}` : "";
@@ -72,7 +73,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
     return `${missionPrompt}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
   }
 
-  if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
+  if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}`;
 
   const stateHint = compactState(learningState);
   const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
@@ -86,7 +87,7 @@ ${VOICE_TURN_INSTRUCTION}` : "";
 
 ${stateHint}
 
-${nextHint}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
+${nextHint}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}`;
 }
 
 /** Returns the `voice` metadata of the most recent user message, if any. */
