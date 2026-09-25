@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { AIMessage, ExerciseResult } from "@/lib/ai-practice/types";
 import type { TurnSaveable } from "@/lib/ai-practice/tools/registry";
 import type { ExerciseSessionSummary } from "./PracticeSession";
@@ -15,8 +15,6 @@ import { ChatContextDivider } from "./chat/ChatContextDivider";
 //   <MessageStack />
 //   <TypingIndicator />
 // </ChatView>
-
-const MIN_THINKING_MS = 700;
 
 interface ChatViewProps {
   messages: AIMessage[];
@@ -51,35 +49,13 @@ export default function ChatView({
 }: ChatViewProps) {
   const autoSpeak = useAICoachStore((s) => s.autoSpeak);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const thinkingStartRef = useRef<number | null>(null);
-  const [thinkingHold, setThinkingHold] = useState(false);
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isStreaming, thinkingHold]);
-
-  // Hold the typing indicator for a minimum duration so the AI doesn't pop in abruptly.
-  useEffect(() => {
-    if (isStreaming) {
-      thinkingStartRef.current ??= Date.now();
-      setThinkingHold(true);
-      return;
-    }
-    if (thinkingStartRef.current == null) return;
-    const elapsed = Date.now() - thinkingStartRef.current;
-    const remaining = Math.max(0, MIN_THINKING_MS - elapsed);
-    const t = setTimeout(() => {
-      setThinkingHold(false);
-      thinkingStartRef.current = null;
-    }, remaining);
-    return () => clearTimeout(t);
-  }, [isStreaming]);
+  }, [messages, isStreaming]);
 
   // One pass over `messages` per change instead of four on every render: the
   // stream fires a setMessages per token, so this ran dozens of times a turn.
-  // `sourceIndex` is kept so translation edits address the original array
-  // without an O(n) indexOf, and `key` gives React a stable identity across
-  // the filter flipping entries in and out (an empty streaming bubble).
+  // `sourceIndex` keeps translation edits aligned with the original array.
   const visibleMessages = useMemo(() => {
     const kept: Array<{
       msg: AIMessage;
@@ -113,7 +89,6 @@ export default function ChatView({
         // covered by the typing indicator) or an orphan left behind when a stream
         // was superseded mid-flight. Neither should render as a blank bubble.
         if (!hasText && !hasToolCall) return;
-        if (i === messages.length - 1 && thinkingHold) return;
       }
 
       const prev = kept[kept.length - 1];
@@ -129,12 +104,10 @@ export default function ChatView({
     });
 
     return kept;
-  }, [messages, thinkingHold]);
-
-  const showIndicator = isStreaming || thinkingHold;
+  }, [messages]);
 
   const lastVisible = visibleMessages[visibleMessages.length - 1]?.msg;
-  const indicatorVisible = showIndicator && lastVisible?.role !== "model";
+  const indicatorVisible = isStreaming && lastVisible?.role !== "model";
   const isTop = align === "top";
 
   return (

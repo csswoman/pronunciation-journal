@@ -95,8 +95,10 @@ function buildGenerationConfig(
   abortSignal?: AbortSignal,
   timeoutMs?: number,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tools: any = toolChoice !== "none" ? [{ functionDeclarations: TOOLS_TYPED }] : undefined;
+  const declarations = allowedTools?.length
+    ? TOOLS_TYPED.filter((tool) => tool.name && allowedTools.includes(tool.name))
+    : TOOLS_TYPED;
+  const tools = toolChoice !== "none" ? [{ functionDeclarations: declarations }] : undefined;
   const toolConfig = buildToolConfig(toolChoice, allowedTools);
   const thinkingConfig = getFastThinkingConfig(model);
   return {

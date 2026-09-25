@@ -14,6 +14,7 @@ import type {
   StartMissionArgs,
 } from "@/lib/ai-practice/tools/registry";
 import { persistCoachExerciseResult } from "@/lib/ai-practice/coach-progress";
+import { logEvent } from "@/lib/ai-practice/events";
 import { useCoachSessionMetrics } from "./useCoachSessionMetrics";
 import type { AIConversationMode } from "@/lib/types";
 import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
@@ -79,6 +80,8 @@ export function useStreamingChat({
       controller.abort(new DOMException("La respuesta de IA tardó demasiado.", "TimeoutError"));
     }, 35_000);
     const thisId = ++streamIdRef.current;
+    const turnStartedAt = performance.now();
+    let timeToFirstTextMs: number | null = null;
     setIsStreaming(true);
 
     const modelMsg: AIMessage = { role: "model", contentParts: [], toolCalls: new Map(), timestamp: new Date().toISOString() };
@@ -155,6 +158,9 @@ export function useStreamingChat({
           if (!raw) continue;
           let chunk: StreamChunk;
           try { chunk = JSON.parse(raw); } catch { continue; }
+          if (chunk.type === "text_delta" && chunk.delta.trim() && timeToFirstTextMs === null) {
+            timeToFirstTextMs = Math.round(performance.now() - turnStartedAt);
+          }
 
           const result = processChunk(chunk, state, {
             onStartMission,
@@ -205,6 +211,11 @@ export function useStreamingChat({
       const finalModelMsg: AIMessage = { role: "model", contentParts: state.parts, toolCalls: state.calls, timestamp: modelMsg.timestamp };
       const finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
+      void logEvent("coach_turn_latency", {
+        mode,
+        timeToFirstTextMs,
+        totalMs: Math.round(performance.now() - turnStartedAt),
+      }, userId).catch(() => {});
 
       await metrics.noteFirstExercise(state.calls);
 

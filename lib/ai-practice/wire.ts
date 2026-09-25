@@ -1,6 +1,7 @@
 import type { AIMessage, VoiceMetadata } from "./types";
 import { BASE_TUTOR_PROMPT, VOICE_TURN_INSTRUCTION } from "./prompts";
 import { buildAICoachTeachingPrompt } from "@/lib/ai-prompts";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
 import { compactState, selectNextExerciseTopic, type UserLearningState } from "./learning-state";
 import { isExerciseTool } from "./tools/registry";
 import { buildMissionPrompt } from "./missions/prompts";
@@ -33,6 +34,8 @@ export interface SystemPromptOptions {
   interests?: readonly string[];
   /** Explicit learner override; `null`/absent follows their CEFR level. */
   languagePreference?: CoachLanguagePreference;
+  exerciseRequested?: boolean;
+  learnerLevel?: CEFRLevel;
 }
 
 function interestsBlock(interests: readonly string[] | undefined): string {
@@ -49,9 +52,9 @@ export function buildSystemPrompt(
   learningState: UserLearningState | null,
   options: SystemPromptOptions = {},
 ): string {
-  const { lastTopic, voiceScored, missionId, interests, languagePreference } = options;
+  const { lastTopic, voiceScored, missionId, interests, languagePreference, exerciseRequested, learnerLevel } = options;
   // No learning state means A1 support, not a fabricated intermediate level.
-  const level = learningState?.level.cefrEstimate ?? "A1";
+  const level = learnerLevel ?? learningState?.level.cefrEstimate ?? "A1";
   const language = resolveCoachLanguage(level, languagePreference ?? null);
   const languageSuffix = `
 
@@ -68,20 +71,22 @@ ${VOICE_TURN_INSTRUCTION}` : "";
   if (mission && isConversationalMission(mission)) {
     const missionPrompt = buildMissionPrompt(
       mission,
-      learningState ? compactState(learningState) : undefined,
+      learningState ? compactState({ ...learningState, level: { ...learningState.level, cefrEstimate: level } }) : undefined,
     );
     return `${missionPrompt}${languageSuffix}${interestsSuffix}${voiceSuffix}`;
   }
 
   if (!learningState) return `${BASE_TUTOR_PROMPT}${languageSuffix}${teachingSuffix}${interestsSuffix}${voiceSuffix}`;
 
-  const stateHint = compactState(learningState);
-  const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
-  const { topic, isNew } = selectNextExerciseTopic(learningState, knownTopics, lastTopic);
-
-  const nextHint = isNew
-    ? `Next exercise: introduce a NEW topic — "${topic}". Do not repeat the last topic.`
-    : `Next exercise: focus on "${topic}" (student has struggled here). Do not repeat the last topic.`;
+  const stateHint = compactState({ ...learningState, level: { ...learningState.level, cefrEstimate: level } });
+  const nextHint = (() => {
+    if (!exerciseRequested) return "";
+    const knownTopics = learningState.grammar.weakTopics.map(t => t.topic);
+    const { topic, isNew } = selectNextExerciseTopic(learningState, knownTopics, lastTopic);
+    return isNew
+      ? `Next exercise: introduce a NEW topic — "${topic}". Do not repeat the last topic.`
+      : `Next exercise: focus on "${topic}" (student has struggled here). Do not repeat the last topic.`;
+  })();
 
   return `${BASE_TUTOR_PROMPT}
 

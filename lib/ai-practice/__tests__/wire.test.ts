@@ -127,6 +127,19 @@ describe("buildSystemPrompt language policy", () => {
     expect(prompt).not.toContain("one short sentence about a concrete familiar topic");
   });
 
+  it("reserves the next-exercise hint for exercise requests", () => {
+    const state = stateAt("B1");
+    expect(buildSystemPrompt(state)).not.toContain("Next exercise:");
+    expect(buildSystemPrompt(state, { exerciseRequested: true })).toContain("Next exercise:");
+  });
+
+  it("uses the canonical learner level over a stale coach state estimate", () => {
+    const prompt = buildSystemPrompt(stateAt("A1"), { learnerLevel: "C1" });
+    expect(prompt).toContain("Student: C1");
+    expect(prompt).toContain("audience-aware explanation");
+    expect(prompt).not.toContain("one short sentence about a concrete familiar topic");
+  });
+
   it("defaults to Spanish (A1) when there is no learning state yet", () => {
     expect(buildSystemPrompt(null)).toContain("Write your prose in SPANISH");
   });

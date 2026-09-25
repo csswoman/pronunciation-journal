@@ -5,7 +5,9 @@ import { detectIntent, selectionForRequest } from "@/lib/ai-practice/intent-dete
 import { buildSystemPrompt, extractLastTopicFromWire, lastUserVoiceMetadataFromWire } from "@/lib/ai-practice/wire";
 import { getMission } from "@/lib/ai-practice/missions/registry";
 import { fetchServerLearningState } from "@/lib/ai-practice/server-state";
+import { trimHistoryForModel } from "@/lib/ai-practice/history";
 import { getUserInterests } from "@/lib/users/server-queries";
+import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { getErrorStatus, QUALITY_FALLBACK_MODELS } from "@/lib/gemini/fallback";
 import {
   buildHistory,
@@ -74,22 +76,13 @@ export async function POST(request: NextRequest): Promise<Response> {
   const withTimeout = <T>(p: Promise<T>, fallback: T) =>
     Promise.race([p, new Promise<T>((r) => setTimeout(() => r(fallback), 800))]);
 
-  const [learningState, interests] = await Promise.all([
+  const [learningState, interests, effectiveLevel] = await Promise.all([
     withTimeout(fetchServerLearningState(user.id, accessToken), null),
     withTimeout(getUserInterests(user.id).catch(() => []), []),
+    withTimeout(getEffectiveLearnerLevelServer(user.id).catch(() => null), null),
   ]);
   const lastTopic = extractLastTopicFromWire(body.messages);
   const voice = lastUserVoiceMetadataFromWire(body.messages);
-  const systemPrompt = buildSystemPrompt(learningState, {
-    lastTopic,
-    voiceScored: voice?.scored === true,
-    missionId: body.missionId,
-    interests,
-    languagePreference: body.coachLanguage ?? null,
-  });
-
-  // Cap input fed to intent detection — detectIntent has its own guard but we
-  // also avoid building a huge string from the full content field.
   const lastUserText = (lastMsg.content ?? "").slice(0, 2_000);
   const isStarter = body.starterId !== undefined;
   const selection = body.missionId
@@ -97,8 +90,17 @@ export async function POST(request: NextRequest): Promise<Response> {
       ? { toolChoice: "none" as const, allowedTools: [] as string[] }
       : { toolChoice: "auto" as const, allowedTools: ["save_word", "mission_intent_observed"] }
     : selectionForRequest(lastUserText, isStarter);
+  const systemPrompt = buildSystemPrompt(learningState, {
+    lastTopic,
+    voiceScored: voice?.scored === true,
+    missionId: body.missionId,
+    interests,
+    languagePreference: body.coachLanguage ?? null,
+    exerciseRequested: selection.toolChoice === "any",
+    learnerLevel: effectiveLevel?.source !== "unknown" ? effectiveLevel?.level : undefined,
+  });
 
-  const history = buildHistory(body.messages.slice(0, -1));
+  const history = buildHistory(trimHistoryForModel(body.messages.slice(0, -1)));
   const ai = new GoogleGenAI({ apiKey });
   const modelOrder = body.missionId ? QUALITY_FALLBACK_MODELS : undefined;
 

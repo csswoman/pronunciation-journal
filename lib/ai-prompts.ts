@@ -3,10 +3,11 @@ import type { LearnerContext } from '@/lib/ai-coach/learner-context'
 import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
 
 export const AI_COACH_SPANISH_LANGUAGE_PROMPT = `LANGUAGE OF YOUR REPLIES:
-Write explanations and brief support in SPANISH at the learner's actual CEFR
-level. Keep examples, model answers, and the learner's task in ENGLISH. Quote
-English as-is and explain it separately in Spanish. Invite the learner to
-answer in English; offer a short English starter only when they need support.
+Write your prose in SPANISH at the learner's actual CEFR level, including
+explanations and brief support. Keep examples, model answers, and the learner's
+task in ENGLISH. Quote English as-is and explain it separately in Spanish.
+Invite the learner to answer in English; offer a short English starter only
+when they need support.
 Choosing Spanish for explanations must never lower the difficulty of the task.`;
 
 export const AI_COACH_ENGLISH_LANGUAGE_PROMPT = `LANGUAGE OF YOUR REPLIES:

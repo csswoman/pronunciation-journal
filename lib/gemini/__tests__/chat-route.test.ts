@@ -106,6 +106,25 @@ describe('gemini chat-route helpers', () => {
     expect(text).toContain('"type":"tool_call_end"')
   })
 
+  it('sends only the selected tool declarations in AUTO mode', async () => {
+    const create = vi.fn((config: unknown) => {
+      void config
+      return {
+        async *sendMessageStream() {
+          yield { candidates: [{ content: { parts: [{ text: 'Hello' }] } }] }
+        },
+      }
+    })
+    await readStream((controller) => streamWithFallback(
+      { chats: { create } } as never,
+      'system', [], 'hello',
+      { toolChoice: 'auto', allowedTools: ['annotate_turn'] },
+      controller, new AbortController().signal,
+    ))
+    const config = create.mock.calls[0][0] as { config: { tools: Array<{ functionDeclarations: Array<{ name: string }> }> } }
+    expect(config.config.tools[0].functionDeclarations.map((tool) => tool.name)).toEqual(['annotate_turn'])
+  })
+
   it('truncates streams that exceed the chunk limit', async () => {
     const ai = {
       chats: {

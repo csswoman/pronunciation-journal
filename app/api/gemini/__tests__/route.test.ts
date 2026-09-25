@@ -37,6 +37,10 @@ vi.mock('@/lib/users/server-queries', () => ({
   getUserInterests: vi.fn(async () => []),
 }))
 
+vi.mock('@/lib/learner-level/server-queries', () => ({
+  getEffectiveLearnerLevelServer: vi.fn(async () => ({ level: 'A1', source: 'starter_default' })),
+}))
+
 vi.mock('@/lib/ai-usage/budget', () => ({
   reserveModel: vi.fn(async () => true),
   recordModelSuccess: vi.fn(),
@@ -58,6 +62,7 @@ vi.mock('@/lib/gemini/fallback', () => ({
 
 import { POST } from '../route'
 import { VOICE_TURN_INSTRUCTION } from '@/lib/ai-practice/prompts'
+import { getEffectiveLearnerLevelServer } from '@/lib/learner-level/server-queries'
 
 function reqWith(): Request {
   return new Request('http://x/api/gemini', { method: 'POST', body: '{}' })
@@ -67,10 +72,27 @@ beforeEach(() => {
   mocks.sendMessage.mockReset()
   mocks.validateBody.mockReset()
   chatCreateSpy.mockClear()
+  vi.mocked(getEffectiveLearnerLevelServer).mockResolvedValue({
+    level: 'A1', source: 'starter_default', confidence: null, isPlaced: false, updatedAt: null,
+  })
   process.env.GEMINI_API_KEY = 'test'
 })
 
 describe('main gemini route', () => {
+  it('uses the canonical level when the cached coach state is unavailable', async () => {
+    vi.mocked(getEffectiveLearnerLevelServer).mockResolvedValueOnce({
+      level: 'B2', source: 'placement', confidence: null, isPlaced: true, updatedAt: null,
+    })
+    mocks.validateBody.mockResolvedValueOnce({
+      data: { messages: [{ role: 'user', content: 'Hello' }], promptKey: 'default', stream: false },
+      error: null,
+    })
+    mocks.sendMessage.mockResolvedValueOnce({ text: 'ok' })
+    await POST(reqWith() as never)
+    const config = chatCreateSpy.mock.calls[0][0] as { config: { systemInstruction: string } }
+    expect(config.config.systemInstruction).toContain('learner level B2')
+  })
+
   it('rejects requests where the last message is not from the user', async () => {
     mocks.validateBody.mockResolvedValueOnce({
       data: { messages: [{ role: 'model', content: 'hello' }], promptKey: 'default', stream: false },

@@ -75,6 +75,7 @@ export type AnalyticsEventName =
   | "time_to_first_exercise"
   | "session_started"
   | "session_ended"
+  | "coach_turn_latency"
   | "daily_step_started"
   | "daily_step_completed"
   | "daily_step_exited";
