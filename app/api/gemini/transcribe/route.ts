@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody, publicErrorResponse } from "@/lib/api/guards";
 import { buildTranscriptionPrompt } from "@/lib/ai-prompts";
-import { getErrorStatus, shouldTryNextModel, FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
+import { getErrorStatus, shouldTryNextModel, isTimeoutLikeError, FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
 import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
 import { logServerError } from "@/lib/api/logging";
 import { buildTranscriptionCacheKey, createTranscriptionCache } from "@/lib/gemini/transcription-cache";
@@ -43,6 +43,8 @@ const TranscribeSchema = z.object({
 
 const TRANSCRIBE_CACHE_TTL_MS = 1000 * 60 * 60 * 6;
 const MAX_TRANSCRIBE_CACHE_ENTRIES = 400;
+const TRANSCRIPTION_TOTAL_TIMEOUT_MS = 45_000;
+const TRANSCRIPTION_ATTEMPT_TIMEOUT_MS = 20_000;
 const transcriptionCache = createTranscriptionCache<{ targetWord?: string }>({
   table: "stt_transcription_cache",
   ttlMs: TRANSCRIBE_CACHE_TTL_MS,
@@ -73,7 +75,7 @@ async function transcribeWithFallback(
   let lastError: unknown;
   let budgetDenied = false;
   const prompt = buildTranscriptionPrompt(targetWord);
-  const deadlineAt = Date.now() + 30_000;
+  const deadlineAt = Date.now() + TRANSCRIPTION_TOTAL_TIMEOUT_MS;
 
   for (const modelName of filterAvailable(FALLBACK_MODELS).slice(0, 2)) {
     if (Date.now() >= deadlineAt) break;
@@ -84,7 +86,7 @@ async function transcribeWithFallback(
     const startedAt = Date.now();
     try {
       const thinkingConfig = getFastThinkingConfig(modelName);
-      const remainingMs = Math.max(1, Math.min(14_000, deadlineAt - Date.now()));
+      const remainingMs = Math.max(1, Math.min(TRANSCRIPTION_ATTEMPT_TIMEOUT_MS, deadlineAt - Date.now()));
       const result = await ai.models.generateContent({
           model: modelName,
           contents: [
@@ -114,7 +116,10 @@ async function transcribeWithFallback(
     throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
   }
   if (Date.now() >= deadlineAt) {
-    throw Object.assign(new Error("Gemini transcription timed out after 30000ms"), { status: 504 });
+    throw Object.assign(new Error(`Gemini transcription timed out after ${TRANSCRIPTION_TOTAL_TIMEOUT_MS}ms`), { status: 504 });
+  }
+  if (lastError && isTimeoutLikeError(lastError)) {
+    throw Object.assign(new Error("Every transcription model timed out"), { status: 504 });
   }
   throw lastError ?? new Error("All fallback models failed");
 }
@@ -183,6 +188,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       status,
       userId: user.id,
     });
-    return publicErrorResponse(status >= 500 ? 500 : status, "Transcription failed");
+    const publicStatus = status === 504 ? 504 : status >= 500 ? 500 : status;
+    return publicErrorResponse(publicStatus, "Transcription failed");
   }
 }

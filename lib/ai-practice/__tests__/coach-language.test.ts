@@ -35,7 +35,7 @@ describe("languagePolicyBlock", () => {
   it("keeps target-language content in English even in the Spanish policy", () => {
     const block = languagePolicyBlock("es");
     expect(block).toContain("Write your prose in SPANISH");
-    expect(block).toContain("learner's task in ENGLISH");
+    expect(block).toMatch(/learner's\s+task in ENGLISH/);
     expect(block).toContain("must never lower the difficulty");
   });
 

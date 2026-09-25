@@ -103,4 +103,14 @@ describe("CoursePathPage", () => {
       "/courses?level=c1",
     );
   });
+
+  it("renders the optional tracks section when opcionales tab is selected", () => {
+    render(<CoursePathPage levelParam="opcionales" />);
+
+    expect(screen.getByText("Temas opcionales")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Temas opcionales/i })[0]).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
 });

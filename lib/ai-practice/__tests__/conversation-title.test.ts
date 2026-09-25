@@ -37,7 +37,7 @@ describe("conversation-title utilities", () => {
   describe("getInitialTitleForModeAndMessage with a starter id", () => {
     it("uses mission communicativeGoal for mission modes", () => {
       const title = getInitialTitleForModeAndMessage("mission:roleplay.cafe");
-      expect(title).toBe("Pedir una bebida y confirmar tus preferencias.");
+      expect(title).toBe("Pedir un café y confirmar tus preferencias.");
     });
 
     it("prefers the starter id over the message text", () => {
@@ -68,7 +68,7 @@ describe("conversation-title utilities", () => {
         createdAt: "2026-09-05T00:00:00Z",
         updatedAt: "2026-09-05T00:00:00Z",
       };
-      expect(formatConversationTitle(conv)).toBe("Pedir una bebida y confirmar tus preferencias.");
+      expect(formatConversationTitle(conv)).toBe("Pedir un café y confirmar tus preferencias.");
     });
 
     it("returns starter title when conversation has starterId or saved title", () => {

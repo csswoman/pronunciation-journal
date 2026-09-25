@@ -19,6 +19,7 @@ vi.mock("@/lib/api/guards", () => ({
   requireUser: (...args: unknown[]) => mocks.requireUser(...args),
   checkLayeredRateLimit: () => ({ limited: false, error: null }),
   rateLimit: () => ({ limited: false, error: null }),
+  publicErrorResponse: (status: number, error: string) => Response.json({ error }, { status }),
   validateBody: (...args: unknown[]) => mocks.validateBody(...args),
 }));
 
@@ -93,6 +94,33 @@ describe("gemini transcribe route", () => {
 
     expect(first.status).toBe(200);
     expect(second.status).toBe(200);
+    expect(mocks.generateContent).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries the next model when one attempt is aborted by its deadline", async () => {
+    mocks.requireUser.mockResolvedValue({ user: { id: "user-timeout-fallback" }, error: null });
+    mocks.generateContent
+      .mockRejectedValueOnce(Object.assign(new Error("This operation was aborted"), { name: "AbortError" }))
+      .mockResolvedValueOnce({ text: "fallback transcript" });
+    mockCacheMiss();
+
+    const res = await POST(reqWith() as never);
+
+    expect(res.status).toBe(200);
+    expect(mocks.generateContent).toHaveBeenCalledTimes(2);
+    await expect(res.json()).resolves.toMatchObject({ transcript: "fallback transcript" });
+  });
+
+  it("preserves 504 when every transcription model times out", async () => {
+    mocks.requireUser.mockResolvedValue({ user: { id: "user-all-timeout" }, error: null });
+    mocks.generateContent.mockRejectedValue(
+      Object.assign(new Error("This operation was aborted"), { name: "AbortError" }),
+    );
+    mockCacheMiss();
+
+    const res = await POST(reqWith() as never);
+
+    expect(res.status).toBe(504);
     expect(mocks.generateContent).toHaveBeenCalledTimes(2);
   });
 });

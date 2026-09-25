@@ -3,7 +3,7 @@
  * - CoursePathPage (root course catalog layout)
  *   - CoursePathAutoLevelSync (background level router)
  *   - PageHeader (Aprender / Cursos title block)
- *   - CoursePathLevelPicker (CEFR level tabs with progress bars and counts)
+ *   - CoursePathLevelPicker (CEFR level and optional tabs with progress bars and counts)
  *   - CoursePathSearch (level search bar)
  *   - CoursePathLevelPanel (units, inline achievement block and aside progress)
  */
@@ -15,11 +15,20 @@ import PageHeader from "@/components/layout/PageHeader";
 import PageLayout from "@/components/layout/PageLayout";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import { parseCefrLevelId } from "@/lib/courses/curriculumIndex";
-import type { CefrLevelId } from "@/lib/courses/types";
+import type { CefrLevelId, CoursePathLevel } from "@/lib/courses/types";
 
 import type { ImmersionLesson } from "@/lib/immersion/types";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
+
+const OPTIONAL_LEVEL: CoursePathLevel = {
+  id: "opcionales",
+  spineLabel: "Opcionales",
+  spineSubtitle: "Rutas y temas",
+  title: "Temas opcionales",
+  description: "Rutas especializadas y temas opcionales para profundizar tu aprendizaje.",
+  units: COURSE_PATH_CURRICULUM.electiveTracks.flatMap((t) => t.units),
+};
 
 interface CoursePathPageProps {
   levelParam?: string;
@@ -27,12 +36,19 @@ interface CoursePathPageProps {
 }
 
 export default function CoursePathPage({ levelParam, topicImmersionMap }: CoursePathPageProps) {
+  const isOptionalView =
+    levelParam === "opcionales" ||
+    levelParam === "electivas" ||
+    levelParam === "optional" ||
+    COURSE_PATH_CURRICULUM.electiveTracks.some((track) => track.id === levelParam);
+
   const requestedLevel = parseCefrLevelId(levelParam);
-  const selectedLevelId = requestedLevel ?? DEFAULT_LEVEL;
-  const hasExplicitLevel = requestedLevel !== null;
-  const selectedLevel =
-    COURSE_PATH_CURRICULUM.levels.find((level) => level.id === selectedLevelId) ??
-    COURSE_PATH_CURRICULUM.levels[0];
+  const selectedLevelId = isOptionalView ? "opcionales" : (requestedLevel ?? DEFAULT_LEVEL);
+  const hasExplicitLevel = requestedLevel !== null || isOptionalView;
+  const selectedLevel = isOptionalView
+    ? OPTIONAL_LEVEL
+    : (COURSE_PATH_CURRICULUM.levels.find((level) => level.id === selectedLevelId) ??
+       COURSE_PATH_CURRICULUM.levels[0]);
 
   return (
     <div className="course-path">
@@ -50,6 +66,7 @@ export default function CoursePathPage({ levelParam, topicImmersionMap }: Course
           actions={
             <CoursePathLevelPicker
               levels={COURSE_PATH_CURRICULUM.levels}
+              electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
               selectedLevelId={selectedLevelId}
             />
           }

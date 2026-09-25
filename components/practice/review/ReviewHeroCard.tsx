@@ -61,15 +61,15 @@ export function ReviewHeroCard({
       {/* Header tags */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="rounded-full bg-[#12151c] px-3.5 py-1 text-xs font-black text-white uppercase tracking-wider shadow-2xs">
+          <span className="rounded-full bg-[var(--ink)] px-3.5 py-1 text-xs font-black text-white uppercase tracking-wider shadow-2xs">
             HOY
           </span>
-          <span className="rounded-full bg-white/80 backdrop-blur-xs border border-[#12151c]/15 px-4 py-1 text-xs sm:text-sm font-bold text-[#12151c]">
+          <span className="rounded-full bg-white/80 backdrop-blur-xs border border-[var(--ink)]/15 px-4 py-1 text-xs sm:text-sm font-bold text-[var(--ink)]">
             {estimatedMinutes} min aprox.
           </span>
         </div>
         {overdueOneWeekCount > 0 ? (
-          <span className="text-xs sm:text-sm font-bold text-[#12151c]/80">
+          <span className="text-xs sm:text-sm font-bold text-[var(--ink)]/80">
             {overdueOneWeekCount} llevan más de una semana esperando
           </span>
         ) : null}
@@ -78,54 +78,54 @@ export function ReviewHeroCard({
       {/* Main Big Metric */}
       <div className="space-y-1">
         <div className="flex items-baseline gap-3">
-          <span className="text-6xl font-black tracking-tight text-[#12151c] sm:text-7xl">
+          <span className="text-6xl font-black tracking-tight text-[var(--ink)] sm:text-7xl">
             {totalCount}
           </span>
-          <span className="text-3xl font-extrabold text-[#12151c]">pendientes</span>
+          <span className="text-3xl font-extrabold text-[var(--ink)]">pendientes</span>
         </div>
-        <p className="text-sm sm:text-base font-bold text-[#12151c]/75">{sourcesLabel}</p>
+        <p className="text-sm sm:text-base font-bold text-[var(--ink)]/75">{sourcesLabel}</p>
       </div>
 
       {/* Stacked Progress Bar & Legend with distinct domain colors */}
       <div className="space-y-3">
-        <div className="flex h-4 w-full overflow-hidden rounded-full bg-[#12151c]/15">
+        <div className="flex h-4 w-full overflow-hidden rounded-full bg-[var(--ink)]/15">
           <div
-            className="bg-[#12151c] transition-all duration-300"
+            className="bg-[var(--ink)] transition-all duration-300"
             style={{ width: `${vocabPct}%` }}
             title={`Vocabulario ${vocabCount}`}
           />
           <div
-            className="bg-[#b45309] transition-all duration-300"
+            className="bg-[var(--accent-amber)] transition-all duration-300"
             style={{ width: `${weakPct}%` }}
             title={`Palabras débiles ${weakWordsCount}`}
           />
           <div
-            className="bg-[#7c3aed] transition-all duration-300"
+            className="bg-[var(--accent-purple)] transition-all duration-300"
             style={{ width: `${soundsPct}%` }}
             title={`Sonidos ${soundsCount}`}
           />
           <div
-            className="bg-[#059669] transition-all duration-300"
+            className="bg-[var(--accent-emerald)] transition-all duration-300"
             style={{ width: `${sentencesPct}%` }}
             title={`Frases ${sentencesCount}`}
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm font-bold text-[#12151c]">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm font-bold text-[var(--ink)]">
           <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#12151c]" />
+            <span className="h-3 w-3 rounded-full bg-[var(--ink)]" />
             Vocabulario {vocabCount}
           </span>
           <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#b45309]" />
+            <span className="h-3 w-3 rounded-full bg-[var(--accent-amber)]" />
             Palabras débiles {weakWordsCount}
           </span>
           <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#7c3aed]" />
+            <span className="h-3 w-3 rounded-full bg-[var(--accent-purple)]" />
             Sonidos {soundsCount}
           </span>
           <span className="inline-flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#059669]" />
+            <span className="h-3 w-3 rounded-full bg-[var(--accent-emerald)]" />
             Frases {sentencesCount}
           </span>
         </div>
@@ -137,7 +137,7 @@ export function ReviewHeroCard({
           type="button"
           disabled={isSessionActive || totalCount === 0}
           onClick={onStartReview}
-          className="rounded-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold text-sm sm:text-base px-6 py-3 shadow-md border-none"
+          className="rounded-full bg-[var(--accent-blue)] hover:opacity-90 text-white font-bold text-sm sm:text-base px-6 py-3 shadow-md border-none"
         >
           Repasar los {totalCount} · {estimatedMinutes} min →
         </Button>
@@ -145,11 +145,11 @@ export function ReviewHeroCard({
           type="button"
           disabled={isSessionActive || totalCount === 0}
           onClick={onStartShortReview || onStartReview}
-          className="rounded-full border border-[#12151c]/35 bg-white/60 hover:bg-white/90 text-[#12151c] font-bold text-xs sm:text-sm px-5 py-2.5 transition-colors shadow-2xs"
+          className="rounded-full border border-[var(--ink)]/35 bg-white/60 hover:bg-white/90 text-[var(--ink)] font-bold text-xs sm:text-sm px-5 py-2.5 transition-colors shadow-2xs"
         >
           Solo 10 · 4 min
         </button>
-        <span className="text-xs sm:text-sm font-semibold text-[#12151c]/75 sm:ml-auto">
+        <span className="text-xs sm:text-sm font-semibold text-[var(--ink)]/75 sm:ml-auto">
           Puedes parar cuando quieras: se guarda el avance.
         </span>
       </div>

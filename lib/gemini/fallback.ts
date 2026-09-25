@@ -36,12 +36,20 @@ export function getErrorStatus(err: unknown): number | undefined {
   return undefined
 }
 
+export function isTimeoutLikeError(err: unknown): boolean {
+  const name = String((err as { name?: unknown })?.name ?? '').toLowerCase()
+  if (name === 'aborterror' || name === 'timeouterror') return true
+  const message = String((err as { message?: unknown })?.message ?? '').toLowerCase()
+  return ['timeout', 'timed out', 'aborted'].some((term) => message.includes(term))
+}
+
 export function shouldTryNextModel(err: unknown): boolean {
   const status = getErrorStatus(err)
   if (status === 400 || status === 401 || status === 403) return false
   if ([404, 408, 409, 425, 429].includes(status ?? -1)) return true
   if (typeof status === 'number' && status >= 500) return true
+  if (isTimeoutLikeError(err)) return true
   const message = String((err as { message?: unknown })?.message ?? '').toLowerCase()
-  return ['not found', 'quota', 'rate', 'resource exhausted', 'unavailable', 'timeout', 'internal']
+  return ['not found', 'quota', 'rate', 'resource exhausted', 'unavailable', 'internal']
     .some((term) => message.includes(term))
 }

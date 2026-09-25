@@ -1,7 +1,7 @@
 'use client'
 
-import Badge from '@/components/ui/Badge'
 import { PillButton } from '@/components/ui/PillButton'
+import PastelCard, { type PastelTone } from '@/components/layout/PastelCard'
 import {
   isConversationalMission,
   isScriptedMission,
@@ -13,13 +13,22 @@ import { getIllustration, type IllustrationKey } from '@/lib/illustrations/regis
 
 // Planned structure:
 // <MissionCard>
-//   <MissionHeader>
-//     <CenteredIllustration /> — enlarged 72px icon badge
-//     <CenteredPillsRow /> — category + CEFR + IA + featured badge
-//   </MissionHeader>
-//   <MissionBody /> — communicative goal + summarized context description
-//   <MissionHighlights /> — roleplay parties (if conversational)
-//   <MissionAction /> — start CTA button with clear resting border & solid hover
+//   <FeaturedMissionCard> (isFeatured === true)
+//     <PastelCard tone="coral">
+//       <HeaderRow> — SUGERIDA badge + Category/CEFR pills
+//       <ContentSection> — Title (Bricolage Grotesque) + Description in text-ink
+//       <BackgroundIllustration /> — SVG illustration as large background watermark
+//       <ActionRow> — Empezar CTA
+//     </PastelCard>
+//   </FeaturedMissionCard>
+//   <RegularMissionCard> (isFeatured === false)
+//     <PastelCard tone={categoryTone}>
+//       <HeaderRow> — Category & CEFR badges
+//       <ContentSection> — Title (Bricolage Grotesque) + Description in text-ink
+//       <BackgroundIllustration /> — SVG illustration as large background watermark
+//       <ActionRow> — Empezar CTA
+//     </PastelCard>
+//   </RegularMissionCard>
 // </MissionCard>
 
 interface MissionCardProps {
@@ -28,7 +37,7 @@ interface MissionCardProps {
   isFeatured?: boolean
 }
 
-function getMissionIllustrationKey(mission: OralMission): IllustrationKey {
+export function getMissionIllustrationKey(mission: OralMission): IllustrationKey {
   const id = mission.id.toLowerCase()
   if (id.includes('interview')) return 'categoryPersonalInterview'
   if (id.includes('frontend')) return 'categoryFrontend'
@@ -52,84 +61,150 @@ function getMissionIllustrationKey(mission: OralMission): IllustrationKey {
   return categoryMap[mission.category] ?? 'domainSpeaking'
 }
 
+export function getCategoryTone(category: MissionCategory | string): PastelTone {
+  switch (category) {
+    case 'service':
+      return 'butter'
+    case 'interview':
+      return 'sky'
+    case 'workplace':
+      return 'lilac'
+    case 'social':
+      return 'coral'
+    case 'generated':
+      return 'mint'
+    default:
+      return 'coral'
+  }
+}
+
 export function MissionCard({ mission, onSelect, isFeatured = false }: MissionCardProps) {
   const isScripted = isScriptedMission(mission)
   const isConversational = isConversationalMission(mission)
   const illustrationKey = getMissionIllustrationKey(mission)
   const Illustration = getIllustration(illustrationKey)
+  const tone = getCategoryTone(mission.category)
+  const cefrUpper = mission.recommendedCefr.toUpperCase()
 
-  return (
-    <article
-      className={`group layout-card-pad relative flex flex-col justify-between items-center text-center gap-4 rounded-md border transition-all duration-200 ${
-        isFeatured
-          ? 'border-primary/40 bg-surface-raised shadow-sm hover:border-primary/60 hover:shadow-md'
-          : 'border-border-subtle bg-surface-raised hover:border-border hover:shadow-sm'
-      }`}
-    >
-      <div className="flex w-full flex-col items-center gap-3">
-        {/* Centered Large Illustration & Badges */}
-        <div className="flex flex-col items-center justify-center gap-2.5 pt-1 w-full text-center">
-          <div className="flex h-18 w-18 shrink-0 items-center justify-center rounded-2xl bg-primary-soft/90 p-3 text-primary border border-primary/10 shadow-xs transition-transform duration-200 group-hover:scale-105 [&>svg]:h-full [&>svg]:w-auto">
-            <Illustration />
-          </div>
-
-          {/* Centered Badges Row */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
-            {isFeatured && (
-              <Badge label="Sugerida" variant="default" size="sm" />
-            )}
-            <Badge
-              label={MISSION_CATEGORY_LABELS[mission.category]}
-              variant="neutral"
-              size="sm"
-            />
-            <Badge
-              label={mission.recommendedCefr.toUpperCase()}
-              variant="neutral"
-              size="sm"
-            />
+  if (isFeatured) {
+    return (
+      <PastelCard
+        tone="coral"
+        className="col-span-full relative flex flex-col justify-between gap-5 p-5 @[28rem]:p-6 overflow-hidden rounded-3xl group min-h-[200px]"
+      >
+        <div className="flex flex-col gap-3 min-w-0 z-10 max-w-xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full bg-ink px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-paper select-none">
+              SUGERIDA
+            </span>
+            <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-3 py-1 text-tiny font-bold text-ink select-none">
+              {MISSION_CATEGORY_LABELS[mission.category]}
+            </span>
+            <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-1 text-tiny font-bold text-ink select-none">
+              {cefrUpper}
+            </span>
             {isScripted && mission.origin === 'generated' && (
-              <Badge label="IA" variant="neutral" size="sm" />
+              <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-1 text-tiny font-bold text-ink select-none">
+                IA
+              </span>
             )}
           </div>
+
+          <div className="flex flex-col gap-1 pr-6">
+            <h3 className="m-0 font-display text-xl @[28rem]:text-2xl font-extrabold text-ink leading-snug tracking-tight">
+              {mission.communicativeGoal}
+            </h3>
+            <p className="m-0 text-sm text-ink-secondary text-pretty line-clamp-2">
+              {mission.context}
+            </p>
+          </div>
+
+          {isConversational && (
+            <p className="m-0 font-mono text-tiny text-ink-muted">
+              {mission.role.model} · {mission.role.student}
+            </p>
+          )}
         </div>
 
-        {/* Goal & Summarized Context */}
-        <div className="flex flex-col items-center gap-1 min-w-0 w-full px-1 text-center">
-          <h3 className="m-0 text-balance text-label font-semibold text-fg text-center leading-snug">
+        <div className="flex items-center justify-between z-10 pt-1">
+          <PillButton
+            type="button"
+            variant="primary"
+            size="sm"
+            className="!bg-ink !text-paper border-none hover:!bg-ink/90 font-medium text-xs rounded-full min-h-10 px-5 transition-transform duration-150 active:scale-95"
+            onClick={() => onSelect(mission.id)}
+          >
+            Empezar →
+          </PillButton>
+        </div>
+
+        {/* Illustration in background right */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-4 -bottom-4 text-ink/15 transition-all duration-300 group-hover:scale-105 group-hover:text-ink/25 [&>svg]:h-44 @[28rem]:[&>svg]:h-56 [&>svg]:w-auto"
+        >
+          <Illustration />
+        </div>
+      </PastelCard>
+    )
+  }
+
+  return (
+    <PastelCard
+      tone={tone}
+      className="relative flex flex-col justify-between gap-4 p-5 overflow-hidden rounded-3xl group min-h-[190px]"
+    >
+      <div className="flex flex-col gap-3 min-w-0 z-10">
+        {/* Top-left category & level badges */}
+        <div className="flex flex-wrap items-center justify-start gap-1.5">
+          <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-0.5 text-tiny font-bold text-ink select-none">
+            {MISSION_CATEGORY_LABELS[mission.category]}
+          </span>
+          <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-0.5 text-tiny font-bold text-ink select-none">
+            {cefrUpper}
+          </span>
+          {isScripted && mission.origin === 'generated' && (
+            <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-0.5 text-tiny font-bold text-ink select-none">
+              IA
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1 min-w-0 pr-8">
+          <h3 className="m-0 font-display text-base @[28rem]:text-lg font-bold text-ink leading-tight tracking-tight">
             {mission.communicativeGoal}
           </h3>
-          <p className="m-0 text-pretty text-body-sm text-fg-muted text-center line-clamp-2 max-w-xs">
+          <p className="m-0 text-xs text-ink-secondary text-pretty line-clamp-2">
             {mission.context}
           </p>
         </div>
 
-        {/* Highlights / Roleplay Details */}
         {isConversational && (
-          <div className="w-full border-t border-border-subtle/50 pt-2 text-center text-tiny text-fg-subtle">
-            <p className="m-0 truncate font-mono text-tiny text-fg-subtle">
-              {mission.role.model} · {mission.role.student}
-            </p>
-          </div>
+          <p className="m-0 font-mono text-tiny text-ink-muted truncate">
+            {mission.role.model} · {mission.role.student}
+          </p>
         )}
       </div>
 
-      {/* Action CTA */}
-      <div className="w-full pt-1">
+      <div className="flex items-center justify-between z-10 pt-1">
         <PillButton
           type="button"
-          variant={isFeatured ? 'primary' : 'outline'}
+          variant="primary"
           size="sm"
-          className={`min-h-10 w-full font-medium transition-all duration-200 ${
-            isFeatured
-              ? '!bg-primary !text-on-primary border-none hover:!bg-primary-hover shadow-xs'
-              : '!bg-surface-sunken !text-fg border !border-border-strong group-hover:!bg-primary group-hover:!text-on-primary group-hover:!border-transparent'
-          }`}
+          className="!bg-ink !text-paper border-none hover:!bg-ink/90 font-medium text-xs rounded-full min-h-9 px-4 transition-transform duration-150 active:scale-95"
           onClick={() => onSelect(mission.id)}
         >
-          Empezar
+          Empezar →
         </PillButton>
       </div>
-    </article>
+
+      {/* Illustration in background right */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-4 -bottom-4 text-ink/15 transition-all duration-300 group-hover:scale-105 group-hover:text-ink/25 [&>svg]:h-36 @[28rem]:[&>svg]:h-44 [&>svg]:w-auto"
+      >
+        <Illustration />
+      </div>
+    </PastelCard>
   )
 }

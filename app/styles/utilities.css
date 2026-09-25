@@ -534,14 +534,13 @@
    surfaces layer white/ink at fixed alpha over --card — never a sibling
    tone's -soft/-deep swatch, which fights the card's own hue. */
 .pastel-card {
-  /* Real neutral chain (theme.css): --text-primary/secondary/tertiary/quaternary
-     feed text-fg / text-fg-muted / text-fg-subtle / text-fg-faint via @theme
-     inline. Redefining them here — not just the ink-* aliases — is what makes
-     any child using the plain neutral utilities legible on the pastel fill. */
-  --text-primary: var(--ink);
-  --text-secondary: var(--ink-secondary);
-  --text-tertiary: var(--ink-muted);
-  --text-quaternary: var(--ink-muted);
+  --ink: #12151c;
+  --ink-secondary: rgb(18 21 28 / 0.75);
+  --ink-muted: rgb(18 21 28 / 0.55);
+  --text-primary: #12151c;
+  --text-secondary: rgb(18 21 28 / 0.75);
+  --text-tertiary: rgb(18 21 28 / 0.55);
+  --text-quaternary: rgb(18 21 28 / 0.55);
   --border: rgb(18 21 28 / 0.15);
   --border-subtle: rgb(18 21 28 / 0.15);
   --border-default: rgb(18 21 28 / 0.15);

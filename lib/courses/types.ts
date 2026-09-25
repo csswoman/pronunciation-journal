@@ -11,7 +11,7 @@ export type ElectiveTrackId =
 
 export type ElectiveSpineIcon = "laptop" | "briefcase" | "mic" | "message" | "book";
 
-export type CoursePathTrackId = CefrLevelId | ElectiveTrackId;
+export type CoursePathTrackId = CefrLevelId | ElectiveTrackId | "opcionales";
 
 export type CoursePathLegendIcon = "sound-lab" | "optional";
 

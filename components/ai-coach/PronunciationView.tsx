@@ -5,14 +5,14 @@ import PhraseCard from "./pronunciation/PhraseCard";
 import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
 import SessionComplete from "./pronunciation/SessionComplete";
-import { SpokenLineFeedback } from "@/components/pronunciation-feedback/SpokenLineFeedback";
-import { PhonemeFix } from "@/components/pronunciation-feedback/PhonemeFix";
+import { LineResult } from "@/components/ai-coach/missions/scripted/LineResult";
 import { useSyllableFeedback } from "@/hooks/useSyllableFeedback";
 import { buildRemediation } from "@/lib/pronunciation/syllable-remediation";
 import { pickPrimaryFix } from "@/lib/pronunciation/pick-primary-fix";
 import { describePhonemeInWord } from "@/lib/pronunciation/phoneme-in-word";
 import { getPhraseMetadata } from "@/lib/ai-coach/phrase-metadata";
 import { usePronunciationCoach } from "./usePronunciationCoach";
+import { Loader2 } from "@/components/icons";
 
 // Planned structure:
 // <PronunciationView>
@@ -20,7 +20,7 @@ import { usePronunciationCoach } from "./usePronunciationCoach";
 //   <SessionComplete | MainPracticeScrollArea>
 //     <PhraseCard />
 //     <PhoneticTipCard />
-//     <FeedbackSection />
+//     <AnalyzingFeedbackBanner | LineResultCard />
 //   </SessionComplete>
 //   <RecordingControls />
 // </PronunciationView>
@@ -41,6 +41,8 @@ export default function PronunciationView() {
     hasMistakes,
     ipaLoading,
     isRecording,
+    speechError,
+    speechSupported,
     loadMoreFromPool,
     fetchMoreWithAI,
     masteredCount,
@@ -68,6 +70,10 @@ export default function PronunciationView() {
   })();
 
   const meta = getPhraseMetadata(activePhrase);
+
+  const correctCount = wordResults.filter((w) => w.status === "correct").length;
+  const totalCount = wordResults.length;
+  const score = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : hasMistakes ? 60 : 100;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -101,8 +107,8 @@ export default function PronunciationView() {
             onRepeat={() => speakPhrase(activePhrase)}
           />
 
-          {/* Tarjeta de tip fonético */}
-          {meta.phoneticTipTitle && !analyzing && (
+          {/* Tarjeta de tip fonético (solo si no hay análisis ni está analizando) */}
+          {meta.phoneticTipTitle && !analyzing && !hasAnalysis && (
             <CoachPanel
               focus={focus}
               focusTip={focusTip}
@@ -117,22 +123,33 @@ export default function PronunciationView() {
             />
           )}
 
-          {/* Feedback detallado palabra-a-palabra cuando hay análisis */}
+          {/* Banner de estado analizando */}
+          {analyzing && (
+            <div className="rounded-3xl border border-purple-500/30 bg-purple-500/10 p-5 flex flex-col items-center justify-center text-center gap-2.5 animate-pulse shadow-xs">
+              <div className="flex items-center gap-2.5 text-purple-700 dark:text-purple-300 font-bold text-base">
+                <Loader2 size={22} className="animate-spin text-purple-600 dark:text-purple-400" />
+                <span>Analizando tu pronunciación...</span>
+              </div>
+              <p className="text-xs text-fg-subtle m-0 max-w-md leading-relaxed">
+                Evaluando tu audio palabra a palabra y comparándolo con el modelo de voz nativo.
+              </p>
+            </div>
+          )}
+
+          {/* Feedback completo utilizando LineResult cuando hay análisis */}
           {hasAnalysis && wordResults.length > 0 && !analyzing && (
-            <div className="pb-1 flex flex-col gap-3">
-              <SpokenLineFeedback
+            <div className="w-full">
+              <LineResult
+                score={score}
                 wordResults={wordResults}
                 syllableMap={syllableMap}
+                fix={fix}
+                remediation={remediation}
+                targetText={activePhrase}
+                userAudioUrl={null}
+                onRetry={handleMicClick}
+                onContinue={advanceQueue}
               />
-              {fix && (
-                <PhonemeFix
-                  explanation={fix.explanation}
-                  remediation={remediation}
-                  phonemeIpa={fix.phonemeIpa}
-                  score={hasMistakes ? 60 : 100}
-                  status={fix.status}
-                />
-              )}
             </div>
           )}
 
@@ -140,6 +157,8 @@ export default function PronunciationView() {
           <RecordingControls
             isRecording={isRecording}
             isAnalyzing={analyzing}
+            error={speechError}
+            isSupported={speechSupported}
             onMicClick={handleMicClick}
             onSkip={advanceQueue}
           />

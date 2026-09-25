@@ -13,7 +13,7 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     category: 'service',
     recommendedCefr: 'A2',
     context: 'Pides algo de beber en una cafetería.',
-    communicativeGoal: 'Pedir una bebida y responder a las preguntas del camarero.',
+    communicativeGoal: 'Pedir una bebida y responder al camarero.',
     targets: [{ targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'coffee please' }],
     script: [
       { id: 'cafe-1', speaker: 'coach', text: 'Hi there! What can I get for you today?' },
@@ -30,8 +30,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'service',
     recommendedCefr: 'A2',
-    context: 'Preguntando en una estación cómo llegar al centro de la ciudad.',
-    communicativeGoal: 'Pedir indicaciones para tomar el transporte público correcto.',
+    context: 'Preguntando en una estación de tren.',
+    communicativeGoal: 'Pedir indicaciones para tomar el transporte público.',
     targets: [
       { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'thank you' },
       { targetId: phonemeTargetId('/ə/'), phrase: 'about twenty minutes' },
@@ -51,8 +51,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B1',
-    context: 'Los primeros minutos de una entrevista de trabajo como desarrollador.',
-    communicativeGoal: 'Presentarte y explicar por qué te interesa el puesto.',
+    context: 'Primeros minutos de una entrevista.',
+    communicativeGoal: 'Presentarte y explicar tu interés en el puesto.',
     targets: [{ targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'this team' }],
     script: [
       { id: 'int-1', speaker: 'coach', text: 'Thanks for coming in. Tell me a little about yourself.' },
@@ -78,8 +78,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B2',
-    context: 'Pregunta técnica sobre optimización de rendimiento y arquitectura frontend.',
-    communicativeGoal: 'Explicar cómo identificar y resolver problemas de rendimiento en una app web.',
+    context: 'Pregunta sobre optimización y arquitectura frontend.',
+    communicativeGoal: 'Explicar cómo resolver problemas de rendimiento en web.',
     targets: [
       { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'code splitting' },
       { targetId: phonemeTargetId('/ə/'), phrase: 'performance' },
@@ -104,8 +104,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B2',
-    context: 'Pregunta técnica sobre diagnóstico de cuellos de botella y bases de datos en el backend.',
-    communicativeGoal: 'Explicar cómo resolver consultas lentas y proteger la estabilidad de la API.',
+    context: 'Diagnóstico de cuellos de botella y bases de datos.',
+    communicativeGoal: 'Resolver consultas lentas y proteger la estabilidad de la API.',
     targets: [
       { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'healthy' },
       { targetId: contrastTargetId('/s/', '/z/'), phrase: 'stress tests' },
@@ -130,8 +130,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B2',
-    context: 'Explicando el desarrollo end-to-end de una funcionalidad completa como Full Stack developer.',
-    communicativeGoal: 'Describir la integración de esquema de base de datos, API REST y componentes de UI.',
+    context: 'Desarrollo end-to-end de una funcionalidad.',
+    communicativeGoal: 'Integrar esquema de BD, API REST y UI.',
     targets: [
       { targetId: contrastTargetId('/æ/', '/ʌ/'), phrase: 'instant feedback' },
       { targetId: contrastTargetId('/b/', '/v/'), phrase: 'validate payloads' },
@@ -161,8 +161,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B1',
-    context: 'Presentación concisa de tu proyecto de programación ante un reclutador técnico.',
-    communicativeGoal: 'Explicar el propósito de tu proyecto, su arquitectura y retos técnicos superados.',
+    context: 'Presentación concisa de tu proyecto de código.',
+    communicativeGoal: 'Explicar propósito, arquitectura y retos de tu proyecto.',
     targets: [
       { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'real-time' },
       { targetId: phonemeTargetId('/ə/'), phrase: 'productivity' },
@@ -187,8 +187,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B2',
-    context: 'Pregunta de comportamiento (STAR) sobre la resolución constructiva de un desacuerdo técnico.',
-    communicativeGoal: 'Explicar cómo tomaste una decisión con datos, benchmarking y colaboración.',
+    context: 'Resolución de un desacuerdo técnico en el equipo.',
+    communicativeGoal: 'Defender una decisión técnica con datos y benchmarking.',
     targets: [
       { targetId: contrastTargetId('/θ/', '/ð/'), phrase: 'three weeks' },
       { targetId: contrastTargetId('/ʃ/', '/tʃ/'), phrase: 'benchmarks showed' },
@@ -213,8 +213,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'interview',
     recommendedCefr: 'B1',
-    context: 'Pregunta de entrevista sobre visión profesional, objetivos de crecimiento y aprendizaje.',
-    communicativeGoal: 'Expresar tus fortalezas técnicas, curiosidad y metas a medio plazo.',
+    context: 'Objetivos de crecimiento y aprendizaje.',
+    communicativeGoal: 'Expresar tus fortalezas técnicas y metas profesionales.',
     targets: [
       { targetId: contrastTargetId('/iː/', '/ɪ/'), phrase: 'deepen my skills' },
       { targetId: phonemeTargetId('/ɹ/'), phrase: 'thoroughly' },
@@ -239,8 +239,8 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     origin: 'authored',
     category: 'social',
     recommendedCefr: 'B1',
-    context: 'Charla informal virtual o coffee break con un compañero de equipo antes de una reunión.',
-    communicativeGoal: 'Hacer conversación informal (small talk) sobre el fin de semana y trabajo remoto.',
+    context: 'Charla informal con un compañero antes de una reunión.',
+    communicativeGoal: 'Hacer conversación casual sobre trabajo y fin de semana.',
     targets: [
       { targetId: contrastTargetId('/æ/', '/ʌ/'), phrase: 'catch up' },
       { targetId: phonemeTargetId('/ə/'), phrase: 'relaxing' },
@@ -260,4 +260,3 @@ export const SCRIPTED_MISSIONS: readonly ScriptedMission[] = [
     ],
   },
 ]
-

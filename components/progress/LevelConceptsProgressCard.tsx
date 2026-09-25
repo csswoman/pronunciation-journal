@@ -3,16 +3,15 @@
 // Planned structure:
 // <LevelConceptsProgressCard>
 //   <CardHeader>
-//     <TitleAndLevelPicker />
-//     <ProgressMetricsSummary routeCompleted={completedRouteCount} mastered={masteredCount} inReview={inReviewCount} />
-//     <ProgressBar value={masteredPct} />
+//     <KickerAndCefrPicker selectedLevel={selectedLevel} onSelect={setSelectedLevel} />
+//     <TitleText title="Gramática y conceptos" />
 //   </CardHeader>
-//   <TabNavigation tabs={["mastered", "review", "pending"]} />
+//   <ProgressBarBlock levelTitle={levelData.title} mastered={mastered.length} total={total} pct={masteredPct} />
+//   <StatusPillsTabList activeTab={activeTab} onSelectTab={setActiveTab} />
 //   <LevelConceptsList items={currentList} activeTab={activeTab} selectedLevel={selectedLevel} />
 // </LevelConceptsProgressCard>
 
 import { useState } from "react";
-import { Check, Timer, BookOpen } from "@/components/icons";
 import { COURSE_PATH_CURRICULUM } from "@/lib/courses/curriculum";
 import type { CefrLevelId, CoursePathTrackId } from "@/lib/courses/types";
 import { cn } from "@/lib/cn";
@@ -32,12 +31,6 @@ interface Props {
   initialLevel: CefrLevelId;
 }
 
-const TAB_CONFIG = [
-  { id: "mastered" as const, label: "Retenidos", icon: Check, activeClass: "border-success text-success" },
-  { id: "review" as const, label: "En aprendizaje", icon: Timer, activeClass: "border-warning text-warning" },
-  { id: "pending" as const, label: "Por iniciar", icon: BookOpen, activeClass: "border-primary text-primary" },
-];
-
 export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel }: Props) {
   const [selectedLevel, setSelectedLevel] = useState<CoursePathTrackId>(initialLevel);
   const [activeTab, setActiveTab] = useState<StatusTab>("mastered");
@@ -47,14 +40,14 @@ export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel
     COURSE_PATH_CURRICULUM.levels[0];
 
   const completedSlugSet = new Set(
-    completedRoute?.map((r) => r.lessonSlug) ?? []
+    completedRoute?.map((r) => r.lessonSlug) ?? [],
   );
 
   const topicStatusByDeck = buildTopicStatusByDeck(topics);
 
   const allLessons: LevelConceptItem[] = levelData.units.flatMap((unit) =>
     unit.lessons
-      .filter((lesson): lesson is typeof lesson & { slug: string } => !!lesson.slug)
+      .filter((lesson): lesson is typeof lesson & { slug: string } => Boolean(lesson.slug))
       .map((lesson) => {
         const isRouteCompleted = completedSlugSet.has(lesson.slug);
         const rawStatus = topicStatusByDeck.get(lesson.slug);
@@ -79,103 +72,125 @@ export function LevelConceptsProgressCard({ topics, completedRoute, initialLevel
   const masteredPct = total > 0 ? Math.round((mastered.length / total) * 100) : 0;
   const currentList = activeTab === "mastered" ? mastered : activeTab === "review" ? inReview : pending;
 
-  const metricIndicators = [
-    { count: completedRouteCount, label: "lecciones recorridas", dotClass: "bg-success" },
-    { count: mastered.length, label: "retenidos", dotClass: "bg-primary" },
-    { count: inReview.length, label: "en aprendizaje", dotClass: "bg-warning" },
+  const tabs = [
+    { id: "mastered" as const, label: "Dominados", count: mastered.length, accessibleLabel: "retenidos" },
+    { id: "review" as const, label: "En repaso", count: inReview.length, accessibleLabel: "en aprendizaje" },
+    { id: "pending" as const, label: "Faltan", count: pending.length, accessibleLabel: "por iniciar" },
   ];
 
   return (
-    <section className="flex flex-col gap-3.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:p-5">
-      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <span className="font-kicker font-semibold text-fg-subtle">Cobertura y retención</span>
-          <h2 className="text-h4 font-semibold text-fg">Gramática y Conceptos</h2>
-        </div>
-
-        <div className="flex max-w-full items-center gap-1 overflow-x-auto no-scrollbar rounded-md border border-border-subtle bg-surface-sunken p-0.5" role="group" aria-label="Seleccionar nivel CEFR">
-          {COURSE_PATH_CURRICULUM.levels.map((lvl) => (
-            <button
-              key={lvl.id}
-              type="button"
-              aria-pressed={selectedLevel === lvl.id}
-              aria-label={`Nivel ${lvl.id.toUpperCase()}`}
-              onClick={() => setSelectedLevel(lvl.id)}
-              className={cn(
-                "flex min-h-[36px] min-w-[36px] sm:min-h-[32px] sm:min-w-[32px] items-center justify-center rounded px-2.5 py-1 text-caption font-semibold uppercase transition-colors focus-ring",
-                selectedLevel === lvl.id
-                  ? "bg-surface-raised text-fg shadow-xs"
-                  : "text-fg-muted hover:text-fg",
-              )}
-            >
-              {lvl.id}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center justify-between gap-1 text-body-sm text-fg-muted">
-          <span>{levelData.title}</span>
-          <span className="font-semibold text-fg">
-            {mastered.length}/{total} retenidos ({masteredPct}%)
+    <section className="flex flex-col justify-between rounded-3xl border border-border-subtle bg-surface-raised p-6 sm:p-7">
+      <div>
+        {/* Header with CEFR Level Picker */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="font-kicker font-bold text-xs sm:text-sm uppercase tracking-wider text-fg-subtle">
+            DOMINIO POR TEMAS
           </span>
+
+          {/* CEFR Pills */}
+          <div
+            className="flex items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken p-1"
+            role="group"
+            aria-label="Seleccionar nivel CEFR"
+          >
+            {COURSE_PATH_CURRICULUM.levels.map((lvl) => {
+              const isSelected = selectedLevel === lvl.id;
+              return (
+                <button
+                  key={lvl.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedLevel(lvl.id)}
+                  className={cn(
+                    "min-h-[30px] min-w-[34px] rounded-full px-3 py-0.5 text-xs sm:text-sm font-bold uppercase transition-all focus-ring",
+                    isSelected
+                      ? "bg-primary text-on-primary shadow-xs"
+                      : "text-fg-muted hover:text-fg",
+                  )}
+                >
+                  {lvl.id}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <div
-          role="progressbar"
-          aria-valuenow={masteredPct}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={`Porcentaje de conceptos retenidos en nivel ${levelData.title}`}
-          className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken"
-        >
-          <span
-            className="block h-full w-full rounded-full bg-success origin-left transition-transform duration-300 ease-out"
-            style={{ transform: `scaleX(${Math.min(1, Math.max(0, masteredPct / 100))})` }}
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-3 text-caption text-fg-muted pt-0.5">
-          {metricIndicators.map(({ count, label, dotClass }) => (
-            <span key={label} className="flex items-center gap-1.5">
-              <span className={cn("inline-block h-2 w-2 rounded-full", dotClass)} aria-hidden="true" />
-              <span className="text-fg-secondary"><strong className="text-fg">{count}</strong> {label}</span>
+
+        <h3 className="font-display text-2xl sm:text-3xl font-bold text-fg leading-tight mt-1.5">
+          Gramática y conceptos
+        </h3>
+
+        {/* Progress header & bar */}
+        <div className="mt-4 sm:mt-5 flex flex-col gap-2.5">
+          <div className="flex items-center justify-between text-sm sm:text-base font-semibold">
+            <span className="text-fg-muted font-medium">{levelData.title}</span>
+            <span className="text-fg font-bold">
+              {mastered.length}/{total} retenidos ({masteredPct}%)
             </span>
-          ))}
+          </div>
+
+          <div
+            role="progressbar"
+            aria-valuenow={masteredPct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Porcentaje de conceptos retenidos en nivel ${levelData.title}`}
+            className="h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken"
+          >
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300"
+              style={{ width: `${Math.min(100, Math.max(0, masteredPct))}%` }}
+            />
+          </div>
+
+          {/* Auxiliary metric for route completion */}
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-fg-muted pt-0.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-success" aria-hidden="true" />
+            <span>
+              <strong className="text-fg font-semibold">{completedRouteCount}</strong> lecciones recorridas
+            </span>
+          </div>
+        </div>
+
+        {/* Status Pills */}
+        <div
+          className="mt-5 flex flex-wrap items-center gap-2.5"
+          role="tablist"
+          aria-label="Filtrar por estado de concepto"
+        >
+          {tabs.map(({ id, label, count, accessibleLabel }) => {
+            const isActive = activeTab === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                id={`tab-${id}`}
+                aria-controls="panel-concepts"
+                aria-selected={isActive}
+                aria-label={`${label} (${count}) - ${accessibleLabel}`}
+                onClick={() => setActiveTab(id)}
+                className={cn(
+                  "rounded-full border px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all focus-ring",
+                  isActive
+                    ? "border-primary/50 bg-primary/10 text-primary shadow-xs"
+                    : "border-border-subtle bg-surface-sunken text-fg-muted hover:text-fg",
+                )}
+              >
+                {label} {count}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto no-scrollbar border-b border-border-subtle pt-1" role="tablist" aria-label="Filtrar por estado de concepto">
-        {TAB_CONFIG.map(({ id, label, icon: Icon, activeClass }) => {
-          const count = id === "mastered" ? mastered.length : id === "review" ? inReview.length : pending.length;
-          const isActive = activeTab === id;
-          return (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              id={`tab-${id}`}
-              aria-controls="panel-concepts"
-              aria-selected={isActive}
-              onClick={() => setActiveTab(id)}
-              className={cn(
-                "flex min-h-[40px] shrink-0 items-center gap-1.5 border-b-2 px-3 py-1.5 text-body-sm font-medium whitespace-nowrap transition-colors focus-ring",
-                isActive
-                  ? `${activeClass} font-semibold`
-                  : "border-transparent text-fg-muted hover:text-fg",
-              )}
-            >
-              <Icon size={15} aria-hidden />
-              <span>{label} ({count})</span>
-            </button>
-          );
-        })}
+      {/* List */}
+      <div className="mt-5">
+        <LevelConceptsList
+          items={currentList}
+          activeTab={activeTab}
+          selectedLevel={selectedLevel}
+        />
       </div>
-
-      <LevelConceptsList
-        items={currentList}
-        activeTab={activeTab}
-        selectedLevel={selectedLevel}
-      />
     </section>
   );
 }

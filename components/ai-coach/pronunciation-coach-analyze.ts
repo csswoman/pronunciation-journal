@@ -97,11 +97,17 @@ export async function analyzePronunciationRecording({
       timeMs: 0,
       exercisePayload: { targetWord: activePhrase },
     };
-    await savePracticeAnswer(userId, answer);
-    await recordActivitySession(userId, {
-      practiceContext: "ai_coach",
-      sessionResult: buildSessionResult([{ ...answer, completedAt: new Date() }]),
-      metadata: { coachTool: "pronunciation_coach" },
+    // The learner-facing result is already ready. Persist it without keeping
+    // the feedback UI blocked on Dexie/Supabase latency.
+    void (async () => {
+      await savePracticeAnswer(userId, answer);
+      await recordActivitySession(userId, {
+        practiceContext: "ai_coach",
+        sessionResult: buildSessionResult([{ ...answer, completedAt: new Date() }]),
+        metadata: { coachTool: "pronunciation_coach" },
+      });
+    })().catch((error) => {
+      console.error("[pronunciation-coach] attempt persistence failed", error);
     });
   }
 }

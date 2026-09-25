@@ -19,10 +19,20 @@ import type { CefrLevelId, CoursePathLevel } from "@/lib/courses/types";
 
 const DEFAULT_LEVEL: CefrLevelId = "a1";
 
+const OPTIONAL_TAB_LEVEL: CoursePathLevel = {
+  id: "opcionales",
+  spineLabel: "Opcionales",
+  spineSubtitle: "Rutas y temas",
+  title: "Temas opcionales",
+  description: "Rutas especializadas y temas opcionales.",
+  units: [],
+};
+
 interface CoursePathLevelPickerProps {
   levels: CoursePathLevel[];
-  selectedLevelId: CefrLevelId;
+  selectedLevelId: string;
   mobileSearch?: ReactNode;
+  electiveTracks?: CoursePathLevel[];
 }
 
 async function getOptionalUserId(): Promise<string | null> {
@@ -51,17 +61,24 @@ function LevelCardTab({
   completedCount,
   totalCount,
 }: LevelCardTabProps) {
-  const href = level.id === DEFAULT_LEVEL ? "/courses" : `/courses?level=${level.id}`;
+  const href =
+    level.id === DEFAULT_LEVEL
+      ? "/courses"
+      : level.id === "opcionales"
+      ? "/courses?level=opcionales"
+      : `/courses?level=${level.id}`;
+
+  const ariaLabel =
+    level.id === "opcionales"
+      ? `Temas opcionales: ${completedCount} de ${totalCount} lecciones completadas`
+      : `Nivel ${level.spineLabel}: ${completedCount} de ${totalCount} lecciones completadas`;
 
   return (
     <Link
       href={href}
       aria-current={isActive ? "page" : undefined}
-      aria-label={`Nivel ${level.spineLabel}: ${completedCount} de ${totalCount} lecciones completadas`}
-      className={cn(
-        "course-path__level",
-        isActive && "course-path__level--on"
-      )}
+      aria-label={ariaLabel}
+      className={cn("course-path__level", isActive && "course-path__level--on")}
     >
       <span className="course-path__level-lv">{level.spineLabel}</span>
       {isActive && (
@@ -77,7 +94,7 @@ function AssessmentActions({
   selectedLevelId,
   learnerLevelId,
 }: {
-  selectedLevelId: CefrLevelId;
+  selectedLevelId: string;
   learnerLevelId: CefrLevelId;
 }) {
   const isNavigatingOwnLevel = learnerLevelId === selectedLevelId;
@@ -108,9 +125,26 @@ export default function CoursePathLevelPicker({
   levels,
   selectedLevelId,
   mobileSearch,
+  electiveTracks,
 }: CoursePathLevelPickerProps) {
   const [completedCounts, setCompletedCounts] = useState<Record<string, number>>({});
-  const learnerLevelId = useLearnerLevelId(selectedLevelId);
+  const validCefrLevel = (["a1", "a2", "b1", "b2", "c1", "c2"] as CefrLevelId[]).includes(
+    selectedLevelId as CefrLevelId
+  )
+    ? (selectedLevelId as CefrLevelId)
+    : DEFAULT_LEVEL;
+  const learnerLevelId = useLearnerLevelId(validCefrLevel);
+
+  const electives = electiveTracks ?? [];
+  const optionalTotalCount = electives.reduce(
+    (sum, track) => sum + track.units.reduce((uSum, u) => uSum + u.lessons.length, 0),
+    0
+  );
+  const isOptionalActive =
+    selectedLevelId === "opcionales" ||
+    selectedLevelId === "electivas" ||
+    selectedLevelId === "optional" ||
+    electives.some((track) => track.id === selectedLevelId);
 
   useEffect(() => {
     let cancelled = false;
@@ -122,7 +156,8 @@ export default function CoursePathLevelPicker({
         return;
       }
 
-      const allKeys = levels.flatMap((level) =>
+      const allLevels = [...levels, ...electives];
+      const allKeys = allLevels.flatMap((level) =>
         level.units.flatMap((unit) =>
           unit.lessons.map((lesson) => completionKey(userId, level.id, lesson.id))
         )
@@ -150,6 +185,18 @@ export default function CoursePathLevelPicker({
         nextCounts[level.id] = count;
       }
 
+      let optionalCount = 0;
+      for (const track of electives) {
+        for (const unit of track.units) {
+          for (const lesson of unit.lessons) {
+            if (completedSet.has(`${track.id}:${lesson.id}`)) {
+              optionalCount++;
+            }
+          }
+        }
+      }
+      nextCounts["opcionales"] = optionalCount;
+
       setCompletedCounts(nextCounts);
     }
 
@@ -160,7 +207,7 @@ export default function CoursePathLevelPicker({
     return () => {
       cancelled = true;
     };
-  }, [levels]);
+  }, [levels, electives]);
 
   const selectedLevel = levels.find((l) => l.id === selectedLevelId) ?? levels[0];
 
@@ -175,7 +222,7 @@ export default function CoursePathLevelPicker({
         {levels.map((level) => {
           const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
           const completedCount = completedCounts[level.id] ?? 0;
-          const isActive = level.id === selectedLevelId;
+          const isActive = level.id === selectedLevelId && !isOptionalActive;
 
           return (
             <LevelCardTab
@@ -187,6 +234,15 @@ export default function CoursePathLevelPicker({
             />
           );
         })}
+        {electives.length > 0 && (
+          <LevelCardTab
+            key="opcionales"
+            level={OPTIONAL_TAB_LEVEL}
+            isActive={isOptionalActive}
+            completedCount={completedCounts["opcionales"] ?? 0}
+            totalCount={optionalTotalCount}
+          />
+        )}
       </nav>
 
       {/* Mobile Toolbar (Search + Level Selector side-by-side) */}
@@ -200,7 +256,7 @@ export default function CoursePathLevelPicker({
           <summary className="course-path__level-picker-mobile-summary">
             <span className="course-path__level-picker-mobile-label">Nivel actual</span>
             <strong className="course-path__level-picker-mobile-current">
-              {selectedLevel.spineLabel}
+              {isOptionalActive ? "Opcionales" : selectedLevel.spineLabel}
             </strong>
             <ChevronDown size={14} aria-hidden />
           </summary>
@@ -209,7 +265,7 @@ export default function CoursePathLevelPicker({
               {levels.map((level) => {
                 const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
                 const completedCount = completedCounts[level.id] ?? 0;
-                const isActive = level.id === selectedLevelId;
+                const isActive = level.id === selectedLevelId && !isOptionalActive;
 
                 return (
                   <LevelCardTab
@@ -221,6 +277,15 @@ export default function CoursePathLevelPicker({
                   />
                 );
               })}
+              {electives.length > 0 && (
+                <LevelCardTab
+                  key="opcionales"
+                  level={OPTIONAL_TAB_LEVEL}
+                  isActive={isOptionalActive}
+                  completedCount={completedCounts["opcionales"] ?? 0}
+                  totalCount={optionalTotalCount}
+                />
+              )}
             </nav>
             <div className="course-path__level-picker-mobile-actions">
               <AssessmentActions selectedLevelId={selectedLevelId} learnerLevelId={learnerLevelId} />

@@ -21,6 +21,10 @@ describe('Gemini fallback classification', () => {
     expect(shouldTryNextModel(new Error(message))).toBe(true)
   })
 
+  it.each(['AbortError', 'TimeoutError'])('retries %s from a per-model deadline', (name) => {
+    expect(shouldTryNextModel({ name, message: 'This operation was aborted' })).toBe(true)
+  })
+
   it('reads statusCode when status is absent', () => {
     expect(getErrorStatus({ statusCode: 408 })).toBe(408)
   })

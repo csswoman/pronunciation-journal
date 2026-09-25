@@ -57,7 +57,7 @@ export function ReviewCategoryGrid({
           {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3.5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--butter)] dark:bg-[var(--butter-deep)] text-[#12151c] shadow-xs shrink-0">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--butter)] dark:bg-[var(--butter-deep)] text-[var(--ink)] shadow-xs shrink-0">
                 <AlertCircle className="h-5 w-5 stroke-[2.5]" />
               </span>
               <div>
@@ -116,7 +116,7 @@ export function ReviewCategoryGrid({
           {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3.5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--coral-soft)] dark:bg-[var(--coral-deep)] text-[#12151c] shadow-xs shrink-0">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--coral-soft)] dark:bg-[var(--coral-deep)] text-[var(--ink)] shadow-xs shrink-0">
                 <BookOpen className="h-5 w-5 stroke-[2.5]" />
               </span>
               <div>
@@ -178,7 +178,7 @@ export function ReviewCategoryGrid({
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3.5">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--lilac-soft)] dark:bg-[var(--lilac-deep)] text-[#12151c] shadow-xs shrink-0">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--lilac-soft)] dark:bg-[var(--lilac-deep)] text-[var(--ink)] shadow-xs shrink-0">
                   <Volume2 className="h-5 w-5 stroke-[2.5]" />
                 </span>
                 <div>
@@ -207,7 +207,7 @@ export function ReviewCategoryGrid({
                         <span className="text-text-secondary font-bold">{s.example}</span>
                       </div>
                       {isOverdueAlert ? (
-                        <span className="rounded-full bg-[var(--coral)] dark:bg-[var(--coral-deep)] px-3 py-1 text-xs font-black text-[#12151c] shadow-2xs">
+                        <span className="rounded-full bg-[var(--coral)] dark:bg-[var(--coral-deep)] px-3 py-1 text-xs font-black text-[var(--ink)] shadow-2xs">
                           {daysOverdue} d
                         </span>
                       ) : (
