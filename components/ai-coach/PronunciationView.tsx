@@ -11,12 +11,17 @@ import { useSyllableFeedback } from "@/hooks/useSyllableFeedback";
 import { buildRemediation } from "@/lib/pronunciation/syllable-remediation";
 import { pickPrimaryFix } from "@/lib/pronunciation/pick-primary-fix";
 import { describePhonemeInWord } from "@/lib/pronunciation/phoneme-in-word";
+import { getPhraseMetadata } from "@/lib/ai-coach/phrase-metadata";
 import { usePronunciationCoach } from "./usePronunciationCoach";
 
 // Planned structure:
 // <PronunciationView>
 //   <PronunciationProgress />
-//   <SessionComplete | PhraseCard + SpokenLineFeedback + CoachPanel />
+//   <SessionComplete | MainPracticeScrollArea>
+//     <PhraseCard />
+//     <PhoneticTipCard />
+//     <FeedbackSection />
+//   </SessionComplete>
 //   <RecordingControls />
 // </PronunciationView>
 
@@ -57,10 +62,12 @@ export default function PronunciationView() {
     if (!primaryFix) return null;
     const explanation = describePhonemeInWord(primaryFix.syllableText, primaryFix.culprit);
     if (!explanation) return null;
-    const phonemeIpa = remediation?.ipa ?? `/${primaryFix.culprit.ipa ?? ''}/`;
-    const status: 'incorrect' | 'missing' = primaryFix.culprit.status === 'missing' ? 'missing' : 'incorrect';
+    const phonemeIpa = remediation?.ipa ?? `/${primaryFix.culprit.ipa ?? ""}/`;
+    const status: "incorrect" | "missing" = primaryFix.culprit.status === "missing" ? "missing" : "incorrect";
     return { explanation, phonemeIpa, status };
   })();
+
+  const meta = getPhraseMetadata(activePhrase);
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -80,7 +87,7 @@ export default function PronunciationView() {
           loadingMore={fetchingPhrases}
         />
       ) : (
-        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4 gap-4 sm:gap-5">
           <PhraseCard
             phrase={activePhrase}
             wordIPAs={wordIPAs}
@@ -91,11 +98,28 @@ export default function PronunciationView() {
             onListen={() => speakPhrase(activePhrase)}
             onSlow={() => speakPhrase(activePhrase, 0.55)}
             onListenWord={(word) => speakPhrase(word, 0.75)}
+            onRepeat={() => speakPhrase(activePhrase)}
           />
 
-          {/* Feedback detallado palabra-a-palabra (mismo componente que Misiones) */}
+          {/* Tarjeta de tip fonético */}
+          {meta.phoneticTipTitle && !analyzing && (
+            <CoachPanel
+              focus={focus}
+              focusTip={focusTip}
+              focusProgress={focusProgress}
+              savedWords={savedWords}
+              onListen={(word) => speakPhrase(word, 0.75)}
+              onSlow={(word) => speakPhrase(word, 0.55)}
+              onSave={handleSavePractice}
+              onRetry={handleMicClick}
+              tipTitle={meta.phoneticTipTitle}
+              tipBody={meta.phoneticTipBody}
+            />
+          )}
+
+          {/* Feedback detallado palabra-a-palabra cuando hay análisis */}
           {hasAnalysis && wordResults.length > 0 && !analyzing && (
-            <div className="px-4 pb-3 flex flex-col gap-2">
+            <div className="pb-1 flex flex-col gap-3">
               <SpokenLineFeedback
                 wordResults={wordResults}
                 syllableMap={syllableMap}
@@ -112,32 +136,15 @@ export default function PronunciationView() {
             </div>
           )}
 
-          {focus && !analyzing && (
-            <div className="px-4 pb-4 shrink-0">
-              <CoachPanel
-                focus={focus}
-                focusTip={focusTip}
-                focusProgress={focusProgress}
-                savedWords={savedWords}
-                onListen={(word) => speakPhrase(word, 0.75)}
-                onSlow={(word) => speakPhrase(word, 0.55)}
-                onSave={handleSavePractice}
-                onRetry={handleMicClick}
-              />
-            </div>
-          )}
+          {/* Controles de grabación */}
+          <RecordingControls
+            isRecording={isRecording}
+            isAnalyzing={analyzing}
+            onMicClick={handleMicClick}
+            onSkip={advanceQueue}
+          />
         </div>
-      )}
-
-      {!sessionDone && (
-        <RecordingControls
-          isRecording={isRecording}
-          isAnalyzing={analyzing}
-          onMicClick={handleMicClick}
-          onSkip={advanceQueue}
-        />
       )}
     </div>
   );
 }
-

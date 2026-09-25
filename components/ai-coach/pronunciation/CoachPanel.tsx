@@ -1,9 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Volume2, BookmarkPlus, Check, Circle, Lightbulb } from "@/components/icons";
-import { RemediationSequence } from '@/components/pronunciation-feedback/RemediationSequence'
-import { isActionablePronunciationFeedbackCopyEnabled } from '@/lib/pronunciation/feedback/copy-flag'
+import { Volume2, BookmarkPlus, Check } from "@/components/icons";
+import PastelCard from "@/components/layout/PastelCard";
+import { RemediationSequence } from "@/components/pronunciation-feedback/RemediationSequence";
+import { isActionablePronunciationFeedbackCopyEnabled } from "@/lib/pronunciation/feedback/copy-flag";
+
+// Planned structure:
+// <CoachPanel>
+//   <PastelCard tone="lilac">
+//     <PhoneticIconContainer />
+//     <PhoneticTipContent>
+//       <TipTitle />
+//       <TipDescription />
+//       <OptionalRemediationControls />
+//     </PhoneticTipContent>
+//   </PastelCard>
+// </CoachPanel>
 
 interface FocusPhoneme {
   word: string;
@@ -17,136 +30,124 @@ interface FocusProgress {
 }
 
 interface CoachPanelProps {
-  focus: FocusPhoneme;
-  focusTip: string | null;
-  focusProgress: FocusProgress | null;
-  savedWords: Set<string>;
+  focus?: FocusPhoneme | null;
+  focusTip?: string | null;
+  focusProgress?: FocusProgress | null;
+  savedWords?: Set<string>;
   onListen: (word: string) => void;
   onSlow?: (word: string) => void;
-  onSave: (word: string) => void;
+  onSave?: (word: string) => void;
   onRetry?: () => void;
+  tipTitle?: string;
+  tipBody?: string;
 }
 
 export default function CoachPanel({
   focus,
   focusTip,
-  focusProgress,
-  savedWords,
+  savedWords = new Set(),
   onListen,
   onSlow,
   onSave,
   onRetry,
+  tipTitle,
+  tipBody,
 }: CoachPanelProps) {
-  const isSaved = savedWords.has(focus.word.toLowerCase());
+  const isSaved = focus ? savedWords.has(focus.word.toLowerCase()) : false;
   const [justSaved, setJustSaved] = useState(false);
   const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled();
 
   const handleSave = () => {
-    if (isSaved) return;
+    if (!focus || isSaved || !onSave) return;
     onSave(focus.word);
     setJustSaved(true);
     setTimeout(() => setJustSaved(false), 1500);
   };
 
-  const attempts = (focusProgress?.total ?? 0);
+  const title = tipTitle ?? (feedbackCopyEnabled && focus ? `Ojo con /${focus.ipa}/` : focus ? `“${focus.word}”` : "Consejo de pronunciación");
+  const description = tipBody ?? (feedbackCopyEnabled ? focusTip : null);
 
   return (
-    <div className="rounded-xl border border-(--line-divider) bg-(--card-bg) p-4">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div>
-          <p className="text-body-sm mb-1.5 font-medium text-fg-subtle">
-            {feedbackCopyEnabled ? "Let's fix one thing" : "Next practice"}
-          </p>
-          {feedbackCopyEnabled ? (
-            <div className="text-body-lg font-medium leading-snug tracking-[-0.01em] text-(--fg)">
-              <span>&ldquo;{focus.word}&rdquo;</span>
-              <ArrowRight size={14} strokeWidth={2} className="mx-1.5 inline-block align-middle text-fg-subtle" aria-hidden />
-              <span className="rounded bg-[color-mix(in_oklch,var(--primary)_12%,transparent)] px-2 py-0.5 font-mono text-base font-medium text-primary">
-                /{focus.ipa}/
-              </span>
-            </div>
-          ) : (
-            <div className="text-body-lg font-medium leading-snug tracking-[-0.01em] text-(--fg)">
-              &ldquo;{focus.word}&rdquo;
-            </div>
-          )}
-        </div>
-
-        <div className="flex gap-1 shrink-0">
-          <IconBtn title="Listen to this sound" onClick={() => onListen(focus.word)}>
-            <Volume2 size={14} strokeWidth={2} aria-hidden />
-          </IconBtn>
-          <IconBtn title={isSaved ? "Saved" : "Save for practice"} onClick={handleSave} disabled={isSaved}>
-            {isSaved
-              ? <Check size={14} strokeWidth={2.25} className={justSaved ? "animate-bounce" : ""} aria-hidden />
-              : <BookmarkPlus size={14} strokeWidth={2} aria-hidden />
-            }
-          </IconBtn>
-        </div>
-      </div>
-
-      {/* Tip */}
-      {feedbackCopyEnabled && focusTip && (
-        <div className="mt-2 flex items-start gap-2.5 rounded-lg bg-(--btn-regular-bg) px-3 py-2.5 text-body-sm leading-relaxed text-fg-muted">
-          <Lightbulb size={14} className="mt-px shrink-0 text-warning" />
-          <span>{focusTip}</span>
-        </div>
-      )}
-
-      <div className="mt-3">
-        <RemediationSequence
-          cue={feedbackCopyEnabled ? (focusTip ?? undefined) : undefined}
-          onListen={() => onListen(focus.word)}
-          onSlow={() => (onSlow ?? onListen)(focus.word)}
-          onRetry={onRetry ?? (() => undefined)}
-          compact
-        />
-      </div>
-
-      {/* Stats footer */}
-      {focusProgress && focusProgress.total > 0 && (
-        <div className="mt-3 flex items-center justify-between border-t border-(--line-divider) pt-3 text-caption text-fg-subtle">
-          <span className="tabular-nums">
-            {attempts} attempt{attempts !== 1 ? "s" : ""} this session
-          </span>
-          {feedbackCopyEnabled && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-(--btn-regular-bg) px-2.5 py-0.5 font-medium text-fg-muted">
-              <Circle size={8} fill="currentColor" />
-              /{focus.ipa}/ in focus
-            </span>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function IconBtn({
-  title, onClick, disabled, children,
-}: {
-  title: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      title={title}
-      aria-label={title}
-      onClick={onClick}
-      disabled={disabled}
-      className="flex h-7 w-7 items-center justify-center rounded-md border-none text-fg-subtle transition-colors hover:bg-(--btn-regular-bg) hover:text-(--fg) cursor-pointer disabled:cursor-default disabled:bg-transparent disabled:text-fg-subtle"
-      onMouseEnter={e => {
-        if (!disabled) {
-          e.currentTarget.classList.add("bg-(--btn-regular-bg)", "text-(--fg)");
-        }
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.classList.remove("bg-(--btn-regular-bg)", "text-(--fg)");
-      }}
+    <PastelCard
+      tone="lilac"
+      className="p-5 sm:p-6 md:p-7 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 shadow-xs"
     >
-      {children}
-    </button>
+      {/* Icono de dientes/articulación fonética siempre blanco, amplio y legible */}
+      <div
+        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-white border border-[color-mix(in_oklch,var(--ink)_12%,transparent)] flex items-center justify-center shrink-0 shadow-2xs text-[var(--ink)]"
+        aria-hidden="true"
+      >
+        <svg
+          className="w-8 h-8"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="5" y="8" width="22" height="16" rx="8" stroke="currentColor" strokeWidth="1.8" />
+          <path d="M5 16H27" stroke="currentColor" strokeWidth="1.2" strokeDasharray="1.5 1.5" />
+          <path d="M10 10V22" stroke="currentColor" strokeWidth="1.2" />
+          <path d="M16 9V23" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M22 10V22" stroke="currentColor" strokeWidth="1.2" />
+        </svg>
+      </div>
+
+      {/* Contenido del tip con tipografía nítida y espaciado holgado */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-sm sm:text-base font-bold tracking-tight text-[var(--ink)] mb-1">
+              {title}
+            </h3>
+            {description && (
+              <p className="text-xs sm:text-sm text-[var(--ink-secondary)] leading-relaxed font-medium">
+                {description}
+              </p>
+            )}
+          </div>
+
+          {/* Acciones de guardar / escuchar si hay foco */}
+          {focus && onSave && (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                title="Listen to this sound"
+                aria-label="Listen to this sound"
+                onClick={() => onListen(focus.word)}
+                className="flex h-8 w-8 items-center justify-center rounded-xl border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors shadow-2xs"
+              >
+                <Volume2 size={16} strokeWidth={2} aria-hidden />
+              </button>
+              <button
+                type="button"
+                title={isSaved ? "Saved" : "Save for practice"}
+                aria-label={isSaved ? "Saved" : "Save for practice"}
+                onClick={handleSave}
+                disabled={isSaved}
+                className="flex h-8 w-8 items-center justify-center rounded-xl border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors disabled:opacity-60 shadow-2xs"
+              >
+                {isSaved ? (
+                  <Check size={16} strokeWidth={2.2} className={justSaved ? "animate-bounce" : ""} aria-hidden />
+                ) : (
+                  <BookmarkPlus size={16} strokeWidth={2} aria-hidden />
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Remediación interactiva si hay reintento activo */}
+        {focus && onRetry && (
+          <div className="mt-3.5 pt-3 border-t border-[color-mix(in_oklch,var(--ink)_14%,transparent)]">
+            <RemediationSequence
+              cue={feedbackCopyEnabled ? (focusTip ?? undefined) : undefined}
+              onListen={() => onListen(focus.word)}
+              onSlow={() => (onSlow ?? onListen)(focus.word)}
+              onRetry={onRetry}
+              compact
+            />
+          </div>
+        )}
+      </div>
+    </PastelCard>
   );
 }
