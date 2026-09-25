@@ -125,6 +125,32 @@ describe('gemini chat-route helpers', () => {
     expect(config.config.tools[0].functionDeclarations.map((tool) => tool.name)).toEqual(['annotate_turn'])
   })
 
+  it('uses the exercise and conversation generation budgets', async () => {
+    const create = vi.fn((config: unknown) => {
+      void config
+      return {
+        async *sendMessageStream() {
+          yield { candidates: [{ content: { parts: [{ text: 'ok' }] } }] }
+        },
+      }
+    })
+    const ai = { chats: { create } } as never
+
+    await readStream((controller) => streamWithFallback(
+      ai, 'system', [], 'practice', { toolChoice: 'any', allowedTools: ['render_fill_blank'] },
+      controller, new AbortController().signal,
+    ))
+    await readStream((controller) => streamWithFallback(
+      ai, 'system', [], 'hello', { toolChoice: 'auto', allowedTools: ['annotate_turn'] },
+      controller, new AbortController().signal,
+    ))
+
+    const exerciseConfig = (create.mock.calls[0][0] as { config: object }).config
+    const conversationConfig = (create.mock.calls[1][0] as { config: object }).config
+    expect(exerciseConfig).toMatchObject({ temperature: 0.7, maxOutputTokens: 4096 })
+    expect(conversationConfig).toMatchObject({ temperature: 0.9, maxOutputTokens: 2048 })
+  })
+
   it('truncates streams that exceed the chunk limit', async () => {
     const ai = {
       chats: {

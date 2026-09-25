@@ -46,6 +46,7 @@ const MAX_STREAM_CHUNKS = 2_000;
 // client as an empty response; 2_048 leaves headroom while the byte/chunk
 // guards in `streamWithFallback` remain the real ceiling.
 const MAX_OUTPUT_TOKENS = 2_048;
+const EXERCISE_SET_MAX_OUTPUT_TOKENS = 4_096;
 
 // Cast needed: TOOL_DECLARATIONS uses plain string literals for `type` fields,
 // but the SDK expects its internal `Type` enum. Runtime values are identical.
@@ -108,7 +109,8 @@ function buildGenerationConfig(
     ...(thinkingConfig ? { thinkingConfig } : {}),
     ...(abortSignal ? { abortSignal } : {}),
     ...(timeoutMs ? { httpOptions: { timeout: timeoutMs } } : {}),
-    maxOutputTokens: MAX_OUTPUT_TOKENS,
+    temperature: toolChoice === "any" ? 0.7 : 0.9,
+    maxOutputTokens: toolChoice === "any" ? EXERCISE_SET_MAX_OUTPUT_TOKENS : MAX_OUTPUT_TOKENS,
   };
 }
 

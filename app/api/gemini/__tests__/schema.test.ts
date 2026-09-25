@@ -73,3 +73,11 @@ describe("GeminiRequestSchema — mission field", () => {
     expect(GeminiRequestSchema.safeParse(baseRequest(undefined, "")).success).toBe(false);
   });
 });
+
+describe("GeminiRequestSchema — recent stems", () => {
+  it("accepts at most 20 stems of at most 80 characters", () => {
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), recentStems: Array(20).fill("seen") }).success).toBe(true);
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), recentStems: Array(21).fill("seen") }).success).toBe(false);
+    expect(GeminiRequestSchema.safeParse({ ...baseRequest(), recentStems: ["x".repeat(81)] }).success).toBe(false);
+  });
+});

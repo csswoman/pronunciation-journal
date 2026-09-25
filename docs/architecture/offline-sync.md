@@ -20,6 +20,7 @@ Fecha: 2026-07-01
 | Lexicon practice session | `sessionStorage` temporal por categoria | Temporal, recreable desde API |
 | Word of Day | `sessionStorage` cache diario | Temporal, recreable desde API/Gemini |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
+| Enunciados vistos por el AI Coach | Dexie `coachSeenItems` | Solo dispositivo; no se sincroniza |
 
 ## Reglas
 

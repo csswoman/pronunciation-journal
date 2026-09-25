@@ -98,6 +98,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     languagePreference: body.coachLanguage ?? null,
     exerciseRequested: selection.toolChoice === "any",
     learnerLevel: effectiveLevel?.source !== "unknown" ? effectiveLevel?.level : undefined,
+    recentStems: body.recentStems,
   });
 
   const history = buildHistory(trimHistoryForModel(body.messages.slice(0, -1)));

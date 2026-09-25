@@ -12,6 +12,7 @@ diseño y planes de producto.
 | [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
+| [AI Coach](architecture/ai-coach.md) | Sets de cinco ejercicios, navegación y resumen locales, y coste de requests |
 | [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
 | [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |

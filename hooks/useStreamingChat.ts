@@ -19,6 +19,7 @@ import { useCoachSessionMetrics } from "./useCoachSessionMetrics";
 import type { AIConversationMode } from "@/lib/types";
 import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
 import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydratePersistedMessages, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+import { getRecentCoachStems, saveCoachSeenItems } from "@/lib/ai-practice/coach-seen-items";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -88,6 +89,9 @@ export function useStreamingChat({
     setMessages([...nextMessages, modelMsg]);
 
     try {
+      const recentStems = userIdRef.current
+        ? await getRecentCoachStems(userIdRef.current).catch(() => [])
+        : [];
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -99,6 +103,7 @@ export function useStreamingChat({
           // Omitted when the learner has not overridden it, so the server
           // falls back to the CEFR-derived default.
           coachLanguage: useAICoachStore.getState().coachLanguage ?? undefined,
+          recentStems,
         }),
         signal: controller.signal,
       });
@@ -218,6 +223,9 @@ export function useStreamingChat({
       }, userId).catch(() => {});
 
       await metrics.noteFirstExercise(state.calls);
+      if (userIdRef.current) {
+        void saveCoachSeenItems(userIdRef.current, state.calls.values()).catch(() => {});
+      }
 
       const newId = await persistConversationState({
         userId,

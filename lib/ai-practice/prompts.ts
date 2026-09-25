@@ -75,6 +75,15 @@ EXERCISE QUALITY (when calling render_fill_blank / render_multiple_choice):
 - Unambiguous: exactly one correct answer, or list variants in "acceptableAlternatives".
 `.trim();
 
+export const EXERCISE_SET_INSTRUCTION = `
+EXERCISE SET (MANDATORY FOR THIS TURN):
+- Return exactly 5 exercise tool calls in this single turn. Do not stop after the first call.
+- Vary the set: include 2 multiple-choice exercises, 2 fill-in-the-blank exercises, and 1 speaking exercise.
+- Keep all five exercises on the requested topic and appropriate for the learner's level, but use different sentences and situations.
+- Every multiple-choice and fill-in-the-blank exercise must include a complete explanation, commonWrongAnswers, and hint so the app can grade and explain locally.
+- Do not add a sixth exercise tool call.
+`.trim();
+
 /**
  * Appended to the system prompt when the last user turn was spoken and
  * successfully transcribed (`voice.scored === true`). Keeps feedback narrow

@@ -58,6 +58,7 @@ export const GeminiRequestSchema = z.object({
    * or affect tool access.
    */
   coachLanguage: z.enum(["es", "en"]).optional(),
+  recentStems: z.array(z.string().min(1).max(80)).max(20).optional(),
   stream: z.boolean().optional().default(false),
 }).strict();
 

@@ -173,7 +173,7 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           onToolAnswer={p.answerToolCall}
           onNext={() => p.sendMessage("next")}
           onExerciseComplete={(s) =>
-            void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`, {
+            void p.sendMessage(`I finished the set with ${s.correct} of ${s.total} correct. Help me review: ${s.reviewItems.join("; ") || "nothing — all correct"}.`, {
               hidden: true,
               marker: exerciseResultMarker(s),
             })

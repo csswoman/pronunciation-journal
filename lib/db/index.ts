@@ -413,6 +413,15 @@ export interface DownloadedLessonRecord {
   downloadedAt: string; // ISO
 }
 
+/** Device-local anti-repetition memory for AI Coach exercise prompts. */
+export interface CoachSeenItemRecord {
+  id: string;
+  userId: string;
+  topic: string;
+  stem: string;
+  seenAt: string;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -457,6 +466,7 @@ class PronunciationDB extends Dexie {
   immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
   userEdClusterProgress!: Table<UserEdClusterProgress, string>;
   edClusterAttempts!: Table<EdClusterAttempt, string>;
+  coachSeenItems!: Table<CoachSeenItemRecord, string>;
 
 
   constructor() {
@@ -726,6 +736,10 @@ class PronunciationDB extends Dexie {
     });
     this.version(42).stores({
       edClusterAttempts: 'id, userId, cluster, occurredAt, [userId+cluster], [userId+occurredAt]',
+    });
+    // v43: device-local anti-repetition memory for AI Coach exercise sets.
+    this.version(43).stores({
+      coachSeenItems: 'id, userId, seenAt, [userId+seenAt]',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

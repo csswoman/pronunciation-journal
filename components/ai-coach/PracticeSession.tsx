@@ -10,8 +10,10 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { ToolCall, ExerciseResult } from "@/lib/ai-practice/types";
-import { Sparkles } from "@/components/icons";
 import ToolWidget from "./chat/ToolWidget";
+import PracticeSessionSummary, { type ExerciseSessionSummary } from "./PracticeSessionSummary";
+
+export type { ExerciseSessionSummary } from "./PracticeSessionSummary";
 
 type ExStatus = "idle" | "correct" | "incorrect" | "reviewing";
 interface SessionExercise { id: string; toolCall: ToolCall; status: ExStatus; result: ExerciseResult | null; }
@@ -82,11 +84,6 @@ function SessionProgress({ current, total, dotCount, hasNextPending }: {
 }
 
 const AUTO_ADVANCE_MS = 1500;
-
-export interface ExerciseSessionSummary {
-  total: number;
-  correct: number;
-}
 
 interface Props {
   initialExercises: ToolCall[];
@@ -171,38 +168,26 @@ function PracticeSessionInner({ initialExercises, onAnswer, onComplete }: Props)
 
   const total = exercises.length;
   const correctCount = exercises.filter(e => e.status === "correct" || e.result?.correct).length;
-  const isAllCorrect = correctCount === total;
   const isFinished = current >= exercises.length;
+  const summary: ExerciseSessionSummary = {
+    total,
+    correct: correctCount,
+    reviewItems: exercises.flatMap((exercise) => {
+      if (exercise.status !== "incorrect" && exercise.result?.correct !== false) return [];
+      const args = exercise.toolCall.args as { topic?: string; explanation?: string };
+      const topic = args.topic?.replace(/_/g, " ");
+      return [args.explanation ?? topic ?? exerciseLabel(exercise.toolCall.name)];
+    }),
+  };
 
-  useEffect(() => {
-    if (isFinished && !completeSentRef.current) {
-      completeSentRef.current = true;
-      onComplete?.({ total, correct: correctCount });
-    }
-  }, [isFinished, total, correctCount, onComplete]);
+  const discussWithCoach = useCallback((result: ExerciseSessionSummary) => {
+    if (completeSentRef.current) return;
+    completeSentRef.current = true;
+    onComplete?.(result);
+  }, [onComplete]);
 
   if (isFinished) {
-    return (
-      <div className="layout-stack w-full rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary shadow-xs">
-            <Sparkles size={16} strokeWidth={2.2} aria-hidden />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="m-0 text-caption font-semibold text-fg">¡Práctica finalizada!</p>
-            <p className="m-0 text-tiny font-medium text-fg-muted">
-              {correctCount} de {total} ejercicio{total > 1 ? "s" : ""} correcto{total > 1 ? "s" : ""}
-            </p>
-          </div>
-        </div>
-
-        <p className="m-0 text-body-sm text-fg-secondary">
-          {isAllCorrect
-            ? "¡Excelente trabajo! Has completado la práctica con éxito."
-            : "¡Buen intento! Continúa practicando para afianzar estos conceptos."}
-        </p>
-      </div>
-    );
+    return <PracticeSessionSummary summary={summary} onDiscuss={onComplete ? discussWithCoach : undefined} />;
   }
 
   const ex = exercises[current];

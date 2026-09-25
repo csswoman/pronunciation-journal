@@ -5,7 +5,7 @@ import {
   extractLastTopicFromWire,
   lastUserVoiceMetadataFromWire,
 } from "../wire";
-import { BASE_TUTOR_PROMPT, VOICE_TURN_INSTRUCTION } from "../prompts";
+import { BASE_TUTOR_PROMPT, EXERCISE_SET_INSTRUCTION, VOICE_TURN_INSTRUCTION } from "../prompts";
 import { createEmptyState } from "../learning-state";
 import type { AIMessage } from "../types";
 
@@ -133,6 +133,11 @@ describe("buildSystemPrompt language policy", () => {
     expect(buildSystemPrompt(state, { exerciseRequested: true })).toContain("Next exercise:");
   });
 
+  it("requests five varied tool calls only for exercise turns", () => {
+    expect(buildSystemPrompt(null)).not.toContain(EXERCISE_SET_INSTRUCTION);
+    expect(buildSystemPrompt(null, { exerciseRequested: true })).toContain(EXERCISE_SET_INSTRUCTION);
+  });
+
   it("uses the canonical learner level over a stale coach state estimate", () => {
     const prompt = buildSystemPrompt(stateAt("A1"), { learnerLevel: "C1" });
     expect(prompt).toContain("Student: C1");
@@ -234,5 +239,22 @@ describe("buildSystemPrompt interests", () => {
   it("keeps interests in mission mode", () => {
     const prompt = buildSystemPrompt(null, { missionId: "roleplay.cafe", interests: ["travel"] });
     expect(prompt).toContain("travel");
+  });
+});
+
+describe("buildSystemPrompt recent stems", () => {
+  it("adds the anti-repetition list", () => {
+    const prompt = buildSystemPrompt(null, {
+      exerciseRequested: true,
+      recentStems: ["where did you go yesterday?", "i have worked here since may"],
+    });
+    expect(prompt).toContain("Do not repeat these exercise sentences");
+    expect(prompt).toContain("- where did you go yesterday?");
+    expect(prompt).toContain("- i have worked here since may");
+  });
+
+  it("omits the block when there are no recent stems", () => {
+    expect(buildSystemPrompt(null, { recentStems: [] }))
+      .not.toContain("Do not repeat these exercise sentences");
   });
 });
