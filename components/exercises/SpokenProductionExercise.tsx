@@ -10,14 +10,13 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
+import { useRecordingElapsed } from '@/hooks/useRecordingElapsed'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useVoiceLevel } from '@/hooks/useVoiceLevel'
-import {
-  gradeProduction,
-  isOnline,
-  ProductionGradeError,
-} from '@/lib/exercises/grade-production-client'
+import { useOnlineStatus } from '@/hooks/useOnlineStatus'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
+import { AI_GRADES_SPENT_MESSAGE } from '@/lib/exercises/grading-attempts'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import { rehearsedPatternForConstraint } from '@/lib/exercises/error-patterns'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
@@ -55,11 +54,19 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     getStream,
     endpoint: '/api/gemini/transcribe-sentence',
   })
-  const [grading, setGrading] = useState(false)
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [online, setOnline] = useState(true)
-  const [recordingMs, setRecordingMs] = useState(0)
+  const [micError, setMicError] = useState<string | null>(null)
+  const online = useOnlineStatus()
+  // Local-first grading: cached and repeated transcripts never reach the AI,
+  // and only two versions per exercise are graded (Plan 037 C2).
+  const {
+    grade: gradeProductionLocalFirst,
+    clearError,
+    grading,
+    error: gradingError,
+    aiBudgetSpent,
+  } = useProductionGrading({ exerciseKey: exercise.id })
+  const error = micError ?? gradingError
   // El stream vive aquí (no en useSharedMicStream) sólo para alimentar el
   // analizador del osciloscopio. Los tracks los sigue soltando `release`.
   const [micStream, setMicStream] = useState<MediaStream | null>(null)
@@ -70,78 +77,36 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
   useEffect(() => {
     setGrade(null)
-    setError(null)
-    setGrading(false)
-    setRecordingMs(0)
+    setMicError(null)
     submitted.current = false
     startMs.current = Date.now()
-    setOnline(isOnline())
     reset()
   }, [exercise.id, reset])
 
-  useEffect(() => {
-    function syncOnline() {
-      setOnline(isOnline())
-    }
-    window.addEventListener('online', syncOnline)
-    window.addEventListener('offline', syncOnline)
-    return () => {
-      window.removeEventListener('online', syncOnline)
-      window.removeEventListener('offline', syncOnline)
-    }
-  }, [])
-
   useEffect(() => release, [release])
-
-  // Un contador visible da prueba de que el micro sigue capturando: el pulso
-  // CSS por sí solo no distingue "grabando" de "congelado".
-  useEffect(() => {
-    if (speechState !== 'listening') return
-    setRecordingMs(0)
-    const startedAt = Date.now()
-    const id = window.setInterval(() => {
-      setRecordingMs(Date.now() - startedAt)
-    }, 200)
-    return () => window.clearInterval(id)
-  }, [speechState])
 
   const runGrading = useCallback(
     async (transcript: string) => {
-      if (!isOnline()) {
-        setError('Necesitas conexión a internet para corregir tu respuesta.')
-        return
-      }
-      setGrading(true)
-      setError(null)
-      try {
-        const result = await gradeProduction({
-          targetItem: exercise.targetItem,
-          targetMeaning: exercise.targetMeaning,
-          taskPrompt: exercise.taskPrompt,
-          production: transcript,
-          modality: 'spoken',
-          level: exercise.level,
-          constraintCheck: exercise.constraint?.checkEn,
-        })
-        setGrade(result)
-      } catch (err) {
-        const msg =
-          err instanceof ProductionGradeError
-            ? err.message
-            : 'No se pudo corregir. Inténtalo de nuevo.'
-        setError(msg)
-      } finally {
-        setGrading(false)
-      }
+      setMicError(null)
+      const result = await gradeProductionLocalFirst({
+        targetItem: exercise.targetItem,
+        targetMeaning: exercise.targetMeaning,
+        taskPrompt: exercise.taskPrompt,
+        production: transcript,
+        modality: 'spoken',
+        level: exercise.level,
+        constraintCheck: exercise.constraint?.checkEn,
+      })
+      if (result) setGrade(result)
     },
-    [exercise],
+    [exercise, gradeProductionLocalFirst],
   )
 
   useEffect(() => {
     if (speechState !== 'done' || !speechResult || grading || grade) return
     const transcript = speechResult.transcript.trim()
     if (!transcript) {
-      setError('No se detectó voz. Toca el micrófono y habla con claridad.')
+      setMicError('No se detectó voz. Toca el micrófono y habla con claridad.')
       return
     }
     void runGrading(transcript)
@@ -172,29 +137,30 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   const handleRetry = useCallback(() => {
     submitted.current = false
     setGrade(null)
-    setError(null)
-    setRecordingMs(0)
+    setMicError(null)
+    clearError()
     setMicStream(null)
     reset()
     release()
     startMs.current = Date.now()
-  }, [reset, release])
+  }, [reset, release, clearError])
 
   const handleToggleMic = useCallback(async () => {
     if (speechState === 'listening') {
-      setError(null)
+      setMicError(null)
       setMicStream(null)
       await stop()
       return
     }
-    setError(null)
+    setMicError(null)
+    clearError()
     reset()
     try {
       setMicStream(await getStream())
       await start()
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'not-allowed'
-      setError(
+      setMicError(
         msg === 'not-allowed'
           ? 'Se denegó el acceso al micrófono. Habilita los permisos.'
           : 'No se pudo acceder al micrófono.',
@@ -202,20 +168,21 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       setMicStream(null)
       release()
     }
-  }, [speechState, stop, reset, getStream, start, release])
+  }, [speechState, stop, reset, getStream, start, release, clearError])
 
   useEnterToContinue(Boolean(grade && !grading), handleContinue)
 
   const isListening = speechState === 'listening'
+  const elapsedLabel = useRecordingElapsed(isListening)
   // El reconocedor pasa por 'processing' mientras la transcripción está en
   // vuelo. Sin exponerlo, la UI caía al estado inicial ("Toca para hablar")
   // justo cuando el audio ya se estaba procesando.
   const isTranscribing = speechState === 'processing'
   const isDone = speechState === 'done'
   const isMicError = speechState === 'error'
-  const elapsedLabel = isListening
-    ? `${Math.floor(recordingMs / 60000)}:${String(Math.floor(recordingMs / 1000) % 60).padStart(2, '0')}`
-    : null
+  // Presupuesto de IA agotado: la salida es comparar con el modelo, no seguir
+  // grabando intentos que nadie va a corregir.
+  const selfAssess = aiBudgetSpent && !grade
 
   return (
     <div
@@ -226,15 +193,17 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
 
       {/* Sin micrófono no hay nada que transcribir, pero leer la oración en voz
           alta sigue siendo la práctica: se ofrece el modelo y una salida que no
-          puntúa, en vez de dejar el ejercicio sin ninguna acción posible. */}
-      {!isSupported && !grade && (
+          puntúa, en vez de dejar el ejercicio sin ninguna acción posible. Con el
+          presupuesto de correcciones agotado se toma la misma salida. */}
+      {(!isSupported || selfAssess) && !grade && (
         <SpokenProductionUnscored
           exampleSentence={exercise.exampleSentence}
+          message={selfAssess ? AI_GRADES_SPENT_MESSAGE : undefined}
           onContinue={handleUnscoredDone}
         />
       )}
 
-      {isSupported && !grade && (
+      {isSupported && !selfAssess && !grade && (
         <SpokenProductionControls
           exampleSentence={exercise.exampleSentence}
           hintAlwaysVisible={exercise.constraint?.id !== 'rodeo_circumlocution'}

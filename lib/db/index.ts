@@ -422,6 +422,16 @@ export interface CoachSeenItemRecord {
   seenAt: string;
 }
 
+export interface GradedAnswerRecord {
+  key: string;
+  userId: string;
+  exerciseKey: string;
+  normalized: string;
+  result: import('../exercises/production-grade').ProductionGradeResult;
+  createdAt: string;
+  accepted: 0 | 1;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -467,6 +477,7 @@ class PronunciationDB extends Dexie {
   userEdClusterProgress!: Table<UserEdClusterProgress, string>;
   edClusterAttempts!: Table<EdClusterAttempt, string>;
   coachSeenItems!: Table<CoachSeenItemRecord, string>;
+  gradedAnswers!: Table<GradedAnswerRecord, string>;
 
 
   constructor() {
@@ -740,6 +751,10 @@ class PronunciationDB extends Dexie {
     // v43: device-local anti-repetition memory for AI Coach exercise sets.
     this.version(43).stores({
       coachSeenItems: 'id, userId, seenAt, [userId+seenAt]',
+    });
+    // v44: per-account production-grade cache and accepted-answer bank.
+    this.version(44).stores({
+      gradedAnswers: 'key, userId, exerciseKey, normalized, accepted, [userId+exerciseKey+normalized]',
     });
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;

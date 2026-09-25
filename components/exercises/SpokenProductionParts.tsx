@@ -198,14 +198,17 @@ export function SpokenProductionControls({
 export function SpokenProductionUnscored({
   exampleSentence,
   onContinue,
+  message = SCORING_UNAVAILABLE_ES,
 }: {
   exampleSentence?: string
   onContinue: () => void
+  /** Por qué este intento no se puntúa (micrófono o presupuesto de IA). */
+  message?: string
 }) {
   return (
     <div className="flex w-full flex-col items-center gap-4 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised/50 px-4 py-6 text-center">
       <p className="m-0 max-w-[50ch] text-body-sm text-fg-muted">
-        {SCORING_UNAVAILABLE_ES}
+        {message}
       </p>
 
       {exampleSentence && (

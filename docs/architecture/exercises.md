@@ -47,6 +47,44 @@ Ambos sistemas comparten:
 - El catálogo `exercise_types` (slug + label por tipo)
 - La lógica Levenshtein para validación tolerante de texto
 
+## Corrección local primero
+
+Todo ejercicio que necesita evaluación abierta pasa por `gradeWithLocalFirst`.
+El pipeline aplica este orden: rechaza respuestas vacías o de menos de dos
+palabras; detecta una transformación sin cambios; acepta referencias explícitas
+tras normalizar mayúsculas, puntuación final y contracciones; reutiliza el banco
+o la caché local; y solo entonces llama a Gemini.
+
+Las notas del modelo se guardan por cuenta y ejercicio en `gradedAnswers`, con
+una clave SHA-256 versionada. Una respuesta correcta con al menos 90 puntos se
+incorpora al banco local cuando el ejercicio tiene referencia fija. Esto permite
+corregir referencias conocidas sin conexión.
+
+### Presupuesto de reintentos
+
+Los cuatro ejercicios con corrección abierta —traducción, transformación y
+producción escrita y hablada— consumen el pipeline a través de
+[`hooks/useProductionGrading.ts`](../../hooks/useProductionGrading.ts), que decide
+si el intento merece una request. La política vive en
+[`lib/exercises/grading-attempts.ts`](../../lib/exercises/grading-attempts.ts) y bloquea tres casos
+antes de llamar a Gemini, siempre después de las ramas locales:
+
+| Caso | Respuesta |
+|---|---|
+| Sin conexión | Mensaje del ejercicio con su referencia; ninguna request |
+| Reintento con menos de 3 ediciones normalizadas respecto al anterior | "Es la misma respuesta…" |
+| Dos versiones ya corregidas en la sesión | Autoevaluación con el ejemplo |
+
+Agotado el presupuesto, la producción escrita ofrece "Autoevaluar con ejemplo" y
+la hablada cierra el ejercicio sin puntuación. Un intento bloqueado nunca entra
+en la caché: solo se guarda lo que el modelo calificó de verdad.
+
+Sin conexión, cualquier ejercicio con referencia sigue corrigiéndose en local: la
+comparación con las respuestas aceptadas ocurre antes del gate. Las rutas
+`generate-translations` y `generate-transformations` piden 3–5 `acceptedAnswers`
+por ítem —con los límites en el `responseJsonSchema`— para que esa rama resuelva
+la mayoría de los intentos.
+
 ---
 
 ## Ejercicios de fonética (Phoneme Practice)

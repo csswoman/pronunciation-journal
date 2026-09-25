@@ -136,7 +136,8 @@ Rules:
 - Vary sentence structures (statements, questions, negatives)`;
 
 export const GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT = `You create sentence-transformation exercises for English learners.
-Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), and referenceAnswer. Keep the grammar topic accurate and give one natural valid answer.`
+Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), referenceAnswer, and acceptedAnswers. Keep the grammar topic accurate and give one natural valid answer as referenceAnswer.
+acceptedAnswers is the answer key: 3 to 5 complete sentences a teacher would mark correct for that instruction, starting with referenceAnswer itself. The app already ignores capitalization, final punctuation and contractions, so vary the wording instead: synonyms, valid word orders and equally correct structures. Never list an answer that ignores the instruction or changes the meaning of sourceSentence.`
 export function buildGenerateTransformationsPrompt(input: { topic: string; level: string; count: number }): string {
   return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}.`
 }
@@ -148,7 +149,8 @@ export function buildTransformationTaskPrompt(input: {
   const reference = input.referenceAnswer ? ` Reference solution: "${input.referenceAnswer}".` : ''
   return `Transform the original sentence according to the instruction. Original sentence: "${input.sourceSentence}". Instruction: "${input.instruction}".${reference}`
 }
-export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Each item needs sourceEs, referenceEn, and optional acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.`
+export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Each item needs sourceEs, referenceEn and acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.
+acceptedAnswers is the answer key: 3 to 5 complete English sentences a teacher would mark correct for sourceEs, starting with referenceEn itself. The app already ignores capitalization, final punctuation and contractions, so vary the wording instead: synonyms, valid word orders and equally natural structures. Never list a sentence that changes the meaning or the grammar topic.`
 export function buildGenerateTranslationsPrompt(input: { topic: string; level: string; count: number }): string {
   return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}.`
 }

@@ -12,11 +12,18 @@
 
 ## Estado
 
-- **Progreso**: fases A y B completas (2026-09-25). La cola vive en `PracticeSession`,
+- **Progreso**: plan completo (fases A, B y C, 2026-09-25). La cola vive en `PracticeSession`,
   que ya recibe todas las tool calls del turno; no se duplicó estado en
   `useStreamingChat`. El set real de cinco tool calls fue verificado contra el
   proveedor. `coachSeenItems` conserva localmente los últimos enunciados para
-  evitar repeticiones; los ángulos y el orden 2-2-1 rotan en el cliente. Fase C pendiente.
+  evitar repeticiones; los ángulos y el orden 2-2-1 rotan en el cliente. El
+  pipeline local y `gradedAnswers` están listos. C2: los cuatro ejercicios de
+  corrección abierta pasan por `hooks/useProductionGrading.ts`, con la política
+  de reintentos en `lib/exercises/grading-attempts.ts` (offline, respuesta casi
+  idéntica, dos correcciones por ejercicio) aplicada como gate `beforeAiCall`
+  del pipeline, de modo que un intento bloqueado no entra en la caché. C3: las
+  rutas `generate-translations` y `generate-transformations` exigen 3–5
+  `acceptedAnswers` por ítem con los límites en el `responseJsonSchema`.
 - **Priority**: P1
 - **Effort**: L (fase A: ~1 día · fase B: 1–2 días · fase C: 1–2 días)
 - **Risk**: MED
@@ -191,13 +198,16 @@ Las rutas que generan ejercicios (`generate-translations`, `generate-transformat
 
 ## Criterios de aceptación
 
-- [ ] Un set de 5 ejercicios del Coach cuesta 1 request (antes 5 + 1 de resumen).
-- [ ] El historial enviado al modelo tiene ≤16 mensajes.
-- [ ] Reenviar la misma respuesta o una respuesta aceptada no llama a `gradeProduction`.
-- [ ] Máximo 2 llamadas a IA por ejercicio y sesión.
-- [ ] Offline: los ejercicios con referencia se corrigen en local.
-- [ ] `pnpm test`, `pnpm type-check`, `pnpm lint`, `npm run lint:design` en exit 0; ningún archivo >250 líneas.
-- [ ] Documentación del "Paso final" actualizada para las fases ejecutadas.
+- [x] Un set de 5 ejercicios del Coach cuesta 1 request (antes 5 + 1 de resumen).
+- [x] El historial enviado al modelo tiene ≤16 mensajes.
+- [x] Reenviar la misma respuesta o una respuesta aceptada no llama a `gradeProduction`.
+- [x] Máximo 2 llamadas a IA por ejercicio y sesión.
+- [x] Offline: los ejercicios con referencia se corrigen en local.
+- [x] `pnpm type-check` y `pnpm lint` en exit 0; suites de `lib/exercises`, `components/exercises`,
+  `hooks/useProductionGrading` y las rutas `generate-*` en verde (318 tests). Ningún archivo del plan
+  supera 250 líneas. `pnpm lint:design-tokens` falla solo por archivos sin versionar de
+  `components/practice/review/` ajenos a este plan.
+- [x] Documentación del "Paso final" actualizada para las fases ejecutadas.
 
 ## STOP conditions
 

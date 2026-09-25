@@ -18,11 +18,8 @@ import { PracticeActionBar, PracticeContinueButton } from '@/components/practice
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
-import {
-  gradeProduction,
-  isOnline,
-  ProductionGradeError,
-} from '@/lib/exercises/grade-production-client'
+import { useOnlineStatus } from '@/hooks/useOnlineStatus'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { WrittenProductionExercise as WrittenProductionExerciseType } from '@/lib/exercises/types'
@@ -42,64 +39,38 @@ interface Props {
 
 export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props) {
   const [text, setText] = useState('')
-  const [grading, setGrading] = useState(false)
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [online, setOnline] = useState(true)
+  const online = useOnlineStatus()
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
   const fieldId = useId()
   const errorId = useId()
+  // Local-first grading: cached and repeated answers never reach the AI, and
+  // only two versions per exercise are graded (Plan 037 C2).
+  const pipeline = useProductionGrading({ exerciseKey: exercise.id })
+  const grading = pipeline.grading
+  const error = pipeline.error
 
   useEffect(() => {
     setText('')
     setGrade(null)
-    setError(null)
-    setGrading(false)
     submitted.current = false
     startMs.current = Date.now()
-    setOnline(isOnline())
   }, [exercise.id])
-
-  useEffect(() => {
-    function syncOnline() { setOnline(isOnline()) }
-    window.addEventListener('online', syncOnline)
-    window.addEventListener('offline', syncOnline)
-    return () => {
-      window.removeEventListener('online', syncOnline)
-      window.removeEventListener('offline', syncOnline)
-    }
-  }, [])
 
   const handleSubmit = useCallback(async () => {
     const trimmed = text.trim()
     if (!trimmed || grading || grade) return
-    if (!isOnline()) {
-      setError('Necesitas conexión a internet para corregir tu respuesta.')
-      return
-    }
-
-    setGrading(true)
-    setError(null)
-    try {
-      const result = await gradeProduction({
-        targetItem: exercise.targetItem,
-        targetMeaning: exercise.targetMeaning,
-        taskPrompt: exercise.taskPrompt,
-        production: trimmed,
-        modality: 'written',
-        level: exercise.level,
-      })
-      setGrade(result)
-    } catch (err) {
-      const msg = err instanceof ProductionGradeError
-        ? err.message
-        : 'No se pudo corregir. Inténtalo de nuevo.'
-      setError(msg)
-    } finally {
-      setGrading(false)
-    }
-  }, [text, grading, grade, exercise])
+    const result = await pipeline.grade({
+      targetItem: exercise.targetItem,
+      targetMeaning: exercise.targetMeaning,
+      taskPrompt: exercise.taskPrompt,
+      production: trimmed,
+      modality: 'written',
+      level: exercise.level,
+    })
+    if (result) setGrade(result)
+  }, [text, grading, grade, exercise, pipeline])
 
   const handleContinue = useCallback(() => {
     if (!grade || submitted.current) return
@@ -113,9 +84,9 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
   const handleRetry = useCallback(() => {
     submitted.current = false
     setGrade(null)
-    setError(null)
+    pipeline.clearError()
     startMs.current = Date.now()
-  }, [])
+  }, [pipeline])
 
   const handleSelfCheck = useCallback(() => {
     if (!text.trim() || submitted.current) return
@@ -202,7 +173,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
             >
               {grading ? 'Corrigiendo…' : 'Enviar'}
             </Button>
-            {(!online || error) && text.trim() && (
+            {(!online || error || pipeline.aiBudgetSpent) && text.trim() && (
               <Button
                 variant="secondary"
                 size="md"

@@ -27,7 +27,7 @@ son históricas.
 |---|---|---|---|---|---|
 | 035 | Aprovechar la IA gratuita sin agotar el servicio (fases A/B/C) | P1 | M | — | IN PROGRESS (fases A–C en código; migraciones pendientes de aplicar y validar) |
 | 036 | Salida estructurada y prompts ajustados al nivel | P2 | M | 035 fase A | DONE (20 rutas JSON; eval 11/12 frente a 8/12; 5313 tests) |
-| 037 | AI Coach y ejercicios más rápidos, variados y con menos llamadas a IA | P1 | L | 035 fase A | IN PROGRESS (fases A y B completas) |
+| 037 | AI Coach y ejercicios más rápidos, variados y con menos llamadas a IA | P1 | L | 035 fase A | DONE (fases A, B y C) |
 | 038 | Feedback de pronunciación por sonido (estilo ELSA) sin cuota de IA | P2 | L | fase A: —; fases B/C: 039 fase A | TODO |
 | 039 | Voces locales (Kokoro) y entrenamiento de percepción con muchas voces (HVPT) | P1 | L | — | TODO |
 | 040 | Las correcciones del AI Coach alimentan la cola de errores repetidos | P1 | S | — | TODO |

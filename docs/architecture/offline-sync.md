@@ -21,6 +21,7 @@ Fecha: 2026-07-01
 | Word of Day | `sessionStorage` cache diario | Temporal, recreable desde API/Gemini |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
 | Enunciados vistos por el AI Coach | Dexie `coachSeenItems` | Solo dispositivo; no se sincroniza |
+| Caché y banco de correcciones | Dexie `gradedAnswers`; sin sesión, caché en memoria del componente | Solo dispositivo y cuenta; no se sincroniza |
 
 ## Reglas
 

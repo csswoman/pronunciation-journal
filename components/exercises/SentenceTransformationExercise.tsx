@@ -9,11 +9,11 @@
 //   <SubmitButton />
 // </SentenceTransformationExercise>
 
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
-import { gradeProduction, ProductionGradeError } from '@/lib/exercises/grade-production-client'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
-import { isExactTransformation } from '@/lib/exercises/transformations'
+import { transformationAnswers } from '@/lib/exercises/transformations'
 import { buildTransformationTaskPrompt } from '@/lib/ai-prompts'
 import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
@@ -26,73 +26,47 @@ export function SentenceTransformationExercise({
   onResult: (correct: boolean, answer: string, timeMs: number, extras?: GenericRenderExtras) => void
 }) {
   const [answer, setAnswer] = useState('')
-  const [grading, setGrading] = useState(false)
   const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
+  const acceptedAnswers = useMemo(() => transformationAnswers(exercise), [exercise])
+  const pipeline = useProductionGrading({
+    exerciseKey: exercise.id,
+    acceptedAnswers,
+    sourceSentence: exercise.sourceSentence,
+    fixedReference: true,
+    offlineMessage: acceptedAnswers.length > 0
+      ? `Sin conexión. Respuesta de referencia: ${acceptedAnswers[0]}`
+      : 'Necesitas conexión para corregir esta transformación.',
+  })
+  const grading = pipeline.grading
 
   async function submit() {
     const production = answer.trim()
     if (!production || grading || done) return
 
-    if (isExactTransformation(exercise, production)) {
-      setDone(true)
-      return onResult(true, production, Date.now() - startedAt.current, {
-        score: 100,
-        feedback: {
-          immediate: '¡Correcto!',
-          expectedAnswer: exercise.referenceAnswer,
-          errorCode: 'correct',
-          canRetry: false,
-          nextAction: 'continue',
-        },
-      })
-    }
+    const grade = await pipeline.grade({
+      targetItem: exercise.referenceAnswer ?? exercise.instruction,
+      taskPrompt: buildTransformationTaskPrompt(exercise),
+      production,
+      modality: 'written',
+      constraintCheck: exercise.instruction,
+    })
+    if (!grade) return
 
-    if (!navigator.onLine) {
-      const answers = [
-        ...(exercise.referenceAnswer ? [exercise.referenceAnswer] : []),
-        ...(exercise.acceptedAnswers ?? []),
-      ]
-      if (answers.length > 0) {
-        return setError(`Sin conexión. Respuesta de referencia: ${answers[0]}`)
+    const feedback = pedagogicalFeedbackFromProductionGrade(grade)
+    feedback.immediate = grade.correct ? '¡Correcto!' : 'Revisa la transformación.'
+    if (exercise.referenceAnswer) {
+      feedback.expectedAnswer = exercise.referenceAnswer
+      if (!grade.correct) {
+        feedback.correction = exercise.referenceAnswer
       }
-      return setError('Necesitas conexión para corregir esta transformación.')
     }
 
-    setGrading(true)
-    setError(null)
-    try {
-      const targetItem = exercise.referenceAnswer ?? exercise.instruction
-      const taskPrompt = buildTransformationTaskPrompt(exercise)
-
-      const grade = await gradeProduction({
-        targetItem,
-        taskPrompt,
-        production,
-        modality: 'written',
-        constraintCheck: exercise.instruction,
-      })
-
-      const feedback = pedagogicalFeedbackFromProductionGrade(grade)
-      feedback.immediate = grade.correct ? '¡Correcto!' : 'Revisa la transformación.'
-      if (exercise.referenceAnswer) {
-        feedback.expectedAnswer = exercise.referenceAnswer
-        if (!grade.correct) {
-          feedback.correction = exercise.referenceAnswer
-        }
-      }
-
-      setDone(true)
-      onResult(grade.correct, production, Date.now() - startedAt.current, {
-        score: grade.score,
-        feedback,
-      })
-    } catch (cause) {
-      setError(cause instanceof ProductionGradeError ? cause.message : 'No se pudo corregir. Inténtalo de nuevo.')
-    } finally {
-      setGrading(false)
-    }
+    setDone(true)
+    onResult(grade.correct, production, Date.now() - startedAt.current, {
+      score: grade.score,
+      feedback,
+    })
   }
 
   return (
@@ -127,9 +101,9 @@ export function SentenceTransformationExercise({
         />
       </div>
 
-      {error ? (
+      {pipeline.error ? (
         <p role="alert" className="text-body-sm text-error">
-          {error}
+          {pipeline.error}
         </p>
       ) : null}
 
