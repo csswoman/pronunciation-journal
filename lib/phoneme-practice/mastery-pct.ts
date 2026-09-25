@@ -70,10 +70,36 @@ export function normalizeIpaKey(ipa: string): string {
 }
 
 /**
+ * Read-time decay of a stored mastery_pct, without writing anything back.
+ *
+ * `mastery_pct` only decays when a new session is recorded (see
+ * computeNextMasteryPct). A contrast last practiced months ago keeps
+ * showing its old, undecayed score until the learner happens to practice
+ * it again — which makes "weakest sounds" rankings blind to forgetting.
+ * This applies the same half-life curve purely for display/ranking, so a
+ * sound the learner hasn't touched in a while drifts back down over time
+ * even without a new attempt.
+ */
+export function liveMasteryPct(
+  storedMastery: number,
+  lastSeen: string | null,
+  now: Date = new Date(),
+): number {
+  if (storedMastery <= 0 || !lastSeen) return storedMastery
+  const daysSince = Math.max(0, (now.getTime() - new Date(lastSeen).getTime()) / 86_400_000)
+  const decayFactor = Math.exp(-daysSince / MASTERY_HALF_LIFE_DAYS)
+  return Math.round(storedMastery * decayFactor)
+}
+
+/**
  * Sound-level mastery = minimum contrast mastery for configured confusions
  * (weakest link blocks the displayed score).
  */
-export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]): number {
+export function soundMasteryPct(
+  ipa: string,
+  allProgress: UserContrastProgress[],
+  now: Date = new Date(),
+): number {
   const canonicalIpa = canonicalizeSoundIpa(ipa)
   const progress = canonicalizeProgressRows(allProgress)
   const confusables = PHONEME_CONFUSION[canonicalIpa]
@@ -85,7 +111,7 @@ export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]
       const key = contrastKey(canonicalIpa, other)
       const row = progressMap.get(key)
       if (row && row.total_attempts > 0) {
-        values.push(row.mastery_pct ?? 0)
+        values.push(liveMasteryPct(row.mastery_pct ?? 0, row.last_seen ?? null, now))
       }
     }
     if (values.length > 0) return Math.round(Math.min(...values))
@@ -93,7 +119,7 @@ export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]
 
   const related = progress.filter((p) => p.contrast_id.split('|').includes(canonicalIpa))
   if (related.length === 0) return 0
-  return Math.round(Math.min(...related.map((p) => p.mastery_pct ?? 0)))
+  return Math.round(Math.min(...related.map((p) => liveMasteryPct(p.mastery_pct ?? 0, p.last_seen ?? null, now))))
 }
 
 export interface SoundMasteryRow {
@@ -105,11 +131,12 @@ export interface SoundMasteryRow {
 /** Rank sounds by lowest dynamic mastery (for Progress / home). */
 export function rankWeakestSounds(
   progress: UserContrastProgress[],
-  options?: { minAttempts?: number; limit?: number },
+  options?: { minAttempts?: number; limit?: number; now?: Date },
 ): SoundMasteryRow[] {
   const canonicalProgress = canonicalizeProgressRows(progress)
   const minAttempts = options?.minAttempts ?? 5
   const limit = options?.limit ?? 5
+  const now = options?.now ?? new Date()
   const ipas = new Set<string>()
   for (const p of canonicalProgress) {
     for (const ipa of p.contrast_id.split('|')) ipas.add(ipa)
@@ -121,11 +148,11 @@ export function rankWeakestSounds(
       const totalAttempts = Math.max(0, ...related.map((r) => r.total_attempts))
       return {
         ipa: normalizeIpaKey(ipa),
-        mastery: soundMasteryPct(ipa, canonicalProgress),
+        mastery: soundMasteryPct(ipa, canonicalProgress, now),
         totalAttempts,
       }
     })
-    .filter((r) => r.totalAttempts >= minAttempts && r.mastery > 0)
+    .filter((r) => r.totalAttempts >= minAttempts)
     .sort((a, b) => a.mastery - b.mastery)
     .slice(0, limit)
 }

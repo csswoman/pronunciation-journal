@@ -30,6 +30,8 @@ export interface ProgressDomainData {
   learningTopics: TopicProgressRow[]
   masteredTopics: TopicProgressRow[]
   immersion: ImmersionProgressData
+  /** True when any of the underlying queries failed — an empty result here is not confirmed "no data". */
+  hasError: boolean
 }
 
 const IMMERSION_REVIEW_INTERVAL_DAYS = 7
@@ -60,6 +62,10 @@ export async function getProgressDomainData(userId: string): Promise<ProgressDom
   if (immersionResult.error) console.error('[progress] immersion progress query failed', immersionResult.error)
   if (immersionTotalResult.error) console.error('[progress] immersion total query failed', immersionTotalResult.error)
   if (lessonCompletionsResult.error) console.error('[progress] lesson_completions query failed', lessonCompletionsResult.error)
+
+  const hasError = Boolean(
+    topicsResult.error || immersionResult.error || immersionTotalResult.error || lessonCompletionsResult.error,
+  )
 
   const topics: TopicProgressRow[] = (topicsResult.data ?? []).map((row) => ({
     topic: row.topic,
@@ -95,5 +101,6 @@ export async function getProgressDomainData(userId: string): Promise<ProgressDom
       due,
       total: immersionTotalResult.count ?? 0,
     },
+    hasError,
   }
 }
