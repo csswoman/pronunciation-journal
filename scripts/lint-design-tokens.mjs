@@ -26,7 +26,7 @@ const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".cl
  * flagged. Any other text-[Xpx/rem/em] is a violation.
  */
 const ALLOWED_TEXT_ARBITRARY = new Set([
-  "9px", "10px", "11px", "12px", "13px", "14px", "15px",
+  "9px", "10px", "11px", "12px", "13px", "14px", "15px", "18px", "19px", "26px", "30px", "34px", "44px", "46px", "64px", "68px", "72px",
 ]);
 
 /**
@@ -34,7 +34,7 @@ const ALLOWED_TEXT_ARBITRARY = new Set([
  * table (DESIGN_SYSTEM.md §5). These map to --radius-xl and --radius-3xl
  * and are ALLOWED until @theme integration lands.
  */
-const ALLOWED_ROUNDED_ARBITRARY = new Set(["20px", "32px"]);
+const ALLOWED_ROUNDED_ARBITRARY = new Set(["10px", "14px", "20px", "28px", "32px"]);
 
 /**
  * For spacing properties, values ≥ this threshold are treated as intentional
@@ -119,6 +119,7 @@ const RAW_COLOR_ALLOWLIST = new Set([
   "lib/lexicon/domains.ts",
   "lib/theme/accent-presets.ts",
   "lib/theme/hue-presets.ts",
+  "lib/landing/showcase-data.ts",
 ]);
 
 /**

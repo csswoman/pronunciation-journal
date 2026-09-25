@@ -314,3 +314,36 @@
     animation: none !important;
   }
 }
+
+/* ── Landing Showcase Keyframes (.ej-*) ───────────────────────────────────── */
+@keyframes ejIn    { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes ejBar   { from { width: 0; } to { width: 100%; } }
+@keyframes ejWave  { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+@keyframes ejPulse { 0% { box-shadow: 0 0 0 0 rgba(18,21,28,.35); } 100% { box-shadow: 0 0 0 16px rgba(18,21,28,0); } }
+@keyframes ejDim   { to { opacity: .55; } }
+@keyframes ejUsed  { to { opacity: .25; transform: scale(.94); } }
+@keyframes ejButter { from { background: var(--surface-raised); border-color: var(--border); color: var(--text-strong); } to { background: #f8e08e; border-color: #efd06a; color: #12151c; } }
+@keyframes ejCoral  { from { background: var(--surface-raised); border-color: var(--border); color: var(--text-strong); } to { background: #f7b7a6; border-color: #ee9f8b; color: #12151c; } }
+@keyframes ejMint   { from { background: var(--surface-raised); border-color: var(--border); color: var(--text-strong); } to { background: #a8e6c9; border-color: #86d6b0; color: #12151c; } }
+
+.ej-in    { animation: ejIn .45s cubic-bezier(.2,.7,.2,1) both; }
+.ej-pop   { animation: ejIn .40s cubic-bezier(.2,.7,.2,1) both; }
+.ej-progress { animation: ejBar 6s linear both; }
+.ej-wave  { transform-origin: center; animation: ejWave .9s ease-in-out infinite; }
+.ej-pulse { animation: ejPulse 1.4s ease-out infinite; }
+.ej-dim   { animation: ejDim .4s ease both; }
+.ej-used  { animation: ejUsed .3s ease both; }
+.ej-hit-butter { animation: ejButter .25s ease both; }
+.ej-hit-coral  { animation: ejCoral .25s ease both; }
+.ej-hit-mint   { animation: ejMint .25s ease both; }
+.is-paused .ej-progress, .is-paused .ej-wave, .is-paused .ej-pulse { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ej-in, .ej-pop, .ej-wave, .ej-pulse, .ej-dim, .ej-used,
+  .ej-hit-butter, .ej-hit-coral, .ej-hit-mint {
+    animation-duration: .01s !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+  }
+}
+

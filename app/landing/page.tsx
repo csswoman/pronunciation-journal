@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { LandingNav } from "@/components/landing/LandingNav";
-import { LandingHero } from "@/components/landing/LandingHero";
-import { LandingStatsRow } from "@/components/landing/LandingStatsRow";
+import { Hero } from "@/components/landing/Hero";
 import { LandingPractices } from "@/components/landing/LandingPractices";
 import { LandingCoach } from "@/components/landing/LandingCoach";
 import { LandingProgress } from "@/components/landing/LandingProgress";
@@ -22,18 +20,12 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-dvh bg-[var(--bg)]">
-      <LandingNav />
-      <div className="mx-auto flex w-full max-w-6xl flex-col px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8">
-        <main className="mt-4 flex flex-col gap-20 sm:gap-28 lg:gap-32">
-          {/* Hero & Stats block (cohesive visual unit) */}
-          <ScrollReveal>
-            <div className="flex flex-col gap-5 sm:gap-6">
-              <LandingHero />
-              <LandingStatsRow />
-            </div>
-          </ScrollReveal>
+    <div className="min-h-dvh bg-[var(--bg)] text-[var(--text)]">
+      {/* Complete Hero component with header, main card showcase and stats */}
+      <Hero />
 
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col px-5 pb-16 sm:px-[40px] sm:pb-24">
+        <main className="mt-12 flex flex-col gap-20 sm:gap-28 lg:gap-32">
           <ScrollReveal>
             <LandingPractices />
           </ScrollReveal>
