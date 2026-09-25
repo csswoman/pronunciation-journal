@@ -82,10 +82,48 @@ function LevelCardTab({
     >
       <span className="course-path__level-lv">{level.spineLabel}</span>
       {isActive && (
-        <span className="course-path__level-count" aria-hidden="true">
-          {completedCount}/{totalCount}
-        </span>
+        <>
+          <span className="course-path__level-dot" aria-hidden="true">
+            ·
+          </span>
+          <span className="course-path__level-count" aria-hidden="true">
+            {completedCount}/{totalCount}
+          </span>
+        </>
       )}
+    </Link>
+  );
+}
+
+function MobileLevelOption({
+  level,
+  isActive,
+  completedCount,
+  totalCount,
+}: LevelCardTabProps) {
+  const href =
+    level.id === DEFAULT_LEVEL
+      ? "/courses"
+      : level.id === "opcionales"
+      ? "/courses?level=opcionales"
+      : `/courses?level=${level.id}`;
+
+  const isOptional = level.id === "opcionales";
+  const title = isOptional ? "Opcionales" : `Nivel ${level.spineLabel}`;
+
+  return (
+    <Link
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        "course-path__mobile-option",
+        isActive && "course-path__mobile-option--active"
+      )}
+    >
+      <span className="course-path__mobile-option-title">{title}</span>
+      <span className="course-path__mobile-option-badge">
+        {completedCount}/{totalCount}
+      </span>
     </Link>
   );
 }
@@ -261,14 +299,15 @@ export default function CoursePathLevelPicker({
             <ChevronDown size={14} aria-hidden />
           </summary>
           <div className="course-path__level-picker-mobile-content">
-            <nav className="course-path__spine course-path__spine--mobile" aria-label="Cambiar nivel">
+            <div className="course-path__mobile-menu-header">Cambiar nivel</div>
+            <nav className="course-path__mobile-options-list" aria-label="Cambiar nivel">
               {levels.map((level) => {
                 const totalCount = level.units.reduce((sum, u) => sum + u.lessons.length, 0);
                 const completedCount = completedCounts[level.id] ?? 0;
                 const isActive = level.id === selectedLevelId && !isOptionalActive;
 
                 return (
-                  <LevelCardTab
+                  <MobileLevelOption
                     key={level.id}
                     level={level}
                     isActive={isActive}
@@ -278,7 +317,7 @@ export default function CoursePathLevelPicker({
                 );
               })}
               {electives.length > 0 && (
-                <LevelCardTab
+                <MobileLevelOption
                   key="opcionales"
                   level={OPTIONAL_TAB_LEVEL}
                   isActive={isOptionalActive}
