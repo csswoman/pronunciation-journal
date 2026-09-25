@@ -20,7 +20,7 @@ diseño y planes de producto.
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
 | [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
 | [Feedback de pronunciación](architecture/pronunciation-feedback.md) | Señales honestas (`stt_intelligibility`), priorización y remediación |
-| [ADR 064 — evaluación acústica](architecture/adr-064-acoustic-pronunciation-assessment.md) | Por qué no se muestra evaluación acústica todavía y qué benchmark debe pasar |
+| [ADR 064 — evaluación acústica](architecture/adr-064-acoustic-pronunciation-assessment.md) | NO-SHIP vigente: por qué no hay veredicto por sonido. Candidato 4 (CTC de fonemas en el dispositivo) vetado y sin STOP, pero sin medir: L2-ARCTIC exige que la dueña acepte la licencia |
 
 ## Despliegue y CI/CD
 
