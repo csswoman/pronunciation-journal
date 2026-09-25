@@ -6,6 +6,15 @@ import type { AssessmentQuestion } from "@/lib/courses/assessment";
 import type { AssessmentConcept } from "@/lib/courses/concept-profile";
 
 const persistAssessmentConceptProfileMock = vi.fn();
+const draftRows = vi.hoisted(() => new Map<string, { key: string; value: string; updatedAt: string }>());
+
+vi.mock("@/lib/db", () => ({
+  db: { practicePrefs: {
+    get: async (key: string) => draftRows.get(key),
+    put: async (row: { key: string; value: string; updatedAt: string }) => { draftRows.set(row.key, row); },
+    delete: async (key: string) => { draftRows.delete(key); },
+  } },
+}));
 
 vi.mock("@/lib/courses/assessment-profile", () => ({
   persistAssessmentConceptProfile: (...args: unknown[]) => persistAssessmentConceptProfileMock(...args),
@@ -114,6 +123,7 @@ const concepts: AssessmentConcept[] = [
 describe("AssessmentClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    draftRows.clear();
     vi.stubGlobal("fetch", fetchMock);
     window.scrollTo = vi.fn();
     const store = new Map<string, string>();
@@ -329,6 +339,24 @@ describe("AssessmentClient", () => {
       }),
     );
     expect(persistAssessmentConceptProfileMock).not.toHaveBeenCalled();
+  });
+
+  it("restores the answered question and position after remounting", async () => {
+    const first = render(<AssessmentClient mode="checkpoint" checkpointLabel="B1" questions={checkpointQuestions} />);
+    await waitFor(() => expect(draftRows.has("assessment-draft:guest:checkpoint:B1")).toBe(true));
+    fireEvent.click(screen.getByText("Right"));
+    fireEvent.click(screen.getByRole("button", { name: "Siguiente pregunta" }));
+    await waitFor(() => {
+      const saved = JSON.parse(draftRows.get("assessment-draft:guest:checkpoint:B1")!.value).draft;
+      expect(saved.questionIndex).toBe(1);
+      expect(saved.answers).toEqual({ "a1:topic-one": 1 });
+    });
+    first.unmount();
+
+    render(<AssessmentClient mode="checkpoint" checkpointLabel="B1" questions={checkpointQuestions} />);
+    expect(await screen.findByRole("heading", { name: "Choose two" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Anterior" }));
+    expect(screen.getByRole("radio", { name: "Right" })).toBeChecked();
   });
 
   it("requires a full audio playback and retries after an audio error without losing the answer", () => {

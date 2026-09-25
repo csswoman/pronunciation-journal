@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
 import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import { groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
@@ -22,6 +22,7 @@ import { AssessmentOralCheckpoint } from "./AssessmentOralCheckpoint";
 import { type AssessmentOralPilotLevel } from "@/lib/courses/assessment-oral-shared";
 import { useAssessmentOralFlow } from "./useAssessmentOralFlow";
 import { useAssessmentCompletion, type AssessmentSectionFeedbackState } from "./useAssessmentCompletion";
+import { assessmentDraftKey, assessmentDraftSignature, clearAssessmentDraft, readAssessmentDraft, saveAssessmentDraft } from "@/lib/courses/assessment-draft";
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
   questions: ClientAssessmentQuestion[];
@@ -49,6 +50,44 @@ export default function AssessmentClient({
   const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
   const sections = groupQuestionsByLevel(questions);
   const flow = useAssessmentFlow({ mode, sections, initialLevel });
+  const draftKey = assessmentDraftKey({ userId, mode, checkpointLabel });
+  const draftSignature = assessmentDraftSignature(questions, concepts);
+  const [draftReady, setDraftReady] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void readAssessmentDraft(draftKey, draftSignature)
+      .then((draft) => {
+        if (!active || !draft) return;
+        const draftSection = sections[draft.sectionIndex];
+        const validAnswers = questions.every((question) =>
+          draft.answers[question.id] === undefined
+          || (Number.isInteger(draft.answers[question.id])
+            && draft.answers[question.id] >= 0
+            && draft.answers[question.id] < question.options.length),
+        );
+        if (!draftSection || !validAnswers || draft.questionIndex < 0
+          || draft.questionIndex >= draftSection.questions.length
+          || draft.placementStartIndex < 0 || draft.placementStartIndex > draft.sectionIndex) return;
+        setAnswers(draft.answers);
+        setSelfRatings(draft.selfRatings);
+        flow.restoreFlow(draft);
+      })
+      .catch(() => { /* IndexedDB can be unavailable in a restricted browser. */ })
+      .finally(() => { if (active) setDraftReady(true); });
+    return () => { active = false; };
+  }, [draftKey, draftSignature]);
+  useEffect(() => {
+    if (!draftReady) return;
+    void saveAssessmentDraft(draftKey, draftSignature, {
+      answers, selfRatings,
+      sectionIndex: flow.sectionIndex,
+      placementStartIndex: flow.placementStartIndex,
+      questionIndex: flow.questionIndex,
+      placementStep: flow.placementStep,
+      selfReportedLevel: flow.selfReportedLevel,
+    }).catch(() => { /* Keep the current attempt usable if persistence fails. */ });
+  }, [draftReady, draftKey, draftSignature, answers, selfRatings, flow.sectionIndex,
+    flow.placementStartIndex, flow.questionIndex, flow.placementStep, flow.selfReportedLevel]);
   const section = sections[flow.sectionIndex];
   const sectionConcepts = section
     ? concepts.filter((concept) => concept.level === section.level)
@@ -72,6 +111,9 @@ export default function AssessmentClient({
     answers,
     selfRatings,
   });
+  useEffect(() => {
+    if (scoring.result) void clearAssessmentDraft(draftKey).catch(() => {});
+  }, [scoring.result, draftKey]);
   const oralFlow = useAssessmentOralFlow({ mode, userId, checkpointLevel, answers, questions, scoring });
   const includesOralTask = Boolean(userId && oralFlow.needsOralEvidence);
   const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
@@ -154,6 +196,7 @@ export default function AssessmentClient({
     : undefined;
 
   const handleRedo = useCallback(() => {
+    void clearAssessmentDraft(draftKey).catch(() => {});
     clearSavedAssessmentResult({ userId, mode, checkpointLabel });
     scoring.reset();
     setAnswers({});
@@ -162,7 +205,7 @@ export default function AssessmentClient({
     setAudioReadyQuestionId(null);
     flow.resetFlow();
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [userId, mode, checkpointLabel, scoring, flow]);
+  }, [userId, mode, checkpointLabel, draftKey, scoring, flow]);
 
   if (scoring.result) {
     return (

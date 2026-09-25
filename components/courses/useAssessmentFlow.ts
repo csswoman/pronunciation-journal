@@ -4,6 +4,7 @@ import { useState } from "react";
 import { assessmentAnchorIndex } from "@/lib/courses/assessment-shared";
 import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { CefrLevelId } from "@/lib/courses/types";
+import type { AssessmentDraft } from "@/lib/courses/assessment-draft";
 
 export type AssessmentPlacementStep = "level" | "inventory" | "questions";
 
@@ -65,6 +66,14 @@ export function useAssessmentFlow({
     setSelfReportedLevel(initialLevel ?? null);
   }
 
+  function restoreFlow(draft: AssessmentDraft) {
+    setSectionIndex(draft.sectionIndex);
+    setPlacementStartIndex(draft.placementStartIndex);
+    setQuestionIndex(draft.questionIndex);
+    setPlacementStep(draft.placementStep);
+    setSelfReportedLevel(draft.selfReportedLevel);
+  }
+
   return {
     sectionIndex,
     placementStartIndex,
@@ -79,5 +88,6 @@ export function useAssessmentFlow({
     goToPreviousQuestion,
     goToNextQuestion,
     resetFlow,
+    restoreFlow,
   };
 }
