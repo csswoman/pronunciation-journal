@@ -24,7 +24,7 @@ export function AuthGuestButton({
         onClick={onClick}
         disabled={pending}
         className={cn(
-          "w-full h-12 rounded-full bg-[var(--accent-purple)] hover:brightness-95 text-white font-semibold text-base flex items-center justify-center gap-2.5 transition-all shadow-xs focus-visible:outline-2 focus-visible:outline-[var(--accent-purple)] focus-visible:outline-offset-2 disabled:opacity-50 select-none",
+          "w-full h-12 rounded-full bg-[var(--cta-bg)] hover:bg-[var(--cta-bg-hover)] text-[var(--cta-fg)] font-semibold text-base flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] shadow-xs focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:opacity-50 select-none",
         )}
       >
         <PlayIcon />

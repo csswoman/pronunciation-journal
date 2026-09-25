@@ -10,10 +10,10 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ResetForm } from "@/components/auth/ResetForm";
 import { RecoveryForm } from "@/components/auth/RecoveryForm";
-import { SocialDivider } from "@/components/auth/SocialDivider";
 import { hasAuthedBefore } from "@/lib/auth/returning-visitor";
 import { useAuthPanelController } from "@/components/auth/useAuthPanelController";
 import { useOAuthIdentityRecovery } from "@/components/auth/useOAuthIdentityRecovery";
+import { ArrowRight } from "@/components/icons";
 
 export default function AuthPanel() {
   const auth = useAuthPanelController();
@@ -31,15 +31,33 @@ export default function AuthPanel() {
     auth.clearFeedback();
   };
 
+  const headerTitle = isSave
+    ? "Guarda tu progreso"
+    : showExplorePrimary && !accountOpen
+      ? "Practica ahora, sin crear cuenta"
+      : auth.mode === "register"
+        ? "Crea tu cuenta"
+        : "Bienvenido de vuelta";
+
+  const headerSubtitle = isSave
+    ? auth.upgradingGuest
+      ? "Conserva esta sesión en tu cuenta"
+      : "Inicia sesión para no perder tu práctica"
+    : showExplorePrimary && !accountOpen
+      ? "Una sesión completa gratis, sin registrarte"
+      : auth.mode === "register"
+        ? "Empieza a practicar pronunciación hoy mismo."
+        : "Inicia sesión para seguir donde lo dejaste.";
+
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[var(--bg)] dark:bg-surface-base p-3 lg:p-4 lg:gap-4">
+    <div className="relative min-h-screen flex flex-col lg:flex-row bg-[var(--bg)] p-3 lg:p-4 lg:gap-4 overflow-hidden">
       <AuthImagePanel />
 
       <div className="flex-1 flex flex-col justify-center items-center py-6 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[400px] mx-auto flex flex-col">
+        <div className="w-full max-w-[400px] mx-auto flex flex-col animate-home-in animate-home-in-d2">
           {/* Top Brand header for mobile view */}
           <div className="lg:hidden flex items-center justify-center gap-2 mb-6">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--butter)] dark:bg-amber-400 text-black font-bold text-xs border border-black/10">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--butter)] text-slate-950 font-bold text-xs border border-black/10">
               Aa
             </div>
             <span className="font-bold text-fg text-sm tracking-tight">
@@ -48,21 +66,11 @@ export default function AuthPanel() {
           </div>
 
           <div className="flex flex-col items-center text-center mb-6">
-            <h1 className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl font-bold tracking-tight text-fg text-balance leading-tight mb-2">
-              {isSave
-                ? "Guarda tu progreso"
-                : showExplorePrimary
-                  ? "Practica ahora, sin crear cuenta"
-                  : "English Journal"}
+            <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-fg text-balance leading-tight mb-2">
+              {headerTitle}
             </h1>
             <p className="text-sm text-fg-muted text-pretty">
-              {isSave
-                ? auth.upgradingGuest
-                  ? "Conserva esta sesión en tu cuenta"
-                  : "Inicia sesión para no perder tu práctica"
-                : showExplorePrimary
-                  ? "Una sesión completa gratis, sin registrarte."
-                  : "Inicia sesión en tu cuenta"}
+              {headerSubtitle}
             </p>
           </div>
 
@@ -111,31 +119,29 @@ export default function AuthPanel() {
             />
           ) : (
             <>
-              {showExplorePrimary ? (
+              {showExplorePrimary && !accountOpen ? (
                 <div>
                   <AuthGuestButton
                     variant="primary"
                     onClick={auth.handleGuest}
                     pending={auth.pending}
+                    label="Probar una sesión"
                   />
-                  {!accountOpen ? (
-                    <p className="mt-4 text-center text-body-sm text-fg-muted">
-                      ¿Ya tienes cuenta?{" "}
-                      <button
-                        type="button"
-                        onClick={revealAccount}
-                        className="font-semibold text-[var(--accent-purple)] underline-offset-2 transition-colors hover:underline focus-visible:outline-none"
-                      >
-                        Inicia sesión
-                      </button>
-                    </p>
-                  ) : null}
+                  <p className="mt-4 text-center text-body-sm text-fg-muted">
+                    ¿Ya tienes cuenta?{" "}
+                    <button
+                      type="button"
+                      onClick={revealAccount}
+                      className="font-semibold text-[var(--accent-purple)] underline-offset-2 transition-colors hover:underline focus-visible:outline-none"
+                    >
+                      Inicia sesión
+                    </button>
+                  </p>
                 </div>
               ) : null}
 
               {!showExplorePrimary || accountOpen ? (
                 <>
-                  {showExplorePrimary ? <SocialDivider /> : null}
                   <div>
                     <AuthTabs
                       mode={auth.mode === "register" ? "register" : "login"}
@@ -189,6 +195,63 @@ export default function AuthPanel() {
                       />
                     )}
                   </div>
+
+                  {/* Account Switch Mode CTA */}
+                  <p className="mt-4 text-center text-body-sm text-fg-muted">
+                    {auth.mode === "login" ? (
+                      <>
+                        ¿No tienes cuenta?{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            auth.setMode("register");
+                            auth.clearFeedback();
+                          }}
+                          className="font-bold text-[var(--accent-purple)] hover:underline focus-visible:outline-none"
+                        >
+                          Crear cuenta
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        ¿Ya tienes cuenta?{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            auth.setMode("login");
+                            auth.clearFeedback();
+                          }}
+                          className="font-bold text-[var(--accent-purple)] hover:underline focus-visible:outline-none"
+                        >
+                          Iniciar sesión
+                        </button>
+                      </>
+                    )}
+                  </p>
+
+                  {/* Guest Practice Bento Card with hover interaction */}
+                  <div className="rounded-2xl bg-[var(--sky)] text-slate-950 p-5 mt-6 flex items-center justify-between shadow-sm border border-black/5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 group">
+                    <div className="flex flex-col pr-2">
+                      <span className="text-[11px] font-extrabold tracking-wider text-slate-700 uppercase block mb-1">
+                        SIN REGISTRO
+                      </span>
+                      <h4 className="font-[family-name:var(--font-display)] text-lg font-bold text-slate-950 leading-snug">
+                        Prueba una sesión gratis
+                      </h4>
+                      <p className="text-xs text-slate-700 font-medium mt-0.5">
+                        Completa, sin crear cuenta.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={auth.handleGuest}
+                      disabled={auth.pending}
+                      className="bg-slate-950 hover:bg-black text-white px-4 py-2.5 rounded-full font-bold text-sm flex items-center gap-1.5 shrink-0 transition-transform active:scale-95 disabled:opacity-50 cursor-pointer"
+                    >
+                      <span>{auth.pending ? "Entrando…" : "Probar"}</span>
+                      <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  </div>
                 </>
               ) : null}
             </>
@@ -208,4 +271,3 @@ export default function AuthPanel() {
     </div>
   );
 }
-

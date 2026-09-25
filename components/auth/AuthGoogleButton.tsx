@@ -6,7 +6,7 @@ interface AuthGoogleButtonProps {
   label?: string;
 }
 
-const SOCIAL_BTN = "w-full flex items-center justify-center gap-3 h-12 px-4 rounded-full border border-border-subtle bg-white dark:bg-surface-sunken text-base font-semibold text-fg transition-all hover:bg-gray-50 dark:hover:bg-surface-raised hover:border-border-strong disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 shadow-xs select-none";
+const SOCIAL_BTN = "w-full flex items-center justify-center gap-3 h-12 px-4 rounded-full border border-border bg-surface dark:bg-field text-base font-semibold text-fg transition-all hover:bg-surface-raised dark:hover:bg-surface-raised hover:border-border-strong disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 shadow-xs select-none";
 
 
 export { SOCIAL_BTN };

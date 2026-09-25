@@ -14,7 +14,7 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       <button
         type={type}
         onClick={onClick}
-        className="text-base font-semibold text-[var(--accent-purple)] hover:underline underline-offset-2 transition-colors focus-visible:outline-none"
+        className="text-xs font-semibold text-[var(--accent-purple)] hover:underline underline-offset-2 transition-colors focus-visible:outline-none cursor-pointer"
       >
         {label}
       </button>
@@ -26,9 +26,8 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
       type={type}
       onClick={onClick}
       disabled={pending}
-      className="w-full h-12 rounded-full bg-[var(--ink)] hover:bg-black text-white font-semibold text-base flex items-center justify-center gap-2 transition-all shadow-xs focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2 disabled:opacity-50 select-none"
+      className="w-full h-12 rounded-full bg-[var(--accent-purple)] hover:brightness-95 text-white font-semibold text-base flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] shadow-md focus-visible:outline-2 focus-visible:outline-[var(--accent-purple)] focus-visible:outline-offset-2 disabled:opacity-50 select-none cursor-pointer"
     >
-
       {pending ? (
         <span className="flex items-center gap-2">
           <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -43,4 +42,3 @@ export function AuthButton({ label, pending, type = "submit", variant = "primary
     </button>
   );
 }
-

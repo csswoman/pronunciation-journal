@@ -211,6 +211,10 @@
   color: var(--text-secondary);
 }
 
+.pastel-card .font-ipa {
+  color: var(--ink-secondary) !important;
+}
+
 /** Sentence / multi-token IPA transcription */
 .ipa {
   font-family: var(--font-ipa), sans-serif;

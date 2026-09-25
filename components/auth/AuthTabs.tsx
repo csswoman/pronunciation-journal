@@ -16,7 +16,7 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
   return (
     <div
       role="tablist"
-      className="grid grid-cols-2 p-1 bg-white dark:bg-surface-sunken border border-border-subtle rounded-full mb-6 w-full select-none"
+      className="grid grid-cols-2 p-1 bg-surface dark:bg-field border border-border rounded-full mb-6 w-full select-none"
     >
       {TABS.map(({ value, label }) => {
         const active = mode === value;
@@ -28,7 +28,7 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
             aria-selected={active}
             onClick={() => onModeChange(value)}
             className={[
-              "w-full py-2.5 rounded-full text-base transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[var(--accent-purple)] focus-visible:outline-offset-2",
+              "w-full py-2.5 rounded-full text-base transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[var(--accent-purple)] focus-visible:outline-offset-2 cursor-pointer active:scale-95",
               active
                 ? "bg-[var(--accent-purple)] text-white font-semibold shadow-xs"
                 : "text-fg-muted font-medium hover:text-fg bg-transparent",
@@ -41,4 +41,3 @@ export function AuthTabs({ mode, onModeChange }: AuthTabsProps) {
     </div>
   );
 }
-

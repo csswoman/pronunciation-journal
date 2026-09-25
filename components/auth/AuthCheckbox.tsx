@@ -13,7 +13,7 @@ export function AuthCheckbox({ label, checked, onChange }: AuthCheckboxProps) {
         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all ${
           checked
             ? "border-[var(--accent-purple)] bg-[var(--accent-purple)]"
-            : "border-border-strong bg-white dark:bg-surface-sunken"
+            : "border-border-strong bg-surface dark:bg-field"
         }`}
       >
         {checked && (
