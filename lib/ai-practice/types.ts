@@ -1,5 +1,11 @@
 import type { StarterId } from "@/lib/ai-practice/starters/types";
+import type { ErrorPatternId } from "@/lib/exercises/error-patterns";
 export type ToolCallStatus = "pending" | "rendered" | "answered" | "error";
+
+export type CoachErrorRecurrenceFeedback = {
+  patternId: ErrorPatternId;
+  status: "saved" | "failed";
+};
 
 export type ToolCall = {
   id: string;
@@ -37,7 +43,7 @@ export type SendOpts = {
 
 export type AIMessage =
   | { role: "user"; content: string; timestamp: string; hidden?: boolean; voice?: VoiceMetadata; marker?: string }
-  | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string; translation?: string }
+  | { role: "model"; contentParts: ContentPart[]; toolCalls: Map<string, ToolCall>; timestamp: string; translation?: string; errorRecurrence?: CoachErrorRecurrenceFeedback }
   | { role: "tool"; toolCallId: string; name: string; result: unknown; timestamp: string };
 
 export type StreamChunk =

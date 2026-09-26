@@ -10,6 +10,8 @@ export interface CorrectionCardData {
   kind?: "error" | "unnatural";
   /** Set only when kind is "error" and the model identified the pattern. */
   errorPattern?: ErrorPatternId;
+  /** Client persistence result; omitted for legacy messages and guest turns. */
+  recurrenceStatus?: "saved" | "failed";
 }
 
 interface CorrectionCardProps {
@@ -34,7 +36,11 @@ export default function CorrectionCard({ correction }: CorrectionCardProps) {
         </p>
         {correction.errorPattern && !isNatural && (
           <p className="m-0 text-xs text-ink-secondary">
-            Lo repasarás en tu práctica: {describeErrorPattern(correction.errorPattern)}
+            {correction.recurrenceStatus === "saved"
+              ? "Lo repasarás en tu práctica: " + describeErrorPattern(correction.errorPattern)
+              : correction.recurrenceStatus === "failed"
+                ? "No se pudo guardar el repaso de " + describeErrorPattern(correction.errorPattern) + "."
+                : "Patrón detectado: " + describeErrorPattern(correction.errorPattern)}
           </p>
         )}
       </div>

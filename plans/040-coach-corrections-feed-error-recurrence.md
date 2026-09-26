@@ -14,6 +14,7 @@
 - **Effort**: S (~1 día)
 - **Risk**: LOW
 - **Depends on**: — (compatible con 037; si 037 fase A ya tocó `hooks/useStreamingChat.ts`, integra sobre esa versión)
+- **Status**: DONE (commit `724f3c9f`, 2026-09-25)
 - **Category**: pedagogía / bucle de aprendizaje
 - **Planned at**: commit `866979df`, 2026-09-23
 
@@ -114,12 +115,14 @@ pásalo desde `AIBubble`. En `CorrectionCard`, cuando la corrección trae `error
 
 ## Criterios de aceptación
 
-- [ ] Una corrección `kind:"error"` con id válido llega a `recordPracticeErrorRecurrence` una vez por patrón y conversación.
-- [ ] Ids inventados y correcciones `unnatural` no llegan a la cola.
-- [ ] Conversaciones cargadas del historial no registran nada.
-- [ ] Ninguna request nueva a `/api/gemini/*`.
-- [ ] `pnpm test`, `pnpm type-check`, `pnpm lint`, `npm run lint:design` en exit 0.
-- [ ] Documentación del paso 5 actualizada.
+- [x] Una corrección `kind:"error"` con id válido llega a `recordPracticeErrorRecurrence` una vez por patrón y conversación.
+- [x] Ids inventados y correcciones `unnatural` no llegan a la cola.
+- [x] Conversaciones cargadas del historial no registran nada.
+- [x] Reabrir una conversación restaura la deduplicación; patrones cuyo guardado falló pueden reintentarse.
+- [x] La tarjeta confirma el repaso solo tras guardar en Dexie e informa el fallo si no se pudo guardar.
+- [x] Ninguna request nueva a `/api/gemini/*`.
+- [x] Pasaron 120 pruebas dirigidas y el type-check completo; ESLint dirigido terminó sin errores y dejó una advertencia por longitud. No se ejecutaron los lint globales ni `npm run lint:design`.
+- [x] Documentación del paso 5 actualizada.
 
 ## STOP conditions
 

@@ -71,9 +71,14 @@ El hook `useCoachErrorRecurrence` (`hooks/useCoachErrorRecurrence.ts`) llama a
 `recordPracticeErrorRecurrence` cuando recibe un turno en vivo con corrección
 válida. Garantías:
 
-- **Una vez por patrón por conversación**: un `Set<ErrorPatternId>` impide que
-  el mismo patrón se encole varias veces aunque el aprendiz repita el error.
-- **Solo camino vivo**: los mensajes cargados del historial (`loadMessages`) y
-  los turnos ocultos/automatizados (`options.hidden`) no enrolan nada.
+- **Una vez por patrón por conversación**: al restaurar el historial, se hidrata
+  el conjunto desde las correcciones visibles ya guardadas. Los mensajes antiguos
+  sin estado de guardado se consideran registrados; los que guardan estado
+  `failed` permiten reintentar.
+- **Solo camino vivo**: cargar historial (`loadMessages`) no escribe en la cola;
+  solo recupera la deduplicación. Los turnos ocultos/automatizados no se guardan.
+- **Aviso fiel al guardado**: “Lo repasarás en tu práctica” aparece cuando la
+  escritura local en Dexie tuvo éxito. Si falla, el Coach lo indica y permite
+  reintentar; en modo invitado solo muestra el patrón detectado.
 - **Sin requests extra**: el campo viaja en la llamada `annotate_turn` ya
   existente; no hay nuevas peticiones a `/api/gemini/*`.

@@ -36,7 +36,8 @@ describe('recordPracticeErrorRecurrence', () => {
       updatedAt: emptyState.updatedAt,
     })
 
-    await recordPracticeErrorRecurrence('u1', 'tense_present_for_past', undefined, false)
+    const saved = await recordPracticeErrorRecurrence('u1', 'tense_present_for_past', undefined, false)
+    expect(saved).toBe(true)
 
     expect(db.learningState.put).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -104,5 +105,30 @@ describe('recordPracticeErrorRecurrence', () => {
         }),
       }),
     )
+  })
+
+  it('returns false when the local learning-state write fails', async () => {
+    vi.mocked(db.learningState.get).mockResolvedValue(undefined)
+    vi.mocked(db.learningState.put).mockRejectedValueOnce(new Error('IndexedDB unavailable'))
+
+    const saved = await recordPracticeErrorRecurrence('u1', 'spelling', undefined, false)
+
+    expect(saved).toBe(false)
+    expect(enqueue).not.toHaveBeenCalled()
+  })
+
+  it('keeps a locally saved recurrence when adding the remote outbox entry fails', async () => {
+    const emptyState = createEmptyState('u1', 'client')
+    vi.mocked(db.learningState.get).mockResolvedValue({
+      userId: 'u1',
+      state: emptyState,
+      updatedAt: emptyState.updatedAt,
+    })
+    vi.mocked(enqueue).mockRejectedValueOnce(new Error('Outbox unavailable'))
+
+    const saved = await recordPracticeErrorRecurrence('u1', 'spelling', undefined, false)
+
+    expect(saved).toBe(true)
+    expect(db.learningState.put).toHaveBeenCalled()
   })
 })

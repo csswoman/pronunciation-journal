@@ -12,8 +12,8 @@ export async function recordPracticeErrorRecurrence(
   errorPattern: ErrorPatternId | undefined,
   rehearsedPattern: ErrorPatternId | undefined,
   isCorrect: boolean,
-): Promise<void> {
-  if (!errorPattern && !rehearsedPattern) return
+): Promise<boolean> {
+  if (!errorPattern && !rehearsedPattern) return false
 
   try {
     const existingRow = await db.learningState.get(userId)
@@ -25,18 +25,26 @@ export async function recordPracticeErrorRecurrence(
     })
     const updatedAt = updatedState.updatedAt || new Date().toISOString()
     await db.learningState.put({ userId, state: updatedState, updatedAt })
-    await enqueue(
-      userId,
-      'user_learning_state',
-      'upsert',
-      {
-        user_id: userId,
-        state: updatedState as unknown as Record<string, unknown>,
-        updated_at: updatedAt,
-      },
-      { user_id: userId },
-    )
+    try {
+      await enqueue(
+        userId,
+        'user_learning_state',
+        'upsert',
+        {
+          user_id: userId,
+          state: updatedState as unknown as Record<string, unknown>,
+          updated_at: updatedAt,
+        },
+        { user_id: userId },
+      )
+    } catch (err) {
+      // Dexie is the local source of truth. A failed remote enqueue should not
+      // cause a second local failure to be counted for the same correction.
+      console.warn('[recordPracticeErrorRecurrence] failed to enqueue learning state', err)
+    }
+    return true
   } catch (err) {
     console.warn('[recordPracticeErrorRecurrence] failed to update errorRecurrence', err)
+    return false
   }
 }

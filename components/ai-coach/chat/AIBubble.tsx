@@ -65,6 +65,19 @@ export default function AIBubble({
   const concept = extractTurnConcept(message.toolCalls);
   const parsed = parseCorrection(fullText);
   const correction = toolCorrection ?? parsed.correction;
+  const patternId =
+    correction && "errorPattern" in correction ? correction.errorPattern : undefined;
+  const recurrenceFeedback = message.errorRecurrence;
+  const recurrenceStatus =
+    patternId && recurrenceFeedback?.patternId === patternId
+      ? recurrenceFeedback.status
+      : undefined;
+  const correctionCardData = correction
+    ? {
+        ...correction,
+        recurrenceStatus,
+      }
+    : null;
   const rawProse = toolCorrection ? fullText : parsed.body;
   const proseBody = rawProse.trim();
   const extractedSuggestions = extractSuggestions(proseBody);
@@ -118,7 +131,7 @@ export default function AIBubble({
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2">
-        {correction && <CorrectionCard correction={correction} />}
+        {correctionCardData && <CorrectionCard correction={correctionCardData} />}
 
         {hasContentBox && (
           <div

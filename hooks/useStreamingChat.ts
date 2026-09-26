@@ -63,7 +63,7 @@ export function useStreamingChat({
   const lastFailedSendRef = useRef<{ text: string; options?: SendOpts } | null>(null);
 
   const metrics = useCoachSessionMetrics({ mode, userId });
-  const { recordIfNeeded, reset: resetErrorRecurrence } = useCoachErrorRecurrence();
+  const { recordIfNeeded, reset: resetErrorRecurrence, restoreFromMessages: restoreErrorRecurrence } = useCoachErrorRecurrence();
 
   const sendMessage = useCallback(async (text: string, options?: SendOpts) => {
     if (!text.trim() || isStreaming) return;
@@ -225,8 +225,13 @@ export function useStreamingChat({
         return;
       }
 
-      const finalModelMsg: AIMessage = { role: "model", contentParts: state.parts, toolCalls: state.calls, timestamp: modelMsg.timestamp };
-      const finalMessages = [...nextMessages, finalModelMsg];
+      let finalModelMsg: Extract<AIMessage, { role: "model" }> = {
+        role: "model",
+        contentParts: state.parts,
+        toolCalls: state.calls,
+        timestamp: modelMsg.timestamp,
+      };
+      let finalMessages = [...nextMessages, finalModelMsg];
       setMessages(finalMessages);
       void logEvent("coach_turn_latency", {
         mode,
@@ -238,8 +243,11 @@ export function useStreamingChat({
       if (userIdRef.current) {
         void saveCoachSeenItems(userIdRef.current, state.calls.values()).catch(() => {});
       }
-      if (userIdRef.current && !options?.hidden) {
-        recordIfNeeded(userIdRef.current, state.calls);
+      const recurrenceFeedback = await recordIfNeeded(userIdRef.current, state.calls, options?.hidden);
+      if (recurrenceFeedback) {
+        finalModelMsg = { ...finalModelMsg, errorRecurrence: recurrenceFeedback };
+        finalMessages = [...nextMessages, finalModelMsg];
+        setMessages(finalMessages);
       }
 
       const newId = await persistConversationState({
@@ -261,7 +269,7 @@ export function useStreamingChat({
       window.clearTimeout(requestTimeout);
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, userId]);
+  }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, recordIfNeeded, userId]);
 
   const retryLastFailedSend = useCallback(async () => {
     const failed = lastFailedSendRef.current;
@@ -312,8 +320,10 @@ export function useStreamingChat({
   }, [finalizeSession, metrics, resetErrorRecurrence]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
-    setMessages(hydratePersistedMessages(msgs));
-  }, []);
+    const hydrated = hydratePersistedMessages(msgs);
+    restoreErrorRecurrence(hydrated);
+    setMessages(hydrated);
+  }, [restoreErrorRecurrence]);
 
   const saveTranslation = useCallback((msgIndex: number, translation: string) => {
     setMessages(prev => {

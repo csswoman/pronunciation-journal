@@ -214,7 +214,10 @@ Ya están conectados al backbone común:
   `kind:"error"` y un `errorPattern` válido, `useCoachErrorRecurrence` llama a
   `recordPracticeErrorRecurrence` (máximo una vez por patrón y conversación)
   para que el Plan diario programe el repaso. Correcciones `unnatural`, ids no
-  reconocidos y turnos del historial cargado no entran a la cola.
+  reconocidos y turnos del historial cargado no crean entradas nuevas. El
+  historial visible restaura la deduplicación al reabrir la conversación; solo
+  un guardado local exitoso se presenta como repaso programado, y los fallos
+  siguen siendo reintentables.
 
 Plan 073 cerró el backbone: `audit:learning-loop` proyecta el contenido autoral
 y audita adapters; Ruta/Mazos/Mini-lecciones comparten topics explícitos;
