@@ -4,6 +4,8 @@ import { fetchEssentialWords } from '@/lib/essential-words/client'
 import { fromGenericExercise } from '@/lib/practice/adapters'
 import type { PracticeExercise } from '@/lib/practice/types'
 import type { CefrLevel } from '@/lib/essential-words/types'
+import type { GrammarDrill } from '@/lib/courses/grammar-deck/drill-schema'
+import { buildGrammarDrill } from '@/lib/exercises/generators/grammar-drill'
 import { selectNewWordsForLevel } from './vocab-selector'
 import { buildWordExercises } from './word-exercise-builder'
 import { db } from '@/lib/db'
@@ -16,19 +18,24 @@ export interface BuildCourseSessionOptions {
   deckSlug: string
   cefrLevel: CefrLevel
   userId?: string
+  drill?: GrammarDrill
 }
 
 /**
  * Assembles a mixed PracticeExercise[] for a grammar deck lesson.
- * Sources: sentence fragments (reorder/dictation/fill-blank), new Core 1000
- * vocabulary for the CEFR level.
+ * Sources: grammar drill (if present), sentence fragments (reorder/dictation/fill-blank),
+ * new Core 1000 vocabulary for the CEFR level.
  * Returns [] when all sources are empty — caller should hide the practice button.
  */
 export async function buildCoursePracticeSession({
   deckSlug,
   cefrLevel,
   userId,
+  drill,
 }: BuildCourseSessionOptions): Promise<PracticeExercise[]> {
+  const drillExercises = drill
+    ? buildGrammarDrill(deckSlug, drill).map((ex) => fromGenericExercise(ex, 'courses'))
+    : []
   // ── Source 1: sentence fragments ──────────────────────────────────────────
   const fragmentExercises = await (async () => {
     try {
@@ -71,5 +78,5 @@ export async function buildCoursePracticeSession({
     if (interleaved.length < TARGET_SIZE && vq.length > 0) interleaved.push(vq.shift()!)
   }
 
-  return interleaved
+  return [...drillExercises, ...interleaved]
 }

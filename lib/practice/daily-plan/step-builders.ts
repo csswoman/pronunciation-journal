@@ -19,6 +19,7 @@ import type { MinimalPair, Sound, SoundWord } from '@/lib/phoneme-practice/types
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { wordBankEntryToStudyCard } from '@/lib/practice/study-card/model'
 import type { WordCategoryIndex } from '@/lib/lexicon/domain-profile'
+import type { SpeechConstraintId } from '@/lib/exercises/speech-constraints'
 import {
   LISTENING_EXERCISE_COUNT,
   MINIMAL_PAIRS_EXERCISE_COUNT,
@@ -62,6 +63,7 @@ export function buildWordReviewStep(
   savedOrFamiliarIds?: ReadonlySet<string>,
   wordIndex?: WordCategoryIndex,
   activeLevel?: CefrLevelId,
+  repairConstraints: readonly SpeechConstraintId[] = [],
 ): DailyStep | null {
   if (words.length === 0) return null
 
@@ -107,11 +109,16 @@ export function buildWordReviewStep(
   // Constraints above the learner's level are dropped inside the generator,
   // forced slots included: asking an A1 learner for circumlocution or a
   // second conditional is not a challenge, it is an unanswerable prompt.
+  const preferredConstraints = [
+    ...repairConstraints,
+    'rodeo_circumlocution',
+    'spoken_verb_transform',
+  ] as const
   const spokenProduction = isExerciseAvailableOnSurface('spoken_production', targetSurface)
     ? generateSpokenProductionFromWordBank(
         productionWords,
         SPOKEN_PRODUCTION_PER_SESSION,
-        ['rodeo_circumlocution', 'spoken_verb_transform'],
+        preferredConstraints,
         learnerLevel,
       )
     : { exercises: [] }

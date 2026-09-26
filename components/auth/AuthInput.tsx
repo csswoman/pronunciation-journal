@@ -15,6 +15,7 @@ interface AuthInputProps {
   autoComplete?: string;
   minLength?: number;
   error?: string;
+  rightLabel?: React.ReactNode;
 }
 
 // Large bullet character — renders at full font-size unlike browser password glyphs
@@ -30,6 +31,7 @@ export function AuthInput({
   autoComplete,
   minLength,
   error,
+  rightLabel,
 }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,10 +41,10 @@ export function AuthInput({
   const masked = isPasswordField && !showPassword;
 
   const baseClass =
-    "w-full bg-surface-sunken rounded-sm text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface-raised focus-visible:ring-2 focus-visible:ring-offset-2 pr-14";
+    "w-full bg-surface dark:bg-field rounded-xl text-fg text-base px-4 py-3 outline-none transition-all placeholder:text-fg-subtle focus:bg-surface dark:focus:bg-surface-raised pr-12";
   const borderClass = error
-    ? "border border-error focus:border-error focus-visible:ring-error"
-    : "border border-border-subtle focus:border-primary focus-visible:ring-primary";
+    ? "border border-error focus:border-error focus-visible:ring-2 focus-visible:ring-error"
+    : "border border-border focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20";
 
   // Wide tracking only while masked bullets are visible — not on the empty placeholder
   const maskedClass =
@@ -74,9 +76,12 @@ export function AuthInput({
 
   return (
     <div>
-      <label htmlFor={inputId} className="block mb-1.5 text-body-sm font-medium text-fg-muted">
-        {label}
-      </label>
+      <div className="flex items-center justify-between mb-1.5">
+        <label htmlFor={inputId} className="text-body-sm font-semibold text-fg-muted">
+          {label}
+        </label>
+        {rightLabel}
+      </div>
       <div className="relative">
         <input
           ref={inputRef}

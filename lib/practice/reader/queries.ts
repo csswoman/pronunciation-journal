@@ -4,6 +4,7 @@ import { targetHash } from './target-hash'
 import type { ReaderTarget } from './select-targets'
 import type { ReaderPassage, ReaderQuestion } from './types'
 import { getAllReaderPassages, deleteReaderPassage } from '@/lib/db'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 interface GenerateReaderResponse {
   passage: string
@@ -35,7 +36,7 @@ export async function generateReaderPassage(
   topic?: string,
 ): Promise<ReaderPassage> {
   const words = targets.map((t) => t.word)
-  const res = await fetch('/api/gemini/generate-reader', {
+  const res = await fetchWithTimeout('/api/gemini/generate-reader', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -43,7 +44,7 @@ export async function generateReaderPassage(
       level: level.toLowerCase(),
       topic: topic?.trim() || undefined,
     }),
-  })
+  }, 30_000)
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
     throw new Error(errorData.error || errorData.message || `generate-reader failed: ${res.status}`)
@@ -73,11 +74,11 @@ export async function fetchReaderAudioUrl(
   passageText?: string,
   voice?: "Puck" | "Charon" | "Kore" | "Fenrir" | "Aoede",
 ): Promise<string> {
-  const res = await fetch('/api/gemini/reader-audio', {
+  const res = await fetchWithTimeout('/api/gemini/reader-audio', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ passageId, passageText, voice }),
-  })
+  }, 50_000)
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
     throw new Error(errorData.error || `Audio generation failed (${res.status})`)

@@ -2,14 +2,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   from: vi.fn(),
+  getWordsDueForReview: vi.fn(),
 }))
 
 vi.mock('server-only', () => ({}))
 vi.mock('@/lib/supabase/server', () => ({
   createSupabaseServerClient: async () => ({ from: mocks.from }),
 }))
+vi.mock('@/lib/word-bank/server-queries', () => ({
+  getWordsDueForReview: mocks.getWordsDueForReview,
+}))
 
-import { resolveSeedVocabulary, selectGrammarNote } from '@/lib/journal/scaffold-resolver'
+import { combineScaffoldVocabulary, type DueReviewSeedWord } from '@/lib/journal/scaffold-resolver'
+import { fetchDueWordsForScaffold, resolveSeedVocabulary, selectGrammarNote } from '@/lib/journal/server-queries'
 
 function queryResult(data: unknown) {
   const chain: Record<string, unknown> = {
@@ -23,14 +28,15 @@ function queryResult(data: unknown) {
 
 beforeEach(() => {
   mocks.from.mockReset()
+  mocks.getWordsDueForReview.mockReset()
 })
 
 describe('resolveSeedVocabulary', () => {
   it('uses the learner rows for matching seeds, preserves order, and makes one query', async () => {
     mocks.from.mockReturnValue(
       queryResult([
-        { text: ' COZY ', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', srs_status: 'learning' },
-        { text: 'shelf', translation: 'estantería', ipa: '/ʃelf/', example: 'The shelf is by the window.', srs_status: 'review' },
+        { id: 'word-cozy', text: ' COZY ', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', srs_status: 'learning' },
+        { id: 'word-shelf', text: 'shelf', translation: 'estantería', ipa: '/ʃelf/', example: 'The shelf is by the window.', srs_status: 'review' },
       ]),
     )
 
@@ -44,12 +50,66 @@ describe('resolveSeedVocabulary', () => {
     )
 
     expect(result).toEqual([
-      { text: 'cozy', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', inWordBank: true, srsStatus: 'learning' },
-      { text: 'corner', translation: 'rincón', ipa: '/corner/', example: 'Generated corner.', inWordBank: false, srsStatus: null },
-      { text: 'shelf', translation: 'estantería', ipa: '/ʃelf/', example: 'The shelf is by the window.', inWordBank: true, srsStatus: 'review' },
+      { id: 'word-cozy', text: 'cozy', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', inWordBank: true, srsStatus: 'learning', provenance: 'scaffold' },
+      { text: 'corner', translation: 'rincón', ipa: '/corner/', example: 'Generated corner.', inWordBank: false, srsStatus: null, provenance: 'scaffold' },
+      { id: 'word-shelf', text: 'shelf', translation: 'estantería', ipa: '/ʃelf/', example: 'The shelf is by the window.', inWordBank: true, srsStatus: 'review', provenance: 'scaffold' },
     ])
     expect(mocks.from).toHaveBeenCalledTimes(1)
     expect(mocks.from).toHaveBeenCalledWith('word_bank')
+  })
+})
+
+describe('fetchDueWordsForScaffold', () => {
+  it('adapts the canonical due queue and preserves user and limit arguments', async () => {
+    mocks.getWordsDueForReview.mockResolvedValue([{
+      id: 'due-1', text: 'borrow', translation: 'pedir prestado', meaning: 'obtener prestado',
+      ipa: '/ˈbɑːroʊ/', example: 'Can I borrow your pen?', srs_status: 'review',
+    }])
+
+    await expect(fetchDueWordsForScaffold('user-1', 3)).resolves.toEqual([{
+      id: 'due-1', text: 'borrow', translation: 'pedir prestado', ipa: '/ˈbɑːroʊ/',
+      example: 'Can I borrow your pen?', inWordBank: true, srsStatus: 'review', provenance: 'dueReview',
+    }])
+    expect(mocks.getWordsDueForReview).toHaveBeenCalledWith('user-1', 3)
+  })
+
+  it('keeps a failed due query distinct from a confirmed empty queue', async () => {
+    mocks.getWordsDueForReview.mockResolvedValue([])
+    await expect(fetchDueWordsForScaffold('user-1', 3)).resolves.toEqual([])
+
+    const queryError = new Error('query failed')
+    mocks.getWordsDueForReview.mockRejectedValue(queryError)
+    await expect(fetchDueWordsForScaffold('user-1', 3)).rejects.toBe(queryError)
+  })
+})
+
+describe('combineScaffoldVocabulary', () => {
+  const seed = {
+    text: 'borrow', translation: 'pedir prestado', ipa: '/bɑːroʊ/', example: 'Borrow a book.',
+    inWordBank: false, srsStatus: null, provenance: 'scaffold' as const,
+  }
+  const due: DueReviewSeedWord = {
+    id: 'due-1', text: 'BORROW', translation: 'pedir prestado', ipa: '/ˈbɑːroʊ/',
+    example: 'Can I borrow it?', inWordBank: true, srsStatus: 'review', provenance: 'dueReview',
+  }
+
+  it('deduplicates a due word against the scaffold and retains due provenance only with a confirmed due row', () => {
+    expect(combineScaffoldVocabulary([seed], [])).toEqual([seed])
+    expect(combineScaffoldVocabulary([seed], [due])).toEqual([{
+      ...seed, id: due.id, inWordBank: true, srsStatus: 'review', provenance: 'dueReview',
+    }])
+  })
+
+  it('adds due words after scaffold words without duplicating canonical ids', () => {
+    const secondDue = { ...due, id: 'due-2', text: 'lend' }
+    expect(combineScaffoldVocabulary([seed], [due, secondDue])).toHaveLength(2)
+    expect(combineScaffoldVocabulary([seed], [due, secondDue])[1].provenance).toBe('dueReview')
+
+    const sameIdDifferentText = { ...seed, text: 'borrow something', id: due.id }
+    expect(combineScaffoldVocabulary([sameIdDifferentText], [due])).toHaveLength(1)
+    expect(combineScaffoldVocabulary([sameIdDifferentText], [due])[0]).toMatchObject({
+      text: 'borrow something', provenance: 'dueReview', id: due.id,
+    })
   })
 })
 

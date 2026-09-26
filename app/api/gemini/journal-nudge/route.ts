@@ -47,6 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 900,
       },
     },
+    schema: journalNudgeResponseSchema,
     parse: (raw) => journalNudgeResponseSchema.parse(parseGeminiJson(raw, (json) => json)),
     failureMessage: 'Failed to generate journal nudge',
   })

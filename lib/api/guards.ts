@@ -6,7 +6,13 @@ import type { Database } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 import { logServerError, redactForLog, type RedactedError } from "@/lib/api/logging";
-export { checkLayeredRateLimit, isAnonymousUser, getClientIp, hashIp } from "@/lib/api/rate-limit";
+export {
+  checkDailyAiUserLimit,
+  checkLayeredRateLimit,
+  isAnonymousUser,
+  getClientIp,
+  hashIp,
+} from "@/lib/api/rate-limit";
 
 // ---------------------------------------------------------------------------
 // Shared secure response headers

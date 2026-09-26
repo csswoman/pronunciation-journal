@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   insert: vi.fn(),
   upsert: vi.fn(),
+  resultUpsert: vi.fn(),
   tryGetSupabaseAdminClient: vi.fn(),
 }));
 
@@ -18,7 +19,7 @@ vi.mock("@/lib/supabase/service-role", () => ({
   tryGetSupabaseAdminClient: mocks.tryGetSupabaseAdminClient,
 }));
 
-import { persistAssessmentOutcome, saveAssessmentResult } from "../assessment-queries";
+import { persistAssessmentOutcome, saveAssessmentResult, savePendingOralAssessmentResult } from "../assessment-queries";
 import type { AssessmentResult } from "../assessment";
 
 const result: AssessmentResult = {
@@ -27,6 +28,8 @@ const result: AssessmentResult = {
   passedLevels: ["a1", "a2"],
   score: 8,
   total: 10,
+  listeningScore: 0,
+  listeningTotal: 0,
   topicScores: [{ lessonSlug: "intro", title: "Intro", correct: 1, total: 2 }],
   strengths: [],
   needsReview: [{ lessonSlug: "intro", title: "Intro" }],
@@ -46,8 +49,10 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.insert.mockResolvedValue({ error: null });
   mocks.upsert.mockResolvedValue({ error: null });
+  mocks.resultUpsert.mockResolvedValue({ error: null });
   mocks.tryGetSupabaseAdminClient.mockReturnValue({
     from: (table: string) => {
+      if (table === "assessment_results") return { upsert: mocks.resultUpsert };
       expect(table).toBe("user_profiles");
       return { upsert: mocks.upsert };
     },
@@ -60,11 +65,65 @@ describe("assessment persistence", () => {
 
     expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
       topic_scores: {
-        version: 2,
+        version: 4,
+        listeningScore: result.listeningScore,
+        listeningTotal: result.listeningTotal,
+        levelScores: [],
+        oralEvidence: null,
         topics: result.topicScores,
         concepts: result.conceptSignals,
       },
     }));
+  });
+
+  it("persists oral evidence and the written-listening threshold breakdown", async () => {
+    const oralResult: AssessmentResult = {
+      ...result,
+      evaluatedLevels: ["a1"],
+      oralEvidence: { level: "a1", status: "passed" },
+      levelScores: [{
+        level: "a1",
+        correct: 12,
+        total: 14,
+        minimumCorrect: 10,
+        listeningCorrect: 4,
+        listeningTotal: 6,
+        minimumListeningCorrect: 3,
+        writtenListeningMet: true,
+        oralRequired: true,
+        oralPassed: true,
+        thresholdMet: true,
+      }],
+    };
+
+    await saveAssessmentResult("u1", "checkpoint", oralResult, "a1");
+
+    expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
+      topic_scores: expect.objectContaining({
+        version: 4,
+        oralEvidence: { level: "a1", status: "passed" },
+        levelScores: oralResult.levelScores,
+      }),
+    }));
+  });
+
+  it("upserts a pending oral result by attempt id without promoting the profile", async () => {
+    const pendingResult: AssessmentResult = {
+      ...result,
+      assignedLevel: "A1",
+      passed: false,
+      oralEvidence: { level: "a1", status: "pending" },
+    };
+
+    await savePendingOralAssessmentResult("u1", "attempt-1", "a1", pendingResult);
+
+    expect(mocks.resultUpsert).toHaveBeenCalledWith(expect.objectContaining({
+      id: "attempt-1",
+      passed: false,
+      evaluated_level: "A1",
+      topic_scores: expect.objectContaining({ oralEvidence: { level: "a1", status: "pending" } }),
+    }), { onConflict: "id" });
+    expect(mocks.upsert).not.toHaveBeenCalled();
   });
 
   it("updates user_profiles exclusively using admin client", async () => {
@@ -113,5 +172,12 @@ describe("assessment persistence", () => {
     mocks.insert.mockResolvedValueOnce({ error: failure });
 
     await expect(saveAssessmentResult("u1", "placement", result)).rejects.toEqual(failure);
+  });
+
+  it("does not report success when the assessment results table is missing", async () => {
+    const failure = { code: "PGRST205", message: "assessment_results not found" };
+    mocks.insert.mockResolvedValueOnce({ error: failure });
+
+    await expect(saveAssessmentResult("u1", "checkpoint", result)).rejects.toEqual(failure);
   });
 });

@@ -102,6 +102,8 @@ export interface CoachWeakTopic {
 export interface CoachInsights {
   weakTopics: CoachWeakTopic[]
   avgAccuracy: number | null
+  /** True when the underlying query failed — an empty result here is not confirmed "no data". */
+  hasError?: boolean
 }
 
 export interface FluencyProfileData {
@@ -123,6 +125,8 @@ export interface ProgressPageData {
   canSayAttempts: CanSayAttempt[]
   speechLatency: SpeechLatencyData
   domains: ProgressDomainData
+  /** Human-readable labels for sections that failed to load — surfaced as a discreet notice, distinct from "no activity yet". */
+  dataErrors: string[]
 }
 
 // ── Queries ───────────────────────────────────────────────────────────────────
@@ -326,7 +330,7 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 
     supabase
       .from('user_contrast_progress')
-      .select('contrast_id, total_attempts, correct_answers, mastery_pct')
+      .select('contrast_id, total_attempts, correct_answers, mastery_pct, last_seen')
       .eq('user_id', userId)
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
@@ -365,7 +369,7 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 
   const contrastRows = (phonemeResult.data ?? []) as Pick<
     UserContrastProgress,
-    'contrast_id' | 'total_attempts' | 'correct_answers' | 'mastery_pct'
+    'contrast_id' | 'total_attempts' | 'correct_answers' | 'mastery_pct' | 'last_seen'
   >[]
 
   const phonemes = rankWeakestSounds(contrastRows as UserContrastProgress[], { limit: 5 }).map((r) => ({
@@ -395,7 +399,12 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 export async function getCoachInsights(userId: string): Promise<CoachInsights> {
   try {
     const supabase = await createSupabaseServerClient()
-    const { data } = await supabase.from('user_learning_state').select('state').eq('user_id', userId).maybeSingle()
+    const { data, error } = await supabase.from('user_learning_state').select('state').eq('user_id', userId).maybeSingle()
+
+    if (error) {
+      console.error('[progress] getCoachInsights: user_learning_state query failed', error)
+      return { weakTopics: [], avgAccuracy: null, hasError: true }
+    }
 
     if (!data?.state) {
       return { weakTopics: [], avgAccuracy: null }
@@ -404,7 +413,12 @@ export async function getCoachInsights(userId: string): Promise<CoachInsights> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- jsonb blob, shape validated at write time
     const state = data.state as any
     const weakTopics: CoachWeakTopic[] = (state?.grammar?.weakTopics ?? [])
-      .filter((t: CoachWeakTopic) => t.errorRate > 0.3 && t.sampleCount >= 3)
+      // Matches WEAK_ERROR_RATE in srs-weak-topics.ts. sampleCount requires more
+      // than the coach EMA's own minimum (3) so a single bad session of 3
+      // consecutive misses on a topic doesn't surface it here — this list is
+      // shown to the learner as "reinforce this", not just used to pick the
+      // next exercise, so it needs a sturdier sample than that.
+      .filter((t: CoachWeakTopic) => t.errorRate >= 0.4 && t.sampleCount >= 5)
       .sort((a: CoachWeakTopic, b: CoachWeakTopic) => b.errorRate - a.errorRate)
       .slice(0, 5)
 
@@ -412,8 +426,9 @@ export async function getCoachInsights(userId: string): Promise<CoachInsights> {
       weakTopics,
       avgAccuracy: state?.pronunciation?.averageAccuracy ?? null,
     }
-  } catch {
-    return { weakTopics: [], avgAccuracy: null }
+  } catch (err) {
+    console.error('[progress] getCoachInsights: unexpected error', err)
+    return { weakTopics: [], avgAccuracy: null, hasError: true }
   }
 }
 
@@ -495,7 +510,9 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
   return { scores, comparisonLabel }
 }
 
-export async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
+async function getRecentActivitySessionsResult(
+  userId: string,
+): Promise<{ sessions: ActivitySessionSummary[]; hasError: boolean }> {
   try {
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase
@@ -509,7 +526,7 @@ export async function getRecentActivitySessions(userId: string): Promise<Activit
 
     if (error) throw error
 
-    return (data ?? []).map((row) => {
+    const sessions = (data ?? []).map((row) => {
       const source = row.source as ActivitySource
       return {
         id: row.id as string,
@@ -522,9 +539,16 @@ export async function getRecentActivitySessions(userId: string): Promise<Activit
         completedAt: row.completed_at as string,
       }
     })
-  } catch {
-    return []
+    return { sessions, hasError: false }
+  } catch (err) {
+    console.error('[progress] getRecentActivitySessions: unexpected error', err)
+    return { sessions: [], hasError: true }
   }
+}
+
+export async function getRecentActivitySessions(userId: string): Promise<ActivitySessionSummary[]> {
+  const { sessions } = await getRecentActivitySessionsResult(userId)
+  return sessions
 }
 
 function attributedAnswerFacts(rows: Array<{
@@ -570,7 +594,9 @@ function attributedAnswerFacts(rows: Array<{
   })
 }
 
-export async function getProgressProjections(userId: string): Promise<ProgressProjections> {
+async function getProgressProjectionsResult(
+  userId: string,
+): Promise<{ projections: ProgressProjections; hasError: boolean }> {
   const supabase = await createSupabaseServerClient()
   const sinceEvidenceWindow = new Date()
   sinceEvidenceWindow.setDate(sinceEvidenceWindow.getDate() - PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS)
@@ -589,6 +615,8 @@ export async function getProgressProjections(userId: string): Promise<ProgressPr
   if (completionTotal.error) console.error('getProgressProjections: get_lesson_completion_total failed', completionTotal.error)
   if (answers.error) console.error('getProgressProjections: answer_history query failed', answers.error)
 
+  const hasError = Boolean(activityTotals.error || completionTotal.error || answers.error)
+
   const row = activityTotals.data?.[0]
 
   const evidenceFacts = attributedAnswerFacts((answers.data ?? []) as Array<{
@@ -598,7 +626,7 @@ export async function getProgressProjections(userId: string): Promise<ProgressPr
     exercise_payload: unknown
   }>)
 
-  return projectProgress(evidenceFacts, {
+  const projections = projectProgress(evidenceFacts, {
     activity: {
       sessions: row?.sessions ?? 0,
       exercises: row?.exercises ?? 0,
@@ -607,6 +635,13 @@ export async function getProgressProjections(userId: string): Promise<ProgressPr
     },
     completedCount: completionTotal.data ?? 0,
   })
+
+  return { projections, hasError }
+}
+
+export async function getProgressProjections(userId: string): Promise<ProgressProjections> {
+  const { projections } = await getProgressProjectionsResult(userId)
+  return projections
 }
 
 export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttempt[]> {
@@ -638,7 +673,7 @@ export async function getCanSayNowAttempts(userId: string): Promise<CanSayAttemp
 }
 
 export async function getProgressPageData(userId: string): Promise<ProgressPageData> {
-  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessions, projections, canSayAttempts, speechLatency, domains, learnerLevel] =
+  const [streak, dailyCompletion, accuracy, skillProfile, weeklySummary, coachInsights, recentSessionsResult, projectionsResult, canSayAttempts, speechLatency, domains, learnerLevel] =
     await Promise.all([
       getDailyStreak(userId),
       getDailyCompletionStats(userId),
@@ -646,8 +681,8 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
       getSkillProfileData(userId),
       getWeeklySummaryStats(userId),
       getCoachInsights(userId),
-      getRecentActivitySessions(userId),
-      getProgressProjections(userId),
+      getRecentActivitySessionsResult(userId),
+      getProgressProjectionsResult(userId),
       getCanSayNowAttempts(userId),
       getSpeechLatencyData(userId),
       getProgressDomainData(userId),
@@ -656,6 +691,12 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
 
   const fluencyProfile = await getFluencyProfile(userId, skillProfile)
 
+  const dataErrors: string[] = []
+  if (coachInsights.hasError) dataErrors.push('Diagnóstico de gramática (Coach)')
+  if (recentSessionsResult.hasError) dataErrors.push('Historial de sesiones recientes')
+  if (projectionsResult.hasError) dataErrors.push('Práctica acumulada')
+  if (domains.hasError) dataErrors.push('Progreso por dominio y temas')
+
   return {
     learnerLevel,
     streak,
@@ -663,10 +704,11 @@ export async function getProgressPageData(userId: string): Promise<ProgressPageD
     accuracy,
     skillProfile,
     fluencyProfile,
+    dataErrors,
     weeklySummary,
     coachInsights,
-    recentSessions,
-    projections,
+    recentSessions: recentSessionsResult.sessions,
+    projections: projectionsResult.projections,
     canSayAttempts,
     speechLatency,
     domains,

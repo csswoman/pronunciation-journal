@@ -150,6 +150,21 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       ...Object.fromEntries(nextPolyfillModuleIds.map((id) => [id, false])),
+      // `kokoro-js`'s package.json `exports` only declares `node` / `default`
+      // conditions (no `browser`), so webpack's client bundle resolves the
+      // `node` condition and drags in `@huggingface/transformers`'s Node
+      // build — which requires `onnxruntime-node`'s native `.node` binary and
+      // fails to parse under webpack. Force the client bundle (and the
+      // Kokoro worker, Plan 039) onto the browser build the package already
+      // ships for CDN use (`dist/kokoro.web.js`). `exports` blocks resolving
+      // that subpath by name, so alias straight to the file on disk.
+      ...(isServer
+        ? {}
+        : {
+          "kokoro-js": fileURLToPath(
+            new URL("./node_modules/kokoro-js/dist/kokoro.web.js", import.meta.url)
+          ),
+        }),
     };
     // Keep `*.svg` imports as React components under webpack too — the
     // turbopack.rules entry above only applies to the turbopack pipeline,

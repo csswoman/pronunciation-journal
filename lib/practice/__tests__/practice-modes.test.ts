@@ -91,4 +91,25 @@ describe('resolveRecommendedMode', () => {
       },
     ])
   })
+
+  it('includes Chunks and -ed drills once with their canonical routes and icons', () => {
+    expect(PRACTICE_MODES.filter((mode) => mode.id === 'chunks')).toEqual([
+      {
+        id: 'chunks',
+        label: 'Chunks en contexto',
+        description: 'Practica expresiones frecuentes con escucha, recuperación y producción',
+        href: '/practice/chunks',
+        icon: 'Layers',
+      },
+    ])
+    expect(PRACTICE_MODES.filter((mode) => mode.id === 'ed-drills')).toEqual([
+      {
+        id: 'ed-drills',
+        label: 'Escalera de -ed',
+        description: 'Escucha, enlaza y practica las terminaciones -ed en habla conectada',
+        href: '/practice/ed-drills',
+        icon: 'Ear',
+      },
+    ])
+  })
 })

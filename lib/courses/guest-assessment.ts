@@ -43,6 +43,7 @@ async function claim(userId: string): Promise<boolean> {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "placement",
+          evaluatedLevels: result.evaluatedLevels,
           evaluatedLevel: result.conceptSignals.at(-1)?.level ?? null,
           answers,
           selfRatings,

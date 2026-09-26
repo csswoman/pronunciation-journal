@@ -1,11 +1,10 @@
+import type { AssessmentResult, ClientAssessmentQuestion } from "@/lib/courses/assessment";
+import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
 import {
-  ASSESSMENT_LEVEL_ORDER,
-  levelPassed,
-  scoreAssessment,
-  type AssessmentQuestion,
-  type AssessmentResult,
-} from "@/lib/courses/assessment";
-import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
+  deriveConceptSignal,
+  type AssessmentConcept,
+  type ConceptSelfRating,
+} from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
 import { persistAssessmentConceptProfile } from "@/lib/courses/assessment-profile";
 import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
@@ -24,110 +23,66 @@ export function reportedLevelIsAbove(
   return ASSESSMENT_LEVEL_ORDER.indexOf(reported) > ASSESSMENT_LEVEL_ORDER.indexOf(sectionLevel);
 }
 
-export async function saveAssessmentLevel(params: {
-  mode: "placement" | "checkpoint";
-  questions: AssessmentQuestion[];
-  userId: string;
-  nextResult: AssessmentResult;
-  setSaving: (value: boolean) => void;
-  setSaveError: (value: boolean) => void;
+export function buildAssessmentCoverageLevels(params: {
+  questions: ClientAssessmentQuestion[];
+  concepts: AssessmentConcept[];
   answers: Record<string, number>;
-  selfRatings?: Record<string, ConceptSelfRating>;
-  checkpointLevel?: CefrLevelId | null;
+  selfRatings: Record<string, ConceptSelfRating>;
 }) {
-  const {
-    mode,
-    questions,
-    userId,
-    nextResult,
-    setSaving,
-    setSaveError,
-    answers,
-    selfRatings,
-    checkpointLevel: passedCheckpointLevel,
-  } = params;
-  setSaving(true);
-  setSaveError(false);
-
-  // Asegurar persistencia inmediata en el dispositivo
-  try {
-    saveGuestStudyLevel(nextResult.assignedLevel);
-  } catch {
-    /* localStorage no disponible */
-  }
-
-  try {
-    const evaluatedLevel =
-      mode === "checkpoint"
-        ? questions[0]?.level ?? null
-        : nextResult.evaluatedLevels?.reduce<CefrLevelId | null>((highest, level) => {
-            if (!highest) return level;
-            return ASSESSMENT_LEVEL_ORDER.indexOf(level) > ASSESSMENT_LEVEL_ORDER.indexOf(highest)
-              ? level
-              : highest;
-          }, null) ?? null;
-
-    const checkpointLevel =
-      passedCheckpointLevel !== undefined
-        ? passedCheckpointLevel
-        : mode === "checkpoint"
-          ? questions[0]?.level ?? null
-          : null;
-
-    // 1. Guardado local en Dexie (fuente de verdad offline-first)
-    await persistAssessmentConceptProfile(
-      userId,
-      nextResult.conceptSignals,
-      nextResult.assignedLevel,
-    );
-
-    // 2. Sincronización remota best-effort
-    const response = await fetch("/api/assessment/results", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mode,
-        evaluatedLevel,
-        result: nextResult,
-        answers,
-        selfRatings,
-        checkpointLevel,
-      }),
-    });
-    // 401 o 403 indica sesión anónima o no autenticada en Supabase: el progreso local ya está a salvo
-    if (!response.ok && response.status !== 401 && response.status !== 403) {
-      console.warn("[assessment] remote sync non-ok status:", response.status);
-      throw new Error(`Remote sync failed with status ${response.status}`);
-    }
-  } catch (error) {
-    console.error("[assessment] local persistence failed:", error);
-    setSaveError(true);
-  } finally {
-    setSaving(false);
-  }
+  const { questions, concepts, answers, selfRatings } = params;
+  return ASSESSMENT_LEVEL_ORDER.map((level) => {
+    const levelQuestions = questions.filter((question) => question.level === level);
+    const levelConcepts = concepts.filter((concept) => concept.level === level);
+    return {
+      level,
+      answeredQuestionCount: levelQuestions.filter((question) => answers[question.id] !== undefined).length,
+      questionCount: levelQuestions.length,
+      ratedTopicCount: levelConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length,
+      topicCount: levelConcepts.length,
+    };
+  });
 }
 
-export function buildAssessmentResult(params: {
-  mode: "placement" | "checkpoint";
-  questions: AssessmentQuestion[];
-  attemptedQuestions: AssessmentQuestion[];
-  answers: Record<string, number>;
-  concepts: AssessmentConcept[];
-  selfRatings: Record<string, ConceptSelfRating>;
-}): AssessmentResult {
-  const { mode, questions, attemptedQuestions, answers, concepts, selfRatings } = params;
-  const checkpointLevel = questions[0]?.level;
-  const assessedConcepts = concepts.filter(
-    (concept) => selfRatings[concept.lessonSlug] !== undefined,
-  );
-  return scoreAssessment(
-    attemptedQuestions,
-    answers,
-    mode,
-    checkpointLevel,
-    assessedConcepts,
-    selfRatings,
-  );
+export function buildStarterPlanResult(
+  concepts: AssessmentConcept[],
+  selfRatings: Record<string, ConceptSelfRating>,
+): AssessmentResult {
+  const assessedAt = new Date().toISOString();
+  const conceptSignals = concepts.map((concept) => deriveConceptSignal(
+    concept,
+    selfRatings[concept.lessonSlug] ?? "unknown",
+    { correct: 0, total: 0 },
+    assessedAt,
+  ));
+  return {
+    assignedLevel: "A1",
+    evaluatedLevels: [],
+    confidence: "low",
+    passed: false,
+    passedLevels: [],
+    score: 0,
+    total: 0,
+    listeningScore: 0,
+    listeningTotal: 0,
+    topicScores: [],
+    strengths: [],
+    needsReview: conceptSignals
+      .filter((signal) => signal.status === "learn")
+      .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
+    conceptSignals,
+  };
+}
+
+export async function persistVerifiedAssessmentLocally(
+  userId: string,
+  result: AssessmentResult,
+): Promise<void> {
+  await persistAssessmentConceptProfile(userId, result.conceptSignals, result.assignedLevel);
+  try {
+    saveGuestStudyLevel(result.assignedLevel);
+  } catch {
+    /* localStorage may be unavailable */
+  }
 }
 
 export function persistLocalAssessmentCache(params: {
@@ -152,6 +107,42 @@ export function persistLocalAssessmentCache(params: {
   );
 }
 
+export function getSavedAssessmentResult(params: {
+  userId?: string;
+  mode: "placement" | "checkpoint";
+  checkpointLabel?: string;
+}): AssessmentResult | null {
+  if (typeof window === "undefined") return null;
+  const { userId, mode, checkpointLabel } = params;
+  const key = `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && "assignedLevel" in parsed && "score" in parsed) {
+      return parsed as AssessmentResult;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearSavedAssessmentResult(params: {
+  userId?: string;
+  mode: "placement" | "checkpoint";
+  checkpointLabel?: string;
+}): void {
+  if (typeof window === "undefined") return;
+  const { userId, mode, checkpointLabel } = params;
+  const key = `assessment:${userId ?? "guest"}:${mode}:${checkpointLabel ?? "placement"}`;
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* localStorage may be restricted */
+  }
+}
+
 export function assessmentFooterCopy(params: {
   showingLevelPrompt: boolean;
   showingInventory: boolean;
@@ -161,12 +152,6 @@ export function assessmentFooterCopy(params: {
   questionIndex: number;
   visibleQuestionsLength: number;
   mode: "placement" | "checkpoint";
-  sectionIndex: number;
-  sectionsLength: number;
-  sectionLevel: CefrLevelId;
-  sectionQuestions: AssessmentQuestion[];
-  answers: Record<string, number>;
-  nextSectionLevel?: string;
 }): { footerStatus?: string; primaryLabel: string } {
   const {
     showingLevelPrompt,
@@ -177,33 +162,29 @@ export function assessmentFooterCopy(params: {
     questionIndex,
     visibleQuestionsLength,
     mode,
-    sectionIndex,
-    sectionsLength,
-    sectionLevel,
-    sectionQuestions,
-    answers,
-    nextSectionLevel,
   } = params;
 
+  const remaining = sectionConceptsLength - ratedConcepts;
   const footerStatus = showingLevelPrompt
     ? selfReportedLevel
-      ? "Referencia seleccionada."
-      : "Elige una opción para continuar."
-    : showingInventory && ratedConcepts !== sectionConceptsLength
-      ? `Faltan ${sectionConceptsLength - ratedConcepts} temas.`
+      ? "Nivel de partida listo."
+      : "Elige un nivel aproximado para empezar."
+    : showingInventory && remaining > 0
+      ? remaining === 1
+        ? "Valora 1 tema restante para continuar."
+        : `Valora ${remaining} temas restantes para continuar.`
       : undefined;
 
+  const isLastQuestion = questionIndex >= visibleQuestionsLength - 1;
   const primaryLabel = showingLevelPrompt
-    ? "Empezar prueba"
-    : showingInventory
-      ? "Comprobar con preguntas"
-      : questionIndex < visibleQuestionsLength - 1
-        ? "Siguiente pregunta"
-        : mode === "placement" &&
-            sectionIndex < sectionsLength - 1 &&
-            (levelPassed(sectionLevel, sectionQuestions, answers) || selfReportedLevel === "full")
-          ? `Seguir con ${nextSectionLevel?.toUpperCase()}`
-          : "Ver resultado";
+        ? "Empezar prueba"
+        : showingInventory
+          ? "Comprobar con preguntas"
+          : !isLastQuestion
+            ? "Siguiente pregunta"
+            : mode === "placement"
+              ? "Comprobar nivel"
+              : "Ver resultado";
 
   return { footerStatus, primaryLabel };
 }

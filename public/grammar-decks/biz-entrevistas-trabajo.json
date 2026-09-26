@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Ahora", "value": "I'm a developer with 5 years' experience.", "highlights": ["I'm a developer"] },
-            { "key": "Trayectoria", "value": "I've worked mainly in fintech.", "highlights": ["I've worked"] },
-            { "key": "Objetivo", "value": "I'm looking to grow as a team lead.", "highlights": ["I'm looking to"] }
+            {
+              "key": "Ahora",
+              "value": "I'm a developer with 5 years' experience.",
+              "highlights": [
+                "I'm a developer"
+              ]
+            },
+            {
+              "key": "Trayectoria",
+              "value": "I've worked mainly in fintech.",
+              "highlights": [
+                "I've worked"
+              ]
+            },
+            {
+              "key": "Objetivo",
+              "value": "I'm looking to grow as a team lead.",
+              "highlights": [
+                "I'm looking to"
+              ]
+            }
           ]
         }
       ],
@@ -34,10 +52,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I'm good at", "value": "se me da bien · I'm good at problem-solving.", "highlights": ["I'm good at"] },
-            { "key": "I have strong... skills", "value": "tengo buenas habilidades de...", "highlights": ["strong", "skills"] },
-            { "key": "One of my strengths is", "value": "una de mis fortalezas es...", "highlights": ["One of my strengths is"] },
-            { "key": "For example, I once...", "value": "por ejemplo, una vez...", "highlights": ["For example"] }
+            {
+              "key": "I'm good at",
+              "value": "se me da bien · I'm good at problem-solving.",
+              "highlights": [
+                "I'm good at"
+              ]
+            },
+            {
+              "key": "I have strong... skills",
+              "value": "tengo buenas habilidades de...",
+              "highlights": [
+                "strong",
+                "skills"
+              ]
+            },
+            {
+              "key": "One of my strengths is",
+              "value": "una de mis fortalezas es...",
+              "highlights": [
+                "One of my strengths is"
+              ]
+            },
+            {
+              "key": "For example, I once...",
+              "value": "por ejemplo, una vez...",
+              "highlights": [
+                "For example"
+              ]
+            }
           ]
         }
       ]
@@ -51,10 +94,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "I have no weaknesses." },
-            { "variant": "good", "text": "I used to struggle with delegating, but I've been working on it.", "note": "defecto + mejora" },
-            { "variant": "bad", "text": "I'm a perfectionist." },
-            { "variant": "good", "text": "I can focus too much on detail, so I now set clear deadlines.", "note": "concreto y con solución" }
+            {
+              "variant": "bad",
+              "text": "I have no weaknesses."
+            },
+            {
+              "variant": "good",
+              "text": "I used to struggle with delegating, but I've been working on it.",
+              "note": "defecto + mejora"
+            },
+            {
+              "variant": "bad",
+              "text": "I'm a perfectionist."
+            },
+            {
+              "variant": "good",
+              "text": "I can focus too much on detail, so I now set clear deadlines.",
+              "note": "concreto y con solución"
+            }
           ]
         }
       ]
@@ -68,10 +125,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Situation", "value": "el contexto · In my last role,...", "highlights": ["Situation"] },
-            { "key": "Task", "value": "tu objetivo · I had to...", "highlights": ["Task"] },
-            { "key": "Action", "value": "qué hiciste · So I decided to...", "highlights": ["Action"] },
-            { "key": "Result", "value": "el resultado · As a result,...", "highlights": ["Result"] }
+            {
+              "key": "Situation",
+              "value": "el contexto · In my last role,...",
+              "highlights": [
+                "Situation"
+              ]
+            },
+            {
+              "key": "Task",
+              "value": "tu objetivo · I had to...",
+              "highlights": [
+                "Task"
+              ]
+            },
+            {
+              "key": "Action",
+              "value": "qué hiciste · So I decided to...",
+              "highlights": [
+                "Action"
+              ]
+            },
+            {
+              "key": "Result",
+              "value": "el resultado · As a result,...",
+              "highlights": [
+                "Result"
+              ]
+            }
           ]
         }
       ]
@@ -85,9 +166,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sobre el rol", "value": "What does a typical day look like?", "highlights": ["a typical day"] },
-            { "key": "Sobre el equipo", "value": "How is the team structured?", "highlights": ["How is the team structured?"] },
-            { "key": "Sobre crecer", "value": "What growth opportunities are there?", "highlights": ["growth opportunities"] }
+            {
+              "key": "Sobre el rol",
+              "value": "What does a typical day look like?",
+              "highlights": [
+                "a typical day"
+              ]
+            },
+            {
+              "key": "Sobre el equipo",
+              "value": "How is the team structured?",
+              "highlights": [
+                "How is the team structured?"
+              ]
+            },
+            {
+              "key": "Sobre crecer",
+              "value": "What growth opportunities are there?",
+              "highlights": [
+                "growth opportunities"
+              ]
+            }
           ]
         }
       ],
@@ -105,9 +204,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reafirmar interés", "value": "I'm very excited about this opportunity.", "highlights": ["very excited about"] },
-            { "key": "Agradecer", "value": "Thank you for your time.", "highlights": ["Thank you for your time."] },
-            { "key": "Email de seguimiento", "value": "Thank you for the interview yesterday...", "highlights": ["Thank you for the interview"] }
+            {
+              "key": "Reafirmar interés",
+              "value": "I'm very excited about this opportunity.",
+              "highlights": [
+                "very excited about"
+              ]
+            },
+            {
+              "key": "Agradecer",
+              "value": "Thank you for your time.",
+              "highlights": [
+                "Thank you for your time."
+              ]
+            },
+            {
+              "key": "Email de seguimiento",
+              "value": "Thank you for the interview yesterday...",
+              "highlights": [
+                "Thank you for the interview"
+              ]
+            }
           ]
         }
       ],
@@ -115,6 +232,35 @@
         "label": "Buena práctica:",
         "body": "envía un thank-you email el mismo día o al siguiente. Marca la diferencia."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "When answering 'Tell me about yourself', what is the recommended structure to follow?",
+      "options": [
+        "Present, past, and future goals",
+        "Only your educational background"
+      ],
+      "answer": 0,
+      "explain": "Estructurar tu respuesta cubriendo el presente, tu trayectoria pasada y tus objetivos futuros ayuda a dar una visión completa y profesional de tu perfil."
+    },
+    {
+      "q": "When asked about a weakness, what is the best approach?",
+      "options": [
+        "Mention a fatal flaw to show honesty",
+        "Show self-awareness and how you are improving"
+      ],
+      "answer": 1,
+      "explain": "El entrevistador busca ver tu capacidad de autocrítica y tu proactividad para superar desafíos, no un defecto que te impida hacer el trabajo."
+    },
+    {
+      "q": "Which of these is a professional question to ask the interviewer at the end?",
+      "options": [
+        "What does a typical day look like in this role?",
+        "How much will my salary increase next year?"
+      ],
+      "answer": 0,
+      "explain": "Preguntar por el día a día demuestra un interés genuino en el puesto y en cómo encajarás en el equipo."
     }
   ]
 }

@@ -3,18 +3,25 @@ import type { CefrLevelId } from "@/lib/courses/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 
-function isMissingAssessmentTable(error: { code?: string } | null): boolean {
-  return error?.code === "PGRST205" || error?.code === "42P01";
+export async function getAssessmentProfileLevel(userId: string): Promise<string> {
+  const admin = tryGetSupabaseAdminClient();
+  if (!admin) return "a1";
+  const { data, error } = await admin
+    .from("user_profiles")
+    .select("cefr_level")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return (data?.cefr_level ?? "a1").toLowerCase();
 }
 
-export async function saveAssessmentResult(
+function assessmentResultRow(
   userId: string,
   mode: "placement" | "checkpoint",
   result: AssessmentResult,
   evaluatedLevel?: CefrLevelId,
-): Promise<void> {
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.from("assessment_results").insert({
+) {
+  return {
     user_id: userId,
     mode,
     evaluated_level: evaluatedLevel?.toUpperCase() ?? null,
@@ -23,7 +30,25 @@ export async function saveAssessmentResult(
     total: result.total,
     passed: result.passed,
     topic_scores: {
-      version: 2,
+      version: 4,
+      listeningScore: result.listeningScore,
+      listeningTotal: result.listeningTotal,
+      levelScores: (result.levelScores ?? []).map((score) => ({
+        level: score.level,
+        correct: score.correct,
+        total: score.total,
+        minimumCorrect: score.minimumCorrect,
+        listeningCorrect: score.listeningCorrect,
+        listeningTotal: score.listeningTotal,
+        minimumListeningCorrect: score.minimumListeningCorrect,
+        writtenListeningMet: score.writtenListeningMet ?? null,
+        oralRequired: score.oralRequired ?? null,
+        oralPassed: score.oralPassed ?? null,
+        thresholdMet: score.thresholdMet,
+      })),
+      oralEvidence: result.oralEvidence
+        ? { level: result.oralEvidence.level, status: result.oralEvidence.status }
+        : null,
       topics: result.topicScores,
       concepts: result.conceptSignals.map((signal) => ({
         lessonSlug: signal.lessonSlug,
@@ -36,9 +61,36 @@ export async function saveAssessmentResult(
         assessedAt: signal.assessedAt,
       })),
     },
-  });
+  };
+}
 
-  if (error && !isMissingAssessmentTable(error)) throw error;
+export async function saveAssessmentResult(
+  userId: string,
+  mode: "placement" | "checkpoint",
+  result: AssessmentResult,
+  evaluatedLevel?: CefrLevelId,
+): Promise<void> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from("assessment_results")
+    .insert(assessmentResultRow(userId, mode, result, evaluatedLevel));
+
+  if (error) throw error;
+}
+
+export async function savePendingOralAssessmentResult(
+  userId: string,
+  attemptId: string,
+  level: "a1" | "a2",
+  result: AssessmentResult,
+): Promise<void> {
+  const admin = tryGetSupabaseAdminClient();
+  if (!admin) throw new Error("Supabase admin client unavailable for oral assessment result");
+  const { error } = await admin.from("assessment_results").upsert({
+    id: attemptId,
+    ...assessmentResultRow(userId, "checkpoint", result, level),
+  }, { onConflict: "id" });
+
+  if (error) throw error;
 }
 
 export async function persistAssessmentOutcome(
@@ -51,6 +103,14 @@ export async function persistAssessmentOutcome(
 
   if (mode === "checkpoint" && !result.passed) {
     return;
+  }
+
+  if (mode === "checkpoint") {
+    const currentLevel = await getAssessmentProfileLevel(userId);
+    const levels = ["a1", "a2", "b1", "b2", "c1", "c2"];
+    const currentIndex = levels.indexOf(currentLevel.toLowerCase());
+    const assignedIndex = levels.indexOf(result.assignedLevel.toLowerCase());
+    if (currentIndex > assignedIndex && assignedIndex >= 0) return;
   }
 
   const admin = tryGetSupabaseAdminClient();

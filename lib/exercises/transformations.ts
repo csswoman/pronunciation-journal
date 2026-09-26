@@ -1,15 +1,15 @@
 import { db, type CachedExercise } from '@/lib/db'
 import type { SentenceTransformationExercise } from '@/lib/exercises/types'
+import { matchesAcceptedAnswer } from './grading-pipeline'
 
 const TTL_MS = 24 * 60 * 60 * 1000
 
-function normalize(value: string): string {
-  return value
-    .toLocaleLowerCase('en-US')
-    .replaceAll('’', "'")
-    .replace(/[^a-z0-9'\s]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+/** Every answer the exercise itself declares valid, reference first. */
+export function transformationAnswers(exercise: SentenceTransformationExercise): string[] {
+  return [
+    ...(exercise.referenceAnswer ? [exercise.referenceAnswer] : []),
+    ...(exercise.acceptedAnswers ?? []),
+  ]
 }
 
 /** Only explicit reference answers are accepted locally; never infer semantic equivalence. */
@@ -17,13 +17,9 @@ export function isExactTransformation(
   exercise: SentenceTransformationExercise,
   answer: string,
 ): boolean {
-  const normalized = normalize(answer)
-  const candidates = [
-    ...(exercise.referenceAnswer ? [exercise.referenceAnswer] : []),
-    ...(exercise.acceptedAnswers ?? []),
-  ]
+  const candidates = transformationAnswers(exercise)
   if (candidates.length === 0) return false
-  return candidates.some((candidate) => normalize(candidate) === normalized)
+  return matchesAcceptedAnswer(answer, candidates)
 }
 
 export async function getCachedTransformations(cacheKey: string): Promise<SentenceTransformationExercise[] | null> {

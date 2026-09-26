@@ -20,6 +20,12 @@ vi.mock("@/hooks/useUserPreferences", () => ({
     preferences: { full_name: "Learner", avatar_url: "", interests: [] },
     learnerLevel: { level: "A2", source: "manual", confidence: null, isPlaced: false, updatedAt: null },
     loading: false,
+    appLanguage: "Español",
+    learningTarget: "Inglés · acento americano",
+    dailyGoal: "10 min",
+    setAppLanguage: vi.fn(),
+    setLearningTarget: vi.fn(),
+    setDailyGoal: vi.fn(),
     updateFullName: vi.fn(),
     updateAvatar: vi.fn(),
     updatePassword: vi.fn(),
@@ -33,21 +39,15 @@ vi.mock("@/hooks/useOKLCHTheme", () => ({
     hue: 250,
     setHue: vi.fn(),
     resetHue: vi.fn(),
-    mode: "light",
+    accent: "pink",
+    setAccent: vi.fn(),
+    preference: "dark",
+    setPreference: vi.fn(),
+    mode: "dark",
     toggleMode: vi.fn(),
     mounted: true,
   }),
 }));
-
-vi.mock("@/lib/learning-focus/queries", () => ({
-  claimTheoryTopics: vi.fn().mockResolvedValue(undefined),
-  listClaimedTheoryTopics: vi.fn().mockResolvedValue([]),
-}));
-
-vi.mock("@/components/profile/ProfileAvatarCard", () => ({ default: () => <div>Avatar</div> }));
-vi.mock("@/components/profile/ProfileNameCard", () => ({ default: () => <div>Name</div> }));
-vi.mock("@/components/profile/ProfilePasswordCard", () => ({ default: () => <div>Password</div> }));
-
 
 describe("ProfileSettings", () => {
   it("shows and updates the persisted CEFR level", async () => {
@@ -60,13 +60,11 @@ describe("ProfileSettings", () => {
     await waitFor(() => expect(updateCefrLevel).toHaveBeenCalledWith("B1"));
   });
 
-  it("places learning preferences before account controls", () => {
+  it("renders profile sections including account controls and appearance", () => {
     render(<ProfileSettings />);
 
-    const learning = screen.getByRole("heading", { name: "Cómo quieres aprender" });
-    const levelGroup = screen.getByRole("group", { name: "Nivel de estudio" });
-    const account = screen.getByRole("heading", { name: "Cuenta y seguridad" });
-    expect(learning.compareDocumentPosition(levelGroup) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(levelGroup.compareDocumentPosition(account) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Apariencia" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cómo estudias" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cuenta y seguridad" })).toBeInTheDocument();
   });
 });

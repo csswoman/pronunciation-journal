@@ -37,6 +37,15 @@ function getGroupIcon(title: string) {
   return BookOpen;
 }
 
+function getGroupTone(title: string): "lilac" | "butter" | "mint" | "coral" | "sky" {
+  const lower = title.toLowerCase();
+  if (lower.includes("gramática")) return "lilac";
+  if (lower.includes("preguntas") || lower.includes("presente")) return "butter";
+  if (lower.includes("acciones") || lower.includes("vida") || lower.includes("rutina")) return "mint";
+  if (lower.includes("pronunciación") || lower.includes("sonido") || lower.includes("escucha") || lower.includes("audio")) return "coral";
+  return "sky";
+}
+
 export default function CoursePathLessonGroup({
   id,
   title,
@@ -58,6 +67,7 @@ export default function CoursePathLessonGroup({
   else if (isInProgress) statusClass = "partial";
 
   const GroupIcon = getGroupIcon(title);
+  const tone = getGroupTone(title);
 
   let lastSubgroup: string | undefined = undefined;
 
@@ -69,7 +79,7 @@ export default function CoursePathLessonGroup({
       onToggle={(e) => onToggle(id, e.currentTarget.open)}
     >
       <summary className="course-path__lesson-group-summary">
-        <span className={cn("course-path__group-icon-box", `course-path__group-icon-box--${statusClass}`)} aria-hidden="true">
+        <span className={cn("course-path__group-icon-box", `course-path__group-icon-box--${tone}`)} aria-hidden="true">
           <GroupIcon size={20} className="course-path__group-icon" />
         </span>
         <span className="course-path__lesson-group-heading">
@@ -89,7 +99,7 @@ export default function CoursePathLessonGroup({
             )}
           </span>
         </span>
-        <ChevronRight className="course-path__lesson-group-chevron" size={16} aria-hidden />
+        <ChevronRight className="course-path__lesson-group-chevron" size={18} aria-hidden />
       </summary>
       <div className="course-path__lesson-group-body course-path__spine-body">
         {lessons.map((lesson, index) => {

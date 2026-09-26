@@ -209,7 +209,21 @@ Ya están conectados al backbone común:
 - Plan diario con palabras vencidas, guardadas/familiares, errores recientes,
   sonidos débiles y siguiente teoría;
 - Progreso con `activity_sessions`, `answer_history`, word bank, contrastes y
-  lesson completions.
+  lesson completions;
+- correcciones del AI Coach en conversación: cuando `annotate_turn` incluye
+  `kind:"error"` y un `errorPattern` válido, `useCoachErrorRecurrence` llama a
+  `recordPracticeErrorRecurrence` (máximo una vez por patrón y conversación)
+  para que el Plan diario programe el repaso. Correcciones `unnatural`, ids no
+  reconocidos y turnos del historial cargado no crean entradas nuevas. El
+  historial visible restaura la deduplicación al reabrir la conversación; solo
+  un guardado local exitoso se presenta como repaso programado, y los fallos
+  siguen siendo reintentables;
+- correcciones erróneas reportadas: si el alumno pulsa el botón "¿Corrección equivocada?"
+  en el Coach o en un ejercicio de producción, `reportWrongFeedback` llama a
+  `retractPracticeErrorRecurrence` para restar el fallo de la cola de reincidencia o eliminarlo
+  con un tombstone si llega a 0, evitando que el error continúe programándose. Para el Diario
+  (`journal_correction`), el reporte se registra en Supabase y Dexie para análisis pedagógico,
+  pero no retira errores en el cliente (estos se gestionan vía RPC en servidor).
 
 Plan 073 cerró el backbone: `audit:learning-loop` proyecta el contenido autoral
 y audita adapters; Ruta/Mazos/Mini-lecciones comparten topics explícitos;

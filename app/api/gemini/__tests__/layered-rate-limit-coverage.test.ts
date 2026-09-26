@@ -40,8 +40,8 @@ describe("Gemini layered rate-limit coverage", () => {
       "utf8",
     );
 
-    const ipIdx = source.indexOf("gemini:ip:");
-    const userIdx = source.indexOf("gemini:user:");
+    const ipIdx = source.indexOf("const ipKey = `gemini:ip:${endpoint}");
+    const userIdx = source.indexOf("const userKey = `gemini:user:${endpoint}");
     const globalIdx = source.indexOf("gemini:global:emergency");
 
     expect(ipIdx).toBeGreaterThan(-1);

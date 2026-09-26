@@ -5,8 +5,20 @@ import {
   extractAudioUrlsFromDeck,
   downloadLesson,
   removeDownloadedLesson,
+  downloadCoachExercises,
+  getCoachExercisesOfflineCount,
+  removeCoachExercisesOffline,
 } from "../download-manager";
+import { fetchBankItems } from "@/lib/content-bank/queries";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
+
+vi.mock("@/lib/content-bank/queries", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/content-bank/queries")>();
+  return {
+    ...actual,
+    fetchBankItems: vi.fn(),
+  };
+});
 
 const mockDeck: GrammarStudyDeckData = {
   meta: {
@@ -90,5 +102,32 @@ describe("download-manager", () => {
 
     await removeDownloadedLesson("a1:2");
     expect(await db.downloadedLessons.get("a1:2")).toBeUndefined();
+  });
+
+  it("downloads and counts coach exercises offline", async () => {
+    vi.mocked(fetchBankItems).mockResolvedValueOnce([
+      {
+        id: "bank-1",
+        kind: "coach_exercise",
+        tool_name: "render_multiple_choice",
+        level: "B1",
+        topic_id: "past_simple",
+        payload: { question: "Q1" },
+        prompt_version: "v1",
+        stem_hash: "hash_bank_1",
+        quality_flags: 0,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+
+    const result = await downloadCoachExercises("B1", 100);
+    expect(result.count).toBe(1);
+
+    const count = await getCoachExercisesOfflineCount("B1");
+    expect(count).toBe(1);
+
+    await removeCoachExercisesOffline("B1");
+    const countAfter = await getCoachExercisesOfflineCount("B1");
+    expect(countAfter).toBe(0);
   });
 });

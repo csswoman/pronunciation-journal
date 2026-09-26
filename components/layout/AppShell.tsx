@@ -42,12 +42,12 @@ const AICoachPanel = dynamic(() => import("@/components/ai-coach/AICoachPanel"),
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = isPublicAuthPath(pathname);
-  // Session column for in-flow practice (hubs use PageLayout archetypes instead).
+  // Session column for in-flow drill practice (sound drills). Assessment uses its own responsive shell.
   // Active sessions also hide mobile BottomNav via sessionChromeStore.
-  const isImmersivePractice =
-    pathname.startsWith("/practice/sounds/sound/") ||
-    pathname === "/assessment" ||
-    pathname === "/assessment/pronunciation";
+  const isPracticeSession = pathname.startsWith("/practice/sounds/sound/");
+  const isAssessment =
+    pathname === "/assessment" || pathname.startsWith("/assessment/");
+  const isImmersivePractice = isPracticeSession || isAssessment;
   const hideMobileNav = useSessionChromeStore(selectHideMobileNav);
   const { user } = useAuth();
   const { isOpen: isPanelOpen, launch, isFullscreen, panelWidth } = useAICoachStore();
@@ -81,7 +81,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       >
         <div
           className={
-            isImmersivePractice
+            isPracticeSession
               ? "page-shell--session mx-auto flex min-h-0 w-full flex-1 flex-col"
               : "w-full"
           }

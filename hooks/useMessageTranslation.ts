@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { fetchWithTimeout } from "@/lib/api/timeout";
 
 export interface UseMessageTranslationOptions {
   /** Prose to translate — the suggestion-stripped body, not the raw turn. */
@@ -55,11 +56,11 @@ export function useMessageTranslation({
       setIsVisible(true);
 
       try {
-        const res = await fetch("/api/gemini/translate", {
+        const res = await fetchWithTimeout("/api/gemini/translate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text }),
-        });
+        }, 28_000);
 
         if (!res.ok) {
           setTranslation(GENERIC_FAILURE);

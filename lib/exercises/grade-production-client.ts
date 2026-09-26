@@ -3,6 +3,7 @@ import type {
   ProductionGradeResult,
 } from '@/lib/exercises/production-grade'
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 export type { GradeProductionInput, ProductionGradeResult }
 
@@ -32,11 +33,11 @@ export async function gradeProduction(
 
   let res: Response
   try {
-    res = await fetch('/api/gemini/grade-production', {
+    res = await fetchWithTimeout('/api/gemini/grade-production', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
-    })
+    }, 30_000)
   } catch {
     throw new ProductionGradeError(
       publicAiErrorMessage(undefined, '', PRODUCTION_AI_UNAVAILABLE_MESSAGE),

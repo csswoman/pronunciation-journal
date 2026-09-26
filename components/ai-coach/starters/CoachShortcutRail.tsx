@@ -3,7 +3,7 @@
 import {
   AlignLeft,
   BriefcaseBusiness,
-  Mic,
+  ChevronRight,
   Plane,
 } from "@/components/icons";
 import { AI_COACH_SHORTCUT_PROMPTS } from "@/lib/ai-prompts";
@@ -12,7 +12,7 @@ import { cn } from "@/lib/cn";
 // Planned structure:
 // <CoachShortcutRail>
 //   <section aria-label="Atajos populares">
-//     <div className="divider" />
+//     <p className="font-kicker">ATAJOS POPULARES</p>
 //     <div className="chip-list">
 //       <button className="chip" />
 //     </div>
@@ -31,14 +31,9 @@ const SUGGESTION_CHIPS = [
     prompt: AI_COACH_SHORTCUT_PROMPTS.jobInterview,
   },
   {
-    label: "Comentar un artículo",
+    label: "Comentar [TEMA]",
     Icon: AlignLeft,
     prompt: AI_COACH_SHORTCUT_PROMPTS.discussArticle,
-  },
-  {
-    label: "Pronunciación",
-    Icon: Mic,
-    prompt: AI_COACH_SHORTCUT_PROMPTS.pronunciation,
   },
 ] as const;
 
@@ -48,30 +43,45 @@ interface CoachShortcutRailProps {
 
 export default function CoachShortcutRail({ onSendMessage }: CoachShortcutRailProps) {
   return (
-    <section aria-label="Atajos populares" className="mt-6 w-full @[22rem]:mt-7">
-      <div className="mb-2.5 flex items-center gap-2.5">
-        <span className="h-px flex-1 bg-border-subtle" />
-        <p className="m-0 font-kicker text-fg-subtle">Atajos populares</p>
-        <span className="h-px flex-1 bg-border-subtle" />
-      </div>
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <section aria-label="Atajos populares" className="mt-6 w-full sm:mt-7">
+      <p className="font-kicker mb-2.5 block text-xs font-semibold uppercase tracking-wider text-fg-subtle sm:mb-3">
+        ATAJOS POPULARES
+      </p>
+      <div className="flex flex-wrap items-center gap-2">
         {SUGGESTION_CHIPS.map(({ label, Icon, prompt }) => (
           <button
             key={label}
             type="button"
             onClick={() => onSendMessage(prompt)}
             className={cn(
-              "flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-border-subtle",
-              "bg-surface-raised px-3.5 text-caption font-medium whitespace-nowrap text-fg-muted",
+              "group flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-border-subtle",
+              "bg-surface-raised px-3.5 text-xs font-medium text-fg sm:px-4",
               "transition-colors duration-150 focus-ring",
-              "hover:border-primary hover:bg-primary-soft hover:text-primary",
+              "hover:border-primary hover:bg-surface-base hover:text-primary",
               "active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",
             )}
           >
-            <Icon size={14} strokeWidth={2} className="shrink-0" aria-hidden />
-            {label}
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-fg-muted transition-colors group-hover:bg-primary-soft group-hover:text-primary">
+              <Icon size={12} strokeWidth={2} aria-hidden />
+            </span>
+            <span className="whitespace-normal text-left">{label}</span>
           </button>
         ))}
+
+        <button
+          type="button"
+          onClick={() => onSendMessage("Ver todos los atajos")}
+          className={cn(
+            "flex min-h-[44px] cursor-pointer items-center gap-1 rounded-full border border-border-subtle",
+            "bg-surface-raised px-3.5 text-xs font-medium text-fg-muted sm:px-4",
+            "transition-colors duration-150 focus-ring",
+            "hover:border-border-default hover:text-fg",
+            "active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",
+          )}
+        >
+          <span className="whitespace-nowrap">Ver todos</span>
+          <ChevronRight size={14} aria-hidden />
+        </button>
       </div>
     </section>
   );

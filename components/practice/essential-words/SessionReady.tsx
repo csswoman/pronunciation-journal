@@ -5,14 +5,13 @@ import type { EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
 import type { EssentialWordsSessionPreview } from '@/lib/essential-words/action-session'
 import { useEssentialWordsReadyDashboard } from '@/hooks/useEssentialWordsReadyDashboard'
 import { SessionReadyHero } from './SessionReadyHero'
-import { SessionReadyStreak } from './SessionReadyStreak'
 import { SessionReadyVaultRow } from './SessionReadyVaultRow'
 import { SessionReadyVocabulary } from './SessionReadyVocabulary'
 
 interface Props {
   preview: EssentialWordsSessionPreview
   stats: EssentialWordsStats
-  streak: number
+  streak?: number
   activeRouteId: string | null
   onRouteChange: (routeId: string | null) => void
   sessionSize: SessionSizeId
@@ -24,12 +23,10 @@ interface Props {
 }
 
 const DEFAULT_VOCAB_BUCKETS = { nuevas: 2, aprendiendo: 0, en_repaso: 0, dominadas: 0 }
-const DEFAULT_STREAK_MARKS = [false, false, false, false, false, false, false]
 
 export function SessionReady({
   preview,
   stats,
-  streak,
   activeRouteId,
   onRouteChange,
   sessionSize,
@@ -64,16 +61,11 @@ export function SessionReady({
           />
         </div>
 
-        {/* Right Column: Stacked Cards (Racha, Tu Vocabulario, Tu Baúl) */}
+        {/* Right Column: Stacked Cards (Tu Vocabulario, Tu Baúl) */}
         <aside
           className="flex flex-col gap-4 w-full"
           aria-label="Progreso y Vocabulario"
         >
-          <SessionReadyStreak
-            streak={streak}
-            marks={dashboard?.streakMarks ?? DEFAULT_STREAK_MARKS}
-            forecast={dashboard?.forecast}
-          />
           <SessionReadyVocabulary
             buckets={dashboard?.vocabulary ?? DEFAULT_VOCAB_BUCKETS}
             totalWords={stats.totalWords || 2800}

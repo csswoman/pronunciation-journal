@@ -2,6 +2,57 @@ import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { LearnerContext } from '@/lib/ai-coach/learner-context'
 import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
 
+export const AI_COACH_SPANISH_LANGUAGE_PROMPT = `LANGUAGE OF YOUR REPLIES:
+Write your prose in SPANISH at the learner's actual CEFR level, including
+explanations and brief support. Keep examples, model answers, and the learner's
+task in ENGLISH. Quote English as-is and explain it separately in Spanish.
+Invite the learner to answer in English; offer a short English starter only
+when they need support.
+Choosing Spanish for explanations must never lower the difficulty of the task.`;
+
+export const AI_COACH_ENGLISH_LANGUAGE_PROMPT = `LANGUAGE OF YOUR REPLIES:
+Write your prose in ENGLISH, pitched at the student's level — short sentences,
+concrete words at lower levels and more nuanced language at higher levels.
+The student can translate any message on demand, so do not pre-translate or
+append a Spanish gloss.
+Switch to Spanish for one sentence ONLY if the student writes to you in Spanish
+because they are stuck, then return to English.`;
+
+/** CEFR task progression follows Council of Europe descriptors; feedback and
+ * communicative practice follow the Cambridge English Teaching Framework.
+ * American English is the target variety, not a reason to reject valid dialects.
+ */
+const AI_COACH_LEVEL_TASKS: Record<CEFRLevel, string> = {
+  A1: 'Ask for one short sentence about a concrete familiar topic. Model one useful phrase and offer a sentence starter when needed.',
+  A2: 'Ask for two connected sentences about a familiar situation, including one simple detail or reason. Model one useful phrase when needed.',
+  B1: 'Ask for a connected account, plan, or opinion on a familiar topic with one reason or example. Ask a natural follow-up that keeps the conversation going.',
+  B2: 'Ask the learner to develop and defend a viewpoint, compare options, or explain a trade-off with a concrete example. Follow up on the substance of their answer.',
+  C1: 'Ask for a nuanced argument, synthesis, or audience-aware explanation on a complex topic. Practice register, cohesion, and implications in context.',
+  C2: 'Ask the learner to distinguish fine shades of meaning, reframe an idea for a different audience, or handle pragmatic ambiguity. Discuss style and effect without calling valid alternatives errors.',
+};
+
+export function buildAICoachTeachingPrompt(level: CEFRLevel): string {
+  return `ENGLISH COACHING METHOD — learner level ${level}:
+Teach American English spelling and usage in your own examples. Accept other
+standard English varieties as valid; explain a US preference when useful.
+During practice turns, give the learner one meaningful communicative task tied
+to their topic. Keep your explanation shorter than the learner's intended reply.
+If introducing new language, model ONE useful word, phrase, or pattern in context,
+then ask the learner to use it to communicate their own idea. Do not lecture or
+give a model answer that completes the task for them.
+${AI_COACH_LEVEL_TASKS[level]}
+After a real error, give one prioritized correction through annotate_turn and
+briefly explain its effect on meaning or use. In your conversational reply, ask
+the learner to apply the corrected form to a NEW example in English before
+changing topics. If the meaning was already clear and the wording is simply a
+valid alternative, do not label it wrong. If no correction is needed, respond
+to the meaning and move the task forward without inventing feedback.
+If the learner replies in Spanish, help them express their idea in English with
+an appropriately leveled starter and invite an English attempt. If they ask for
+an explanation, answer it first, then offer a small practice step. Never infer
+mastery from one answer or from merely showing a correction.`;
+}
+
 // ── Transcription ──
 
 export function buildTranscriptionPrompt(targetWord?: string): string {
@@ -34,10 +85,7 @@ export function buildDeckSuggestUserPrompt(input: {
     : `Deck: "${input.deckName}"\n\n${difficultyHint} ${seedHint}${existingHint}\nSuggest 8 English words or short phrases for this theme.`;
 }
 
-export const DECK_SUGGEST_SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Return ONLY valid JSON with no markdown, no code fences, no extra text — just raw JSON.
-
-Format:
-{"suggestions":[{"word":"example","meaning":"brief definition or usage context"}]}`;
+export const DECK_SUGGEST_SYSTEM_PROMPT = `You are an English vocabulary coach. When given a deck name and optional description, suggest 8 relevant English words or short phrases that fit the theme. Each suggestion needs a word and a brief meaning or usage context.`;
 
 // ── Pronunciation Phrases ──
 
@@ -53,17 +101,14 @@ export const PRONUNCIATION_PHRASES_SYSTEM_PROMPT = `You are an English pronuncia
 - Mix of everyday, professional, and social contexts
 - Vary sentence length (5–12 words each)
 - Include phonetically challenging sounds: TH, R, W, V, SH, vowel reductions
-- Never generate the same sentence twice across calls
-
-Return ONLY valid JSON, no markdown, no code fences:
-{"phrases":["sentence one","sentence two",...]}`;
+- Never generate the same sentence twice across calls`;
 
 // ── Message Translation ──
 
-export const MESSAGE_TRANSLATION_SYSTEM_PROMPT = `You are an English to Spanish translator for an ESL learning app. Translate the given English text into natural Spanish. Return ONLY valid JSON: {"translation":"Spanish translation here"}`;
+export const MESSAGE_TRANSLATION_SYSTEM_PROMPT = `You are an English to Spanish translator for an ESL learning app. Translate the given English text into natural Spanish. Put the translation in the translation field.`;
 
 export function buildMessageTranslationPrompt(text: string): string {
-  return `Translate the following English message into natural Spanish for an ESL student. Return ONLY valid JSON with no markdown:\n{"translation": "Spanish translation here"}\n\nEnglish text:\n"${text}"`;
+  return `Translate the following English message into natural Spanish for an ESL student.\n\nEnglish text:\n"${text}"`;
 }
 
 // ── Sentence Reorder ──
@@ -74,8 +119,7 @@ export function buildSentenceReorderUserPrompt(
   level: string,
   interests: string[] = [],
 ): string {
-  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".${interestsClause(interests)}
-Return a JSON array of strings only. Example: ["The cat sat on the mat.", "She goes to school every day."]`;
+  return `Generate ${count} English sentences for a ${level} learner about: "${topic}".${interestsClause(interests)}`;
 }
 
 export function interestsClause(interests: readonly string[]): string {
@@ -89,17 +133,34 @@ Rules:
 - Each sentence must be 4–12 words long
 - Use clear, natural English (no slang unless requested)
 - Sentences should relate to the given topic/level
-- Return ONLY a JSON array of strings — no markdown, no extra text
 - Vary sentence structures (statements, questions, negatives)`;
 
-export const GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT = `You create sentence-transformation exercises for English learners. Return JSON only.
-Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), and referenceAnswer. Keep the grammar topic accurate and give one natural valid answer.`
+export const GENERATE_TRANSFORMATIONS_SYSTEM_PROMPT = `You create sentence-transformation exercises for English learners.
+Each item needs sourceSentence (4-20 words), instruction (clear transformation constraint), referenceAnswer, and acceptedAnswers. Keep the grammar topic accurate and give one natural valid answer as referenceAnswer.
+acceptedAnswers is the answer key: 3 to 5 complete sentences a teacher would mark correct for that instruction, starting with referenceAnswer itself. The app already ignores capitalization, final punctuation and contractions, so vary the wording instead: synonyms, valid word orders and equally correct structures. Never list an answer that ignores the instruction or changes the meaning of sourceSentence.`
 export function buildGenerateTransformationsPrompt(input: { topic: string; level: string; count: number }): string {
-  return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceSentence":"...","instruction":"...","referenceAnswer":"..."}]}.`
+  return `Generate ${input.count} sentence transformations for topic "${input.topic}" at ${input.level}.`
 }
-export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Return JSON only. Each item needs sourceEs, referenceEn, and optional acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.`
+export function buildTransformationTaskPrompt(input: {
+  sourceSentence: string
+  instruction: string
+  referenceAnswer?: string
+}): string {
+  const reference = input.referenceAnswer ? ` Reference solution: "${input.referenceAnswer}".` : ''
+  return `Transform the original sentence according to the instruction. Original sentence: "${input.sourceSentence}". Instruction: "${input.instruction}".${reference}`
+}
+export const GENERATE_TRANSLATIONS_SYSTEM_PROMPT = `You create short Spanish-to-English translation exercises for English learners. Each item needs sourceEs, referenceEn and acceptedAnswers. Keep Spanish natural and the English reference accurate for the named grammar topic.
+acceptedAnswers is the answer key: 3 to 5 complete English sentences a teacher would mark correct for sourceEs, starting with referenceEn itself. The app already ignores capitalization, final punctuation and contractions, so vary the wording instead: synonyms, valid word orders and equally natural structures. Never list a sentence that changes the meaning or the grammar topic.`
 export function buildGenerateTranslationsPrompt(input: { topic: string; level: string; count: number }): string {
-  return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}. Return {"exercises":[{"sourceEs":"...","referenceEn":"...","acceptedAnswers":["..."]}]}.`
+  return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}.`
+}
+
+export function buildPersonalizationTaskPrompt(input: {
+  promptText: string
+  example?: string
+}): string {
+  const exampleStr = input.example ? ` Example: "${input.example}".` : ''
+  return `The learner is writing an original sentence about themselves or their experience. Prompt: "${input.promptText}".${exampleStr} Provide encouraging pedagogical suggestions to polish grammar and natural phrasing.`
 }
 
 // ── Production grading (written + spoken free production) ──
@@ -109,7 +170,7 @@ export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher gradin
 Evaluate strictly using this rubric:
 1. usedTarget — Did the learner use the target item with correct meaning and an acceptable form (minor spelling typos in spoken transcripts are OK)?
 2. grammaticallyCorrect — Is the production a grammatical English sentence/response appropriate for the learner's CEFR level (stated below; default A2–B2)? Judge leniently for lower levels; minor slips OK; broken structure = false.
-   At A1/A2 the bar is communication, not polish: a short, simple sentence that gets the meaning across is CORRECT. Do not mark it false for a missing article, a missing plural -s, or a preposition slip. Only broken word order or a structure that blocks understanding is false at these levels.
+   At A1/A2 the bar is communication, not polish: a short, simple sentence that gets the meaning across is CORRECT. A missing article, plural -s, or minor preposition slip alone means grammaticallyCorrect=true and, if target and constraint pass, correct=true. Mention one optional improvement in feedback. Only broken word order or a structure that blocks understanding is false at these levels.
 3. constraintMet — If a "Required constraint" is stated below, did the response satisfy it? This is the learner's growth edge: a grammatical sentence that ignores the required tense or function is NOT acceptable, however fluent it sounds. When no constraint is stated, set this to true.
 4. correct — true ONLY when usedTarget AND grammaticallyCorrect AND constraintMet are all true.
 5. score — integer 0–100:
@@ -121,10 +182,7 @@ Evaluate strictly using this rubric:
 6. feedback — 1–3 short sentences in Spanish: praise what worked, then one concrete fix. When constraintMet is false, say explicitly which structure was required and show it. Be encouraging, not harsh. At A1/A2, name ONE fix only (never a list), in plain Spanish and without grammatical jargon: say «falta "the" antes de "house"», not «error de determinante».
 7. corrections — optional improved version of their sentence that satisfies the constraint (omit if already perfect).
 8. errorPattern — When correct is false, classify the SINGLE most important error using EXACTLY one of these ids (never invent one; omit the field when correct is true):
-tense_present_for_past, present_perfect_vs_past, missing_auxiliary, subject_verb_agreement, word_order, preposition_choice, article_use, plural_countable, modal_form, conditional_form, gerund_infinitive, comparative_form, negation_form, question_form, vocabulary_choice, spelling
-
-Return ONLY valid JSON, no markdown:
-{"correct":boolean,"usedTarget":boolean,"grammaticallyCorrect":boolean,"constraintMet":boolean,"feedback":"...","corrections":"...","errorPattern":"...","score":number}`;
+tense_present_for_past, present_perfect_vs_past, missing_auxiliary, subject_verb_agreement, word_order, preposition_choice, article_use, plural_countable, modal_form, conditional_form, gerund_infinitive, comparative_form, negation_form, question_form, vocabulary_choice, spelling`;
 
 export function buildGradeProductionUserPrompt(input: {
   targetItem: string
@@ -328,8 +386,7 @@ Rules:
 - If a requested topic or theme is provided, center the story and topic title around that theme.
 - Embed EVERY target word. Prefer each target's citation (base/dictionary) form; if grammar forces inflection, keep it regular and recognizable.
 - Keep all other vocabulary simple and high-frequency. No idioms, no rare words.
-- Then write 1-2 comprehension questions about the MEANING of the passage (not grammar), each with exactly 4 plausible options and one correct answer.
-- Output JSON only.`
+- Then write 1-2 comprehension questions about the MEANING of the passage (not grammar), each with exactly 4 plausible options and one correct answer.`
 
 export function buildGenerateReaderUserPrompt(input: {
   targets: string[]
@@ -338,7 +395,7 @@ export function buildGenerateReaderUserPrompt(input: {
   topic?: string
 }): string {
   const topicClause = input.topic?.trim() ? `\nRequested Topic / Theme: ${input.topic.trim()}` : ''
-  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${topicClause}${interestsClause(input.interests ?? [])}\n\nReturn JSON: { "passage": string, "topic": string, "questions": [{ "prompt": string, "options": [string,string,string,string], "correctIndex": number }] }`
+  return `Target words to embed: ${input.targets.join(', ')}\nLevel: ${input.level}${topicClause}${interestsClause(input.interests ?? [])}`
 }
 
 const JOURNAL_TOPIC_IDS = JOURNAL_TOPIC_CATALOG.map(({ id }) => id).join(', ')
@@ -347,37 +404,23 @@ export const JOURNAL_CORRECTION_SYSTEM_PROMPT = `You are a supportive, expert En
 
 Your goal is to provide constructive, clear feedback that encourages writing and teaches natural English without being overwhelming.
 
-Return ONLY valid JSON (no markdown, no code fences) with this exact schema:
-{
-  "correctedContent": string,
-  "errors": [
-    {
-      "quote": string,
-      "correction": string,
-      "type": string,
-      "explanationEs": string,
-      "topic": string
-    }
-  ],
-  "newWords": string[]
-}
-
 Rules:
 1. "correctedContent": Produce a natural, idiomatic, and polished version in clear English. Preserve the learner's original meaning, voice, and ideas. Do not turn a casual reflection into stiff academic prose.
-2. "errors": Highlight the most impactful mistakes or unnatural phrasings (max 8 items). If the text is already solid, return an empty array or just 1-2 subtle improvements.
+2. "errors": Highlight the most impactful mistakes or unnatural phrasings. For A1/A2 return at most 3; for B1 at most 5; for B2/C1/C2 at most 8. Put errors that block understanding and repeated errors first. If the text is already solid, return an empty array or just 1-2 subtle improvements.
    - "quote": The exact fragment from the learner's text.
    - "correction": The corrected or more natural phrasing.
    - "type": One of: "grammar", "vocabulary", "spelling", "naturalness", "preposition", "word-order".
-   - "explanationEs": A friendly, concise explanation in Spanish (1-2 sentences) explaining WHY, focusing on typical Spanish-to-English interferences (e.g., subject omission, prepositions, false friends, tense agreement).
+   - "explanationEs": A friendly, concise explanation in Spanish (1-2 sentences) explaining WHY, focusing on typical Spanish-to-English interferences (e.g., subject omission, prepositions, false friends, tense agreement). At A1/A2 use plain words and no grammar jargon; explain one concrete change at a time.
+   - When "actually" is used to mean "currently" rather than "in fact", correct this false friend and explain the difference. Likewise, "assist a meeting" usually means "attend a meeting".
    - "topic": MUST be exactly one of these allowed topic IDs: ${JOURNAL_TOPIC_IDS}. Never invent new topic IDs.
 3. "newWords": Suggest 2 to 5 useful, natural vocabulary words or collocations (lowercase dictionary form) that fit the topic or elevate the learner's entry. Max 8 items.`
 
-export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = []): string {
+export function buildJournalCorrectionPrompt(content: string, interests: readonly string[] = [], level: CEFRLevel = 'A2'): string {
   const sanitizedContent = content.replaceAll('"""', '\\"\\"\\"')
-  return `Please review and correct the following learner journal entry. Ensure every error[].topic strictly matches one of the canonical topic IDs: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\nLearner Entry:\n"""\n${sanitizedContent}\n"""`
+  return `Please review and correct the following learner journal entry. Learner CEFR level: ${level}. Ensure every error[].topic strictly matches one of the canonical topic IDs: ${JOURNAL_TOPIC_IDS}.${interestsClause(interests)}\n\nLearner Entry:\n"""\n${sanitizedContent}\n"""`
 }
 
-export const JOURNAL_NUDGE_SYSTEM_PROMPT = `You help a Spanish-speaking English learner continue a journal entry when they are stuck. Return ONLY valid JSON with exactly three nudges: { "nudges": [{ "en": "...", "es": "..." }, { "en": "...", "es": "..." }, { "en": "...", "es": "..." }] }.
+export const JOURNAL_NUDGE_SYSTEM_PROMPT = `You help a Spanish-speaking English learner continue a journal entry when they are stuck. Provide exactly three nudges, each with an English en field and Spanish es field.
 
 Rules:
 1. Never correct, rewrite, or mention anything the learner has written. Ignore errors completely.
@@ -527,26 +570,18 @@ export function buildScriptGenerationPrompt({
     )
   }
 
-  lines.push(
-    '',
-    'Return JSON only, with this shape:',
-    '{"script":[{"speaker":"coach","text":"..."},{"speaker":"learner","text":"..."}]}',
-  )
-
   return lines.join('\n')
 }
 
 // ── Journal Pronunciation Assistant ──
 
 export const JOURNAL_PRONUNCIATION_SYSTEM_PROMPT = `You are an expert English phonetics coach assisting a Spanish-speaking learner.
-Given an English word or phrase, analyze its pronunciation and return JSON with:
+Given an English word or phrase, analyze its pronunciation and provide:
 1. "ipa": accurate IPA representation using standard US or UK phonetic notation.
 2. "syllableStress": clear notation of syllables and stress (e.g. "pro-TECT (stress on 2nd syllable)").
 3. "suggestedReason": one of "difficult_sound", "syllable_stress", "tricky_spelling", "new_word", or "other".
 4. "explanationEs": 1-2 concise sentences in Spanish explaining why this word can be tricky and how to pronounce it correctly.
-5. "phoneticTrap": a short tip on common pitfalls (e.g. "Don't confuse with recite").
-
-Return ONLY raw valid JSON with no markdown formatting or code blocks.`
+5. "phoneticTrap": a short tip on common pitfalls (e.g. "Don't confuse with recite").`
 
 export function buildJournalPronunciationUserPrompt(wordOrPhrase: string): string {
   return `Analyze this word/phrase for a Pronunciation Journal entry: "${wordOrPhrase}"`
@@ -569,7 +604,7 @@ Do not ask another question. Do not offer more practice.`;
 export const TRACKING_ENRICH_SYSTEM_PROMPT = `You are an expert English learning coach for Spanish speakers.
 Given an English word or phrase and optional learner context, provide a complete, high-quality pedagogical breakdown in a SINGLE call to economize API usage.
 
-Return ONLY raw valid JSON (no markdown, no backticks, no code fences) with:
+Provide these fields:
 - "ipa": accurate phonetic transcription in standard IPA (e.g. "/rɪˈzɪl.i.ənt/").
 - "translation": clear, natural Spanish translation.
 - "meaning": simple, learner-friendly definition in clear English (A2-B1 level).
@@ -579,8 +614,7 @@ Return ONLY raw valid JSON (no markdown, no backticks, no code fences) with:
 Rules:
 - "context" must be purely the English example sentence itself, ready to read or speak. Never prepend labels or quotes.
 - If learner provided existing context, adapt or improve the example sentence to stay true to the context.
-- Keep English natural, modern, and idiomatic.
-- Return ONLY valid JSON.`;
+- Keep English natural, modern, and idiomatic.`;
 
 export function buildTrackingEnrichUserPrompt(input: {
   text: string;
@@ -600,15 +634,9 @@ The story must NOT sound robotic or like a grammar drill; it should feel like hi
 
 Requirements:
 - Level appropriate for the learner's CEFR level.
+- Provide a short descriptive "title" and put the English story in "passage".
 - Highlight 4-8 exact phrases from the passage that exemplify the target pattern in "keyPhrases".
-- Provide a clear, encouraging 2-3 line micro-explanation in Spanish ("explanation") explaining what the pattern is and a tip to master it.
-- Return ONLY raw valid JSON with no markdown formatting or code blocks:
-{
-  "title": "Story title",
-  "passage": "Full English passage text...",
-  "explanation": "Explicación breve en español sobre el patrón...",
-  "keyPhrases": ["phrase one", "phrase two"]
-}`
+- Provide a clear, encouraging 2-3 line micro-explanation in Spanish ("explanation") explaining what the pattern is and a tip to master it.`
 
 export function buildFocusStoryUserPrompt(input: {
   gaps: Array<{ kind: string; label: string; level?: string }>;
@@ -631,18 +659,7 @@ Create 8 to 10 distinct, natural English sentences that repeatedly utilize the t
 For each sentence:
 - "text": The complete, natural English sentence (6-15 words).
 - "translation": Natural Spanish translation for Spanish-to-English translation exercises.
-- "gapWord": The exact target word, verb form, or phrase in the sentence that embodies the gap pattern (for fill-in-the-blank practice).
-
-Return ONLY raw valid JSON with no markdown formatting:
-{
-  "sentences": [
-    {
-      "text": "Yesterday I walked to the park and met an old friend.",
-      "translation": "Ayer caminé al parque y me encontré con un viejo amigo.",
-      "gapWord": "walked"
-    }
-  ]
-}`
+- "gapWord": The exact target word, verb form, or phrase in the sentence that embodies the gap pattern (for fill-in-the-blank practice).`
 
 export function buildFocusDrillUserPrompt(input: {
   gaps: Array<{ kind: string; label: string; level?: string }>;
@@ -655,16 +672,7 @@ Each sentence must have text, natural Spanish translation, and the exact gapWord
 
 export const FOCUS_DIALOGUE_SYSTEM_PROMPT = `You are a conversational English curriculum designer.
 Create a lively, authentic dialogue between two speakers (A and B) spanning 10 to 14 turns.
-The conversation must revolve around a realistic everyday or workplace situation where the target patterns/gaps naturally occur multiple times.
-
-Return ONLY raw valid JSON with no markdown formatting:
-{
-  "context": "Short 1-sentence description of the situation in Spanish",
-  "turns": [
-    { "speaker": "A", "text": "..." },
-    { "speaker": "B", "text": "..." }
-  ]
-}`
+The conversation must revolve around a realistic everyday or workplace situation where the target patterns/gaps naturally occur multiple times. Describe the situation in one Spanish sentence ("context"). In "turns", alternate speakers A and B with natural English text.`
 
 export function buildFocusDialogueUserPrompt(input: {
   gaps: Array<{ kind: string; label: string; level?: string }>;
@@ -680,23 +688,7 @@ Create exactly 5 sentences related to the target gaps:
 - 3 sentences must be completely grammatically correct and natural.
 - 2 sentences must contain the subtle, classic error Spanish speakers make regarding this gap (e.g. using base form instead of past simple, omitting -ed, false friend, or confusing /iː/ vs /ɪ/ homophones).
 For erroneous sentences, specify "hasError": true, the "correction" (corrected sentence), and a clear "explanation" in Spanish.
-For correct sentences, "hasError": false, and omit or keep null correction and explanation.
-
-Return ONLY raw valid JSON with no markdown formatting:
-{
-  "sentences": [
-    {
-      "text": "I went to the store and buy some milk.",
-      "hasError": true,
-      "correction": "I went to the store and bought some milk.",
-      "explanation": "En el pasado simple se debe usar 'bought' para mantener la concordancia de tiempo."
-    },
-    {
-      "text": "She listened carefully to what he said.",
-      "hasError": false
-    }
-  ]
-}`
+For correct sentences, "hasError": false, and omit or keep null correction and explanation.`
 
 export function buildFocusErrorTrapUserPrompt(input: {
   gaps: Array<{ kind: string; label: string; level?: string }>;
@@ -713,14 +705,7 @@ Features:
 - Rhyme scheme or strong rhythm (AABB, ABAB, or ballad meter).
 - "gapLines": An array of 0-based integers indicating which lines (0 to 15) contain the target gap pattern.
 - "notes": 1-2 sentences in Spanish highlighting the rhythmic/phonetic pattern to listen for or sing along with.
-
-Return ONLY raw valid JSON with no markdown formatting:
-{
-  "title": "Song or poem title",
-  "lyrics": "Line 1\\nLine 2\\n...",
-  "gapLines": [0, 2, 4, 8, 12],
-  "notes": "Fíjate en el ritmo de los verbos en pasado al final de cada estrofa..."
-}`
+- "title": A short song or poem title. Put the 16 lines in "lyrics" separated by newlines.`
 
 export function buildFocusSongUserPrompt(input: {
   gaps: Array<{ kind: string; label: string; level?: string }>;
@@ -730,12 +715,23 @@ export function buildFocusSongUserPrompt(input: {
   return `Write a 16-line rhythmic song/rhyme for level ${input.level.toUpperCase()} focused on practicing: ${gapsList}.`
 }
 
-export function buildReaderAudioPrompt(passageText: string): string {
-  return `Please read the following English story aloud with clear, natural pronunciation and articulate phrasing at a moderate pace suitable for language learning:\n\n${passageText.trim()}`
+export interface SpeechGenerationPrompt {
+  transcript: string
+  style: string
 }
 
-export function buildMissionAudioPrompt(lineText: string): string {
-  return `Please speak the following conversational dialogue line aloud with natural pronunciation, expressive intonation, and native cadence suitable for language learning:\n\n${lineText.trim()}`
+export function buildReaderAudioPrompt(passageText: string): SpeechGenerationPrompt {
+  return {
+    transcript: passageText.trim(),
+    style: 'Clear, natural English pronunciation with articulate phrasing at a moderate pace suitable for language learning.',
+  }
+}
+
+export function buildMissionAudioPrompt(lineText: string): SpeechGenerationPrompt {
+  return {
+    transcript: lineText.trim(),
+    style: 'Natural conversational English with expressive intonation and native cadence suitable for language learning.',
+  }
 }
 
 export const IMMERSION_ENRICH_SYSTEM_PROMPT = `You are an ESL curriculum designer building study material for Spanish-speaking learners around a real English video lesson from engVid.
@@ -783,13 +779,7 @@ Rules:
 - If the description is vague, off-topic, or not about learning English, return an empty "matches" array and explain why in "clarification".
 - "confidence" is 0.0-1.0: how sure you are that this topic is what the learner means.
 - "rationale" is ONE short sentence in Spanish, addressed to the learner, connecting their words to the topic. Quote their own phrasing when it helps.
-- Never shame the learner. Their description is valid input, not an error.
-
-Return ONLY raw valid JSON with no markdown formatting or code blocks:
-{
-  "matches": [{ "topicId": "grammar:past simple", "confidence": 0.9, "rationale": "Explicación breve en español..." }],
-  "clarification": null
-}`
+- Never shame the learner. Their description is valid input, not an error.`
 
 export function buildFocusGapMatchUserPrompt(input: {
   description: string;
@@ -867,5 +857,167 @@ CANDIDATE VIDEO (Observable metadata):
 - Description: ${input.candidateVideo.description || 'No description provided'}
 
 Classify the pedagogical relationship strictly using only the observable evidence.`
+}
+
+// ── Grammar & Elective Decks: Quiz Generation ──
+
+export const GRAMMAR_DECK_QUIZ_SYSTEM_PROMPT = `You are an expert English teacher designing assessment quizzes for English language learners.
+For a given grammar or elective lesson deck (with title, concepts, rules, and example sentences), generate exactly 3 multiple-choice quiz questions.
+
+Rules:
+1. Each question must test understanding of key phrases, collocations, grammatical structures, or workplace communication nuances taught in the deck.
+2. Provide exactly 2 plausible options ("options": [string, string]) for each question.
+3. "answer": 0 or 1 (the 0-indexed index of the correct option in "options").
+4. "explain": A concise, encouraging explanation in Spanish (1-2 sentences) explaining why the chosen option is correct.
+5. Questions can be in English (testing language choice in context) or Spanish (testing conceptual/pragmatic understanding).
+
+Return ONLY raw valid JSON with no markdown formatting:
+{
+  "quiz": [
+    {
+      "q": "The sentence or question prompt with a blank '___' or question text",
+      "options": ["correctOption", "distractorOption"],
+      "answer": 0,
+      "explain": "Explicación clara en español..."
+    }
+  ]
+}`
+
+export function buildGrammarDeckQuizPrompt(deck: {
+  title: string
+  eyebrow?: string
+  cards: Array<{
+    title?: string
+    lede?: string
+    rules?: Array<{ key: string; value: string }>
+  }>
+}): string {
+  const cardsText = deck.cards
+    .map((c) => {
+      const rules = c.rules?.map((r) => `  - ${r.key}: ${r.value}`).join('\n') ?? ''
+      return `Section: ${c.title ?? ''}\nSummary: ${c.lede ?? ''}\n${rules}`
+    })
+    .join('\n\n')
+
+  return `Deck Title: ${deck.eyebrow ?? ''} - ${deck.title}
+
+Content & Rules:
+${cardsText}
+
+Generate 3 high-quality quiz questions for this deck.`
+}
+
+
+
+export function buildListeningAudioPrompt(lineText: string): SpeechGenerationPrompt {
+  return {
+    transcript: lineText.trim(),
+    style: 'Clear, carefully articulated English with authentic intonation at a moderate pace suitable for a listening comprehension assessment.',
+  }
+}
+export const ASSESSMENT_ORAL_TRANSCRIPTION_PROMPT =
+  "Transcribe only the English words that are clearly audible in this recording. Do not infer missing words, answer the speaker's task, or add commentary. Return an empty string when no speech is intelligible.";
+
+// ── Content Bank ──
+
+export const CONTENT_BANK_EXERCISE_SET_PROMPT = `
+You are an expert English language curriculum generator.
+Generate a cohesive set of exactly 5 practice exercises for English learners at the specified CEFR level and topic.
+Exercise variety:
+- 2 multiple-choice exercises ("render_multiple_choice")
+- 2 fill-in-the-blank exercises ("render_fill_blank")
+- 1 speaking exercise ("render_speaking")
+
+Quality requirements:
+- Pedagogical clarity: explanations must be in clear Spanish, explaining WHY the correct answer is right.
+- For multiple-choice: 3-4 plausible options, with 0-based correctIndex. Include 2-3 commonWrongAnswers explaining student misconceptions. Include progressive hints (level1 and level2).
+- For fill-in-the-blank: a clear sentence with a blank (e.g. "I ___ (go) to the store yesterday"), exact target answer, acceptable alternative answers, progressive hints, and commonWrongAnswers.
+- For speaking: a clear communicative prompt and target sentence or phrase to say aloud, with optional IPA pronunciation guide.
+- Appropriate difficulty for the declared CEFR level (A1 to C2).
+- Keep all exercises strictly focused on the requested topic.
+`.trim();
+
+export function buildContentBankSetPrompt({
+  level,
+  topicId,
+  avoidStems,
+}: {
+  level: CEFRLevel;
+  topicId: string;
+  avoidStems?: string[];
+}): string {
+  const avoidClause = avoidStems && avoidStems.length > 0
+    ? `\nAvoid repeating these sentences or questions:\n${avoidStems.map((s) => `- ${s}`).join("\n")}\n`
+    : "";
+
+  return `Generate 5 exercises for CEFR level ${level} on topic "${topicId}".${avoidClause}
+Ensure all required fields are populated with rich pedagogical content (instruction, learningGoal, explanation, commonWrongAnswers, hint).
+Return the set in JSON matching the specified schema.`.trim();
+}
+
+// ── Grammar Drills (Plan 043) ──
+
+export const GRAMMAR_DRILL_SYSTEM_PROMPT = `You are an expert English language pedagogue creating high-precision grammar drills for Spanish-speaking learners.
+You output strictly valid JSON matching the GrammarDrill schema without markdown wrappers or conversational filler.
+
+Key requirements for generated drills:
+1. Four core techniques:
+   - "transform": 3 to 4 sentence transformations based on the deck's rules.
+   - "build": 3 to 4 reorder items (or combine items if permitted by the level).
+   - "correct": 4 to 5 error correction items targeting the lesson topic, with the specified ratio of already-correct sentences.
+   - "personalize": 3 to 5 personalization prompts (frames for A1-A2, open prompts for B1-C1) connecting grammar to the learner's own life.
+2. Tolerant matching with template syntax:
+   - Provide acceptable alternative phrasing using {optionA|optionB} syntax (e.g. "{I am|I'm} ready.").
+   - Never exceed 64 expansions per template.
+   - For A1-A2, specify "contractions": "require" when contractions are standard in spoken/informal English.
+3. Grammar structure tags:
+   - Where applicable, specify "requires" referencing exact StructureCheckIds (e.g. "past_simple", "second_conditional", "third_conditional", "negative_inversion", "cleft_what").
+   - Do NOT use structure IDs above the deck's CEFR level.
+4. Content grounding:
+   - Base all drill content strictly on the rules, contrasts, and example sentences present in the deck cards. Do not invent an unrelated grammatical topic.
+5. All explanations and user-facing instructions must be in Spanish.
+6. Set "reviewed": false.`;
+
+export function buildGrammarDrillPrompt({
+  deck,
+  profile,
+  pilot,
+}: {
+  deck: {
+    meta?: { title?: string; eyebrow?: string; goal?: string };
+    cards?: Array<{ title?: string; lede?: string; blocks?: unknown[] }>;
+  };
+  profile: {
+    level: string;
+    buildMode: string;
+    alreadyCorrectRatio: number;
+    sentenceWords: [number, number];
+    personalizationMode: string;
+  };
+  pilot?: unknown;
+}): string {
+  const cardsSummary = (deck.cards ?? [])
+    .map((c) => `- ${c.title ?? ''}: ${c.lede ?? ''}`)
+    .join('\n');
+
+  const pilotExample = pilot
+    ? `\nHere is a reference gold-standard drill for level ${profile.level}:\n${JSON.stringify(pilot, null, 2)}\n`
+    : '';
+
+  return `Create a grammar drill for CEFR level ${profile.level}.
+Topic: ${deck.meta?.title ?? ''} (${deck.meta?.eyebrow ?? ''})
+Goal: ${deck.meta?.goal ?? ''}
+
+Lesson cards:
+${cardsSummary}
+
+Level constraints:
+- Level: ${profile.level}
+- Build mode: ${profile.buildMode}
+- Target alreadyCorrect ratio: ${Math.round(profile.alreadyCorrectRatio * 100)}%
+- Target sentence length: ${profile.sentenceWords[0]}–${profile.sentenceWords[1]} words
+- Personalization mode: ${profile.personalizationMode}
+${pilotExample}
+Generate the JSON payload with "level": "${profile.level}", "reviewed": false, and the 4 techniques (transform, build, correct, personalize).`.trim();
 }
 

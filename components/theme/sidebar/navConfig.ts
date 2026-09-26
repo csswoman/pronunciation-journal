@@ -44,6 +44,7 @@ export const learnNav: NavSectionType = {
     { name: "Modo Foco", href: "/focus", icon: Radar },
     { name: "Pronunciación", href: "/practice/sounds", icon: MicVocal },
     { name: "Vocabulario", href: "/practice/essential-words", icon: Layers },
+    { name: "Lectura", href: "/practice/reader", icon: BookOpen },
     { name: "Inmersión", href: "/practice/immersion", icon: Clapperboard },
     { name: "Mini lecciones", href: "/mini-lessons", icon: Sparkles },
   ],

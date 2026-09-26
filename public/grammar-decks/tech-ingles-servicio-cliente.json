@@ -14,9 +14,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Saludo", "value": "Thank you for calling. How can I help?", "highlights": ["How can I help?"] },
-            { "key": "Chat/email", "value": "Thanks for reaching out.", "highlights": ["reaching out"] },
-            { "key": "Identificar", "value": "May I have your name, please?", "highlights": ["May I have"] }
+            {
+              "key": "Saludo",
+              "value": "Thank you for calling. How can I help?",
+              "highlights": [
+                "How can I help?"
+              ]
+            },
+            {
+              "key": "Chat/email",
+              "value": "Thanks for reaching out.",
+              "highlights": [
+                "reaching out"
+              ]
+            },
+            {
+              "key": "Identificar",
+              "value": "May I have your name, please?",
+              "highlights": [
+                "May I have"
+              ]
+            }
           ]
         }
       ]
@@ -30,9 +48,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Confirmar", "value": "Let me make sure I understand...", "highlights": ["Let me make sure"] },
-            { "key": "Reformular", "value": "So, what you're saying is...", "highlights": ["what you're saying is"] },
-            { "key": "Empatía", "value": "I understand how frustrating that is.", "highlights": ["I understand how frustrating"] }
+            {
+              "key": "Confirmar",
+              "value": "Let me make sure I understand...",
+              "highlights": [
+                "Let me make sure"
+              ]
+            },
+            {
+              "key": "Reformular",
+              "value": "So, what you're saying is...",
+              "highlights": [
+                "what you're saying is"
+              ]
+            },
+            {
+              "key": "Empatía",
+              "value": "I understand how frustrating that is.",
+              "highlights": [
+                "I understand how frustrating"
+              ]
+            }
           ]
         }
       ],
@@ -50,10 +86,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "I'm sorry for the inconvenience.", "note": "formal" },
-            { "variant": "good", "text": "I apologize for the delay.", "note": "más formal" },
-            { "variant": "bad", "text": "It's not our fault.", "note": "evítalo" },
-            { "variant": "good", "text": "Let me fix this for you right away.", "note": "orientado a solución" }
+            {
+              "variant": "good",
+              "text": "I'm sorry for the inconvenience.",
+              "note": "formal"
+            },
+            {
+              "variant": "good",
+              "text": "I apologize for the delay.",
+              "note": "más formal"
+            },
+            {
+              "variant": "bad",
+              "text": "It's not our fault.",
+              "note": "evítalo"
+            },
+            {
+              "variant": "good",
+              "text": "Let me fix this for you right away.",
+              "note": "orientado a solución"
+            }
           ]
         }
       ]
@@ -67,9 +119,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Ofrecer", "value": "I'll look into this for you.", "highlights": ["I'll look into"] },
-            { "key": "Pasos", "value": "What I'll do is... · The next step is...", "highlights": ["What I'll do is"] },
-            { "key": "Opciones", "value": "We could either... or...", "highlights": ["either... or"] }
+            {
+              "key": "Ofrecer",
+              "value": "I'll look into this for you.",
+              "highlights": [
+                "I'll look into"
+              ]
+            },
+            {
+              "key": "Pasos",
+              "value": "What I'll do is... · The next step is...",
+              "highlights": [
+                "What I'll do is"
+              ]
+            },
+            {
+              "key": "Opciones",
+              "value": "We could either... or...",
+              "highlights": [
+                "either... or"
+              ]
+            }
           ]
         }
       ]
@@ -83,9 +153,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Espera", "value": "Could you hold for a moment, please?", "highlights": ["hold for a moment"] },
-            { "key": "Transferir", "value": "I'll transfer you to the right team.", "highlights": ["transfer you"] },
-            { "key": "Tiempo", "value": "Bear with me while I check.", "highlights": ["Bear with me"] }
+            {
+              "key": "Espera",
+              "value": "Could you hold for a moment, please?",
+              "highlights": [
+                "hold for a moment"
+              ]
+            },
+            {
+              "key": "Transferir",
+              "value": "I'll transfer you to the right team.",
+              "highlights": [
+                "transfer you"
+              ]
+            },
+            {
+              "key": "Tiempo",
+              "value": "Bear with me while I check.",
+              "highlights": [
+                "Bear with me"
+              ]
+            }
           ]
         }
       ]
@@ -99,12 +187,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Confirmar", "value": "Is there anything else I can help with?", "highlights": ["anything else"] },
-            { "key": "Resumir", "value": "Just to recap, we've...", "highlights": ["Just to recap"] },
-            { "key": "Despedir", "value": "Thank you for your patience. Have a great day!", "highlights": ["Thank you for your patience"] }
+            {
+              "key": "Confirmar",
+              "value": "Is there anything else I can help with?",
+              "highlights": [
+                "anything else"
+              ]
+            },
+            {
+              "key": "Resumir",
+              "value": "Just to recap, we've...",
+              "highlights": [
+                "Just to recap"
+              ]
+            },
+            {
+              "key": "Despedir",
+              "value": "Thank you for your patience. Have a great day!",
+              "highlights": [
+                "Thank you for your patience"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "A customer is explaining a complex technical issue. Which phrase is best to show you are actively listening and confirming their problem?",
+      "options": [
+        "So, what you're saying is...",
+        "I'll look into this for you."
+      ],
+      "answer": 0,
+      "explain": "Esta frase es ideal para parafrasear y confirmar que has comprendido correctamente el problema antes de ofrecer una solución."
+    },
+    {
+      "q": "You need to check some information in the system. What is the most professional way to ask the customer to wait?",
+      "options": [
+        "Bear with me while I check.",
+        "Wait a minute, I am checking."
+      ],
+      "answer": 0,
+      "explain": "La frase 'Bear with me' es una forma educada y profesional de pedirle al cliente que espere mientras realizas una gestión."
+    },
+    {
+      "q": "When offering a solution to a customer, which structure sounds most proactive and helpful?",
+      "options": [
+        "What I'll do is...",
+        "Maybe you should try..."
+      ],
+      "answer": 0,
+      "explain": "Usar 'What I'll do is...' demuestra que tomas el control de la situación y te haces responsable de resolver el problema del cliente."
     }
   ]
 }

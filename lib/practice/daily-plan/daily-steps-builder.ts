@@ -29,6 +29,7 @@ import {
 } from './step-builders'
 import type { CefrLevelId } from '@/lib/courses/types'
 import type { UserLearningState } from '@/lib/ai-practice/learning-state'
+import type { SpeechConstraintId } from '@/lib/exercises/speech-constraints'
 
 const DEFAULT_GRAMMAR_DECK = 'a2-presente-perfecto-experiencias'
 
@@ -44,6 +45,7 @@ export interface BuildDailyCandidateStepsParams {
   aiState: UserLearningState | null
   savedOrFamiliarWordIds: Set<string>
   wordIndex: WordCategoryIndex
+  repairConstraints?: readonly SpeechConstraintId[]
 }
 
 export async function buildDailyCandidateSteps(
@@ -66,6 +68,7 @@ export async function buildDailyCandidateSteps(
     aiState,
     savedOrFamiliarWordIds,
     wordIndex,
+    repairConstraints = [],
   } = params
 
   const newSteps: DailyStep[] = []
@@ -150,6 +153,7 @@ export async function buildDailyCandidateSteps(
     savedOrFamiliarWordIds,
     wordIndex,
     studyDeckActiveLevel,
+    repairConstraints,
   )
   if (wordReview) reviewSteps.push(wordReview)
 

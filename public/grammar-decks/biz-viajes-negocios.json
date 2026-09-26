@@ -6,7 +6,10 @@
     "goal": "Ya puedes organizar un viaje de trabajo, reunirte con clientes y hacer el seguimiento posterior."
   },
   "related": [
-    { "slug": "b1-practico-viajes-negocios", "label": "B1 · Viajes de negocios (intermedio)" }
+    {
+      "slug": "b1-practico-viajes-negocios",
+      "label": "B1 · Viajes de negocios (intermedio)"
+    }
   ],
   "cards": [
     {
@@ -18,9 +21,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reservar", "value": "book a flight · arrange accommodation", "highlights": ["book a flight"] },
-            { "key": "Agenda", "value": "itinerary · schedule · time zone", "highlights": ["itinerary"] },
-            { "key": "Frase", "value": "I'm flying out on Monday.", "highlights": ["flying out"] }
+            {
+              "key": "Reservar",
+              "value": "book a flight · arrange accommodation",
+              "highlights": [
+                "book a flight"
+              ]
+            },
+            {
+              "key": "Agenda",
+              "value": "itinerary · schedule · time zone",
+              "highlights": [
+                "itinerary"
+              ]
+            },
+            {
+              "key": "Frase",
+              "value": "I'm flying out on Monday.",
+              "highlights": [
+                "flying out"
+              ]
+            }
           ]
         }
       ]
@@ -34,9 +55,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Facturar", "value": "check in · carry-on · boarding pass", "highlights": ["check in"] },
-            { "key": "Incidencias", "value": "The flight's been delayed / cancelled.", "highlights": ["delayed"] },
-            { "key": "Conexión", "value": "I have a layover in Madrid.", "highlights": ["layover"] }
+            {
+              "key": "Facturar",
+              "value": "check in · carry-on · boarding pass",
+              "highlights": [
+                "check in"
+              ]
+            },
+            {
+              "key": "Incidencias",
+              "value": "The flight's been delayed / cancelled.",
+              "highlights": [
+                "delayed"
+              ]
+            },
+            {
+              "key": "Conexión",
+              "value": "I have a layover in Madrid.",
+              "highlights": [
+                "layover"
+              ]
+            }
           ]
         }
       ]
@@ -50,9 +89,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Presentarse", "value": "Pleased to meet you. I'm... from...", "highlights": ["Pleased to meet you"] },
-            { "key": "Tarjeta", "value": "Here's my business card.", "highlights": ["business card"] },
-            { "key": "Abrir", "value": "Thank you all for coming. Shall we begin?", "highlights": ["Shall we begin?"] }
+            {
+              "key": "Presentarse",
+              "value": "Pleased to meet you. I'm... from...",
+              "highlights": [
+                "Pleased to meet you"
+              ]
+            },
+            {
+              "key": "Tarjeta",
+              "value": "Here's my business card.",
+              "highlights": [
+                "business card"
+              ]
+            },
+            {
+              "key": "Abrir",
+              "value": "Thank you all for coming. Shall we begin?",
+              "highlights": [
+                "Shall we begin?"
+              ]
+            }
           ]
         }
       ],
@@ -70,10 +127,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Thank you for the invitation.", "note": "cortesía" },
-            { "variant": "good", "text": "What do you recommend?", "note": "pedir consejo" },
-            { "variant": "good", "text": "Please, let me get this.", "note": "invitar a pagar" },
-            { "variant": "good", "text": "It's been a pleasure.", "note": "despedida" }
+            {
+              "variant": "good",
+              "text": "Thank you for the invitation.",
+              "note": "cortesía"
+            },
+            {
+              "variant": "good",
+              "text": "What do you recommend?",
+              "note": "pedir consejo"
+            },
+            {
+              "variant": "good",
+              "text": "Please, let me get this.",
+              "note": "invitar a pagar"
+            },
+            {
+              "variant": "good",
+              "text": "It's been a pleasure.",
+              "note": "despedida"
+            }
           ]
         }
       ]
@@ -87,9 +160,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Agradecer", "value": "It was great meeting you in person.", "highlights": ["great meeting you"] },
-            { "key": "Resumir", "value": "As discussed, we agreed to...", "highlights": ["As discussed"] },
-            { "key": "Próximos pasos", "value": "I'll follow up with the details.", "highlights": ["follow up"] }
+            {
+              "key": "Agradecer",
+              "value": "It was great meeting you in person.",
+              "highlights": [
+                "great meeting you"
+              ]
+            },
+            {
+              "key": "Resumir",
+              "value": "As discussed, we agreed to...",
+              "highlights": [
+                "As discussed"
+              ]
+            },
+            {
+              "key": "Próximos pasos",
+              "value": "I'll follow up with the details.",
+              "highlights": [
+                "follow up"
+              ]
+            }
           ]
         }
       ]
@@ -103,12 +194,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Gastos", "value": "expenses · per diem · receipt", "highlights": ["expenses"] },
-            { "key": "Reembolso", "value": "claim back · reimbursement", "highlights": ["reimbursement"] },
-            { "key": "Frase", "value": "I'll submit my expense report.", "highlights": ["expense report"] }
+            {
+              "key": "Gastos",
+              "value": "expenses · per diem · receipt",
+              "highlights": [
+                "expenses"
+              ]
+            },
+            {
+              "key": "Reembolso",
+              "value": "claim back · reimbursement",
+              "highlights": [
+                "reimbursement"
+              ]
+            },
+            {
+              "key": "Frase",
+              "value": "I'll submit my expense report.",
+              "highlights": [
+                "expense report"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is most appropriate to use when you have a stopover during your flight?",
+      "options": [
+        "I have a layover in Madrid.",
+        "I have a boarding pass in Madrid."
+      ],
+      "answer": 0,
+      "explain": "La palabra 'layover' se utiliza específicamente para describir una escala o conexión durante un viaje."
+    },
+    {
+      "q": "After returning from a business trip, what is the best way to start a follow-up email?",
+      "options": [
+        "It was great meeting you in person.",
+        "I'll submit my expense report."
+      ],
+      "answer": 0,
+      "explain": "Esta frase es la forma profesional y cortés de iniciar el contacto tras una reunión presencial."
+    },
+    {
+      "q": "If you need to get your money back for business-related costs, what should you do?",
+      "options": [
+        "Submit an expense report for reimbursement.",
+        "Ask for a carry-on."
+      ],
+      "answer": 0,
+      "explain": "El término 'reimbursement' se refiere al reembolso de gastos, y el 'expense report' es el documento necesario para solicitarlo."
     }
   ]
 }

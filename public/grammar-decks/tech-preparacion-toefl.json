@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reading", "value": "textos académicos + preguntas", "highlights": ["Reading"] },
-            { "key": "Listening", "value": "clases y conversaciones", "highlights": ["Listening"] },
-            { "key": "Speaking", "value": "tareas independientes e integradas", "highlights": ["Speaking"] },
-            { "key": "Writing", "value": "ensayo integrado + de opinión", "highlights": ["Writing"] }
+            {
+              "key": "Reading",
+              "value": "textos académicos + preguntas",
+              "highlights": [
+                "Reading"
+              ]
+            },
+            {
+              "key": "Listening",
+              "value": "clases y conversaciones",
+              "highlights": [
+                "Listening"
+              ]
+            },
+            {
+              "key": "Speaking",
+              "value": "tareas independientes e integradas",
+              "highlights": [
+                "Speaking"
+              ]
+            },
+            {
+              "key": "Writing",
+              "value": "ensayo integrado + de opinión",
+              "highlights": [
+                "Writing"
+              ]
+            }
           ]
         }
       ]
@@ -31,9 +55,28 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Postura", "value": "In my opinion, ... for two main reasons.", "highlights": ["In my opinion"] },
-            { "key": "Desarrollar", "value": "First, ... For example, ...", "highlights": ["First", "For example"] },
-            { "key": "Cerrar", "value": "That's why I believe...", "highlights": ["That's why"] }
+            {
+              "key": "Postura",
+              "value": "In my opinion, ... for two main reasons.",
+              "highlights": [
+                "In my opinion"
+              ]
+            },
+            {
+              "key": "Desarrollar",
+              "value": "First, ... For example, ...",
+              "highlights": [
+                "First",
+                "For example"
+              ]
+            },
+            {
+              "key": "Cerrar",
+              "value": "That's why I believe...",
+              "highlights": [
+                "That's why"
+              ]
+            }
           ]
         }
       ],
@@ -51,9 +94,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Reportar lectura", "value": "The reading claims that...", "highlights": ["The reading claims that"] },
-            { "key": "Reportar audio", "value": "The lecturer, however, argues...", "highlights": ["The lecturer, however, argues"] },
-            { "key": "Contrastar", "value": "This casts doubt on...", "highlights": ["This casts doubt on"] }
+            {
+              "key": "Reportar lectura",
+              "value": "The reading claims that...",
+              "highlights": [
+                "The reading claims that"
+              ]
+            },
+            {
+              "key": "Reportar audio",
+              "value": "The lecturer, however, argues...",
+              "highlights": [
+                "The lecturer, however, argues"
+              ]
+            },
+            {
+              "key": "Contrastar",
+              "value": "This casts doubt on...",
+              "highlights": [
+                "This casts doubt on"
+              ]
+            }
           ]
         }
       ]
@@ -67,9 +128,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Neutro", "value": "states · explains · notes", "highlights": ["states"] },
-            { "key": "Argumentar", "value": "argues · claims · maintains", "highlights": ["argues"] },
-            { "key": "Dudar", "value": "questions · challenges · refutes", "highlights": ["refutes"] }
+            {
+              "key": "Neutro",
+              "value": "states · explains · notes",
+              "highlights": [
+                "states"
+              ]
+            },
+            {
+              "key": "Argumentar",
+              "value": "argues · claims · maintains",
+              "highlights": [
+                "argues"
+              ]
+            },
+            {
+              "key": "Dudar",
+              "value": "questions · challenges · refutes",
+              "highlights": [
+                "refutes"
+              ]
+            }
           ]
         }
       ]
@@ -83,10 +162,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "Anota la idea central de cada párrafo.", "note": "main idea" },
-            { "variant": "good", "text": "Marca los giros: however, on the other hand.", "note": "contraste" },
-            { "variant": "good", "text": "Usa abreviaturas y símbolos.", "note": "rapidez" },
-            { "variant": "good", "text": "Atiende al tono del hablante.", "note": "actitud" }
+            {
+              "variant": "good",
+              "text": "Anota la idea central de cada párrafo.",
+              "note": "main idea"
+            },
+            {
+              "variant": "good",
+              "text": "Marca los giros: however, on the other hand.",
+              "note": "contraste"
+            },
+            {
+              "variant": "good",
+              "text": "Usa abreviaturas y símbolos.",
+              "note": "rapidez"
+            },
+            {
+              "variant": "good",
+              "text": "Atiende al tono del hablante.",
+              "note": "actitud"
+            }
           ]
         }
       ]
@@ -100,12 +195,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Causa", "value": "consequently · therefore · thus", "highlights": ["consequently"] },
-            { "key": "Ejemplo", "value": "for instance · namely · in particular", "highlights": ["for instance"] },
-            { "key": "Énfasis", "value": "significantly · notably · crucially", "highlights": ["significantly"] }
+            {
+              "key": "Causa",
+              "value": "consequently · therefore · thus",
+              "highlights": [
+                "consequently"
+              ]
+            },
+            {
+              "key": "Ejemplo",
+              "value": "for instance · namely · in particular",
+              "highlights": [
+                "for instance"
+              ]
+            },
+            {
+              "key": "Énfasis",
+              "value": "significantly · notably · crucially",
+              "highlights": [
+                "significantly"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which verb is most appropriate to use when the lecturer in the audio directly contradicts the information provided in the reading passage?",
+      "options": [
+        "refutes",
+        "states"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'refutes' es ideal para indicar que el conferenciante está contradiciendo o desmintiendo la información de la lectura."
+    },
+    {
+      "q": "Which transition word is best to introduce a specific example to support your argument in the Speaking section?",
+      "options": [
+        "namely",
+        "consequently"
+      ],
+      "answer": 0,
+      "explain": "'Namely' es un conector excelente para introducir ejemplos específicos o detalles concretos, a diferencia de 'consequently' que indica una consecuencia."
+    },
+    {
+      "q": "En el ensayo integrado, ¿cuál es el objetivo principal al reportar la información del audio?",
+      "options": [
+        "Resumir cómo la conferencia se relaciona con la lectura",
+        "Repetir palabra por palabra lo que dijo el conferenciante"
+      ],
+      "answer": 0,
+      "explain": "El TOEFL evalúa tu capacidad de síntesis y de contrastar ideas, por lo que es fundamental explicar la relación entre ambos textos."
     }
   ]
 }

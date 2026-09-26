@@ -18,9 +18,9 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
       <JournalSupportRail
         promptId="relaxing-place"
         resolvedVocabulary={[
-          { text: 'cozy', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', inWordBank: true, srsStatus: 'learning' },
-          { text: 'corner', translation: 'rincón', ipa: '/corner/', example: 'Generated corner.', inWordBank: false, srsStatus: null },
-          { text: 'quiet', translation: 'silencioso', ipa: '/quiet/', example: 'Generated quiet.', inWordBank: false, srsStatus: null },
+          { text: 'cozy', translation: 'acogedor de mi casa', ipa: '/koʊzi/', example: 'My own cozy example.', inWordBank: true, srsStatus: 'learning', provenance: 'scaffold' },
+          { text: 'corner', translation: 'rincón', ipa: '/corner/', example: 'Generated corner.', inWordBank: false, srsStatus: null, provenance: 'scaffold' },
+          { text: 'quiet', translation: 'silencioso', ipa: '/quiet/', example: 'Generated quiet.', inWordBank: false, srsStatus: null, provenance: 'scaffold' },
         ]}
         selectedGrammarNote={null}
         feedback={null}
@@ -30,9 +30,28 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
     expect(screen.getByText('Palabras de hoy')).toBeInTheDocument()
     expect(screen.getByText('0 de 3')).toBeInTheDocument()
     expect(screen.getByText('cozy')).toBeInTheDocument()
+    expect(screen.queryByText('En tu repaso')).not.toBeInTheDocument()
     expect(screen.getByText('corner')).toBeInTheDocument()
     expect(screen.getByText('quiet')).toBeInTheDocument()
     expect(screen.getByText('Modelos de frase')).toBeInTheDocument()
+  })
+
+  it('labels only vocabulary confirmed due by the review query', () => {
+    render(
+      <JournalSupportRail
+        promptId="relaxing-place"
+        resolvedVocabulary={[
+          { id: 'due-1', text: 'borrow', translation: 'pedir prestado', ipa: '/ˈbɑːroʊ/', example: 'Can I borrow it?', inWordBank: true, srsStatus: 'review', provenance: 'dueReview' },
+          { text: 'cozy', translation: 'acogedor', ipa: '/koʊzi/', example: 'A cozy room.', inWordBank: true, srsStatus: 'learning', provenance: 'scaffold' },
+        ]}
+        selectedGrammarNote={null}
+        feedback={null}
+      />,
+    )
+
+    expect(screen.getByText('En tu repaso')).toBeInTheDocument()
+    expect(screen.getByText('borrow')).toBeInTheDocument()
+    expect(screen.getByText('cozy')).toBeInTheDocument()
   })
 
   it('emits starter selection through the rail callback', () => {
@@ -78,8 +97,8 @@ describe('JournalSupportRail vocabulary resolution', { timeout: 15_000 }, () => 
       <JournalSupportRail
         promptId="relaxing-place"
         resolvedVocabulary={[
-          { text: 'cozy', translation: 'acogedor', ipa: '/koʊzi/', example: 'A cozy room.', inWordBank: false, srsStatus: null },
-          { text: 'shelf', translation: 'estante', ipa: '/ʃelf/', example: 'A shelf.', inWordBank: false, srsStatus: null },
+          { text: 'cozy', translation: 'acogedor', ipa: '/koʊzi/', example: 'A cozy room.', inWordBank: false, srsStatus: null, provenance: 'scaffold' },
+          { text: 'shelf', translation: 'estante', ipa: '/ʃelf/', example: 'A shelf.', inWordBank: false, srsStatus: null, provenance: 'scaffold' },
         ]}
         selectedGrammarNote={null}
         feedback={null}

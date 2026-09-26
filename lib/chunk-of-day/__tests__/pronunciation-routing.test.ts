@@ -43,4 +43,15 @@ describe('enrutamiento de dificultad de pronunciación', () => {
     )
     expect(exercise).toMatchObject({ slug: 'minimal_pair', contrastId: '/ð/|/θ/' })
   })
+
+  it('routes pronunciation difficulty for A2 and B1 chunk anchors with registered targets', () => {
+    const a2Route = routePronunciationDifficulty('c1k:problem', LEARNING_CHUNKS)
+    expect(a2Route).not.toBeNull()
+    expect(a2Route?.chunks.map((c) => c.id)).toContain('094-no-problem-at-all')
+    expect(a2Route?.pronunciationTargetIds).toContain('segmental.phoneme./ɹ/')
+
+    const b1Route = routePronunciationDifficulty('c1k:point', LEARNING_CHUNKS)
+    expect(b1Route).not.toBeNull()
+    expect(b1Route?.chunks.map((c) => c.id)).toContain('048-that-s-a-good-point')
+  })
 })

@@ -8,8 +8,8 @@
  * navegador (`speechSynthesis`).
  *
  * Este script recorre el catálogo y deja el WAV de cada línea (coach y learner)
- * pre-generado en Supabase Storage (`mission-audio/catalog/{lineId}.wav`), usando el
- * mismo esquema de rutas que la ruta API. Es idempotente: salta las líneas que ya
+ * pre-generado en Supabase Storage (`mission-audio/catalog/{content-voice-model-hash}.wav`), usando el
+ * mismo esquema de caché que la ruta API. Es idempotente: salta las líneas que ya
  * tienen archivo salvo que se pase `--force`.
  *
  * Uso:
@@ -32,7 +32,12 @@
  */
 
 import { getSupabaseAdminClient } from '@/lib/supabase/service-role'
-import { generateMissionSpeech, type GenerateSpeechOptions } from '@/lib/gemini/audio'
+import {
+  AUDIO_MODELS,
+  buildSpeechCacheKey,
+  generateMissionSpeech,
+  type GenerateSpeechOptions,
+} from '@/lib/gemini/audio'
 import { SCRIPTED_MISSIONS } from '@/lib/ai-practice/missions/scripted/catalog'
 import type { ScriptLine, ScriptedMission } from '@/lib/ai-practice/missions/types'
 
@@ -119,11 +124,18 @@ async function generateWithRetry(
   text: string,
   voice: GeminiVoice,
   maxRetries: number,
-): Promise<Buffer> {
+): Promise<{ buffer: Buffer; model: string }> {
   let attempt = 0
   for (;;) {
     try {
-      return await generateMissionSpeech(apiKey, text, { voice })
+      let modelUsed: string | undefined
+      const buffer = await generateMissionSpeech(apiKey, text, {
+        voice,
+        feature: '/api/gemini/mission-audio',
+        onModelUsed: (model) => { modelUsed = model },
+      })
+      if (!modelUsed) throw new Error('TTS response did not identify its model')
+      return { buffer, model: modelUsed }
     } catch (err) {
       if (!isRateLimitError(err) || attempt >= maxRetries) throw err
       attempt += 1
@@ -134,29 +146,24 @@ async function generateWithRetry(
   }
 }
 
-/** Mismo saneado de id que `app/api/gemini/mission-audio/route.ts`. */
-function safeLineId(lineId: string): string {
-  return lineId.replace(/[^a-zA-Z0-9._-]/g, '_')
-}
-
-function storagePathFor(lineId: string): string {
-  return `${CATALOG_FOLDER}/${safeLineId(lineId)}.wav`
+function storagePathFor(text: string, voice: GeminiVoice, model: string): string {
+  const key = buildSpeechCacheKey('/api/gemini/mission-audio', text, voice, model)
+  return `${CATALOG_FOLDER}/${key}.wav`
 }
 
 async function fileExists(
   client: ReturnType<typeof getSupabaseAdminClient>,
-  lineId: string,
+  line: ScriptLine,
+  voice: GeminiVoice,
 ): Promise<boolean> {
-  const fileName = `${safeLineId(lineId)}.wav`
-  const { data, error } = await client.storage
-    .from(BUCKET)
-    .list(CATALOG_FOLDER, { search: fileName, limit: 5 })
-
-  if (error) {
-    // Si no podemos comprobar, tratamos como inexistente y dejamos que el upsert decida.
-    return false
+  for (const model of AUDIO_MODELS) {
+    const fileName = storagePathFor(line.text, voice, model).split('/').at(-1) as string
+    const { data, error } = await client.storage
+      .from(BUCKET)
+      .list(CATALOG_FOLDER, { search: fileName, limit: 5 })
+    if (!error && data?.some((file) => file.name === fileName)) return true
   }
-  return Boolean(data?.some((f) => f.name === fileName))
+  return false
 }
 
 interface LineJob {
@@ -183,7 +190,7 @@ async function processLine(
   const { line, mission, voice } = job
   const label = `${mission.id} · ${line.id} (${line.speaker}/${voice})`
 
-  if (!opts.force && (await fileExists(client, line.id))) {
+  if (!opts.force && (await fileExists(client, line, voice))) {
     console.log(`  ↷ existe   ${label}`)
     summary.skipped += 1
     return 'skipped'
@@ -196,10 +203,10 @@ async function processLine(
   }
 
   try {
-    const wavBuffer = await generateWithRetry(apiKey, line.text, voice, opts.maxRetries)
+    const { buffer: wavBuffer, model } = await generateWithRetry(apiKey, line.text, voice, opts.maxRetries)
     const { error: uploadError } = await client.storage
       .from(BUCKET)
-      .upload(storagePathFor(line.id), wavBuffer, {
+      .upload(storagePathFor(line.text, voice, model), wavBuffer, {
         contentType: 'audio/wav',
         upsert: true,
       })

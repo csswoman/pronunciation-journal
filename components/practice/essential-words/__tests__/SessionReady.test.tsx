@@ -85,13 +85,12 @@ const readyProps = {
 }
 
 describe('SessionReady', () => {
-  it('composes hero, recap, streak, vocabulary, and vault row without residual forecast/heatmap rows', () => {
+  it('composes hero, recap, vocabulary, and vault row without residual forecast/heatmap rows', () => {
     render(<SessionReady {...readyProps} />)
 
     expect(screen.getByRole('heading', { name: 'Hoy tienes 15 ejercicios' })).toBeInTheDocument()
     expect(screen.getByText(/Última: buen ritmo · 8\/9/)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tu vocabulario' })).toBeInTheDocument()
-    expect(screen.getByText('Racha')).toBeInTheDocument()
     expect(screen.getByTestId('vault')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Próximos 7 días' })).not.toBeInTheDocument()
     expect(screen.queryByText('Retención 30 días')).not.toBeInTheDocument()

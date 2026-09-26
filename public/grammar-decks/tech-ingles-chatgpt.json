@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Summarize", "value": "resume · Summarize this text.", "highlights": ["Summarize"] },
-            { "key": "Explain", "value": "explica · Explain it simply.", "highlights": ["Explain"] },
-            { "key": "Rewrite", "value": "reescribe · Rewrite this email.", "highlights": ["Rewrite"] },
-            { "key": "Translate", "value": "traduce · Translate into English.", "highlights": ["Translate"] }
+            {
+              "key": "Summarize",
+              "value": "resume · Summarize this text.",
+              "highlights": [
+                "Summarize"
+              ]
+            },
+            {
+              "key": "Explain",
+              "value": "explica · Explain it simply.",
+              "highlights": [
+                "Explain"
+              ]
+            },
+            {
+              "key": "Rewrite",
+              "value": "reescribe · Rewrite this email.",
+              "highlights": [
+                "Rewrite"
+              ]
+            },
+            {
+              "key": "Translate",
+              "value": "traduce · Translate into English.",
+              "highlights": [
+                "Translate"
+              ]
+            }
           ]
         }
       ]
@@ -31,10 +55,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Write about dogs." },
-            { "variant": "good", "text": "Write a 100-word paragraph about dog training for beginners.", "note": "longitud, tema y público" },
-            { "variant": "bad", "text": "Make it better." },
-            { "variant": "good", "text": "Make it more formal and concise.", "note": "di en qué dirección" }
+            {
+              "variant": "bad",
+              "text": "Write about dogs."
+            },
+            {
+              "variant": "good",
+              "text": "Write a 100-word paragraph about dog training for beginners.",
+              "note": "longitud, tema y público"
+            },
+            {
+              "variant": "bad",
+              "text": "Make it better."
+            },
+            {
+              "variant": "good",
+              "text": "Make it more formal and concise.",
+              "note": "di en qué dirección"
+            }
           ]
         }
       ]
@@ -48,10 +86,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Act as...", "value": "Act as an English teacher.", "highlights": ["Act as"] },
-            { "key": "Use a ... tone", "value": "Use a friendly tone.", "highlights": ["Use a friendly tone"] },
-            { "key": "Format as...", "value": "Format the answer as a table.", "highlights": ["Format as"] },
-            { "key": "Step by step", "value": "Explain it step by step.", "highlights": ["step by step"] }
+            {
+              "key": "Act as...",
+              "value": "Act as an English teacher.",
+              "highlights": [
+                "Act as"
+              ]
+            },
+            {
+              "key": "Use a ... tone",
+              "value": "Use a friendly tone.",
+              "highlights": [
+                "Use a friendly tone"
+              ]
+            },
+            {
+              "key": "Format as...",
+              "value": "Format the answer as a table.",
+              "highlights": [
+                "Format as"
+              ]
+            },
+            {
+              "key": "Step by step",
+              "value": "Explain it step by step.",
+              "highlights": [
+                "step by step"
+              ]
+            }
           ]
         }
       ]
@@ -65,10 +127,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Shorten this", "value": "acórtalo · Shorten this to two lines.", "highlights": ["Shorten"] },
-            { "key": "Expand on...", "value": "amplía sobre... · Expand on point 2.", "highlights": ["Expand on"] },
-            { "key": "Give me alternatives", "value": "dame opciones · Give me 3 options.", "highlights": ["alternatives"] },
-            { "key": "Keep the... but...", "value": "mantén el tono, pero acórtalo", "highlights": ["Keep the", "but"] }
+            {
+              "key": "Shorten this",
+              "value": "acórtalo · Shorten this to two lines.",
+              "highlights": [
+                "Shorten"
+              ]
+            },
+            {
+              "key": "Expand on...",
+              "value": "amplía sobre... · Expand on point 2.",
+              "highlights": [
+                "Expand on"
+              ]
+            },
+            {
+              "key": "Give me alternatives",
+              "value": "dame opciones · Give me 3 options.",
+              "highlights": [
+                "alternatives"
+              ]
+            },
+            {
+              "key": "Keep the... but...",
+              "value": "mantén el tono, pero acórtalo",
+              "highlights": [
+                "Keep the",
+                "but"
+              ]
+            }
           ]
         }
       ]
@@ -82,10 +169,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Correct my grammar", "value": "Correct my grammar and explain the errors.", "highlights": ["Correct my grammar"] },
-            { "key": "Rephrase naturally", "value": "Rephrase this to sound more natural.", "highlights": ["sound more natural"] },
-            { "key": "Quiz me", "value": "Quiz me on the past tense.", "highlights": ["Quiz me on"] },
-            { "key": "Roleplay", "value": "Let's roleplay a job interview.", "highlights": ["roleplay"] }
+            {
+              "key": "Correct my grammar",
+              "value": "Correct my grammar and explain the errors.",
+              "highlights": [
+                "Correct my grammar"
+              ]
+            },
+            {
+              "key": "Rephrase naturally",
+              "value": "Rephrase this to sound more natural.",
+              "highlights": [
+                "sound more natural"
+              ]
+            },
+            {
+              "key": "Quiz me",
+              "value": "Quiz me on the past tense.",
+              "highlights": [
+                "Quiz me on"
+              ]
+            },
+            {
+              "key": "Roleplay",
+              "value": "Let's roleplay a job interview.",
+              "highlights": [
+                "roleplay"
+              ]
+            }
           ]
         }
       ],
@@ -103,10 +214,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "to hallucinate", "value": "inventarse datos falsos", "highlights": ["hallucinate"] },
-            { "key": "make things up", "value": "inventárselo · it made that up", "highlights": ["make things up"] },
-            { "key": "double-check", "value": "verificar · always double-check facts", "highlights": ["double-check"] },
-            { "key": "That's not accurate", "value": "eso no es exacto · corregir", "highlights": ["not accurate"] }
+            {
+              "key": "to hallucinate",
+              "value": "inventarse datos falsos",
+              "highlights": [
+                "hallucinate"
+              ]
+            },
+            {
+              "key": "make things up",
+              "value": "inventárselo · it made that up",
+              "highlights": [
+                "make things up"
+              ]
+            },
+            {
+              "key": "double-check",
+              "value": "verificar · always double-check facts",
+              "highlights": [
+                "double-check"
+              ]
+            },
+            {
+              "key": "That's not accurate",
+              "value": "eso no es exacto · corregir",
+              "highlights": [
+                "not accurate"
+              ]
+            }
           ]
         }
       ],
@@ -114,6 +249,35 @@
         "label": "Consejo:",
         "body": "verifica siempre los datos importantes; el modelo suena seguro incluso cuando se equivoca."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which prompt is best for improving the clarity and professional tone of a draft email?",
+      "options": [
+        "Rewrite this email to sound more professional.",
+        "Summarize this email."
+      ],
+      "answer": 0,
+      "explain": "El verbo 'rewrite' es el adecuado para modificar el estilo o tono de un texto existente, mientras que 'summarize' solo lo acortaría."
+    },
+    {
+      "q": "If ChatGPT provides incorrect information, which phrase is most appropriate to point out the error?",
+      "options": [
+        "That's not accurate.",
+        "Shorten this."
+      ],
+      "answer": 0,
+      "explain": "La frase 'That's not accurate' es la forma correcta y educada de señalar que el modelo ha cometido un error o ha inventado datos."
+    },
+    {
+      "q": "To get a better result, what is the best way to instruct ChatGPT on how to present its answer?",
+      "options": [
+        "Format the answer as a table.",
+        "Make things up."
+      ],
+      "answer": 0,
+      "explain": "Dar un formato específico, como 'format as a table', ayuda a que la respuesta sea mucho más organizada y útil para lo que necesitas."
     }
   ]
 }

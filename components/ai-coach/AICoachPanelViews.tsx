@@ -136,16 +136,24 @@ export interface RenderActiveChatParams {
 export function renderActiveChat(p: RenderActiveChatParams) {
   return (
     <>
-      <div className="flex shrink-0 items-center justify-between border-b border-border-subtle/60 bg-surface-raised/80 px-3 py-1.5 backdrop-blur-xs">
-        <button
-          type="button"
-          onClick={() => p.resetSession()}
-          className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-surface-base px-2.5 py-0.5 text-caption font-medium text-fg-muted hover:text-fg hover:border-border-default hover:bg-surface-sunken transition-colors cursor-pointer focus-ring active:scale-[0.98] motion-reduce:transition-none"
-        >
-          <ChevronLeft size={14} aria-hidden />
-          <span>Volver al inicio</span>
-        </button>
-        <span className="text-xxs font-medium text-fg-subtle">Sesión activa</span>
+      <div className="flex shrink-0 items-center justify-between border-b border-border-subtle/60 bg-surface-raised/80 px-3.5 py-2 backdrop-blur-xs">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => p.resetSession()}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-base px-3 py-1 text-xs font-semibold text-fg-muted hover:border-border-default hover:bg-surface-sunken hover:text-fg transition-colors cursor-pointer focus-ring active:scale-[0.98] motion-reduce:transition-none"
+          >
+            <ChevronLeft size={14} aria-hidden />
+            <span>Volver al inicio</span>
+          </button>
+          <span className="inline-flex shrink-0 items-center rounded-full bg-[var(--butter,#fef08a)] px-3 py-1 text-xs font-bold text-[var(--ink,#1c1917)] shadow-xs">
+            Posesivo con 's · A1
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="size-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
+          <span className="text-xs font-medium text-fg-subtle">Sesión activa</span>
+        </div>
       </div>
       <div
         className="chat-messages-scroll flex flex-1 min-h-0 flex-col overflow-y-auto"
@@ -165,7 +173,7 @@ export function renderActiveChat(p: RenderActiveChatParams) {
           onToolAnswer={p.answerToolCall}
           onNext={() => p.sendMessage("next")}
           onExerciseComplete={(s) =>
-            void p.sendMessage(`I just finished — ${s.correct} of ${s.total} right. How did I do?`, {
+            void p.sendMessage(`I finished the set with ${s.correct} of ${s.total} correct. Help me review: ${s.reviewItems.join("; ") || "nothing — all correct"}.`, {
               hidden: true,
               marker: exerciseResultMarker(s),
             })

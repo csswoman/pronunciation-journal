@@ -42,6 +42,7 @@ export type ExerciseSlug =
   | 'sentence_transformation' // id: 20
   | 'translation_es_en' // id: 22
   | 'cs_shadow_phrase' // id: 23 — connected-speech shadow/production step (local STT, no Gemini)
+  | 'personalization' // no DB row — drills de gramática, auto-personalización
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -68,6 +69,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   sentence_transformation: 20,
   translation_es_en: 22,
   cs_shadow_phrase: 23,
+  personalization: null,
 }
 
 const EXERCISE_SLUG_BY_TYPE_ID = new Map<number, ExerciseSlug>()
@@ -343,6 +345,7 @@ export type PedagogicalFeedback = {
 }
 
 export type PracticeSubmitExtras = {
+  attemptId?: string
   score?: number
   feedback?: PedagogicalFeedback
   status?: PracticeResultStatus

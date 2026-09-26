@@ -22,6 +22,13 @@ allowBuilds:
   '@google/genai': true
   canvas: true
   esbuild: true
+  # onnxruntime-node llega vía kokoro-js (Plan 039) y @huggingface/transformers
+  # (benchmark del plan 038, ver decision-phoneme-ctc.md). Su postinstall solo
+  # compila un binario nativo de CPU para Node; Kokoro corre 100% en el
+  # navegador via WASM (lib/speech/kokoro/kokoro-worker.ts), así que no hace
+  # falta ese binario. Déjalo en `false` a menos que se ejecute Kokoro desde
+  # un script de Node.
+  onnxruntime-node: false
   protobufjs: true
   sharp: true
   unrs-resolver: true

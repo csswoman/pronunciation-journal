@@ -14,15 +14,48 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "It might be worth", "value": "It might be worth extracting this into a helper.", "highlights": ["might be worth"] },
-            { "key": "I wonder if we could", "value": "I wonder if we could cache this result.", "highlights": ["I wonder if we could"] },
-            { "key": "Have you considered", "value": "Have you considered using a Map here?", "highlights": ["Have you considered"] },
-            { "key": "This could be simplified to", "value": "This could be simplified to a single reduce call.", "highlights": ["could be simplified"] },
-            { "key": "Nit:", "value": "Nit: variable name could be more descriptive.", "highlights": ["Nit:"] }
+            {
+              "key": "It might be worth",
+              "value": "It might be worth extracting this into a helper.",
+              "highlights": [
+                "might be worth"
+              ]
+            },
+            {
+              "key": "I wonder if we could",
+              "value": "I wonder if we could cache this result.",
+              "highlights": [
+                "I wonder if we could"
+              ]
+            },
+            {
+              "key": "Have you considered",
+              "value": "Have you considered using a Map here?",
+              "highlights": [
+                "Have you considered"
+              ]
+            },
+            {
+              "key": "This could be simplified to",
+              "value": "This could be simplified to a single reduce call.",
+              "highlights": [
+                "could be simplified"
+              ]
+            },
+            {
+              "key": "Nit:",
+              "value": "Nit: variable name could be more descriptive.",
+              "highlights": [
+                "Nit:"
+              ]
+            }
           ]
         }
       ],
-      "tip": { "label": "Registro:", "body": "Estos hedges son normales en PR comments americanos — no son debilidad, son colaboración." }
+      "tip": {
+        "label": "Registro:",
+        "body": "Estos hedges son normales en PR comments americanos — no son debilidad, son colaboración."
+      }
     },
     {
       "id": "cr-approve",
@@ -33,10 +66,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "LGTM", "value": "Looks good to me — nice work!", "highlights": ["LGTM", "Looks good to me"] },
-            { "key": "Good catch", "value": "Good catch — I hadn't thought of that edge case.", "highlights": ["Good catch"] },
-            { "key": "This is clean", "value": "This is clean and easy to follow.", "highlights": ["clean"] },
-            { "key": "I like how you", "value": "I like how you separated concerns here.", "highlights": ["I like how"] }
+            {
+              "key": "LGTM",
+              "value": "Looks good to me — nice work!",
+              "highlights": [
+                "LGTM",
+                "Looks good to me"
+              ]
+            },
+            {
+              "key": "Good catch",
+              "value": "Good catch — I hadn't thought of that edge case.",
+              "highlights": [
+                "Good catch"
+              ]
+            },
+            {
+              "key": "This is clean",
+              "value": "This is clean and easy to follow.",
+              "highlights": [
+                "clean"
+              ]
+            },
+            {
+              "key": "I like how you",
+              "value": "I like how you separated concerns here.",
+              "highlights": [
+                "I like how"
+              ]
+            }
           ]
         }
       ]
@@ -50,10 +108,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I went with X because", "value": "I went with a queue because it decouples the producer from the consumer.", "highlights": ["I went with", "because"] },
-            { "key": "The trade-off here is", "value": "The trade-off here is simplicity vs. performance.", "highlights": ["trade-off"] },
-            { "key": "I can change it to", "value": "I can change it to a factory if that's clearer.", "highlights": ["I can change it"] },
-            { "key": "You're right, I'll fix that", "value": "You're right, I'll fix that in the next commit.", "highlights": ["I'll fix that"] }
+            {
+              "key": "I went with X because",
+              "value": "I went with a queue because it decouples the producer from the consumer.",
+              "highlights": [
+                "I went with",
+                "because"
+              ]
+            },
+            {
+              "key": "The trade-off here is",
+              "value": "The trade-off here is simplicity vs. performance.",
+              "highlights": [
+                "trade-off"
+              ]
+            },
+            {
+              "key": "I can change it to",
+              "value": "I can change it to a factory if that's clearer.",
+              "highlights": [
+                "I can change it"
+              ]
+            },
+            {
+              "key": "You're right, I'll fix that",
+              "value": "You're right, I'll fix that in the next commit.",
+              "highlights": [
+                "I'll fix that"
+              ]
+            }
           ]
         }
       ]
@@ -67,11 +150,41 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "deploy to production", "value": "We can deploy to production once the tests pass.", "highlights": ["deploy to production"] },
-            { "key": "roll back a change", "value": "If something breaks, we can roll back the change.", "highlights": ["roll back"] },
-            { "key": "push back on", "value": "I want to push back on the deadline — we need more time.", "highlights": ["push back on"] },
-            { "key": "ship the feature", "value": "Let's ship the feature behind a flag first.", "highlights": ["ship the feature"] },
-            { "key": "address the comment", "value": "I'll address your comment before merging.", "highlights": ["address the comment"] }
+            {
+              "key": "deploy to production",
+              "value": "We can deploy to production once the tests pass.",
+              "highlights": [
+                "deploy to production"
+              ]
+            },
+            {
+              "key": "roll back a change",
+              "value": "If something breaks, we can roll back the change.",
+              "highlights": [
+                "roll back"
+              ]
+            },
+            {
+              "key": "push back on",
+              "value": "I want to push back on the deadline — we need more time.",
+              "highlights": [
+                "push back on"
+              ]
+            },
+            {
+              "key": "ship the feature",
+              "value": "Let's ship the feature behind a flag first.",
+              "highlights": [
+                "ship the feature"
+              ]
+            },
+            {
+              "key": "address the comment",
+              "value": "I'll address your comment before merging.",
+              "highlights": [
+                "address the comment"
+              ]
+            }
           ]
         }
       ]
@@ -85,12 +198,33 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Yesterday I worked on the login." },
-            { "variant": "good", "text": "I've been working on the login flow — almost done.", "note": "presente perfecto continuo" },
-            { "variant": "bad", "text": "I have a blocker with the API." },
-            { "variant": "good", "text": "I'm blocked on the API rate limits — could use some help.", "note": "más natural y proactivo" },
-            { "variant": "bad", "text": "I will review your PR today." },
-            { "variant": "good", "text": "I'll take a look at your PR this morning.", "note": "tono colaborativo" }
+            {
+              "variant": "bad",
+              "text": "Yesterday I worked on the login."
+            },
+            {
+              "variant": "good",
+              "text": "I've been working on the login flow — almost done.",
+              "note": "presente perfecto continuo"
+            },
+            {
+              "variant": "bad",
+              "text": "I have a blocker with the API."
+            },
+            {
+              "variant": "good",
+              "text": "I'm blocked on the API rate limits — could use some help.",
+              "note": "más natural y proactivo"
+            },
+            {
+              "variant": "bad",
+              "text": "I will review your PR today."
+            },
+            {
+              "variant": "good",
+              "text": "I'll take a look at your PR this morning.",
+              "note": "tono colaborativo"
+            }
           ]
         }
       ]
@@ -104,10 +238,22 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Contexto", "value": "Describe qué parte del cambio estás comentando." },
-            { "key": "Impacto", "value": "Explica si afecta claridad, mantenimiento, rendimiento o corrección." },
-            { "key": "Propuesta", "value": "Sugiere una alternativa concreta cuando sea útil." },
-            { "key": "Prioridad", "value": "Aclara si es bloqueante, sugerencia o nit." }
+            {
+              "key": "Contexto",
+              "value": "Describe qué parte del cambio estás comentando."
+            },
+            {
+              "key": "Impacto",
+              "value": "Explica si afecta claridad, mantenimiento, rendimiento o corrección."
+            },
+            {
+              "key": "Propuesta",
+              "value": "Sugiere una alternativa concreta cuando sea útil."
+            },
+            {
+              "key": "Prioridad",
+              "value": "Aclara si es bloqueante, sugerencia o nit."
+            }
           ]
         }
       ],
@@ -138,5 +284,34 @@
     "LGTM — nice and clean solution.",
     "I like how you separated concerns here.",
     "One small nit: the variable name could be more descriptive."
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is best to suggest an improvement in a code review without sounding too demanding?",
+      "options": [
+        "It might be worth extracting this into a helper.",
+        "You must extract this into a helper."
+      ],
+      "answer": 0,
+      "explain": "Usar 'It might be worth' suaviza la sugerencia, haciéndola sonar como una recomendación profesional en lugar de una orden directa."
+    },
+    {
+      "q": "If you want to express that you disagree with a proposed deadline or requirement, which phrasal verb should you use?",
+      "options": [
+        "push back on",
+        "roll back"
+      ],
+      "answer": 0,
+      "explain": "'Push back on' es la expresión técnica correcta para indicar resistencia o desacuerdo ante una propuesta o fecha límite."
+    },
+    {
+      "q": "When acknowledging a good observation from a colleague in a PR, what is a natural way to show appreciation?",
+      "options": [
+        "Good catch — I hadn't thought of that.",
+        "You are right, you found a bug."
+      ],
+      "answer": 0,
+      "explain": "'Good catch' es una expresión muy común y natural en entornos de desarrollo para reconocer que alguien identificó un error o caso de borde importante."
+    }
   ]
 }

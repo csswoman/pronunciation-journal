@@ -4,7 +4,8 @@ import { JournalPronunciationWrite } from '@/components/journal/JournalPronuncia
 import { JournalPageClient } from '@/components/journal/JournalPageClient'
 import { journalPromptForDate, journalPromptById } from '@/lib/journal/prompts'
 import { writingScaffoldFor } from '@/lib/journal/writing-scaffold'
-import { resolveSeedVocabulary, selectGrammarNote } from '@/lib/journal/scaffold-resolver'
+import { combineScaffoldVocabulary } from '@/lib/journal/scaffold-resolver'
+import { fetchDueWordsForScaffold, resolveSeedVocabulary, selectGrammarNote } from '@/lib/journal/server-queries'
 import { getTodayLocalDateKey } from '@/lib/date/local-date'
 import { getSupabaseServerUserId } from '@/lib/supabase/session'
 import { TOPIC_PROMPTS, type NotebookTopic } from '@/lib/journal/notebook-types'
@@ -22,10 +23,21 @@ export default async function JournalWritePage({
   const entryDate = getTodayLocalDateKey()
   const prompt = (promptId ? journalPromptById(promptId) : null) ?? journalPromptForDate(entryDate)
   const scaffold = writingScaffoldFor(prompt.id, prompt.cefr_min)
-  const [resolvedVocabulary, grammarNote] = await Promise.all([
+  const [scaffoldVocabulary, grammarNote, dueReviewResult] = await Promise.all([
     resolveSeedVocabulary(scaffold.seed_vocabulary, userId),
     selectGrammarNote(scaffold.relevant_topics, scaffold.grammar_notes, userId),
+    fetchDueWordsForScaffold(userId, 3).then(
+      (words) => ({ status: 'fulfilled' as const, words }),
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    ),
   ])
+  if (dueReviewResult.status === 'rejected') {
+    console.error('[journal] No se pudieron cargar las palabras vencidas para sugerencias.', dueReviewResult.error)
+  }
+  const resolvedVocabulary = combineScaffoldVocabulary(
+    scaffoldVocabulary,
+    dueReviewResult.status === 'fulfilled' ? dueReviewResult.words : [],
+  )
   const now = new Date().toISOString()
 
   const entryMode =

@@ -24,7 +24,7 @@ interface Props {
   /** Items due within 24h, or null when unavailable (offline). */
   dueTomorrow: number | null
   /** Current streak in days, or null when unavailable. */
-  streak: number | null
+  streak?: number | null
   /**
    * Essential Words learned count, queried once by the shared ancestor
    * (DailyChecklist) instead of each daily card subscribing independently.
@@ -94,9 +94,7 @@ export default function SessionRecapCard({
           {(learned ?? 0) > 0
             ? `${learned} / ${ESSENTIAL_WORD_TARGET} palabras esenciales`
             : `Completaste ${stepCount} pasos`}
-          {streak != null && streak > 0
-            ? ` · ${streak} ${streak === 1 ? 'día' : 'días'} de racha`
-            : ''}
+          {streak != null && streak > 0 ? ` · ${streak} ${streak === 1 ? 'día' : 'días'} de racha` : ''}
         </p>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">

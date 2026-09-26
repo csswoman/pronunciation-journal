@@ -108,6 +108,7 @@ export function GrammarStudyDeckBody({
           onQuizDone(correct, totalQ);
           const evidenceLessonSlug = lessonId ?? deckSlug;
           if (evidenceLessonSlug && deckSlug) {
+            const quizAttemptId = crypto.randomUUID();
             void getCurrentUser()
               .then((user) => {
                 if (!user || !deck.quiz) return;
@@ -116,6 +117,7 @@ export function GrammarStudyDeckBody({
                   deck.quiz.map((question, qIndex) => {
                     const selectedIndex = pickedAnswers[qIndex];
                     return {
+                      attemptId: `${quizAttemptId}:${qIndex + 1}`,
                       questionId: `${lessonId}:quiz:${qIndex + 1}`,
                       courseSlug: levelId ?? "decks",
                       lessonSlug: evidenceLessonSlug,
@@ -128,6 +130,7 @@ export function GrammarStudyDeckBody({
                       topic: deck.topicId ?? theoryTopicForDeck(deckSlug),
                     };
                   }),
+                  { attemptId: quizAttemptId },
                 );
               })
               .catch(() => undefined);
@@ -193,6 +196,7 @@ export function GrammarStudyDeckBody({
         reviewed={reviewed}
         onSelectCard={handlers.onGoTo}
         immersionLesson={identity.immersionLesson}
+        backHref={identity.backHref}
       />
     </div>
   );

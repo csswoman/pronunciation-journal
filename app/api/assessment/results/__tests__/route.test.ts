@@ -4,6 +4,7 @@ vi.mock("server-only", () => ({}));
 
 const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
+  getAssessmentProfileLevel: vi.fn(),
   persistAssessmentOutcome: vi.fn(),
   tryGetSupabaseAdminClient: vi.fn(),
 }));
@@ -19,6 +20,7 @@ vi.mock("@/lib/api/guards", () => ({
 }));
 
 vi.mock("@/lib/courses/assessment-queries", () => ({
+  getAssessmentProfileLevel: mocks.getAssessmentProfileLevel,
   persistAssessmentOutcome: mocks.persistAssessmentOutcome,
 }));
 
@@ -28,6 +30,7 @@ vi.mock("@/lib/supabase/service-role", () => ({
 
 import { POST } from "../route";
 import { AssessmentResultSchema } from "@/lib/courses/assessment-schema";
+import { buildServerAssessment } from "@/lib/courses/server-assessment";
 
 function reqWith(body: unknown): Request {
   return new Request("http://x/api/assessment/results", {
@@ -39,6 +42,7 @@ function reqWith(body: unknown): Request {
 beforeEach(() => {
   mocks.validateBody.mockReset();
   mocks.persistAssessmentOutcome.mockReset();
+  mocks.getAssessmentProfileLevel.mockReset().mockResolvedValue("a1");
   mocks.tryGetSupabaseAdminClient.mockReset();
 });
 
@@ -90,10 +94,26 @@ describe("assessment results route", () => {
     expect(body.error).toBe("Checkpoint level exceeds allowed progression limit");
   });
 
+  it("keeps checkpoint scoring unavailable when the current profile level cannot be verified", async () => {
+    mocks.validateBody.mockResolvedValueOnce({
+      data: { mode: "checkpoint", checkpointLevel: "a1", answers: { "a1:reading:1": 0 } },
+      error: null,
+    });
+    mocks.getAssessmentProfileLevel.mockRejectedValueOnce(new Error("profile service unavailable"));
+
+    const response = await POST(reqWith({}) as never);
+    const body = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(body.error).toBe("Could not verify checkpoint level");
+    expect(mocks.persistAssessmentOutcome).not.toHaveBeenCalled();
+  });
+
   it("rescores on server and persists assessment outcome", async () => {
     mocks.validateBody.mockResolvedValueOnce({
       data: {
         mode: "placement",
+        evaluatedLevels: ["a1"],
         evaluatedLevel: "a1",
         answers: { "a1:reading:1": 0, "a1:reading:2": 1 },
       },
@@ -105,11 +125,43 @@ describe("assessment results route", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body).toEqual({ ok: true });
+    expect(body).toMatchObject({
+      ok: true,
+      result: { total: 14, listeningScore: 0, listeningTotal: 6, passed: false },
+    });
     expect(mocks.persistAssessmentOutcome).toHaveBeenCalledWith(
       "u1",
       "placement",
       expect.objectContaining({ assignedLevel: expect.any(String) }),
+      "a1",
+    );
+  });
+
+  it("ignores a client-reported oral pass when saving an A1 checkpoint", async () => {
+    const { questions } = buildServerAssessment("checkpoint", "a1");
+    mocks.validateBody.mockResolvedValueOnce({
+      data: {
+        mode: "checkpoint",
+        checkpointLevel: "a1",
+        answers: Object.fromEntries(questions.map((question) => [question.id, question.answer])),
+        result: { assignedLevel: "A2", score: 14, passed: true, listeningScore: 6, listeningTotal: 6 },
+      },
+      error: null,
+    });
+
+    const response = await POST(reqWith({}) as never);
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.result).toMatchObject({
+      assignedLevel: "A1",
+      passed: false,
+      oralEvidence: { level: "a1", status: "pending" },
+    });
+    expect(mocks.persistAssessmentOutcome).toHaveBeenCalledWith(
+      "u1",
+      "checkpoint",
+      expect.objectContaining({ passed: false, assignedLevel: "A1" }),
       "a1",
     );
   });
@@ -121,8 +173,11 @@ describe("assessment results route", () => {
         assignedLevel: "B1",
         passed: true,
         passedLevels: ["a1"],
+        evaluatedLevels: ["a1"],
         score: 1,
         total: 1,
+        listeningScore: 0,
+        listeningTotal: 0,
         topicScores: [],
         strengths: [],
         needsReview: [],
@@ -155,6 +210,7 @@ describe("assessment results route", () => {
   it("accepts null checkpointLevel for placement payloads", () => {
     expect(AssessmentResultSchema.safeParse({
       mode: "placement",
+      evaluatedLevels: ["a1"],
       answers: { "a1:reading:1": 0 },
       checkpointLevel: null,
     }).success).toBe(true);

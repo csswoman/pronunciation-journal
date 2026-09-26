@@ -8,37 +8,33 @@
 //     <GuestBanner />           — guest only
 //     <ProfileGrid>
 //       <MainColumn>
-//         <IdentityCard />
-//         <ProfilePreferencesPanel />
+//         <ProfileIdentityCard />
+//         <ProfileAppearanceCard />
+//         <ProfileStudyCard />
 //       </MainColumn>
-//       <SecurityColumn />
+//       <SecurityColumn>
+//         <ProfileAccountCard />
+//       </SecurityColumn>
 //     </ProfileGrid>
 //   </PageLayout>
 // </ProfileSettings>
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
-import ProfileAvatarCard from "@/components/profile/ProfileAvatarCard";
-import ProfileNameCard from "@/components/profile/ProfileNameCard";
-import ProfilePasswordCard from "@/components/profile/ProfilePasswordCard";
-import ProfilePreferencesPanel from "@/components/profile/ProfilePreferencesPanel";
+import ProfileIdentityCard from "@/components/profile/ProfileIdentityCard";
+import ProfileAccountCard from "@/components/profile/ProfileAccountCard";
+import ProfileAppearanceCard from "@/components/profile/ProfileAppearanceCard";
+import ProfileStudyCard from "@/components/profile/ProfileStudyCard";
 import ProfilePageSkeleton from "@/components/profile/ProfilePageSkeleton";
 import ProfileToast from "@/components/profile/ProfileToast";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
+import { exportUserVocabulary } from "@/lib/users/export-vocabulary";
 import type { CefrLevel } from "@/lib/essential-words/types";
-import type { AssessmentConcept } from "@/lib/courses/concept-profile";
-import type { FocusLevel } from "@/lib/learning-focus/types";
-import { learnerLevelSourceLabel } from "@/lib/learner-level/labels";
-import LearningFocusTopicsSheet from "@/components/home/LearningFocusTopicsSheet";
-import {
-  claimTheoryTopics,
-  listClaimedTheoryTopics,
-} from "@/lib/learning-focus/queries";
 
 export default function ProfileSettings() {
   const { user } = useAuth();
@@ -46,29 +42,21 @@ export default function ProfileSettings() {
     preferences,
     learnerLevel,
     loading,
+    dailyGoal,
+    setDailyGoal,
     updateFullName,
     updateAvatar,
     updatePassword,
     updateCefrLevel,
-    updateInterests,
   } = useUserPreferences();
 
   const isGuest = isAnonymousUser(user);
   const [guestLevel, setGuestLevel] = useState<CefrLevel>("A1");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [topicsOpen, setTopicsOpen] = useState(false);
-  const [claimedSlugs, setClaimedSlugs] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isGuest) setGuestLevel(readGuestStudyLevel());
   }, [isGuest]);
-
-  useEffect(() => {
-    if (!user?.id) return;
-    void listClaimedTheoryTopics(user.id).then((claimed) => {
-      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)));
-    });
-  }, [user?.id]);
 
   const displayName = isGuest
     ? preferences?.full_name || "Invitado"
@@ -106,23 +94,28 @@ export default function ProfileSettings() {
     showToast("Nivel de estudio actualizado");
   };
 
-  const handleTopicsClaim = useCallback(
-    async (concepts: AssessmentConcept[]) => {
-      if (!user?.id) return;
-      await claimTheoryTopics(user.id, concepts);
-      const claimed = await listClaimedTheoryTopics(user.id);
-      setClaimedSlugs(new Set(claimed.map((item) => item.lessonSlug)));
-    },
-    [user?.id],
-  );
+  const handleExportVocabulary = async () => {
+    if (user?.id) {
+      await exportUserVocabulary(user.id);
+      showToast("Vocabulario exportado con éxito");
+    } else {
+      showToast("No hay datos de usuario para exportar", "error");
+    }
+  };
 
-  const topicsLevel = level.toLowerCase() as FocusLevel;
+  const handleDeleteAccount = async () => {
+    const { getSupabaseBrowserClient } = await import("@/lib/supabase/client");
+    const supabase = getSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
 
   const header = (
     <PageHeader
-      kicker="Cuenta"
-      title="Perfil"
-      subtitle="Tu identidad y las preferencias que usas cada día."
+      kicker="CUENTA"
+      title="Ajustes"
+      subtitle="Tu identidad, cómo se ve la app y cómo quieres estudiar."
+      badge="Los cambios se guardan solos"
     />
   );
 
@@ -158,111 +151,49 @@ export default function ProfileSettings() {
         )}
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">
+          {/* Main Column */}
           <div className="layout-stack-loose min-w-0">
-            <section aria-labelledby="profile-identity-title" className="layout-stack-loose">
-              <h2 id="profile-identity-title" className="sr-only">
-                Identidad
-              </h2>
-              <div className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-6 shadow-xs">
-                <ProfileAvatarCard
-                  avatarUrl={preferences?.avatar_url}
-                  initials={initials}
-                  displayName={displayName}
-                  email={emailDisplay}
-                  onAvatarUpdate={async (file) => {
-                    await updateAvatar(file);
-                    showToast("Foto de perfil actualizada");
-                  }}
-                />
-                <div className="border-t border-border-subtle pt-4">
-                  <ProfileNameCard
-                    currentName={displayName === "Invitado" ? "" : displayName}
-                    onSave={async (name) => {
-                      await updateFullName(name);
-                      showToast("Nombre actualizado");
-                    }}
-                  />
-                </div>
-              </div>
-            </section>
-
-            <ProfilePreferencesPanel
-              level={level}
-              onLevelChange={(next) => void handleLevelChange(next)}
-              topicsLevel={topicsLevel}
-              onTopicsOpen={() => setTopicsOpen(true)}
-              interests={preferences?.interests ?? []}
-              onInterestsSave={async (next) => {
-                await updateInterests(next);
-                showToast("Intereses guardados");
+            <ProfileIdentityCard
+              avatarUrl={preferences?.avatar_url}
+              initials={initials}
+              displayName={displayName}
+              email={emailDisplay}
+              onAvatarUpdate={async (file) => {
+                await updateAvatar(file);
+                showToast("Foto de perfil actualizada");
               }}
-              hint={
-                isGuest
-                  ? "Tus preferencias se guardan en este dispositivo. Crea una cuenta para sincronizarlas."
-                  : "Ajusta tus recomendaciones. Tu progreso se conserva independientemente de estas opciones."
-              }
+              onNameSave={async (name) => {
+                await updateFullName(name);
+                showToast("Nombre actualizado");
+              }}
             />
-            {!isGuest && learnerLevel ? (
-              <p className="-mt-4 px-0.5 font-caption text-fg-muted">
-                {learnerLevelSourceLabel[learnerLevel.source]}
-              </p>
-            ) : null}
 
-            <LearningFocusTopicsSheet
-              open={topicsOpen}
-              level={topicsLevel}
-              claimedSlugs={claimedSlugs}
-              onClose={() => setTopicsOpen(false)}
-              onClaim={handleTopicsClaim}
+            <ProfileAppearanceCard />
+
+            <ProfileStudyCard
+              level={level}
+              dailyGoal={dailyGoal}
+              onLevelChange={(next) => void handleLevelChange(next)}
+              onDailyGoalChange={(goal) => {
+                setDailyGoal(goal);
+                showToast("Objetivo diario actualizado");
+              }}
             />
           </div>
 
-          <section
-            aria-labelledby="profile-account-title"
-            className="layout-stack rounded-xl border border-border-subtle bg-surface-raised p-6 shadow-xs lg:sticky lg:top-6"
-          >
-            <div className="layout-stack-tight">
-              <h2 id="profile-account-title" className="m-0 font-label text-fg">
-                Cuenta y seguridad
-              </h2>
-              <p className="m-0 font-caption text-fg-muted">
-                Gestión de acceso y credenciales.
-              </p>
-            </div>
-            <div className="divide-y divide-border-subtle pt-2">
-              <div className="flex flex-col gap-1 py-3.5">
-                <span className="font-caption text-fg-muted">Correo electrónico</span>
-                <span className="truncate font-caption font-semibold text-fg">
-                  {isGuest ? "Invitado (Dispositivo local)" : user?.email}
-                </span>
-              </div>
-              <div className="py-3.5">
-                {isGuest ? (
-                  <div className="layout-stack-tight">
-                    <span className="font-caption font-medium text-fg-muted">Contraseña</span>
-                    <p className="mt-1 font-caption text-fg-muted">
-                      Sin contraseña registrada. Registra tu cuenta para proteger tu progreso.
-                    </p>
-                    <div className="pt-2">
-                      <Link
-                        href="/login?intent=save&mode=register"
-                        className="focus-ring inline-flex w-full items-center justify-center rounded-md bg-cta-bg px-4 py-2 font-label text-body-sm font-semibold text-cta-fg transition-colors hover:bg-cta-bg-hover"
-                      >
-                        Crear cuenta
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <ProfilePasswordCard
-                    onSave={async (password) => {
-                      await updatePassword(password);
-                      showToast("Contraseña actualizada");
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </section>
+          {/* Security Column */}
+          <div className="lg:sticky lg:top-6">
+            <ProfileAccountCard
+              email={user?.email}
+              isGuest={isGuest}
+              onPasswordSave={async (password) => {
+                await updatePassword(password);
+                showToast("Contraseña actualizada");
+              }}
+              onExportVocabulary={handleExportVocabulary}
+              onDeleteAccount={handleDeleteAccount}
+            />
+          </div>
         </div>
       </div>
     </PageLayout>

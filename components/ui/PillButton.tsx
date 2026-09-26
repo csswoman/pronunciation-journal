@@ -32,7 +32,7 @@ interface PillButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 const variantStyles: Record<PillVariant, string> = {
   primary: cn(
     'bg-primary text-on-primary border-none font-medium',
-    'hover:bg-primary-hover',
+    'hover:bg-primary-hover hover:text-on-primary',
   ),
   outline: cn(
     'bg-transparent text-fg-muted border border-border-subtle',

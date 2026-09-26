@@ -10,8 +10,10 @@ import {
 } from "@/lib/api/guards";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
-import { generateMissionSpeech } from "@/lib/gemini/audio";
+import { AUDIO_MODELS, buildSpeechCacheKey, generateMissionSpeech } from "@/lib/gemini/audio";
+import { recordSharedCacheHit } from "@/lib/ai-usage/budget";
 import { logServerError } from "@/lib/api/logging";
+import { getErrorStatus } from "@/lib/gemini/fallback";
 
 export const maxDuration = 60;
 
@@ -43,42 +45,50 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: body, error: validationError } = await validateBody(request, RequestSchema);
   if (validationError) return validationError;
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return publicErrorResponse(503, "AI audio service is currently unavailable");
-  }
-
   try {
     const supabase = await createSupabaseServerClient();
     const storageClient = tryGetSupabaseAdminClient() ?? supabase;
+    const voice = body.voice ?? "Puck";
 
-    // Determine storage location: catalog authored lines vs user generated lines
     const isCatalogMission = body.missionId?.startsWith("scripted.");
-    const safeLineId = body.lineId.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const storagePath = isCatalogMission
-      ? `catalog/${safeLineId}.wav`
-      : `users/${user.id}/${safeLineId}.wav`;
+    const feature = "/api/gemini/mission-audio";
 
-    const folder = storagePath.substring(0, storagePath.lastIndexOf("/"));
-    const fileName = storagePath.substring(storagePath.lastIndexOf("/") + 1);
-
-    // 1. Idempotency / cache check: If audio already exists in Storage, return it immediately
-    const { data: existingFiles } = await storageClient.storage
-      .from("mission-audio")
-      .list(folder, { search: fileName, limit: 5 })
-      .catch(() => ({ data: null }));
-
-    if (existingFiles?.some((f) => f.name === fileName)) {
-      const { data: publicData } = storageClient.storage
+    const cachedAudio = (await Promise.all(AUDIO_MODELS.map(async (model) => {
+      const cacheKey = buildSpeechCacheKey(feature, body.lineText, voice, model);
+      const cachePath = isCatalogMission
+        ? `catalog/${cacheKey}.wav`
+        : `users/${user.id}/${cacheKey}.wav`;
+      const folder = cachePath.slice(0, cachePath.lastIndexOf("/"));
+      const fileName = cachePath.slice(cachePath.lastIndexOf("/") + 1);
+      const { data: existingFiles } = await storageClient.storage
         .from("mission-audio")
-        .getPublicUrl(storagePath);
-      return NextResponse.json({ audioUrl: publicData.publicUrl }, { headers: SECURE_HEADERS });
+        .list(folder, { search: fileName, limit: 5 })
+        .catch(() => ({ data: null }));
+      if (existingFiles?.some((file) => file.name === fileName)) {
+        const { data: publicData } = storageClient.storage.from("mission-audio").getPublicUrl(cachePath);
+        return publicData.publicUrl;
+      }
+      return null;
+    }))).find((url): url is string => Boolean(url));
+    if (cachedAudio) {
+      void recordSharedCacheHit(feature);
+      return NextResponse.json({ audioUrl: cachedAudio }, { headers: SECURE_HEADERS });
     }
 
-    // 2. Generate high-fidelity speech audio via Gemini TTS
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return publicErrorResponse(503, "AI audio service is currently unavailable");
+
+    let modelUsed: string | undefined;
     const wavBuffer = await generateMissionSpeech(apiKey, body.lineText, {
-      voice: body.voice ?? "Puck",
+      voice,
+      feature,
+      onModelUsed: (model) => { modelUsed = model; },
     });
+    if (!modelUsed) throw new Error("TTS response did not identify its model");
+    const cacheKey = buildSpeechCacheKey(feature, body.lineText, voice, modelUsed);
+    const storagePath = isCatalogMission
+      ? `catalog/${cacheKey}.wav`
+      : `users/${user.id}/${cacheKey}.wav`;
 
     // 3. Upload WAV audio to Supabase Storage
     const { error: uploadError } = await storageClient.storage
@@ -108,6 +118,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       operation: "generateAudio",
       userId: user.id,
     });
+    const status = getErrorStatus(err) ?? 500;
+    if (status === 429) {
+      return publicErrorResponse(429, "La cuota diaria de audio de IA está agotada. Vuelve a intentarlo después de medianoche del Pacífico.");
+    }
+    if (status === 503 || status === 504) {
+      return publicErrorResponse(status, "El audio HD está ocupado. Usa la voz del dispositivo o vuelve a intentarlo en unos segundos.");
+    }
     return publicErrorResponse(500, "Failed to generate mission line audio");
   }
 }

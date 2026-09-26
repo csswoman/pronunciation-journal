@@ -40,6 +40,7 @@ const mockSummary: ReviewHubSummary = {
     dueLessons: 0,
     essentialWordsDue: 0,
     total: 5,
+    overdueOneWeek: 0,
   },
   canStartReview: true,
   nothingDue: false,
@@ -102,7 +103,7 @@ describe('ReviewHubClient', () => {
   it('renders summary ready without active session mounted', () => {
     render(<ReviewHubClient summary={mockSummary} />)
 
-    expect(screen.getByText('5')).toBeDefined()
+    expect(screen.getAllByText('5')[0]).toBeDefined()
     expect(screen.getByText('Oraciones fallidas')).toBeDefined()
     expect(screen.getByText('I went to the store yesterday')).toBeDefined()
     expect(screen.getByText('Palabras débiles')).toBeDefined()

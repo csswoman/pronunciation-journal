@@ -25,15 +25,17 @@ export function buildExerciseResult(params: {
   userAnswer: string
   timeMs: number
   context: ExerciseResult['context']
+  attemptId?: string
   extras?: import('@/lib/practice/types').PracticeSubmitExtras
 }): ExerciseResult {
-  const { current, isCorrect, userAnswer, timeMs, context, extras } = params
+  const { current, isCorrect, userAnswer, timeMs, context, attemptId, extras } = params
   const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
   const taskSkill = taskSkillForExercise(current)
   const status = extras?.status ?? (userAnswer === 'skip' ? 'skipped' : 'answered')
   const responseTimeMs = extras?.responseTimeMs ?? timeMs
 
   return {
+    attemptId: attemptId ?? extras?.attemptId,
     exerciseId: current.id,
     slug: current.slug,
     exerciseTypeId: current.exerciseTypeId,

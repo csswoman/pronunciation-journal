@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 import { callWithFallback, getErrorStatus, stripJsonFences, type CallWithFallbackOptions, type GeminiCallParams } from "@/lib/gemini/client";
@@ -8,6 +9,7 @@ type GeminiJsonRouteOptions<T> = {
   endpoint: string;
   userId?: string;
   params: GeminiCallParams;
+  schema?: z.ZodType;
   parse: (text: string) => T;
   failureMessage: string;
   headers?: HeadersInit;
@@ -22,6 +24,7 @@ export async function callGeminiJson<T>({
   endpoint,
   userId,
   params,
+  schema,
   parse,
   failureMessage,
   fallbackOptions,
@@ -35,7 +38,19 @@ export async function callGeminiJson<T>({
   }
 
   try {
-    const result = await callWithFallback(apiKey, params, parse, fallbackOptions);
+    const config = schema
+      ? { ...params.config, responseJsonSchema: z.toJSONSchema(schema) }
+      : params.config;
+    const parseResponse = schema
+      ? (text: string) => {
+          schema.parse(JSON.parse(stripJsonFences(text)));
+          return parse(text);
+        }
+      : parse;
+    const result = await callWithFallback(apiKey, { ...params, config }, parseResponse, {
+      ...fallbackOptions,
+      feature: fallbackOptions?.feature ?? endpoint,
+    });
     return { data: result, response: null };
   } catch (err: unknown) {
     const status = getErrorStatus(err) ?? 500;

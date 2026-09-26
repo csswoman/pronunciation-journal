@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Listening", "value": "4 audios, 40 preguntas", "highlights": ["Listening"] },
-            { "key": "Reading", "value": "3 textos (académico o general)", "highlights": ["Reading"] },
-            { "key": "Writing", "value": "Task 1 (gráfico/carta) + Task 2 (ensayo)", "highlights": ["Writing"] },
-            { "key": "Speaking", "value": "entrevista en 3 partes", "highlights": ["Speaking"] }
+            {
+              "key": "Listening",
+              "value": "4 audios, 40 preguntas",
+              "highlights": [
+                "Listening"
+              ]
+            },
+            {
+              "key": "Reading",
+              "value": "3 textos (académico o general)",
+              "highlights": [
+                "Reading"
+              ]
+            },
+            {
+              "key": "Writing",
+              "value": "Task 1 (gráfico/carta) + Task 2 (ensayo)",
+              "highlights": [
+                "Writing"
+              ]
+            },
+            {
+              "key": "Speaking",
+              "value": "entrevista en 3 partes",
+              "highlights": [
+                "Speaking"
+              ]
+            }
           ]
         }
       ]
@@ -31,9 +55,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Tendencia", "value": "rose sharply · fell steadily · leveled off", "highlights": ["rose sharply"] },
-            { "key": "Comparar", "value": "whereas · compared to · while", "highlights": ["whereas"] },
-            { "key": "Resumen", "value": "Overall, the figures show...", "highlights": ["Overall"] }
+            {
+              "key": "Tendencia",
+              "value": "rose sharply · fell steadily · leveled off",
+              "highlights": [
+                "rose sharply"
+              ]
+            },
+            {
+              "key": "Comparar",
+              "value": "whereas · compared to · while",
+              "highlights": [
+                "whereas"
+              ]
+            },
+            {
+              "key": "Resumen",
+              "value": "Overall, the figures show...",
+              "highlights": [
+                "Overall"
+              ]
+            }
           ]
         }
       ],
@@ -51,9 +93,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Intro", "value": "It is often argued that... In this essay, I will...", "highlights": ["It is often argued that"] },
-            { "key": "Cuerpo", "value": "Firstly, ... Moreover, ... For example, ...", "highlights": ["Firstly"] },
-            { "key": "Conclusión", "value": "In conclusion, I firmly believe...", "highlights": ["In conclusion"] }
+            {
+              "key": "Intro",
+              "value": "It is often argued that... In this essay, I will...",
+              "highlights": [
+                "It is often argued that"
+              ]
+            },
+            {
+              "key": "Cuerpo",
+              "value": "Firstly, ... Moreover, ... For example, ...",
+              "highlights": [
+                "Firstly"
+              ]
+            },
+            {
+              "key": "Conclusión",
+              "value": "In conclusion, I firmly believe...",
+              "highlights": [
+                "In conclusion"
+              ]
+            }
           ]
         }
       ]
@@ -67,10 +127,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Do you like music? — Yes.", "note": "muy corto" },
-            { "variant": "good", "text": "Yes, I'm really into jazz because it helps me relax.", "note": "amplía y justifica" },
-            { "variant": "good", "text": "Well, that's an interesting question...", "note": "ganar tiempo con naturalidad" },
-            { "variant": "good", "text": "It depends, but generally...", "note": "matizar" }
+            {
+              "variant": "bad",
+              "text": "Do you like music? — Yes.",
+              "note": "muy corto"
+            },
+            {
+              "variant": "good",
+              "text": "Yes, I'm really into jazz because it helps me relax.",
+              "note": "amplía y justifica"
+            },
+            {
+              "variant": "good",
+              "text": "Well, that's an interesting question...",
+              "note": "ganar tiempo con naturalidad"
+            },
+            {
+              "variant": "good",
+              "text": "It depends, but generally...",
+              "note": "matizar"
+            }
           ]
         }
       ]
@@ -84,10 +160,25 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Fluency", "value": "habla seguido, sin pausas largas" },
-            { "key": "Vocabulary", "value": "léxico variado y preciso (lexical resource)", "highlights": ["lexical resource"] },
-            { "key": "Grammar", "value": "variedad de estructuras correctas" },
-            { "key": "Pronunciation", "value": "claridad y entonación natural" }
+            {
+              "key": "Fluency",
+              "value": "habla seguido, sin pausas largas"
+            },
+            {
+              "key": "Vocabulary",
+              "value": "léxico variado y preciso (lexical resource)",
+              "highlights": [
+                "lexical resource"
+              ]
+            },
+            {
+              "key": "Grammar",
+              "value": "variedad de estructuras correctas"
+            },
+            {
+              "key": "Pronunciation",
+              "value": "claridad y entonación natural"
+            }
           ]
         }
       ]
@@ -101,12 +192,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Sinónimos", "value": "important → crucial · big → significant", "highlights": ["crucial"] },
-            { "key": "Cambiar voz", "value": "People use it → It is widely used.", "highlights": ["It is widely used"] },
-            { "key": "Cambiar clase", "value": "decide → make a decision", "highlights": ["make a decision"] }
+            {
+              "key": "Sinónimos",
+              "value": "important → crucial · big → significant",
+              "highlights": [
+                "crucial"
+              ]
+            },
+            {
+              "key": "Cambiar voz",
+              "value": "People use it → It is widely used.",
+              "highlights": [
+                "It is widely used"
+              ]
+            },
+            {
+              "key": "Cambiar clase",
+              "value": "decide → make a decision",
+              "highlights": [
+                "make a decision"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "When describing trends in an IELTS Academic Task 1, which phrase is most appropriate to describe a graph that stays constant?",
+      "options": [
+        "leveled off",
+        "rose sharply"
+      ],
+      "answer": 0,
+      "explain": "La expresión 'leveled off' se utiliza correctamente para indicar que una tendencia se ha estabilizado o ha dejado de cambiar."
+    },
+    {
+      "q": "Which of the following is the best way to paraphrase the word 'important' to improve your lexical resource score?",
+      "options": [
+        "crucial",
+        "big"
+      ],
+      "answer": 0,
+      "explain": "Utilizar 'crucial' demuestra un vocabulario más preciso y académico, lo cual es fundamental para obtener una banda más alta en el examen."
+    },
+    {
+      "q": "En la sección de Speaking, ¿cuál es la mejor estrategia para obtener una puntuación alta en fluidez?",
+      "options": [
+        "Ampliar tus respuestas evitando monosílabos",
+        "Contestar de forma breve y directa"
+      ],
+      "answer": 0,
+      "explain": "El examen valora tu capacidad de desarrollar ideas y hablar con fluidez, por lo que expandir tus respuestas es esencial para demostrar tu nivel real."
     }
   ]
 }

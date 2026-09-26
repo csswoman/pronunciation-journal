@@ -6,15 +6,12 @@
 // </HomePageHeader>
 
 import PageHeader from "@/components/layout/PageHeader";
-import StreakChip from "@/components/home/StreakChip";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isPermanentUser } from "@/lib/auth/is-anonymous";
-import type { DailyStreakResult } from "@/lib/daily/streak-core";
 import type { DailyGoalProgress } from "@/lib/home/constants";
 
 interface HomePageHeaderProps {
-  streak?: DailyStreakResult;
   weekMinutes?: number;
   dailyGoal?: DailyGoalProgress | null;
   /** True until the learner has real practice history. */
@@ -36,9 +33,8 @@ function buildSubtitle(week: number, isNewLearner: boolean): string | undefined 
   return undefined;
 }
 
-/** Canonical home header — streak renders as a chip in the title row. */
+/** Canonical home header. */
 export default function HomePageHeader({
-  streak,
   weekMinutes,
   dailyGoal = null,
   isNewLearner = false,
@@ -51,7 +47,6 @@ export default function HomePageHeader({
   const fullName = preferences?.full_name || metadataName || user?.email?.split("@")[0] || null;
   const userName = isPermanentUser(user) && fullName ? fullName.split(" ")[0] : null;
 
-  const current = streak?.currentStreak ?? 0;
   const week = weekMinutes ?? dailyGoal?.weekMinutes ?? 0;
   const greeting = getGreeting();
 
@@ -62,7 +57,6 @@ export default function HomePageHeader({
     <PageHeader
       title={title}
       subtitle={subtitle}
-      actions={current > 0 ? <StreakChip days={current} /> : undefined}
     />
   );
 }

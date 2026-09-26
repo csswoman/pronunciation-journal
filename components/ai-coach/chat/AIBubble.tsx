@@ -65,6 +65,19 @@ export default function AIBubble({
   const concept = extractTurnConcept(message.toolCalls);
   const parsed = parseCorrection(fullText);
   const correction = toolCorrection ?? parsed.correction;
+  const patternId =
+    correction && "errorPattern" in correction ? correction.errorPattern : undefined;
+  const recurrenceFeedback = message.errorRecurrence;
+  const recurrenceStatus =
+    patternId && recurrenceFeedback?.patternId === patternId
+      ? recurrenceFeedback.status
+      : undefined;
+  const correctionCardData = correction
+    ? {
+        ...correction,
+        recurrenceStatus,
+      }
+    : null;
   const rawProse = toolCorrection ? fullText : parsed.body;
   const proseBody = rawProse.trim();
   const extractedSuggestions = extractSuggestions(proseBody);
@@ -112,19 +125,19 @@ export default function AIBubble({
   });
 
   return (
-    <div className="group/msg flex max-w-[min(88%,36rem)] items-start justify-start gap-3">
+    <div className="group/msg flex max-w-[min(90%,38rem)] items-start justify-start gap-3">
       <div className="flex size-8 shrink-0 items-start pt-0.5">
         {showAvatar ? <AIAvatar /> : <span className="block size-8" aria-hidden />}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2">
-        {correction && <CorrectionCard correction={correction} />}
+        {correctionCardData && <CorrectionCard correction={correctionCardData} />}
 
         {hasContentBox && (
           <div
             className={cn(
-              "cursor-text select-text rounded-md border border-border-subtle bg-surface-raised px-3.5 py-2.5 text-fg",
-              showAvatar && "rounded-bl-sm",
+              "cursor-text select-text rounded-3xl border border-border-subtle bg-surface-raised px-4 py-3.5 sm:px-5 sm:py-4 text-fg shadow-xs",
+              showAvatar && "rounded-tl-md",
             )}
             onMouseUp={handleMouseUp}
           >

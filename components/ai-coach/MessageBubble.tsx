@@ -45,7 +45,7 @@ export default function MessageBubble({
     return (
       <div className="group/msg ml-auto flex max-w-[min(88%,36rem)] justify-end">
         <div className="flex flex-col items-end gap-1.5">
-          <div className="rounded-md rounded-br-sm border border-[color-mix(in_oklch,var(--primary)_18%,transparent)] bg-[color-mix(in_oklch,var(--primary)_12%,var(--surface-raised))] px-3.5 py-2.5 text-body-sm leading-relaxed break-words whitespace-pre-wrap text-fg">
+          <div className="rounded-3xl rounded-br-md border border-primary/20 bg-primary px-4 py-2.5 sm:px-5 sm:py-3 text-body-sm font-semibold leading-relaxed break-words whitespace-pre-wrap text-white shadow-xs">
             {message.content}
           </div>
           <div className="flex items-center gap-1 pr-1 opacity-0 transition-opacity group-hover/msg:opacity-100 motion-reduce:transition-none">

@@ -21,7 +21,7 @@ describe('AICoachHome', () => {
     renderHome('missions')
     // `scripted.cafe.order` es de guion; `roleplay.interview` es conversacional.
     expect(
-      screen.getByText(/Pedir una bebida y responder a las preguntas del camarero/i),
+      screen.getByText(/Pedir una bebida y responder/i),
     ).toBeInTheDocument()
     expect(
       screen.queryByText(/Presentarte y explicar una experiencia profesional relevante/i),

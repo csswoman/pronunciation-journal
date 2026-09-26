@@ -45,7 +45,7 @@ describe("Content-Security-Policy Configuration", () => {
 
   it("excludes unsafe-inline from production script-src and keeps unsafe-eval only in development", () => {
     expect(proxyContent).toMatch(
-      /`script-src 'self' 'nonce-\$\{nonce\}' 'sha256-\$\{THEME_INIT_SCRIPT_SHA256\}' 'strict-dynamic'\$\{isDev \? " 'unsafe-eval'" : ""\}`/,
+      /`script-src 'self' 'nonce-\$\{nonce\}' 'sha256-\$\{THEME_INIT_SCRIPT_SHA256\}' 'strict-dynamic' 'wasm-unsafe-eval'\$\{isDev \? " 'unsafe-eval'" : ""\}`/,
     );
     expect(proxyContent).not.toMatch(/script-src[^`]*unsafe-inline/);
   });

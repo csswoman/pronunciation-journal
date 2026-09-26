@@ -179,7 +179,7 @@ async function getDueLessonsForReview(
   return items.slice(0, limit)
 }
 
-import { fetchExactReviewQueueCounts } from './queue-count-queries'
+import { fetchExactReviewQueueCounts, getReviewForecast, getWordMasteryStatsServer } from './queue-count-queries'
 import type { AggregatedReviewSummary } from './summary-types'
 
 export { fetchExactReviewQueueCounts }
@@ -187,16 +187,18 @@ export type { AggregatedReviewSummary }
 
 /** Server: full hub summary for `/practice/review`. */
 export async function getReviewHubSummary(userId: string): Promise<ReviewHubSummary> {
-  const [failedSentences, weakWords, dueWords, soundsDueRaw, dueTopicsRaw, weakTopicsRaw, dueLessons, essentialWordsDue] =
+  const [failedSentences, weakWords, dueWords, soundsDueRaw, dueTopicsRaw, weakTopicsRaw, dueLessons, essentialWordsDue, wordMastery, forecast] =
     await Promise.all([
       loadFailedSentenceItemsServer(userId, 5),
-      getWeakWordsForReviewServer(userId, 6),
-      getWordsDueForReview(userId, 6),
+      getWeakWordsForReviewServer(userId, 8),
+      getWordsDueForReview(userId, 8),
       getSoundsDueForHome(userId),
       getDueTopicsForReview(userId, 6),
       getWeakTopicsForReview(userId, 6),
       getDueLessonsForReview(userId, 4),
       getDueEssentialWords(userId, 12),
+      getWordMasteryStatsServer(userId),
+      getReviewForecast(userId),
     ])
   const soundsDue = soundsDueRaw.filter((sound) => sound.soundId > 0)
   const dueTopics = filterReviewableTopics(dueTopicsRaw)
@@ -243,6 +245,8 @@ export async function getReviewHubSummary(userId: string): Promise<ReviewHubSumm
     counts: queueCounts,
     nothingDue: queueCounts.executable === 0,
     canStartReview,
+    wordMastery,
+    forecast,
   }
 }
 

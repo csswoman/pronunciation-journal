@@ -3,7 +3,7 @@
 //   kicker?
 //   h1 title
 //   subtitle?
-//   actions? | progress?
+//   actions? | badge? | progress?
 // </header>
 
 import { cn } from "@/lib/cn";
@@ -28,7 +28,8 @@ export function CanonicalHeader({
   className = "",
 }: PageHeaderDerived) {
   const isCompact = variant === "compact";
-  const chromeKicker = kicker ?? badge;
+  const chromeKicker = kicker;
+  const chromeBadge = badge;
   const chromeSubtitle = subtitle ?? description;
 
   return (
@@ -39,19 +40,24 @@ export function CanonicalHeader({
       {chromeKicker ? (
         <span className="font-kicker text-fg-muted">{chromeKicker}</span>
       ) : null}
-      <div className="flex flex-row items-center justify-between gap-layout-stack-tight sm:items-start sm:gap-layout-stack-loose">
+      <div className="flex flex-row items-center justify-between gap-layout-stack-tight sm:items-end sm:gap-layout-stack-loose">
         <div className="layout-stack-tight min-w-0">
-          <h1 className={cn("text-balance text-fg", isCompact ? "text-h3" : "text-h2")}>
+          <h1 className={cn("text-balance font-heading font-extrabold text-fg tracking-tight", isCompact ? "text-h3" : "text-h1")}>
             {title}
           </h1>
           {chromeSubtitle ? (
-            <p className="max-w-prose text-pretty font-body-sm text-fg-muted">
+            <p className="max-w-prose text-pretty text-body-sm text-fg-muted">
               {chromeSubtitle}
             </p>
           ) : null}
         </div>
-        {!hasProgress && (primaryCta || secondaryCta || actions) ? (
+        {!hasProgress && (primaryCta || secondaryCta || actions || chromeBadge) ? (
           <div className="flex shrink-0 flex-wrap items-center gap-layout-stack-tight">
+            {chromeBadge && !actions && !primaryCta && !secondaryCta ? (
+              <span className="rounded-full border border-border-default bg-surface-raised px-4 py-1.5 font-label text-caption font-semibold text-fg shadow-xs">
+                {chromeBadge}
+              </span>
+            ) : null}
             {actions}
             {(primaryCta || secondaryCta) ? (
               <CtaButtons primaryCta={primaryCta} secondaryCta={secondaryCta} rounded="md" />

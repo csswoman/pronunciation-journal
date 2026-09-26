@@ -32,6 +32,7 @@ export const EXERCISE_SKILL_MATRIX = {
   sentence_transformation: ['grammar'],
   translation_es_en: ['vocabulary', 'grammar'],
   cs_shadow_phrase: ['speaking', 'pronunciation'],
+  personalization: ['grammar', 'writing'],
 } as const satisfies Record<ExerciseSlug, readonly SkillTag[]>
 
 export type ExerciseSkillMatrix = typeof EXERCISE_SKILL_MATRIX
@@ -77,6 +78,8 @@ export function taskSkillForExercise(
     case 'dictation':
     case 'sentence_dictation':
       return 'listening'
+    case 'personalization':
+      return 'grammar'
     default:
       break
   }

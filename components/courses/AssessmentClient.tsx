@@ -1,35 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useHideMobileNavDuringSession } from "@/hooks/useHideMobileNavDuringSession";
-import {
-  ASSESSMENT_LEVEL_ORDER,
-  groupQuestionsByLevel,
-  levelPassed,
-  type AssessmentQuestion,
-  type AssessmentResult,
-} from "@/lib/courses/assessment";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
+import { groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
-import { AssessmentErrorState, AssessmentResultView } from "./AssessmentViews";
+import {
+  AssessmentErrorState,
+  AssessmentResultView,
+  AssessmentSectionFeedbackView,
+} from "./AssessmentViews";
 import { AssessmentClientShell } from "./AssessmentClientShell";
+import type { AssessmentTopicPreview } from "./AssessmentCheckpointResultView";
 import { useAssessmentFlow } from "./useAssessmentFlow";
 import {
-  assessmentFooterCopy,
-  buildAssessmentResult,
-  persistLocalAssessmentCache,
-  reportedLevelIsAbove,
-  saveAssessmentLevel,
+  assessmentFooterCopy, buildAssessmentCoverageLevels, clearSavedAssessmentResult, reportedLevelIsAbove,
 } from "./assessment-client-helpers";
-import { saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
-
+import { useAssessmentScoring } from "./useAssessmentScoring";
+import { AssessmentOralCheckpoint } from "./AssessmentOralCheckpoint";
+import { type AssessmentOralPilotLevel } from "@/lib/courses/assessment-oral-shared";
+import { useAssessmentOralFlow } from "./useAssessmentOralFlow";
+import { useAssessmentCompletion, type AssessmentSectionFeedbackState } from "./useAssessmentCompletion";
+import { assessmentDraftKey, assessmentDraftSignature, clearAssessmentDraft, readAssessmentDraft, saveAssessmentDraft } from "@/lib/courses/assessment-draft";
 interface AssessmentClientProps {
   mode: "placement" | "checkpoint";
-  questions: AssessmentQuestion[];
+  questions: ClientAssessmentQuestion[];
   concepts?: AssessmentConcept[];
   checkpointLabel?: string;
   userId?: string;
   initialLevel?: CefrLevelId | null;
+  nextLevelTopics?: AssessmentTopicPreview[];
 }
 
 export default function AssessmentClient({
@@ -39,15 +40,54 @@ export default function AssessmentClient({
   checkpointLabel,
   userId,
   initialLevel,
+  nextLevelTopics = [],
 }: AssessmentClientProps) {
   useHideMobileNavDuringSession();
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [selfRatings, setSelfRatings] = useState<Record<string, ConceptSelfRating>>({});
-  const [result, setResult] = useState<AssessmentResult | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(false);
+  const [sectionFeedback, setSectionFeedback] = useState<AssessmentSectionFeedbackState | null>(null);
+  const [audioReadyQuestionId, setAudioReadyQuestionId] = useState<string | null>(null);
+  const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
   const sections = groupQuestionsByLevel(questions);
   const flow = useAssessmentFlow({ mode, sections, initialLevel });
+  const draftKey = assessmentDraftKey({ userId, mode, checkpointLabel });
+  const draftSignature = assessmentDraftSignature(questions, concepts);
+  const [draftReady, setDraftReady] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void readAssessmentDraft(draftKey, draftSignature)
+      .then((draft) => {
+        if (!active || !draft) return;
+        const draftSection = sections[draft.sectionIndex];
+        const validAnswers = questions.every((question) =>
+          draft.answers[question.id] === undefined
+          || (Number.isInteger(draft.answers[question.id])
+            && draft.answers[question.id] >= 0
+            && draft.answers[question.id] < question.options.length),
+        );
+        if (!draftSection || !validAnswers || draft.questionIndex < 0
+          || draft.questionIndex >= draftSection.questions.length
+          || draft.placementStartIndex < 0 || draft.placementStartIndex > draft.sectionIndex) return;
+        setAnswers(draft.answers);
+        setSelfRatings(draft.selfRatings);
+        flow.restoreFlow(draft);
+      })
+      .catch(() => { /* IndexedDB can be unavailable in a restricted browser. */ })
+      .finally(() => { if (active) setDraftReady(true); });
+    return () => { active = false; };
+  }, [draftKey, draftSignature]);
+  useEffect(() => {
+    if (!draftReady) return;
+    void saveAssessmentDraft(draftKey, draftSignature, {
+      answers, selfRatings,
+      sectionIndex: flow.sectionIndex,
+      placementStartIndex: flow.placementStartIndex,
+      questionIndex: flow.questionIndex,
+      placementStep: flow.placementStep,
+      selfReportedLevel: flow.selfReportedLevel,
+    }).catch(() => { /* Keep the current attempt usable if persistence fails. */ });
+  }, [draftReady, draftKey, draftSignature, answers, selfRatings, flow.sectionIndex,
+    flow.placementStartIndex, flow.questionIndex, flow.placementStep, flow.selfReportedLevel]);
   const section = sections[flow.sectionIndex];
   const sectionConcepts = section
     ? concepts.filter((concept) => concept.level === section.level)
@@ -55,79 +95,49 @@ export default function AssessmentClient({
   const showingInventory = mode === "placement" && flow.placementStep === "inventory";
   const showingLevelPrompt = mode === "placement" && flow.placementStep === "level";
   const visibleQuestions = mode === "placement" ? section?.questions ?? [] : questions;
-  const answered = visibleQuestions.filter((q) => answers[q.id] !== undefined).length;
+  const coverageLevels = buildAssessmentCoverageLevels({ questions, concepts, answers, selfRatings });
+  const answered = visibleQuestions.filter((question) => answers[question.id] !== undefined).length;
   const currentQuestion = visibleQuestions[flow.questionIndex];
-  const currentQuestionAnswered = currentQuestion ? answers[currentQuestion.id] !== undefined : false;
-  const ratedConcepts = sectionConcepts.filter(
-    (c) => selfRatings[c.lessonSlug] !== undefined,
-  ).length;
+  const currentQuestionAnswered = Boolean(currentQuestion)
+    && answers[currentQuestion.id] !== undefined
+    && (!currentQuestion.audioSrc || audioReadyQuestionId === currentQuestion.id);
+  const ratedConcepts = sectionConcepts.filter((concept) => selfRatings[concept.lessonSlug] !== undefined).length;
+  const scoring = useAssessmentScoring({
+    mode,
+    concepts,
+    checkpointLabel,
+    userId,
+    checkpointLevel,
+    answers,
+    selfRatings,
+  });
+  useEffect(() => {
+    if (scoring.result) void clearAssessmentDraft(draftKey).catch(() => {});
+  }, [scoring.result, draftKey]);
+  const oralFlow = useAssessmentOralFlow({ mode, userId, checkpointLevel, answers, questions, scoring });
+  const includesOralTask = Boolean(userId && oralFlow.needsOralEvidence);
   const progressValue = showingInventory ? ratedConcepts : showingLevelPrompt ? 0 : answered;
   const progressTotal = showingInventory
     ? sectionConcepts.length
     : showingLevelPrompt
       ? 1
-      : visibleQuestions.length;
+      : visibleQuestions.length + (includesOralTask ? 1 : 0);
+  const { finishSection } = useAssessmentCompletion({
+    mode,
+    userId,
+    questions,
+    sections,
+    sectionIndex: flow.sectionIndex,
+    placementStartIndex: flow.placementStartIndex,
+    selfReportedLevel: flow.selfReportedLevel,
+    oralFlow,
+    scoring,
+    setSectionFeedback,
+  });
 
-  function completeAssessment(attemptedQuestions: AssessmentQuestion[]) {
-    const nextResult = buildAssessmentResult({
-      mode,
-      questions,
-      attemptedQuestions,
-      answers,
-      concepts,
-      selfRatings,
-    });
-    setResult(nextResult);
-    if (attemptedQuestions.length > 0) {
-      const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
-      persistLocalAssessmentCache({
-        userId,
-        mode,
-        checkpointLabel,
-        nextResult,
-        answers,
-        selfRatings,
-        checkpointLevel,
-      });
-      try {
-        saveGuestStudyLevel(nextResult.assignedLevel);
-      } catch {
-        /* no-op */
-      }
-      if (userId) {
-        void saveAssessmentLevel({
-          mode,
-          questions,
-          userId,
-          nextResult,
-          setSaving,
-          setSaveError,
-          answers,
-          selfRatings,
-          checkpointLevel,
-        });
-      }
-    }
-  }
-
-  function finishSection() {
-    if (mode === "checkpoint") {
-      completeAssessment(questions);
-      return;
-    }
-    const passed = levelPassed(section.level, section.questions, answers);
-    const isLast = flow.sectionIndex === sections.length - 1;
-    if ((passed || flow.selfReportedLevel === "full") && !isLast) {
-      flow.goToNextSection();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    completeAssessment(
-      sections
-        .slice(flow.placementStartIndex, flow.sectionIndex + 1)
-        .flatMap((item) => item.questions),
-    );
-  }
+  const handleAudioReadyChange = useCallback((questionId: string, ready: boolean) => {
+    setAudioReadyQuestionId(ready ? questionId : null);
+  }, []);
 
   function handleBack() {
     if (flow.questionIndex > 0) flow.goToPreviousQuestion();
@@ -142,15 +152,10 @@ export default function AssessmentClient({
       return;
     }
     if (showingInventory) {
-      const allUnknown =
-        sectionConcepts.length > 0 &&
-        sectionConcepts.every((c) => selfRatings[c.lessonSlug] === "unknown");
+      const allUnknown = sectionConcepts.length > 0
+        && sectionConcepts.every((concept) => selfRatings[concept.lessonSlug] === "unknown");
       if (allUnknown && !reportedLevelIsAbove(section.level, flow.selfReportedLevel)) {
-        completeAssessment(
-          sections
-            .slice(flow.placementStartIndex, flow.sectionIndex)
-            .flatMap((item) => item.questions),
-        );
+        void scoring.completeAssessment([]);
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
@@ -163,10 +168,10 @@ export default function AssessmentClient({
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    finishSection();
+    void finishSection();
   }
 
-  const { footerStatus, primaryLabel } = assessmentFooterCopy({
+  const footer = assessmentFooterCopy({
     showingLevelPrompt,
     showingInventory,
     selfReportedLevel: flow.selfReportedLevel,
@@ -175,41 +180,69 @@ export default function AssessmentClient({
     questionIndex: flow.questionIndex,
     visibleQuestionsLength: visibleQuestions.length,
     mode,
-    sectionIndex: flow.sectionIndex,
-    sectionsLength: sections.length,
-    sectionLevel: section?.level ?? "a1",
-    sectionQuestions: section?.questions ?? [],
-    answers,
-    nextSectionLevel: sections[flow.sectionIndex + 1]?.level,
   });
 
-  if (result) {
-    const checkpointLevel = mode === "checkpoint" ? (questions[0]?.level ?? null) : null;
+  const oralContent = oralFlow.attemptId && checkpointLevel && oralFlow.needsOralEvidence
+    ? (
+      <AssessmentOralCheckpoint
+        key={oralFlow.attemptId}
+        level={checkpointLevel as AssessmentOralPilotLevel}
+        attemptId={oralFlow.attemptId}
+        initialChallenge={oralFlow.initialChallenge}
+        onComplete={oralFlow.completeAttempt}
+        onDefer={oralFlow.deferAttempt}
+      />
+    )
+    : undefined;
+
+  const handleRedo = useCallback(() => {
+    void clearAssessmentDraft(draftKey).catch(() => {});
+    clearSavedAssessmentResult({ userId, mode, checkpointLabel });
+    scoring.reset();
+    setAnswers({});
+    setSelfRatings({});
+    setSectionFeedback(null);
+    setAudioReadyQuestionId(null);
+    flow.resetFlow();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [userId, mode, checkpointLabel, draftKey, scoring, flow]);
+
+  if (scoring.result) {
     return (
       <AssessmentResultView
         mode={mode}
-        result={result}
+        result={scoring.result}
         userId={userId}
-        saving={saving}
-        saveError={saveError}
-        onRetry={() => {
-          if (!userId) return;
-          void saveAssessmentLevel({
-            mode,
-            questions,
-            userId,
-            nextResult: result,
-            setSaving,
-            setSaveError,
-            answers,
-            selfRatings,
-            checkpointLevel,
-          });
+        saving={scoring.saving}
+        saveError={scoring.saveError}
+        onRetry={scoring.retryPersistence}
+        onRedo={handleRedo}
+        nextLevelTopics={nextLevelTopics}
+      />
+    );
+  }
+  if (sectionFeedback) {
+    return (
+      <AssessmentSectionFeedbackView
+        result={sectionFeedback.result}
+        level={sectionFeedback.level}
+        nextLevel={sectionFeedback.nextLevel}
+        nextLevelTopics={concepts
+          .filter((concept) => concept.level === sectionFeedback.nextLevel)
+          .slice(0, 4)
+          .map((concept) => ({
+            title: concept.title,
+            ...(concept.goal ? { description: concept.goal } : {}),
+          }))}
+        canContinueAfterFailure={sectionFeedback.canContinueAfterFailure}
+        onContinue={() => {
+          setSectionFeedback(null);
+          flow.goToNextSection();
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
     );
   }
-
   if (!section) return <AssessmentErrorState />;
 
   return (
@@ -223,6 +256,7 @@ export default function AssessmentClient({
         showingInventory,
         progressValue,
         progressTotal,
+        questionTotal: visibleQuestions.length,
       }}
       prompt={{
         selfReportedLevel: flow.selfReportedLevel,
@@ -234,20 +268,28 @@ export default function AssessmentClient({
         questionIndex: flow.questionIndex,
         answers,
         setAnswers,
+        audioReadyQuestionId,
+        onAudioReadyChange: handleAudioReadyChange,
       }}
+      oralContent={oralContent}
       footer={{
-        status: footerStatus,
-        primaryLabel,
-        primaryDisabled: showingLevelPrompt
+        status: oralFlow.startError
+          ?? (scoring.evaluationError
+            ? "No se pudo comprobar el resultado. Tus respuestas siguen aquí; puedes reintentar."
+            : footer.footerStatus),
+        statusRole: oralFlow.startError || scoring.evaluationError ? "alert" : "status",
+        primaryLabel: scoring.evaluationError ? "Reintentar corrección" : scoring.saving ? "Comprobando…" : footer.primaryLabel,
+        primaryDisabled: scoring.saving || (showingLevelPrompt
           ? flow.selfReportedLevel === null
           : showingInventory
             ? ratedConcepts !== sectionConcepts.length
-            : !currentQuestionAnswered,
+            : !currentQuestionAnswered || !oralFlow.pendingLookupDone),
+        secondaryDisabled: scoring.saving,
         onBack: handleBack,
         onPrimary: handlePrimary,
       }}
       coverage={{
-        placementLevels: [...ASSESSMENT_LEVEL_ORDER],
+        levels: coverageLevels,
         placementStartIndex: flow.placementStartIndex,
         sectionIndex: flow.sectionIndex,
       }}

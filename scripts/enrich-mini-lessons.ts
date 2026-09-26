@@ -1,7 +1,9 @@
+// Manual maintenance script only; each run is capped and spaced to protect the free Gemini quota.
 import fs from "fs";
 import path from "path";
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
+import { BASE_MODELS } from "../lib/gemini/fallback";
 
 // We'll define simple schemas locally in the script to avoid dependency path issues at execution time
 const LessonLevelSchema = z.enum(["basic", "intermediate", "advanced"]);
@@ -74,14 +76,33 @@ const MINI_LESSONS_DIR = path.join(process.cwd(), "public", "mini-lessons");
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
-const all = args.includes("--all");
 const force = args.includes("--force");
 const slugArg = args.indexOf("--slug");
 const targetSlug = slugArg >= 0 ? args[slugArg + 1] : null;
 const limitArg = args.indexOf("--limit");
-const limit = limitArg >= 0 ? Number(args[limitArg + 1]) : all ? Infinity : 3;
+const maxArg = args.find((arg) => arg.startsWith("--max="));
+const maxArgIndex = args.indexOf("--max");
+const configuredMax = maxArg
+  ? Number(maxArg.slice("--max=".length))
+  : maxArgIndex >= 0
+    ? Number(args[maxArgIndex + 1])
+    : limitArg >= 0
+      ? Number(args[limitArg + 1])
+      : 50;
+if (!Number.isInteger(configuredMax) || configuredMax < 1) {
+  throw new Error("--max must be a positive integer");
+}
+const limit = configuredMax;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+let lastGeminiRequestAt = 0;
+let geminiRequestCount = 0;
+
+async function waitForRequestSpacing(): Promise<void> {
+  const remainingMs = 4_000 - (Date.now() - lastGeminiRequestAt);
+  if (lastGeminiRequestAt > 0 && remainingMs > 0) await sleep(remainingMs);
+  lastGeminiRequestAt = Date.now();
+}
 
 function hasSpanishAnswers(lesson: { exercises?: Array<{ answers?: string[] }> }): boolean {
   if (!lesson.exercises || lesson.exercises.length === 0) return false;
@@ -111,8 +132,11 @@ type GeminiClient = {
 async function callGeminiWithRetry(ai: GeminiClient, prompt: string, retries = 5): Promise<unknown> {
   for (let i = 0; i < retries; i++) {
     try {
+      if (geminiRequestCount >= limit) throw new Error(`Gemini request cap reached (${limit})`);
+      geminiRequestCount++;
+      await waitForRequestSpacing();
       const res = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: BASE_MODELS[0],
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -268,9 +292,7 @@ async function main() {
       .map((f) => path.basename(f, ".json"));
   }
 
-  if (limit !== Infinity) {
-    slugsToProcess = slugsToProcess.slice(0, limit);
-  }
+  slugsToProcess = slugsToProcess.slice(0, limit);
 
   console.log(`Starting run on ${slugsToProcess.length} lessons...`);
 

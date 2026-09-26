@@ -99,6 +99,7 @@ export async function classifyTopicRelevance(
     parseTopicRelevance,
     {
       shouldRetry: (err) => shouldTryNextModel(err),
+      feature: 'immersion-topic-relevance',
     },
   )
 }

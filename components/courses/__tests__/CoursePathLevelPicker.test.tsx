@@ -88,6 +88,22 @@ describe("CoursePathLevelPicker", () => {
     expect(a2Links[0]).toHaveAttribute("href", "/courses?level=a2");
   });
 
+  it("renders the Opcionales tab and marks it active when selectedLevelId is opcionales", () => {
+    bulkGet.mockResolvedValue([]);
+
+    render(
+      <CoursePathLevelPicker
+        levels={COURSE_PATH_CURRICULUM.levels}
+        electiveTracks={COURSE_PATH_CURRICULUM.electiveTracks}
+        selectedLevelId="opcionales"
+      />
+    );
+
+    const opcionalesLinks = screen.getAllByRole("link", { name: /Temas opcionales/i });
+    expect(opcionalesLinks[0]).toHaveAttribute("aria-current", "page");
+    expect(opcionalesLinks[0]).toHaveAttribute("href", "/courses?level=opcionales");
+  });
+
   it("handles storage errors gracefully without crashing", async () => {
     bulkGet.mockRejectedValue(new Error("Dexie failure"));
 

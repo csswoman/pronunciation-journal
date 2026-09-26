@@ -59,6 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 600,
       },
     },
+    schema: journalPronunciationResponseSchema,
     parse: (raw) =>
       journalPronunciationResponseSchema.parse(
         parseGeminiJson(raw, (json) => json)

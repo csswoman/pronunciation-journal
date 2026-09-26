@@ -1,6 +1,8 @@
 'use client'
 
 import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
+import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
+import { PhonemeDifficultyHeadword } from '@/components/lesson/PhonemeDifficultyHeadword'
 import { QuietSpeakFeedback } from './QuietSpeakFeedback'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import {
@@ -13,6 +15,8 @@ import type { WordResult } from '@/lib/types'
 // Planned structure:
 // <SpeakScoredPanel>
 //   <InlineFeedback + QuietSpeakFeedback />
+//   <PhonemeDifficultyHeadword />   — la palabra con la grafía difícil resaltada
+//   <SelfPlaybackAudioBar />        — tu grabación vs. el modelo
 //   <PracticeActionBar />
 //   <phoneme detail toggle + PhonemeFeedbackTable />
 // </SpeakScoredPanel>
@@ -21,6 +25,10 @@ interface SpeakScoredPanelProps {
   score: number
   feedbackMessage: string | null
   wordResults: WordResult[]
+  /** Texto del modelo, para reproducirlo con el TTS del navegador. */
+  modelText: string
+  /** Grabación del intento, solo en memoria. Null si no se pudo grabar. */
+  userAudioUrl: string | null
   showSoundDetail: boolean
   isSubmitting: boolean
   submitError: string | null
@@ -33,6 +41,8 @@ export function SpeakScoredPanel({
   score,
   feedbackMessage,
   wordResults,
+  modelText,
+  userAudioUrl,
   showSoundDetail,
   isSubmitting,
   submitError,
@@ -48,6 +58,8 @@ export function SpeakScoredPanel({
       {feedbackMessage && (
         <QuietSpeakFeedback accuracy={score} message={feedbackMessage} />
       )}
+      <PhonemeDifficultyHeadword wordResults={wordResults} />
+      <SelfPlaybackAudioBar targetWord={modelText} userAudioUrl={userAudioUrl} />
       <PracticeActionBar>
         <PillButton variant="outline" size="md" className="w-full" onClick={onRetry}>
           Intentar de nuevo

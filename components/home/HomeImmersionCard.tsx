@@ -177,38 +177,37 @@ export default function HomeImmersionCard({ summary = null }: Props) {
           : ""}
       </div>
 
-      {/* Fila inferior: Racha de 7 días y Botón de acción */}
-      <div className="flex items-center justify-between gap-3 pt-1">
-        {/* Solo muestra historial realmente registrado. */}
-        <div className="flex items-center gap-2 select-none">
-          <div className="flex items-center gap-1.5">
-            {Array.from({ length: 7 }).map((_, idx) => (
-              <span
-                key={idx}
-                className={cn(
-                  "size-3 rounded-full transition-colors",
-                  idx < Math.min(summary?.currentStreak ?? 0, 7)
-                    ? "bg-mint"
-                    : "border border-dashed border-fg-muted/40 bg-transparent",
-                )}
-              />
-            ))}
-          </div>
-          <span className="font-sans text-caption font-medium text-fg-muted">
-            {summary && summary.currentStreak > 0
-              ? `${summary.currentStreak} ${summary.currentStreak === 1 ? "día" : "días"} · ${summary.weekMinutes} min esta semana`
-              : summary && summary.weekMinutes > 0
-                ? `${summary.weekMinutes} min esta semana`
-                : "Sin inmersión registrada"}
-          </span>
+      {/* Indicador de progreso y racha de 7 días (línea propia) */}
+      <div className="flex items-center gap-2.5 pt-1 select-none">
+        <div className="flex items-center gap-1.5 shrink-0">
+          {Array.from({ length: 7 }).map((_, idx) => (
+            <span
+              key={idx}
+              className={cn(
+                "size-2.5 rounded-full transition-colors",
+                idx < Math.min(summary?.currentStreak ?? 0, 7)
+                  ? "bg-mint"
+                  : "border border-dashed border-fg-muted/40 bg-transparent",
+              )}
+            />
+          ))}
         </div>
+        <span className="font-sans text-caption font-medium text-fg-muted">
+          {summary && summary.currentStreak > 0
+            ? `${summary.currentStreak} ${summary.currentStreak === 1 ? "día" : "días"} · ${summary.weekMinutes} min esta semana`
+            : summary && summary.weekMinutes > 0
+              ? `${summary.weekMinutes} min esta semana`
+              : "Sin inmersión registrada"}
+        </span>
+      </div>
 
-        {/* Botón CTA principal */}
+      {/* Botón CTA principal (línea dedicada) */}
+      <div className="flex justify-end pt-1">
         <button
           type="button"
           onClick={handleRegister}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full px-5 py-2 font-label text-body-sm font-semibold transition-all select-none shrink-0",
+            "focus-ring inline-flex w-full sm:w-auto min-h-10 items-center justify-center gap-1.5 rounded-full px-5 py-2 font-label text-body-sm font-semibold transition-all select-none",
             registered
               ? "bg-success text-paper"
               : "bg-primary text-on-primary hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98]",

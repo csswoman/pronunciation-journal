@@ -65,6 +65,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 1024,
       },
     },
+    schema: GeneratedScriptSchema,
     parse: (raw) => parseGeminiJson(raw, (json) => GeneratedScriptSchema.parse(json)),
     failureMessage: 'No se pudo generar el guión',
   })

@@ -14,9 +14,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Dirección", "value": "CEO, manager, head of, supervisor" },
-            { "key": "Equipo", "value": "colleague, coworker, intern, assistant" },
-            { "key": "Departamentos", "value": "HR, finance, sales, operations", "highlights": ["HR"] }
+            {
+              "key": "Dirección",
+              "value": "CEO, manager, head of, supervisor"
+            },
+            {
+              "key": "Equipo",
+              "value": "colleague, coworker, intern, assistant"
+            },
+            {
+              "key": "Departamentos",
+              "value": "HR, finance, sales, operations",
+              "highlights": [
+                "HR"
+              ]
+            }
           ]
         }
       ]
@@ -30,9 +42,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Encargarse", "value": "be in charge of · be responsible for", "highlights": ["be in charge of"] },
-            { "key": "Ocuparse", "value": "deal with · handle · take care of", "highlights": ["deal with"] },
-            { "key": "Plazos", "value": "meet a deadline · fall behind", "highlights": ["meet a deadline"] }
+            {
+              "key": "Encargarse",
+              "value": "be in charge of · be responsible for",
+              "highlights": [
+                "be in charge of"
+              ]
+            },
+            {
+              "key": "Ocuparse",
+              "value": "deal with · handle · take care of",
+              "highlights": [
+                "deal with"
+              ]
+            },
+            {
+              "key": "Plazos",
+              "value": "meet a deadline · fall behind",
+              "highlights": [
+                "meet a deadline"
+              ]
+            }
           ]
         }
       ]
@@ -46,9 +76,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Agendar", "value": "schedule / set up a meeting", "highlights": ["schedule"] },
-            { "key": "Cambiar", "value": "reschedule · postpone · cancel", "highlights": ["reschedule"] },
-            { "key": "Asistir", "value": "attend · run / chair a meeting", "highlights": ["attend"] }
+            {
+              "key": "Agendar",
+              "value": "schedule / set up a meeting",
+              "highlights": [
+                "schedule"
+              ]
+            },
+            {
+              "key": "Cambiar",
+              "value": "reschedule · postpone · cancel",
+              "highlights": [
+                "reschedule"
+              ]
+            },
+            {
+              "key": "Asistir",
+              "value": "attend · run / chair a meeting",
+              "highlights": [
+                "attend"
+              ]
+            }
           ]
         }
       ],
@@ -66,9 +114,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Adjuntar", "value": "Please find attached...", "highlights": ["Please find attached"] },
-            { "key": "Seguimiento", "value": "Just following up on...", "highlights": ["following up on"] },
-            { "key": "Reenviar", "value": "forward · CC · reply all", "highlights": ["forward"] }
+            {
+              "key": "Adjuntar",
+              "value": "Please find attached...",
+              "highlights": [
+                "Please find attached"
+              ]
+            },
+            {
+              "key": "Seguimiento",
+              "value": "Just following up on...",
+              "highlights": [
+                "following up on"
+              ]
+            },
+            {
+              "key": "Reenviar",
+              "value": "forward · CC · reply all",
+              "highlights": [
+                "forward"
+              ]
+            }
           ]
         }
       ]
@@ -82,9 +148,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Contrato", "value": "full-time · part-time · permanent", "highlights": ["full-time"] },
-            { "key": "Pago", "value": "salary · wage · raise · bonus", "highlights": ["salary"] },
-            { "key": "Beneficios", "value": "benefits · paid leave · sick days", "highlights": ["benefits"] }
+            {
+              "key": "Contrato",
+              "value": "full-time · part-time · permanent",
+              "highlights": [
+                "full-time"
+              ]
+            },
+            {
+              "key": "Pago",
+              "value": "salary · wage · raise · bonus",
+              "highlights": [
+                "salary"
+              ]
+            },
+            {
+              "key": "Beneficios",
+              "value": "benefits · paid leave · sick days",
+              "highlights": [
+                "benefits"
+              ]
+            }
           ]
         }
       ]
@@ -98,13 +182,58 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "make a meeting", "note": "→ have / hold a meeting" },
-            { "variant": "bad", "text": "win money (en el trabajo)", "note": "→ earn / make money" },
-            { "variant": "good", "text": "do business · make a decision", "note": "do vs. make" },
-            { "variant": "good", "text": "work overtime · be on leave", "note": "expresiones fijas" }
+            {
+              "variant": "bad",
+              "text": "make a meeting",
+              "note": "→ have / hold a meeting"
+            },
+            {
+              "variant": "bad",
+              "text": "win money (en el trabajo)",
+              "note": "→ earn / make money"
+            },
+            {
+              "variant": "good",
+              "text": "do business · make a decision",
+              "note": "do vs. make"
+            },
+            {
+              "variant": "good",
+              "text": "work overtime · be on leave",
+              "note": "expresiones fijas"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is the most professional way to say you are responsible for a specific task?",
+      "options": [
+        "I am in charge of this project.",
+        "I am the charge of this project."
+      ],
+      "answer": 0,
+      "explain": "La estructura correcta es 'to be in charge of' para indicar responsabilidad sobre una tarea o proyecto."
+    },
+    {
+      "q": "If you need to move a meeting to a later date, which verb should you use?",
+      "options": [
+        "Reschedule",
+        "Cancel"
+      ],
+      "answer": 0,
+      "explain": "Usamos 'reschedule' cuando queremos cambiar la fecha o la hora de una reunión, mientras que 'cancel' significa eliminarla por completo."
+    },
+    {
+      "q": "When sending a document in an email, which phrase is standard professional English?",
+      "options": [
+        "Please find attached the report.",
+        "Please find attaching the report."
+      ],
+      "answer": 0,
+      "explain": "La fórmula fija 'Please find attached' es la forma más común y profesional de indicar que incluyes un archivo adjunto."
     }
   ]
 }

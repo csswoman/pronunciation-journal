@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   callGeminiJson: vi.fn(),
   applyJournalFeedback: vi.fn(),
   maybeSingle: vi.fn(),
+  getLevel: vi.fn(),
 }))
 
 vi.mock('@/lib/api/guards', () => ({
@@ -29,6 +30,10 @@ vi.mock('@/lib/users/server-queries', () => ({
 
 vi.mock('@/lib/journal/apply-feedback', () => ({
   applyJournalFeedback: mocks.applyJournalFeedback,
+}))
+
+vi.mock('@/lib/learner-level/server-queries', () => ({
+  getEffectiveLearnerLevelServer: mocks.getLevel,
 }))
 
 vi.mock('@/lib/supabase/server', () => ({
@@ -73,6 +78,7 @@ beforeEach(() => {
   mocks.callGeminiJson.mockReset()
   mocks.applyJournalFeedback.mockReset()
   mocks.maybeSingle.mockReset()
+  mocks.getLevel.mockReset().mockResolvedValue({ level: 'A2', source: 'placement' })
   process.env.GEMINI_API_KEY = 'test'
 })
 
@@ -147,6 +153,27 @@ describe('journal-correct route', () => {
     expect(res.status).toBe(200)
     expect(body.correctedContent).toBe('Yesterday I went to work.')
     expect(body.scheduled).toEqual({ topics: [], words: [] })
+  })
+
+  it('uses the server level and limits A1 feedback before persistence and response', async () => {
+    mocks.validateBody.mockResolvedValueOnce(goodBody())
+    mocks.maybeSingle.mockResolvedValueOnce({ data: { id: validEntryId, status: 'submitted' }, error: null })
+    mocks.getLevel.mockResolvedValueOnce({ level: 'A1', source: 'checkpoint' })
+    const errors = Array.from({ length: 5 }, (_, index) => ({
+      quote: `error ${index}`, correction: `fix ${index}`, type: 'grammar',
+      explanationEs: 'Usa esta forma.', topic: 'grammar:past simple',
+    }))
+    mocks.callGeminiJson.mockResolvedValueOnce({
+      data: { correctedContent: 'I went to work.', errors, newWords: [] }, response: null,
+    })
+    mocks.applyJournalFeedback.mockResolvedValueOnce({ applied: true, scheduledTopics: [] })
+
+    const res = await POST(reqWith() as never)
+    const body = await res.json()
+
+    expect(mocks.callGeminiJson.mock.calls[0][0].params.contents).toContain('Learner CEFR level: A1')
+    expect(mocks.applyJournalFeedback.mock.calls[0][1].correction.errors).toHaveLength(3)
+    expect(body.errors).toHaveLength(3)
   })
 
   it('returns every topic date captured while scheduling the correction', async () => {

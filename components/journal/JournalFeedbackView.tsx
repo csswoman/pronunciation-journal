@@ -5,6 +5,7 @@ import { SuggestedWords } from './SuggestedWords'
 import { journalErrorTypeLabel } from '@/lib/journal/error-type-label'
 import type { JournalFeedback } from '@/lib/journal/correction'
 import { JOURNAL_TOPIC_CATALOG } from '@/lib/journal/topic-catalog'
+import { ReportWrongFeedbackButton } from '@/components/ai-feedback/ReportWrongFeedbackButton'
 
 interface JournalFeedbackViewProps {
   originalContent: string
@@ -20,6 +21,7 @@ export function JournalFeedbackView({
   originalContent,
   correctedContent,
   feedback,
+  userId,
   showReactive = true,
 }: JournalFeedbackViewProps) {
   return (
@@ -85,9 +87,23 @@ export function JournalFeedbackView({
                       <span className="font-medium text-fg">{error.correction}</span>
                     </span>
                   </summary>
-                  <p className="border-t border-border-subtle px-3 py-2.5 font-body-sm text-fg-muted">
-                    {error.explanationEs}
-                  </p>
+                  <div className="flex flex-col gap-2 border-t border-border-subtle px-3 py-2.5 font-body-sm text-fg-muted">
+                    <p className="m-0">
+                      {error.explanationEs}
+                    </p>
+                    <div>
+                      <ReportWrongFeedbackButton
+                        feature="journal_correction"
+                        input={{ originalContent, quote: error.quote }}
+                        output={{
+                          correction: error.correction,
+                          explanation: error.explanationEs,
+                          type: error.type,
+                        }}
+                        userId={userId}
+                      />
+                    </div>
+                  </div>
                 </details>
               </li>
             ))}

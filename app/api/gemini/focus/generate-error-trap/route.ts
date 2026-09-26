@@ -61,6 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 1024,
       },
     },
+    schema: ResponseSchema,
     parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)),
     failureMessage: 'Failed to generate focus error trap',
   })

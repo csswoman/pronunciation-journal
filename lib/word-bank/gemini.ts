@@ -2,6 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import type { WordEnrichment } from "@/lib/word-bank/types";
 
 import { FALLBACK_MODELS, getFastThinkingConfig } from "@/lib/gemini/fallback";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
+import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
 const SYSTEM_PROMPT = `You are an English learning assistant for Spanish speakers.
 
@@ -37,21 +39,6 @@ function getErrorStatus(err: unknown): number | undefined {
   if (typeof maybe.status === "number") return maybe.status;
   if (typeof maybe.statusCode === "number") return maybe.statusCode;
   return undefined;
-}
-
-function isRetryableApiError(err: unknown): boolean {
-  const status = getErrorStatus(err);
-  if (typeof status === "number") return status >= 500 || status === 408 || status === 409 || status === 425 || status === 429;
-
-  const message = String((err as { message?: unknown })?.message ?? "").toLowerCase();
-  return (
-    message.includes("quota") ||
-    message.includes("rate") ||
-    message.includes("resource exhausted") ||
-    message.includes("unavailable") ||
-    message.includes("timeout") ||
-    message.includes("internal")
-  );
 }
 
 function shouldTryNextModel(err: unknown): boolean {
@@ -103,15 +90,26 @@ function parseEnrichment(raw: string): WordEnrichment {
   };
 }
 
-async function callGeminiOnce(
+async function callGeminiOnce<T>(
   ai: GoogleGenAI,
   prompt: string,
+  parse: (raw: string) => T,
   systemInstruction = SYSTEM_PROMPT,
-): Promise<string> {
+  feature = "word-bank-enrichment",
+): Promise<T> {
   let lastError: unknown;
-  for (const modelName of FALLBACK_MODELS) {
+  let budgetDenied = false;
+  const deadlineAt = Date.now() + 25_000;
+  for (const modelName of filterAvailable(FALLBACK_MODELS).slice(0, 2)) {
+    if (Date.now() >= deadlineAt) break;
+    if (!(await reserveModel(modelName, feature))) {
+      budgetDenied = true;
+      continue;
+    }
+    const startedAt = Date.now();
     try {
       const thinkingConfig = getFastThinkingConfig(modelName);
+      const remainingMs = Math.max(1, Math.min(12_000, deadlineAt - Date.now()));
       const result = await ai.models.generateContent({
         model: modelName,
         contents: prompt,
@@ -119,23 +117,32 @@ async function callGeminiOnce(
           systemInstruction,
           responseMimeType: "application/json",
           ...(thinkingConfig ? { thinkingConfig } : {}),
+          httpOptions: { timeout: remainingMs },
+          abortSignal: AbortSignal.timeout(remainingMs),
         },
       });
 
       if (!result.text) {
         throw new Error("Gemini returned an empty response");
       }
-      return result.text;
+      const parsed = parse(result.text);
+      void recordModelSuccess(modelName, feature, Date.now() - startedAt);
+      return parsed;
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(modelName, err);
+      void recordModelFailure(modelName, feature, getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
+      if (Date.now() >= deadlineAt) break;
       if (!shouldTryNextModel(err)) throw err;
     }
   }
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
+  if (Date.now() >= deadlineAt) {
+    throw Object.assign(new Error("Gemini word-bank request timed out after 25000ms"), { status: 504 });
+  }
   throw lastError ?? new Error("All fallback models failed");
-}
-
-function isParseError(err: unknown): boolean {
-  return err instanceof SyntaxError || String((err as { message?: unknown })?.message ?? "").includes("No JSON object");
 }
 
 export async function enrichWithGemini(
@@ -148,15 +155,7 @@ export async function enrichWithGemini(
   const ai = new GoogleGenAI({ apiKey });
   const prompt = buildPrompt(text, context);
 
-  try {
-    const raw = await callGeminiOnce(ai, prompt);
-    return parseEnrichment(raw);
-  } catch (err) {
-    if (!isParseError(err) && !isRetryableApiError(err)) throw err;
-    console.warn("[word-bank] enrich attempt 1 failed, retrying:", err);
-    const raw = await callGeminiOnce(ai, prompt);
-    return parseEnrichment(raw);
-  }
+  return callGeminiOnce(ai, prompt, parseEnrichment);
 }
 
 /** Low-cost Reader lookup. Extra WordEnrichment fields intentionally stay empty. */
@@ -167,13 +166,5 @@ export async function lookupWordWithGemini(text: string): Promise<WordEnrichment
   const ai = new GoogleGenAI({ apiKey });
   const prompt = `Word: "${text}"`;
 
-  try {
-    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
-    return parseEnrichment(raw);
-  } catch (err) {
-    if (!isParseError(err) && !isRetryableApiError(err)) throw err;
-    console.warn("[word-bank] lookup attempt 1 failed, retrying:", err);
-    const raw = await callGeminiOnce(ai, prompt, LOOKUP_SYSTEM_PROMPT);
-    return parseEnrichment(raw);
-  }
+  return callGeminiOnce(ai, prompt, parseEnrichment, LOOKUP_SYSTEM_PROMPT, "word-bank-lookup");
 }

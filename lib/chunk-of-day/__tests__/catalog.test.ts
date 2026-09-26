@@ -57,11 +57,23 @@ describe('chunk learning catalog', () => {
   })
 
   it('keeps every authored bridge structurally valid', () => {
-    expect(LEARNING_CHUNKS.filter((chunk) => chunk.contentGraph.anchors.length > 0)).toHaveLength(36)
+    expect(LEARNING_CHUNKS.filter((chunk) => chunk.contentGraph.anchors.length > 0)).toHaveLength(116)
     for (const chunk of LEARNING_CHUNKS) {
       expect(chunk.contentGraph.text).toBe(chunk.chunk)
       expect(chunk.contentGraph.highlights).toHaveLength(chunk.contentGraph.anchors.length)
     }
+  })
+
+  it('covers authored bridges across A1, A2, and B1 CEFR levels', () => {
+    const bridged = LEARNING_CHUNKS.filter((chunk) => chunk.contentGraph.anchors.length > 0)
+    const byLevel = bridged.reduce<Record<string, number>>((acc, chunk) => {
+      acc[chunk.learning.cefr] = (acc[chunk.learning.cefr] ?? 0) + 1
+      return acc
+    }, {})
+
+    expect(byLevel.A1).toBe(36)
+    expect(byLevel.A2).toBe(50)
+    expect(byLevel.B1).toBe(30)
   })
 
   it('rejects an invalid graph entry before it can reach the UI', () => {

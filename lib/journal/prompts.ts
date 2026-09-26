@@ -40,6 +40,20 @@ export const JOURNAL_PROMPTS: readonly JournalPrompt[] = [
   { id: 'three-verbs-story', text: 'Tell a mini story using the verbs: notice, realize, and discover.', target_length: 70, cefr_min: 'A2' },
   { id: 'phrasal-verbs-routine', text: 'Write about your morning routine using: wake up, figure out, and look forward to.', target_length: 70, cefr_min: 'A2' },
 
+  // ── Advanced Opinion & Debate (B2/C1) ──
+  { id: 'career-pivot', text: 'If you had to pivot your career into an entirely different industry tomorrow, which field would you choose and what challenges would you expect?', target_length: 90, cefr_min: 'B2' },
+  { id: 'ethical-ai', text: 'To what extent should artificial intelligence automate creative work like writing, music, or design? Defend your position with concrete reasons.', target_length: 100, cefr_min: 'B2' },
+  { id: 'unpopular-opinion', text: 'Describe an opinion you hold strongly that most people in your social or professional circle disagree with. Why do you believe it?', target_length: 90, cefr_min: 'B2' },
+  { id: 'leadership-challenge', text: 'What is the most difficult aspect of leading or mentoring others, and how would you address an underperforming teammate constructively?', target_length: 100, cefr_min: 'B2' },
+  { id: 'defining-moment', text: 'Reflect on a decision in your past that felt distinctly risky at the time. Looking back, how did it shape your career or perspective?', target_length: 90, cefr_min: 'B2' },
+  { id: 'modern-burnout', text: 'Many professionals struggle to balance ambition with personal well-being. What specific boundaries or habits do you maintain to prevent burnout?', target_length: 90, cefr_min: 'B2' },
+  { id: 'subtle-cultural-shift', text: 'Discuss a subtle cultural or linguistic change you have observed in recent years. How does it reflect deeper transformations in society?', target_length: 120, cefr_min: 'C1' },
+  { id: 'complex-tradeoff', text: 'Analyze a complex dilemma where every possible alternative carried significant downsides. How did you reconcile the competing priorities?', target_length: 120, cefr_min: 'C1' },
+  { id: 'rhetorical-persuasion', text: 'Write a persuasive case advocating for an unconventional idea or policy, carefully acknowledging and addressing the main counterarguments.', target_length: 130, cefr_min: 'C1' },
+  { id: 'nuanced-identity', text: 'How does communicating in a second language alter the way you express humor, vulnerability, or intellectual authority compared to your native tongue?', target_length: 120, cefr_min: 'C1' },
+  { id: 'the-paradox-of-choice', text: 'Modern life provides an unprecedented abundance of choices in career, media, and lifestyle. Does this variety liberate us, or does it breed subtle paralysis?', target_length: 120, cefr_min: 'C1' },
+  { id: 'future-of-human-connection', text: 'As asynchronous digital interaction displaces in-person collaboration, what essential dimensions of trust and empathy are we at risk of diluting?', target_length: 130, cefr_min: 'C1' },
+
   // ── Free Topic ──
   { id: 'free-writing', text: 'Write freely about anything on your mind today.', target_length: 60, cefr_min: 'A1' },
   { id: 'free-reflection', text: 'Reflect on an interesting thought, idea, or feeling you had recently.', target_length: 70, cefr_min: 'A2' },

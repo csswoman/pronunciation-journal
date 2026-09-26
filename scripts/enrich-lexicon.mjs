@@ -122,7 +122,7 @@ ${JSON.stringify(payload, null, 0)}`;
 function listCategoryFiles() {
   return fs
     .readdirSync(LEXICON_DIR)
-    .filter((f) => f.endsWith(".json") && f !== "index.json")
+    .filter((f) => f.endsWith(".json") && f !== "index.json" && f !== "word-index.json")
     .map((f) => path.join(LEXICON_DIR, f));
 }
 

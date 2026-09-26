@@ -1,7 +1,9 @@
 "use client";
 
 import { isWordOfDay, type WordOfDay } from "@/lib/word-of-day/types";
+import { getClientFallbackWordOfDay } from "@/lib/word-of-day/definitions-fallback";
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type { WordOfDay };
@@ -89,7 +91,7 @@ export function useWordOfDay(level?: string) {
 
       setWord(data);
       writeCachedWord(data, stamp);
-    } catch (err) {
+    } catch {
       if (requestId !== requestIdRef.current) return;
 
       const cached = readCachedWord(stamp);
@@ -107,8 +109,13 @@ export function useWordOfDay(level?: string) {
       }
 
       clearCachedWord();
-      setWord(null);
-      setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ""));
+      const fallbackWord = getClientFallbackWordOfDay(
+        level,
+        forceRefresh ? String(Date.now()) : undefined
+      );
+      setWord(fallbackWord);
+      writeCachedWord(fallbackWord, stamp);
+      setError(null);
     } finally {
       if (requestId === requestIdRef.current) {
         setLoading(false);

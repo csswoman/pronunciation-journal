@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["scripts/generate-listening-audio.ts"],
+  "exclude": ["node_modules", "supabase/functions"]
+}

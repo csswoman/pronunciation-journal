@@ -3,7 +3,6 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { LANDING_STATS } from "@/lib/landing/content";
-import { CANONICAL_SOUNDS } from "@/lib/sounds/inventory";
 
 function findStat(label: string) {
   const stat = LANDING_STATS.find((s) => s.label === label);
@@ -24,8 +23,14 @@ describe("LANDING_STATS", () => {
     expect(stat.value).toBe(String(deckFileCount));
   });
 
-  it("sounds stat matches CANONICAL_SOUNDS, the app's real English phoneme inventory", () => {
-    const stat = findStat("sonidos del inglés con audio de referencia");
-    expect(stat.value).toBe(String(CANONICAL_SOUNDS.length));
+  it("sounds stat matches the actual number of .ogg files in public/sounds/", () => {
+    const soundsDir = path.join(process.cwd(), "public", "sounds");
+    const soundFileCount = fs
+      .readdirSync(soundsDir)
+      .filter((file) => file.endsWith(".ogg")).length;
+
+    const stat = findStat("sonidos con audio de referencia");
+    expect(stat.value).toBe(String(soundFileCount));
   });
 });
+

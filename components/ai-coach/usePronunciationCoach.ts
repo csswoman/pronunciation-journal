@@ -42,9 +42,13 @@ export function usePronunciationCoach() {
   const [latestScoring, setLatestScoring] = useState<ScoringResult | null>(null);
 
   const { getStream } = useSharedMicStream();
-  const { state, result, start, stop, reset } = useSpeechInput({ prefer: "gemini", getStream });
+  const { state, result, error, isSupported, start, stop, reset } = useSpeechInput({
+    prefer: "gemini",
+    getStream,
+  });
 
   const isRecording = state === "listening";
+  const isProcessing = state === "processing" || analyzing;
   const activePhrase = queue[0] ?? "";
   const sessionDone = queue.length === 0;
 
@@ -227,7 +231,7 @@ export function usePronunciationCoach() {
 
   return {
     activePhrase,
-    analyzing,
+    analyzing: isProcessing,
     batchCount,
     doneInBatch,
     fetchingPhrases,
@@ -240,6 +244,8 @@ export function usePronunciationCoach() {
     hasMistakes,
     ipaLoading,
     isRecording,
+    speechError: error,
+    speechSupported: isSupported,
     loadMoreFromPool: () => loadMoreFromPool(seen, mastered),
     fetchMoreWithAI: () => fetchMoreWithAI(seen),
     masteredCount: mastered.size,

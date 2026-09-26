@@ -68,3 +68,4 @@ public/workbox-*.js.map
 # working scratch (lexicon gap generation, etc.)
 tmp/
 .cache/
+scripts/prompt-eval/cases/reported/

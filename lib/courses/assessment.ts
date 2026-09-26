@@ -1,7 +1,26 @@
+import "server-only";
 import type { CefrLevel } from "@/lib/essential-words/types";
 import type { CefrLevelId } from "@/lib/courses/types";
 import type { GrammarQuizQuestion } from "@/lib/courses/grammar-deck/types";
 import { LEVEL_ASSESSMENT_CONTRACTS, buildAssessment } from "@/lib/courses/curriculum";
+import { LISTENING_BANK, listeningAudioSrc } from "@/lib/courses/listening-bank";
+import { ASSESSMENT_LEVEL_ORDER } from "@/lib/courses/assessment-shared";
+import { requiresCheckpointOralEvidence, type AssessmentOralEvidenceStatus } from "@/lib/courses/assessment-oral-shared";
+import { buildAssessmentOralResultDetails } from "@/lib/courses/assessment-oral-result";
+import {
+  buildAssessmentResultDetails,
+  deriveAssessmentNeedsReview,
+  resolveAssessmentTopicTitle,
+  type AssessmentLevelScore,
+  type AssessmentQuestionFeedback,
+  type AssessmentQuestionOutcome,
+} from "@/lib/courses/assessment-result-details";
+export type {
+  AssessmentLevelScore,
+  AssessmentQuestionFeedback,
+  AssessmentQuestionOutcome,
+} from "@/lib/courses/assessment-result-details";
+export { ASSESSMENT_LEVEL_ORDER, assessmentAnchorIndex, groupQuestionsByLevel } from "@/lib/courses/assessment-shared";
 import {
   deriveConceptSignal,
   type AssessmentConcept,
@@ -13,12 +32,17 @@ export interface AssessmentQuestion {
   id: string;
   level: CefrLevelId;
   lessonSlug: string;
+  topicTitle?: string;
   prompt: string;
   options: string[];
   answer: number;
+  type?: "grammar" | "vocabulary" | "reading" | "listening";
   explanation?: string;
   passage?: string;
+  audioSrc?: string;
 }
+
+export type ClientAssessmentQuestion = Omit<AssessmentQuestion, "answer" | "explanation">;
 
 export interface AssessmentResult {
   assignedLevel: CefrLevel;
@@ -28,18 +52,16 @@ export interface AssessmentResult {
   passedLevels: CefrLevelId[];
   score: number;
   total: number;
+  listeningScore: number;
+  listeningTotal: number;
   topicScores: Array<{ lessonSlug: string; title: string; correct: number; total: number }>;
   strengths: Array<{ lessonSlug: string; title: string }>;
-  needsReview: Array<{ lessonSlug: string; title: string }>;
+  needsReview: Array<{ lessonSlug: string; title: string; lessonHref?: string }>;
   conceptSignals: ConceptSignal[];
-}
-
-export const ASSESSMENT_LEVEL_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1", "c2"];
-const QUESTIONS_PER_LEVEL = 10;
-
-export function assessmentAnchorIndex(level: CefrLevelId, sections: readonly { level: CefrLevelId }[]): number {
-  const levelIndex = sections.findIndex((section) => section.level === level);
-  return Math.max(0, levelIndex - 1);
+  levelScores?: AssessmentLevelScore[];
+  questionOutcomes?: AssessmentQuestionOutcome[];
+  questionFeedback?: AssessmentQuestionFeedback[];
+  oralEvidence?: AssessmentOralEvidenceStatus;
 }
 
 const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
@@ -117,10 +139,6 @@ const READING_QUESTIONS: Record<CefrLevelId, AssessmentQuestion[]> = {
   ],
 };
 
-function lessonTitle(slug: string): string {
-  return slug.replace(/^[a-z]\d-/, "").replaceAll("-", " ");
-}
-
 function nextLevel(level: CefrLevelId): CefrLevelId {
   const index = ASSESSMENT_LEVEL_ORDER.indexOf(level);
   return ASSESSMENT_LEVEL_ORDER[Math.min(index + 1, ASSESSMENT_LEVEL_ORDER.length - 1)];
@@ -132,7 +150,10 @@ export function buildAssessmentQuestions(
   checkpointLevel?: CefrLevelId,
 ): AssessmentQuestion[] {
   return buildAssessment(mode, checkpointLevel).flatMap((section) => {
-    const authoredLimit = QUESTIONS_PER_LEVEL - READING_QUESTIONS[section.level].length;
+    const contract = LEVEL_ASSESSMENT_CONTRACTS[section.level];
+    const authoredLimit = contract.questionCount
+      - READING_QUESTIONS[section.level].length
+      - contract.listeningQuestionCount;
     const authored: AssessmentQuestion[] = [];
     const availableItems = section.items.filter((item) => quizzes[item.lessonSlug]?.length);
     const maximumQuizLength = Math.max(0, ...availableItems.map((item) => quizzes[item.lessonSlug].length));
@@ -148,21 +169,40 @@ export function buildAssessmentQuestions(
           prompt: question.q,
           options: question.options,
           answer: question.answer,
+          type: item.questionType,
           explanation: question.explain,
         });
         if (authored.length === authoredLimit) break;
       }
     }
-    return [...authored, ...READING_QUESTIONS[section.level]];
+    const listening = LISTENING_BANK[section.level].flatMap((item) => item.questions.map((question) => ({
+      id: question.id,
+      level: section.level,
+      lessonSlug: item.lessonSlug,
+      prompt: question.prompt,
+      options: question.options,
+      answer: question.answer,
+      type: "listening" as const,
+      audioSrc: listeningAudioSrc(item.id),
+    })));
+    return [...authored, ...READING_QUESTIONS[section.level], ...listening];
   });
 }
 
-export function groupQuestionsByLevel(
+/** Removes server-only answer keys and explanations before a question crosses into the client tree. */
+export function toClientAssessmentQuestions(
   questions: AssessmentQuestion[],
-): Array<{ level: CefrLevelId; questions: AssessmentQuestion[] }> {
-  return ASSESSMENT_LEVEL_ORDER
-    .map((level) => ({ level, questions: questions.filter((question) => question.level === level) }))
-    .filter((section) => section.questions.length > 0);
+): ClientAssessmentQuestion[] {
+  return questions.map((question) => ({
+    id: question.id,
+    level: question.level,
+    lessonSlug: question.lessonSlug,
+    prompt: question.prompt,
+    options: question.options,
+    ...(question.type ? { type: question.type } : {}),
+    ...(question.passage ? { passage: question.passage } : {}),
+    ...(question.audioSrc ? { audioSrc: question.audioSrc } : {}),
+  }));
 }
 
 export function levelPassed(
@@ -171,8 +211,13 @@ export function levelPassed(
   answers: Record<string, number>,
 ): boolean {
   const correct = questions.filter((question) => answers[question.id] === question.answer).length;
+  const listeningQuestions = questions.filter((question) => question.type === "listening");
+  const listeningCorrect = listeningQuestions.filter((question) => answers[question.id] === question.answer).length;
   const contract = LEVEL_ASSESSMENT_CONTRACTS[level];
-  return correct >= Math.ceil((contract.minimumCorrect / contract.questionCount) * questions.length);
+  return questions.length === contract.questionCount
+    && listeningQuestions.length === contract.listeningQuestionCount
+    && correct >= contract.minimumCorrect
+    && listeningCorrect >= contract.minimumListeningCorrect;
 }
 
 export function scoreAssessment(
@@ -182,14 +227,23 @@ export function scoreAssessment(
   checkpointLevel?: CefrLevelId,
   concepts: AssessmentConcept[] = [],
   selfRatings: Record<string, ConceptSelfRating> = {},
+  oralEvidencePassed = false,
 ): AssessmentResult {
+  const oralRequired = mode === "checkpoint" && checkpointLevel !== undefined
+    && requiresCheckpointOralEvidence(checkpointLevel);
   const passedLevels: CefrLevelId[] = [];
   const topicMap = new Map<string, { correct: number; total: number }>();
+  let listeningScore = 0;
+  let listeningTotal = 0;
 
   for (const question of questions) {
     const topic = topicMap.get(question.lessonSlug) ?? { correct: 0, total: 0 };
     topic.total += 1;
-    if (answers[question.id] === question.answer) topic.correct += 1;
+    if (question.type === "listening") listeningTotal += 1;
+    if (answers[question.id] === question.answer) {
+      topic.correct += 1;
+      if (question.type === "listening") listeningScore += 1;
+    }
     topicMap.set(question.lessonSlug, topic);
   }
 
@@ -197,9 +251,17 @@ export function scoreAssessment(
     const levelQuestions = questions.filter((question) => question.level === level);
     if (levelQuestions.length === 0) continue;
     const correct = levelQuestions.filter((question) => answers[question.id] === question.answer).length;
+    const listeningQuestions = levelQuestions.filter((question) => question.type === "listening");
+    const listeningCorrect = listeningQuestions.filter((question) => answers[question.id] === question.answer).length;
     const contract = LEVEL_ASSESSMENT_CONTRACTS[level];
-    const threshold = Math.ceil((contract.minimumCorrect / contract.questionCount) * levelQuestions.length);
-    if (correct >= threshold) passedLevels.push(level);
+    const completeQuestionSet = levelQuestions.length === contract.questionCount
+      && listeningQuestions.length === contract.listeningQuestionCount;
+    if (
+      completeQuestionSet
+      && correct >= contract.minimumCorrect
+      && listeningCorrect >= contract.minimumListeningCorrect
+      && (!oralRequired || level !== checkpointLevel || oralEvidencePassed)
+    ) passedLevels.push(level);
     else break;
   }
 
@@ -208,13 +270,18 @@ export function scoreAssessment(
   );
   const assigned = mode === "checkpoint" && checkpointLevel
     ? (checkpointPassed ? nextLevel(checkpointLevel) : checkpointLevel)
-    : (passedLevels.at(-1) ?? "a1");
+    : (passedLevels.at(-1)
+      ?? LEVEL_ASSESSMENT_CONTRACTS[questions[0]?.level ?? "a1"].failureFallback);
   const score = questions.filter((question) => answers[question.id] === question.answer).length;
   const topicScores = [...topicMap].map(([lessonSlug, value]) => ({
     lessonSlug,
-    title: lessonTitle(lessonSlug),
+    title: resolveAssessmentTopicTitle(questions, lessonSlug),
     ...value,
   }));
+  const resultDetails = buildAssessmentResultDetails(questions, answers);
+  const oralResultDetails = buildAssessmentOralResultDetails({
+    levelScores: resultDetails.levelScores, mode, checkpointLevel, oralEvidencePassed,
+  });
   const assessedAt = new Date().toISOString();
   const conceptSignals = concepts.map((concept) => deriveConceptSignal(
     concept,
@@ -222,25 +289,7 @@ export function scoreAssessment(
     topicMap.get(concept.lessonSlug) ?? { correct: 0, total: 0 },
     assessedAt,
   ));
-  const needsReviewByLesson = new Map(
-    topicScores
-      .filter((topic) => topic.correct < topic.total)
-      .map(({ lessonSlug, title }) => [lessonSlug, { lessonSlug, title }]),
-  );
-
-  // Starter plan (no questions answered): inventory "learn" topics become the plan.
-  // After a scored quiz, "Para reforzar" must reflect missed answers only — not
-  // humble self-ratings on topics the quiz never asked about.
-  if (questions.length === 0) {
-    for (const signal of conceptSignals) {
-      if (signal.status === "learn") {
-        needsReviewByLesson.set(signal.lessonSlug, {
-          lessonSlug: signal.lessonSlug,
-          title: signal.title,
-        });
-      }
-    }
-  }
+  const needsReview = deriveAssessmentNeedsReview(topicScores, conceptSignals, questions.length === 0);
 
   return {
     assignedLevel: assigned.toUpperCase() as CefrLevel,
@@ -250,11 +299,15 @@ export function scoreAssessment(
     passedLevels,
     score,
     total: questions.length,
+    listeningScore,
+    listeningTotal,
     topicScores,
     strengths: topicScores
       .filter((topic) => topic.correct === topic.total)
       .map(({ lessonSlug, title }) => ({ lessonSlug, title })),
-    needsReview: [...needsReviewByLesson.values()],
+    needsReview,
     conceptSignals,
+    ...resultDetails,
+    ...oralResultDetails,
   };
 }

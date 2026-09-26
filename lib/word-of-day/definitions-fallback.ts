@@ -148,3 +148,68 @@ export const FALLBACK_DEFINITIONS: Record<string, FallbackWordEntry> = {
     example_translation: "La niebla matutina es hermosa pero efímera.",
   },
 };
+
+const FALLBACK_BEGINNER = [
+  "vivid", "keen", "bliss", "grit", "bold", "calm", "poise",
+  "witty", "zest", "valor", "thrive", "muse", "flair",
+] as const;
+
+const FALLBACK_INTERMEDIATE = [
+  "lucid", "pragmatic", "resilient", "eloquent", "quest",
+] as const;
+
+const FALLBACK_ADVANCED = [
+  "serendipity", "ephemeral",
+] as const;
+
+/**
+ * Client-safe fallback generator for Word of the Day.
+ * Picks a deterministic word from FALLBACK_DEFINITIONS based on date seed and level.
+ */
+export function getClientFallbackWordOfDay(level?: string, extraSeed?: string): import("./types").WordOfDay {
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const normalizedLevel = level?.toLowerCase();
+
+  let pool: readonly string[];
+  if (normalizedLevel === "a1" || normalizedLevel === "a2" || normalizedLevel === "beginner") {
+    pool = FALLBACK_BEGINNER;
+  } else if (normalizedLevel === "c1" || normalizedLevel === "c2" || normalizedLevel === "advanced") {
+    pool = FALLBACK_ADVANCED;
+  } else if (normalizedLevel === "b1" || normalizedLevel === "b2" || normalizedLevel === "intermediate") {
+    pool = FALLBACK_INTERMEDIATE;
+  } else {
+    pool = Object.keys(FALLBACK_DEFINITIONS);
+  }
+
+  if (!pool || pool.length === 0) {
+    pool = Object.keys(FALLBACK_DEFINITIONS);
+  }
+
+  const baseSeed = level ? `${dateStr}|${level.toUpperCase()}` : dateStr;
+  const seed = extraSeed ? `${baseSeed}-${extraSeed}` : baseSeed;
+
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+
+  const wordKey = pool[hash % pool.length] || "vivid";
+  const entry = FALLBACK_DEFINITIONS[wordKey] ?? FALLBACK_DEFINITIONS["vivid"];
+
+  const difficulty: import("./types").WordOfDay["difficulty"] = (FALLBACK_BEGINNER as readonly string[]).includes(wordKey)
+    ? "beginner"
+    : (FALLBACK_ADVANCED as readonly string[]).includes(wordKey)
+    ? "advanced"
+    : "intermediate";
+
+  return {
+    word: wordKey,
+    ipa: entry.ipa,
+    part_of_speech: entry.part_of_speech,
+    definition: entry.definition,
+    example_sentence: entry.example_sentence,
+    example_translation: entry.example_translation,
+    difficulty,
+  };
+}
+

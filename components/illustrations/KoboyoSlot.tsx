@@ -16,6 +16,7 @@ const NAME_TO_KEY: Record<string, IllustrationKey> = {
   "pupil reading aloud": "domainReading",
   "writing in a notebook": "domainWriting",
   "teaching a friend": "journalLanguageBook",
+  "professional english": "categoryProfessional",
   celebrating: "stateCompletado",
 };
 
