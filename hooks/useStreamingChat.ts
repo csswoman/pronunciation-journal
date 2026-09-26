@@ -21,6 +21,7 @@ import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLik
 import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydratePersistedMessages, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
 import { getRecentCoachStems, saveCoachSeenItems } from "@/lib/ai-practice/coach-seen-items";
 import { rotationForCoachRequest, type PracticeAngle } from "@/lib/ai-practice/practice-rotation";
+import { useCoachErrorRecurrence } from "./useCoachErrorRecurrence";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -62,6 +63,7 @@ export function useStreamingChat({
   const lastFailedSendRef = useRef<{ text: string; options?: SendOpts } | null>(null);
 
   const metrics = useCoachSessionMetrics({ mode, userId });
+  const { recordIfNeeded, reset: resetErrorRecurrence } = useCoachErrorRecurrence();
 
   const sendMessage = useCallback(async (text: string, options?: SendOpts) => {
     if (!text.trim() || isStreaming) return;
@@ -236,6 +238,9 @@ export function useStreamingChat({
       if (userIdRef.current) {
         void saveCoachSeenItems(userIdRef.current, state.calls.values()).catch(() => {});
       }
+      if (userIdRef.current && !options?.hidden) {
+        recordIfNeeded(userIdRef.current, state.calls);
+      }
 
       const newId = await persistConversationState({
         userId,
@@ -299,11 +304,12 @@ export function useStreamingChat({
     abortRef.current?.abort();
     finalizeSession();
     lastFailedSendRef.current = null;
+    resetErrorRecurrence();
     metrics.endSession();
     setMessages([]);
     setError(null);
     setQuotaExhausted(false);
-  }, [finalizeSession, metrics]);
+  }, [finalizeSession, metrics, resetErrorRecurrence]);
 
   const loadMessages = useCallback((msgs: AIMessage[]) => {
     setMessages(hydratePersistedMessages(msgs));

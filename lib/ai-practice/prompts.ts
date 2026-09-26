@@ -47,6 +47,7 @@ Before replying, scan the student's message for ONE thing worth flagging:
      valid dialect or style.
 If you find one, call annotate_turn with \`correction\` — ONE only, the most
 useful one. Set kind:"error" or kind:"unnatural". Write \`rule\` in SPANISH.
+When kind:"error", set errorPattern to the single id that best describes the mistake; if no id fits, omit it. Never set errorPattern when kind:"unnatural".
 If the message is fine, DO NOT call annotate_turn with a correction and DO NOT
 say "that's correct" or "good job" — just continue the conversation naturally.
 Silence is the signal that their English was fine.

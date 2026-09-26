@@ -1,12 +1,15 @@
 "use client";
 
 import { Check } from "@/components/icons";
+import { type ErrorPatternId, describeErrorPattern } from "@/lib/exercises/error-patterns";
 
 export interface CorrectionCardData {
   original: string;
   corrected: string;
   rule?: string;
   kind?: "error" | "unnatural";
+  /** Set only when kind is "error" and the model identified the pattern. */
+  errorPattern?: ErrorPatternId;
 }
 
 interface CorrectionCardProps {
@@ -29,6 +32,11 @@ export default function CorrectionCard({ correction }: CorrectionCardProps) {
           <b className="font-bold text-ink">{correction.corrected}</b>
           {correction.rule ? ` = ${correction.rule}` : correction.original ? ` (${correction.original})` : ""}
         </p>
+        {correction.errorPattern && !isNatural && (
+          <p className="m-0 text-xs text-ink-secondary">
+            Lo repasarás en tu práctica: {describeErrorPattern(correction.errorPattern)}
+          </p>
+        )}
       </div>
     </div>
   );

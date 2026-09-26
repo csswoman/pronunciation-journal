@@ -209,7 +209,12 @@ Ya están conectados al backbone común:
 - Plan diario con palabras vencidas, guardadas/familiares, errores recientes,
   sonidos débiles y siguiente teoría;
 - Progreso con `activity_sessions`, `answer_history`, word bank, contrastes y
-  lesson completions.
+  lesson completions;
+- correcciones del AI Coach en conversación: cuando `annotate_turn` incluye
+  `kind:"error"` y un `errorPattern` válido, `useCoachErrorRecurrence` llama a
+  `recordPracticeErrorRecurrence` (máximo una vez por patrón y conversación)
+  para que el Plan diario programe el repaso. Correcciones `unnatural`, ids no
+  reconocidos y turnos del historial cargado no entran a la cola.
 
 Plan 073 cerró el backbone: `audit:learning-loop` proyecta el contenido autoral
 y audita adapters; Ruta/Mazos/Mini-lecciones comparten topics explícitos;

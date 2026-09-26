@@ -41,3 +41,39 @@ viajes, intereses del perfil y errores recientes. Los tres últimos ángulos se
 guardan por cuenta en `practicePrefs`, de modo que tres peticiones consecutivas
 no repiten escenario. También envía el orden exacto de los cinco formatos,
 manteniendo siempre el reparto 2 opción múltiple, 2 huecos y 1 speaking.
+
+## Campo errorPattern en annotate_turn
+
+La herramienta `annotate_turn` incluye el campo opcional `errorPattern` en el
+objeto `correction`. Cuando el modelo produce `kind:"error"`, debe rellenar
+`errorPattern` con el id del `ErrorPatternId` que mejor describe el fallo.
+Si ningún id encaja, lo omite. El campo **no va en `required`** para que
+correcciones sin etiqueta sigan siendo válidas.
+
+El campo viaja en el `enum` del schema de la herramienta (ver
+`lib/ai-practice/tools/declarations.ts`) por lo que el modelo conoce la
+taxonomía cerrada de 16 ids sin listarlos en el prompt.
+
+### Validación en el cliente
+
+`parseTurnCorrection` (`lib/ai-practice/tools/registry.ts`) conserva
+`errorPattern` solo si se cumplen ambas condiciones:
+
+1. `isErrorPatternId(value)` — el id está en `ERROR_PATTERN_IDS`.
+2. `kind === "error"` — las correcciones `unnatural` no tienen patrón.
+
+Ids inventados o `errorPattern` en correcciones `unnatural` se descartan
+silenciosamente; la corrección sigue siendo válida.
+
+### Registro en la cola de reincidencia
+
+El hook `useCoachErrorRecurrence` (`hooks/useCoachErrorRecurrence.ts`) llama a
+`recordPracticeErrorRecurrence` cuando recibe un turno en vivo con corrección
+válida. Garantías:
+
+- **Una vez por patrón por conversación**: un `Set<ErrorPatternId>` impide que
+  el mismo patrón se encole varias veces aunque el aprendiz repita el error.
+- **Solo camino vivo**: los mensajes cargados del historial (`loadMessages`) y
+  los turnos ocultos/automatizados (`options.hidden`) no enrolan nada.
+- **Sin requests extra**: el campo viaja en la llamada `annotate_turn` ya
+  existente; no hay nuevas peticiones a `/api/gemini/*`.
