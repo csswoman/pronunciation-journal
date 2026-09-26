@@ -9,19 +9,86 @@
 //   <OfflineCapabilitiesList />
 // </OfflineHubClient>
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Download, RefreshCw } from "@/components/icons";
 import { PillButton } from "@/components/ui/PillButton";
+import { useAuthOptional } from "@/components/auth/AuthProvider";
 import GrammarStudyDeck from "@/components/courses/grammar-deck/GrammarStudyDeck";
 import type { CoursePathTrackId } from "@/lib/courses/types";
 import type { DownloadedLessonRecord } from "@/lib/db";
-import { useAllDownloadedLessons } from "@/lib/offline/download-manager";
+import type { CEFRLevel } from "@/lib/exercises/cefr";
+import {
+  downloadCoachExercises,
+  getCoachExercisesOfflineCount,
+  removeCoachExercisesOffline,
+  useAllDownloadedLessons,
+  useCoachExercisesOfflineCount,
+} from "@/lib/offline/download-manager";
+import { getCoachBankLevel } from "@/lib/content-bank/queries";
 import { DownloadedLessonCard } from "./DownloadedLessonCard";
 
 export function OfflineHubClient() {
   const [activeLesson, setActiveLesson] = useState<DownloadedLessonRecord | null>(null);
+  const auth = useAuthOptional();
+  const userId = auth?.user?.id ?? null;
   const downloadedLessons = useAllDownloadedLessons();
+  const [coachLevel, setCoachLevel] = useState<CEFRLevel | null>(null);
+  const [isOnline, setIsOnline] = useState(false);
+  const [packBusy, setPackBusy] = useState(false);
+  const [packMessage, setPackMessage] = useState("");
+  const coachExerciseCount = useCoachExercisesOfflineCount(coachLevel ?? "");
+
+  useEffect(() => {
+    let active = true;
+    void getCoachBankLevel(userId).then((level) => {
+      if (active) setCoachLevel(level);
+    });
+    return () => { active = false; };
+  }, [userId]);
+
+  useEffect(() => {
+    const updateOnline = () => setIsOnline(navigator.onLine);
+    updateOnline();
+    window.addEventListener("online", updateOnline);
+    window.addEventListener("offline", updateOnline);
+    return () => {
+      window.removeEventListener("online", updateOnline);
+      window.removeEventListener("offline", updateOnline);
+    };
+  }, []);
+
+  const handleDownloadCoachPack = async () => {
+    if (!coachLevel || !userId || !isOnline) return;
+    setPackBusy(true);
+    setPackMessage("");
+    try {
+      const result = await downloadCoachExercises(coachLevel, 100);
+      const total = await getCoachExercisesOfflineCount(coachLevel);
+      setPackMessage(result.count > 0
+        ? `La descarga encontró ${result.count} ejercicios; ahora tienes ${total} guardados para ${coachLevel}.`
+        : total > 0
+          ? `Ya tienes ${total} ejercicios descargados para ${coachLevel}.`
+          : "No hay ejercicios disponibles para descargar en este nivel.");
+    } catch {
+      setPackMessage("No se pudo descargar el set. Comprueba tu conexión e inténtalo de nuevo.");
+    } finally {
+      setPackBusy(false);
+    }
+  };
+
+  const handleRemoveCoachPack = async () => {
+    if (!coachLevel) return;
+    setPackBusy(true);
+    try {
+      await removeCoachExercisesOffline(coachLevel);
+      setPackMessage(`Se quitaron los ejercicios descargados de ${coachLevel}.`);
+    } catch {
+      setPackMessage("No se pudo quitar la descarga. Inténtalo de nuevo.");
+    } finally {
+      setPackBusy(false);
+    }
+  };
 
   // If the user selected an offline lesson to study, render the full deck experience
   if (activeLesson) {
@@ -99,6 +166,43 @@ export function OfflineHubClient() {
         )}
       </section>
 
+      <section className="flex flex-col gap-3 rounded-xl border border-line bg-surface-raised p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-body font-semibold text-fg">Ejercicios del Coach{coachLevel ? ` · ${coachLevel}` : ""}</h2>
+            <p className="text-caption text-fg-muted">
+              {coachExerciseCount} ejercicios guardados para practicar sin conexión.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <PillButton
+              variant="outline"
+              size="sm"
+              icon={<Download size={14} />}
+              isLoading={packBusy}
+              disabled={!coachLevel || !userId || !isOnline}
+              onClick={() => void handleDownloadCoachPack()}
+            >
+              {coachExerciseCount > 0 ? "Actualizar descarga" : "Descargar hasta 100"}
+            </PillButton>
+            {coachExerciseCount > 0 && (
+              <PillButton variant="quiet" size="sm" disabled={packBusy} onClick={() => void handleRemoveCoachPack()}>
+                Quitar descarga
+              </PillButton>
+            )}
+          </div>
+        </div>
+        <p className="text-caption text-fg-subtle" role="status">
+          {packMessage || (!coachLevel
+            ? "Conéctate para resolver el nivel de tu cuenta."
+            : !userId
+              ? "Inicia sesión para descargar ejercicios del Coach."
+              : !isOnline
+                ? "Conéctate para descargar nuevos ejercicios; los ya guardados siguen disponibles."
+                : "El set se guarda en este dispositivo y funciona sin conexión.")}
+        </p>
+      </section>
+
       {/* Capabilities summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
         <div className="bg-surface-raised rounded-xl p-4 border border-line">
@@ -120,7 +224,7 @@ export function OfflineHubClient() {
           <p className="text-body-sm font-medium text-fg mb-2">Requiere conexión:</p>
           <ul className="space-y-1.5 text-caption text-fg-muted">
             <li className="flex items-center gap-1.5">
-              <span className="text-fg-subtle">✗</span> Práctica libre y generación con IA
+              <span className="text-fg-subtle">✗</span> Generar ejercicios nuevos con IA
             </li>
             <li className="flex items-center gap-1.5">
               <span className="text-fg-subtle">✗</span> Descargar nuevas lecciones no guardadas

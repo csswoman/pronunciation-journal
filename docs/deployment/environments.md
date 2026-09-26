@@ -20,13 +20,15 @@ Fecha: 2026-07-17
   readiness checks, usually `https://TU_DOMINIO/api/health?ready=1`.
 - GitHub repository variable `ENRICHMENT_DRAIN_URL`, usually
   `https://TU_DOMINIO/api/jobs/drain-enrichment`.
+- GitHub repository variable `CONTENT_BANK_FILL_URL`, usually
+  `https://TU_DOMINIO/api/jobs/fill-content-bank` (Plan 041, banco de ejercicios pregenerados).
 
 ## Variables Operativas
 
 - `SUPABASE_SERVICE_ROLE_KEY`: requerido para rate limit distribuido, workers server-side y operaciones administrativas. Nunca exponer al cliente.
 - `GEMINI_DAILY_LIMIT_PER_USER`: solicitudes Gemini por día para cuentas registradas; default `150`, reinicio a medianoche del Pacífico.
 - `GEMINI_DAILY_LIMIT_ANONYMOUS`: solicitudes Gemini por día para invitados; default `15`, reinicio a medianoche del Pacífico.
-- `CRON_SECRET`: secreto compartido para autenticar llamadas de GitHub Actions al endpoint `/api/jobs/drain-enrichment`. Debe tener el mismo valor en Vercel y en GitHub Actions Secrets. Requerido en producción; omitir en local permite ejecutar el endpoint libremente.
+- `CRON_SECRET`: secreto compartido para autenticar llamadas de GitHub Actions a los endpoints `/api/jobs/drain-enrichment` y `/api/jobs/fill-content-bank`. Debe tener el mismo valor en Vercel y en GitHub Actions Secrets. Requerido en producción; omitir en local permite ejecutar el endpoint libremente.
 
 El presupuesto compartido por modelo usa `ai_usage_daily` y sus RPC de servidor;
 requiere la migración aplicada y `SUPABASE_SERVICE_ROLE_KEY`. Si esa telemetría no

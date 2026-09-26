@@ -432,6 +432,26 @@ export interface GradedAnswerRecord {
   accepted: 0 | 1;
 }
 
+export interface ContentBankCacheRecord {
+  id: string;
+  kind: "coach_exercise";
+  tool_name: string;
+  level: string;
+  topic_id: string;
+  payload: Record<string, unknown>;
+  prompt_version: string;
+  stem_hash: string;
+  quality_flags: number;
+  created_at: string;
+  cachedAt?: string;
+}
+
+export interface CoachBankLevelCacheRecord {
+  userId: string;
+  level: string;
+  cachedAt: string;
+}
+
 export interface AIFeedbackReportRecord {
   id: string;
   userId: string;
@@ -490,6 +510,8 @@ class PronunciationDB extends Dexie {
   edClusterAttempts!: Table<EdClusterAttempt, string>;
   coachSeenItems!: Table<CoachSeenItemRecord, string>;
   gradedAnswers!: Table<GradedAnswerRecord, string>;
+  contentBankCache!: Table<ContentBankCacheRecord, string>;
+  coachBankLevelCache!: Table<CoachBankLevelCacheRecord, string>;
   aiFeedbackReports!: Table<AIFeedbackReportRecord, string>;
 
 
@@ -769,9 +791,17 @@ class PronunciationDB extends Dexie {
     this.version(44).stores({
       gradedAnswers: 'key, userId, exerciseKey, normalized, accepted, [userId+exerciseKey+normalized]',
     });
+    // v45: offline cache for pregenerated content bank items.
+    this.version(45).stores({
+      contentBankCache: 'id, level, topic_id, kind, [level+topic_id], stem_hash',
+    });
     // v46: offline storage for AI feedback error reports.
     this.version(46).stores({
       aiFeedbackReports: 'id, userId, feature, createdAt, [userId+createdAt]',
+    });
+    // v47: keep the last resolved Coach level available for offline bank lookup.
+    this.version(47).stores({
+      coachBankLevelCache: 'userId, level, cachedAt',
     });
 
 

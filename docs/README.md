@@ -13,6 +13,7 @@ diseño y planes de producto.
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
 | [AI Coach](architecture/ai-coach.md) | Sets de cinco ejercicios, navegación y resumen locales, y coste de requests |
+| [Banco de contenido pregenerado](architecture/content-bank.md) | Ejercicios pregenerados con la cuota sobrante de IA, servicio banco primero y caché offline |
 | [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
 | [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |

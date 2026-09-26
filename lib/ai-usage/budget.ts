@@ -17,18 +17,44 @@ export const DAILY_BUDGET = {
   "gemini-3.8-flash-tts": 8,
 } as const satisfies Record<string, number>;
 
-export async function reserveModel(model: string, feature: string): Promise<boolean> {
-  const limit = DAILY_BUDGET[model as keyof typeof DAILY_BUDGET];
-  if (!limit) return false;
-  if (Date.now() < unavailableUntil) return true;
+export interface ReserveModelOptions {
+  /** Deny the request when quota telemetry is unavailable. */
+  failClosed?: boolean;
+  /** A lower task-specific cap; it can never exceed the model's daily budget. */
+  limit?: number;
+}
 
-  const supabase = tryGetSupabaseAdminClient();
-  if (!supabase) {
-    logServerError("AI usage reservation unavailable; allowing request", new Error("Missing database client"), {
+export async function reserveModel(
+  model: string,
+  feature: string,
+  options: ReserveModelOptions = {},
+): Promise<boolean> {
+  const dailyLimit = DAILY_BUDGET[model as keyof typeof DAILY_BUDGET];
+  if (!dailyLimit) return false;
+  const failClosed = options.failClosed ?? false;
+  const limit = options.limit ?? dailyLimit;
+  if (!Number.isInteger(limit) || limit < 1 || limit > dailyLimit) return false;
+  const onUnavailable = !failClosed;
+  if (Date.now() < unavailableUntil) return onUnavailable;
+
+  let supabase: ReturnType<typeof tryGetSupabaseAdminClient>;
+  try {
+    supabase = tryGetSupabaseAdminClient();
+  } catch (error) {
+    logServerError(`AI usage reservation unavailable; ${onUnavailable ? "allowing" : "denying"} request`, error, {
       endpoint: feature,
       operation: "reserveModel",
     }, "warn");
-    return true;
+    return onUnavailable;
+  }
+  if (!supabase) {
+    logServerError(
+      `AI usage reservation unavailable; ${onUnavailable ? "allowing" : "denying"} request`,
+      new Error("Missing database client"),
+      { endpoint: feature, operation: "reserveModel" },
+      "warn",
+    );
+    return onUnavailable;
   }
 
   try {
@@ -43,27 +69,27 @@ export async function reserveModel(model: string, feature: string): Promise<bool
     );
     if (error) {
       unavailableUntil = Date.now() + AI_USAGE_CIRCUIT_BREAKER_MS;
-      logServerError("AI usage reservation failed; allowing request", error, {
+      logServerError(`AI usage reservation failed; ${onUnavailable ? "allowing" : "denying"} request`, error, {
         endpoint: feature,
         operation: "reserveModel",
       }, "warn");
-      return true;
+      return onUnavailable;
     }
     if (typeof data !== "boolean") {
-      logServerError("AI usage reservation returned an invalid result; allowing request", new Error("Invalid RPC result"), {
+      logServerError(`AI usage reservation returned an invalid result; ${onUnavailable ? "allowing" : "denying"} request`, new Error("Invalid RPC result"), {
         endpoint: feature,
         operation: "reserveModel",
       }, "warn");
-      return true;
+      return onUnavailable;
     }
     return data;
   } catch (error) {
     unavailableUntil = Date.now() + AI_USAGE_CIRCUIT_BREAKER_MS;
-    logServerError("AI usage reservation threw; allowing request", error, {
+    logServerError(`AI usage reservation threw; ${onUnavailable ? "allowing" : "denying"} request`, error, {
       endpoint: feature,
       operation: "reserveModel",
     }, "warn");
-    return true;
+    return onUnavailable;
   }
 }
 

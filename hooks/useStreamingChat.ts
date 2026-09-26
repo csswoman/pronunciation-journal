@@ -22,6 +22,8 @@ import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydrate
 import { getRecentCoachStems, saveCoachSeenItems } from "@/lib/ai-practice/coach-seen-items";
 import { rotationForCoachRequest, type PracticeAngle } from "@/lib/ai-practice/practice-rotation";
 import { useCoachErrorRecurrence } from "./useCoachErrorRecurrence";
+import { useCoachBankSet } from "./useCoachBankSet";
+import { detectIntent } from "@/lib/ai-practice/intent-detection";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -64,6 +66,7 @@ export function useStreamingChat({
 
   const metrics = useCoachSessionMetrics({ mode, userId });
   const { recordIfNeeded, reset: resetErrorRecurrence, restoreFromMessages: restoreErrorRecurrence } = useCoachErrorRecurrence();
+  const { tryServeBankSet } = useCoachBankSet();
 
   const sendMessage = useCallback(async (text: string, options?: SendOpts) => {
     if (!text.trim() || isStreaming) return;
@@ -76,6 +79,27 @@ export function useStreamingChat({
     const userMsg: AIMessage = { role: "user", content: text.trim(), timestamp: new Date().toISOString(), hidden: options?.hidden, voice: options?.voice, marker: options?.marker };
     const nextMessages = [...messagesRef.current, userMsg];
     setMessages(nextMessages);
+    const isExerciseRequest = detectIntent(text).type === "exercise_request";
+    if (isExerciseRequest && !options?.hidden && !options?.starterId && !mode.startsWith("mission:")) {
+      const bankMsg = await tryServeBankSet({ userId: userIdRef.current });
+      if (bankMsg) {
+        const finalMessages = [...nextMessages, bankMsg];
+        setMessages(finalMessages);
+        await metrics.noteFirstExercise(bankMsg.toolCalls);
+        const newId = await persistConversationState({
+          userId,
+          conversationId: conversationIdRef.current,
+          mode,
+          text,
+          starterId: options?.starterId,
+          messages: finalMessages,
+          onConversationCreated,
+        });
+        if (newId) conversationIdRef.current = newId;
+        return;
+      }
+    }
+
 
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -269,7 +293,7 @@ export function useStreamingChat({
       window.clearTimeout(requestTimeout);
       if (streamIdRef.current === thisId) setIsStreaming(false);
     }
-  }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, recordIfNeeded, userId]);
+  }, [isStreaming, mode, metrics, onStartMission, onMissionIntentObserved, onConversationCreated, recordIfNeeded, tryServeBankSet, userId]);
 
   const retryLastFailedSend = useCallback(async () => {
     const failed = lastFailedSendRef.current;

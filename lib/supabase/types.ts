@@ -395,6 +395,45 @@ export type Database = {
         }
         Relationships: []
       }
+      content_bank_items: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          level: string
+          payload: Json
+          prompt_version: string
+          quality_flags: number
+          stem_hash: string
+          tool_name: string
+          topic_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          level: string
+          payload: Json
+          prompt_version?: string
+          quality_flags?: number
+          stem_hash: string
+          tool_name: string
+          topic_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          level?: string
+          payload?: Json
+          prompt_version?: string
+          quality_flags?: number
+          stem_hash?: string
+          tool_name?: string
+          topic_id?: string
+        }
+        Relationships: []
+      }
       deck_entries: {
         Row: {
           added_at: string | null

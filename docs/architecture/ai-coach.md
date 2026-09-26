@@ -5,9 +5,13 @@ decisiones que realmente necesitan al modelo. Cuando detecta una petición de
 práctica, el servidor solicita cinco herramientas en un mismo turno: dos de
 opción múltiple, dos de completar y una de producción oral.
 
-## Flujo de una práctica
+## Flujo de una práctica (Banco primero → IA)
 
-1. El cliente envía la petición de práctica: **1 request**.
+1. El cliente verifica si hay ejercicios pregenerados en el banco de contenido (Plan 041, `useCoachBankSet`):
+   - Si el banco (local Dexie `contentBankCache` o Supabase `content_bank_items`) dispone de un set de 5 ejercicios no vistos que cumpla las restricciones (máx. 2 por formato, priorizando temas débiles):
+     - Se sirve de inmediato en un mensaje local: **0 requests a Gemini** (instantáneo y offline).
+   - Si el banco no cuenta con suficientes ítems no vistos:
+     - El cliente envía la petición en streaming a Gemini: **1 request**.
 2. La respuesta contiene las cinco llamadas de herramienta. `BubbleContent`
    las entrega juntas a `PracticeSession`.
 3. `PracticeSession` avanza entre ejercicios con estado local. Cada acción

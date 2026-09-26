@@ -64,6 +64,7 @@ practice session, nothing interrupts it.
 - **Strict layering.** UI never touches Supabase directly — all data access goes
   through `lib/*/queries.ts`. No AI prompt strings live in components; they're all
   in `lib/ai-prompts.ts`. Pages route and compose only, no business logic.
+- **Content bank from leftover quota.** Practice content is pregenerated using nightly unused free AI quota into a system-wide bank, allowing the AI Coach to serve 5-exercise sets instantly with 0 live API requests and offline caching ([docs/architecture/content-bank.md](docs/architecture/content-bank.md)).
 - **Offline-first sync.** Practice writes go through a Dexie `syncOutbox` with
   retryable delivery to Supabase, which stays the source of truth after reconnect.
 - **One learning loop, honest signals.** Each user action contributes only the

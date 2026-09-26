@@ -12,6 +12,7 @@
 
 ## Estado
 
+- **Status**: IN PROGRESS (código corregido; validación de migración y aceptación pendiente)
 - **Priority**: P2
 - **Effort**: M–L (fase A: 1 día · fase B: 1 día · fase C: 1 día)
 - **Risk**: MED
@@ -132,13 +133,15 @@ Añade al gestor de `lib/offline/` una entrada "Ejercicios del Coach · nivel X"
 
 ## Criterios de aceptación
 
-- [ ] La tabla tiene RLS: lectura para autenticados, sin escritura desde el cliente.
-- [ ] El job no genera cuando el modelo supera el 60% del presupuesto diario.
-- [ ] Un set servido desde el banco no hace requests a `/api/gemini`.
-- [ ] Ítems ya vistos no se repiten; los sets mezclan formatos.
-- [ ] Sin conexión, el Coach sirve sets desde la caché descargada.
+- [x] La tabla tiene RLS: lectura para autenticados, sin escritura desde el cliente.
+- [x] El job no genera cuando el modelo supera el 60% del presupuesto diario.
+- [x] Un set servido desde el banco no hace requests a `/api/gemini`.
+- [x] Ítems ya vistos no se repiten; los sets mezclan formatos.
+- [x] Sin conexión, el Coach sirve sets desde la caché descargada.
 - [ ] `pnpm test`, `pnpm type-check`, `pnpm lint`, `pnpm audit:hard-rules` en exit 0.
-- [ ] Documentación del paso final actualizada.
+- [x] Documentación del paso final actualizada.
+
+Antes de marcar DONE, aplicar y verificar la migración/RLS en el entorno objetivo, ejecutar los checks de la tabla anterior y aceptar el flujo offline en runtime. La migración remota no se aplicó en esta corrección.
 
 ## STOP conditions
 

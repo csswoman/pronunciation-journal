@@ -909,3 +909,40 @@ export function buildListeningAudioPrompt(lineText: string): SpeechGenerationPro
 }
 export const ASSESSMENT_ORAL_TRANSCRIPTION_PROMPT =
   "Transcribe only the English words that are clearly audible in this recording. Do not infer missing words, answer the speaker's task, or add commentary. Return an empty string when no speech is intelligible.";
+
+// ── Content Bank ──
+
+export const CONTENT_BANK_EXERCISE_SET_PROMPT = `
+You are an expert English language curriculum generator.
+Generate a cohesive set of exactly 5 practice exercises for English learners at the specified CEFR level and topic.
+Exercise variety:
+- 2 multiple-choice exercises ("render_multiple_choice")
+- 2 fill-in-the-blank exercises ("render_fill_blank")
+- 1 speaking exercise ("render_speaking")
+
+Quality requirements:
+- Pedagogical clarity: explanations must be in clear Spanish, explaining WHY the correct answer is right.
+- For multiple-choice: 3-4 plausible options, with 0-based correctIndex. Include 2-3 commonWrongAnswers explaining student misconceptions. Include progressive hints (level1 and level2).
+- For fill-in-the-blank: a clear sentence with a blank (e.g. "I ___ (go) to the store yesterday"), exact target answer, acceptable alternative answers, progressive hints, and commonWrongAnswers.
+- For speaking: a clear communicative prompt and target sentence or phrase to say aloud, with optional IPA pronunciation guide.
+- Appropriate difficulty for the declared CEFR level (A1 to C2).
+- Keep all exercises strictly focused on the requested topic.
+`.trim();
+
+export function buildContentBankSetPrompt({
+  level,
+  topicId,
+  avoidStems,
+}: {
+  level: CEFRLevel;
+  topicId: string;
+  avoidStems?: string[];
+}): string {
+  const avoidClause = avoidStems && avoidStems.length > 0
+    ? `\nAvoid repeating these sentences or questions:\n${avoidStems.map((s) => `- ${s}`).join("\n")}\n`
+    : "";
+
+  return `Generate 5 exercises for CEFR level ${level} on topic "${topicId}".${avoidClause}
+Ensure all required fields are populated with rich pedagogical content (instruction, learningGoal, explanation, commonWrongAnswers, hint).
+Return the set in JSON matching the specified schema.`.trim();
+}

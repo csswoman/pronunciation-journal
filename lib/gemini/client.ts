@@ -45,6 +45,8 @@ export interface CallWithFallbackOptions {
   models?: readonly string[];
   /** Stable route/feature label used for shared daily quota reservations. */
   feature?: string;
+  /** Skip a reservation only when the caller already made an equivalent atomic reservation. */
+  skipBudgetReservation?: boolean;
   /**
    * Return true to try the next fallback model after this error.
    * Defaults to `shouldTryNextModel` from `./fallback`.
@@ -78,6 +80,7 @@ export async function callWithFallback<T>(
     shouldRetry = shouldTryNextModel,
     models = FALLBACK_MODELS,
     feature = "gemini-unattributed",
+    skipBudgetReservation = false,
   } = options;
   const ai = new GoogleGenAI({ apiKey });
   let lastError: unknown;
@@ -87,7 +90,7 @@ export async function callWithFallback<T>(
   for (const model of filterAvailable(models).slice(0, maxAttempts)) {
     const remainingBeforeReservation = deadlineAt - Date.now();
     if (remainingBeforeReservation <= 0) break;
-    if (!(await reserveModel(model, feature))) {
+    if (!skipBudgetReservation && !(await reserveModel(model, feature))) {
       budgetDenied = true;
       continue;
     }

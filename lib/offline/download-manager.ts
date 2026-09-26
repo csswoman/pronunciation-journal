@@ -8,6 +8,7 @@ import {
 } from "@/lib/db";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
+import { fetchBankItems, cacheBankItems } from "@/lib/content-bank/queries";
 
 export const OFFLINE_MEDIA_CACHE = "offline-lessons-media";
 
@@ -125,4 +126,57 @@ export async function removeDownloadedLesson(id: string): Promise<void> {
 export function useAllDownloadedLessons() {
   const lessons = useLiveQuery(() => db.downloadedLessons.toArray(), [], []);
   return lessons;
+}
+
+// ── Content Bank Offline (Plan 041) ──
+
+/**
+ * Downloads up to `limit` pregenerated coach exercises for a specific CEFR level
+ * and stores them in Dexie contentBankCache for offline practice.
+ */
+export async function downloadCoachExercises(
+  level: string,
+  limit = 100,
+): Promise<{ count: number }> {
+  const safeLimit = Math.max(0, Math.min(100, Math.floor(limit)));
+  if (safeLimit === 0) return { count: 0 };
+  const items = await fetchBankItems(level, undefined, safeLimit);
+  if (items.length > 0) {
+    await cacheBankItems(items);
+  }
+  return { count: items.length };
+}
+
+/**
+ * Counts how many exercises for this level are cached offline.
+ */
+export async function getCoachExercisesOfflineCount(level: string): Promise<number> {
+  return db.contentBankCache
+    .where("level")
+    .equals(level)
+    .and((item) => item.quality_flags < 3)
+    .count();
+}
+
+/**
+ * React hook to reactively observe cached coach exercises for a level.
+ */
+export function useCoachExercisesOfflineCount(level: string): number {
+  const count = useLiveQuery(
+    () => db.contentBankCache
+      .where("level")
+      .equals(level)
+      .and((item) => item.quality_flags < 3)
+      .count(),
+    [level],
+    0,
+  );
+  return count ?? 0;
+}
+
+/**
+ * Removes cached coach exercises for a specific level.
+ */
+export async function removeCoachExercisesOffline(level: string): Promise<void> {
+  await db.contentBankCache.where("level").equals(level).delete();
 }
