@@ -25,30 +25,13 @@ const HEAT_OPACITIES: Record<ConsistencyHeatLevel, string> = {
   3: "bg-ink hover:opacity-90",
 };
 
-const DAY_LABELS = ["D", "L", "M", "M", "J", "V", "S"];
-
 export function HabitHeroCard({ streak, dailyCompletion, weeklySummary }: Props) {
-  const { currentStreak, maxStreak, completedToday } = streak;
+  const { completedToday } = streak;
   const avgDaily = Math.round((weeklySummary.exercises7 / 7) * 10) / 10;
-
-  // Last 7 entries of the 30-day heatmap are the last 7 days (oldest → today).
-  const last7Heat = dailyCompletion.heatmap30.slice(-7);
-  const today = new Date();
-  const weekDots = last7Heat.map((level, idx) => {
-    const daysAgo = last7Heat.length - 1 - idx;
-    const d = new Date(today);
-    d.setDate(d.getDate() - daysAgo);
-    const isToday = daysAgo === 0;
-    return {
-      label: DAY_LABELS[d.getDay()],
-      completed: isToday ? completedToday : level > 0,
-      isToday,
-    };
-  });
 
   return (
     <PastelCard tone="sky" className="p-5 sm:p-7 transition-all duration-300 hover:shadow-sm">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_1fr_1.4fr] lg:gap-8 items-stretch">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.3fr] lg:gap-8 items-stretch">
         {/* Col 1: Plan Diario */}
         <div className="flex flex-col justify-between h-full">
           <div>
@@ -67,66 +50,17 @@ export function HabitHeroCard({ streak, dailyCompletion, weeklySummary }: Props)
 
             <p className="text-sm sm:text-base font-medium text-ink-secondary mt-3 leading-relaxed">
               {completedToday
-                ? "¡Excelente consistencia! Has sumado tu práctica diaria para mantener la racha activa."
-                : "Unos minutos bastan para mantener la racha y afianzar tu hábito."}
+                ? "¡Excelente consistencia! Has sumado tu práctica diaria de hoy."
+                : "Unos minutos bastan para afianzar tu hábito de estudio."}
             </p>
           </div>
 
           <div className="mt-4 pt-3 border-t border-ink/10 text-sm font-semibold text-ink-secondary">
-            {completedToday ? "✓ Racha asegurada por hoy" : "⏱️ Pendiente de inicio"}
+            {completedToday ? "✓ Práctica completada hoy" : "⏱️ Pendiente de inicio"}
           </div>
         </div>
 
-        {/* Col 2: Racha */}
-        <div className="flex flex-col justify-between h-full border-t lg:border-t-0 lg:border-l border-ink/10 pt-5 lg:pt-0 lg:pl-8">
-          <div>
-            <span className="font-kicker font-bold text-xs sm:text-sm uppercase tracking-wider text-ink-secondary">
-              RACHA DIARIA
-            </span>
-
-            <div className="flex items-baseline gap-6 mt-2">
-              <div className="group cursor-default">
-                <span className="font-display text-4xl sm:text-5xl font-extrabold text-ink leading-none transition-transform group-hover:scale-105 inline-block">
-                  {currentStreak}
-                </span>
-                <span className="block font-kicker text-xs sm:text-sm font-bold text-ink-secondary mt-1">
-                  ACTUAL
-                </span>
-              </div>
-              <div className="group cursor-default">
-                <span className="font-display text-4xl sm:text-5xl font-extrabold text-ink/65 leading-none transition-transform group-hover:scale-105 inline-block">
-                  {maxStreak}
-                </span>
-                <span className="block font-kicker text-xs sm:text-sm font-bold text-ink-secondary mt-1">
-                  MEJOR
-                </span>
-              </div>
-            </div>
-
-            {/* 7-day dots */}
-            <div className="mt-4 flex items-center gap-2">
-              {weekDots.map((dot, idx) => (
-                <span
-                  key={idx}
-                  title={dot.isToday ? (dot.completed ? "Hoy completado" : "Hoy pendiente") : `Día ${idx + 1}`}
-                  className={cn(
-                    "h-5 w-5 sm:h-6 sm:w-6 rounded-full transition-all duration-200 hover:scale-110",
-                    dot.completed
-                      ? "bg-ink"
-                      : dot.isToday
-                        ? "border-2 border-dashed border-ink/70 bg-transparent animate-pulse"
-                        : "bg-ink/20",
-                  )}
-                />
-              ))}
-            </div>
-            <p className="text-xs sm:text-sm text-ink-secondary font-medium mt-2">
-              {weekDots.map((d) => d.label).join(" ")} - {completedToday ? "hoy completado" : "hoy pendiente"}
-            </p>
-          </div>
-        </div>
-
-        {/* Col 3: Consistencia */}
+        {/* Col 2: Consistencia */}
         <div className="flex flex-col justify-between h-full border-t lg:border-t-0 lg:border-l border-ink/10 pt-5 lg:pt-0 lg:pl-8">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-2">

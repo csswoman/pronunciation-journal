@@ -12,7 +12,6 @@
 
 import Link from 'next/link'
 import { ArrowRight } from '@/components/icons'
-import { StreakCard } from '@/components/progress/StreakCard'
 import { ThisWeekCard } from '@/components/progress/ThisWeekCard'
 import WeeklyConsistencyCard from './WeeklyConsistencyCard'
 import DailyCheckpointCard from './DailyCheckpointCard'
@@ -30,7 +29,6 @@ export default function DailyProgressSidebar({ data, checkpointReadiness }: Prop
       aria-label="Tu progreso semanal"
       className="flex min-w-0 flex-col gap-4 self-start lg:sticky lg:top-[calc(var(--layout-page-block)+0.5rem)]"
     >
-      <StreakCard streak={data.streak} />
       <WeeklyConsistencyCard
         heatmap7={data.heatmap7}
         completedDays7={data.completedDays7}
