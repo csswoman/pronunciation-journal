@@ -1,16 +1,12 @@
 'use client'
 
-// Planned structure:
-// <DailyLessonCard>            // presentational; receives the lesson via props
-//   <LessonBody />             // ReactMarkdown of the short body
-//   <LessonActions />          // useAICoachStore + TrackingSaveButton + link
-
+import { useState } from 'react'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
-import { ArrowRight, GraduationCap, MessageCircle } from '@/components/icons'
-import Button from '@/components/ui/Button'
+import { Bookmark, BookmarkCheck, MessageCircle } from '@/components/icons'
+import Chip from '@/components/ui/Chip'
+import PastelCard from '@/components/layout/PastelCard'
 import EmptyState from '@/components/EmptyState'
-import { TrackingSaveButton } from '@/components/tracking/TrackingSaveButton'
 import { useAICoachStore } from '@/lib/stores/aiCoachStore'
 import { getIllustration } from '@/lib/illustrations/registry'
 
@@ -27,59 +23,96 @@ interface DailyLessonCardProps {
 
 export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
   const openCoach = useAICoachStore((s) => s.openCoach)
+  const [saved, setSaved] = useState(false)
 
   if (!lesson) {
     return (
-      <section className="rounded-xl border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
+      <PastelCard tone="butter" className="p-5 sm:p-6 motion-reduce:shadow-none">
         <EmptyState
           illustration={<EmptyIllustration />}
           title="Hoy no hay lección nueva"
           description="Vuelve mañana para la siguiente mini-lección, o explora la Ruta cuando quieras."
         />
-      </section>
+      </PastelCard>
     )
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border-default bg-surface-raised p-[var(--layout-card-pad)] shadow-sm">
-      <header className="flex flex-col gap-1">
-        <div className="flex items-center gap-2 text-primary">
-          <GraduationCap className="size-4" />
-          <span className="font-kicker text-fg-muted">La lección de hoy</span>
+    <PastelCard tone="butter" className="relative flex flex-col gap-4.5 p-6 sm:p-7 overflow-hidden motion-reduce:shadow-none">
+      <header className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <Chip variant="ink" className="uppercase tracking-wide font-extrabold px-3 py-1">
+            LA LECCIÓN DE HOY
+          </Chip>
+          <Chip variant="outline" className="border-ink/20 text-ink-secondary px-3 py-1 font-medium">
+            4 min de lectura
+          </Chip>
         </div>
-        <h2 className="text-h3 font-bold text-fg">{lesson.title}</h2>
-        <p className="text-body-sm text-fg-muted">{lesson.subtitle}</p>
+        <h2 className="font-heading text-h1 font-extrabold text-ink text-balance tracking-tight">
+          {lesson.title}
+        </h2>
+        {lesson.subtitle ? (
+          <p className="font-ipa text-body-md font-bold text-ink-secondary">
+            {lesson.subtitle}
+          </p>
+        ) : null}
       </header>
 
-      <div className="flex flex-col gap-2 text-body-sm text-fg leading-relaxed">
+      <div className="flex flex-col gap-2 font-body-sm text-ink leading-relaxed">
         <ReactMarkdown>{lesson.body}</ReactMarkdown>
       </div>
 
-      <footer className="flex flex-wrap items-center gap-2 border-t border-border-default/60 pt-3">
-        <Link href={`/mini-lessons/${lesson.slug}`}>
-          <Button variant="primary" size="sm" icon={<ArrowRight size={14} />} iconPosition="right">
-            Ver lección completa
-          </Button>
+      {/* Ejemplos destacados en contención suave */}
+      <div className="relative flex flex-wrap items-center gap-3 rounded-full bg-paper/60 border border-ink/10 px-4 py-2.5 text-body-sm">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
+            cats <span className="font-ipa font-bold text-ink-secondary">/s/</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
+            dogs <span className="font-ipa font-bold text-ink-secondary">/z/</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
+            watches <span className="font-ipa font-bold text-ink-secondary">/ɪz/</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Rayas decorativas por fuera en la esquina inferior derecha de la tarjeta */}
+      <div className="absolute -bottom-1 -right-1 opacity-25 select-none pointer-events-none text-ink" aria-hidden="true">
+        <svg width="160" height="80" viewBox="0 0 160 80" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <path d="M100 20 C120 8 140 12 135 28 C130 40 115 32 128 20" />
+          <path d="M15 65 C55 48 95 72 150 42" />
+        </svg>
+      </div>
+
+      <footer className="flex flex-wrap items-center gap-3 pt-2">
+        <Link
+          href={`/mini-lessons/${lesson.slug}`}
+          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-6 py-2.5 font-label text-body-sm font-bold text-paper transition-colors hover:bg-ink-secondary cursor-pointer shadow-xs"
+        >
+          Ver la lección
         </Link>
 
-        <TrackingSaveButton
-          kind="lesson"
-          reference={lesson.slug}
-          title={lesson.title}
-          payload={{ href: `/mini-lessons/${lesson.slug}` }}
-        />
-
-        <Button
-          variant="ghost"
-          size="sm"
-          icon={<MessageCircle size={14} />}
-          onClick={() =>
-            openCoach({ tab: 'chat', prefill: `Explícame más sobre "${lesson.title}"` })
-          }
+        <button
+          type="button"
+          onClick={() => setSaved(!saved)}
+          className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors cursor-pointer ${
+            saved ? 'bg-ink text-paper' : 'bg-transparent hover:bg-ink/10'
+          }`}
         >
-          Pregúntale al coach
-        </Button>
+          {saved ? <BookmarkCheck size={16} aria-hidden /> : <Bookmark size={16} aria-hidden />}
+          <span>{saved ? 'Guardada' : 'Guardar'}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => openCoach({ tab: 'chat', prefill: `Explícame más sobre "${lesson.title}"` })}
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors hover:bg-ink/10 cursor-pointer"
+        >
+          <MessageCircle size={16} aria-hidden />
+          <span>Preguntar al coach</span>
+        </button>
       </footer>
-    </section>
+    </PastelCard>
   )
 }

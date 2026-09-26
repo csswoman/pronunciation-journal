@@ -16,6 +16,7 @@ diseño y planes de producto.
 | [Banco de contenido pregenerado](architecture/content-bank.md) | Ejercicios pregenerados con la cuota sobrante de IA, servicio banco primero y caché offline |
 | [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
 | [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
+| [Modelos de voz locales](ai/local-voice-models.md) | Spike de Kokoro TTS (Plan 039, fase A): licencia, tamaños, voces y veredicto de la puerta (no-ship — latencia por palabra en WASM) |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |

@@ -155,6 +155,14 @@ export function buildGenerateTranslationsPrompt(input: { topic: string; level: s
   return `Generate ${input.count} Spanish-to-English translation exercises for topic "${input.topic}" at ${input.level}.`
 }
 
+export function buildPersonalizationTaskPrompt(input: {
+  promptText: string
+  example?: string
+}): string {
+  const exampleStr = input.example ? ` Example: "${input.example}".` : ''
+  return `The learner is writing an original sentence about themselves or their experience. Prompt: "${input.promptText}".${exampleStr} Provide encouraging pedagogical suggestions to polish grammar and natural phrasing.`
+}
+
 // ── Production grading (written + spoken free production) ──
 
 export const GRADE_PRODUCTION_SYSTEM_PROMPT = `You are an English teacher grading a learner's original production (written or spoken, provided as text).
@@ -946,3 +954,70 @@ export function buildContentBankSetPrompt({
 Ensure all required fields are populated with rich pedagogical content (instruction, learningGoal, explanation, commonWrongAnswers, hint).
 Return the set in JSON matching the specified schema.`.trim();
 }
+
+// ── Grammar Drills (Plan 043) ──
+
+export const GRAMMAR_DRILL_SYSTEM_PROMPT = `You are an expert English language pedagogue creating high-precision grammar drills for Spanish-speaking learners.
+You output strictly valid JSON matching the GrammarDrill schema without markdown wrappers or conversational filler.
+
+Key requirements for generated drills:
+1. Four core techniques:
+   - "transform": 3 to 4 sentence transformations based on the deck's rules.
+   - "build": 3 to 4 reorder items (or combine items if permitted by the level).
+   - "correct": 4 to 5 error correction items targeting the lesson topic, with the specified ratio of already-correct sentences.
+   - "personalize": 3 to 5 personalization prompts (frames for A1-A2, open prompts for B1-C1) connecting grammar to the learner's own life.
+2. Tolerant matching with template syntax:
+   - Provide acceptable alternative phrasing using {optionA|optionB} syntax (e.g. "{I am|I'm} ready.").
+   - Never exceed 64 expansions per template.
+   - For A1-A2, specify "contractions": "require" when contractions are standard in spoken/informal English.
+3. Grammar structure tags:
+   - Where applicable, specify "requires" referencing exact StructureCheckIds (e.g. "past_simple", "second_conditional", "third_conditional", "negative_inversion", "cleft_what").
+   - Do NOT use structure IDs above the deck's CEFR level.
+4. Content grounding:
+   - Base all drill content strictly on the rules, contrasts, and example sentences present in the deck cards. Do not invent an unrelated grammatical topic.
+5. All explanations and user-facing instructions must be in Spanish.
+6. Set "reviewed": false.`;
+
+export function buildGrammarDrillPrompt({
+  deck,
+  profile,
+  pilot,
+}: {
+  deck: {
+    meta?: { title?: string; eyebrow?: string; goal?: string };
+    cards?: Array<{ title?: string; lede?: string; blocks?: unknown[] }>;
+  };
+  profile: {
+    level: string;
+    buildMode: string;
+    alreadyCorrectRatio: number;
+    sentenceWords: [number, number];
+    personalizationMode: string;
+  };
+  pilot?: unknown;
+}): string {
+  const cardsSummary = (deck.cards ?? [])
+    .map((c) => `- ${c.title ?? ''}: ${c.lede ?? ''}`)
+    .join('\n');
+
+  const pilotExample = pilot
+    ? `\nHere is a reference gold-standard drill for level ${profile.level}:\n${JSON.stringify(pilot, null, 2)}\n`
+    : '';
+
+  return `Create a grammar drill for CEFR level ${profile.level}.
+Topic: ${deck.meta?.title ?? ''} (${deck.meta?.eyebrow ?? ''})
+Goal: ${deck.meta?.goal ?? ''}
+
+Lesson cards:
+${cardsSummary}
+
+Level constraints:
+- Level: ${profile.level}
+- Build mode: ${profile.buildMode}
+- Target alreadyCorrect ratio: ${Math.round(profile.alreadyCorrectRatio * 100)}%
+- Target sentence length: ${profile.sentenceWords[0]}–${profile.sentenceWords[1]} words
+- Personalization mode: ${profile.personalizationMode}
+${pilotExample}
+Generate the JSON payload with "level": "${profile.level}", "reviewed": false, and the 4 techniques (transform, build, correct, personalize).`.trim();
+}
+

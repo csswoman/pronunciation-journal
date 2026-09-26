@@ -4,13 +4,7 @@
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background:
-    radial-gradient(
-      120% 60% at 50% -8%,
-      color-mix(in oklch, var(--primary) 14%, var(--surface-base)),
-      var(--surface-base) 55%
-    ),
-    var(--surface-base);
+  background: var(--surface-base);
   min-height: 100dvh;
 }
 
@@ -219,8 +213,9 @@
 }
 
 .grammar-deck__rail-title {
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
-  font-weight: 500;
+  font-weight: 600;
   line-height: var(--text-leading-body-sm);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -228,7 +223,7 @@
 }
 
 .grammar-deck__rail-item--active .grammar-deck__rail-title {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -263,7 +258,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-secondary);
   transition:
     transform var(--transition-fast),
@@ -343,7 +338,7 @@
 /* ── Study card ──────────────────────────────────────────── */
 
 .grammar-card {
-  background: var(--surface-raised);
+  background: #c8bbfb;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -461,7 +456,7 @@
   padding: var(--space-3) var(--space-6);
   min-height: 48px;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
   font-weight: 700;
   color: #ffffff;
@@ -508,7 +503,7 @@
 }
 
 .grammar-card__advance--soft:hover {
-  background: color-mix(in oklch, var(--success) 14%, var(--surface-raised));
+  background: color-mix(in oklch, var(--success) 14%, #ffffff);
   box-shadow:
     inset 0 0 0 1px var(--success-border),
     var(--shadow-sm);
@@ -517,7 +512,7 @@
 /* ── Completion screen ───────────────────────────────────── */
 
 .grammar-deck__practice-shell {
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -533,7 +528,7 @@
   align-items: stretch;
   gap: var(--space-6);
   text-align: center;
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
@@ -708,7 +703,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-primary);
   text-decoration: none;
   font-size: var(--text-size-body-sm);
@@ -773,7 +768,7 @@
 }
 
 .grammar-deck__done-back {
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-default);
   color: var(--text-primary);
 }
@@ -822,7 +817,7 @@
   font-family: inherit;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-primary);
   font-size: var(--text-size-body-sm);
   transition:
@@ -957,8 +952,9 @@
 }
 
 .grammar-deck__title {
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.25;
   letter-spacing: var(--text-tracking-h3);
   color: var(--text-primary);
@@ -967,7 +963,8 @@
 
 @media (min-width: 640px) {
   .grammar-deck__title {
-    font: var(--font-h2);
+    font-size: 1.75rem;
+    font-weight: 800;
     letter-spacing: var(--text-tracking-h2);
   }
 }
@@ -1045,7 +1042,9 @@
 }
 
 .grammar-deck__done-title {
-  font: var(--font-h2);
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
   letter-spacing: var(--text-tracking-h2);
   color: var(--text-primary);
   text-wrap: balance;
@@ -1058,7 +1057,7 @@
 }
 
 .grammar-card__idx {
-  font-family: var(--font-mono-var), monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   line-height: var(--text-leading-caption);
   color: var(--text-tertiary);
@@ -1071,7 +1070,7 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.025em;
-  color: oklch(0.18 0.008 250);
+  color: var(--text-primary);
   text-wrap: balance;
 }
 
@@ -1163,10 +1162,10 @@
   text-transform: uppercase;
   color: var(--text-tertiary);
   font-weight: var(--text-weight-kicker);
-  font-family: var(--font-mono-var), monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   padding: var(--space-2) var(--space-3);
   text-align: left;
-  background: var(--surface-raised);
+  background: #f3e8ff;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -1306,7 +1305,7 @@
 .grammar-rules {
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
   background: var(--surface-sunken);
   overflow: hidden;
@@ -1314,18 +1313,36 @@
 
 .grammar-rules__row {
   display: grid;
-  grid-template-columns: minmax(4.5rem, auto) 1fr;
-  gap: var(--space-2);
-  align-items: baseline;
-  padding: var(--space-3) var(--space-4);
+  grid-template-columns: minmax(7rem, auto) 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3.5) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 @media (min-width: 640px) {
   .grammar-rules__row {
-    grid-template-columns: minmax(7.5rem, auto) 1fr;
+    grid-template-columns: minmax(9.5rem, auto) 1fr auto;
     gap: var(--space-5);
     padding: var(--space-4) var(--space-5);
+  }
+}
+
+@media (max-width: 480px) {
+  .grammar-rules__row {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-1.5) var(--space-3);
+  }
+  .grammar-rules__key-group {
+    grid-column: 1;
+  }
+  .grammar-rules__val-group {
+    grid-column: 1;
+  }
+  .grammar-rules__action {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
   }
 }
 
@@ -1333,39 +1350,97 @@
   border-bottom: none;
 }
 
+.grammar-rules__key-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
 .grammar-rules__key {
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
-  font-weight: var(--text-weight-label);
-  line-height: var(--text-leading-body-sm);
+  font-weight: 800;
+  line-height: 1.3;
   color: var(--text-primary);
-  align-self: flex-start;
-  padding-top: 1px;
 }
 
 @media (min-width: 640px) {
   .grammar-rules__key {
     font-size: var(--text-size-body);
-    line-height: var(--text-leading-body);
   }
 }
 
-.grammar-rules__val {
+.grammar-rules__ipa {
+  font-family: var(--font-ipa), Andika, sans-serif;
+  font-size: var(--text-size-caption);
+  color: var(--text-tertiary);
+}
+
+.grammar-rules__val-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.grammar-rules__val-text {
   font-size: var(--text-size-body-sm);
-  line-height: var(--text-leading-body-sm);
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.grammar-rules__highlight {
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-@media (min-width: 640px) {
-  .grammar-rules__val {
-    font-size: var(--text-size-body);
-    line-height: var(--text-leading-body);
-  }
+.grammar-rules__arrow-split {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2.5);
+  flex-wrap: wrap;
 }
 
-.grammar-rules__content {
+.grammar-rules__spanish {
+  font-size: var(--text-size-body-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.grammar-rules__response-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: #f3e8ff;
+  border: 1px solid #e9d5ff;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--text-size-caption);
+  color: #6d28d9;
+  font-weight: 600;
+}
+
+.dark .grammar-rules__response-chip {
+  background: #2e1065;
+  border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  color: var(--text-primary);
+}
+
+.grammar-rules__arrow-icon {
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+.grammar-rules__response-text {
+  font-weight: 600;
+}
+
+.grammar-rules__action {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .grammar-rules__gloss {
@@ -1394,26 +1469,12 @@
   }
 }
 
-.grammar-rules__val b,
-.grammar-rules__phrase b {
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
 .grammar-rules__hint {
   display: block;
   margin-top: var(--space-1);
   color: var(--text-tertiary);
   font-size: var(--text-size-caption);
   line-height: var(--text-leading-caption);
-}
-
-@media (max-width: 380px) {
-  .grammar-rules__row {
-    grid-template-columns: 1fr;
-    gap: var(--space-1);
-    padding: var(--space-3) var(--space-3);
-  }
 }
 
 
@@ -1434,21 +1495,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
-  border: none;
+  border: 1px solid #ddd6fe;
   background: #ede9fe;
-  color: #18181b;
+  color: #6d28d9;
   cursor: pointer;
+  flex-shrink: 0;
   transition:
     transform var(--transition-fast),
-    background var(--transition-fast);
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.gd-speak--sm {
+  width: 2.125rem;
+  height: 2.125rem;
+}
+
+.gd-speak--md {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .gd-speak:hover {
   background: #ddd6fe;
-  transform: scale(1.05);
+  border-color: #c4b5fd;
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .gd-speak:active {
@@ -1456,13 +1532,19 @@
 }
 
 .gd-speak--on {
-  background: #7c3aed;
+  background: var(--primary);
   color: #ffffff;
+  border-color: var(--primary);
 }
 
 .dark .gd-speak {
-  background: color-mix(in oklch, #7c3aed 25%, var(--surface-raised));
+  background: #2e1065;
+  border-color: color-mix(in oklch, var(--primary) 40%, transparent);
   color: var(--text-primary);
+}
+
+.dark .gd-speak:hover {
+  background: #3b0764;
 }
 
 .grammar-pron {
@@ -1626,7 +1708,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-4);
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
@@ -1640,7 +1722,7 @@
   height: 2.75rem;
   border-radius: 50%;
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-secondary);
   transition: all var(--transition-fast);
   flex-shrink: 0;
@@ -1666,14 +1748,15 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 0.625rem;
-  background: color-mix(in oklch, var(--primary) 15%, var(--surface-raised));
+  background: #f3e8ff;
   color: var(--primary);
   flex-shrink: 0;
 }
 
 .grammar-deck__eyebrow {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-tiny);
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-tertiary);
@@ -1687,7 +1770,7 @@
 }
 
 .grammar-deck__count-label {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -1764,7 +1847,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1783,7 +1866,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -1842,12 +1925,12 @@
 }
 
 .dark .grammar-vtable thead {
-  background: color-mix(in oklch, #7c3aed 20%, var(--surface-raised));
+  background: #2e1065;
   border-bottom-color: var(--border-subtle);
 }
 
 .grammar-vtable th {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1881,7 +1964,8 @@
 }
 
 .grammar-vtable__key-text {
-  font-weight: 700;
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
   font-size: 1.125rem;
   color: #0f172a;
 }
@@ -1943,17 +2027,18 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  background: var(--pastel-butter, #fef08a);
+  background: #f3e8ff;
+  border: 1px solid #e9d5ff;
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-5);
-  color: oklch(0.2 0.05 85);
+  color: #4c1d95;
   box-shadow: var(--shadow-sm);
 }
 
 .dark .grammar-card__meeting-banner {
-  background: color-mix(in oklch, var(--pastel-butter, oklch(0.85 0.14 85)) 25%, var(--surface-raised));
+  background: #2e1065;
   color: var(--text-primary);
-  border: 1px solid color-mix(in oklch, var(--pastel-butter, oklch(0.85 0.14 85)) 40%, transparent);
+  border: 1px solid color-mix(in oklch, #7c3aed 35%, transparent);
 }
 
 .grammar-card__meeting-play {
@@ -1988,7 +2073,7 @@
 }
 
 .grammar-card__meeting-kicker {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-tiny);
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -2022,6 +2107,7 @@
   border-radius: 999px;
   border: 1.5px solid currentColor;
   background: transparent;
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
   font-weight: 700;
   color: inherit;
@@ -2060,10 +2146,11 @@
   min-height: 48px;
   border-radius: 999px;
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-primary);
+  font-family: var(--font-display), "Bricolage Grotesque", system-ui, sans-serif;
   font-size: var(--text-size-body-sm);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -2075,7 +2162,7 @@
 }
 
 .grammar-card__shortcut-note {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   color: var(--text-tertiary);
   font-weight: 500;
@@ -2084,7 +2171,7 @@
 /* Sidebar Rail Extensions */
 
 .grammar-deck__rail-card {
-  background: var(--surface-raised);
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
@@ -2102,7 +2189,7 @@
 }
 
 .grammar-deck__rail-steps-badge {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -2123,7 +2210,7 @@
 }
 
 .grammar-deck__rail-progress-text {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-size-caption);
   font-variant-numeric: tabular-nums;
   color: var(--text-tertiary);
@@ -2138,7 +2225,7 @@
   min-height: 36px;
   border-radius: 999px;
   border: 1px solid var(--border-default);
-  background: var(--surface-raised);
+  background: #ffffff;
   color: var(--text-secondary);
   font-size: var(--text-size-caption);
   font-weight: 600;
@@ -2190,7 +2277,7 @@
 }
 
 .dark .grammar-pairs__bad-pill {
-  background: color-mix(in oklch, #ef4444 20%, var(--surface-raised));
+  background: #450a0a;
   border-color: color-mix(in oklch, #ef4444 40%, transparent);
   color: #fca5a5;
 }
@@ -2265,7 +2352,7 @@
 }
 
 .dark .grammar-pairs__note-badge {
-  background: color-mix(in oklch, #10b981 20%, var(--surface-raised));
+  background: #064e3b;
   border-color: color-mix(in oklch, #10b981 40%, transparent);
   color: #6ee7b7;
 }
@@ -2280,7 +2367,7 @@
 }
 
 .grammar-card__conventions-header {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -2316,7 +2403,7 @@
 }
 
 .dark .grammar-card__convention-card {
-  background: var(--surface-raised);
+  background: var(--surface-base);
   border-color: var(--border-subtle);
 }
 
@@ -2328,7 +2415,7 @@
   background: #0f172a;
   color: #ffffff;
   border-radius: 999px;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;

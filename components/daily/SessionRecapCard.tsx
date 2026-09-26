@@ -41,6 +41,7 @@ export default function SessionRecapCard({
   arc,
   stepCount,
   dueTomorrow,
+  streak,
   learned = 0,
   onBackHome,
 }: Props) {
@@ -93,6 +94,7 @@ export default function SessionRecapCard({
           {(learned ?? 0) > 0
             ? `${learned} / ${ESSENTIAL_WORD_TARGET} palabras esenciales`
             : `Completaste ${stepCount} pasos`}
+          {streak != null && streak > 0 ? ` · ${streak} ${streak === 1 ? 'día' : 'días'} de racha` : ''}
         </p>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">

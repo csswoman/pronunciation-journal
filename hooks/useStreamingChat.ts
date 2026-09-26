@@ -1,14 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
-import type { AIMessage, StreamChunk, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
-// Read via `getState()` at send time rather than subscribing: this hook's
-// comments note that a changing dep would rebuild `sendMessage` and re-render
-// the whole panel, and the language only matters at the moment of the request.
-import { useAICoachStore } from "@/lib/stores/aiCoachStore";
+import type { AIMessage, ExerciseResult, SendOpts } from "@/lib/ai-practice/types";
 import { applyExerciseResult, type UserLearningState } from "@/lib/ai-practice/learning-state";
-import { messagesToWire } from "@/lib/ai-practice/wire";
-import { makeStreamState, processChunk } from "@/lib/ai-practice/stream-processor";
 import type {
   MissionIntentObservedArgs,
   StartMissionArgs,
@@ -17,13 +11,19 @@ import { persistCoachExerciseResult } from "@/lib/ai-practice/coach-progress";
 import { logEvent } from "@/lib/ai-practice/events";
 import { useCoachSessionMetrics } from "./useCoachSessionMetrics";
 import type { AIConversationMode } from "@/lib/types";
-import { AI_COACH_RATE_LIMITED_MESSAGE, AI_COACH_TURN_FAILED_MESSAGE, isQuotaLikeError, publicAiErrorMessage } from "@/lib/degradation/messages";
-import { applyAnswerToMessages, coachErrorMessage, emptyResponseMessage, hydratePersistedMessages, persistConversationState, persistMessageEdit } from "@/lib/ai-practice/chat-helpers";
+import {
+  applyAnswerToMessages,
+  coachErrorMessage,
+  hydratePersistedMessages,
+  persistConversationState,
+  persistMessageEdit,
+} from "@/lib/ai-practice/chat-helpers";
 import { getRecentCoachStems, saveCoachSeenItems } from "@/lib/ai-practice/coach-seen-items";
 import { rotationForCoachRequest, type PracticeAngle } from "@/lib/ai-practice/practice-rotation";
 import { useCoachErrorRecurrence } from "./useCoachErrorRecurrence";
 import { useCoachBankSet } from "./useCoachBankSet";
 import { detectIntent } from "@/lib/ai-practice/intent-detection";
+import { fetchAndProcessCoachStream } from "@/lib/ai-practice/chat-stream-handler";
 
 interface UseStreamingChatOptions {
   mode: AIConversationMode;
@@ -100,7 +100,6 @@ export function useStreamingChat({
       }
     }
 
-
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -109,7 +108,6 @@ export function useStreamingChat({
     }, 35_000);
     const thisId = ++streamIdRef.current;
     const turnStartedAt = performance.now();
-    let timeToFirstTextMs: number | null = null;
     setIsStreaming(true);
 
     const modelMsg: AIMessage = { role: "model", contentParts: [], toolCalls: new Map(), timestamp: new Date().toISOString() };
@@ -127,127 +125,31 @@ export function useStreamingChat({
       if (practiceContext && !userIdRef.current) {
         anonymousAnglesRef.current = [...anonymousAnglesRef.current, practiceContext.angle].slice(-3);
       }
-      const res = await fetch("/api/gemini", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: messagesToWire(nextMessages),
-          stream: true,
-          missionId: mode.startsWith("mission:") ? mode.slice("mission:".length) : undefined,
-          starterId: options?.starterId,
-          // Omitted when the learner has not overridden it, so the server
-          // falls back to the CEFR-derived default.
-          coachLanguage: useAICoachStore.getState().coachLanguage ?? undefined,
-          recentStems,
-          practiceContext,
-        }),
-        signal: controller.signal,
+
+      const streamResult = await fetchAndProcessCoachStream({
+        nextMessages,
+        mode,
+        options,
+        text,
+        recentStems,
+        practiceContext,
+        controller,
+        thisId,
+        streamIdRef,
+        messagesRef,
+        modelMsg,
+        turnStartedAt,
+        onStartMission,
+        onMissionIntentObserved,
+        setMessages,
+        setError,
+        setQuotaExhausted,
+        lastFailedSendRef,
       });
 
-      if (!res.ok || !res.body) {
-        const data = await res.json().catch(() => ({}));
-        const errMsg: string = data.error ?? "Failed to get AI response";
-        // Our own layered rate limiter (15 req / 60 s per user) sets
-        // `retryable`. That is a short throttle, not the provider's daily
-        // quota: surface it as a recoverable error the user retries in the
-        // same conversation, never the "session over" quota wall.
-        if (data.retryable === true) {
-          setError(AI_COACH_RATE_LIMITED_MESSAGE);
-          setMessages(messagesRef.current.slice(0, -1));
-          lastFailedSendRef.current = { text, options };
-          return;
-        }
-        if (res.status === 429 || isQuotaLikeError(errMsg)) {
-          setQuotaExhausted(true);
-          setMessages(messagesRef.current.slice(0, -1));
-          lastFailedSendRef.current = { text, options };
-          return;
-        }
-        throw new Error(publicAiErrorMessage(res.status, errMsg, AI_COACH_TURN_FAILED_MESSAGE));
-      }
+      if (!streamResult) return;
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-      let truncated = false;
-      const state = makeStreamState();
-
-      const flush = () => {
-        if (streamIdRef.current !== thisId) return;
-        setMessages(prev => {
-          const copy = [...prev];
-          copy[copy.length - 1] = {
-            ...(copy[copy.length - 1] as Extract<AIMessage, { role: "model" }>),
-            contentParts: [...state.parts],
-            toolCalls: new Map(state.calls),
-          };
-          return copy;
-        });
-      };
-
-      outer: while (true) {
-        const { done, value } = await reader.read();
-        if (done || streamIdRef.current !== thisId) break;
-
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const raw = line.slice(6).trim();
-          if (!raw) continue;
-          let chunk: StreamChunk;
-          try { chunk = JSON.parse(raw); } catch { continue; }
-          if (chunk.type === "text_delta" && chunk.delta.trim() && timeToFirstTextMs === null) {
-            timeToFirstTextMs = Math.round(performance.now() - turnStartedAt);
-          }
-
-          const result = processChunk(chunk, state, {
-            onStartMission,
-            onMissionIntentObserved,
-            onActionToolResult: (toolCallId, name) => {
-              setMessages(prev => [...prev, {
-                role: "tool" as const,
-                toolCallId,
-                name,
-                result: { success: true },
-                timestamp: new Date().toISOString(),
-              }]);
-            },
-            onError: (errorId, tool, message) => console.error({ errorId, tool, message }),
-          });
-
-          if (result === "done") break outer;
-          if (result === "done-truncated") { truncated = true; break outer; }
-          if (typeof result === "object" && "error" in result) {
-            if (isQuotaLikeError(result.error)) {
-              setQuotaExhausted(true);
-              setMessages(prev => prev.slice(0, -1));
-            } else {
-              setError(publicAiErrorMessage(undefined, result.error, AI_COACH_TURN_FAILED_MESSAGE));
-              setMessages(messagesRef.current.slice(0, -2));
-            }
-            lastFailedSendRef.current = { text, options };
-            break outer;
-          }
-          if (result === "flush") flush();
-        }
-      }
-
-      if (streamIdRef.current !== thisId) {
-        // Superseded mid-flight: drop this turn's still-empty placeholder bubble.
-        setMessages(prev => (prev[prev.length - 1] === modelMsg ? prev.slice(0, -1) : prev));
-        return;
-      }
-
-      const hasContent = state.parts.length > 0 || state.calls.size > 0;
-      if (!hasContent) {
-        setMessages(prev => (prev[prev.length - 1] === modelMsg ? prev.slice(0, -1) : prev));
-        setError(emptyResponseMessage(truncated));
-        lastFailedSendRef.current = { text, options };
-        return;
-      }
+      const { state, timeToFirstTextMs } = streamResult;
 
       let finalModelMsg: Extract<AIMessage, { role: "model" }> = {
         role: "model",

@@ -192,8 +192,14 @@ Actualiza solo lo que la fase cambió; no documentes fases no ejecutadas.
 - [x] `pnpm type-check` y `pnpm lint` en exit 0.
 - [x] Las migraciones tienen RLS habilitado y ninguna política para `anon`/`authenticated` (auditoría estática).
 - [x] Aplicar las migraciones originales y ejecutar `pnpm ai:usage-report` contra la base de datos.
-- [ ] Verificar explícitamente la RPC de reserva (`true`, luego `false`).
-- [ ] Aplicar `20260925120000_ai_usage_outcomes.sql` para latencia y último error.
+- [x] Verificar explícitamente la RPC de reserva (`true`, luego `false`) — confirmado 2026-09-26 vía
+  REST API (`/rest/v1/rpc/ai_usage_try_reserve`) con el JWT de `service_role`: primera llamada
+  `true`, segunda (mismo modelo/feature, límite 1) `false`. El SQL Editor del dashboard y el MCP de
+  Supabase no sirven para esto (corren como rol `postgres`, no `service_role`; la función lo rechaza
+  con `ERROR: 42501: service role required` por diseño). Registro de prueba limpiado de
+  `ai_usage_daily` tras la verificación.
+- [x] Aplicar `20260925120000_ai_usage_outcomes.sql` para latencia y último error — confirmado
+  aplicada en remoto (2026-09-26, como `ai_usage_outcomes`).
 - [ ] Guardar el diario y los ejercicios funciona sin IA (prueba manual con `GEMINI_API_KEY` vacía).
 - [x] Documentación del "Paso final" actualizada para las fases ejecutadas.
 

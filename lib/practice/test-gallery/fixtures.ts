@@ -138,6 +138,15 @@ const GENERIC_FIXTURES: Record<
     phraseIpa: '/aɪm ˈɡɑnə ˈkɔl jə ˈleɪtər/',
     deckSlug: 'cs-linking',
   },
+  personalization: {
+    id: 'test-personalization',
+    type: 'personalization',
+    sourceRef: SOURCE,
+    mode: 'frame',
+    frame: 'I always ___ in the morning.',
+    slot: 'phrase',
+    example: 'I always drink coffee in the morning.',
+  },
 }
 
 const PHONEME_FIXTURES: Record<
@@ -281,6 +290,7 @@ const GENERIC_LABELS: Record<keyof typeof GENERIC_FIXTURES, string> = {
   sentence_transformation: 'Transformar oración',
   translation_es_en: 'Traducir al inglés',
   cs_shadow_phrase: 'Frase de habla conectada',
+  personalization: 'Personalización',
 }
 
 const PHONEME_LABELS: Record<keyof typeof PHONEME_FIXTURES, string> = {
@@ -419,7 +429,9 @@ export const TEST_GALLERY_ENTRIES: TestGalleryEntry[] = [
     id: `generic-${slug}`,
     slug: slug as ExerciseSlug,
     label: GENERIC_LABELS[slug as keyof typeof GENERIC_LABELS],
-    domain: (slug === 'multiple_choice' ? 'grammar' : 'vocabulary') as TestGalleryDomain,
+    domain: (['multiple_choice', 'error_correction', 'conjugation_blank', 'sentence_transformation', 'personalization'].includes(slug)
+      ? 'grammar'
+      : 'vocabulary') as TestGalleryDomain,
     build: (context: PracticeContext) => adaptGeneric(exercise, context),
   })),
   ...NEW_EXERCISE_FIXTURES,

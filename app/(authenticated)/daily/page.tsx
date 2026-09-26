@@ -10,10 +10,12 @@ import { getTodaysMiniLesson } from '@/lib/content/lessons'
 import { getDailyStreak } from '@/lib/daily/streak'
 import { getWeeklyProgressData, type WeeklyProgressData } from '@/lib/progress/weekly-queries'
 import { getSupabaseServerUser } from '@/lib/supabase/session'
-import { getUserProfileLevel } from '@/lib/home/queries'
-import { getHomePlacementState } from '@/lib/home/placement-state'
+import { getUserProfileLevel, getWeakestPhonemeForHome } from '@/lib/home/queries'
+import { getHomePlacementState, type HomePlacementState } from '@/lib/home/placement-state'
+import { getHomePronunciationDiagnosticState, type HomePronunciationDiagnosticState } from '@/lib/home/pronunciation-diagnostic-state'
 import { getCheckpointReadiness } from '@/lib/home/checkpoint-readiness-query'
 import type { CheckpointReadiness } from '@/lib/home/checkpoint-readiness'
+import type { WeakestPhonemeHome } from '@/lib/home/constants'
 import type { CefrLevelId } from '@/lib/courses/types'
 
 export default async function DailyPage({
@@ -42,6 +44,9 @@ export default async function DailyPage({
   let streak: number | null = null
   let weeklyProgress: WeeklyProgressData | null = null
   let checkpointReadiness: CheckpointReadiness | null = null
+  let weakestPhoneme: WeakestPhonemeHome | null = null
+  let placementState: HomePlacementState = { hasPlacement: true, hasMeaningfulProgress: true }
+  let pronunciationDiagnosticState: HomePronunciationDiagnosticState = { hasPronunciationDiagnostic: true }
 
   try {
     const user = await getSupabaseServerUser()
@@ -51,10 +56,15 @@ export default async function DailyPage({
       streak = weeklyProgress.streak.currentStreak
 
       try {
-        const [profileLevel, placementState] = await Promise.all([
+        const [profileLevel, pState, pDiagState, weakSound] = await Promise.all([
           getUserProfileLevel(user.id),
           getHomePlacementState(user.id),
+          getHomePronunciationDiagnosticState(user.id),
+          getWeakestPhonemeForHome(user.id),
         ])
+        placementState = pState
+        pronunciationDiagnosticState = pDiagState
+        weakestPhoneme = weakSound
         const resolvedLevelId = profileLevel ? (profileLevel.toLowerCase() as CefrLevelId) : null
         if (placementState.hasPlacement && resolvedLevelId) {
           checkpointReadiness = await getCheckpointReadiness(user.id, resolvedLevelId)
@@ -84,6 +94,9 @@ export default async function DailyPage({
       streak={streak}
       weeklyProgress={weeklyProgress}
       checkpointReadiness={checkpointReadiness}
+      weakestPhoneme={weakestPhoneme}
+      placementState={placementState}
+      pronunciationDiagnosticState={pronunciationDiagnosticState}
     />
   )
 }

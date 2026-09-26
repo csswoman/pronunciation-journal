@@ -13,6 +13,7 @@ import { ConjugationBlankExercise } from '@/components/exercises/ConjugationBlan
 import { SentenceTransformationExercise } from '@/components/exercises/SentenceTransformationExercise'
 import { TranslationEsEnExercise } from '@/components/exercises/TranslationEsEnExercise'
 import { CsShadowPhraseExercise } from '@/components/exercises/CsShadowPhraseExercise'
+import { PersonalizationExercise } from '@/components/exercises/PersonalizationExercise'
 import type {
   GenericExercise,
   GenericExerciseType,
@@ -29,6 +30,7 @@ import type {
   SentenceTransformationExercise as SentenceTransformationExerciseType,
   TranslationEsEnExercise as TranslationEsEnExerciseType,
   CsShadowPhraseExercise as CsShadowPhraseExerciseType,
+  PersonalizationExercise as PersonalizationExerciseType,
 } from '@/lib/exercises/types'
 import type { PedagogicalFeedback, PracticeResultStatus } from '@/lib/practice/types'
 import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
@@ -183,6 +185,13 @@ export const GENERIC_REGISTRY: GenericRegistry = {
     noHint: true,
     render: (exercise: CsShadowPhraseExerciseType, { onResult }) => (
       <CsShadowPhraseExercise exercise={exercise} onResult={onResult} />
+    ),
+  },
+  personalization: {
+    title: 'Habla de ti',
+    noHint: true,
+    render: (exercise: PersonalizationExerciseType, { onResult }) => (
+      <PersonalizationExercise exercise={exercise} onResult={onResult} />
     ),
   },
 }

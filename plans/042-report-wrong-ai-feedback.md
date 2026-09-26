@@ -11,7 +11,11 @@
 
 ## Estado
 
-- **Status**: IN PROGRESS (2026-09-25; correcciones locales, pendiente despliegue de migración y verificación RLS remota)
+- **Status**: DONE (2026-09-26; migración `ai_feedback_reports` aplicada en remoto como
+  `20260926144617_ai_feedback_reports` — mismo contenido que el archivo local
+  `20260925200000_ai_feedback_reports.sql`, timestamp distinto porque se aplicó un día después de
+  crearse el archivo. RLS verificado vía advisors: solo el WARN estándar
+  `auth_allow_anonymous_sign_ins`, esperado en ~40 tablas del proyecto, sin hallazgos propios de esta tabla)
 - **Priority**: P2
 - **Effort**: S–M (~1–1,5 días)
 - **Risk**: LOW

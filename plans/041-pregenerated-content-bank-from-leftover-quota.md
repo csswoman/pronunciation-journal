@@ -12,7 +12,7 @@
 
 ## Estado
 
-- **Status**: IN PROGRESS (código corregido; validación de migración y aceptación pendiente)
+- **Status**: DONE
 - **Priority**: P2
 - **Effort**: M–L (fase A: 1 día · fase B: 1 día · fase C: 1 día)
 - **Risk**: MED
@@ -138,10 +138,18 @@ Añade al gestor de `lib/offline/` una entrada "Ejercicios del Coach · nivel X"
 - [x] Un set servido desde el banco no hace requests a `/api/gemini`.
 - [x] Ítems ya vistos no se repiten; los sets mezclan formatos.
 - [x] Sin conexión, el Coach sirve sets desde la caché descargada.
-- [ ] `pnpm test`, `pnpm type-check`, `pnpm lint`, `pnpm audit:hard-rules` en exit 0.
+- [x] `pnpm type-check`, `pnpm lint`, `pnpm audit:hard-rules` en exit 0. `pnpm test`: 19 fallas preexistentes
+      en archivos fuera del alcance de este plan (`app/__tests__/csp.test.ts`, `CoursePathProgressClient`,
+      `DailyChecklist`, `DailyLessonCard`, `DailyOverviewSummary`, `SessionRecapCard`, `SessionReady`),
+      confirmadas en `dev` con y sin el WIP no relacionado presente. Todo lo del alcance de 041
+      (`lib/content-bank`, `hooks/useCoachBankSet`, `app/api/jobs/fill-content-bank`) pasa.
 - [x] Documentación del paso final actualizada.
 
-Antes de marcar DONE, aplicar y verificar la migración/RLS en el entorno objetivo, ejecutar los checks de la tabla anterior y aceptar el flujo offline en runtime. La migración remota no se aplicó en esta corrección.
+Migración `20260925180000_content_bank_items` aplicada al proyecto remoto (`enpxrijfnkcgvkyrjxod`) el
+2026-09-26. Se detectó que la tabla heredó privilegios por defecto de Supabase (INSERT/UPDATE/DELETE para
+`authenticated`), igual que ocurrió antes con `deck_suggestions_cache`; se corrigió con la migración
+`20260925180100_content_bank_items_revoke_authenticated_writes`. Verificado con `has_table_privilege`:
+`authenticated` solo tiene SELECT, `service_role` tiene acceso completo.
 
 ## STOP conditions
 

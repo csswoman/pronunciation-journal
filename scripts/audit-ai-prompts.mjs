@@ -29,6 +29,7 @@ const GENAI_ALLOWLIST_PREFIXES = [
   "lib/ai-prompts.ts",
   "lib/gemini/",
   "lib/word-bank/gemini.ts",
+  "lib/content-bank/generate.ts",
   "app/api/gemini/",
   "scripts/",
 ];

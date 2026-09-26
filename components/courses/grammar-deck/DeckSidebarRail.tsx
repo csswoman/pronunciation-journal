@@ -87,7 +87,7 @@ export default function DeckSidebarRail({
           <span className="grammar-deck__rail-kicker mb-2 block">CLASE EN VIDEO</span>
           <Link
             href={`/practice/immersion/${immersionLesson.slug}`}
-            className="flex flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-raised p-3 text-left transition-all hover:border-accent/40 hover:bg-accent-soft/40"
+            className="flex flex-col gap-1.5 rounded-xl border border-border-subtle bg-white dark:bg-surface-base p-3 text-left transition-all hover:border-accent/40 hover:bg-accent-soft/40"
             title={immersionLesson.title}
           >
             <div className="flex items-center gap-2 text-accent">
@@ -99,7 +99,7 @@ export default function DeckSidebarRail({
             <p className="line-clamp-2 text-body-sm font-medium leading-snug text-fg">
               {immersionLesson.title}
             </p>
-            <span className="font-mono text-[10px] text-accent/90">
+            <span className="text-caption font-medium text-accent/90">
               {immersionLesson.metadata?.relation === "exact" ? "Video canónico" : "Video relacionado"}
             </span>
           </Link>

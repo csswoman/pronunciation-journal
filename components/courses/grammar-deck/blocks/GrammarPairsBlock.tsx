@@ -8,30 +8,15 @@
 
 "use client";
 
-import { useCallback, useState } from "react";
-import { Check, Volume2, X } from "@/components/icons";
+import { Check, X } from "@/components/icons";
 import type { GrammarPairLine } from "@/lib/courses/grammar-deck/types";
+import SpeakButton from "../SpeakButton";
 
 interface GrammarPairsBlockProps {
   lines: GrammarPairLine[];
 }
 
 export default function GrammarPairsBlock({ lines }: GrammarPairsBlockProps) {
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-
-  const handlePlayAudio = useCallback((text: string, index: number) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    const synth = window.speechSynthesis;
-    synth.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "en-US";
-    utter.rate = 0.95;
-    utter.onstart = () => setPlayingIndex(index);
-    utter.onend = () => setPlayingIndex(null);
-    utter.onerror = () => setPlayingIndex(null);
-    synth.speak(utter);
-  }, []);
-
   // Group alternating bad/good lines into pairs
   const pairs: { bad?: GrammarPairLine; good?: GrammarPairLine; pairIndex: number }[] = [];
   for (let i = 0; i < lines.length; i += 2) {
@@ -83,18 +68,12 @@ export default function GrammarPairsBlock({ lines }: GrammarPairsBlockProps) {
                     )}
                   </div>
                   {pair.good && (
-                    <button
-                      type="button"
-                      className="gd-speak flex-shrink-0"
-                      onClick={() => handlePlayAudio(pair.good!.text, idx)}
-                      aria-label={`Escuchar: ${pair.good.text}`}
-                    >
-                      <Volume2
-                        size={16}
-                        className={playingIndex === idx ? "text-primary animate-pulse" : ""}
-                        aria-hidden
-                      />
-                    </button>
+                    <SpeakButton
+                      text={pair.good.text}
+                      size="sm"
+                      className="flex-shrink-0"
+                      label={`Escuchar: ${pair.good.text}`}
+                    />
                   )}
                 </div>
               </td>

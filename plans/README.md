@@ -31,8 +31,8 @@ son históricas.
 | 038 | Feedback de pronunciación por sonido (estilo ELSA) sin cuota de IA | P2 | L | fase A: —; fases B/C: 039 fase A | DONE (fase A + B, no-ship): la puerta exigía 4 fonemas y solo pasó /z/; sin fase C |
 | 039 | Voces locales (Kokoro) y entrenamiento de percepción con muchas voces (HVPT) | P1 | L | — | DONE (no-ship): fase A no pasó la puerta — Kokoro `q8`/WASM mide ~3–4 s por palabra suelta (límite ≤1,5 s); sin fases B/C |
 | 040 | Las correcciones del AI Coach alimentan la cola de errores repetidos | P1 | S | — | DONE (commit `724f3c9f`) |
-| 041 | Banco de ejercicios pregenerados con la cuota diaria que sobra | P2 | M–L | 035 fase B, 037 fases A/B1 | IN PROGRESS (código corregido; pendiente validar migración/RLS y aceptación runtime) |
-| 042 | Botón "Esta corrección está mal" y casos de evaluación reales | P2 | S–M | 036, 040 | IN PROGRESS (correcciones locales; pendiente despliegue de migración y verificación RLS remota) |
+| 041 | Banco de ejercicios pregenerados con la cuota diaria que sobra | P2 | M–L | 035 fase B, 037 fases A/B1 | DONE (migración `content_bank_items` aplicada en remoto + fix de RLS/grants heredados; tests del alcance del plan en verde) |
+| 042 | Botón "Esta corrección está mal" y casos de evaluación reales | P2 | S–M | 036, 040 | DONE (migración `ai_feedback_reports` aplicada en remoto; RLS verificado sin hallazgos propios) |
 | 043 | Drills de gramática A1–C1 (4 técnicas) con corrección tolerante y local | P1 | L | — (comparte pieza con 037 C1) | DONE (calificador tolerante answer-match, 26 structure-checks, 5 pilotos A1-C1 revisados, script CLI y generador con Zod superRefine) |
 
 Orden recomendado: **040 → 035 fase A → 037 fase A → 039 → 035 fase B → 037 fases B/C → 041 → 036 → 042**.
