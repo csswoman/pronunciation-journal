@@ -11,6 +11,7 @@
 
 ## Estado
 
+- **Status**: IN PROGRESS (2026-09-25; correcciones locales, pendiente despliegue de migración y verificación RLS remota)
 - **Priority**: P2
 - **Effort**: S–M (~1–1,5 días)
 - **Risk**: LOW
@@ -79,14 +80,19 @@ RLS habilitado; `select` e `insert` solo propios (`(select auth.uid()) = user_id
 ### Paso 2: Retirar un fallo de la cola
 En `lib/practice/error-recurrence.ts` añade `retractErrorPattern(queue, patternId, now)`: si la entrada existe, resta 1 a
 `failCount`; si queda en 0, elimina la entrada y escribe un tombstone en `removedAtByPattern[patternId] = now` (mismo
-mecanismo que usan las retiradas actuales, para que otro dispositivo no la resucite). En `error-recurrence-sync.ts` añade
+mecanismo que usan las retiradas actuales, para que otro dispositivo no la resucite). Cada cambio de entrada también
+actualiza `revisionAt`; el merge local y el RPC de estado de aprendizaje comparan esa revisión (con fallback a
+`lastFailedAt` para datos viejos), para que una retirada parcial no pierda contra una copia con el mismo fallo. En
+`error-recurrence-sync.ts` añade
 `retractPracticeErrorRecurrence(userId, patternId)` siguiendo exactamente el patrón de `recordPracticeErrorRecurrence`.
 **Verify**: tests: `failCount` 2 → 1 y la entrada sigue; `failCount` 1 → se elimina con tombstone; `mergeErrorRecurrenceQueues`
 con una copia remota anterior no la resucita.
 
 ### Paso 3: Guardar el reporte (offline primero)
 `lib/ai-feedback/report.ts`: `reportWrongFeedback({ userId, feature, promptVersion, input, output, errorPattern?, comment? })`
-guarda en Dexie y encola el `insert` con el outbox (`enqueue(userId, 'ai_feedback_reports', 'insert', …)`); si la
+guarda en Dexie y encola el `insert` con el outbox en una sola transacción Dexie; para Coach/ejercicios la retirada del
+fallo y su upsert también participan en esa transacción. No aceptar el sentinel `guest`: el dueño debe ser una sesión
+autenticada. Si la
 corrección tenía `errorPattern` y la función es `coach_correction` o `production_grade`, llama a
 `retractPracticeErrorRecurrence`. El outbox solo acepta las tablas de la unión `SyncTable` en `lib/sync/types.ts:5-25`:
 añade `'ai_feedback_reports'` ahí y revisa si `lib/sync/sync-manager.ts` necesita una entrada para esa tabla (busca
@@ -101,12 +107,14 @@ que abre un campo opcional de comentario y confirma con "Gracias, no lo contarem
 de `JournalFeedbackView`. Tokens de diseño solamente; accesible por teclado.
 **Verify**: tests de componente: clic → llama a `reportWrongFeedback` con la `feature` correcta; segundo clic deshabilitado.
 
-### Paso 5: Convertir reportes en casos de evaluación
+### Paso 5: Importar reportes para revisión y curación
 `scripts/prompt-eval/import-reports.ts`: lee **tus** reportes (sesión autenticada del propio usuario vía
 `lib/ai-feedback/queries.ts`; nunca `service_role`) y escribe un caso por reporte en
 `scripts/prompt-eval/cases/reported/` con `expect: "no_error_flagged"` (o la regla que indique el comentario). Por
 defecto excluye `journal_correction` salvo con la flag `--include-journal`, y avisa de que esos casos contienen texto
-personal y no deben commitearse (añade `scripts/prompt-eval/cases/reported/` a `.gitignore`).
+personal y no deben commitearse (añade `scripts/prompt-eval/cases/reported/` a `.gitignore`). Esta carpeta es un
+buzón privado, no la entrada automática de `run.ts`: revisa y anonimiza el contexto antes de promover un caso a los
+fixtures sintéticos compatibles que consume el evaluador.
 **Verify**: `pnpm tsx scripts/prompt-eval/import-reports.ts --dry-run` → lista cuántos casos crearía, sin escribir archivos.
 
 ### Paso 6: Documentación

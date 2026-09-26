@@ -47,3 +47,19 @@ mejora: superar el número no prueba por sí solo la calidad pedagógica. Actual
 y conserva el registro anterior al modificarla. Los avisos de telemetría
 indican el estado de la migración de Supabase; no equivalen a un fallo de la
 respuesta del modelo.
+
+## Reportes para revisión
+
+El botón "¿Corrección equivocada?" permite reportar correcciones del Coach, ejercicios y el Diario. El importador guarda candidatos privados para revisión:
+
+```powershell
+$env:SUPABASE_USER_ACCESS_TOKEN = "<JWT vigente de tu propia sesión de usuario>"
+pnpm tsx scripts/prompt-eval/import-reports.ts --dry-run
+pnpm tsx scripts/prompt-eval/import-reports.ts
+```
+
+- Se necesita `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` y un JWT de sesión de usuario. El importador nunca usa `service_role`; una consulta fallida termina con error y no se presenta como cero reportes.
+- `--auth-token=<jwt>` también permite pasar el JWT. No uses aquí el token personal de gestión de Supabase CLI.
+- Los JSON se guardan en `scripts/prompt-eval/cases/reported/` con `expect: "no_error_flagged"`. Esa carpeta es un buzón de triage: `run.ts` no la carga automáticamente porque el reporte puede omitir contexto de nivel/ejercicio y contener texto personal. Revisa y anonimiza cada caso; después crea un fixture sintético compatible en `scripts/prompt-eval/cases/` para que entre en el evaluador.
+- Los reportes de `journal_correction` se excluyen por defecto. `--include-journal` hace explícita su exportación local y muestra una advertencia.
+- `scripts/prompt-eval/cases/reported/` está ignorada en `.gitignore`. No commitees esos archivos.

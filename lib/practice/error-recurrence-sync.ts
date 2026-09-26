@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
-import { applyProductionGrade, createEmptyState } from '@/lib/ai-practice/learning-state'
+import { applyProductionGrade, createEmptyState, type UserLearningState } from '@/lib/ai-practice/learning-state'
+import { retractErrorPattern, EMPTY_RECURRENCE_QUEUE } from '@/lib/practice/error-recurrence'
 import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 
 /**
@@ -46,5 +47,48 @@ export async function recordPracticeErrorRecurrence(
   } catch (err) {
     console.warn('[recordPracticeErrorRecurrence] failed to update errorRecurrence', err)
     return false
+  }
+}
+
+/**
+ * Retira un fallo registrado por error en la cola de reincidencia.
+ * Si reduce failCount a 0, escribe un tombstone para que copias remotas
+ * previas no resuciten el patrón.
+ */
+export async function retractPracticeErrorRecurrence(
+  userId: string,
+  patternId: ErrorPatternId | undefined,
+  now: number = Date.now(),
+): Promise<void> {
+  if (!patternId) return
+
+  try {
+    await db.transaction('rw', [db.learningState, db.syncOutbox], async () => {
+      const existingRow = await db.learningState.get(userId)
+      const currentState = existingRow?.state ?? createEmptyState(userId, 'client')
+      const queue = currentState.errorRecurrence ?? EMPTY_RECURRENCE_QUEUE
+      const updatedQueue = retractErrorPattern(queue, patternId, now)
+      const updatedAt = new Date(now).toISOString()
+      const updatedState: UserLearningState = {
+        ...currentState,
+        updatedAt,
+        errorRecurrence: updatedQueue,
+      }
+      await db.learningState.put({ userId, state: updatedState, updatedAt })
+      await enqueue(
+        userId,
+        'user_learning_state',
+        'upsert',
+        {
+          user_id: userId,
+          state: updatedState as unknown as Record<string, unknown>,
+          updated_at: updatedAt,
+        },
+        { user_id: userId },
+      )
+    })
+  } catch (err) {
+    console.warn('[retractPracticeErrorRecurrence] failed to retract errorRecurrence', err)
+    throw err
   }
 }

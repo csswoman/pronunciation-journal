@@ -56,6 +56,7 @@ export async function cleanupAdditionalRlsRows(admin, users) {
     await admin.from("essential_word_blank_quality").delete().eq("user_id", user.id);
     await admin.from("content_srs").delete().eq("user_id", user.id);
     await admin.from("immersion_lesson_progress").delete().eq("user_id", user.id);
+    await admin.from("ai_feedback_reports").delete().eq("user_id", user.id);
     await admin.from("user_roles").delete().eq("user_id", user.id);
   }
 }
@@ -229,6 +230,15 @@ export async function runAdditionalRlsCases(ctx) {
     }),
     "sentence_id"
   );
+
+  await assertOwnRowIsolation(ctx, "ai_feedback_reports", (user) => ({
+    id: randomUUID(),
+    user_id: user.id,
+    feature: "coach_correction",
+    prompt_version: "v1",
+    input_snapshot: { text: "hello" },
+    output_snapshot: { text: "hi" },
+  }));
 
   await assertAuthenticatedReadOnly(
     ctx,

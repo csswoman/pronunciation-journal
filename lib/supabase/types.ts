@@ -56,6 +56,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_feedback_reports: {
+        Row: {
+          comment: string | null
+          created_at: string
+          error_pattern: string | null
+          feature: "coach_correction" | "production_grade" | "journal_correction"
+          id: string
+          input_snapshot: Json
+          output_snapshot: Json
+          prompt_version: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          error_pattern?: string | null
+          feature: "coach_correction" | "production_grade" | "journal_correction"
+          id?: string
+          input_snapshot: Json
+          output_snapshot: Json
+          prompt_version?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          error_pattern?: string | null
+          feature?: "coach_correction" | "production_grade" | "journal_correction"
+          id?: string
+          input_snapshot?: Json
+          output_snapshot?: Json
+          prompt_version?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_response_cache: {
         Row: {
           created_at: string

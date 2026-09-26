@@ -23,6 +23,7 @@ export type SyncTable =
   | 'immersion_lesson_progress'
   | 'content_srs'
   | 'ed_cluster_attempts'
+  | 'ai_feedback_reports'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
 export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event' | 'apply_essential_word_contrast_observation' | 'merge_user_learning_state_snapshot'

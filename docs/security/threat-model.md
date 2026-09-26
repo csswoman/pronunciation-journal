@@ -9,6 +9,7 @@ Fecha: 2026-07-01
 - `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY` y credenciales de despliegue.
 - Audio de usuario, transcripciones, prompts y respuestas Gemini.
 - Jobs durables como `word_enrichment_jobs` y caches de STT/deck suggestions.
+- Tabla `ai_feedback_reports`: datos personales, RLS por usuario, sin acceso de otros usuarios.
 
 ## Controles Actuales
 

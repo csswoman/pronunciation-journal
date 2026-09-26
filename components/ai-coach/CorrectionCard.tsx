@@ -1,7 +1,21 @@
 "use client";
 
+import { useState } from "react";
+
+// Planned structure:
+// <CorrectionCard>
+//   <CheckIcon />
+//   <CorrectionDetails>
+//     <CorrectionLabel />
+//     <CorrectionText />
+//     <ErrorPatternNotice />
+//     <ReportWrongFeedbackButton />
+//   </CorrectionDetails>
+// </CorrectionCard>
+
 import { Check } from "@/components/icons";
 import { type ErrorPatternId, describeErrorPattern } from "@/lib/exercises/error-patterns";
+import { ReportWrongFeedbackButton } from "@/components/ai-feedback/ReportWrongFeedbackButton";
 
 export interface CorrectionCardData {
   original: string;
@@ -19,6 +33,7 @@ interface CorrectionCardProps {
 }
 
 export default function CorrectionCard({ correction }: CorrectionCardProps) {
+  const [isReportedWrong, setIsReportedWrong] = useState(false);
   const isNatural = correction.kind === "unnatural";
   const label = isNatural ? "Suena más natural" : "Corrección rápida";
 
@@ -34,15 +49,28 @@ export default function CorrectionCard({ correction }: CorrectionCardProps) {
           <b className="font-bold text-ink">{correction.corrected}</b>
           {correction.rule ? ` = ${correction.rule}` : correction.original ? ` (${correction.original})` : ""}
         </p>
-        {correction.errorPattern && !isNatural && (
+        {correction.errorPattern && !isNatural && !isReportedWrong && (
           <p className="m-0 text-xs text-ink-secondary">
             {correction.recurrenceStatus === "saved"
-              ? "Lo repasarás en tu práctica: " + describeErrorPattern(correction.errorPattern)
+              ? `Lo repasarás en tu práctica: ${describeErrorPattern(correction.errorPattern)}`
               : correction.recurrenceStatus === "failed"
-                ? "No se pudo guardar el repaso de " + describeErrorPattern(correction.errorPattern) + "."
-                : "Patrón detectado: " + describeErrorPattern(correction.errorPattern)}
+                ? `No se pudo guardar el repaso de ${describeErrorPattern(correction.errorPattern)}.`
+                : `Patrón detectado: ${describeErrorPattern(correction.errorPattern)}`}
           </p>
         )}
+        <div className="pt-1">
+          <ReportWrongFeedbackButton
+            feature="coach_correction"
+            input={correction.original}
+            output={{
+              corrected: correction.corrected,
+              rule: correction.rule,
+              kind: correction.kind,
+            }}
+            errorPattern={correction.errorPattern}
+            onSubmitted={() => setIsReportedWrong(true)}
+          />
+        </div>
       </div>
     </div>
   );

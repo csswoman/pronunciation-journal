@@ -432,6 +432,18 @@ export interface GradedAnswerRecord {
   accepted: 0 | 1;
 }
 
+export interface AIFeedbackReportRecord {
+  id: string;
+  userId: string;
+  feature: "coach_correction" | "production_grade" | "journal_correction";
+  promptVersion: string;
+  inputSnapshot: unknown;
+  outputSnapshot: unknown;
+  errorPattern?: string | null;
+  comment?: string | null;
+  createdAt: string;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -478,6 +490,7 @@ class PronunciationDB extends Dexie {
   edClusterAttempts!: Table<EdClusterAttempt, string>;
   coachSeenItems!: Table<CoachSeenItemRecord, string>;
   gradedAnswers!: Table<GradedAnswerRecord, string>;
+  aiFeedbackReports!: Table<AIFeedbackReportRecord, string>;
 
 
   constructor() {
@@ -756,6 +769,11 @@ class PronunciationDB extends Dexie {
     this.version(44).stores({
       gradedAnswers: 'key, userId, exerciseKey, normalized, accepted, [userId+exerciseKey+normalized]',
     });
+    // v46: offline storage for AI feedback error reports.
+    this.version(46).stores({
+      aiFeedbackReports: 'id, userId, feature, createdAt, [userId+createdAt]',
+    });
+
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
     this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;
