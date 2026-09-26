@@ -70,15 +70,15 @@ export default function CoachPanel({
   return (
     <PastelCard
       tone="lilac"
-      className="p-5 sm:p-6 md:p-7 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 shadow-xs"
+      className="p-3.5 sm:p-4 md:p-5 rounded-2xl flex flex-row items-center gap-3 sm:gap-4 shadow-xs"
     >
-      {/* Icono de dientes/articulación fonética siempre blanco, amplio y legible */}
+      {/* Icono de dientes/articulación fonética compacto */}
       <div
-        className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-white border border-[color-mix(in_oklch,var(--ink)_12%,transparent)] flex items-center justify-center shrink-0 shadow-2xs text-[var(--ink)]"
+        className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white border border-[color-mix(in_oklch,var(--ink)_12%,transparent)] flex items-center justify-center shrink-0 shadow-2xs text-[var(--ink)]"
         aria-hidden="true"
       >
         <svg
-          className="w-8 h-8"
+          className="w-5 h-5 sm:w-6 sm:h-6"
           viewBox="0 0 32 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -91,15 +91,15 @@ export default function CoachPanel({
         </svg>
       </div>
 
-      {/* Contenido del tip con tipografía nítida y espaciado holgado */}
+      {/* Contenido del tip con tipografía nítida */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="text-sm sm:text-base font-bold tracking-tight text-[var(--ink)] mb-1">
+            <h3 className="text-xs sm:text-sm font-bold tracking-tight text-[var(--ink)] mb-0.5">
               {title}
             </h3>
             {description && (
-              <p className="text-xs sm:text-sm text-[var(--ink-secondary)] leading-relaxed font-medium">
+              <p className="text-xs text-[var(--ink-secondary)] leading-relaxed font-medium">
                 {description}
               </p>
             )}
@@ -107,15 +107,15 @@ export default function CoachPanel({
 
           {/* Acciones de guardar / escuchar si hay foco */}
           {focus && onSave && (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 type="button"
                 title="Listen to this sound"
                 aria-label="Listen to this sound"
                 onClick={() => onListen(focus.word)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors shadow-2xs"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors shadow-2xs"
               >
-                <Volume2 size={16} strokeWidth={2} aria-hidden />
+                <Volume2 size={15} strokeWidth={2} aria-hidden />
               </button>
               <button
                 type="button"
@@ -123,12 +123,12 @@ export default function CoachPanel({
                 aria-label={isSaved ? "Saved" : "Save for practice"}
                 onClick={handleSave}
                 disabled={isSaved}
-                className="flex h-8 w-8 items-center justify-center rounded-xl border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors disabled:opacity-60 shadow-2xs"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border-none text-[var(--ink-secondary)] hover:bg-white/80 hover:text-[var(--ink)] cursor-pointer transition-colors disabled:opacity-60 shadow-2xs"
               >
                 {isSaved ? (
-                  <Check size={16} strokeWidth={2.2} className={justSaved ? "animate-bounce" : ""} aria-hidden />
+                  <Check size={15} strokeWidth={2.2} className={justSaved ? "animate-bounce" : ""} aria-hidden />
                 ) : (
-                  <BookmarkPlus size={16} strokeWidth={2} aria-hidden />
+                  <BookmarkPlus size={15} strokeWidth={2} aria-hidden />
                 )}
               </button>
             </div>
@@ -137,7 +137,7 @@ export default function CoachPanel({
 
         {/* Remediación interactiva si hay reintento activo */}
         {focus && onRetry && (
-          <div className="mt-3.5 pt-3 border-t border-[color-mix(in_oklch,var(--ink)_14%,transparent)]">
+          <div className="mt-2.5 pt-2 border-t border-[color-mix(in_oklch,var(--ink)_14%,transparent)]">
             <RemediationSequence
               cue={feedbackCopyEnabled ? (focusTip ?? undefined) : undefined}
               onListen={() => onListen(focus.word)}

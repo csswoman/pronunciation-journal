@@ -93,7 +93,7 @@ export default function PronunciationView() {
           loadingMore={fetchingPhrases}
         />
       ) : (
-        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4 gap-4 sm:gap-5">
+        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto px-3.5 sm:px-5 py-2.5 sm:py-3.5 gap-3 sm:gap-4">
           <PhraseCard
             phrase={activePhrase}
             wordIPAs={wordIPAs}

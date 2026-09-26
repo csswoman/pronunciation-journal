@@ -47,14 +47,17 @@ export default function PhraseCard({
   const words = phrase.split(/\s+/).filter(Boolean);
   const focusWordsSet = new Set((meta.focusWords ?? []).map((w) => w.toLowerCase()));
 
+  // Adapta la escala tipográfica si la frase es larga o tiene muchas palabras
+  const isLongPhrase = phrase.length > 32 || words.length > 5;
+
   return (
     <PastelCard
       tone="butter"
-      className="relative p-6 sm:p-8 md:p-9 flex flex-col items-center text-center overflow-hidden rounded-3xl gap-4 sm:gap-5 shadow-xs"
+      className="relative p-4 sm:p-5 md:p-6 flex flex-col items-center text-center overflow-hidden rounded-3xl gap-2.5 sm:gap-3.5 shadow-xs max-w-full"
     >
-      {/* Comillas decorativas gigantes superiores con aire holgado */}
+      {/* Comillas decorativas superiores */}
       <svg
-        className="absolute top-5 left-5 sm:top-6 sm:left-7 w-11 h-11 sm:w-14 sm:h-14 text-[var(--ink)] opacity-15 pointer-events-none select-none"
+        className="absolute top-3 left-3 sm:top-4 sm:left-5 w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)] opacity-15 pointer-events-none select-none"
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -72,13 +75,13 @@ export default function PhraseCard({
         />
       </svg>
 
-      {/* Kicker superior con tracking tipográfico abierto */}
-      <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--ink-secondary)] opacity-80 mb-1 sm:mb-2">
+      {/* Kicker superior en DM Mono con tracking tipográfico técnico */}
+      <p className="font-mono text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--ink-secondary)] opacity-75">
         FRASE PARA PRACTICAR
       </p>
 
-      {/* Contenedor de palabras en Bricolage Grotesque con amplio espacio */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 my-2 max-w-2xl">
+      {/* Contenedor de palabras en Bricolage Grotesque / DM Sans Display */}
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3 my-0.5 max-w-2xl">
         {words.map((rawWord, index) => {
           const cleanWord = rawWord.replace(/[^a-zA-Z']/g, "");
           const cleanLower = cleanWord.toLowerCase();
@@ -99,26 +102,36 @@ export default function PhraseCard({
               onClick={() => onListenWord(cleanWord)}
               className={`group flex flex-col items-center justify-center cursor-pointer transition-all duration-150 active:scale-95 border-none ${
                 isFocus
-                  ? "bg-white/95 text-[var(--ink)] shadow-xs rounded-2xl px-4 py-2 sm:px-5 sm:py-2.5 border border-[color-mix(in_oklch,var(--ink)_10%,transparent)] hover:bg-white"
-                  : "bg-transparent text-[var(--ink)] px-2 py-1.5 rounded-xl hover:bg-white/40"
+                  ? "bg-white/95 text-[var(--ink)] shadow-xs rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 border border-[color-mix(in_oklch,var(--ink)_10%,transparent)] hover:bg-white"
+                  : "bg-transparent text-[var(--ink)] px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-xl hover:bg-white/30"
               }`}
               aria-label={`Escuchar ${cleanWord}`}
             >
-              <span className="font-display font-extrabold text-3xl sm:text-4xl tracking-[-0.03em] leading-tight text-[var(--ink)] group-hover:text-[var(--ink-secondary)] transition-colors">
+              {/* Palabra principal en font-display */}
+              <span
+                className={`font-display font-extrabold tracking-[-0.03em] leading-tight text-[var(--ink)] group-hover:text-[var(--ink-secondary)] transition-colors ${
+                  isLongPhrase
+                    ? "text-xl sm:text-2xl md:text-3xl"
+                    : "text-2xl sm:text-3xl md:text-4xl"
+                }`}
+              >
                 {rawWord}
               </span>
+
+              {/* Notación fonética IPA límpida en Andika (font-ipa) */}
               {ipaLoading ? (
-                <span className="h-4 flex items-center justify-center mt-1">
+                <span className="h-4 flex items-center justify-center mt-0.5 sm:mt-1">
                   <Loader2 size={11} className="animate-spin text-[var(--ink-muted)]" />
                 </span>
               ) : ipaText ? (
                 <span
-                  className={`text-xs sm:text-sm font-ipa font-normal tracking-wide mt-1 transition-colors ${
+                  lang="en-fonipa"
+                  className={`font-ipa text-[11px] sm:text-xs font-normal tracking-wide mt-0.5 sm:mt-1 transition-colors ${
                     hasAnalysis && hasError
                       ? "text-rose-700 font-semibold"
                       : allCorrect
                       ? "text-emerald-800 font-semibold"
-                      : "text-[var(--ink-secondary)]"
+                      : "text-[var(--ink-secondary)] opacity-80"
                   }`}
                 >
                   {ipaText}
@@ -129,25 +142,25 @@ export default function PhraseCard({
         })}
       </div>
 
-      {/* Subtítulo de traducción con respiración y claridad */}
-      <p className="text-sm sm:text-base text-[var(--ink-secondary)] max-w-xl leading-relaxed font-medium mt-1 mb-1">
-        {meta.spanish} · Toca una palabra para escucharla.
+      {/* Subtítulo de traducción nítido en DM Sans */}
+      <p className="text-xs sm:text-sm md:text-base font-sans font-medium text-[var(--ink-secondary)] max-w-xl leading-snug">
+        {meta.spanish}
       </p>
 
       {/* Feedback de análisis si es perfecto */}
       {hasAnalysis && !hasMistakes && !analyzing && (
-        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 border border-emerald-600/30 shadow-2xs">
-          <PartyPopper size={15} className="text-emerald-700" />
+        <div className="flex items-center gap-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white/95 border border-emerald-600/30 shadow-2xs">
+          <PartyPopper size={14} className="text-emerald-700 shrink-0" />
           <p className="text-xs sm:text-sm font-bold text-emerald-800">¡Excelente pronunciación!</p>
         </div>
       )}
 
-      {/* Botones de acción de audio con proporciones cómodas */}
-      <div className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap mt-2">
+      {/* Botones de acción de audio en DM Sans / DM Mono */}
+      <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mt-0.5 sm:mt-1">
         <button
           type="button"
           onClick={onListen}
-          className="inline-flex items-center gap-2.5 rounded-full bg-[var(--ink)] text-white px-6 py-3 text-sm sm:text-base font-semibold hover:opacity-90 transition active:scale-95 cursor-pointer shadow-sm border-none"
+          className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] text-white px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold hover:opacity-90 transition active:scale-95 cursor-pointer shadow-sm border-none min-h-[38px] sm:min-h-[42px]"
         >
           <Play size={13} fill="currentColor" />
           <span>Escuchar</span>
@@ -156,7 +169,7 @@ export default function PhraseCard({
         <button
           type="button"
           onClick={onSlow}
-          className="inline-flex items-center gap-1 rounded-full border border-[color-mix(in_oklch,var(--ink)_16%,transparent)] bg-white/85 text-[var(--ink)] px-5 py-3 text-sm sm:text-base font-semibold hover:bg-white transition active:scale-95 cursor-pointer shadow-2xs"
+          className="inline-flex items-center gap-1 rounded-full border border-[color-mix(in_oklch,var(--ink)_16%,transparent)] bg-white/85 text-[var(--ink)] px-3.5 py-2 sm:px-4 sm:py-2.5 font-mono text-xs sm:text-sm font-semibold hover:bg-white transition active:scale-95 cursor-pointer shadow-2xs min-h-[38px] sm:min-h-[42px]"
         >
           <span>0.5×</span>
         </button>
@@ -164,12 +177,13 @@ export default function PhraseCard({
         <button
           type="button"
           onClick={onRepeat ?? onListen}
-          className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklch,var(--ink)_16%,transparent)] bg-white/85 text-[var(--ink)] px-5 py-3 text-sm sm:text-base font-semibold hover:bg-white transition active:scale-95 cursor-pointer shadow-2xs"
+          className="inline-flex items-center gap-1.5 rounded-full border border-[color-mix(in_oklch,var(--ink)_16%,transparent)] bg-white/85 text-[var(--ink)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold hover:bg-white transition active:scale-95 cursor-pointer shadow-2xs min-h-[38px] sm:min-h-[42px]"
         >
-          <RotateCcw size={14} strokeWidth={2.2} />
+          <RotateCcw size={13} strokeWidth={2.2} />
           <span>Repetir</span>
         </button>
       </div>
     </PastelCard>
   );
 }
+
