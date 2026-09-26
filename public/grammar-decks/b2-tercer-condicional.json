@@ -212,5 +212,144 @@
       "answer": 0,
       "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
     }
-  ]
+  ],
+  "drill": {
+    "level": "B2",
+    "reviewed": true,
+    "transform": [
+      {
+        "source": "I didn't study, so I failed the driving test.",
+        "instruction": "Reescribe la oración en tercer condicional usando la palabra clave.",
+        "mustInclude": ["studied"],
+        "accept": ["If I had studied, I would have passed the driving test."],
+        "requires": ["third_conditional"]
+      },
+      {
+        "source": "She didn't set an alarm, so she missed her flight.",
+        "instruction": "Reescribe la oración usando tercer condicional con la palabra clave.",
+        "mustInclude": ["missed"],
+        "accept": [
+          "If she had set an alarm, she wouldn't have missed her flight.",
+          "If she had set an alarm, she would not have missed her flight."
+        ],
+        "requires": ["third_conditional"]
+      },
+      {
+        "source": "We arrived late because we took the wrong train.",
+        "instruction": "Reescribe en tercer condicional con la palabra clave.",
+        "mustInclude": ["taken"],
+        "accept": [
+          "If we hadn't taken the wrong train, we would have arrived on time.",
+          "If we had not taken the wrong train, we would have arrived on time."
+        ],
+        "requires": ["third_conditional"]
+      },
+      {
+        "source": "He didn't wear a coat, so he caught a bad cold.",
+        "instruction": "Reescribe usando la palabra clave entre paréntesis.",
+        "mustInclude": ["worn"],
+        "accept": [
+          "If he had worn a coat, he wouldn't have caught a cold.",
+          "If he had worn a coat, he would not have caught a cold."
+        ],
+        "requires": ["third_conditional"]
+      }
+    ],
+    "build": [
+      {
+        "kind": "reorder",
+        "chunks": [
+          "If I had known",
+          "about the traffic,",
+          "I would have left",
+          "twenty minutes earlier."
+        ],
+        "accept": [
+          "If I had known about the traffic, I would have left twenty minutes earlier."
+        ]
+      },
+      {
+        "kind": "reorder",
+        "chunks": [
+          "She would have finished",
+          "the project on time",
+          "if she had received",
+          "the client feedback."
+        ],
+        "accept": [
+          "She would have finished the project on time if she had received the client feedback."
+        ]
+      },
+      {
+        "kind": "reorder",
+        "chunks": [
+          "If you had warned us",
+          "about the storm,",
+          "we wouldn't have gone",
+          "sailing yesterday."
+        ],
+        "accept": [
+          "If you had warned us about the storm, we wouldn't have gone sailing yesterday."
+        ]
+      }
+    ],
+    "correct": [
+      {
+        "sentence": "If I would have seen you, I would have said hello.",
+        "accept": ["If I had seen you, I would have said hello."],
+        "explanation": "En la condición se usa past perfect (had seen), nunca would have."
+      },
+      {
+        "sentence": "If they had asked for directions, they wouldn't have gotten lost.",
+        "alreadyCorrect": true,
+        "accept": ["If they had asked for directions, they wouldn't have gotten lost."],
+        "explanation": "La oración es gramaticalmente impecable."
+      },
+      {
+        "sentence": "If she had listened to the advice, she had avoided the problem.",
+        "accept": ["If she had listened to the advice, she would have avoided the problem."],
+        "explanation": "El resultado requiere would have + participio."
+      },
+      {
+        "sentence": "Had we known the flight was cancelled, we would have stayed at the hotel.",
+        "alreadyCorrect": true,
+        "accept": ["Had we known the flight was cancelled, we would have stayed at the hotel."],
+        "explanation": "La inversión formal con Had en tercer condicional es correcta."
+      },
+      {
+        "sentence": "If he studied harder last year, he would have passed the exam.",
+        "accept": ["If he had studied harder last year, he would have passed the exam."],
+        "explanation": "Para una situación hipotética del pasado se usa past perfect (had studied)."
+      }
+    ],
+    "personalize": [
+      {
+        "mode": "open",
+        "promptEs": "Piensa en una decisión importante del pasado. ¿Cómo habría sido diferente tu vida si hubieras tomado otra decisión?",
+        "starter": "If I had chosen a different path, I would have ",
+        "requires": ["third_conditional"],
+        "minWords": 15,
+        "maxWords": 40,
+        "hintEs": "Escribe 2 o 3 oraciones usando If I had (not) + participio, I would (not) have + participio."
+      },
+      {
+        "mode": "open",
+        "promptEs": "¿Qué habría ocurrido si hubieras aprendido inglés a una edad más temprana?",
+        "starter": "If I had learned English earlier, I would have ",
+        "requires": ["third_conditional"],
+        "minWords": 15,
+        "maxWords": 40,
+        "hintEs": "Escribe tus ideas en pasado hipotético."
+      },
+      {
+        "mode": "open",
+        "promptEs": "Recuerda un momento de suerte o coincidencia. ¿Qué habría pasado sin esa casualidad?",
+        "starter": "If that coincidence had not happened, I would have ",
+        "requires": ["third_conditional"],
+        "minWords": 15,
+        "maxWords": 40,
+        "hintEs": "Usa la estructura de tercer condicional."
+      }
+    ]
+  }
 }

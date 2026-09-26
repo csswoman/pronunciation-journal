@@ -1,6 +1,8 @@
 /** Study deck card model (grammar cards UI — content wired later). */
 
 import type { PronunciationTargetId } from "@/lib/pronunciation/targets/types";
+import type { GrammarDrill } from "./drill-schema";
+export type { GrammarDrill } from "./drill-schema";
 
 export interface GrammarDeckMeta {
   eyebrow: string;
@@ -114,6 +116,7 @@ export interface GrammarStudyDeckData {
   pronunciationTargetIds?: PronunciationTargetId[];
   related?: GrammarRelatedLink[];
   quiz?: GrammarQuizQuestion[];
+  drill?: GrammarDrill;
   cards: GrammarStudyCardData[];
 }
 

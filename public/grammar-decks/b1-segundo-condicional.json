@@ -212,5 +212,125 @@
       "answer": 0,
       "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
     }
-  ]
+  ],
+  "drill": {
+    "level": "B1",
+    "reviewed": true,
+    "transform": [
+      {
+        "source": "I don't have enough money, so I don't buy that laptop.",
+        "instruction": "Reescribe usando segundo condicional con if.",
+        "accept": ["If I had enough money, I would buy that laptop."],
+        "requires": ["second_conditional"]
+      },
+      {
+        "source": "She is not here, so she cannot help us.",
+        "instruction": "Reescribe usando if.",
+        "accept": [
+          "If she were here, she could help us.",
+          "If she was here, she could help us."
+        ],
+        "requires": ["second_conditional"]
+      },
+      {
+        "source": "I don't know his number, so I don't call him.",
+        "instruction": "Reescribe usando if.",
+        "accept": ["If I knew his number, I would call him."],
+        "requires": ["second_conditional"]
+      },
+      {
+        "source": "We don't live in the countryside, so we don't have a garden.",
+        "instruction": "Reescribe usando if.",
+        "accept": ["If we lived in the countryside, we would have a garden."],
+        "requires": ["second_conditional"]
+      }
+    ],
+    "build": [
+      {
+        "kind": "combine",
+        "sources": ["I don't have a car.", "I take the bus."],
+        "connector": "if",
+        "accept": [
+          "If I had a car, I would not take the bus.",
+          "If I had a car, I wouldn't take the bus."
+        ],
+        "requires": ["second_conditional"]
+      },
+      {
+        "kind": "combine",
+        "sources": ["He doesn't study.", "He fails his exams."],
+        "connector": "if",
+        "accept": ["If he studied, he would pass his exams."],
+        "requires": ["second_conditional"]
+      },
+      {
+        "kind": "combine",
+        "sources": ["I am not the manager.", "I cannot make this decision."],
+        "connector": "if",
+        "accept": [
+          "If I were the manager, I could make this decision.",
+          "If I was the manager, I could make this decision."
+        ],
+        "requires": ["second_conditional"]
+      }
+    ],
+    "correct": [
+      {
+        "sentence": "If I will have time, I would call you.",
+        "accept": ["If I had time, I would call you."],
+        "explanation": "La cláusula con if usa pasado simple, nunca will."
+      },
+      {
+        "sentence": "If I were you, I would accept the job offer.",
+        "alreadyCorrect": true,
+        "accept": ["If I were you, I would accept the job offer."],
+        "explanation": "La oración es completamente correcta."
+      },
+      {
+        "sentence": "If she knew the answer, she will tell us.",
+        "accept": ["If she knew the answer, she would tell us."],
+        "explanation": "En segundo condicional se usa would en la cláusula principal."
+      },
+      {
+        "sentence": "If they lived closer, they would visit us more often.",
+        "alreadyCorrect": true,
+        "accept": ["If they lived closer, they would visit us more often."],
+        "explanation": "La oración ya está bien estructurada."
+      },
+      {
+        "sentence": "If I would win the lottery, I bought a house.",
+        "accept": ["If I won the lottery, I would buy a house."],
+        "explanation": "If va con pasado simple (won) y el resultado con would + verbo base."
+      }
+    ],
+    "personalize": [
+      {
+        "mode": "open",
+        "promptEs": "¿Qué harías si ganaras la lotería?",
+        "starter": "If I won the lottery, I would ",
+        "requires": ["second_conditional"],
+        "minWords": 10,
+        "maxWords": 30,
+        "hintEs": "Usa If I won the lottery, I would... y describe tus planes."
+      },
+      {
+        "mode": "open",
+        "promptEs": "¿A dónde viajarías si tuvieras un mes de vacaciones?",
+        "starter": "If I had a month of vacation, I would ",
+        "requires": ["second_conditional"],
+        "minWords": 10,
+        "maxWords": 30,
+        "hintEs": "Responde usando If I had..., I would visit..."
+      },
+      {
+        "mode": "open",
+        "promptEs": "Si pudieras cambiar una cosa de tu rutina diaria, ¿cuál sería?",
+        "starter": "If I could change my routine, I would ",
+        "requires": ["second_conditional"],
+        "minWords": 10,
+        "maxWords": 30,
+        "hintEs": "Escribe usando If I could..., I would..."
+      }
+    ]
+  }
 }

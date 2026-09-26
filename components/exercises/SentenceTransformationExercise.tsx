@@ -6,17 +6,25 @@
 //   <Instruction />
 //   <AnswerField />
 //   <ErrorAlert />
+//   <SelfAssessSection />
 //   <SubmitButton />
 // </SentenceTransformationExercise>
 
 import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
+import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import { transformationAnswers } from '@/lib/exercises/transformations'
 import { buildTransformationTaskPrompt } from '@/lib/ai-prompts'
+import { matchAnswer, specFromTransformation } from '@/lib/exercises/answer-match'
+import { feedbackFromVerdict } from '@/lib/exercises/answer-feedback'
+import { checkStructures, STRUCTURE_CHECKS } from '@/lib/exercises/structure-checks'
+import { saveAcceptedAnswer, useAcceptedAnswers } from '@/hooks/useAcceptedAnswers'
+import { SelfAssessPrompt } from './SelfAssessPrompt'
 import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
+import type { PedagogicalFeedback } from '@/lib/practice/types'
 
 export function SentenceTransformationExercise({
   exercise,
@@ -27,7 +35,14 @@ export function SentenceTransformationExercise({
 }) {
   const [answer, setAnswer] = useState('')
   const [done, setDone] = useState(false)
+  const [localFeedback, setLocalFeedback] = useState<PedagogicalFeedback | null>(null)
+  const [showSelfAssess, setShowSelfAssess] = useState(false)
   const startedAt = useRef(Date.now())
+
+  const auth = useAuthOptional()
+  const userId = auth?.user?.id ?? 'anon'
+  const extraAccepted = useAcceptedAnswers(exercise.id, userId)
+
   const acceptedAnswers = useMemo(() => transformationAnswers(exercise), [exercise])
   const pipeline = useProductionGrading({
     exerciseKey: exercise.id,
@@ -39,10 +54,60 @@ export function SentenceTransformationExercise({
       : 'Necesitas conexión para corregir esta transformación.',
   })
   const grading = pipeline.grading
+  const canonical = exercise.referenceAnswer ?? acceptedAnswers[0] ?? ''
 
   async function submit() {
     const production = answer.trim()
     if (!production || grading || done) return
+    const timeMs = Date.now() - startedAt.current
+
+    // Local-first matchAnswer
+    const spec = exercise.answerSpec ?? specFromTransformation(exercise)
+    const maxTypos = exercise.level === 'B2' || exercise.level === 'C1' ? 1 : 2
+    const verdict = matchAnswer(production, spec, { maxTypos, extraAccepted })
+
+    if (verdict.kind === 'exact' || verdict.kind === 'variant' || verdict.kind === 'typo') {
+      const fb = feedbackFromVerdict(verdict, { canonical, explanation: exercise.instruction })
+      setDone(true)
+      setLocalFeedback(fb)
+      onResult(true, production, timeMs, {
+        score: verdict.score,
+        feedback: fb,
+      })
+      return
+    }
+
+    if (
+      verdict.kind === 'contraction_mismatch' ||
+      verdict.kind === 'missing_required' ||
+      verdict.kind === 'known_wrong'
+    ) {
+      const fb = feedbackFromVerdict(verdict, { canonical, explanation: exercise.instruction })
+      setLocalFeedback(fb)
+      return
+    }
+
+    // Check local structures if exercise.requires exists
+    if (exercise.requires && exercise.requires.length > 0) {
+      const structRes = checkStructures(production, exercise.requires)
+      if (!structRes.ok && structRes.missing.length > 0) {
+        const firstMissing = structRes.missing[0]
+        const checker = STRUCTURE_CHECKS[firstMissing]
+        const hint = checker?.hintEs ?? `Falta usar la estructura requerida: ${firstMissing}`
+        setLocalFeedback({
+          immediate: hint,
+          explanation: exercise.instruction,
+          canRetry: true,
+        })
+        return
+      }
+    }
+
+    // If offline or AI budget spent, offer self-assessment
+    if (pipeline.aiBudgetSpent) {
+      setShowSelfAssess(true)
+      return
+    }
 
     const grade = await pipeline.grade({
       targetItem: exercise.referenceAnswer ?? exercise.instruction,
@@ -50,22 +115,67 @@ export function SentenceTransformationExercise({
       production,
       modality: 'written',
       constraintCheck: exercise.instruction,
+      level: exercise.level,
     })
-    if (!grade) return
+
+    if (!grade) {
+      setShowSelfAssess(true)
+      return
+    }
 
     const feedback = pedagogicalFeedbackFromProductionGrade(grade)
     feedback.immediate = grade.correct ? '¡Correcto!' : 'Revisa la transformación.'
-    if (exercise.referenceAnswer) {
-      feedback.expectedAnswer = exercise.referenceAnswer
+    if (canonical) {
+      feedback.expectedAnswer = canonical
       if (!grade.correct) {
-        feedback.correction = exercise.referenceAnswer
+        feedback.correction = canonical
       }
     }
 
     setDone(true)
-    onResult(grade.correct, production, Date.now() - startedAt.current, {
+    onResult(grade.correct, production, timeMs, {
       score: grade.score,
       feedback,
+    })
+  }
+
+  const handleSelfMistake = () => {
+    setDone(true)
+    setShowSelfAssess(false)
+    const timeMs = Date.now() - startedAt.current
+    onResult(false, answer.trim(), timeMs, {
+      score: 0,
+      resultStatus: 'answered',
+      feedback: {
+        immediate: 'Revisa la transformación. Compara tu versión con la de referencia.',
+        correction: canonical,
+        expectedAnswer: canonical,
+        canRetry: false,
+      },
+      firstTryFailed: true,
+    })
+  }
+
+  const handleSelfApprove = async () => {
+    setDone(true)
+    setShowSelfAssess(false)
+    const production = answer.trim()
+    const timeMs = Date.now() - startedAt.current
+    await saveAcceptedAnswer({
+      userId,
+      exerciseKey: exercise.id,
+      answer: production,
+      canonical,
+    })
+    onResult(true, production, timeMs, {
+      score: 70,
+      resultStatus: 'unscored',
+      feedback: {
+        immediate: '¡Respuesta aceptada por ti!',
+        correction: canonical,
+        expectedAnswer: canonical,
+        canRetry: false,
+      },
     })
   }
 
@@ -89,7 +199,13 @@ export function SentenceTransformationExercise({
           value={answer}
           onChange={(event) => setAnswer(event.target.value)}
           onKeyDown={(event) => {
-            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !grading && !done) {
+            if (
+              (event.metaKey || event.ctrlKey || event.key === 'Enter') &&
+              !event.shiftKey &&
+              answer.trim() &&
+              !grading &&
+              !done
+            ) {
               event.preventDefault()
               void submit()
             }
@@ -101,11 +217,26 @@ export function SentenceTransformationExercise({
         />
       </div>
 
+      {localFeedback?.immediate && !done ? (
+        <p role="alert" className="text-body-sm text-error">
+          {localFeedback.immediate}
+        </p>
+      ) : null}
+
       {pipeline.error ? (
         <p role="alert" className="text-body-sm text-error">
           {pipeline.error}
         </p>
       ) : null}
+
+      {showSelfAssess && !done && (
+        <SelfAssessPrompt
+          canonicalAnswer={canonical}
+          userAnswer={answer.trim()}
+          onMistake={handleSelfMistake}
+          onSelfApprove={handleSelfApprove}
+        />
+      )}
 
       {!done && (
         <Button

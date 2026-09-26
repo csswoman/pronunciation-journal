@@ -232,5 +232,102 @@
       "answer": 0,
       "explain": "'They' requiere 'weren't' (were not). El auxiliar 'did' nunca se usa con 'was/were'."
     }
-  ]
+  ],
+  "drill": {
+    "level": "A2",
+    "reviewed": true,
+    "transform": [
+      {
+        "source": "I am very tired today.",
+        "instruction": "Cambia la oración al pasado usando yesterday.",
+        "accept": ["I was very tired yesterday."],
+        "requires": ["past_simple"]
+      },
+      {
+        "source": "They are at school right now.",
+        "instruction": "Cambia la oración al pasado usando yesterday.",
+        "accept": ["They were at school yesterday."],
+        "requires": ["past_simple"]
+      },
+      {
+        "source": "She is not at home.",
+        "instruction": "Cambia la oración al pasado con was not o wasn't.",
+        "accept": ["{She was not|She wasn't} at home."],
+        "requires": ["past_simple"]
+      },
+      {
+        "source": "We are very happy with the results.",
+        "instruction": "Cambia la oración al pasado.",
+        "accept": ["We were very happy with the results."],
+        "requires": ["past_simple"]
+      }
+    ],
+    "build": [
+      {
+        "kind": "reorder",
+        "accept": ["{Yesterday I was|I was yesterday} very busy at work."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["{Last night they were|They were last night} at the concert."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["She was always very kind to everyone here."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["{Suddenly the weather was|The weather was suddenly} extremely cold."]
+      }
+    ],
+    "correct": [
+      {
+        "sentence": "I were at home yesterday.",
+        "accept": ["{I was|We were|They were} at home yesterday."],
+        "explanation": "Con I se usa was en pasado."
+      },
+      {
+        "sentence": "She was very happy with her new job.",
+        "alreadyCorrect": true,
+        "accept": ["She was very happy with her new job."],
+        "explanation": "La oración ya es correcta."
+      },
+      {
+        "sentence": "They was surprised by the news.",
+        "accept": ["{They were|She was|He was} surprised by the news."],
+        "explanation": "El pronombre they requiere were."
+      },
+      {
+        "sentence": "We wasn't ready for the test.",
+        "accept": ["{We weren't|We were not} ready for the test."],
+        "explanation": "Con we se usa weren't (were not)."
+      },
+      {
+        "sentence": "Where was you last Saturday?",
+        "accept": ["Where were you last Saturday?"],
+        "explanation": "El sujeto you usa were, incluso en preguntas."
+      }
+    ],
+    "personalize": [
+      {
+        "mode": "frame",
+        "frame": "Last weekend I ___.",
+        "slot": "phrase",
+        "requires": ["past_simple"],
+        "hintEs": "Escribe qué hiciste o dónde estuviste el fin de semana en pasado."
+      },
+      {
+        "mode": "frame",
+        "frame": "Yesterday afternoon I was ___.",
+        "slot": "phrase",
+        "hintEs": "Escribe dónde estabas o cómo te sentías ayer por la tarde."
+      },
+      {
+        "mode": "frame",
+        "frame": "Two years ago, my life was ___.",
+        "slot": "phrase",
+        "hintEs": "Describe cómo era tu vida hace dos años."
+      }
+    ]
+  }
 }

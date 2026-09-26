@@ -17,17 +17,26 @@ contenido, targets, evidencia, Plan diario, Repaso y Progreso está definida en
    - [Minimal Pair](#minimal-pair)
    - [Dictation (palabra)](#dictation-palabra)
    - [Speak Word](#speak-word)
-3. [Ejercicios genéricos (Generic Exercises)](#ejercicios-genéricos-generic-exercises)
+3. [Corrección local y calificador tolerante](#corrección-local-primero-y-calificador-tolerante)
+   - [Capas de matchAnswer](#capas-de-matchanswer)
+   - [Plantillas {a|b} y combinatoria segura](#plantillas-ab-y-combinatoria-segura)
+   - [Derivación de targetTokens](#derivación-de-targettokens)
+   - [Detectores de estructura pura](#detectores-de-estructura-pura)
+   - [Flujo "Mi respuesta también es correcta" (SelfAssessPrompt)](#flujo-mi-respuesta-también-es-correcta-selfassessprompt)
+4. [Ejercicios genéricos (Generic Exercises)](#ejercicios-genéricos-generic-exercises)
    - [Fill in the blank](#fill-in-the-blank)
    - [Sentence Dictation](#sentence-dictation)
    - [Match Pairs](#match-pairs)
    - [Reorder Words](#reorder-words)
-4. [Contrato de elegibilidad](#contrato-de-elegibilidad)
-5. [Flujo de una sesión](#flujo-de-una-sesión)
-6. [Persistencia y tracking](#persistencia-y-tracking)
-7. [Spaced Repetition (SM-2)](#spaced-repetition-sm-2)
-8. [Evidencia de habla: niveles de señal y matriz surface→store](#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore)
-9. [Extensión futura](#extensión-futura)
+   - [Sentence Transformation](#sentence-transformation)
+   - [Error Correction](#error-correction)
+   - [Personalization (Frame y Open)](#personalization)
+5. [Contrato de elegibilidad](#contrato-de-elegibilidad)
+6. [Flujo de una sesión](#flujo-de-una-sesión)
+7. [Persistencia y tracking](#persistencia-y-tracking)
+8. [Spaced Repetition (SM-2)](#spaced-repetition-sm-2)
+9. [Evidencia de habla: niveles de señal y matriz surface→store](#evidencia-de-habla-niveles-de-señal-y-matriz-surfacestore)
+10. [Extensión futura](#extensión-futura)
 
 ---
 
@@ -47,18 +56,64 @@ Ambos sistemas comparten:
 - El catálogo `exercise_types` (slug + label por tipo)
 - La lógica Levenshtein para validación tolerante de texto
 
-## Corrección local primero
+## Corrección local primero y calificador tolerante
 
-Todo ejercicio que necesita evaluación abierta pasa por `gradeWithLocalFirst`.
+Todo ejercicio que necesita evaluación abierta pasa primero por evaluación determinista local.
 El pipeline aplica este orden: rechaza respuestas vacías o de menos de dos
 palabras; detecta una transformación sin cambios; acepta referencias explícitas
 tras normalizar mayúsculas, puntuación final y contracciones; reutiliza el banco
-o la caché local; y solo entonces llama a Gemini.
+o la caché local; y solo entonces recurre a Gemini si no hay un evaluador local suficiente.
 
 Las notas del modelo se guardan por cuenta y ejercicio en `gradedAnswers`, con
 una clave SHA-256 versionada. Una respuesta correcta con al menos 90 puntos se
 incorpora al banco local cuando el ejercicio tiene referencia fija. Esto permite
 corregir referencias conocidas sin conexión.
+
+### Calificador tolerante (`matchAnswer`)
+
+Ubicación: `lib/exercises/answer-match.ts`
+Contrato: `matchAnswer(input, spec, options?): MatchVerdict`
+
+Diseñado para ejercicios escritos de drills de gramática (`sentence_transformation`, `error_correction`, `personalization`), el calificador ejecuta 5 capas ordenadas:
+
+1. **Normalización determinista (`normalize`)**: Colapso de espacios múltiples, conversión a minúsculas, eliminación de puntuación terminal (`.`, `!`, `?`), normalización de comillas tipográficas (`’` → `'`), y trim de espacios en blanco.
+2. **Plantillas `{a|b}` y expansión combinatoria (`expandTemplate`)**:
+   - Soporta sintaxis de alternancia como `I {have|'ve} seen {it|that}`.
+   - Aplica un **tope estricto de 64 variantes combinatorias** (`MAX_TEMPLATE_EXPANSIONS = 64`) para proteger la memoria y evitar explosión exponencial por backtracking o regex. Si un autor o generador excede 64 variantes, se lanza un error de validación interceptado por `safeMatchAnswer`.
+3. **Manejo de contracciones (`contractions`)**:
+   - `'equivalent'` (default): Acepta indistintamente formas contraídas y expandidas (ej. *"don't"* ↔ *"do not"*, *"I've"* ↔ *"I have"*).
+   - `'require'`: Exige el uso de contracciones (típico en drills de habla o nivel A1 para naturalidad).
+   - `'forbid'`: Exige formas plenas sin contracción (típico en registro formal C1).
+4. **Tolerancia ortográfica por distancia Damerau-Levenshtein**:
+   - Permite una distancia de edición de 1 error tipográfico para palabras o tokens significativos de al menos 5 caracteres (`allowTypo: true`).
+   - Distingue entre un error conceptual y un tipeo menor accidental sin penalizar injustamente al alumno.
+5. **Restricciones duras (`mustInclude`, `forbiddenWords`)**:
+   - `mustInclude`: Verifica obligatoriamente la presencia de tokens clave (por ejemplo, el prompt word de un ejercicio Cambridge tipo Key Word Transformation).
+   - `forbiddenWords`: Bloquea respuestas que reutilicen palabras prohibidas de la oración original (evitando copias sin transformar).
+6. **Derivación de `targetTokens`**:
+   - La función auxiliar `deriveTargetTokens(spec)` extrae automáticamente las palabras objetivo requeridas a partir de las opciones alternas de la plantilla, asegurando que ejercicios como `SentenceTransformationExercise` reciban los chips o validaciones pertinentes.
+
+### Detectores de estructura pura (`lib/exercises/structure-checks/`)
+
+Para evaluar la gramática en local sin incurrir en cuotas de LLM ni latencia, el sistema cuenta con un motor determinista basado en tokenización superficial, patrones léxicos y una tabla base de verbos irregulares:
+
+- **Tabla de verbos irregulares (`irregular-verbs.ts`)**: Mapea ~180 verbos del inglés en sus formas infinitivo, pasado simple (`past`) y participio pasado (`past_participle`), incluyendo formas compuestas como `"wasn't"` y `"weren't"`.
+- **26 detectores agrupados por familia**:
+  - **Tiempos verbales (`tenses.ts`)**: `present_simple`, `past_simple`, `present_continuous`, `past_continuous`, `present_perfect`, `past_perfect`, `future_will`, `future_going_to`, `passive_voice`, `used_to`.
+  - **Condicionales (`conditionals.ts`)**: `zero_conditional`, `first_conditional`, `second_conditional`, `third_conditional`, `mixed_conditional`.
+  - **Sintaxis y preguntas (`questions-syntax.ts`)**: `question_tag`, `indirect_question`, `so_neither_nor`, `cleft_it`, `cleft_what`, `negative_inversion`, `modal_deduction_past`, `wish_past`, `reported_speech`, `relative_clause`, `causative_have`.
+- **API `checkStructures(text, requires)`**: Verifica que el texto del usuario cumpla todas las estructuras listadas en `requires`. Retorna `{ satisfied: boolean, missing: string[] }`.
+
+### Flujo "Mi respuesta también es correcta" (`SelfAssessPrompt`)
+
+Ubicación: `components/exercises/SelfAssessPrompt.tsx`, `hooks/useAcceptedAnswers.ts`
+
+Cuando un ejercicio calificado en local marca una respuesta como incorrecta, el alumno puede considerar que su alternativa es legítima (falso negativo gramatical o variante dialectal válida):
+
+1. **Interacción no intrusiva**: El botón accesible *"Mi respuesta también es correcta"* aparece en el pie del ejercicio tras fallar.
+2. **Persistencia local inmediata**: Al pulsarlo, la respuesta del alumno se almacena en Dexie (`gradedAnswers`) marcada con `isUserAccepted: true` y puntuación 100. En futuras sesiones en el mismo dispositivo, `matchAnswer` la reconocerá como válida.
+3. **Auditoría docente y reporte outbox**: Se despacha un reporte automático mediante `reportWrongFeedback` con feature `'production_grade'`, registrando la oración esperada, la respuesta del usuario y el ID del ejercicio para que el equipo docente revise y enriquezca la plantilla del mazo.
+4. **Integridad de métricas**: El intento se etiqueta internamente con `outcome: 'unscored'` en el ciclo de evidencia, evitando que una auto-aprobación del usuario altere de manera espuria los algoritmos adaptativos de SRS o de cálculo de nivel CEFR.
 
 ### Presupuesto de reintentos
 
@@ -401,6 +456,46 @@ Topic review coloca como máximo una corrección autorada y completa el cap
 existente de tres con `multiple_choice`; si no existe un par válido conserva el
 fallback quiz-only. El audit actual reporta 272 pares válidos en 128 decks y 207
 líneas omitidas con reason code.
+
+En los drills de gramática (`GrammarDrill`), a partir del nivel A2 se incluye el botón
+**"Está correcta"** (`allowAlreadyCorrect`), desafiando al estudiante a discernir si
+la frase proporcionada tiene o no un error antes de editarla.
+
+---
+
+### Sentence Transformation
+
+**Slug:** `sentence_transformation`
+**Componente:** `components/exercises/SentenceTransformationExercise.tsx`
+**Generador:** `lib/exercises/generators/grammar-drill.ts` (drills) / `lib/exercises/generators/transformations.ts`
+
+El alumno transforma una oración original según una instrucción o usando una palabra clave obligatoria (estilo Key Word Transformation de Cambridge).
+
+- **Evaluación determinista:** Calificado localmente mediante `matchAnswer` contra `answerSpec` (`template`, `contractions`, `mustInclude`, `forbiddenWords`).
+- **Verificación de estructura:** Opcionalmente comprueba requisitos estructurales puros vía `checkStructures(userInput, requires)`.
+- **Revelado adaptativo por intentos:** Utiliza `useDrillAttempts` para permitir hasta 2 intentos en A1–B1 antes de revelar la respuesta; en B2–C1 es de intento único.
+- **Acción "Mi respuesta también es correcta":** Si el evaluador no reconoce una variante válida, `SelfAssessPrompt` permite auto-evaluación y reporte.
+
+---
+
+### Personalization
+
+**Slug:** `personalization`
+**Componente:** `components/exercises/PersonalizationExercise.tsx`
+**Sub-componentes:** `PersonalizationFrameExercise.tsx` (variante frame), `PersonalizationOpenExercise.tsx` (variante open)
+**Calificador:** `lib/exercises/personalization.ts` (`gradePersonalization`)
+
+Ejercicio de transferencia personal que conecta la estructura gramatical aprendida con la vida real del estudiante:
+
+- **Modo Frame (A1–A2):**
+  - Muestra una plantilla con huecos (`slots`) guiados por un hint y tipo (`'word' | 'phrase' | 'number'`).
+  - Ejemplo: `"Every day, I {activity} at {time}."`
+  - Valida que los slots no estén vacíos, que cumplan el tipo y, opcionalmente, que la oración ensamblada satisfaga los detectores de estructura (`requires`).
+- **Modo Open (B1–C1):**
+  - Muestra un prompt de respuesta abierta guiado (ej. *"Describe a decision you would change using the third conditional"*).
+  - Incluye rango de longitud esperada (`minWords` – `maxWords`).
+  - Validación determinista pura: longitud suficiente de palabras de contenido + satisfacción obligatoria de los detectores en `requires` (ej. `['third_conditional']`).
+- **Auto-evaluación:** Ofrece `SelfAssessPrompt` si la respuesta cumple la longitud pero falla la detección sintáctica estricta.
 
 ---
 

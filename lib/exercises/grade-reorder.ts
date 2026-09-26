@@ -11,18 +11,19 @@
  * comparing, keeping reorder grading consistent with the tolerance applied to
  * dictation exercises.
  */
-export function gradeReorder(userAnswer: string, sentence: string): boolean {
-  return normalize(userAnswer) === normalize(sentence)
-}
+import { matchAnswer, normalize, type AnswerSpec } from './answer-match'
 
-/**
- * Lowercase, collapse whitespace, and strip punctuation that the chip layout
- * can't represent anyway. Word order is preserved — only orthography is relaxed.
- */
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[.,!?;:"'`()]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+export function gradeReorder(
+  userAnswer: string,
+  sentence: string,
+  spec?: AnswerSpec,
+): boolean {
+  if (spec) {
+    const verdict = matchAnswer(userAnswer, {
+      ...spec,
+      contractions: 'forbid',
+    })
+    return verdict.kind === 'exact' || verdict.kind === 'variant'
+  }
+  return normalize(userAnswer) === normalize(sentence)
 }

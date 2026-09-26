@@ -8,6 +8,9 @@
 // ./types.ts (GrammarStudyDeckData and friends).
 
 import { z } from "zod";
+import { GrammarDrillSchema } from "./drill-schema";
+export { GrammarDrillSchema } from "./drill-schema";
+export type { GrammarDrill } from "./drill-schema";
 
 const GrammarDeckMetaSchema = z.object({
   eyebrow: z.string(),
@@ -117,6 +120,8 @@ export const GrammarStudyDeckSchema = z.object({
   related: z.array(GrammarRelatedSchema).optional(),
   /** Optional 1–5 question self-check shown before the done screen. */
   quiz: z.array(GrammarQuizQuestionSchema).max(5).optional(),
+  /** Optional practice drill with tolerant grading (Plan 043). */
+  drill: GrammarDrillSchema.optional(),
   // Exactly 6 cards per lesson — the "aprendizaje correcto" rule.
   cards: z.array(GrammarStudyCardSchema).min(1).max(6),
 });

@@ -212,5 +212,146 @@
       "answer": 0,
       "explain": "Una frase natural depende del significado, la forma y el contexto, no de traducir palabra por palabra."
     }
-  ]
+  ],
+  "drill": {
+    "level": "C1",
+    "reviewed": true,
+    "transform": [
+      {
+        "source": "I have rarely experienced such exceptional hospitality.",
+        "instruction": "Reescribe comenzando con Seldom para dar énfasis retórico.",
+        "mustInclude": ["Seldom"],
+        "accept": ["Seldom have I experienced such exceptional hospitality."],
+        "requires": ["negative_inversion"]
+      },
+      {
+        "source": "You must not reveal this confidential password under any circumstances.",
+        "instruction": "Reescribe comenzando con Under no circumstances.",
+        "mustInclude": ["Under", "circumstances"],
+        "accept": [
+          "Under no circumstances should you reveal this confidential password.",
+          "Under no circumstances must you reveal this confidential password."
+        ],
+        "requires": ["negative_inversion"]
+      },
+      {
+        "source": "We need to address the underlying causes of this failure.",
+        "instruction": "Reescribe como oración hendida (cleft sentence) con What.",
+        "mustInclude": ["What"],
+        "accept": [
+          "What we need to address is the underlying causes of this failure.",
+          "What we need to address are the underlying causes of this failure."
+        ],
+        "requires": ["cleft_what"]
+      },
+      {
+        "source": "He not only completed the marathon, but he also broke the national record.",
+        "instruction": "Reescribe comenzando con Not only para enfatizar su logro.",
+        "mustInclude": ["Not", "only"],
+        "accept": [
+          "Not only did he complete the marathon, but he also broke the national record."
+        ],
+        "requires": ["negative_inversion"]
+      }
+    ],
+    "build": [
+      {
+        "kind": "reorder",
+        "chunks": [
+          "Rarely have I seen",
+          "such dedication and passion",
+          "displayed in a team environment."
+        ],
+        "accept": [
+          "Rarely have I seen such dedication and passion displayed in a team environment."
+        ]
+      },
+      {
+        "kind": "reorder",
+        "chunks": [
+          "What surprised everyone most",
+          "was not the policy change itself,",
+          "but the abrupt manner in which",
+          "it was announced."
+        ],
+        "accept": [
+          "What surprised everyone most was not the policy change itself, but the abrupt manner in which it was announced."
+        ]
+      },
+      {
+        "kind": "reorder",
+        "chunks": [
+          "Only by maintaining strict discipline",
+          "can the research institute ensure",
+          "reliable experimental outcomes."
+        ],
+        "accept": [
+          "Only by maintaining strict discipline can the research institute ensure reliable experimental outcomes."
+        ]
+      }
+    ],
+    "correct": [
+      {
+        "sentence": "Scarcely had the keynote begun when the power went out.",
+        "alreadyCorrect": true,
+        "accept": ["Scarcely had the keynote begun when the power went out."],
+        "explanation": "Inversión correcta tras scarcely... when."
+      },
+      {
+        "sentence": "Under no circumstances you should sign the contract without legal counsel.",
+        "accept": [
+          "Under no circumstances should you sign the contract without legal counsel."
+        ],
+        "explanation": "La inversión requiere auxiliar antes del sujeto: should you sign."
+      },
+      {
+        "sentence": "What surprised the investigators was the complete lack of oversight.",
+        "alreadyCorrect": true,
+        "accept": ["What surprised the investigators was the complete lack of oversight."],
+        "explanation": "Oración hendida (wh-cleft) perfectamente estructurada."
+      },
+      {
+        "sentence": "Not only she arrived late, but she also forgot her presentation.",
+        "accept": [
+          "Not only did she arrive late, but she also forgot her presentation."
+        ],
+        "explanation": "Not only en posición inicial exige inversión: did she arrive."
+      },
+      {
+        "sentence": "Hardly had they reached the summit when a blizzard struck.",
+        "alreadyCorrect": true,
+        "accept": ["Hardly had they reached the summit when a blizzard struck."],
+        "explanation": "Hardly had + participio ... when es una estructura enfática clásica y correcta."
+      }
+    ],
+    "personalize": [
+      {
+        "mode": "open",
+        "promptEs": "Reflexiona sobre tu trayectoria profesional o académica. Expresa dos ideas enfáticas sobre tus principios usando una inversión negativa y una hendida con What.",
+        "starter": "What matters most in my career is integrity. Under no circumstances would I ",
+        "requires": ["cleft_what", "negative_inversion"],
+        "minWords": 20,
+        "maxWords": 60,
+        "hintEs": "Incluye una frase con 'What...' y otra con 'Under no circumstances...' o 'Rarely...'"
+      },
+      {
+        "mode": "open",
+        "promptEs": "Expresa una convicción ética fuerte sobre el liderazgo o la tecnología usando inversión y cleft.",
+        "starter": "What concerns me most about modern technology is privacy. Seldom have we ",
+        "requires": ["cleft_what", "negative_inversion"],
+        "minWords": 20,
+        "maxWords": 60,
+        "hintEs": "Combina una estructura de hendidura (What...) con inversión (Seldom have I/we...)"
+      },
+      {
+        "mode": "open",
+        "promptEs": "Describe un momento de aprendizaje revelador en tu vida usando inversión negativa y hendidura.",
+        "starter": "What taught me the most was that unexpected failure. Never had I ",
+        "requires": ["cleft_what", "negative_inversion"],
+        "minWords": 20,
+        "maxWords": 60,
+        "hintEs": "Usa 'What...' seguido de 'Never had I...'"
+      }
+    ]
+  }
 }
