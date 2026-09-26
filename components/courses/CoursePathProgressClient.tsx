@@ -391,6 +391,15 @@ export default function CoursePathProgressClient({
         )}
 
         <CoursePracticeSuggestions level={level} levelId={level.id} completedIds={completedIds} />
+
+        {level.id !== "opcionales" && electiveTracks && electiveTracks.length > 0 && (
+          <CoursePathC1Electives
+            tracks={electiveTracks}
+            topicImmersionMap={topicImmersionMap}
+            completedIds={completedIds}
+            downloadedIds={downloadedIds}
+          />
+        )}
       </div>
 
       {showAside && (
