@@ -15,7 +15,6 @@ import type { ConceptSignal } from '@/lib/courses/concept-profile'
 import { mergeConceptSignals } from '@/lib/courses/assessment-profile'
 import {
   CONCEPT_EVIDENCE_WINDOW,
-  CONCEPT_MASTERY_MIN_CONTENTS,
   mergeConceptEvidence,
   summarizeConceptEvidence,
 } from '@/lib/progress/concept-evidence'
@@ -121,6 +120,22 @@ describe('concept evidence accumulation', () => {
     expect(signal.correct).toBe(1)
   })
 
+  it('returns to review when the latest answer lowers accuracy below 80 percent', async () => {
+    await record('s1', Array.from({ length: 5 }, (_, index) =>
+      answer('present-simple', `q${index}`, index < 4)))
+    expect((await settled('present-simple', 5)).status).toBe('mastered')
+
+    const laterMiss = answer('present-simple', 'q0', false, 's2:q0')
+    laterMiss.completedAt = new Date('2026-09-27T13:00:00Z')
+    await record('s2', [laterMiss])
+
+    await vi.waitFor(async () => {
+      const signal = await concept('present-simple')
+      expect(signal).toMatchObject({ correct: 3, total: 5, status: 'review' })
+      expect(signal?.evidence).toHaveLength(6)
+    })
+  })
+
   it('counts repeating the same content as one piece of evidence', async () => {
     await record('s1', Array.from({ length: 5 }, (_, index) =>
       answer('present-simple', 'q1', true, `s1:${index}`)))
@@ -167,12 +182,15 @@ describe('concept evidence contract (pure)', () => {
     expect(merged[0]?.attemptId).toBe('a5')
   })
 
-  it('requires the provisional minimum of distinct contents and accuracy', () => {
-    const four = Array.from({ length: CONCEPT_MASTERY_MIN_CONTENTS - 1 }, (_, index) =>
-      item(`a${index}`, `q${index}`, true, '2026-09-27T10:00:00Z'))
-    expect(summarizeConceptEvidence(four).status).toBe('review')
-    const fiveWithOneMiss = [...four, item('a9', 'q9', false, '2026-09-27T10:00:00Z')]
-    expect(summarizeConceptEvidence(fiveWithOneMiss)).toEqual({ correct: 4, total: 5, status: 'mastered' })
+  it.each([
+    { correct: 4, total: 4, status: 'review' },
+    { correct: 4, total: 5, status: 'mastered' },
+    { correct: 3, total: 5, status: 'review' },
+    { correct: 7, total: 9, status: 'review' },
+  ])('applies the approved criterion: $correct/$total is $status', ({ correct, total, status }) => {
+    const evidence = Array.from({ length: total }, (_, index) =>
+      item(`a${index}`, `q${index}`, index < correct, '2026-09-27T10:00:00Z'))
+    expect(summarizeConceptEvidence(evidence)).toEqual({ correct, total, status })
   })
 
   it('carries exercise evidence through a later manual claim', () => {

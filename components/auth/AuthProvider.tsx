@@ -105,6 +105,7 @@ export default function AuthProvider({
     });
 
     const hydrateCEFR = async (userId: string) => {
+      if (!navigator.onLine) return;
       if (hydrationPromises.has(userId)) return hydrationPromises.get(userId)!;
       const promise = (async () => {
         try {
@@ -194,6 +195,7 @@ export default function AuthProvider({
 
     const bootstrapGuestIfNeeded = async (current: Session | null) => {
       if (current?.user) return { session: current, didBootstrap: false };
+      if (!navigator.onLine) return { session: null, didBootstrap: false };
       if (guestBootstrapTried.current) return { session: null, didBootstrap: false };
       guestBootstrapTried.current = true;
       const { data, error } = await signInAsGuest();
@@ -300,9 +302,17 @@ export default function AuthProvider({
  */
 function SignedOutRedirect() {
   const router = useRouter();
+  const [offline, setOffline] = useState(false);
   useEffect(() => {
-    router.replace("/login?intent=explore");
+    const navigate = () => {
+      setOffline(!navigator.onLine);
+      if (navigator.onLine) router.replace("/login?intent=explore");
+    };
+    navigate();
+    window.addEventListener("online", navigate);
+    return () => window.removeEventListener("online", navigate);
   }, [router]);
+  if (offline) return <p role="status" className="p-6 text-fg-muted">Conéctate para recuperar tu sesión y abrir tu plan guardado.</p>;
   return <AuthLoadingScreen />;
 }
 

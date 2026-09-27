@@ -213,7 +213,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     fetchProgressAnswers(supabase, userId, since30Iso, untilIso),
     supabase
       .from('activity_sessions')
-      .select('completed_at, source')
+      .select('completed_at, source, exercises_total')
       .eq('user_id', userId)
       .gte('completed_at', since30Iso),
     supabase
@@ -252,7 +252,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
   for (const row of sessionRows) {
     if (!row.completed_at) continue
     const day = toLocalDateString(row.completed_at as string, STREAK_TIMEZONE)
-    activeDaysSet.add(day)
+    if (row.source !== 'daily_plan' || (row.exercises_total ?? 0) > 0) activeDaysSet.add(day)
     if (row.source === 'daily_plan') {
       planActivityDaysSet.add(day)
     }

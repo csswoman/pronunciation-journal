@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import { OfflineHubClient } from "@/components/offline/OfflineHubClient";
+import { OfflineEntry } from "@/components/offline/OfflineEntry";
 
 export default function OfflinePage() {
   return (
     <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-fg-muted">Cargando...</div>}>
-      <OfflineHubClient />
+      <OfflineEntry />
     </Suspense>
   );
 }

@@ -62,6 +62,8 @@ export async function recordLessonIncomplete(courseSlug: string, lessonSlug: str
 }
 
 export interface LessonQuizAnswerInput {
+  /** Canonical concept owner, distinct from a numeric course completion id. */
+  conceptSlug?: string
   attemptId?: string
   questionId: string
   courseSlug: string
@@ -106,7 +108,7 @@ export async function recordLessonQuizAttempt(
     exercisePayload: {
       question: answer.question,
       correctAnswer: answer.correctAnswer,
-      lessonSlug: answer.lessonSlug,
+      lessonSlug: answer.conceptSlug ?? (answer.topic?.startsWith('theory:') ? answer.topic.slice(7) : answer.lessonSlug),
       ...(answer.topic ? { topic: answer.topic } : {}),
       ...(answer.taskSkill ? { taskSkill: answer.taskSkill } : {}),
       quarantined: isQuarantined ? true : undefined,

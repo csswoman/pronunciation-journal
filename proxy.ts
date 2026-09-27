@@ -53,7 +53,8 @@ export async function proxy(request: NextRequest) {
     return response;
   };
 
-  if (!isSupabaseConfigured()) {
+  // The precached shell must never refresh auth or serialize account data.
+  if (request.nextUrl.pathname === "/offline" || !isSupabaseConfigured()) {
     return nextResponse();
   }
 

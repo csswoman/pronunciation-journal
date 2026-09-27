@@ -166,7 +166,7 @@ describe("curriculum assessments", () => {
     expect(result.conceptSignals[2]).toMatchObject({ status: "learn", correct: 0, total: 0 });
   });
 
-  it("derives mastery from perfect evidence and keeps old calls compatible", () => {
+  it("keeps perfect placement evidence without declaring concept mastery", () => {
     const questions = buildAssessmentQuestions("checkpoint", quizzes, "a1");
     const answers = { [questions[0].id]: questions[0].answer };
     const legacyResult = scoreAssessment(questions, answers, "checkpoint", "a1");
@@ -178,8 +178,8 @@ describe("curriculum assessments", () => {
     });
 
     expect(legacyResult.conceptSignals).toEqual([]);
-    expect(conceptualResult.conceptSignals[0].status).toBe("mastered");
-    expect(humbleButCorrect.conceptSignals[0].status).toBe("mastered");
+    expect(conceptualResult.conceptSignals[0].status).toBe("review");
+    expect(humbleButCorrect.conceptSignals[0].status).toBe("review");
     expect(humbleButCorrect.needsReview.some((topic) => topic.lessonSlug === "a1-verbo-to-be")).toBe(false);
   });
 

@@ -29,7 +29,8 @@ export async function getDailyStreak(userId: string): Promise<DailyStreakResult>
     supabase
       .from('activity_sessions')
       .select('completed_at')
-      .eq('user_id', userId),
+      .eq('user_id', userId)
+      .or('source.neq.daily_plan,exercises_total.gt.0'),
     supabase
       .from('lesson_completions')
       .select('completed_at')

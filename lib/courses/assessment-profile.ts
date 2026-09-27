@@ -65,7 +65,10 @@ export function mergeConceptSignals(
 }
 
 function withCarriedEvidence(signal: ConceptSignal, previous: ConceptSignal): ConceptSignal {
-  return previous.evidence ? { ...signal, evidence: previous.evidence } : signal;
+  return previous.evidence ? {
+    ...signal, evidence: previous.evidence,
+    ...(previous.masteryBySkill ? { masteryBySkill: previous.masteryBySkill } : {}),
+  } : signal;
 }
 
 /**

@@ -8,6 +8,10 @@ const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV !== "production",
+  // The root layout is dynamic for CSP nonces, so /offline is not discovered
+  // as a static page. It is a public shell; proxy deliberately skips auth here.
+  additionalPrecacheEntries: [{ url: "/offline", revision: String(Date.now()) }],
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
   exclude: [
     /^\/api\/gemini\//,
     /^\/api\/auth\//,

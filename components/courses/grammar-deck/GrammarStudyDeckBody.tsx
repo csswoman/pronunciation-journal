@@ -121,6 +121,8 @@ export function GrammarStudyDeckBody({
                       questionId: `${lessonId}:quiz:${qIndex + 1}`,
                       courseSlug: levelId ?? "decks",
                       lessonSlug: evidenceLessonSlug,
+                      conceptSlug: deckSlug,
+                      taskSkill: question.taskSkill ?? deck.taskSkill,
                       question: question.q,
                       selectedAnswer:
                         selectedIndex == null ? "" : question.options[selectedIndex] ?? "",

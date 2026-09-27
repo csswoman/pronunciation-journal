@@ -205,6 +205,14 @@ describe('progress query truncation (oversized histories)', () => {
     expect(stats.heatmap30.filter((level) => level > 0)).toHaveLength(2)
   })
 
+  it('does not let a manual checklist alone create an active learning day', async () => {
+    fixtures.sessions = [{ source: 'daily_plan', exercises_total: 0, completed_at: daysAgo(0) }]
+    const stats = await getDailyCompletionStats('user-1')
+    expect(stats.activeDays7).toBe(0)
+    expect(stats.planActivityDays7).toBe(1)
+    expect(stats.completedDays7).toBe(0)
+  })
+
   it('counts a zero-exercise daily-plan session as plan activity, not plan completion', async () => {
     fixtures.sessions = [
       { source: 'daily_plan', exercises_total: 0, completed_at: daysAgo(0) },

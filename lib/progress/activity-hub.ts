@@ -67,6 +67,7 @@ export function deriveSkillTags(_context: PracticeContext, result: SessionResult
 export function sessionXp(result: SessionResult): number {
   let xp = 0
   for (const r of result.results) {
+    if (!isEvaluatedPracticeAnswer(r)) continue
     if (r.score != null) {
       xp += calculateXP(r.score)
     } else {
@@ -180,12 +181,6 @@ export async function recordActivitySession(
   }, { id: input.activitySessionId })
   const { reconciledStepIds } = telemetry
 
-  if (reconciledStepIds.length > 0) {
-    const merged = loadResolvedIds(userId)
-    for (const id of reconciledStepIds) merged.add(id)
-    saveResolvedIds(userId, merged)
-  }
-
   try {
     await enqueue(
       userId,
@@ -195,6 +190,12 @@ export async function recordActivitySession(
       undefined,
       'id',
     )
+    // Only durable session evidence may suppress the manual Daily fallback.
+    if (reconciledStepIds.length > 0) {
+      const merged = loadResolvedIds(userId)
+      for (const id of reconciledStepIds) merged.add(id)
+      saveResolvedIds(userId, merged)
+    }
   } catch (err) {
     console.error('[activity-hub] enqueue activity_sessions failed', err)
   }

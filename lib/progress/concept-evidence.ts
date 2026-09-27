@@ -2,6 +2,7 @@ import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumI
 import type { ConceptEvidenceItem, ConceptSignal } from '@/lib/courses/concept-profile'
 import { isEvaluatedPracticeAnswer } from '@/lib/practice/evaluation-status'
 import type { SessionResult } from '@/lib/practice/types'
+import { isSkillTag } from '@/lib/progress/skill-matrix'
 
 /**
  * Concept evidence contract (plan 050, step 3).
@@ -14,8 +15,10 @@ import type { SessionResult } from '@/lib/practice/types'
  *   kept, bounding the JSON stored in user_learning_state.
  *
  * `mastered` needs at least CONCEPT_MASTERY_MIN_CONTENTS distinct contents at
- * CONCEPT_MASTERY_MIN_ACCURACY. This is the provisional minimum proposed in
- * the audit, pending a product decision; it is not proof of mastery.
+ * CONCEPT_MASTERY_MIN_ACCURACY. This product criterion was approved on
+ * 2026-09-27 for exercise evidence, with no minimum elapsed time. It is not
+ * universal proof of mastery; assessment aggregates cannot establish mastery
+ * without content identities. Historical signals are not backfilled.
  */
 export const CONCEPT_MASTERY_MIN_CONTENTS = 5
 export const CONCEPT_MASTERY_MIN_ACCURACY = 0.8
@@ -46,14 +49,25 @@ export function summarizeConceptEvidence(
 ): ConceptEvidenceSummary {
   const latestByContent = new Map<string, ConceptEvidenceItem>()
   for (const item of items) {
-    const current = latestByContent.get(item.contentId)
-    if (!current || item.at >= current.at) latestByContent.set(item.contentId, item)
+    const key = `${item.taskSkill ?? 'unattributed'}:${item.contentId}`
+    const current = latestByContent.get(key)
+    if (!current || item.at >= current.at) latestByContent.set(key, item)
   }
   const total = latestByContent.size
   const correct = [...latestByContent.values()].filter((item) => item.correct).length
-  const mastered = total >= CONCEPT_MASTERY_MIN_CONTENTS
+  const dimensions = new Set(items.map((item) => item.taskSkill ?? 'unattributed'))
+  const mastered = dimensions.size === 1 && total >= CONCEPT_MASTERY_MIN_CONTENTS
     && correct / total >= CONCEPT_MASTERY_MIN_ACCURACY
   return { correct, total, status: mastered ? 'mastered' : 'review' }
+}
+
+/** Keep skill mastery separate; mixed dimensions never produce global mastery. */
+export function conceptMasteryBySkill(items: readonly ConceptEvidenceItem[]): ConceptSignal['masteryBySkill'] {
+  const skills = [...new Set(items.flatMap((item) => item.taskSkill ? [item.taskSkill] : []))]
+  if (!skills.length) return undefined
+  return Object.fromEntries(skills.map((skill) => [
+    skill, summarizeConceptEvidence(items.filter((item) => item.taskSkill === skill)),
+  ]))
 }
 
 /** Fold an incoming exercise signal into the previous one for the same concept. */
@@ -71,6 +85,7 @@ export function accumulateConceptSignal(
     ...incoming,
     assessedAt,
     evidence,
+    ...(conceptMasteryBySkill(evidence) ? { masteryBySkill: conceptMasteryBySkill(evidence) } : {}),
     correct: summary.correct,
     total: summary.total,
     status: summary.status,
@@ -107,6 +122,7 @@ export function collectConceptSignals(
     if (!slug) return
     const items = bySlug.get(slug) ?? []
     items.push({
+      ...(isSkillTag(payload?.taskSkill) ? { taskSkill: payload.taskSkill } : {}),
       attemptId: result.attemptId
         ?? (options.sessionId ? `${options.sessionId}:${index}` : crypto.randomUUID()),
       contentId: result.contentId ?? result.exerciseId,
@@ -133,6 +149,7 @@ export function collectConceptSignals(
       assessedAt: options.nowIso,
       source: 'exercise',
       evidence: items,
+      ...(conceptMasteryBySkill(items) ? { masteryBySkill: conceptMasteryBySkill(items) } : {}),
     }
   })
 }

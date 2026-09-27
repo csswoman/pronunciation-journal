@@ -4,6 +4,7 @@
 // lives as JSON outside the JS bundle, Zod validates it at runtime instead.
 
 import { z } from "zod";
+import { TaskSkillSchema } from './task-skill-schema';
 
 export const LESSON_LEVELS = ["basic", "intermediate", "advanced"] as const;
 
@@ -92,6 +93,7 @@ const LessonExerciseSchema = z.object({
 });
 
 const QuizQuestionSchema = z.object({
+  taskSkill: TaskSkillSchema.optional(),
   question: z.string(),
   options: z.array(z.string()),
   correct: z.number().int(), // index of correct option

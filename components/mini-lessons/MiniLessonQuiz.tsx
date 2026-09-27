@@ -28,6 +28,7 @@ import { theoryTopicForMiniLesson } from "@/lib/learning-loop/theory-targets";
 const COURSE_SLUG = "mini-lessons";
 
 interface QuizQuestion {
+  taskSkill?: import('@/lib/progress/activity-types').SkillTag;
   question: string;
   options: string[];
   correct: number;
@@ -121,6 +122,7 @@ export default function MiniLessonQuiz({ questions, slug, shuffleOptions = false
               questionId: `${slug}:quiz:${index + 1}`,
               courseSlug: COURSE_SLUG,
               lessonSlug: slug,
+              taskSkill: q.taskSkill,
               question: q.question,
               selectedAnswer,
               correctAnswer: q.options[q.correct] ?? "",

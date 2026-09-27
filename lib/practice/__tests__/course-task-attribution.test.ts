@@ -26,6 +26,14 @@ import type { GrammarDrill } from '@/lib/courses/grammar-deck/drill-schema'
 const USER = '00000000-0000-4000-8000-000000000050'
 const DECK = 'a1-verbo-to-be'
 
+it('persists the canonical deck concept independently of numeric course completion ids', async () => {
+  await recordLessonQuizAttempt(USER, [quiz('numeric-id', {
+    lessonSlug: '1', conceptSlug: DECK, taskSkill: 'listening',
+  })], { attemptId: 'numeric-course-attempt' })
+  const rows = await outbox('answer_history')
+  expect(rows[0]?.payload.exercise_payload).toMatchObject({ lessonSlug: DECK, taskSkill: 'listening' })
+})
+
 async function outbox(table: string) {
   return (await db.syncOutbox.where('userId').equals(USER).toArray())
     .filter((entry) => entry.table === table)

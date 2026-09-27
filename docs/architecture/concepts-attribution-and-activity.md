@@ -9,7 +9,9 @@ respuesta evaluada, espaciado, finalización y dominio.
 - `multiple_choice` es un formato, no una habilidad (`EXERCISE_SKILL_MATRIX`).
   Un quiz de curso solo aporta habilidad si el llamador pasa `taskSkill` desde
   metadatos canónicos de la tarea (`LessonQuizAnswerInput.taskSkill`). Hoy
-  ningún mazo ni mini-lección declara esa habilidad, así que los quizzes siguen
+  los esquemas de mazos y mini-lecciones aceptan esa habilidad por pregunta;
+  un valor común por mazo se admite solo sin contradicciones entre sus preguntas.
+  El contenido existente sin autoría explícita sigue
   registrando actividad y SRS de tema, pero **no** una habilidad. Añadir
   `taskSkill` al contenido es trabajo de autoría, no inferencia en runtime.
 - El quiz persiste `topic` (tema canónico `theory:<deck>` de
@@ -26,19 +28,22 @@ respuesta evaluada, espaciado, finalización y dominio.
 
 ## 2. Evidencia de concepto (`lib/progress/concept-evidence.ts`)
 
-`ConceptSignal.evidence` guarda ítems `{ attemptId, contentId, correct, at }`:
+`ConceptSignal.evidence` guarda ítems `{ attemptId, contentId, correct, at, taskSkill? }`:
 
 | Eje | Regla |
 |---|---|
 | Identidad | Un ítem por `attemptId`; el primero gana. Reintentos y replays no suman. |
-| Contenido | Solo cuenta la última respuesta por `contentId`: repetir la misma pregunta es una evidencia. |
+| Contenido | Solo cuenta la última respuesta por habilidad y `contentId`: repetir la misma pregunta es una evidencia. |
 | Tiempo | Orden por `at`; se conservan los últimos `CONCEPT_EVIDENCE_WINDOW` (30). |
 
-`correct`/`total`/`status` se derivan de esa evidencia. `mastered` exige
+`correct`/`total`/`status` se derivan de esa evidencia. **Criterio de producto
+aprobado explícitamente el 2026-09-27:** `mastered` exige al menos
 `CONCEPT_MASTERY_MIN_CONTENTS` (5) contenidos distintos con precisión
-≥ `CONCEPT_MASTERY_MIN_ACCURACY` (0,8). **Es el mínimo provisional de la
-auditoría, pendiente de decisión de producto**; no prueba dominio. 1/1 queda en
-`review`.
+≥ `CONCEPT_MASTERY_MIN_ACCURACY` (0,8). Se mantiene la ventana de 30 intentos
+y no se exige un lapso mínimo entre respuestas. Así, 4/5 es `mastered`,
+4/4 y 3/5 son `review`; una respuesta posterior puede devolver el concepto a
+`review` si reduce la precisión por debajo del 80 %. Es el criterio para
+evidencia de ejercicios, no una prueba universal de dominio.
 
 - La fusión vive en `mergeConceptSignals`, así que todos los escritores
   convergen: una señal manual posterior conserva la evidencia acumulada.
@@ -47,16 +52,23 @@ auditoría, pendiente de decisión de producto**; no prueba dominio. 1/1 queda e
   pisan localmente. Límite conocido: `user_learning_state` remoto sigue siendo
   un JSON completo de último escritor; no hay fusión atómica en servidor.
 - Señales históricas sin `evidence` se mantienen tal cual; no hay backfill.
-- La ruta de diagnóstico (`deriveConceptSignal`, fuente `assessment`) sigue
-  marcando `mastered` con evidencia perfecta. Cambiarlo es una decisión de
-  producto sobre el placement, fuera de este plan.
+- El diagnóstico conserva su resultado de placement, pero los nuevos
+  `deriveConceptSignal` no declaran mastery con un agregado sin identidades.
+  Una respuesta correcta produce `review`, incluso si es 1/1.
+- La evidencia autoral conserva `taskSkill`. `masteryBySkill` calcula cada
+  habilidad por separado. Si hay varias dimensiones en la ventana, el estado
+  genérico queda en `review`: 3 respuestas de escucha + 2 de lectura no cumplen
+  el mínimo de 5 de ninguna habilidad. El histórico sin habilidad no se
+  reatribuye ni se suma a una habilidad autoral.
 
 ## 3. Finalización de lecciones
 
 Sin cambios: completar un mazo o una mini-lección es **recorrido**
 (`lesson_completions`), no aprobación. `quizPassed` viaja en la metadata de la
-sesión. Introducir estados vista/aprobada afecta a los desbloqueos
-(`deriveLevelView`, `selectStudyDeckTarget`) y queda pendiente de decisión.
+sesión. La decisión cerrada mantiene los desbloqueos actuales y no introduce
+estados vista/aprobada. El cumplimiento requerido excluye unidades y lecciones
+opcionales; sin lecciones core, `progressPercent` es `null`. Las unidades
+opcionales conservan su propio avance.
 
 ## 4. Checklist diario frente a sesión real
 
@@ -67,11 +79,15 @@ sesión. Introducir estados vista/aprobada afecta a los desbloqueos
   ninguna fila de actividad reconcilia ya ese paso hoy
   (`isDailyStepAlreadyRecorded`). Los pasos sin sesión (p. ej. `word_intro`)
   siguen escribiendo su fila manual.
+- La sesión publica su reconciliación local después de que `enqueue` confirme
+  la escritura en outbox. Si falla IndexedDB, el paso no se presenta como
+  registrado y la acción manual conserva su fila de respaldo.
 - Reconstrucción: `doneIds` (localStorage) sobrevive a recarga y offline; online
   `syncTodayReconciledSteps` recupera el paso desde la fila de la sesión real.
 - No se borran filas `daily_plan` históricas. Los lectores las excluyen como
   sesiones: `get_activity_totals.sessions` y la tira de sesiones recientes de
-  `/progress`. Siguen contando como día activo.
+  `/progress`. Una casilla manual vacía tampoco crea un día activo; conserva
+  únicamente la participación explícita en el checklist.
 
 ## 5. Rachas, umbrales y límites diarios
 
@@ -94,9 +110,21 @@ sesión. Introducir estados vista/aprobada afecta a los desbloqueos
   el valor anterior en Dexie y `content_srs`).
 - `completeReader` llama `flushOutbox(userId)`; sin id era un no-op.
 
-Decisiones explícitas, no corregidas: XP por saltar (`sessionXp` da 2 XP a una
-respuesta incorrecta/saltada), definición global única de dominio y política de
-ruta opcional.
+`sessionXp` solo recompensa respuestas evaluadas: incorrectas evaluadas conservan
+2 XP; `skipped`, `unscored`, `evaluator_failed` y el skip histórico reciben 0.
+No se introduce un estado global que unifique dominio de conceptos, fonemas y
+habilidades. Cada dominio conserva su evidencia y sus proyecciones.
+
+## 7. Recarga offline
+
+`/offline` es una página pública sin datos de cuenta. El proxy omite Auth para
+esta ruta y Serwist la precarga explícitamente porque el layout raíz es dinámico.
+Las navegaciones HTML autenticadas, RSC y API siguen siendo `NetworkOnly`.
+Si una navegación a `/daily` falla, el shell público monta `DailyChecklist` en
+el navegador y recupera el plan y los pasos de la cuenta en este dispositivo.
+Sin sesión local no se expone ningún plan; sin plan del día no se inventa uno.
+Las reconciliaciones remotas y la hidratación Auth se omiten mientras está offline.
+El límite de precarga es 5 MiB para incluir también el chunk de práctica necesario.
 
 ## Mantenimiento
 

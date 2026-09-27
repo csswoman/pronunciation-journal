@@ -56,6 +56,10 @@ const SKILL_TAGS = new Set<SkillTag>([
   'writing',
 ])
 
+export function isSkillTag(value: unknown): value is SkillTag {
+  return typeof value === 'string' && SKILL_TAGS.has(value as SkillTag)
+}
+
 const LISTENING_ESSENTIAL_WORD_MODES = new Set([
   'dictation_word', 'dictation_sentence', 'listening_cloze_sentence', 'recognize_audio',
 ])

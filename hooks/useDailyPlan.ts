@@ -63,6 +63,8 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
 
   const hydrateStepIds = useCallback(async (userId: string) => {
     setDoneIds(loadDoneIds(userId))
+    setResolvedIds(loadResolvedIds(userId))
+    if (!navigator.onLine) return
     const merged = await syncTodayReconciledSteps(userId)
     setResolvedIds(merged)
   }, [])
@@ -114,6 +116,10 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         )
         applyPlan(localized, lesson, user.id)
         if (changed) saveCachedDailyPlan(user.id, localized)
+        return
+      }
+      if (!navigator.onLine) {
+        setStatus('error')
         return
       }
       // El constructor reúne generadores, catálogos y queries de práctica. La

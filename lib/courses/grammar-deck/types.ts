@@ -99,6 +99,7 @@ export interface GrammarRelatedLink {
 }
 
 export interface GrammarQuizQuestion {
+  taskSkill?: import('@/lib/progress/activity-types').SkillTag;
   q: string;
   options: string[];
   /** 0-based index of the correct option. */
@@ -107,6 +108,7 @@ export interface GrammarQuizQuestion {
 }
 
 export interface GrammarStudyDeckData {
+  taskSkill?: import('@/lib/progress/activity-types').SkillTag;
   meta: GrammarDeckMeta;
   /** Derived from the stable deck slug by the server loader. */
   topicId?: string;
