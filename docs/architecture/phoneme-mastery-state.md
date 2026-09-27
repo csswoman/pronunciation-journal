@@ -73,4 +73,6 @@ La métrica crece de forma monótona conforme se acumula evidencia, eliminando e
 
 ## 5. Orden de despliegue
 
-`20260927020000_contrast_raw_mastery_and_events.sql` (incluidos RLS y las dos firmas RPC) debe aplicarse antes de publicar los lectores que seleccionan las columnas nuevas. Según confirmación del usuario, ya fue aplicada en Supabase; esta revisión no verificó la firma RPC, RLS, concurrencia, replay ni el flujo browser/outbox, por lo que esos gates siguen abiertos en el Plan 048.
+`20260927020000_contrast_raw_mastery_and_events.sql` (incluidos RLS y las dos firmas RPC) debe aplicarse antes de publicar los lectores que seleccionan las columnas nuevas. Está aplicada en Supabase: el 2026-09-27 se verificó en solo lectura la firma RPC, los grants, RLS, columnas y que el cuerpo de ambas funciones coincide con el archivo. La migración no figura en el historial remoto de migraciones (se aplicó fuera de `db push`).
+
+El contrato transaccional (replay, concurrencia, evento offline antiguo, aislamiento) está cubierto por `scripts/rls-integration-contrast.mjs`, que corre dentro de `pnpm test:rls:integration`. Ejecútalo solo contra un Supabase local desechable. El flujo browser/outbox sigue abierto en el Plan 048.

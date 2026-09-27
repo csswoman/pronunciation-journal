@@ -11,7 +11,7 @@ import {
   saveResolvedIds,
 } from '@/lib/daily/plan-storage'
 import { localizeDailyPlanSubtitles } from '@/lib/daily/localize-step-copy'
-import { recordDailyStepCompletion } from '@/lib/progress/activity-hub'
+import { isDailyStepAlreadyRecorded, recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
 import { DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan/constants'
 import { requiredPracticeSteps } from '@/lib/practice/daily-plan/step-completion'
@@ -141,6 +141,8 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
   const markDone = useCallback(
     async (stepId: string) => {
       if (!user) return
+      // Read before the resolved set is rewritten below.
+      const recordedBySession = isDailyStepAlreadyRecorded(user.id, stepId)
       setDoneIds((prev) => {
         const next = new Set(prev)
         next.add(stepId)
@@ -154,6 +156,7 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
         saveResolvedIds(user.id, next)
         return next
       })
+      if (recordedBySession) return
       try {
         await recordDailyStepCompletion(user.id, stepId)
       } catch (err) {

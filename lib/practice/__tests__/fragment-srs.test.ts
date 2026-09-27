@@ -61,6 +61,10 @@ describe("upsertFragmentSrs", () => {
     const saved = dbMocks.saveSRSData.mock.calls[0][0] as SRSData;
     expect(saved.wordId).toBe("fragment:abc-123");
     expect(saved.repetitions).toBe(3);
+    // Plan 050 step 7: the interval follows the new schedule instead of staying stale.
+    const dueDays = (new Date(saved.nextReview).getTime() - Date.now()) / 86_400_000;
+    expect(saved.interval).toBeGreaterThan(1);
+    expect(saved.interval).toBeCloseTo(dueDays, 0);
   });
 
   it("schedules a lapse (failed grade) without throwing", async () => {

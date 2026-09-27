@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, GraduationCap } from "@/components/icons";
 import { cn } from "@/lib/cn";
 
 export type WordsMode = "dictionary" | "learn";
@@ -16,9 +15,9 @@ export type WordsTabId = "lexicon" | "my-words";
 //   </nav>
 // </WordsTopbar>
 
-const TABS: { id: WordsMode; label: string; icon: typeof BookOpen }[] = [
-  { id: "dictionary", label: "Diccionario", icon: BookOpen },
-  { id: "learn", label: "Aprender", icon: GraduationCap },
+const TABS: { id: WordsMode; label: string }[] = [
+  { id: "dictionary", label: "Explorar" },
+  { id: "learn", label: "Aprender" },
 ];
 
 interface WordsTopbarProps {
@@ -32,10 +31,10 @@ export function WordsTopbar({
 }: WordsTopbarProps) {
   return (
     <nav
-      className="inline-flex items-center gap-1 p-1 rounded-full bg-surface-sunken border border-border-subtle/80 shrink-0 shadow-inner"
+      className="inline-flex items-center gap-1.5 p-1 rounded-full bg-surface-raised border border-border-subtle/80 shrink-0 shadow-xs"
       aria-label="Secciones de vocabulario"
     >
-      {TABS.map(({ id, label, icon: Icon }) => {
+      {TABS.map(({ id, label }) => {
         const isActive = activeMode === id;
         const href = id === "learn" ? "/words?mode=learn" : "/words";
         return (
@@ -45,18 +44,12 @@ export function WordsTopbar({
             aria-label={id === "dictionary" ? `${label} (${lexiconCount} palabras)` : label}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "inline-flex items-center justify-center gap-2 min-h-[42px] sm:min-h-[38px] px-4 py-2 rounded-full text-body-sm font-semibold transition-all duration-150 select-none focus-ring",
+              "inline-flex items-center justify-center min-h-[38px] px-5 py-2 rounded-full text-body-sm font-semibold transition-all duration-150 select-none focus-ring",
               isActive
-                ? "bg-surface-raised text-fg shadow-xs border border-border-subtle/80"
-                : "text-fg-muted hover:text-fg hover:bg-surface-raised/50"
+                ? "bg-primary text-on-primary shadow-xs"
+                : "text-fg-muted hover:text-fg hover:bg-surface-sunken/60"
             )}
           >
-            <Icon
-              size={16}
-              strokeWidth={isActive ? 2 : 1.7}
-              className={cn("transition-colors shrink-0", isActive ? "text-primary" : "text-fg-subtle")}
-              aria-hidden
-            />
             <span>{label}</span>
           </Link>
         );

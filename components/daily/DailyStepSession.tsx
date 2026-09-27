@@ -136,6 +136,7 @@ export default function DailyStepSession({
     return (
       <DailyReaderStep
         passage={step.readerPassage}
+        dailyStepId={step.id}
         threadHints={threadHints}
         onComplete={handleStepComplete}
         onExit={() => handleStepExit()}
@@ -199,6 +200,7 @@ export default function DailyStepSession({
       sessionLabel={step.title}
       soundIpa={step.ipa}
       initialIndex={initialExerciseIndex ?? 0}
+      dailyStepId={step.id}
       onSessionComplete={() => undefined}
       onExit={(result) => {
         if (result.results.length >= step.exercises.length) handleStepComplete()

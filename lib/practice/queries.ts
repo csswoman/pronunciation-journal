@@ -10,6 +10,7 @@ import {
 import { enqueue } from '@/lib/sync/sync-manager'
 import { buildSessionResult } from '@/lib/practice/session-result'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import type { SkillTag } from '@/lib/progress/activity-types'
 import type {
   PracticeContext,
   ExerciseResult,
@@ -70,7 +71,13 @@ export interface LessonQuizAnswerInput {
   correctAnswer: string
   isCorrect: boolean
   timeMs: number
+  /** Canonical theory topic of the lesson/deck (see theory-targets). */
   topic?: string
+  /**
+   * Skill the authored question evaluates. Only pass it from canonical task
+   * metadata: a multiple-choice format never implies grammar (plan 050).
+   */
+  taskSkill?: SkillTag
 }
 
 export interface RecordLessonQuizOptions {
@@ -100,6 +107,8 @@ export async function recordLessonQuizAttempt(
       question: answer.question,
       correctAnswer: answer.correctAnswer,
       lessonSlug: answer.lessonSlug,
+      ...(answer.topic ? { topic: answer.topic } : {}),
+      ...(answer.taskSkill ? { taskSkill: answer.taskSkill } : {}),
       quarantined: isQuarantined ? true : undefined,
     },
     topic: answer.topic,

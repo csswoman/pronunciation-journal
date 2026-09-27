@@ -1,7 +1,7 @@
 # Plan 048: Separar EMA y presentación de maestría de sonidos sin perder actualizaciones
 
 ## Estado y base
-- Estado: IN PROGRESS; correcciones locales verificadas con suite focalizada, type-check y lint; runtime SQL (local/remoto) y browser/outbox pendiente.
+- Estado: IN PROGRESS; correcciones locales verificadas con suite focalizada, type-check y lint; esquema remoto verificado en solo lectura y contrato SQL transaccional verde en local (2026-09-27); historial remoto reparado; solo falta la verificación browser/outbox.
 - Prioridad: P1. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 046 fase A para identidad de eventos.
@@ -85,8 +85,15 @@ Evidencia local: `pnpm audit:hard-rules` pasó prompts y auditoría estática RL
 - [x] Pruebas separan algoritmo puro (computeNextRawEma), proyección (projectMasteryPct) y persistencia; ninguna caída causada por reaplicar repScale; la proyección Dexie y replay local cubren deltas/idempotencia sin afirmar que sustituyen la prueba SQL.
 - [x] Pruebas focalizadas (61 tests del dominio), `pnpm type-check` y lint (`eslint .`) verificados con salida real.
 - [ ] Comprobación runtime navegador/offline y sincronización outbox contra un backend real; fake-indexeddb cubre rollback/cache local, no sustituye esta puerta.
+  - Intento 2026-09-27 (dev :3100 contra Supabase local, Playwright con `bypassCSP` porque `proxy.ts` fija `connect-src` a `*.supabase.co`): el login con contraseña deja una cookie válida (`is_anonymous: false`), pero el cliente nunca monta al usuario: sin Dexie, sin `window.__syncRecovery`, error de hidratación y 404 en `_next/static/chunks/components_0fy-u_q._.js` (persiste tras borrar `.next/dev`). Había WIP ajeno del plan 050 modificándose en el árbol. No se llegó a la sesión offline; queda como verificación manual.
+  - Segundo intento 2026-09-27: el servidor activo del checkout en `:3000` usa webpack y su `/_next/mcp` no expone `get_compilation_issues`. Para no detener ese proceso ni interferir con el WIP del plan 050, se levantó una copia temporal e ignorada del estado local con Next 16.3.5 + Turbopack en `:3100`; el MCP sí expuso `get_compilation_issues` y `compile_route`, pero tanto el grafo global como `/practice/sounds/sound/[soundId]` agotaron 120 s, y la ruta siguió compilando más de tres minutos. Se aplicó STOP tras dos timeouts; no se abrió el navegador ni se afirmó sincronización runtime. El servidor y ambas copias temporales se retiraron, sin tocar `:3000`.
 - [x] Si hay SQL: nueva migración 20260927020000_contrast_raw_mastery_and_events.sql con RLS habilitada y verificada estáticamente con check-migrations y audit-rls.
-- [ ] Integración local/remota de RLS, firma RPC, concurrencia SQL y replay; `audit:rls` todavía reporta `contrast_session_events` sin caso en `scripts/rls-integration.mjs`.
+- [x] Integración local/remota de RLS, firma RPC, concurrencia SQL y replay (el sub-ítem abierto de immersion es ajeno a este plan). Avance 2026-09-27:
+  - [x] Caso de integración escrito: `scripts/rls-integration-contrast.mjs` (enlazado desde `rls-integration-cases.mjs`): replay idempotente, 3 sesiones concurrentes + replay concurrente (40 intentos / 4 sesiones), proyección 25.3 → 50.6 al 80% constante, evento offline antiguo sin retroceso SRS, entradas inválidas rechazadas, aislamiento cross-user. `audit:rls` ya no lista `contrast_session_events`.
+  - [x] Remoto (`enpxrijfnkcgvkyrjxod`, solo lectura): firma de 13 args única y `SECURITY INVOKER`; EXECUTE solo `authenticated`; RLS activa en ambas tablas; columnas y UNIQUE presentes; cuerpo de ambas RPC idéntico al archivo (md5 con CRLF: `71e50fec…`, `7bb76f97…`).
+  - [x] Local (`http://127.0.0.1:54321`, 2026-09-27): la migración no estaba aplicada en local; se aplicó con `supabase migration up --local`. Los casos de `rls-integration-contrast.mjs` pasan (`Contrast RLS/RPC cases passed.`, exit 0) con RPC concurrentes reales vía PostgREST; usuarios temporales limpiados (0 restantes).
+  - [ ] La suite completa `pnpm test:rls:integration` en local se detiene después de los casos de contraste en un hueco preexistente ajeno: `missing seeded immersion lesson for RLS progress coverage` (local sin seed de `immersion_lessons`).
+  - [x] Historial remoto reparado por el usuario (`supabase migration repair`); verificado 2026-09-27: `20260927020000 contrast_raw_mastery_and_events` figura en `supabase_migrations.schema_migrations`.
 - [x] `git diff --name-only` contiene solo archivos previstos, descontando el WIP ajeno de AI Coach, Tracking y Vocabulary.
 - [x] Contrato y notas de mantenimiento actualizados en docs/architecture/phoneme-mastery-state.md y enlazados en docs/README.md.
 

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useDailyPlan } from '../useDailyPlan'
 import type { DailyPlan } from '@/lib/practice/types'
@@ -66,6 +66,16 @@ vi.mock('@/lib/daily/plan-storage', () => ({
   loadResolvedIds: vi.fn(() => new Set<string>()),
   saveDoneIds: vi.fn(),
   saveResolvedIds: vi.fn(),
+}))
+
+const { recordDailyStepCompletionMock, isDailyStepAlreadyRecordedMock } = vi.hoisted(() => ({
+  recordDailyStepCompletionMock: vi.fn().mockResolvedValue(undefined),
+  isDailyStepAlreadyRecordedMock: vi.fn(() => false),
+}))
+
+vi.mock('@/lib/progress/activity-hub', () => ({
+  recordDailyStepCompletion: recordDailyStepCompletionMock,
+  isDailyStepAlreadyRecorded: isDailyStepAlreadyRecordedMock,
 }))
 
 vi.mock('@/lib/progress/activity-queries-client', () => ({
@@ -144,5 +154,29 @@ describe('useDailyPlan', () => {
     expect(result.current.status).toBe('loading')
     expect(mockBuildDailyPlan).not.toHaveBeenCalled()
     expect(mockLoadCachedDailyPlan).not.toHaveBeenCalled()
+  })
+
+  it('does not add an empty manual row for a step a real session already recorded', async () => {
+    storedCachedPlan = mockCachedPlan
+    isDailyStepAlreadyRecordedMock.mockReturnValueOnce(true)
+    recordDailyStepCompletionMock.mockClear()
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: null }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    await act(() => result.current.markDone('step-1'))
+
+    expect(recordDailyStepCompletionMock).not.toHaveBeenCalled()
+    expect(result.current.getStepStatus('step-1')).toBe('done')
+  })
+
+  it('records the manual checklist row when no session recorded the step', async () => {
+    storedCachedPlan = mockCachedPlan
+    recordDailyStepCompletionMock.mockClear()
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: null }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    await act(() => result.current.markDone('step-1'))
+
+    expect(recordDailyStepCompletionMock).toHaveBeenCalledWith(mockUser.id, 'step-1')
   })
 })

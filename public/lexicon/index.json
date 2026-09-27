@@ -1,7 +1,7 @@
 [
   {
     "id": "artificial-intelligence",
-    "name": "Artificial Intelligence",
+    "name": "Inteligencia artificial",
     "domain": "engineering",
     "color": "#A855F7",
     "icon": "◎",
@@ -9,7 +9,7 @@
   },
   {
     "id": "backend-infra",
-    "name": "Backend & Infra",
+    "name": "Backend e infra",
     "domain": "engineering",
     "color": "#D97706",
     "icon": "⬡",
@@ -17,7 +17,7 @@
   },
   {
     "id": "data-science",
-    "name": "Data Science",
+    "name": "Datos y analítica",
     "domain": "engineering",
     "color": "#EAB308",
     "icon": "◉",
@@ -25,7 +25,7 @@
   },
   {
     "id": "frontend-dev",
-    "name": "Frontend Dev",
+    "name": "Frontend",
     "domain": "engineering",
     "color": "#65A87A",
     "icon": "⌥",
@@ -33,7 +33,7 @@
   },
   {
     "id": "ux-design",
-    "name": "UX / UI Design",
+    "name": "UX y UI",
     "domain": "design",
     "color": "#6B9FC4",
     "icon": "✦",
@@ -41,15 +41,23 @@
   },
   {
     "id": "design-systems",
-    "name": "Design Systems",
+    "name": "Sistemas de diseño",
     "domain": "design",
     "color": "#9B8EC4",
     "icon": "◻",
     "total": 72
   },
   {
+    "id": "personal-interview",
+    "name": "Entrevistas",
+    "domain": "professional",
+    "color": "#EC4899",
+    "icon": "🎤",
+    "total": 79
+  },
+  {
     "id": "professional",
-    "name": "Professional English",
+    "name": "Reuniones",
     "domain": "professional",
     "color": "#C4846B",
     "icon": "◈",
@@ -57,18 +65,10 @@
   },
   {
     "id": "technical-writing",
-    "name": "Technical Writing",
+    "name": "Redacción técnica",
     "domain": "professional",
     "color": "#5BA8A0",
     "icon": "∂",
     "total": 63
-  },
-  {
-    "id": "personal-interview",
-    "name": "Personal Interview",
-    "domain": "professional",
-    "color": "#EC4899",
-    "icon": "🎤",
-    "total": 79
   }
 ]

@@ -23,6 +23,8 @@ import { DailyThreadStrip } from './DailyThreadStrip'
 
 interface DailyReaderStepProps {
   passage: ReaderPassage
+  /** Daily step reconciled by the passage's own activity row. */
+  dailyStepId?: string
   threadHints: StepThreadHint[]
   onComplete: () => void
   onExit?: () => void
@@ -30,6 +32,7 @@ interface DailyReaderStepProps {
 
 export function DailyReaderStep({
   passage,
+  dailyStepId,
   threadHints,
   onComplete,
   onExit,
@@ -100,6 +103,7 @@ export function DailyReaderStep({
             passageId: passage.id,
             correct,
             context: 'daily',
+            dailyStepId,
           })
           onComplete()
         }}

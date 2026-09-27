@@ -1,7 +1,16 @@
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-/** Minimum answers in a calendar day to count it as an active practice day. */
+/**
+ * Practice goal: answers in one calendar day for it to count as a *goal day*
+ * (consistency heatmap, "completed" days). Not the activity streak threshold.
+ */
 export const DAILY_STREAK_THRESHOLD = 5
+
+/**
+ * Activity threshold: one qualifying event makes a day *active*. Used by the
+ * global and immersion streaks. Keep distinct from DAILY_STREAK_THRESHOLD.
+ */
+export const ACTIVE_DAY_THRESHOLD = 1
 
 /**
  * IANA timezone used for "what day is it?" bucketing.

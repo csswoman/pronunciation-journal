@@ -1,7 +1,7 @@
 # Plan 050: Separar evidencia de conceptos, finalización y actividad diaria
 
 ## Estado y base
-- Estado: TODO; planificación, no implementación autorizada.
+- Estado: IN PROGRESS (2026-09-27, ejecución local sin commit). Contrato: docs/architecture/concepts-attribution-and-activity.md.
 - Prioridad: P1. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 044 y 046; coordinar métricas con 047.
@@ -96,3 +96,19 @@ Detener también si una verificación falla dos veces tras ajustes razonables, s
 ## Mantenimiento
 Cada nuevo productor debe cumplir los mismos casos de estado, identidad y atribución. Revisar futuras migraciones y lectores junto con sus escritores. Mantener separados actividad, respuesta evaluada, espaciado, finalización y dominio; un test estático o un mock no demuestra sincronización real.
 
+
+## Registro de ejecución (2026-09-27, base `791e5be2`)
+Drift: `activity-hub.ts` usa `isEvaluatedPracticeAnswer`; `savePracticeAnswer` movido a `answer-queries.ts`. Diagnóstico vigente.
+
+Caracterización roja (antes de corregir, 6 fallos / 3 pasan, por aserción): 1/1 → `mastered`; sesiones no acumulan (2 ≠ 5); misma pregunta ×5 cuenta 5; `taskSkill` no persiste; drill sin `topic`; drill registrado como concepto `grammar-deck:a1-verbo-to-be`. `fragment-srs`: `interval` quedaba en 1.
+Hallazgos adicionales: ítems `grammar_focus` creaban conceptos `<slug>:rule:<n>`; sesión Daily con `reconciled_step_ids: []` + fila manual vacía por paso; Home inmersión con umbral 5; `get_activity_totals` en UTC y contando filas `daily_plan`.
+
+Puertas:
+- [x] Caracterización demuestra el fallo.
+- [x] Atribución/acumulación/checklist con contrato explícito (docs/architecture/concepts-attribution-and-activity.md). Entrega 4 sin cambios (completion = recorrido; vista/aprobada afecta desbloqueos → decisión).
+- [x] Focalizada 23/23; vecinos 179/179 (35 archivos); `pnpm type-check` y `pnpm lint` exit 0; `git diff --check` limpio; `pnpm check:migrations` OK.
+- [ ] Runtime navegador/offline: pendiente. `next-dev-loop` no pudo abrir una instancia Turbopack porque `next dev --webpack` ya estaba activo en `:3000` (PID 31252); no se cerró el proceso del usuario ni se degradó la aceptación a HTTP 200.
+- [x] SQL `20260927030000_activity_totals_lima_days.sql`: aplicado en Supabase local con `supabase migration up --local`. Prueba PostgreSQL transaccional con rollback: 3 filas → `sessions=2`, `exercises=5`, `duration_ms=300000`, `active_days=2`; excluyó el checklist `daily_plan` vacío y separó correctamente 04:30Z/05:30Z en dos fechas de Lima. Remoto pendiente y bloqueado: `supabase migration list --linked` muestra migraciones locales sin aplicar desde `20260923120000` y cinco versiones remotas sin archivo local (`20260926063939`, `20260926064115`, `20260926144614`, `20260926144617`, `20260926144619`). Reconciliar el historial antes de cualquier `db push`; requiere autorización y alcance propio.
+- Fallos preexistentes (idénticos con los archivos en HEAD): `PracticeSession.test.tsx` (mock sin `getOrCreateSession`), `GenericExerciseView.status.test.tsx` y `producer-roundtrip.integration` misiones (ids de respuesta hash desde 046). `pnpm audit:hard-rules`: 101 violaciones preexistentes, ninguna en archivos tocados.
+
+Decisiones de producto pendientes: umbral `mastered` 5 contenidos/80 %, espaciado temporal mínimo, `mastered` del diagnóstico con 1/1, vista/aprobada, `taskSkill` autoral por mazo, XP por saltar, dominio global.

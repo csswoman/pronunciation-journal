@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
 import { LexiconTodayPanel } from "@/components/lexicon/LexiconTodayPanel";
 import { LexiconContinueSection } from "@/components/lexicon/LexiconContinueSection";
-import { LessonGrid } from "@/components/lexicon/LessonGrid";
+import { LessonCard } from "@/components/lexicon/LessonCard";
 import { AnkiDeckGrid } from "@/components/lexicon/AnkiDeckGrid";
 import { LexiconInlinePractice } from "@/components/lexicon/practice/LexiconInlinePractice";
 import { groupLessonsByDomain, LEXICON_DOMAINS } from "@/lib/lexicon/domains";
@@ -101,21 +101,37 @@ export function LexiconView({
                 <div key={domain.id} className="space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-3 pb-2.5 border-b border-border-subtle/50">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-h3 font-bold text-fg tracking-tight">{domain.name}</h3>
-                      <span className="rounded-full bg-primary-soft/80 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-semibold">
-                        {domain.studyMode === "receptive" ? "Reconocer" : "Producir"}
+                      <h3 className="text-h3 font-display font-extrabold text-fg tracking-tight">{domain.name}</h3>
+                      <span className="rounded-full bg-amber-100 text-amber-950 dark:bg-amber-950/80 dark:text-amber-200 border border-amber-300/60 dark:border-amber-800/50 px-2.5 py-0.5 text-xs font-semibold">
+                        objetivo: {domain.studyMode === "receptive" ? "reconocer" : "producir"}
                       </span>
                     </div>
-                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right">
+                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right font-medium">
                       {domain.description}
                     </p>
                   </div>
-                  <LessonGrid
-                    lessons={group.lessons}
-                    nextLessonId={nextLesson?.id}
-                    onLessonClick={(id) => router.push(`/words/${id}`)}
-                    compact
-                  />
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {group.lessons.map((lesson) => (
+                      <LessonCard
+                        key={lesson.id}
+                        {...lesson}
+                        isNext={lesson.id === nextLesson?.id}
+                        onClick={(id) => router.push(`/words/${id}`)}
+                        compact
+                      />
+                    ))}
+                    {domain.id === "professional" && (
+                      <button
+                        type="button"
+                        onClick={() => router.push("/words?mode=learn")}
+                        className="group flex w-full items-center justify-center gap-2 rounded-2xl border border-border-subtle/80 bg-surface-raised p-4 text-center transition-all duration-150 focus-ring hover:border-primary/60 hover:shadow-xs min-h-[84px]"
+                      >
+                        <span className="font-bold text-fg text-body-sm sm:text-body group-hover:text-primary transition-colors flex items-center gap-1.5">
+                          Ver las 9 áreas <span aria-hidden className="transition-transform group-hover:translate-x-0.5">›</span>
+                        </span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -5,6 +5,7 @@
 //   denied   — anon/authenticated cannot read or write
 import { randomUUID } from "node:crypto";
 import { runJournalLearningStateRlsCases } from "./rls-journal-learning-state.mjs";
+import { cleanupContrastRlsRows, runContrastProgressRlsCases } from "./rls-integration-contrast.mjs";
 
 const SEED_PREFIX = "rls-int-";
 
@@ -42,6 +43,7 @@ export async function cleanupAdditionalRlsRows(admin, users) {
   await admin.from("word_definitions").delete().like("normalized_text", `${SEED_PREFIX}%`);
   await admin.from("deck_suggestions_cache").delete().like("cache_key", `${SEED_PREFIX}%`);
   await admin.from("rate_limits").delete().like("key", `${SEED_PREFIX}%`);
+  await cleanupContrastRlsRows(admin, users);
 
   for (const user of users) {
     await admin.from("srs_review_events").delete().eq("user_id", user.id);
@@ -121,6 +123,7 @@ export async function runAdditionalRlsCases(ctx) {
   assertNoError(journalPatternAccess, "user A can query own journal pattern events");
 
   await runJournalLearningStateRlsCases(ctx);
+  await runContrastProgressRlsCases(ctx);
 
   await assertOwnRowIsolation(ctx, "lesson_completions", (user) => ({
     user_id: user.id,

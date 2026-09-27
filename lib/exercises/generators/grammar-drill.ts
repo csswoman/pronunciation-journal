@@ -14,11 +14,14 @@ import type {
   DrillCorrectItem,
   DrillPersonalizeItem,
 } from '@/lib/courses/grammar-deck/drill-schema'
+import { theoryTopicForDeck } from '@/lib/learning-loop/theory-targets'
 
 type BuildContext = {
   deckSlug: string
   drill: GrammarDrill
   sourceRef: { source: 'grammar_deck'; id: string }
+  /** Canonical theory topic of the deck: drill answers are evidence for it. */
+  topic: string
 }
 
 export const DRILL_ITEM_BUILDERS = {
@@ -30,6 +33,7 @@ export const DRILL_ITEM_BUILDERS = {
       sourceRef: ctx.sourceRef,
       level: ctx.drill.level,
       lessonSlug: ctx.deckSlug,
+      topic: ctx.topic,
       sourceSentence: item.source,
       instruction: item.instruction,
       referenceAnswer: canonical,
@@ -56,6 +60,7 @@ export const DRILL_ITEM_BUILDERS = {
       sourceRef: ctx.sourceRef,
       level: ctx.drill.level,
       lessonSlug: ctx.deckSlug,
+      topic: ctx.topic,
       sourceSentence,
       instruction,
       referenceAnswer: canonical,
@@ -78,6 +83,7 @@ export const DRILL_ITEM_BUILDERS = {
       sourceRef: ctx.sourceRef,
       level: ctx.drill.level,
       lessonSlug: ctx.deckSlug,
+      topic: ctx.topic,
       sentence: canonical,
       tokens: shuffled,
       answerSpec: { accept: item.accept },
@@ -92,6 +98,7 @@ export const DRILL_ITEM_BUILDERS = {
       sourceRef: ctx.sourceRef,
       level: ctx.drill.level,
       lessonSlug: ctx.deckSlug,
+      topic: ctx.topic,
       sentence: item.sentence,
       correctSentence: canonical,
       alreadyCorrect: item.alreadyCorrect,
@@ -108,6 +115,7 @@ export const DRILL_ITEM_BUILDERS = {
       sourceRef: ctx.sourceRef,
       level: ctx.drill.level,
       lessonSlug: ctx.deckSlug,
+      topic: ctx.topic,
       ...item,
     }
   },
@@ -120,7 +128,7 @@ export const DRILL_ITEM_BUILDERS = {
 export function buildGrammarDrill(deckSlug: string, drill: GrammarDrill): GenericExercise[] {
   const exercises: GenericExercise[] = []
   const sourceRef = { source: 'grammar_deck' as const, id: `grammar-deck:${deckSlug}` }
-  const ctx: BuildContext = { deckSlug, drill, sourceRef }
+  const ctx: BuildContext = { deckSlug, drill, sourceRef, topic: theoryTopicForDeck(deckSlug) }
 
   if (drill.transform) {
     for (const item of drill.transform) {

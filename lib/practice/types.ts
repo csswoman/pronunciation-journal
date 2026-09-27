@@ -388,4 +388,9 @@ export type PracticeConfig = {
   footer?: React.ReactNode
   /** Start at this exercise index (0-based). Undefined = start from 0. */
   initialIndex?: number
+  /**
+   * Exact Daily step this session completes. The session's activity row
+   * reconciles it, so the checklist does not add an empty manual row.
+   */
+  dailyStepId?: string
 }

@@ -44,6 +44,15 @@ describe('completeReader', () => {
     })
   })
 
+  it('reconciles the exact Daily step and flushes the user outbox (plan 050)', async () => {
+    await completeReader({ userId: 'u1', passageId: 'p1', correct: true, context: 'daily', dailyStepId: 'reader:p1' })
+
+    expect(recordActivitySession).toHaveBeenCalledWith('u1', expect.objectContaining({
+      explicitReconciledStepIds: ['reader:p1'],
+    }))
+    expect(flushOutbox).toHaveBeenCalledWith('u1')
+  })
+
   it('propagates a persistence failure without running later effects', async () => {
     const error = new Error('save failed')
     savePracticeAnswer.mockRejectedValueOnce(error)

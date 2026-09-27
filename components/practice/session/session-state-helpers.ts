@@ -70,6 +70,9 @@ export function buildExerciseResult(params: {
         : {
             type: current.slug,
             taskSkill,
+            // Authored concept owner; wins over sourceRef ids such as
+            // `grammar-deck:<slug>` or `<slug>:rule:<n>` in concept evidence.
+            lessonSlug: current.payload.kind === 'generic' ? current.payload.data.lessonSlug : undefined,
             sourceRef: current.sourceRef,
             contentId: current.contentId,
             constraintId:

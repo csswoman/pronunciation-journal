@@ -3,11 +3,8 @@ import type { CefrLevel } from "@/lib/essential-words/types";
 import { getEffectiveLearnerLevelServer } from "@/lib/learner-level/server-queries";
 import { normalizeIpaKey, rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 import type { UserContrastProgress } from "@/lib/phoneme-practice/types";
-import {
-  STREAK_TIMEZONE,
-  computeStreakFromTimestamps,
-  toLocalDateString,
-} from "@/lib/daily/streak-core";
+import { STREAK_TIMEZONE, toLocalDateString } from "@/lib/daily/streak-core";
+import { summarizeImmersionActivity } from "@/lib/immersion/activity-summary";
 import { getTodaysMiniLesson } from "@/lib/content/lessons";
 import {
   DEFAULT_DAILY_GOAL_MINUTES,
@@ -339,7 +336,6 @@ export async function getUserProfileLevel(userId: string): Promise<CefrLevel | n
 export async function getHomeImmersionSummary(userId: string): Promise<HomeImmersionSummary> {
   const supabase = await createSupabaseServerClient();
   const nowIso = new Date().toISOString();
-  const weekStart = startOfLocalWeek(nowIso, STREAK_TIMEZONE);
   const { data, error } = await supabase
     .from("activity_sessions")
     .select("completed_at, duration_ms")
@@ -350,13 +346,10 @@ export async function getHomeImmersionSummary(userId: string): Promise<HomeImmer
   if (error) throw error;
 
   const rows = (data ?? []) as { completed_at: string; duration_ms: number | null }[];
-  const weekMinutes = Math.round(rows.reduce((total, row) => {
-    const localDay = toLocalDateString(row.completed_at, STREAK_TIMEZONE);
-    return localDay >= weekStart ? total + (row.duration_ms ?? 0) : total;
-  }, 0) / 60_000);
-
-  return {
-    currentStreak: computeStreakFromTimestamps(rows.map((row) => row.completed_at), nowIso).currentStreak,
-    weekMinutes,
-  };
+  // Same projection as Daily: one immersion session makes an active day. The
+  // 5-answer practice goal must not leak into this streak (plan 050).
+  return summarizeImmersionActivity(
+    rows.map((row) => ({ completedAt: row.completed_at, durationMs: row.duration_ms })),
+    nowIso,
+  );
 }

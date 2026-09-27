@@ -8,7 +8,12 @@ const mocks = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/db', () => ({
-  db: { learningState: { get: mocks.get } },
+  db: {
+    learningState: { get: mocks.get },
+    syncOutbox: {},
+    // The concept writer reads and writes in one transaction (plan 050).
+    transaction: (_mode: string, _tables: unknown[], work: () => Promise<unknown>) => work(),
+  },
 }))
 vi.mock('@/lib/ai-practice/load-state', () => ({
   getUserLearningState: mocks.getUserLearningState,

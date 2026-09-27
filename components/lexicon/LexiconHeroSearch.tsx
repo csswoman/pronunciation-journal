@@ -126,7 +126,7 @@ export function LexiconHeroSearch({
             ref={inputRef}
             type="search"
             className="words-lexicon__search-input"
-            placeholder="Busca una palabra: definición, pronunciación y ejemplos"
+            placeholder="Busca una palabra: definición, IPA y ejemplos"
             value={query}
             autoComplete="off"
             aria-label="Buscar palabras"

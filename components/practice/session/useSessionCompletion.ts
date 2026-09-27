@@ -17,7 +17,7 @@ export function useSessionCompletion({ phase, results, config, user, completedRe
   drainOutbox: (userId: string) => Promise<void>
   setProgressSaveStatus: Dispatch<SetStateAction<ProgressSaveStatus>>
 }) {
-  const { onSessionComplete, persistence, context } = config
+  const { onSessionComplete, persistence, context, dailyStepId } = config
   useEffect(() => {
     if (phase !== 'complete' || completedRef.current) return
     completedRef.current = true
@@ -31,6 +31,7 @@ export function useSessionCompletion({ phase, results, config, user, completedRe
             practiceContext: context,
             sessionResult,
             activitySessionId: sessionIdRef.current,
+            explicitReconciledStepIds: dailyStepId ? [dailyStepId] : undefined,
           })
           await drainOutbox(user.id)
         } catch (err) {
@@ -44,6 +45,6 @@ export function useSessionCompletion({ phase, results, config, user, completedRe
         console.error('[PracticeSession] deleteSession failed', err)
       })
     }
-  }, [phase, results, onSessionComplete, persistence, user, context, drainOutbox, completedRef, sessionIdRef, setProgressSaveStatus])
+  }, [phase, results, onSessionComplete, persistence, user, context, dailyStepId, drainOutbox, completedRef, sessionIdRef, setProgressSaveStatus])
 
 }

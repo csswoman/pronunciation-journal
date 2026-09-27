@@ -1,4 +1,5 @@
 import {
+  ACTIVE_DAY_THRESHOLD,
   STREAK_TIMEZONE,
   computeStreakFromTimestamps,
   toLocalDateString,
@@ -40,7 +41,7 @@ export function summarizeImmersionActivity(
       rows.map((row) => row.completedAt),
       nowIso,
       undefined,
-      1,
+      ACTIVE_DAY_THRESHOLD,
     ).currentStreak,
     weekMinutes,
   }

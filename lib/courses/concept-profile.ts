@@ -13,6 +13,17 @@ export interface AssessmentConcept {
   goal?: string;
 }
 
+/** One evaluated answer kept as concept evidence (plan 050). */
+export interface ConceptEvidenceItem {
+  /** Unique attempt identity: replays of the same attempt count once. */
+  attemptId: string;
+  /** Question/content identity: repeating one item is one piece of evidence. */
+  contentId: string;
+  correct: boolean;
+  /** ISO timestamp of the answer; the latest answer per content wins. */
+  at: string;
+}
+
 export interface ConceptSignal {
   lessonSlug: string;
   level: CefrLevelId;
@@ -25,6 +36,11 @@ export interface ConceptSignal {
   /** When set, Daily study_deck ignores this review signal until due. */
   verificationDueAt?: string;
   source?: ConceptSignalSource;
+  /**
+   * Bounded exercise evidence behind `correct`/`total`. When present, those
+   * counts and `status` are derived from it (see lib/progress/concept-evidence).
+   */
+  evidence?: ConceptEvidenceItem[];
 }
 
 export function deriveConceptSignal(

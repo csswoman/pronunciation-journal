@@ -596,6 +596,8 @@ async function getRecentActivitySessionsResult(
         'id, source, skill_tags, exercises_total, accuracy_pct, xp_earned, completed_at',
       )
       .eq('user_id', userId)
+      // Manual Daily checklist rows are not practice sessions (plan 050).
+      .not('source', 'eq', 'daily_plan')
       .order('completed_at', { ascending: false })
       .limit(RECENT_ACTIVITY_SESSION_LIMIT)
 

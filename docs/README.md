@@ -28,6 +28,7 @@ diseño y planes de producto.
 | [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
 | [Recuperación de respuestas y fallos del outbox](architecture/answer-sync-recovery.md) | Clases de fallo (`permanent`/`exhausted`), recuperación acotada de `answer_history` reparada y runbook del plan 045 |
 | [Feedback de pronunciación](architecture/pronunciation-feedback.md) | Señales honestas (`stt_intelligibility`), priorización y remediación |
+| [Conceptos, atribución y actividad diaria](architecture/concepts-attribution-and-activity.md) | Evidencia de concepto acumulada por intento/contenido, `taskSkill` canónico, checklist diario frente a sesión real y umbrales de racha (Plan 050) |
 | [Estado y maestría de sonidos](architecture/phoneme-mastery-state.md) | Separación de EMA cruda, proyección de presentación y concurrencia transaccional (Plan 048) |
 | [ADR 064 — evaluación acústica](architecture/adr-064-acoustic-pronunciation-assessment.md) | NO-SHIP por dos vías: formantes contra speechocean762 y CTC de fonemas en el dispositivo contra L2-ARCTIC (solo /z/ pasó la puerta, de 4 exigidos). Por qué no hay veredicto por sonido |
 
