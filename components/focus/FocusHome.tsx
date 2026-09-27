@@ -15,6 +15,7 @@ import { SprintProgress } from './SprintProgress'
 import { FocusContentCard } from './FocusContentCard'
 import { saveFocusContent } from '@/lib/focus/queries'
 import { deriveExercisesFromContent } from '@/lib/focus/exercise-builder'
+import { hardestGapLevel } from '@/lib/focus/types'
 import type { FocusSprint, FocusContent, FocusContentKind } from '@/lib/focus/types'
 
 interface FocusHomeProps {
@@ -42,7 +43,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           gaps: sprint.gaps,
-          level: sprint.gaps[0]?.level ?? 'a2',
+          level: hardestGapLevel(sprint.gaps),
         }),
       })
 

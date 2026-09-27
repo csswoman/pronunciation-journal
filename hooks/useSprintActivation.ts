@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSprint, deleteSprint, saveFocusContent } from '@/lib/focus/queries'
 import { deriveExercisesFromContent } from '@/lib/focus/exercise-builder'
+import { hardestGapLevel } from '@/lib/focus/types'
 import type { SprintGap, FocusContent, StoryBody } from '@/lib/focus/types'
 
 /** Etapas visibles de la activación, para que la espera no sea una caja negra. */
@@ -46,7 +47,7 @@ export function useSprintActivation(userId: string) {
       const res = await fetch('/api/gemini/focus/generate-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gaps, level: gaps[0]?.level ?? 'a2' }),
+        body: JSON.stringify({ gaps, level: hardestGapLevel(gaps) }),
       })
 
       if (!res.ok) {

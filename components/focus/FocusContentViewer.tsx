@@ -76,9 +76,9 @@ export function FocusContentViewer({ content, sprintId }: FocusContentViewerProp
       allowTarget: raw.slug !== 'speak_word',
     })
     onProgress({ kind: 'answered', exerciseId: raw.exerciseId })
-    if (!user) return
+    const userId = user?.id ?? 'guest-local-user'
     persistenceQueue.current = persistenceQueue.current
-      .then(() => savePracticeAnswer(user.id, result))
+      .then(() => savePracticeAnswer(userId, result))
       .catch(() => setProgressError(true))
   }, [content, onProgress, user])
 
@@ -88,10 +88,11 @@ export function FocusContentViewer({ content, sprintId }: FocusContentViewerProp
       allowTarget: raw.slug !== 'speak_word',
     }))
     onProgress({ kind: 'completed' })
-    if (!user || results.length === 0) return
+    if (results.length === 0) return
+    const userId = user?.id ?? 'guest-local-user'
     const activitySessionId = `focus:${executionId.current}`
     persistenceQueue.current = persistenceQueue.current
-      .then(async () => { await recordActivitySession(user.id, {
+      .then(async () => { await recordActivitySession(userId, {
           practiceContext: 'practice',
           activitySessionId,
           sessionResult: buildSessionResult(results),

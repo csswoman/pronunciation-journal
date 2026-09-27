@@ -176,3 +176,18 @@ export function isErrorTrapBody(body: FocusContentBody): body is ErrorTrapBody {
 export function isSongBody(body: FocusContentBody): body is SongBody {
   return 'lyrics' in body && 'gapLines' in body
 }
+
+// ── Level ─────────────────────────────────────────────────────────────────────
+
+const FOCUS_LEVEL_ORDER: FocusLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1']
+
+/**
+ * Nivel a usar al generar contenido para un conjunto de gaps: el más alto de
+ * los elegidos, para no aplanar un gap avanzado al nivel del primero que el
+ * usuario haya seleccionado (ej. A1 + B1 no debe salir todo en A1).
+ */
+export function hardestGapLevel(gaps: SprintGap[]): FocusLevel {
+  return gaps.reduce<FocusLevel>((hardest, gap) => (
+    FOCUS_LEVEL_ORDER.indexOf(gap.level) > FOCUS_LEVEL_ORDER.indexOf(hardest) ? gap.level : hardest
+  ), gaps[0]?.level ?? 'a2')
+}
