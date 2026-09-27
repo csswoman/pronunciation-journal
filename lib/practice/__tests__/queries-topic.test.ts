@@ -35,6 +35,9 @@ vi.mock('@/lib/db', () => ({
   db: {
     syncOutbox: { where: syncOutboxWhereMock },
     srsRatingEvents: {},
+    practiceAttemptReceipts: { get: vi.fn(async () => undefined), add: vi.fn(async () => undefined) },
+    chunkEvidence: {},
+    learningState: {},
     srsData: {},
     transaction: transactionMock,
   },
@@ -69,7 +72,7 @@ describe('savePracticeAnswer topic routing', () => {
     expect(insertCall?.[2]).toBe('upsert')
     expect(insertCall?.[3].id).toMatch(/^[0-9a-f-]{36}$/i)
     expect(insertCall?.[5]).toBe('id')
-    expect(topicSrsMock).toHaveBeenCalledWith('user-1', 'grammar:present simple', expect.any(Number))
+    expect(topicSrsMock).toHaveBeenCalledWith('user-1', 'grammar:present simple', expect.any(Number), { idempotencyKey: expect.any(String) })
   })
 
   it('does not schedule topic SRS when topic absent', async () => {
@@ -103,6 +106,7 @@ describe('savePracticeAnswer source SRS routing', () => {
       wordId,
       expect.any(Number),
       expect.objectContaining({ signal: 'objective_evidence' }),
+      expect.any(String),
     )
     expect(fragmentSrsMock).not.toHaveBeenCalled()
   })

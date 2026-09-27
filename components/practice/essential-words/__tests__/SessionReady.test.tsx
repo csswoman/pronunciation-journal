@@ -105,4 +105,14 @@ describe('SessionReady', () => {
     await user.click(screen.getByRole('button', { name: 'Empezar' }))
     expect(onBegin).toHaveBeenCalledOnce()
   })
+
+  it('renders faithful 0 counts for a brand new learner without previous session or vocabulary', () => {
+    render(
+      <SessionReady
+        {...readyProps}
+        stats={{ ...baseStats, totalWords: 0 }}
+      />,
+    )
+    expect(screen.queryByText(/2800/)).not.toBeInTheDocument()
+  })
 })

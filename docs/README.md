@@ -11,6 +11,7 @@ diseño y planes de producto.
 | [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, Plan diario, Repaso y Progreso |
 | [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
+| [Identidad de intentos](architecture/practice-attempt-identity.md) | Recibos duraderos, keys UUID, replay de Practice/Coach y límites de la fase A del plan 046 |
 | [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
 | [AI Coach](architecture/ai-coach.md) | Sets de cinco ejercicios, navegación y resumen locales, y coste de requests |
 | [Banco de contenido pregenerado](architecture/content-bank.md) | Ejercicios pregenerados con la cuota sobrante de IA, servicio banco primero y caché offline |
@@ -18,6 +19,8 @@ diseño y planes de producto.
 | [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
 | [Modelos de voz locales](ai/local-voice-models.md) | Spike de Kokoro TTS (Plan 039, fase A): licencia, tamaños, voces y veredicto de la puerta (no-ship — latencia por palabra en WASM) |
 | [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
+| [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
+| [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
 | [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |

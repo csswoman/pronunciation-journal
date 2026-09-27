@@ -64,6 +64,8 @@ export interface AccuracyStats {
   totalAnswers7: number
   /** Average retrieval quality (grade 1-5), or null if no graded answers */
   retrievalQuality7?: number | null
+  /** True when the underlying query failed — prevents confusing error with 0% */
+  hasError?: boolean
 }
 
 export interface WordBankByStatus {
@@ -289,12 +291,17 @@ export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   const since7 = new Date()
   since7.setDate(since7.getDate() - 7)
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('answer_history')
     .select('grade, is_correct, user_answer')
     .eq('user_id', userId)
     .gte('answered_at', since7.toISOString())
     .not('answered_at', 'is', null)
+
+  if (error) {
+    console.error('[progress] getAccuracyStats: answer_history query failed', error)
+    return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null, hasError: true }
+  }
 
   const rows = data ?? []
   if (rows.length === 0) return { accuracy7: 0, totalAnswers7: 0, retrievalQuality7: null }

@@ -24,8 +24,11 @@ export function buildCoachPracticeAnswer(
 
   const topicKey = normalizeTopic(result.topic) ?? result.topic.trim()
   const contentId = `ai_coach:${topicKey}`
+  const latencyMs = result.latencyMs != null && Number.isFinite(result.latencyMs) && result.latencyMs >= 0
+    ? result.latencyMs : undefined
 
   return {
+    attemptId: result.attemptId,
     exerciseId: contentId,
     slug,
     exerciseTypeId,
@@ -33,7 +36,10 @@ export function buildCoachPracticeAnswer(
     topic: result.topic,
     context: 'ai_coach',
     contentId,
-    timeMs: result.latencyMs ?? 0,
+    timeMs: latencyMs ?? 0,
+    responseTimeKnown: latencyMs !== undefined,
+    firstTryFailed: result.firstTryFailed,
+    hintsUsed: result.hintsUsed,
     score: result.score !== undefined ? Math.round(result.score * 100) : undefined,
     exercisePayload: result.ipa ? { targetWord: result.topic, ipa: result.ipa } : undefined,
   }

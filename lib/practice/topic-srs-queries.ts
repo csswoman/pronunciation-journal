@@ -29,6 +29,7 @@ export interface TopicSrsWriteContext {
 export type TopicSrsWrite = (context: TopicSrsWriteContext) => Promise<unknown>
 
 export interface EnqueueTopicSRSOptions {
+  idempotencyKey?: string
   /** Restrict a caller to a narrower, already-canonical subset of topics. */
   allowedTopics?: ReadonlySet<string>
   /** Replace the browser Dexie/outbox sink (used by authenticated server code). */
@@ -65,8 +66,8 @@ export function buildTopicSrsRatingEvent(
   topic: string,
   grade: number,
   occurredAt: string = new Date().toISOString(),
+  idempotencyKey: string = crypto.randomUUID(),
 ): { event: SRSRatingEventRecord; rpcArgs: Record<string, unknown> } {
-  const idempotencyKey = crypto.randomUUID()
   const event: SRSRatingEventRecord = {
     id: idempotencyKey,
     userId,
@@ -109,7 +110,7 @@ export async function enqueueTopicSRSUpdate(
     return null
   }
 
-  const { event, rpcArgs } = buildTopicSrsRatingEvent(userId, canonical, grade)
+  const { event, rpcArgs } = buildTopicSrsRatingEvent(userId, canonical, grade, undefined, options.idempotencyKey)
 
   // The server-side journal path supplies a Supabase RPC adapter here. This
   // keeps validation at this same choke point without importing browser-only

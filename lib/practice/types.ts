@@ -156,6 +156,10 @@ export type PracticeAnswer = {
   totalInteractionMs?: number
   /** True if the user failed their first try before retrying and succeeding. */
   firstTryFailed?: boolean
+  /** Observed hint count; transport only until a hint penalty is approved. */
+  hintsUsed?: number
+  /** False when a producer has no measured response latency. */
+  responseTimeKnown?: boolean
   /** 0-100, currently used by speak_word. */
   score?: number
   feedback?: PedagogicalFeedback
@@ -352,6 +356,7 @@ export type PracticeSubmitExtras = {
   responseTimeMs?: number
   totalInteractionMs?: number
   firstTryFailed?: boolean
+  hintsUsed?: number
 }
 
 export type PracticeConfig = {

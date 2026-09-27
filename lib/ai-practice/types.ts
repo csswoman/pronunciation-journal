@@ -61,6 +61,9 @@ export type StreamBuffer = {
 };
 
 export type ExerciseResult = {
+  attemptId?: string;
+  firstTryFailed?: boolean;
+  hintsUsed?: number;
   correct: boolean;
   score?: number;
   topic: string;

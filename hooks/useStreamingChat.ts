@@ -211,18 +211,20 @@ export function useStreamingChat({
   }, []);
 
   const answerToolCall = useCallback((callId: string, result: ExerciseResult) => {
-    let resolvedToolName = "exercise_result";
-    setMessages(prev => {
-      const { updatedMessages, toolName } = applyAnswerToMessages(prev, callId, result);
-      resolvedToolName = toolName;
-      return updatedMessages;
-    });
-    setMessages(prev => [...prev, { role: "tool" as const, toolCallId: callId, name: resolvedToolName, result, timestamp: new Date().toISOString() }]);
-    metrics.recordExercise(resolvedToolName, result);
-    if (learningState) setLearningState(applyExerciseResult(learningState, result));
+    const current = messagesRef.current;
+    const prior = current.flatMap(msg => msg.role === "model" ? [msg.toolCalls.get(callId)] : [])
+      .find(call => call?.result)?.result;
+    const observed = { ...(prior ?? result), attemptId: `coach:${callId}` };
+    const { updatedMessages, toolName } = applyAnswerToMessages(current, callId, observed);
     if (userId) {
-      void persistCoachExerciseResult(userId, resolvedToolName, result).catch(() => {});
+      void persistCoachExerciseResult(userId, toolName, observed).catch(() => {});
     }
+    if (prior) return;
+    const next: AIMessage[] = [...updatedMessages, { role: "tool", toolCallId: callId, name: toolName, result: observed, timestamp: new Date().toISOString() }];
+    messagesRef.current = next;
+    setMessages(next);
+    metrics.recordExercise(toolName, observed);
+    if (learningState) setLearningState(applyExerciseResult(learningState, observed));
   }, [learningState, metrics, setLearningState, userId]);
 
   const finalizeSession = metrics.finalizeSession;

@@ -1,5 +1,11 @@
 'use client'
 
+// Planned structure:
+// <GenericExerciseView>
+//   <ExerciseShell> — feedback and navigation for generic exercises
+//     [registry content] — production exercises own their shell
+//   <UnsupportedExercise /> — missing registry entry
+
 import { useState, useEffect } from 'react'
 import { Lightbulb } from "@/components/icons"
 import { ExerciseShell } from '@/components/exercises/ExerciseShell'
@@ -13,6 +19,7 @@ import {
 } from '@/lib/practice/exercise-renderer/generic-registry'
 import { UnsupportedExercise } from '@/lib/practice/exercise-renderer/UnsupportedExercise'
 import { topicDisplayLabel } from '@/lib/practice/topic-labels'
+import { normalizeSubmitEvidence, type ProducerSubmitExtras } from '@/lib/practice/submit-evidence'
 
 interface Props {
   exercise: PracticeExercise & { payload: GenericPayload }
@@ -26,7 +33,7 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
   const { slug, payload } = exercise
   const data = payload.data
   const isProduction = PRODUCTION_TYPES.has(data.type)
-  const [result, setResult] = useState<ExerciseResult | null>(null)
+  const [result, setResult] = useState<(ExerciseResult & { evidence: PracticeSubmitExtras }) | null>(null)
   const [hintCount, setHintCount] = useState(0)
   const [retryKey, setRetryKey] = useState(0)
   const [firstTryFailed, setFirstTryFailed] = useState(false)
@@ -44,26 +51,30 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     isCorrect: boolean,
     userAnswer: string,
     timeMs: number,
-    extras?: PracticeSubmitExtras,
+    extras?: ProducerSubmitExtras,
   ) {
+    const normalized = normalizeSubmitEvidence(extras, userAnswer)
+    const responseTimeMs = firstResponseTimeMs ?? normalized.responseTimeMs ?? timeMs
     if (firstResponseTimeMs === null) {
-      setFirstResponseTimeMs(timeMs)
+      setFirstResponseTimeMs(responseTimeMs)
     }
-    const hadPriorFailure = firstTryFailed || !isCorrect
+    const hadPriorFailure = firstTryFailed || normalized.firstTryFailed === true
+      || (normalized.status === 'answered' && !isCorrect)
+    const evidence: PracticeSubmitExtras = {
+      ...normalized,
+      responseTimeMs,
+      firstTryFailed: hadPriorFailure,
+      // The child's count can reflect the same hints passed down by this container.
+      hintsUsed: Math.max(hintCount, normalized.hintsUsed ?? 0),
+    }
+    setFirstTryFailed(hadPriorFailure)
+    setHintCount(evidence.hintsUsed ?? 0)
 
     if (isProduction) {
-      onSubmit(isCorrect, userAnswer, {
-        ...extras,
-        status: extras?.status ?? 'answered',
-        responseTimeMs: firstResponseTimeMs ?? timeMs,
-        firstTryFailed: hadPriorFailure,
-      })
+      onSubmit(isCorrect, userAnswer, evidence)
       return
     }
-    if (!isCorrect) {
-      setFirstTryFailed(true)
-    }
-    setResult({ isCorrect, userAnswer, timeMs, score: extras?.score, feedback: extras?.feedback })
+    setResult({ isCorrect, userAnswer, timeMs, score: evidence.score, feedback: evidence.feedback, evidence })
   }
 
   function handleContinue() {
@@ -71,24 +82,23 @@ export function GenericExerciseView({ exercise, onSubmit, focusUi = false }: Pro
     onSubmit(
       result.isCorrect,
       result.userAnswer,
-      {
-        score: result.score,
-        feedback: result.feedback,
-        status: 'answered',
-        responseTimeMs: firstResponseTimeMs ?? result.timeMs,
-        firstTryFailed: firstTryFailed || !result.isCorrect,
-      },
+      result.evidence,
     )
   }
 
   function handleRetry() {
-    setFirstTryFailed(true)
     setResult(null)
     setRetryKey((key) => key + 1)
   }
 
   function handleSkip() {
-    onSubmit(false, 'skip', { status: 'skipped' })
+    onSubmit(false, 'skip', {
+      ...result?.evidence,
+      status: 'skipped',
+      firstTryFailed,
+      hintsUsed: Math.max(hintCount, result?.evidence.hintsUsed ?? 0),
+      responseTimeMs: firstResponseTimeMs ?? undefined,
+    })
   }
 
   function handleHint() {

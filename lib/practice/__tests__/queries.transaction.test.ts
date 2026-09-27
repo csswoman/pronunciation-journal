@@ -21,6 +21,7 @@ vi.mock('@/lib/supabase/client', () => ({
 
 import { db } from '@/lib/db'
 import { savePracticeAnswer } from '../queries'
+import { practiceEffectId } from '../attempt-identity'
 import type { PracticeAnswer } from '../types'
 
 const WORD_BANK_UUID = '550e8400-e29b-41d4-a716-446655440000'
@@ -72,7 +73,7 @@ describe('savePracticeAnswer transactional atomicity', () => {
     const answerEntries = (await db.syncOutbox.where('userId').equals('user-1').toArray())
       .filter((entry) => entry.table === 'answer_history')
     expect(answerEntries).toHaveLength(1)
-    expect(answerEntries[0]?.payload.id).toBe('attempt-1')
+    expect(answerEntries[0]?.payload.id).toBe(await practiceEffectId('user-1', 'attempt-1', 'attempt', '', 'answer'))
   })
 
   it('crash simulation: a failure partway through the transaction rolls back ALL operations — none land', async () => {

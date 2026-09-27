@@ -49,3 +49,17 @@ The pure boundary lives in `lib/progress/projections.ts`; server queries feed it
 attributed answers, completion rows and activity summaries. A later negative
 objective result replaces the prior target result in the learning projection
 and exposes that target as needing review.
+
+## Truthful UI claims and empty states
+
+Learner-facing progress surfaces must never display fabricated, placeholder, or unverified metrics:
+
+- **Zero stays zero**: 0 completed exercises displays 0 (never synthetic defaults such as 53 or 8/day).
+- **No speculative forecasts**: cards must not print hardcoded reduction forecasts unless backed by dynamic scheduler projections.
+- **Empty session states**: if no previous session exists, `lastSession` is omitted (never claiming fixed metrics like 0:42 or 1/1).
+- **Catalog totals**: uninitialized or zero-word counts stay 0; `SessionReadyVocabulary` displays real totals without replacing 0 with 2800, and 0 learned words produces 0 active progress segments.
+- **Comprehensive dimensions**: radar and balance cards reflect the full 7 skills (`pronunciation`, `grammar`, `vocabulary`, `listening`, `speaking`, `reading`, `writing`). Dimension counts and labels are derived dynamically from the active skill registry.
+- **Accurate semantic labels**:
+  - Weakest sounds reflect contrast mastery (`maestría`), not raw accuracy.
+  - The 7-day answer weighted average in Practice Hub reflects 7-day accuracy (`precisión (7 días)`), not total vocabulary retention.
+  - Query error states (`hasError`) are explicitly distinguished from 0% or empty data.

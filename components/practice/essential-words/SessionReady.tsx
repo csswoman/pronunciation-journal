@@ -22,7 +22,7 @@ interface Props {
   onDiscard: () => void
 }
 
-const DEFAULT_VOCAB_BUCKETS = { nuevas: 2, aprendiendo: 0, en_repaso: 0, dominadas: 0 }
+const DEFAULT_VOCAB_BUCKETS = { nuevas: 0, aprendiendo: 0, en_repaso: 0, dominadas: 0 }
 
 export function SessionReady({
   preview,
@@ -68,7 +68,7 @@ export function SessionReady({
         >
           <SessionReadyVocabulary
             buckets={dashboard?.vocabulary ?? DEFAULT_VOCAB_BUCKETS}
-            totalWords={stats.totalWords || 2800}
+            totalWords={stats.totalWords}
           />
           <SessionReadyVaultRow />
         </aside>

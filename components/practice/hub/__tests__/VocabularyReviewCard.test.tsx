@@ -33,4 +33,15 @@ describe("VocabularyReviewCard", () => {
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(screen.getByText("3 pendientes")).toBeInTheDocument();
   });
+
+  it("renders 0 active segments when learnedCount is 0", () => {
+    render(<VocabularyReviewCard dueCount={null} learnedCount={0} totalCount={1000} />);
+    const progressbar = screen.getByRole("progressbar");
+    expect(progressbar.querySelectorAll(".bg-ink")).toHaveLength(0);
+  });
+
+  it("omits the progress bar when totalCount is 0", () => {
+    render(<VocabularyReviewCard dueCount={0} learnedCount={0} totalCount={0} />);
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  });
 });

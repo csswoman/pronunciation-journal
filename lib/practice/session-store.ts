@@ -37,9 +37,12 @@ export async function createSession(params: {
   userId: string
   soundId: number
   exercises: PracticeExercise[]
+  sessionId?: string
 }): Promise<PracticeSessionRecord> {
   const now = Date.now()
   const record: PracticeSessionRecord = {
+    sessionId: params.sessionId ?? crypto.randomUUID(),
+    phase: 'exercising',
     id: compositeKey(params.userId, params.soundId),
     userId: params.userId,
     soundId: params.soundId,
@@ -56,9 +59,22 @@ export async function createSession(params: {
 export async function updateSessionProgress(
   userId: string,
   soundId: number,
-  patch: { currentIndex: number; answers: ExerciseResult[] },
+  patch: { currentIndex: number; answers: ExerciseResult[]; phase?: 'exercising' | 'hints' },
 ): Promise<void> {
   await db.practiceSessions.update(compositeKey(userId, soundId), patch)
+}
+
+/** Serialize initial creation across tabs. A restart explicitly calls createSession. */
+export async function getOrCreateSession(params: Parameters<typeof createSession>[0]): Promise<PracticeSessionRecord> {
+  return db.transaction('rw', db.practiceSessions, async () => {
+    const existing = await loadActiveSession(params.userId, params.soundId)
+    if (!existing) return createSession(params)
+    if (!existing.sessionId) {
+      existing.sessionId = crypto.randomUUID()
+      await db.practiceSessions.put(existing)
+    }
+    return existing
+  })
 }
 
 export async function deleteSession(

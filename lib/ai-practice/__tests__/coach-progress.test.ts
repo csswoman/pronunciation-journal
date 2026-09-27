@@ -30,12 +30,28 @@ import {
 } from '@/lib/ai-practice/coach-progress'
 import { createEmptyState } from '@/lib/ai-practice/learning-state'
 import type { ExerciseResult } from '@/lib/ai-practice/types'
+import { answerToGrade } from '@/lib/practice/grade'
 
 const baseResult: ExerciseResult = {
   correct: true,
   topic: 'grammar:present_simple',
   gradedBy: 'client',
 }
+
+describe('Coach attempt evidence', () => {
+  it('unknown latency is not a fast response', () => {
+    const answer = buildCoachPracticeAnswer('render_fill_blank', baseResult)!
+    expect(answer.responseTimeKnown).toBe(false)
+    expect(answerToGrade(answer)).toBe(3)
+  })
+  it('preserves widget identity, measured latency, first failure and options help', () => {
+    const answer = buildCoachPracticeAnswer('render_fill_blank', {
+      ...baseResult, attemptId: 'coach:widget', latencyMs: 4200, firstTryFailed: true, hintsUsed: 1,
+    })!
+    expect(answer).toMatchObject({ attemptId: 'coach:widget', timeMs: 4200, responseTimeKnown: true, firstTryFailed: true, hintsUsed: 1 })
+    expect(answerToGrade(answer)).toBe(1)
+  })
+})
 
 beforeEach(() => {
   savePracticeAnswerMock.mockClear()

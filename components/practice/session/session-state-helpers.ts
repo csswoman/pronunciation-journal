@@ -46,6 +46,7 @@ export function buildExerciseResult(params: {
     responseTimeMs,
     totalInteractionMs: extras?.totalInteractionMs,
     firstTryFailed: extras?.firstTryFailed,
+    hintsUsed: extras?.hintsUsed,
     score: extras?.score,
     feedback: extras?.feedback,
     contentId: current.contentId,

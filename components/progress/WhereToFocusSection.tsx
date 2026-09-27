@@ -108,12 +108,15 @@ export function WhereToFocusSection({ data, coach, learnerLevel }: Props) {
             <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-ink leading-tight mt-2">
               Sonidos a reforzar
             </h3>
+            <span className="block text-xs sm:text-sm font-semibold text-ink-secondary mt-0.5">
+              Maestría en contrastes
+            </span>
 
             {/* Phonemes list */}
             {samplePhonemes.length > 0 ? (
               <div className="mt-5 flex flex-col gap-4">
                 {samplePhonemes.map((p) => (
-                  <div key={p.ipa} className="flex items-center gap-3 group">
+                  <div key={p.ipa} className="flex items-center gap-3 group" aria-label={`/${p.ipa}/: ${p.accuracy}% de maestría`}>
                     <span className="font-ipa text-lg sm:text-xl font-bold text-ink w-10 shrink-0 group-hover:scale-110 transition-transform">
                       /{p.ipa}/
                     </span>
@@ -123,7 +126,10 @@ export function WhereToFocusSection({ data, coach, learnerLevel }: Props) {
                         style={{ width: `${Math.min(100, Math.max(0, p.accuracy))}%` }}
                       />
                     </div>
-                    <span className="w-14 text-right font-display text-base sm:text-lg font-extrabold text-ink tabular-nums shrink-0">
+                    <span
+                      className="w-14 text-right font-display text-base sm:text-lg font-extrabold text-ink tabular-nums shrink-0"
+                      title={`Maestría: ${p.accuracy}%`}
+                    >
                       {p.accuracy} %
                     </span>
                   </div>

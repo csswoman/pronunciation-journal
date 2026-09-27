@@ -43,6 +43,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
   const online = useOnlineStatus()
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
+  const firstTryFailed = useRef(false)
   const fieldId = useId()
   const errorId = useId()
   // Local-first grading: cached and repeated answers never reach the AI, and
@@ -55,6 +56,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
     setText('')
     setGrade(null)
     submitted.current = false
+    firstTryFailed.current = false
     startMs.current = Date.now()
   }, [exercise.id])
 
@@ -69,7 +71,10 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
       modality: 'written',
       level: exercise.level,
     })
-    if (result) setGrade(result)
+    if (result) {
+      firstTryFailed.current ||= !result.correct
+      setGrade(result)
+    }
   }, [text, grading, grade, exercise, pipeline])
 
   const handleContinue = useCallback(() => {
@@ -77,6 +82,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
     submitted.current = true
     onResult(grade.correct, text.trim(), Date.now() - startMs.current, {
       score: grade.score,
+      firstTryFailed: firstTryFailed.current,
       feedback: pedagogicalFeedbackFromProductionGrade(grade),
     })
   }, [grade, text, onResult])
@@ -93,6 +99,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
     submitted.current = true
     onResult(true, text.trim(), Date.now() - startMs.current, {
       resultStatus: 'unscored',
+      firstTryFailed: firstTryFailed.current,
       feedback: {
         immediate: 'Respuesta completada mediante autoevaluación.',
         expectedAnswer: exercise.exampleSentence,

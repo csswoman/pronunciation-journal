@@ -6,7 +6,8 @@ interface Props {
 }
 
 export function ThisWeekCard({ stats }: Props) {
-  const avgPerDay = stats.exercises7 > 0 ? Math.round(stats.exercises7 / 7) : 8
+  const exercises = Math.max(0, stats.exercises7 ?? 0)
+  const avgPerDay = Math.round(exercises / 7)
 
   return (
     <ProgressCard className="flex flex-col gap-3.5 p-5">
@@ -18,7 +19,7 @@ export function ThisWeekCard({ stats }: Props) {
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-baseline gap-1.5 rounded-xl bg-surface-sunken/80 px-3.5 py-3">
             <span className="font-heading text-h2 font-extrabold text-fg tabular-nums">
-              {stats.exercises7 > 0 ? stats.exercises7 : 53}
+              {exercises}
             </span>
             <span className="font-caption text-fg-muted truncate">ejercicios</span>
           </div>

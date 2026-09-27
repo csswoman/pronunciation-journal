@@ -28,6 +28,7 @@ const SKILL_ITEMS: { key: SkillKey; label: string }[] = [
   { key: "speaking", label: "Habla" },
   { key: "grammar", label: "Gramática" },
   { key: "vocabulary", label: "Vocabulario" },
+  { key: "writing", label: "Escritura" },
 ];
 
 const RADAR_SKILLS: { key: SkillKey; label: string }[] = [
@@ -37,6 +38,7 @@ const RADAR_SKILLS: { key: SkillKey; label: string }[] = [
   { key: "listening", label: "ESCUCHA" },
   { key: "speaking", label: "HABLA" },
   { key: "reading", label: "LECTURA" },
+  { key: "writing", label: "ESCRITURA" },
 ];
 
 const SIZE = 320;
@@ -63,7 +65,7 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         className="w-full max-w-[290px] sm:max-w-[310px] transition-transform duration-300 hover:scale-[1.02]"
         role="img"
-        aria-label="Gráfico de radar de 6 dimensiones"
+        aria-label={`Gráfico de radar de ${total} dimensiones`}
       >
         {/* Concentric rings */}
         {RINGS.map((ratio, i) => {
@@ -150,7 +152,7 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
             BALANCE DE SKILLS
           </span>
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-ink leading-tight mt-1">
-            6 dimensiones
+            {SKILL_ITEMS.length} dimensiones
           </h2>
         </div>
         <p className="my-6 text-center text-sm font-medium text-ink-secondary">
@@ -176,14 +178,16 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
               BALANCE DE SKILLS
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-ink leading-tight mt-1">
-              6 dimensiones
+              {SKILL_ITEMS.length} dimensiones
             </h2>
           </div>
 
           <div className="flex flex-col items-start sm:items-end gap-1">
-            <span className="inline-flex items-center rounded-full bg-white/80 px-3.5 py-1 text-xs sm:text-sm font-bold text-ink shadow-xs transition-transform hover:scale-105">
-              {comparisonLabel ?? "Mejorando esta semana"}
-            </span>
+            {comparisonLabel ? (
+              <span className="inline-flex items-center rounded-full bg-white/80 px-3.5 py-1 text-xs sm:text-sm font-bold text-ink shadow-xs transition-transform hover:scale-105">
+                {comparisonLabel}
+              </span>
+            ) : null}
             <span className="text-xs sm:text-sm text-ink-secondary font-medium">sobre 100 puntos</span>
           </div>
         </div>

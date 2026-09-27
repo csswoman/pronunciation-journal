@@ -47,7 +47,7 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
       viewBox={`0 0 ${SIZE} ${SIZE}`}
       className="w-full max-w-[380px]"
       role="img"
-      aria-label="Gráfico de radar del balance de habilidades en 6 dimensiones"
+      aria-label={`Gráfico de radar del balance de habilidades en ${total} dimensiones`}
     >
       {RINGS.map((ratio, i) => {
         const ring = SKILL_ORDER.map((_, j) => {
@@ -238,7 +238,7 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
       <div className="flex items-start justify-between gap-3">
         <ProgressCardHeader
           icon={<Radar size={16} />}
-          eyebrow="6 dimensiones"
+          eyebrow={`${SKILL_ORDER.length} dimensiones`}
           title="Balance de skills"
         />
         {!isEmpty && comparisonLabel ? (

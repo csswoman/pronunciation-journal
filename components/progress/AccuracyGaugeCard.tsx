@@ -29,6 +29,24 @@ export function AccuracyGaugeCard({ stats }: Props) {
   const strokeWidth = 15;
   const circumference = Math.PI * radius;
 
+  if (stats.hasError) {
+    return (
+      <PastelCard tone="butter" className="p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-sm">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-kicker font-bold text-xs sm:text-sm uppercase tracking-wider text-ink-secondary">
+            PRECISIÓN
+          </span>
+          <span className="inline-flex items-center rounded-full bg-ink/10 px-3 py-0.5 text-xs sm:text-sm font-bold text-ink">
+            7 días
+          </span>
+        </div>
+        <p className="my-6 text-center text-sm font-medium text-ink-secondary">
+          No se pudieron cargar tus datos de precisión en este momento.
+        </p>
+      </PastelCard>
+    );
+  }
+
   if (!hasData) {
     return (
       <PastelCard tone="butter" className="p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-sm">

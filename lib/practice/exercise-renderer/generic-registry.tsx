@@ -32,15 +32,10 @@ import type {
   CsShadowPhraseExercise as CsShadowPhraseExerciseType,
   PersonalizationExercise as PersonalizationExerciseType,
 } from '@/lib/exercises/types'
-import type { PedagogicalFeedback, PracticeResultStatus } from '@/lib/practice/types'
+import type { ProducerSubmitExtras } from '@/lib/practice/submit-evidence'
 import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 
-export type GenericRenderExtras = {
-  score?: number
-  feedback?: PedagogicalFeedback
-  resultStatus?: PracticeResultStatus
-  responseTimeMs?: number
-  firstTryFailed?: boolean
+export type GenericRenderExtras = ProducerSubmitExtras & {
   /** Structured error label from AI grading, when the answer was wrong. */
   errorPattern?: ErrorPatternId
   /** Pattern this exercise was scheduled to rehearse, when applicable. */

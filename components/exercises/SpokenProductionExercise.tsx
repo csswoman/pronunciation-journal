@@ -73,12 +73,14 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   const { getSamples, peak } = useVoiceLevel(micStream)
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
+  const firstTryFailed = useRef(false)
   const errorId = useId()
 
   useEffect(() => {
     setGrade(null)
     setMicError(null)
     submitted.current = false
+    firstTryFailed.current = false
     startMs.current = Date.now()
     reset()
   }, [exercise.id, reset])
@@ -97,7 +99,10 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
         level: exercise.level,
         constraintCheck: exercise.constraint?.checkEn,
       })
-      if (result) setGrade(result)
+      if (result) {
+        firstTryFailed.current ||= !result.correct
+        setGrade(result)
+      }
     },
     [exercise, gradeProductionLocalFirst],
   )
@@ -118,6 +123,7 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     const transcript = speechResult?.transcript.trim() ?? ''
     onResult(grade.correct, transcript, Date.now() - startMs.current, {
       score: grade.score,
+      firstTryFailed: firstTryFailed.current,
       feedback: pedagogicalFeedbackFromProductionGrade(grade),
       errorPattern: grade.errorPattern,
       rehearsedPattern: exercise.constraint?.id
@@ -131,7 +137,9 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   const handleUnscoredDone = useCallback(() => {
     if (submitted.current) return
     submitted.current = true
-    onResult(false, '', Date.now() - startMs.current, { resultStatus: 'unscored' })
+    onResult(false, '', Date.now() - startMs.current, {
+      resultStatus: 'unscored', firstTryFailed: firstTryFailed.current,
+    })
   }, [onResult])
 
   const handleRetry = useCallback(() => {

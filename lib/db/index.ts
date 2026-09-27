@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import type { PracticeAttemptReceipt } from '../practice/attempt-identity';
 import type { AIConversation, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
 import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
@@ -37,6 +38,8 @@ export interface GeneratedScriptRecord {
  * One row per (userId, soundId) — composite key `${userId}:${soundId}`.
  */
 export interface PracticeSessionRecord {
+  sessionId?: string;
+  phase?: 'exercising' | 'hints';
   id: string;          // `${userId}:${soundId}`
   soundId: number;
   userId: string;
@@ -478,6 +481,7 @@ class PronunciationDB extends Dexie {
   analyticsEvents!: Table<AnalyticsEvent, number>;
   generatedExercises!: Table<CachedExercise, string>;
   practiceSessions!: Table<PracticeSessionRecord, string>;
+  practiceAttemptReceipts!: Table<PracticeAttemptReceipt, string>;
   ipaExplorations!: Table<IpaExplorationRecord, string>;
   readerPassages!: Table<ReaderPassage, string>;
   practicePrefs!: Table<PracticePrefRecord, string>;
@@ -802,6 +806,9 @@ class PronunciationDB extends Dexie {
     // v47: keep the last resolved Coach level available for offline bank lookup.
     this.version(47).stores({
       coachBankLevelCache: 'userId, level, cachedAt',
+    });
+    this.version(48).stores({
+      practiceAttemptReceipts: 'id, userId, createdAt',
     });
 
 

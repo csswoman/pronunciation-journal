@@ -84,7 +84,7 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
                 )}
                 {retentionPct !== null && (
                   <span className="inline-flex items-center rounded-full bg-ink/10 px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
-                    {retentionPct} % de retención
+                    {retentionPct} % precisión (7 días)
                   </span>
                 )}
               </div>

@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { buildSession } from '@/lib/practice/engine'
 import {
-  createSession,
+  getOrCreateSession,
   evictExpiredSessions,
-  loadActiveSession,
 } from '@/lib/practice/session-store'
 import type { ExerciseResult, PracticeConfig, PracticeExercise } from '@/lib/practice/types'
 import type { SessionPhase } from './session-state-helpers'
@@ -22,6 +21,7 @@ export function useSessionPersistenceRestore(
   const [currentIndex, setCurrentIndex] = useState(config.initialIndex ?? 0)
   const [results, setResults] = useState<ExerciseResult[]>([])
   const [phase, setPhase] = useState<SessionPhase>('exercising')
+  const sessionIdRef = useRef<string>(crypto.randomUUID())
 
   useEffect(() => {
     if (!persistence) return
@@ -29,26 +29,22 @@ export function useSessionPersistenceRestore(
     ;(async () => {
       try {
         await evictExpiredSessions()
-        const existing = await loadActiveSession(persistence.userId, persistence.soundId)
+        const existing = await getOrCreateSession({
+          userId: persistence.userId, soundId: persistence.soundId, exercises: buildSession(config),
+        })
         if (cancelled) return
         if (existing && existing.exercises.length > 0) {
           setExercises(existing.exercises)
           setCurrentIndex(existing.currentIndex)
           setResults(existing.answers)
-          setPhase(existing.currentIndex >= existing.exercises.length ? 'complete' : 'exercising')
+          sessionIdRef.current = existing.sessionId ?? `${existing.id}:${existing.startedAt}`
+          setPhase(existing.currentIndex >= existing.exercises.length ? 'complete' : existing.phase ?? 'exercising')
         } else {
           const fresh = buildSession(config)
           setExercises(fresh)
           setCurrentIndex(0)
           setResults([])
           setPhase(fresh.length > 0 ? 'exercising' : 'complete')
-          if (fresh.length > 0) {
-            await createSession({
-              userId: persistence.userId,
-              soundId: persistence.soundId,
-              exercises: fresh,
-            })
-          }
         }
       } catch (err) {
         console.error('[PracticeSession] restore failed; starting fresh', err)
@@ -67,6 +63,7 @@ export function useSessionPersistenceRestore(
   }, [persistence?.userId, persistence?.soundId])
 
   return {
+    sessionIdRef,
     ready,
     exercises,
     setExercises,

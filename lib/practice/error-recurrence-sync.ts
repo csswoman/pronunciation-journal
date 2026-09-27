@@ -13,6 +13,7 @@ export async function recordPracticeErrorRecurrence(
   errorPattern: ErrorPatternId | undefined,
   rehearsedPattern: ErrorPatternId | undefined,
   isCorrect: boolean,
+  strict = false,
 ): Promise<boolean> {
   if (!errorPattern && !rehearsedPattern) return false
 
@@ -39,12 +40,14 @@ export async function recordPracticeErrorRecurrence(
         { user_id: userId },
       )
     } catch (err) {
+      if (strict) throw err
       // Dexie is the local source of truth. A failed remote enqueue should not
       // cause a second local failure to be counted for the same correction.
       console.warn('[recordPracticeErrorRecurrence] failed to enqueue learning state', err)
     }
     return true
   } catch (err) {
+    if (strict) throw err
     console.warn('[recordPracticeErrorRecurrence] failed to update errorRecurrence', err)
     return false
   }
