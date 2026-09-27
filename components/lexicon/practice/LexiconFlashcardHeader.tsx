@@ -108,9 +108,9 @@ export function LexiconFlashcardHeader({
                 key={idx}
                 className={`h-2 flex-1 rounded-full transition-all duration-200 ${
                   isFilled
-                    ? "bg-[#7c3aed]"
+                    ? "bg-accent-purple"
                     : isActive
-                    ? "border-2 border-[#7c3aed] bg-[#7c3aed]/20"
+                    ? "border-2 border-accent-purple bg-accent-purple/20"
                     : "bg-stone-200 dark:bg-stone-700"
                 }`}
               />

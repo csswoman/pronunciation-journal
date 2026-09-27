@@ -10,6 +10,8 @@
 //   </div>
 // </Upcoming7DaysChart>
 
+import { useMemo } from "react";
+
 interface DayReview {
   dayLabel: string;
   count: number;
@@ -18,22 +20,31 @@ interface DayReview {
 
 interface Upcoming7DaysChartProps {
   todayReviewsCount?: number;
+  upcomingReviews?: number[];
 }
 
-export function Upcoming7DaysChart({
-  todayReviewsCount = 25,
-}: Upcoming7DaysChartProps) {
-  const DAYS: DayReview[] = [
-    { dayLabel: "Hoy", count: todayReviewsCount, isToday: true },
-    { dayLabel: "Lun", count: 14 },
-    { dayLabel: "Mar", count: 9 },
-    { dayLabel: "Mié", count: 17 },
-    { dayLabel: "Jue", count: 6 },
-    { dayLabel: "Vie", count: 11 },
-    { dayLabel: "Sáb", count: 4 },
-  ];
+const DAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
-  const maxCount = Math.max(...DAYS.map((d) => d.count), 1);
+export function Upcoming7DaysChart({
+  todayReviewsCount = 0,
+  upcomingReviews = [0, 0, 0, 0, 0, 0],
+}: Upcoming7DaysChartProps) {
+  const days: DayReview[] = useMemo(() => {
+    const today = new Date();
+    const result: DayReview[] = [
+      { dayLabel: "Hoy", count: todayReviewsCount, isToday: true },
+    ];
+    for (let i = 1; i <= 6; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i);
+      const dayLabel = DAY_NAMES[nextDay.getDay()] ?? "";
+      const count = upcomingReviews[i - 1] ?? 0;
+      result.push({ dayLabel, count });
+    }
+    return result;
+  }, [todayReviewsCount, upcomingReviews]);
+
+  const maxCount = Math.max(...days.map((d) => d.count), 0);
 
   return (
     <div className="rounded-2xl bg-surface-raised border border-border-subtle/80 p-5 shadow-2xs space-y-4">
@@ -45,8 +56,8 @@ export function Upcoming7DaysChart({
       </div>
 
       <div className="flex items-end justify-between gap-1.5 h-36 pt-6 px-1">
-        {DAYS.map((day) => {
-          const heightPct = Math.max(15, Math.round((day.count / maxCount) * 100));
+        {days.map((day) => {
+          const heightPct = maxCount > 0 && day.count > 0 ? Math.max(15, Math.round((day.count / maxCount) * 100)) : 0;
           return (
             <div key={day.dayLabel} className="flex flex-col items-center flex-1 h-full justify-end">
               <span className="text-[11px] font-bold font-mono text-fg-muted mb-1 select-none">
@@ -55,7 +66,7 @@ export function Upcoming7DaysChart({
               <div className="w-full max-w-[28px] bg-surface-sunken rounded-t-md overflow-hidden flex items-end h-full">
                 <div
                   className={`w-full rounded-t-md transition-all duration-300 ${
-                    day.isToday ? "bg-[#7c3aed]" : "bg-stone-300 dark:bg-stone-700"
+                    day.isToday ? "bg-accent-purple" : "bg-stone-300 dark:bg-stone-700"
                   }`}
                   style={{ height: `${heightPct}%` }}
                 />

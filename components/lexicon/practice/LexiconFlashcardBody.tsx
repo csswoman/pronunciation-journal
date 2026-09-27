@@ -92,8 +92,8 @@ export function LexiconFlashcardBody({
           onReveal();
         }
       }}
-      className="w-full cursor-pointer rounded-3xl p-8 sm:p-12 shadow-sm border border-stone-900/10 min-h-[400px] sm:min-h-[460px] flex flex-col justify-between text-left focus-ring select-none transition-all duration-150"
-      style={{ backgroundColor: pastelBg, color: "#1c1917" }}
+      className="w-full cursor-pointer rounded-3xl p-8 sm:p-12 shadow-sm border border-stone-900/10 min-h-[400px] sm:min-h-[460px] flex flex-col justify-between text-left focus-ring select-none transition-all duration-150 text-stone-900"
+      style={{ backgroundColor: pastelBg }}
     >
       {!revealed ? (
         /* Front State */

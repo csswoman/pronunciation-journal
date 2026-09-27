@@ -5,6 +5,7 @@ import { WordBrowserClient } from "@/components/lexicon/lesson/WordBrowserClient
 import { getCategories, getCategoryWords } from "@/lib/lexicon/categories";
 import { getCategoryBlurb } from "@/lib/lexicon/category-blurbs";
 import { getLexiconWordBankDetails } from "@/lib/word-bank/server-queries";
+import { deriveWordProgressSignal } from "@/lib/word-bank/progress-state";
 import type { Word } from "@/components/lexicon/lesson/WordGrid";
 
 export default async function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -17,7 +18,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   const rawWords = getCategoryWords(id);
   const lexiconIds = rawWords.map((w) => w.id);
 
-  let wordBankDetailsMap: Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>;
+  let wordBankDetailsMap: Awaited<ReturnType<typeof getLexiconWordBankDetails>>;
   try {
     wordBankDetailsMap = await getLexiconWordBankDetails(lexiconIds);
   } catch {
@@ -27,9 +28,15 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ i
   function resolveStatus(wordId: string): "learned" | "reviewing" | "new" {
     const entry = wordBankDetailsMap.get(wordId);
     if (!entry) return "new";
-    if (entry.srsStatus === "mastered") return "learned";
-    if (entry.srsStatus === "learning" || entry.srsStatus === "review") return "reviewing";
-    return "new"; // srs_status "new" = in word bank but never practiced
+    const signal = deriveWordProgressSignal({
+      srs_status: entry.srsStatus ?? null,
+      mastery_provenance: entry.masteryProvenance ?? null,
+      objective_evidence_count: entry.objectiveEvidenceCount ?? null,
+      familiarity_status: entry.familiarityStatus ?? null,
+    } as Parameters<typeof deriveWordProgressSignal>[0]);
+    if (signal === "mastered" || signal === "legacy_mastered") return "learned";
+    if (signal === "familiar" || signal === "objective_evidence") return "reviewing";
+    return "new"; // 'saved' = en word_bank pero sin práctica
   }
 
   const words: Word[] = rawWords.map((w) => ({

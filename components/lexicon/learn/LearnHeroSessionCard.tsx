@@ -32,6 +32,30 @@ export function LearnHeroSessionCard({
   const totalSessionCards = dueForReview + newCardsLimit;
   const estMinutes = Math.max(1, Math.ceil(totalSessionCards * 0.4));
 
+  const isAllCaughtUp = dueForReview === 0 && activeDecksCount > 0;
+  const isZeroActive = activeDecksCount === 0;
+
+  const kicker = isZeroActive ? "COMIENZA AQUÍ" : isAllCaughtUp ? "TODO AL DÍA" : "SESIÓN DE HOY";
+  const timeEstimateText = isZeroActive ? "5-10 min" : isAllCaughtUp ? "unos 2 min" : `unos ${estMinutes} min`;
+
+  const heroTitle = isZeroActive
+    ? "Elige un mazo para empezar"
+    : isAllCaughtUp
+      ? "¡Al día con tus repasos!"
+      : `${totalSessionCards} tarjetas, todo en una sesión`;
+
+  const heroSubtitle = isZeroActive
+    ? "Aún no tienes mazos activos. Selecciona uno de los mazos temáticos disponibles abajo para comenzar tu primera sesión."
+    : isAllCaughtUp
+      ? `No tienes tarjetas pendientes hoy. Puedes estudiar ${newCardsLimit} tarjetas nuevas de tus ${activeDecksCount} ${activeDecksCount === 1 ? "mazo activo" : "mazos activos"}.`
+      : `Primero lo que toca repasar (${dueForReview}), luego las nuevas. Se mezclan tus ${activeDecksCount} ${activeDecksCount === 1 ? "mazo activo" : "mazos activos"}.`;
+
+  const ctaLabel = isZeroActive
+    ? "Comenzar primer mazo"
+    : isAllCaughtUp
+      ? `Aprender nuevas (${newCardsLimit})`
+      : "Empezar sesión";
+
   return (
     <PastelCard
       tone="lilac"
@@ -40,28 +64,28 @@ export function LearnHeroSessionCard({
       <div className="space-y-3 flex-1 min-w-0 z-10">
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center rounded-full bg-stone-900 text-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider">
-            SESIÓN DE HOY
+            {kicker}
           </span>
           <span className="inline-flex items-center rounded-full bg-stone-900/10 text-stone-900 px-3 py-1 text-xs font-semibold">
-            unos {estMinutes} min
+            {timeEstimateText}
           </span>
         </div>
 
         <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-stone-900 tracking-tight leading-snug">
-          {totalSessionCards} tarjetas, todo en una sesión
+          {heroTitle}
         </h2>
 
         <p className="text-body-sm text-stone-800/90 font-medium leading-relaxed max-w-xl">
-          Primero lo que toca repasar, luego las nuevas. Se mezclan tus {activeDecksCount} mazos activos.
+          {heroSubtitle}
         </p>
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <button
             type="button"
             onClick={onStartSession}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-3 text-body-sm font-bold shadow-xs focus-ring transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-purple hover:opacity-90 text-white px-6 py-3 text-body-sm font-bold shadow-xs focus-ring transition-transform hover:scale-[1.02] active:scale-[0.98]"
           >
-            <span>Empezar sesión</span>
+            <span>{ctaLabel}</span>
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </button>
 

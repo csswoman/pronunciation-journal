@@ -8,7 +8,7 @@ import { WordFiltersBar } from "./WordFiltersBar";
 import { WordGrid } from "./WordGrid";
 import type { Word } from "./WordGrid";
 import type { StatusFilter, SortMode, ViewMode } from "./WordFiltersBar";
-import { markLexiconWordLearned } from "@/lib/word-bank/queries";
+import { markLexiconWordLearned, markLexiconWordMastered } from "@/lib/word-bank/queries";
 
 interface WordBrowserProps {
   words: Word[];
@@ -83,6 +83,35 @@ export function WordBrowser({
           return next;
         });
         console.error("Failed to mark word as learned:", err);
+      }
+    },
+    [initialWords]
+  );
+
+  const handleMarkMastered = useCallback(
+    async (wordId: string) => {
+      const word = initialWords.find((w) => w.id === wordId);
+      if (!word) return;
+
+      // Optimistic update — marcar como dominada en la UI de inmediato
+      setLearnedIds((prev) => new Set([...prev, wordId]));
+
+      try {
+        await markLexiconWordMastered({
+          sourceRef: word.id,
+          text: word.word,
+          definition: word.definition,
+          example: word.example ?? null,
+          difficulty: word.difficulty,
+        });
+      } catch (err) {
+        // Rollback si falló
+        setLearnedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(wordId);
+          return next;
+        });
+        console.error("Failed to mark word as mastered:", err);
       }
     },
     [initialWords]
@@ -172,6 +201,7 @@ export function WordBrowser({
             view={view}
             groupByLetter={sort === "alpha"}
             onMarkLearned={handleMarkLearned}
+            onMarkMastered={handleMarkMastered}
           />
         </div>
 

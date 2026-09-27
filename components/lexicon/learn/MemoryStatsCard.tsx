@@ -20,7 +20,7 @@ export function MemoryStatsCard({
   unstartedCount,
 }: MemoryStatsCardProps) {
   const total = masteredCount + learningCount + unstartedCount;
-  const learningPct = total > 0 ? Math.max(3, Math.round((learningCount / total) * 100)) : 4;
+  const learningPct = total > 0 ? Math.round((learningCount / total) * 100) : 0;
   const masteredPct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
 
   return (
@@ -34,7 +34,9 @@ export function MemoryStatsCard({
         {masteredPct > 0 ? (
           <div className="h-full bg-emerald-500 transition-all duration-300" style={{ width: `${masteredPct}%` }} />
         ) : null}
-        <div className="h-full bg-amber-400 dark:bg-amber-500 transition-all duration-300 rounded-full" style={{ width: `${learningPct}%` }} />
+        {learningPct > 0 ? (
+          <div className="h-full bg-amber-400 dark:bg-amber-500 transition-all duration-300 rounded-full" style={{ width: `${learningPct}%` }} />
+        ) : null}
       </div>
 
       <div className="space-y-2.5 pt-1">

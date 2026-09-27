@@ -47,9 +47,12 @@ export async function getWordBankSourceRefsServer(
 /**
  * Server-only: returns a map of categoryId → { mastered, reviewing } counts.
  * categoryWordIds is a map of categoryId → array of lexicon word IDs.
+ * userId is required to scope the query to the current user (avoids relying
+ * solely on RLS propagation in the server client).
  */
 export async function getLexiconProgressByCategory(
   categoryWordIds: Map<string, string[]>,
+  userId: string,
 ): Promise<Map<string, { mastered: number; reviewing: number }>> {
   const allIds = Array.from(categoryWordIds.values()).flat();
   if (allIds.length === 0) return new Map();
@@ -58,6 +61,7 @@ export async function getLexiconProgressByCategory(
   const { data, error } = await supabase
     .from(TABLE)
     .select("source_ref, srs_status, mastery_provenance, objective_evidence_count, familiarity_status")
+    .eq("user_id", userId)
     .in("source_ref", allIds);
 
   if (error) throw error;
@@ -78,9 +82,11 @@ export async function getLexiconProgressByCategory(
     let mastered = 0;
     let reviewing = 0;
     for (const id of ids) {
-      const status = statusByRef.get(id);
-      if (status === "mastered") mastered++;
-      else if (status) reviewing++;
+      const signal = statusByRef.get(id);
+      // mastered + legacy_mastered → cuenta como dominada en el progreso
+      if (signal === "mastered" || signal === "legacy_mastered") mastered++;
+      // familiar + objective_evidence + saved → en progreso / repaso
+      else if (signal) reviewing++;
     }
     result.set(categoryId, { mastered, reviewing });
   }
@@ -88,23 +94,37 @@ export async function getLexiconProgressByCategory(
 }
 
 /**
- * Returns a map from lexicon word id → { id: word_bank row id, isFavorite: boolean }
+ * Returns a map from lexicon word id → { id, isFavorite, srsStatus, masteryProvenance, objectiveEvidenceCount, familiarityStatus }
  * for words the current user has in their word_bank.
  */
 export async function getLexiconWordBankDetails(
   lexiconIds: string[]
-): Promise<Map<string, { id: string; isFavorite: boolean; srsStatus: string | null }>> { // isFavorite always false until types regenerated
+): Promise<Map<string, {
+  id: string;
+  isFavorite: boolean;
+  srsStatus: string | null;
+  masteryProvenance: string | null;
+  objectiveEvidenceCount: number | null;
+  familiarityStatus: string | null;
+}>> {
   if (lexiconIds.length === 0) return new Map();
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(TABLE)
-    .select("id, source_ref, srs_status")
+    .select("id, source_ref, srs_status, mastery_provenance, objective_evidence_count, familiarity_status")
     .in("source_ref", lexiconIds);
   if (error) throw error;
   return new Map(
     (data ?? [])
       .filter((r) => r.source_ref)
-      .map((r) => [r.source_ref!, { id: r.id, isFavorite: false, srsStatus: r.srs_status as string | null }])
+      .map((r) => [r.source_ref!, {
+        id: r.id,
+        isFavorite: false,
+        srsStatus: r.srs_status as string | null,
+        masteryProvenance: r.mastery_provenance as string | null,
+        objectiveEvidenceCount: r.objective_evidence_count as number | null,
+        familiarityStatus: r.familiarity_status as string | null,
+      }])
   );
 }
 

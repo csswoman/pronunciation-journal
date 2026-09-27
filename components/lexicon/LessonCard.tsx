@@ -32,6 +32,11 @@ interface LessonCardProps {
   compact?: boolean;
 }
 
+const STUDY_MODE_LABEL: Record<StudyMode, string> = {
+  receptive: "Reconocer",
+  productive: "Producir",
+};
+
 const CATEGORY_PASTEL_VARS: Record<string, string> = {
   "artificial-intelligence": "var(--sky)",
   "backend-infra": "var(--lilac)",
@@ -51,8 +56,10 @@ export function LessonCard({
   totalWords,
   wordsReviewing = 0,
   progress,
+  studyMode,
   isNext = false,
   onClick,
+  compact = false,
 }: LessonCardProps) {
   const illustrationKey = illustrationForCategory(id);
   const Illustration = illustrationKey ? getIllustration(illustrationKey) : null;
@@ -61,6 +68,7 @@ export function LessonCard({
 
   const isStarted = wordsCompleted > 0 || wordsReviewing > 0;
   const statusText = isStarted ? "en curso" : "sin empezar";
+  const studyModeLabel = studyMode ? STUDY_MODE_LABEL[studyMode] : null;
 
   return (
     <button
@@ -90,15 +98,23 @@ export function LessonCard({
           <h4 className="font-display font-bold text-fg text-body-sm sm:text-body truncate tracking-tight">
             {title}
           </h4>
-          {isNext ? (
-            <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-on-primary uppercase shadow-2xs">
-              SIGUIENTE
-            </span>
-          ) : null}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {studyModeLabel && !compact ? (
+              <span className="rounded-full bg-surface-sunken border border-border-subtle/60 px-2 py-0.5 text-tiny font-medium text-fg-muted">
+                {studyModeLabel}
+              </span>
+            ) : null}
+            {isNext ? (
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-on-primary uppercase shadow-2xs">
+                SIGUIENTE
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <p className="text-caption text-fg-muted font-medium">
           {wordsCompleted} de {totalWords} · {statusText}
+          {compact && studyModeLabel ? ` · ${studyModeLabel}` : null}
         </p>
 
         {/* 5-segment progress bar matching mockup */}

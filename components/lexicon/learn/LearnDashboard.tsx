@@ -23,35 +23,37 @@ interface LearnDashboardProps {
 
 export function LearnDashboard({
   lessons,
-  dueForReview = 25,
+  dueForReview = 0,
   onSelectDeck,
 }: LearnDashboardProps) {
   const { activeLessons, unstartedLessons } = useMemo(() => {
-    // Default active categories matching mockup if no progress exists yet
-    const activeIds = ["frontend-dev", "artificial-intelligence", "data-science", "backend-infra"];
-    const active = lessons.filter((l) => activeIds.includes(l.id) || l.wordsReviewing > 0 || l.wordsCompleted > 0);
+    const active = lessons.filter((l) => l.wordsReviewing > 0 || l.wordsCompleted > 0);
     const unstarted = lessons.filter((l) => !active.some((a) => a.id === l.id));
     return { activeLessons: active, unstartedLessons: unstarted };
   }, [lessons]);
 
   const { masteredCount, learningCount, unstartedCount } = useMemo(() => {
-    const totalWords = lessons.reduce((sum, l) => sum + l.totalWords, 0) || 695;
+    const totalWords = lessons.reduce((sum, l) => sum + l.totalWords, 0);
     const mastered = lessons.reduce((sum, l) => sum + l.wordsCompleted, 0);
-    const learning = 29; // Matches mockup baseline learning count
+    const learning = lessons.reduce((sum, l) => sum + l.wordsReviewing, 0);
     const unstarted = Math.max(0, totalWords - mastered - learning);
     return { masteredCount: mastered, learningCount: learning, unstartedCount: unstarted };
   }, [lessons]);
+
+  const defaultDeckId = activeLessons[0]?.id ?? unstartedLessons[0]?.id ?? "frontend-dev";
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
       {/* Main left column */}
       <div className="lg:col-span-8 space-y-8">
         <LearnHeroSessionCard
-          dueForReview={dueForReview > 0 ? dueForReview : 25}
+          dueForReview={dueForReview}
           newCardsLimit={5}
           activeDecksCount={activeLessons.length}
-          onStartSession={() => onSelectDeck(activeLessons[0]?.id ?? "frontend-dev")}
-          onStartReviewOnly={() => onSelectDeck("frontend-dev")}
+          onStartSession={() => onSelectDeck(defaultDeckId)}
+          onStartReviewOnly={() => {
+            if (activeLessons[0]) onSelectDeck(activeLessons[0].id);
+          }}
         />
 
         <ActiveDecksList
@@ -61,8 +63,9 @@ export function LearnDashboard({
 
         <UnstartedDecksBar
           unstartedLessons={unstartedLessons}
-          onAddDeck={() => {
-            if (unstartedLessons[0]) onSelectDeck(unstartedLessons[0].id);
+          onAddDeck={(categoryId) => {
+            const target = categoryId ?? unstartedLessons[0]?.id;
+            if (target) onSelectDeck(target);
           }}
         />
       </div>
@@ -76,7 +79,7 @@ export function LearnDashboard({
         />
 
         <Upcoming7DaysChart
-          todayReviewsCount={dueForReview > 0 ? dueForReview : 25}
+          todayReviewsCount={dueForReview}
         />
 
         <LearnSettingsCard />

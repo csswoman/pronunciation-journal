@@ -3,7 +3,7 @@ import type { WordCardProps } from "./WordCard";
 import EmptyState from "@/components/EmptyState";
 import { getIllustration } from "@/lib/illustrations/registry";
 
-export interface Word extends Omit<WordCardProps, "onMarkLearned" | "view"> {
+export interface Word extends Omit<WordCardProps, "onMarkLearned" | "onMarkMastered" | "view"> {
   id: string;
   isFavorite?: boolean;
   wordBankId?: string | null;
@@ -17,6 +17,7 @@ interface WordGridProps {
   view: "grid" | "list";
   groupByLetter?: boolean;
   onMarkLearned?: (wordId: string) => void;
+  onMarkMastered?: (wordId: string) => void;
 }
 
 const EmptySearchIllustration = getIllustration("emptySearch");
@@ -35,10 +36,12 @@ function WordCards({
   group,
   view,
   onMarkLearned,
+  onMarkMastered,
 }: {
   group: Word[];
   view: "grid" | "list";
   onMarkLearned?: (wordId: string) => void;
+  onMarkMastered?: (wordId: string) => void;
 }) {
   return (
     <>
@@ -48,6 +51,7 @@ function WordCards({
           {...rest}
           view={view}
           onMarkLearned={onMarkLearned ? () => onMarkLearned(id) : undefined}
+          onMarkMastered={onMarkMastered ? () => onMarkMastered(id) : undefined}
           isFavorite={isFavorite}
           onToggleFavorite={onToggleFavorite}
           onAddToMyWords={onAddToMyWords}
@@ -65,7 +69,7 @@ function WordCards({
  * - WordCard (Tarjeta de palabra individual)
  * - EmptyState (Estado vacío con ilustración al no encontrar palabras)
  */
-export function WordGrid({ words, view, groupByLetter = true, onMarkLearned }: WordGridProps) {
+export function WordGrid({ words, view, groupByLetter = true, onMarkLearned, onMarkMastered }: WordGridProps) {
   if (words.length === 0) {
     return (
       <EmptyState
@@ -82,7 +86,7 @@ export function WordGrid({ words, view, groupByLetter = true, onMarkLearned }: W
     return (
       <div className="lexicon-area__lettergroup">
         <div className={gridClass}>
-          <WordCards group={words} view={view} onMarkLearned={onMarkLearned} />
+          <WordCards group={words} view={view} onMarkLearned={onMarkLearned} onMarkMastered={onMarkMastered} />
         </div>
       </div>
     );
@@ -99,7 +103,7 @@ export function WordGrid({ words, view, groupByLetter = true, onMarkLearned }: W
             <hr className="lexicon-area__letter-rule" />
           </div>
           <div className={gridClass}>
-            <WordCards group={group} view={view} onMarkLearned={onMarkLearned} />
+            <WordCards group={group} view={view} onMarkLearned={onMarkLearned} onMarkMastered={onMarkMastered} />
           </div>
         </section>
       ))}

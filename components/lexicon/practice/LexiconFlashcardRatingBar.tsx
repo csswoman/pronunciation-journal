@@ -32,7 +32,7 @@ export function LexiconFlashcardRatingBar({
           type="button"
           onClick={onReveal}
           disabled={disabled}
-          className="w-full sm:w-auto min-w-[280px] inline-flex items-center justify-center gap-2 rounded-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-bold text-body-sm sm:text-body px-8 py-3.5 shadow-xs focus-ring transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full sm:w-auto min-w-[280px] inline-flex items-center justify-center gap-2 rounded-full bg-accent-purple hover:opacity-90 text-white font-bold text-body-sm sm:text-body px-8 py-3.5 shadow-xs focus-ring transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           <span>Mostrar respuesta</span>
           <span className="font-mono text-xs bg-white/20 border border-white/30 text-white px-2 py-0.5 rounded-md">
@@ -55,7 +55,7 @@ export function LexiconFlashcardRatingBar({
           type="button"
           onClick={() => onRate("forgot")}
           disabled={disabled}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#f7b7a6] hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+          className="flex flex-col items-center justify-center rounded-2xl bg-coral hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
         >
           <div className="flex items-center gap-1">
             <span className="font-mono text-xs border border-stone-900/20 rounded px-1.5 py-0.2">
@@ -73,7 +73,7 @@ export function LexiconFlashcardRatingBar({
           type="button"
           onClick={() => onRate("normal")}
           disabled={disabled}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#f8e08e] hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+          className="flex flex-col items-center justify-center rounded-2xl bg-butter hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
         >
           <div className="flex items-center gap-1">
             <span className="font-mono text-xs border border-stone-900/20 rounded px-1.5 py-0.2">
@@ -91,7 +91,7 @@ export function LexiconFlashcardRatingBar({
           type="button"
           onClick={() => onRate("known")}
           disabled={disabled}
-          className="flex flex-col items-center justify-center rounded-2xl bg-[#a8e6c9] hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+          className="flex flex-col items-center justify-center rounded-2xl bg-mint hover:brightness-95 text-stone-900 p-3.5 border border-stone-900/10 shadow-2xs font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
         >
           <div className="flex items-center gap-1">
             <span className="font-mono text-xs border border-stone-900/20 rounded px-1.5 py-0.2">

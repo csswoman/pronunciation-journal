@@ -54,11 +54,11 @@ export function ActiveDecksList({ lessons, onSelectDeck }: ActiveDecksListProps)
           const illustrationKey = illustrationForCategory(lesson.id);
           const Illustration = illustrationKey ? getIllustration(illustrationKey) : null;
           const pastelBg = CATEGORY_PASTEL_VARS[lesson.id] ?? "var(--sky)";
-          const learningCount = lesson.wordsReviewing > 0 ? lesson.wordsReviewing : Math.max(1, Math.round(lesson.totalWords * 0.3));
+          const learningCount = lesson.wordsReviewing;
           const unstartedCount = Math.max(0, lesson.totalWords - lesson.wordsCompleted - learningCount);
           const progressPct = lesson.totalWords > 0 ? Math.round((lesson.wordsCompleted / lesson.totalWords) * 100) : 0;
-          const dueCount = lesson.wordsReviewing > 0 ? lesson.wordsReviewing : (lesson.id === "frontend-dev" ? 18 : 3);
-          const newCount = lesson.id === "frontend-dev" ? 5 : 0;
+          const dueCount = lesson.wordsReviewing;
+          const newCount = Math.min(5, unstartedCount);
 
           return (
             <div
@@ -95,7 +95,7 @@ export function ActiveDecksList({ lessons, onSelectDeck }: ActiveDecksListProps)
                   <div className="h-2 w-full max-w-xs rounded-full bg-surface-sunken overflow-hidden" aria-hidden>
                     <div
                       className="h-full bg-amber-400 dark:bg-amber-500 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.max(12, progressPct)}%` }}
+                      style={{ width: `${progressPct}%` }}
                     />
                   </div>
                 </div>
@@ -103,12 +103,12 @@ export function ActiveDecksList({ lessons, onSelectDeck }: ActiveDecksListProps)
 
               <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border-subtle/40">
                 <div className="flex items-center gap-2">
-                  <div className="bg-[#fde4dc] dark:bg-rose-950/40 text-stone-900 dark:text-rose-200 border border-rose-200/50 rounded-2xl px-3.5 py-1.5 text-center min-w-[60px]">
+                  <div className="bg-coral-soft dark:bg-rose-950/40 text-stone-900 dark:text-rose-200 border border-rose-200/50 rounded-2xl px-3.5 py-1.5 text-center min-w-[60px]">
                     <span className="block font-bold text-body-sm leading-none">{dueCount}</span>
                     <span className="block text-[10px] font-medium leading-tight text-stone-700 dark:text-rose-300 mt-0.5">repasar</span>
                   </div>
 
-                  <div className="bg-[#eaf2fe] dark:bg-sky-950/40 text-stone-900 dark:text-sky-200 border border-sky-200/50 rounded-2xl px-3.5 py-1.5 text-center min-w-[60px]">
+                  <div className="bg-sky-soft dark:bg-sky-950/40 text-stone-900 dark:text-sky-200 border border-sky-200/50 rounded-2xl px-3.5 py-1.5 text-center min-w-[60px]">
                     <span className="block font-bold text-body-sm leading-none">{newCount}</span>
                     <span className="block text-[10px] font-medium leading-tight text-stone-700 dark:text-sky-300 mt-0.5">nuevas</span>
                   </div>
