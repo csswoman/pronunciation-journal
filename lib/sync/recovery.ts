@@ -1,5 +1,6 @@
 import Dexie from 'dexie'
 import { db } from '@/lib/db'
+import type { SyncOutboxEntry } from './types'
 
 export const SYNCING_STALE_MS = 2 * 60 * 1000
 
@@ -46,4 +47,53 @@ export async function getEarliestPendingRetryAt(userId: string): Promise<string 
     if (!earliest || entry.nextRetryAt < earliest) earliest = entry.nextRetryAt
   }
   return earliest
+}
+
+// ── Bounded recovery of `failed` entries (plan 045) ──────────────────────────
+
+/** Each failed entry may be requeued at most this many times, ever. */
+export const MAX_FAILED_RECOVERIES = 3
+
+/**
+ * Whether a failed entry may be requeued at `currentTime`: under the per-entry
+ * cap and past the backoff for its next recovery (`delaysMs[recoveryCount]`,
+ * measured from its last remote attempt).
+ */
+export function isFailedRecoveryDue(
+  entry: SyncOutboxEntry,
+  currentTime: number,
+  delaysMs: readonly number[],
+): boolean {
+  const count = entry.recoveryCount ?? 0
+  if (count >= MAX_FAILED_RECOVERIES) return false
+  const lastAttempt = new Date(entry.lastAttemptAt ?? entry.createdAt).getTime()
+  return lastAttempt + delaysMs[Math.min(count, delaysMs.length - 1)] <= currentTime
+}
+
+/**
+ * Move still-`failed` entries back to `pending` in one Dexie write, keeping
+ * their id, createdAt and payload. Re-checking `status` inside the write makes
+ * concurrent recoveries (two tabs, double call) count each entry once.
+ */
+export async function requeueFailedEntries(
+  ids: number[],
+  patchPayload?: (entry: SyncOutboxEntry) => Record<string, unknown>,
+): Promise<number> {
+  if (ids.length === 0) return 0
+  return db.syncOutbox
+    .where('id')
+    .anyOf(ids)
+    .filter((entry) => entry.status === 'failed')
+    .modify((entry) => {
+      if (patchPayload) entry.payload = patchPayload(entry)
+      entry.status = 'pending'
+      entry.retryCount = 0
+      entry.recoveryCount = (entry.recoveryCount ?? 0) + 1
+      delete entry.nextRetryAt
+      delete entry.failureKind
+      delete entry.errorMessage
+      delete entry.errorCode
+      delete entry.errorDetails
+      delete entry.errorHint
+    })
 }

@@ -1,7 +1,7 @@
 # Plan 045: Recuperar respuestas rechazadas y fallos transitorios de sincronización
 
 ## Estado y base
-- Estado: TODO; planificación, no implementación autorizada.
+- Estado: DONE (sin commit, 2026-09-26) — código/local verificado; migración remota aplicada y verificada; persistencia real de Essential Words (6 filas) y Connected Speech (1 fila UUID) comprobada en navegador.
 - Prioridad: P0. Esfuerzo: M. Riesgo: medio.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 044 para validar elegibilidad; 046 fase A antes de reemitir efectos SRS.
@@ -76,13 +76,36 @@ git diff --check
 Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexistentes por separado; no reparar producción para satisfacer mocks obsoletos. No ejecutar `pnpm test` completo automáticamente: AGENTS.md limita consumo en Windows. Para migraciones ejecutar además `pnpm check:migrations` y `pnpm audit:hard-rules`; estos checks no prueban comportamiento SQL. Ejecutar pruebas transaccionales solo contra entorno local desechable, confirmando primero el destino y sin imprimir secretos.
 
 ## Puertas de cierre
-- [ ] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
-- [ ] Fixtures se sincronizan una vez y las permanentes ajenas permanecen aisladas. Código/local verificados y remoto pendiente son estados separados; cierre remoto requiere evidencia de una respuesta real persistida.
-- [ ] Pruebas focalizadas, types y lint verificados con salida real.
-- [ ] Comprobación runtime navegador/offline cuando aplique; si falta, fase pendiente.
-- [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
-- [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
-- [ ] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
+- [x] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
+- [x] Fixtures se sincronizan una vez y las permanentes ajenas permanecen aisladas (local). Remoto: 6 respuestas reales persistidas; las 3 `focus_sprints:PGRST204` ajenas siguieron aisladas.
+- [x] Pruebas focalizadas, types y lint verificados con salida real.
+- [x] Comprobación runtime navegador: tras aplicar la migración, 6 respuestas `essential-words` persistidas en remoto (2026-09-27 03:46–03:47 UTC). Diagnóstico del navegador (localhost): `repairableAnswers: 0`, sin `answer_history` fallidas → las respuestas rechazadas de la auditoría ya no están en este outbox: irrecuperables desde aquí, no se reconstruyen. Connected Speech: fila `244d46f7-…` (`sound_lab`, `exercise_payload.score = 50`, `phraseId = pick-it-up`) persistida tras recargar; sin columna `score` ni id `cs_…`.
+- [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. → Remoto aplicado por la usuaria y verificado con `pg_get_constraintdef`: incluye los 7 contextos previos + `essential-words`. Local no aplicado (sin stack desechable). Recuperación de datos pendiente. Baseline remota antes de recuperar: 0 filas `essential-words`, 0 `core-1000`, 1 fila Connected Speech (type 23, `daily`, 2026-08-11).
+- [x] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
+- [x] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
+
+## Evidencia de ejecución (2026-09-26, base `d2294315`, sin drift en los 3 archivos)
+
+Caracterización contra el código previo (fixture sintético `lib/sync/__tests__/fixtures/answer-history-remote.ts`
+que replica columnas, uuid y CHECK de `answer_history`):
+- Essential Words: `{"status":"failed","errorCode":"23514","retryCount":1,"errorMessage":"new row for relation \"answer_history\" violates check constraint \"answer_history_context_check\""}`.
+- Connected Speech: 4/4 rojos por causa real — `expected 'cs_p-1_1790479819934' to match /^[0-9a-f]{8}-…/i`; flush `{ synced: 0, failed: 1 }`.
+
+Entregas:
+- 2: `supabase/migrations/20260926230000_answer_history_essential_words_context.sql` (conserva los 7 contextos + `essential-words`; consulta de inspección en cabecera).
+- 3: `lib/sounds/queries.ts` — UUID por intento (`attemptId` opcional), `score` → `exercise_payload.score`.
+- 4: `lib/sync/answer-recovery.ts`.
+- 5: `failureKind` (`permanent`/`exhausted`) + `recoveryCount` en `types.ts`; `sync-manager.ts` clasifica y añade `22P02`/`23502` como permanentes; `lib/sync/exhausted-recovery.ts`; helpers comunes en `recovery.ts`; wiring en `init-sync-listeners.ts`; diagnóstico `lib/sync/sync-diagnostics.ts` expuesto en `window.__syncRecovery` (superficie existente de `schema-failure-recovery.ts`).
+- 6: runbook y contrato en `docs/architecture/answer-sync-recovery.md`.
+
+Verificación:
+- `pnpm exec vitest run lib/sync/__tests__/answer-recovery.test.ts lib/sync/__tests__/exhausted-recovery.test.ts lib/sounds/__tests__/connected-speech-persistence.test.ts --maxWorkers=1` → 3 files, 15 tests, exit 0.
+- Regresión: `lib/sync/__tests__` + `lib/sounds/__tests__/queries.test.ts` → 13 files / 99 tests; AuthProvider.signout + `components/practice/essential-words` → 23 files / 138 tests.
+- `pnpm type-check`, `pnpm lint`, `git diff --check`, `pnpm check:migrations`, `pnpm audit:hard-rules` → exit 0.
+
+Límites conocidos:
+- Filas antiguas `cs_…` quedan aisladas como permanentes (no se reescribe su id).
+- Fuera de alcance, detectado: `savePracticeAnswer` no envía `answered_at`, así que cualquier sync tardío (no solo la recuperación) fecha la respuesta al momento del sync. La recuperación lo corrige solo para las filas que reencola.
 
 ## STOP
 Si las funciones desplegadas o CHECK difieren de la auditoría, actualizar el diagnóstico antes de escribir SQL. Si el navegador perdió los payloads, reportar irrecuperabilidad; no inventar respuestas. No ejecutar db push en la fase de planificación.

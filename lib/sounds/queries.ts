@@ -194,21 +194,26 @@ export async function recordConnectedSpeechAttempt(
     transcript: string;
     isCorrect: boolean;
     timeMs: number;
+    /** Stable per-attempt UUID; minted once here when the caller has none. */
+    attemptId?: string;
   },
 ): Promise<void> {
-  const attemptId = `cs_${input.phraseId}_${Date.now()}`;
+  // answer_history.id is a uuid column. The id is minted once per attempt and
+  // travels inside the outbox payload, so sync retries resend the same row.
+  const attemptId = input.attemptId ?? crypto.randomUUID();
   const targetId = input.category === 'linking-cv' ? 'connected.linking' : `connected.reduction.${input.category}`;
+  const score = input.isCorrect ? 100 : 50;
 
+  // answer_history has no `score` column; the evaluative score lives in the payload.
   const answerRow = {
     id: attemptId,
     user_id: userId,
     exercise_type_id: 23,
     is_correct: input.isCorrect,
-    score: input.isCorrect ? 100 : 50,
     user_answer: input.transcript,
     target_word: input.phrase,
     time_ms: input.timeMs,
-    exercise_payload: { category: input.category, phraseId: input.phraseId, transcript: input.transcript },
+    exercise_payload: { category: input.category, phraseId: input.phraseId, transcript: input.transcript, score },
     context: 'sound_lab' as const,
     topic: 'connected-speech',
   };
@@ -226,7 +231,7 @@ export async function recordConnectedSpeechAttempt(
           contentId: `connected_speech:${input.phraseId}`,
           context: 'sound_lab',
           isCorrect: input.isCorrect,
-          score: input.isCorrect ? 100 : 50,
+          score,
           timeMs: input.timeMs,
           userAnswer: input.transcript,
           completedAt: new Date(),

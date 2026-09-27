@@ -1,6 +1,26 @@
 import { flushOutbox } from './sync-manager'
 import { getEarliestPendingRetryAt } from './recovery'
 import { exposeSyncRecoveryDevTools } from './schema-failure-recovery'
+import { recoverRepairedAnswerFailures } from './answer-recovery'
+import { recoverExhaustedEntries } from './exhausted-recovery'
+import { getSyncFailureDiagnostics } from './sync-diagnostics'
+
+/**
+ * Bounded requeue of failed entries that can now succeed (plan 045): answers
+ * whose CHECK repair shipped, and transient failures that ran out of retries.
+ * Each helper is scoped to `userId` and capped per entry, so reconnecting
+ * never loops. Permanent rejections (RLS, auth, invalid payload) stay parked.
+ */
+async function recoverFailedEntries(userId: string): Promise<void> {
+  const answers = await recoverRepairedAnswerFailures(userId)
+  const exhausted = await recoverExhaustedEntries(userId)
+  if (answers.requeued + exhausted.requeued === 0) return
+  console.info('[sync] requeued failed outbox entries', {
+    repairedAnswers: answers.requeued,
+    exhausted: exhausted.requeued,
+    diagnostics: await getSyncFailureDiagnostics(userId),
+  })
+}
 
 let removeOnlineListener: (() => void) | undefined
 let retryTimer: ReturnType<typeof setTimeout> | undefined
@@ -29,6 +49,7 @@ async function drainAndReschedule(userId: string): Promise<void> {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return
 
   try {
+    await recoverFailedEntries(userId)
     await flushOutbox(userId)
 
     if (typeof navigator !== 'undefined' && navigator.onLine === false) return

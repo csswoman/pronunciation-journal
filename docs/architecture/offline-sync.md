@@ -42,7 +42,9 @@ Fecha: 2026-07-01
 
 1. Aplicar cambios locales optimistas solo cuando la pantalla pueda mostrar pendiente/error.
 2. Encolar operación con `enqueue()` si la escritura remota puede fallar por conectividad.
-3. Al reconectar, `sync-manager` procesa en lotes y marca errores permanentes.
+3. Al reconectar, `sync-manager` procesa en lotes y marca errores permanentes. Los reintentos agotados quedan como
+   `failureKind: 'exhausted'` y se reencolan de forma acotada al reconectar; ver
+   [Recuperación de respuestas y fallos del outbox](answer-sync-recovery.md).
 4. Después de flush, refrescar datos desde Supabase para evitar divergencias.
 5. Si hay conflicto, gana Supabase salvo que exista una regla explícita de merge.
 

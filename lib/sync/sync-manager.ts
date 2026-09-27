@@ -30,8 +30,8 @@ import {
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-/** Max retries before an entry is permanently marked `failed` */
-const MAX_RETRIES = 3
+/** Max retries before an entry is marked `failed` (`failureKind: 'exhausted'`) */
+export const MAX_RETRIES = 3
 
 /** Entries processed per flush pass (prevents oversized batch requests) */
 const FLUSH_BATCH_SIZE = 30
@@ -93,7 +93,8 @@ export { resolveOnConflict }
 
 /**
  * Determine whether a Supabase error should be retried or treated as permanent.
- * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
+ * RLS violations (code 42501) and check-constraint errors (23514) are permanent,
+ * as are invalid payloads (22P02 bad text representation, 23502 not-null).
  *
  * `23505` (unique_violation) is intentionally NOT in `permanentCodes` — see
  * `classifyUniqueViolationAsIdempotentSuccess` below for why it needs
@@ -104,7 +105,7 @@ export { resolveOnConflict }
  * function alone no longer makes that call.
  */
 export function isPermanentError(message: string, code?: string): boolean {
-  const permanentCodes = ['42501', '23514', '23503', 'PGRST204', 'PGRST205', '42P01']
+  const permanentCodes = ['42501', '23514', '23503', '22P02', '23502', 'PGRST204', 'PGRST205', '42P01']
   if (code && permanentCodes.includes(code)) return true
   // Supabase REST errors come as strings; check for common keywords
   return (
@@ -209,8 +210,11 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
     }
 
     const retryCount = entry.retryCount + 1
-    const permanent =
-      isPermanentError(message, code) || code === '23505' || retryCount >= MAX_RETRIES
+    const rejected = isPermanentError(message, code) || code === '23505'
+    // Running out of transient retries parks the entry too, but as `exhausted`
+    // so `exhausted-recovery.ts` can requeue it after reconnection.
+    const exhausted = !rejected && retryCount >= MAX_RETRIES
+    const permanent = rejected || exhausted
     const attemptedAt = now()
     return {
       synced: false,
@@ -223,6 +227,7 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
         ? { hint: (err as { hint: string }).hint }
         : {}),
       permanent,
+      exhausted,
       retryCount,
       attemptedAt,
       nextRetryAt: permanent ? undefined : getNextRetryAt(retryCount, attemptedAt),

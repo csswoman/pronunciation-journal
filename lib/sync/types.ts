@@ -84,6 +84,14 @@ export interface SyncOutboxEntry {
   nextRetryAt?: string
   /** Number of failed attempts */
   retryCount: number
+  /**
+   * Why a `failed` entry stopped (plan 045): `permanent` = the server rejected
+   * it (RLS, CHECK, invalid payload…); `exhausted` = transient retries ran
+   * out. Absent on entries parked before plan 045.
+   */
+  failureKind?: 'permanent' | 'exhausted'
+  /** Times a bounded recovery requeued this failed entry (plan 045). */
+  recoveryCount?: number
   /** Human-readable reason for the last failure */
   errorMessage?: string
   /** Structured remote error code; used only for deterministic recovery. */
