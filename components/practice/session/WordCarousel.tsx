@@ -9,7 +9,7 @@
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/cn'
 import type { LoadingWord } from '@/hooks/loading-words-data'
 
@@ -20,11 +20,15 @@ interface WordCarouselProps {
 export function WordCarousel({ words }: WordCarouselProps) {
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(true)
-  const prefersReduced = useRef(
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  )
+  const [prefersReduced, setPrefersReduced] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updatePreference = () => setPrefersReduced(mediaQuery.matches)
+    updatePreference()
+    mediaQuery.addEventListener('change', updatePreference)
+    return () => mediaQuery.removeEventListener('change', updatePreference)
+  }, [])
 
   useEffect(() => {
     if (words.length === 0) return
@@ -53,7 +57,7 @@ export function WordCarousel({ words }: WordCarouselProps) {
           <div
             className={cn(
               'flex flex-col items-center justify-center gap-2 transition-all duration-300',
-              prefersReduced.current
+              prefersReduced
                 ? 'transition-opacity'
                 : 'transition-[opacity,transform,filter] ease-out-expo',
               visible

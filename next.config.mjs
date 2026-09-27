@@ -32,8 +32,35 @@ const nextPolyfillModuleIds = [
 // indexes so rama URLs never surface publicly.
 const isPublicProductionDeploy = process.env.VERCEL_ENV === "production";
 
+function getLocalSupabaseOrigin() {
+  if (process.env.NODE_ENV !== "development") return null;
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    const isLoopback =
+      url.protocol === "http:" &&
+      ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+    return isLoopback ? url.origin : null;
+  } catch {
+    return null;
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    const localSupabaseOrigin = getLocalSupabaseOrigin();
+    return localSupabaseOrigin
+      ? [
+          {
+            source: "/__supabase-local/:path*",
+            destination: `${localSupabaseOrigin}/:path*`,
+          },
+        ]
+      : [];
+  },
   turbopack: {
     resolveAlias: Object.fromEntries(
       nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),

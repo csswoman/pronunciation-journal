@@ -16,7 +16,8 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export function useLoadingWords(): LoadingWord[] {
-  const [words, setWords] = useState<LoadingWord[]>(() => shuffle([...FALLBACK_WORDS]).slice(0, 10))
+  // Keep the server and first client render identical; randomize only after hydration.
+  const [words, setWords] = useState<LoadingWord[]>(() => FALLBACK_WORDS.slice(0, 10))
 
   useEffect(() => {
     let cancelled = false

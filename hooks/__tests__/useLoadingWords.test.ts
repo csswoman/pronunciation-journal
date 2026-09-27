@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
+import { createElement } from 'react'
+import { renderToString } from 'react-dom/server'
 import { useLoadingWords, FALLBACK_WORDS } from '../useLoadingWords'
 import * as queries from '@/lib/word-bank/queries'
 
@@ -9,11 +11,14 @@ describe('useLoadingWords', () => {
     vi.restoreAllMocks()
   })
 
-  it('returns 10 fallback words immediately before fetch resolves', () => {
+  it('renders the same stable fallback words on the server', () => {
     vi.spyOn(queries, 'getReadyWordSummaries').mockReturnValue(new Promise(() => {})) // never resolves
-    const { result } = renderHook(() => useLoadingWords())
-    expect(result.current).toHaveLength(10)
-    expect(result.current.every(w => FALLBACK_WORDS.some(fw => fw.text === w.text))).toBe(true)
+    function Probe() {
+      return createElement('span', null, useLoadingWords().map((word) => word.text).join(','))
+    }
+
+    const markup = renderToString(createElement(Probe))
+    expect(markup).toContain(FALLBACK_WORDS.slice(0, 10).map((word) => word.text).join(','))
   })
 
   it('switches to user words when fetch returns entries', async () => {

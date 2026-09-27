@@ -13,7 +13,7 @@ La auditoría original se conserva en [audit-source.md](audit-source.md). Sus da
 | [047](047-honest-progress-metrics.md) | Calcular métricas completas y distinguir actividad, precisión y evidencia | P1 | L | 044; 045 para cobertura real de Essential Words; 046 para replay | TODO |
 | [048](048-sound-mastery-state.md) | Separar EMA y presentación de maestría de sonidos sin perder actualizaciones | P1 | L | 046 fase A para identidad de eventos | TODO |
 | [049](049-truthful-progress-ui.md) | Mostrar datos reales, estados vacíos y etiquetas fieles | P1 | M | — para fallbacks; 047 para nuevos estados de evidencia | TODO |
-| [050](050-concepts-attribution-and-activity.md) | Separar evidencia de conceptos, finalización y actividad diaria | P1 | L | 044 y 046; coordinar métricas con 047 | TODO |
+| [050](050-concepts-attribution-and-activity.md) | Separar evidencia de conceptos, finalización y actividad diaria | P1 | L | 044 y 046; coordinar métricas con 047 | IN PROGRESS: cableado y SQL local; Auth, Daily, práctica e hidratación aceptados en navegador local; pendiente PWA offline de producción, reconciliación remota de migraciones y decisiones de producto |
 | [051](051-consistent-local-contractions.md) | Corregir contracciones equivalentes sin aceptar respuestas incorrectas | P2 | M | —; respetar Plan 043 y coordinar con 044 | TODO |
 
 Orden sugerido: **044 → 046 A → 045 → 046 B → 047 A → 048 → 047 B → 050**.

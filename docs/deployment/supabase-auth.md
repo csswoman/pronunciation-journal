@@ -32,6 +32,20 @@ The client enforces these same rules prior to submission via `lib/auth/password-
 - Minimum length: 10 characters
 - Character sets: At least 1 lowercase `[a-z]`, 1 uppercase `[A-Z]`, and 1 digit `[0-9]`
 
+## Local browser testing
+
+When `pnpm dev` uses a local Supabase URL (`http://127.0.0.1:54321` or
+`http://localhost:54321`), the browser client sends its HTTP requests through
+the same-origin `/__supabase-local/*` rewrite. This lets browser sessions that
+can reach the Next.js dev server but cannot reach the host's Supabase port use
+local Auth and Data API routes. The rewrite is enabled only in development and
+only for loopback Supabase URLs; production continues to use the configured
+HTTPS Supabase URL directly.
+
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the values
+reported by `supabase status -o env`, then restart `pnpm dev` after changing
+them. The Next.js process itself must be able to reach the local Supabase API.
+
 ## Administrator seeding
 
 Privileged roles live in `public.user_roles` (service-role only) and/or
