@@ -1,6 +1,8 @@
 # Métricas honestas de progreso
 
-**Estado:** Fase A y Fase B implementadas. Fórmula aprobada.
+**Estado:** Fase A implementada. Fase B tiene una implementación candidata local;
+la fórmula requiere aprobación y calibración de producto antes de activarse
+globalmente.
 
 Este contrato separa actividad, precisión y evidencia. Progreso continúa siendo
 una proyección de solo lectura: no convierte volumen, completion ni intentos no
@@ -41,7 +43,11 @@ estado vacío correspondiente; un fallo agrega el nombre de la sección a
 `ProgressPageData.dataErrors`. Los datos parciales no se presentan como un cero
 confirmado.
 
-## Fórmula de habilidades (Fase B — aprobada)
+## Fórmula de habilidades (Fase B — candidata local)
+
+La fórmula siguiente describe la candidata que cubren los tests locales. No es
+una decisión de producto aprobada ni debe interpretarse como un cambio global
+hasta completar calibración y aprobación explícitas.
 
 ### Contrato `SkillScore`
 

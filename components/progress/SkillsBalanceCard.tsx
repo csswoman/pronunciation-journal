@@ -55,15 +55,16 @@ function polarPoint(index: number, total: number, ratio: number) {
   };
 }
 
-/** Extract the numeric value for the radar polygon. null → small minimum for visual. */
+/** Extract the numeric value for the radar polygon after evidence is complete. */
 function scoreValue(s: SkillScore): number {
   return s.score ?? 0;
 }
 
 function RadarChart({ scores }: { scores: FluencyScores }) {
   const total = RADAR_SKILLS.length;
-  const points = RADAR_SKILLS.map((s, i) => polarPoint(i, total, Math.max(0.15, scoreValue(scores[s.key]) / 100)));
+  const points = RADAR_SKILLS.map((s, i) => polarPoint(i, total, scoreValue(scores[s.key]) / 100));
   const polygon = points.map((p) => `${p.x},${p.y}`).join(" ");
+  const hasCompleteScores = RADAR_SKILLS.every((s) => scores[s.key].score != null);
 
   return (
     <div className="flex items-center justify-center">
@@ -109,15 +110,17 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
         })}
 
         {/* Value Polygon */}
-        <polygon
-          points={polygon}
-          fill="var(--ink)"
-          fillOpacity={0.25}
-          stroke="var(--ink)"
-          strokeWidth={2}
-          strokeLinejoin="round"
-          className="transition-all duration-700 ease-out"
-        />
+        {hasCompleteScores ? (
+          <polygon
+            points={polygon}
+            fill="var(--ink)"
+            fillOpacity={0.25}
+            stroke="var(--ink)"
+            strokeWidth={2}
+            strokeLinejoin="round"
+            className="transition-all duration-700 ease-out"
+          />
+        ) : null}
 
         {/* Points & Labels */}
         {RADAR_SKILLS.map((s, i) => {
@@ -125,7 +128,9 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
           const labelPos = polarPoint(i, total, 1.25);
           return (
             <g key={s.key} className="group cursor-default">
-              <circle cx={p.x} cy={p.y} r={3.5} fill="var(--ink)" className="transition-transform group-hover:scale-125" />
+              {scores[s.key].score != null ? (
+                <circle cx={p.x} cy={p.y} r={3.5} fill="var(--ink)" className="transition-transform group-hover:scale-125" />
+              ) : null}
               <text
                 x={labelPos.x}
                 y={labelPos.y}
@@ -170,10 +175,11 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
 
   const safeScores = scores as FluencyScores;
   const values = SKILL_ITEMS.map((s) => ({ ...s, val: scoreValue(safeScores[s.key]), skill: safeScores[s.key] }));
-  const scored = values.filter((v) => !v.skill.insufficientEvidence);
+  const scored = values.filter((v) => v.skill.score != null && !v.skill.insufficientEvidence);
   const sorted = [...scored].sort((a, b) => b.val - a.val);
-  const best = sorted[0];
-  const worst = sorted[sorted.length - 1];
+  const hasComparableScores = scored.length >= 2 && new Set(scored.map((v) => v.val)).size > 1;
+  const best = hasComparableScores ? sorted[0] : undefined;
+  const worst = hasComparableScores ? sorted[sorted.length - 1] : undefined;
 
   return (
     <PastelCard tone="lilac" className="p-5 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:shadow-sm">

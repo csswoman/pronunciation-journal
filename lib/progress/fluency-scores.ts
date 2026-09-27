@@ -109,17 +109,33 @@ function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
 interface SkillBucket {
   correct: number
   total: number
-  /** content_id → count of attempts already included */
-  contentCounts: Map<string, number>
   /** content_ids seen (for uniqueContentCount) */
   contentIds: Set<string>
+}
+
+/** Keep the newest attempts per canonical content before every aggregate. */
+function deduplicatedAnswers(answers: FluencyRawAnswer[]): FluencyRawAnswer[] {
+  const contentCounts = new Map<string, number>()
+  const kept: FluencyRawAnswer[] = []
+
+  for (let i = answers.length - 1; i >= 0; i--) {
+    const answer = answers[i]
+    const contentId = answer.contentId
+    if (contentId) {
+      const count = contentCounts.get(contentId) ?? 0
+      if (count >= MAX_ATTEMPTS_PER_CONTENT) continue
+      contentCounts.set(contentId, count + 1)
+    }
+    kept.push(answer)
+  }
+
+  return kept.reverse()
 }
 
 function emptyBuckets(): Record<SkillKey, SkillBucket> {
   const make = (): SkillBucket => ({
     correct: 0,
     total: 0,
-    contentCounts: new Map(),
     contentIds: new Set(),
   })
   return {
@@ -143,8 +159,7 @@ function emptyBuckets(): Record<SkillKey, SkillBucket> {
  */
 function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, SkillBucket> {
   const buckets = emptyBuckets()
-  for (let i = answers.length - 1; i >= 0; i--) {
-    const answer = answers[i]
+  for (const answer of deduplicatedAnswers(answers)) {
     const skills = skillsForAnswer(answer)
     const acc = answer.isCorrect ? 100 : 0
 
@@ -154,9 +169,6 @@ function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, SkillBucke
 
       if (cid) {
         bucket.contentIds.add(cid)
-        const count = bucket.contentCounts.get(cid) ?? 0
-        if (count >= MAX_ATTEMPTS_PER_CONTENT) continue
-        bucket.contentCounts.set(cid, count + 1)
       }
 
       bucket.total++
@@ -202,9 +214,15 @@ export function computeFluencyScores(input: FluencyScoreInput): FluencyScores {
 
 // ── Comparison & empty check ──────────────────────────────────────────────────
 
-function averageScore(scores: FluencyScores): number {
-  const values = SKILL_KEYS.map((k) => scores[k].score).filter((v): v is number => v != null)
-  return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0
+function averageComparableScore(current: FluencyScores, previous: FluencyScores): number | null {
+  const values = SKILL_KEYS.flatMap((key) => {
+    const currentScore = current[key].score
+    const previousScore = previous[key].score
+    return currentScore != null && previousScore != null ? [currentScore] : []
+  })
+  if (values.length === 0) return null
+
+  return values.reduce((sum, value) => sum + value, 0) / values.length
 }
 
 /** Label for week-over-week profile shift. */
@@ -212,9 +230,17 @@ export function fluencyComparisonLabel(
   current: FluencyScores,
   previous: FluencyScores,
 ): string | undefined {
-  const cur = averageScore(current)
-  const prev = averageScore(previous)
-  if (prev <= 0 && cur <= 0) return undefined
+  const comparableValues = SKILL_KEYS.flatMap((key) => {
+    const currentScore = current[key].score
+    const previousScore = previous[key].score
+    return currentScore != null && previousScore != null
+      ? [{ current: currentScore, previous: previousScore }]
+      : []
+  })
+  if (comparableValues.length === 0) return undefined
+
+  const cur = averageComparableScore(current, previous)!
+  const prev = averageComparableScore(previous, current)!
   const delta = cur - prev
   if (delta >= 3) return 'Mejorando esta semana'
   if (delta <= -3) return 'Enfoque necesario'
@@ -268,7 +294,8 @@ export function computeDetailedSkillMetrics(
   for (const skill of SKILL_KEYS) {
     const bucket = buckets[skill]
     const accuracy = bucket.total > 0 ? Math.round(bucket.correct / bucket.total) : 0
-    const relevantAnswers = input.answers.filter((a) => skillsForAnswer(a).includes(skill) && a.grade != null && a.grade > 0)
+    const relevantAnswers = deduplicatedAnswers(input.answers)
+      .filter((a) => skillsForAnswer(a).includes(skill) && typeof a.grade === 'number')
     const retrievalQuality = relevantAnswers.length > 0
       ? Math.round((relevantAnswers.reduce((sum, a) => sum + (a.grade ?? 0), 0) / relevantAnswers.length) * 10) / 10
       : null
@@ -295,10 +322,10 @@ export function computeSeparateLearningDimensions(
   let totalGradeSum = 0
   let totalGraded = 0
 
-  for (const answer of input.answers) {
+  for (const answer of deduplicatedAnswers(input.answers)) {
     totalEvaluated++
     if (answer.isCorrect) totalCorrect++
-    if (answer.grade != null && answer.grade > 0) {
+    if (typeof answer.grade === 'number') {
       totalGradeSum += answer.grade
       totalGraded++
     }

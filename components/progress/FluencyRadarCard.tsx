@@ -27,7 +27,7 @@ function polarPoint(index: number, total: number, ratio: number) {
   }
 }
 
-/** Extract the numeric value for the radar polygon. null → 0 for display. */
+/** Extract the numeric value for the radar polygon after evidence is complete. */
 function scoreValue(s: SkillScore): number {
   return s.score ?? 0
 }
@@ -36,6 +36,7 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
   const total = SKILL_ORDER.length
   const points = SKILL_ORDER.map((s, i) => polarPoint(i, total, scoreValue(scores[s.key]) / 100))
   const polygon = points.map((p) => `${p.x},${p.y}`).join(' ')
+  const hasCompleteScores = SKILL_ORDER.every((s) => scores[s.key].score != null)
 
   return (
     <svg
@@ -75,20 +76,24 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
         )
       })}
 
-      <polygon
-        points={polygon}
-        fill="color-mix(in oklch, var(--primary) 22%, transparent)"
-        stroke="var(--primary)"
-        strokeWidth={2}
-        strokeLinejoin="round"
-      />
+      {hasCompleteScores ? (
+        <polygon
+          points={polygon}
+          fill="color-mix(in oklch, var(--primary) 22%, transparent)"
+          stroke="var(--primary)"
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+      ) : null}
 
       {SKILL_ORDER.map((s, i) => {
         const p = points[i]
         const labelPos = polarPoint(i, total, 1.18)
         return (
           <g key={s.key}>
-            <circle cx={p.x} cy={p.y} r={3.5} fill="var(--primary)" />
+            {scores[s.key].score != null ? (
+              <circle cx={p.x} cy={p.y} r={3.5} fill="var(--primary)" />
+            ) : null}
             <text
               x={labelPos.x}
               y={labelPos.y}

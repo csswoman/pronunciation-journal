@@ -221,6 +221,17 @@ describe('Phase B: evidence-based scoring', () => {
     expect(scores.pronunciation.score).toBe(0)
   })
 
+  it('keeps grade 0 in the detailed retrieval aggregate', () => {
+    const answers = distinctAnswers(5, 3, false).map((a) => ({
+      ...a, context: 'sound_lab' as const, grade: 0,
+    }))
+    const dimensions = computeSeparateLearningDimensions({ ...baseInput, answers })
+
+    expect(dimensions.retrievalQuality.gradedAnswers).toBe(5)
+    expect(dimensions.retrievalQuality.averageGrade).toBe(0)
+    expect(dimensions.retrievalQuality.bySkill.pronunciation).toBe(0)
+  })
+
   it('keeps the most recent attempts per content_id, including failures', () => {
     const repeat = (isCorrect: boolean) => answer({
       exerciseTypeId: 3, context: 'sound_lab', contentId: 'repeated', isCorrect,
@@ -282,6 +293,28 @@ describe('fluencyComparisonLabel', () => {
     }
     const cur = { ...prev, pronunciation: scored(50), vocabulary: scored(50) }
     expect(fluencyComparisonLabel(cur, prev)).toBe('Mejorando esta semana')
+  })
+
+  it('does not call missing current evidence a regression', () => {
+    const scored = (value: number) => ({
+      score: value,
+      accuracy: value,
+      uniqueContentCount: 10,
+      evidenceCount: 10,
+      insufficientEvidence: false,
+    })
+    const previous: FluencyScores = {
+      pronunciation: scored(80),
+      grammar: scored(80),
+      vocabulary: scored(80),
+      listening: scored(80),
+      speaking: scored(80),
+      reading: scored(80),
+      writing: scored(80),
+    }
+    const current = computeFluencyScores({ ...baseInput, answers: [] })
+
+    expect(fluencyComparisonLabel(current, previous)).toBeUndefined()
   })
 })
 

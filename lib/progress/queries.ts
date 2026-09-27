@@ -173,6 +173,7 @@ async function fetchProgressAnswers(
   supabase: ProgressSupabaseClient,
   userId: string,
   sinceIso: string,
+  untilIso: string,
 ): Promise<{ data: ProgressAnswerRow[]; error: unknown | null }> {
   const rows: ProgressAnswerRow[] = []
 
@@ -182,6 +183,7 @@ async function fetchProgressAnswers(
       .select('id, exercise_type_id, context, content_id, is_correct, grade, user_answer, exercise_payload, answered_at')
       .eq('user_id', userId)
       .gte('answered_at', sinceIso)
+      .lte('answered_at', untilIso)
       .not('answered_at', 'is', null)
       .order('answered_at', { ascending: true })
       .order('id', { ascending: true })
@@ -201,12 +203,14 @@ async function fetchProgressAnswers(
 export async function getDailyCompletionStats(userId: string): Promise<DailyCompletionStats> {
   const supabase = await createSupabaseServerClient()
 
-  const since30 = new Date()
+  const now = new Date()
+  const since30 = new Date(now)
   since30.setDate(since30.getDate() - PROGRESS_ANSWER_WINDOW_DAYS)
   const since30Iso = since30.toISOString()
+  const untilIso = now.toISOString()
 
   const [answersResult, sessionsResult, lessonsResult] = await Promise.all([
-    fetchProgressAnswers(supabase, userId, since30Iso),
+    fetchProgressAnswers(supabase, userId, since30Iso, untilIso),
     supabase
       .from('activity_sessions')
       .select('completed_at, source')
@@ -254,7 +258,7 @@ export async function getDailyCompletionStats(userId: string): Promise<DailyComp
     }
   }
 
-  const today = new Date()
+  const today = now
   let completedDays7 = 0
   let completedDays30 = 0
   let activeDays7 = 0
@@ -343,10 +347,16 @@ export async function getWeeklySummaryStats(userId: string): Promise<WeeklySumma
 export async function getAccuracyStats(userId: string): Promise<AccuracyStats> {
   const supabase = await createSupabaseServerClient()
 
-  const since7 = new Date()
+  const now = new Date()
+  const since7 = new Date(now)
   since7.setDate(since7.getDate() - 7)
 
-  const { data, error } = await fetchProgressAnswers(supabase, userId, since7.toISOString())
+  const { data, error } = await fetchProgressAnswers(
+    supabase,
+    userId,
+    since7.toISOString(),
+    now.toISOString(),
+  )
 
   if (error) {
     console.error('[progress] getAccuracyStats: answer_history query failed', error)
@@ -506,7 +516,7 @@ export async function getFluencyProfile(userId: string, skillProfile: SkillProfi
   since7.setDate(since7.getDate() - 7)
 
   const [answersResult, contrastResult] = await Promise.all([
-    fetchProgressAnswers(supabase, userId, since30.toISOString()),
+    fetchProgressAnswers(supabase, userId, since30.toISOString(), now.toISOString()),
     supabase
       .from('user_contrast_progress')
       .select('correct_answers, total_attempts')
@@ -655,13 +665,14 @@ async function getProgressProjectionsResult(
   userId: string,
 ): Promise<{ projections: ProgressProjections; hasError: boolean }> {
   const supabase = await createSupabaseServerClient()
-  const sinceEvidenceWindow = new Date()
+  const now = new Date()
+  const sinceEvidenceWindow = new Date(now)
   sinceEvidenceWindow.setDate(sinceEvidenceWindow.getDate() - PROGRESS_PROJECTION_EVIDENCE_WINDOW_DAYS)
 
   const [activityTotals, completionTotal, answers] = await Promise.all([
     supabase.rpc('get_activity_totals'),
     supabase.rpc('get_lesson_completion_total'),
-    fetchProgressAnswers(supabase, userId, sinceEvidenceWindow.toISOString()),
+    fetchProgressAnswers(supabase, userId, sinceEvidenceWindow.toISOString(), now.toISOString()),
   ])
 
   if (activityTotals.error) console.error('getProgressProjections: get_activity_totals failed', activityTotals.error)

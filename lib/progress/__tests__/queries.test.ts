@@ -41,6 +41,7 @@ describe('getProgressProjections', () => {
     const answerHistorySelect = vi.fn().mockReturnThis()
     const answerHistoryEq = vi.fn().mockReturnThis()
     const answerHistoryGte = vi.fn().mockReturnThis()
+    const answerHistoryLte = vi.fn().mockReturnThis()
     const answerHistoryNot = vi.fn().mockReturnThis()
     const answerHistoryOrder = vi.fn().mockReturnThis()
     const answerHistoryRange = vi.fn().mockResolvedValue({ data: [], error: null })
@@ -51,6 +52,7 @@ describe('getProgressProjections', () => {
           select: answerHistorySelect,
           eq: answerHistoryEq,
           gte: answerHistoryGte,
+          lte: answerHistoryLte,
           not: answerHistoryNot,
           order: answerHistoryOrder,
           range: answerHistoryRange,

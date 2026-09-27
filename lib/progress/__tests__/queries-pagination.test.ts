@@ -9,14 +9,24 @@ const state = vi.hoisted(() => ({
   errorTable: null as string | null,
   ranges: [] as Array<{ from: number; to: number }>,
   orders: [] as string[],
+  ltes: [] as Array<{ column: string; value: string }>,
 }))
 
 function queryFor(table: string) {
   let from = 0
   let to: number | null = null
+  let lowerBound: string | null = null
+  let upperBound: string | null = null
 
   const resolve = () => {
-    const rows = table === 'answer_history' ? state.answers : []
+    const rows = table === 'answer_history'
+      ? state.answers.filter((row) => {
+        const answeredAt = row.answered_at
+        return typeof answeredAt === 'string'
+          && (lowerBound === null || answeredAt >= lowerBound)
+          && (upperBound === null || answeredAt <= upperBound)
+      })
+      : []
     const data = to === null ? rows : rows.slice(from, to + 1)
     return { data, count: data.length, error: state.errorTable === table ? { message: 'query failed' } : null }
   }
@@ -24,7 +34,15 @@ function queryFor(table: string) {
   const chain = {
     select: () => chain,
     eq: () => chain,
-    gte: () => chain,
+    gte: (_column: string, value: string) => {
+      lowerBound = value
+      return chain
+    },
+    lte: (column: string, value: string) => {
+      upperBound = value
+      state.ltes.push({ column, value })
+      return chain
+    },
     not: () => chain,
     order: (column: string) => {
       state.orders.push(column)
@@ -48,6 +66,8 @@ vi.mock('@/lib/supabase/server', () => ({
 
 import { getAccuracyStats, getDailyCompletionStats, getFluencyProfile } from '../queries'
 
+const currentAnswerTimestamp = new Date().toISOString()
+
 function answerRow(index: number, overrides: Row = {}): Row {
   return {
     id: `00000000-0000-4000-8000-${String(index).padStart(12, '0')}`,
@@ -58,7 +78,7 @@ function answerRow(index: number, overrides: Row = {}): Row {
     grade: 5,
     user_answer: 'answer',
     exercise_payload: { status: 'answered' },
-    answered_at: '2026-09-26T12:00:00.000Z',
+    answered_at: currentAnswerTimestamp,
     ...overrides,
   }
 }
@@ -69,6 +89,7 @@ describe('progress answer pagination and availability', () => {
     state.errorTable = null
     state.ranges = []
     state.orders = []
+    state.ltes = []
   })
 
   it('counts grade zero as evaluated retrieval evidence', async () => {
@@ -100,5 +121,18 @@ describe('progress answer pagination and availability', () => {
 
     expect(stats.hasError).toBe(true)
     expect(stats.activeDays30).toBe(0)
+  })
+
+  it('excludes rows after the captured upper time boundary', async () => {
+    state.answers = [
+      answerRow(0),
+      answerRow(1, { answered_at: '2099-01-01T00:00:00.000Z' }),
+    ]
+
+    const stats = await getAccuracyStats('user-1')
+
+    expect(stats.totalAnswers7).toBe(1)
+    expect(state.ltes).toHaveLength(1)
+    expect(state.ltes[0].column).toBe('answered_at')
   })
 })

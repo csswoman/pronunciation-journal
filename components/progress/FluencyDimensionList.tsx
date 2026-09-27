@@ -21,19 +21,20 @@ export const SKILL_ORDER: { key: SkillKey; label: string; source: string; href: 
 
 export function FluencyDimensionList({ scores }: { scores: FluencyScores }) {
   const entries = SKILL_ORDER.map((s) => ({ ...s, val: scores[s.key].score ?? 0, skill: scores[s.key] }))
-  const scored = entries.filter((e) => !e.skill.insufficientEvidence)
+  const scored = entries.filter((e) => e.skill.score != null && !e.skill.insufficientEvidence)
   const max = scored.length ? Math.max(...scored.map((e) => e.val)) : 0
   const min = scored.length ? Math.min(...scored.map((e) => e.val)) : 0
-  const best = scored.find((e) => e.val === max)
-  const worst = scored.find((e) => e.val === min)
+  const hasComparableScores = scored.length >= 2 && max > min
+  const best = hasComparableScores ? scored.find((e) => e.val === max) : undefined
+  const worst = hasComparableScores ? scored.find((e) => e.val === min) : undefined
 
   return (
     <div className="flex flex-col gap-2.5">
       {/* 2-column compact grid for the 7 skills */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {entries.map((e) => {
-          const isBest = !e.skill.insufficientEvidence && e.val === max && max > 0
-          const isWorst = !e.skill.insufficientEvidence && e.val === min && min < max
+          const isBest = hasComparableScores && !e.skill.insufficientEvidence && e.val === max
+          const isWorst = hasComparableScores && !e.skill.insufficientEvidence && e.val === min
           return (
             <Link
               key={e.key}

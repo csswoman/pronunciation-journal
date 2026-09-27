@@ -280,5 +280,7 @@ describe('truthful-progress: validación de datos reales y ausencia de fallbacks
     expect(screen.queryByText('Practica un poco más para ver tu balance de habilidades aquí.')).not.toBeInTheDocument()
     expect(screen.getByText('Escritura')).toBeInTheDocument()
     expect(screen.getByText('70')).toBeInTheDocument()
+    expect(screen.queryByText('MÁS CONSOLIDADA')).not.toBeInTheDocument()
+    expect(screen.queryByText('A PRIORIZAR EN TU PRÁCTICA')).not.toBeInTheDocument()
   })
 })

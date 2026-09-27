@@ -1,7 +1,7 @@
 # Plan 047: Calcular métricas completas y distinguir actividad, precisión y evidencia
 
 ## Estado y base
-- Estado: IN PROGRESS; Fases A y B implementadas localmente el 2026-09-27. Pendiente: comprobación runtime en navegador y commit.
+- Estado: IN PROGRESS; Fase A implementada y Fase B instrumentada localmente como candidata el 2026-09-27. Pendientes: aprobación/calibración de la fórmula, comprobación runtime en navegador y commit.
 - Prioridad: P1. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 044; 045 para cobertura real de Essential Words; 046 para replay.
@@ -83,34 +83,37 @@ Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexiste
 ## Puertas de cierre
 - [x] Caracterización demuestra el fallo: 6 casos rojos por denominador, grade 0, paginación, disponibilidad y resumen evaluado; luego verdes con el arreglo.
 - [x] Fase A elimina sesgos verificables y truncamiento.
-- [x] Fase B: fórmula `0.75 × accuracy + 0.25 × retention`, ventana 30 días, máx. 3 intentos más recientes por `content_id`, umbral 5 contenidos distintos; `score = null` (no 0) bajo el umbral. Registrada en `docs/architecture/honest-progress-metrics.md`.
-- [x] Pruebas focalizadas (10 archivos, 68 tests), types y lint verificados con salida real. Lint: 0 errores y 2 warnings preexistentes de `max-lines` en scripts de integración fuera del alcance.
+- [ ] Fase B aprobada: la implementación local candidata usa `0.75 × accuracy + 0.25 × retention`, ventana 30 días, máx. 3 intentos más recientes por `content_id`, umbral 5 contenidos distintos y `score = null` (no 0) bajo el umbral. Falta aprobación/calibración de producto antes de activarla globalmente.
+- [x] Pruebas focalizadas (8 archivos, 61 tests), types y lint verificados con salida real. Lint: 0 errores y 3 warnings fuera del alcance (un import no usado en WordSearch y dos `max-lines` de scripts de integración).
 - [ ] Comprobación runtime navegador/offline cuando aplique; si falta, fase pendiente.
 - [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
 - [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
-- [x] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites de Fase A.
+- [x] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites de Fases A y B.
 
 ### Evidencia local 2026-09-27
 
-- Fase A: contrato central de elegibilidad, `grade = 0`, buckets SRS exclusivos,
-  `evaluatedTotal`, errores por sección y paginación estable por `answered_at + id`.
-- Sin migración ni cambio remoto. La fórmula histórica queda visible como deuda y
-  no se presenta como dominio aprobado en
-  `docs/architecture/honest-progress-metrics.md`.
-- Fase B no activada: el índice mantiene como pendientes la fórmula, la ventana,
-  la deduplicación de contenido y el umbral de evidencia suficiente.
+- Fase A y candidata local de Fase B: contrato central de elegibilidad, `grade = 0`, buckets SRS
+  exclusivos, `evaluatedTotal`, errores por sección, paginación estable por
+  `answered_at + id`, ventana temporal cerrada, deduplicación de los 3 intentos
+  más recientes y umbral de 5 contenidos distintos.
+- Sin migración ni cambio remoto. La fórmula candidata (`0.75 × accuracy +
+  0.25 × retention`) queda documentada solo para verificación local; no se
+  presenta como contrato de producto, no se transforma en CEFR ni se añaden
+  pesos de dificultad.
+- Runtime navegador/offline, validación remota y commit siguen pendientes; esta
+  evidencia local no se presenta como cierre global.
 
 ### Evidencia local Fase B 2026-09-27
 
-- `SkillScore` (`score | null`, `accuracy`, `evidenceCount`, `uniqueContentCount`,
+- `SkillScore` candidato (`score | null`, `accuracy`, `evidenceCount`, `uniqueContentCount`,
   `insufficientEvidence`) sustituye al número plano; `frequency` retirado.
 - `queries.ts` pasa `content_id` al lector; radar y balance muestran «—» y excluyen
   skills sin evidencia de mejor/peor y del promedio semanal.
 - Corrección: la deduplicación conservaba los 3 intentos más antiguos; ahora los
   3 más recientes (test rojo con el código previo).
 - Casos añadidos: 1 evidencia → null, grade 0 cuenta como fallo, recientes ganan.
-- Verificación: 7 archivos / 55 tests focalizados verdes; `pnpm type-check` y
-  ESLint del alcance exit 0.
+- Verificación local: 8 archivos / 61 tests focalizados verdes; `pnpm type-check` exit 0
+  y ESLint exit 0 con 3 warnings fuera del alcance.
 - UI dividida para respetar 250 líneas: `FluencyDimensionList.tsx`,
   `SkillsBalanceHighlights.tsx`.
 

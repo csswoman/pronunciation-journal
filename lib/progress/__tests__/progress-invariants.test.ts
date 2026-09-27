@@ -22,9 +22,23 @@ describe('progress evaluation eligibility', () => {
 
   it('uses the same status contract for in-memory session results', () => {
     expect(isEvaluatedPracticeAnswer({ status: 'answered', userAnswer: 'answer' })).toBe(true)
+    expect(isEvaluatedPracticeAnswer({ status: 'answered', userAnswer: 'skip' })).toBe(false)
     expect(isEvaluatedPracticeAnswer({ status: 'skipped', userAnswer: 'skip' })).toBe(false)
     expect(isEvaluatedPracticeAnswer({ status: 'unscored', userAnswer: 'answer' })).toBe(false)
     expect(isEvaluatedPracticeAnswer({ status: 'evaluator_failed', userAnswer: 'answer' })).toBe(false)
     expect(isEvaluatedPracticeAnswer({ status: undefined, userAnswer: 'legacy' })).toBe(true)
+  })
+
+  it('does not treat a skip sentinel or an unknown persisted status as evaluated', () => {
+    expect(isEvaluatedHistoryRow({
+      grade: 0,
+      user_answer: 'skip',
+      exercise_payload: { status: 'answered' },
+    })).toBe(false)
+    expect(isEvaluatedHistoryRow({
+      grade: 5,
+      user_answer: 'answer',
+      exercise_payload: { status: 'future_status' },
+    })).toBe(false)
   })
 })

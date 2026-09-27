@@ -7,6 +7,7 @@ type EvaluationFields = Pick<PracticeAnswer, 'status' | 'userAnswer'>
  * Rows without status are legacy: every non-skip answer remains evaluable.
  */
 export function isEvaluatedPracticeAnswer(answer: EvaluationFields): boolean {
+  if (answer.userAnswer === 'skip') return false
   return answer.status === 'answered'
     || (answer.status === undefined && answer.userAnswer !== 'skip')
 }
@@ -17,21 +18,27 @@ interface PersistedEvaluationFields {
   exercise_payload: unknown
 }
 
-function persistedStatus(payload: unknown): PracticeAnswer['status'] | undefined {
-  if (!payload || typeof payload !== 'object') return undefined
+function persistedStatus(payload: unknown): {
+  present: boolean
+  value?: PracticeAnswer['status']
+} {
+  if (!payload || typeof payload !== 'object') return { present: false }
+  if (!Object.prototype.hasOwnProperty.call(payload, 'status')) return { present: false }
+
   const status = (payload as { status?: unknown }).status
-  return status === 'answered'
+  const value = status === 'answered'
     || status === 'skipped'
     || status === 'unscored'
     || status === 'evaluator_failed'
     ? status
     : undefined
+  return { present: true, value }
 }
 
 /** A numeric grade includes zero; null means the interaction was not graded. */
 export function isEvaluatedHistoryRow(row: PersistedEvaluationFields): boolean {
   if (typeof row.grade !== 'number') return false
+  if (row.user_answer === 'skip') return false
   const status = persistedStatus(row.exercise_payload)
-  return status === 'answered'
-    || (status === undefined && row.user_answer !== 'skip')
+  return status.present ? status.value === 'answered' : true
 }

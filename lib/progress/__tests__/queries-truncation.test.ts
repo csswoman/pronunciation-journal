@@ -9,6 +9,7 @@ const callLog = vi.hoisted(() => ({
   ranges: [] as Array<{ from: number; to: number }>,
   orders: [] as Array<{ column: string; ascending?: boolean }>,
   gte: [] as Array<{ column: string; value: string }>,
+  lte: [] as Array<{ column: string; value: string }>,
   tables: [] as string[],
 }))
 
@@ -38,6 +39,8 @@ function makeChain(table: string) {
   const state = {
     gteColumn: null as string | null,
     gteValue: null as string | null,
+    lteColumn: null as string | null,
+    lteValue: null as string | null,
     limitN: null as number | null,
     head: false,
   }
@@ -48,6 +51,12 @@ function makeChain(table: string) {
       data = data.filter((row) => {
         const raw = row[state.gteColumn!]
         return typeof raw === 'string' && raw >= state.gteValue!
+      })
+    }
+    if (state.lteColumn && state.lteValue) {
+      data = data.filter((row) => {
+        const raw = row[state.lteColumn!]
+        return typeof raw === 'string' && raw <= state.lteValue!
       })
     }
     if (state.limitN != null) {
@@ -80,6 +89,12 @@ function makeChain(table: string) {
     limit: (n: number) => {
       state.limitN = n
       callLog.limits.push(n)
+      return chain
+    },
+    lte: (column: string, value: string) => {
+      state.lteColumn = column
+      state.lteValue = value
+      callLog.lte.push({ column, value })
       return chain
     },
     range: (from: number, to: number) => {
@@ -126,6 +141,7 @@ describe('progress query truncation (oversized histories)', () => {
     callLog.ranges.length = 0
     callLog.orders.length = 0
     callLog.gte.length = 0
+    callLog.lte.length = 0
     callLog.tables.length = 0
     fixtures.sessions = []
     fixtures.answers = []
