@@ -1,6 +1,7 @@
 import type {
   CellCoordinate,
   WordPlacement,
+  WordSearchDifficulty,
   WordSearchItem,
   WordSearchMode,
   WordSearchPuzzle,
@@ -13,24 +14,34 @@ const LETTER_WEIGHTS = 'EEEEEEEEAAAAAIIIIIROOOONNNNTTTTSSSSLLLLCCCCUUUUDDDDPIIMH
 export const MIN_WORD_SEARCH_ITEMS = 3
 export const MAX_WORD_SEARCH_LENGTH = 12
 
-// 8 standard directions: [dRow, dCol]
-const STANDARD_DIRECTIONS: [number, number][] = [
-  [0, 1], // Horizontal right
-  [1, 0], // Vertical down
-  [1, 1], // Diagonal down-right
-  [-1, 1], // Diagonal up-right
-  [0, -1], // Horizontal left
-  [-1, 0], // Vertical up
-  [1, -1], // Diagonal down-left
-  [-1, -1], // Diagonal up-left
-]
+type Direction = [number, number] // [dRow, dCol]
 
-// Easier directions (no reverse) for beginners or mobile ease
-const EASY_DIRECTIONS: [number, number][] = [
-  [0, 1], // Horizontal right
-  [1, 0], // Vertical down
-  [1, 1], // Diagonal down-right
-]
+const RIGHT: Direction = [0, 1]
+const DOWN: Direction = [1, 0]
+const DOWN_RIGHT: Direction = [1, 1]
+const UP_RIGHT: Direction = [-1, 1]
+const LEFT: Direction = [0, -1]
+const UP: Direction = [-1, 0]
+const DOWN_LEFT: Direction = [1, -1]
+const UP_LEFT: Direction = [-1, -1]
+
+/**
+ * Reading directions per difficulty. Easy only reads forwards on straight
+ * lines; normal adds both forward diagonals; hard allows all 8 directions
+ * (backwards words included).
+ */
+export const DIRECTIONS_BY_DIFFICULTY: Record<WordSearchDifficulty, Direction[]> = {
+  easy: [RIGHT, DOWN],
+  normal: [RIGHT, DOWN, DOWN_RIGHT, UP_RIGHT],
+  hard: [RIGHT, DOWN, DOWN_RIGHT, UP_RIGHT, LEFT, UP, DOWN_LEFT, UP_LEFT],
+}
+
+/** Words per board for each difficulty. */
+export const WORD_COUNT_BY_DIFFICULTY: Record<WordSearchDifficulty, number> = {
+  easy: 6,
+  normal: 8,
+  hard: 10,
+}
 
 export interface GenerateGridOptions {
   id?: string
@@ -38,7 +49,7 @@ export interface GenerateGridOptions {
   topic?: string
   source?: WordSearchSource
   mode?: WordSearchMode
-  allowReverse?: boolean
+  difficulty?: WordSearchDifficulty
   forcedSize?: number
 }
 
@@ -74,7 +85,7 @@ function tryPlaceWord(
   size: number,
   word: string,
   wordId: string,
-  directions: [number, number][]
+  directions: Direction[]
 ): WordPlacement | null {
   const wordLen = word.length
   // Shuffle all candidate coordinates and directions
@@ -157,7 +168,7 @@ export function createWordSearchPuzzle(
     topic = 'Vocabulario General',
     source = 'curated',
     mode = 'classic',
-    allowReverse = false,
+    difficulty = 'normal',
     forcedSize,
   } = options
 
@@ -200,7 +211,7 @@ export function createWordSearchPuzzle(
     Array.from({ length: size }, () => null)
   )
 
-  const directions = allowReverse ? STANDARD_DIRECTIONS : EASY_DIRECTIONS
+  const directions = DIRECTIONS_BY_DIFFICULTY[difficulty]
   const placements: WordPlacement[] = []
   const placedWordIds = new Set<string>()
 

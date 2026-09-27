@@ -91,23 +91,29 @@ html[data-theme="dark"], .dark {
   --cta-bg-hover:     oklch(0.92 0.005 85);
 
   /* Derivados del acento (Dark theme) */
-  --accent-text:   color-mix(in oklch, var(--accent) 55%, white);
-  --accent-soft:   color-mix(in oklch, var(--accent) 38%, #0d1018);
+  --accent-text:   color-mix(in oklch, var(--accent) 45%, white);
+  --accent-soft:   color-mix(in oklch, var(--accent) 26%, #0d1018);
   --accent-border: color-mix(in oklch, var(--accent) 55%, #0d1018);
 
   --primary-text:  var(--accent-text);
   --primary-soft:  var(--accent-soft);
 
-  /* Acentos aclarados para legibilidad en dark (misma familia de tono) */
-  --accent-red-dark: oklch(0.62 0.20 27);
-  --accent-orange-dark: oklch(0.62 0.18 38);
-  --accent-amber-dark: oklch(0.66 0.16 49);
-  --accent-green-dark: oklch(0.62 0.16 150);
-  --accent-emerald-dark: oklch(0.62 0.14 166);
-  --accent-teal-dark: oklch(0.64 0.12 223);
-  --accent-blue-dark: oklch(0.66 0.17 263);
-  --accent-purple-dark: oklch(0.66 0.19 293);
-  --accent-pink-dark: oklch(0.64 0.18 4);
+  /* Feedback (Dark theme) — calibrados para alto contraste con fondo oscuro y texto claro */
+  --feedback-correct:      oklch(0.76 0.16 150);
+  --feedback-correct-soft: color-mix(in oklch, oklch(0.62 0.14 150) 22%, var(--surface-raised));
+  --feedback-wrong:        oklch(0.74 0.18 25);
+  --feedback-wrong-soft:   color-mix(in oklch, oklch(0.62 0.18 25) 22%, var(--surface-raised));
+  --feedback-hint:         oklch(0.78 0.16 85);
+  --feedback-hint-soft:    color-mix(in oklch, oklch(0.66 0.16 85) 22%, var(--surface-raised));
+
+  --success:         var(--feedback-correct);
+  --success-soft:    var(--feedback-correct-soft);
+  --error:           var(--feedback-wrong);
+  --error-soft:      var(--feedback-wrong-soft);
+  --warning:         var(--feedback-hint);
+  --warning-soft:    var(--feedback-hint-soft);
+  --info:            oklch(0.74 0.14 250);
+  --info-soft:       color-mix(in oklch, oklch(0.64 0.14 250) 22%, var(--surface-raised));
 }
 
 :root {
@@ -156,12 +162,12 @@ html[data-theme="dark"], .dark {
   --ej-mint-deep: var(--mint-deep);
   --ej-mint-soft: var(--mint-soft);
 
-  /* ── 4. Feedback (alias de pasteles, NO verde/rojo oscuros) ───────────── */
-  --feedback-correct:      var(--mint);
+  /* ── 4. Feedback (Light theme defaults) ─────────────────────────── */
+  --feedback-correct:      oklch(0.50 0.15 150);
   --feedback-correct-soft: var(--mint-soft);
-  --feedback-wrong:        var(--coral);
+  --feedback-wrong:        oklch(0.52 0.20 25);
   --feedback-wrong-soft:   var(--coral-soft);
-  --feedback-hint:         var(--butter);
+  --feedback-hint:         oklch(0.55 0.16 85);
   --feedback-hint-soft:    var(--butter-soft);
 
   --success:         var(--feedback-correct);
@@ -170,7 +176,7 @@ html[data-theme="dark"], .dark {
   --error-soft:      var(--feedback-wrong-soft);
   --warning:         var(--feedback-hint);
   --warning-soft:    var(--feedback-hint-soft);
-  --info:            var(--sky);
+  --info:            oklch(0.50 0.15 250);
   --info-soft:       var(--sky-soft);
 
   /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
@@ -267,8 +273,6 @@ html[data-theme="dark"], .dark {
   --text-size-h4: 1.25rem;
   --text-size-label: 0.875rem;
   --text-size-kicker: 0.75rem;
-  --text-size-kicker-lg: 0.8125rem;
-  --font-kicker: 700 var(--text-size-kicker)/1.3 var(--font-sans), sans-serif;
   --text-size-tiny: 0.75rem;
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
@@ -284,15 +288,3 @@ html[data-accent="teal"] { --accent: var(--accent-teal); }
 html[data-accent="blue"] { --accent: var(--accent-blue); }
 html[data-accent="purple"] { --accent: var(--accent-purple); }
 html[data-accent="pink"] { --accent: var(--accent-pink); }
-
-/* Accent attributes — dark theme (aclarados para contraste sobre fondos dark) */
-html[data-theme="dark"][data-accent="red"], .dark[data-accent="red"] { --accent: var(--accent-red-dark); }
-html[data-theme="dark"][data-accent="orange"], .dark[data-accent="orange"] { --accent: var(--accent-orange-dark); }
-html[data-theme="dark"][data-accent="amber"], .dark[data-accent="amber"] { --accent: var(--accent-amber-dark); }
-html[data-theme="dark"][data-accent="green"], .dark[data-accent="green"] { --accent: var(--accent-green-dark); }
-html[data-theme="dark"][data-accent="emerald"], .dark[data-accent="emerald"] { --accent: var(--accent-emerald-dark); }
-html[data-theme="dark"][data-accent="teal"], .dark[data-accent="teal"] { --accent: var(--accent-teal-dark); }
-html[data-theme="dark"][data-accent="blue"], .dark[data-accent="blue"] { --accent: var(--accent-blue-dark); }
-html[data-theme="dark"][data-accent="purple"], .dark[data-accent="purple"] { --accent: var(--accent-purple-dark); }
-html[data-theme="dark"][data-accent="pink"], .dark[data-accent="pink"] { --accent: var(--accent-pink-dark); }
-html[data-theme="dark"]:not([data-accent]), .dark:not([data-accent]) { --accent: var(--accent-blue-dark); }

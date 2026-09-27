@@ -14,6 +14,23 @@ export type ActivitySource =
   | 'games'
   | 'word_rain'
   | 'word_search'
+  | 'phoneme_invaders'
+  | 'weak_form_catcher'
+  | 'chunk_duel'
+  | 'memory_match'
+  | 'false_friends_swipe'
+
+export type GameActivitySource = Extract<
+  ActivitySource,
+  | 'games'
+  | 'word_rain'
+  | 'word_search'
+  | 'phoneme_invaders'
+  | 'weak_form_catcher'
+  | 'chunk_duel'
+  | 'memory_match'
+  | 'false_friends_swipe'
+>
 
 export type SkillTag =
   | 'speaking'
@@ -37,6 +54,11 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   games: 'Juegos',
   word_rain: 'Lluvia de palabras',
   word_search: 'Sopa de letras',
+  phoneme_invaders: 'Phoneme Invaders',
+  weak_form_catcher: 'Weak Form Catcher',
+  chunk_duel: 'Chunk Duel',
+  memory_match: 'Memory Match',
+  false_friends_swipe: '¿Trampa? Falsos amigos',
 }
 
 export type ImmersionMediaType = 'video' | 'series' | 'podcast' | 'reading'

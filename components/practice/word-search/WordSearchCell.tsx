@@ -62,8 +62,10 @@ export default function WordSearchCell({
   } else if (state === 'active') {
     visualClass =
       'bg-primary-soft text-primary ring-2 ring-primary/40 font-bold scale-[1.01]'
-  } else if (state === 'found' && colorTheme) {
-    visualClass = `${colorTheme.gridBg} ${colorTheme.gridText} ${colorTheme.gridRing}`
+  } else if (state === 'found') {
+    visualClass = colorTheme
+      ? `${colorTheme.gridBg} ${colorTheme.gridText} ${colorTheme.gridRing}`
+      : 'bg-emerald-300 text-emerald-950 font-extrabold dark:bg-emerald-400 dark:text-emerald-950 shadow-2xs'
   }
 
   const isSelected = state === 'selected' || state === 'tap-anchor'
@@ -82,7 +84,7 @@ export default function WordSearchCell({
       onPointerDown={onPointerDown}
       onClick={onClick}
       onKeyDown={onKeyDown}
-      className={`focus-ring relative flex aspect-square min-w-0 select-none items-center justify-center rounded-md font-mono font-bold uppercase transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.94] motion-reduce:transform-none sm:rounded-lg ${cellTextClass} ${visualClass}`}
+      className={`focus-ring relative flex aspect-square min-w-0 select-none items-center justify-center rounded-sm sm:rounded-md font-mono font-bold uppercase transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.94] motion-reduce:transform-none ${cellTextClass} ${visualClass}`}
     >
       {letter}
     </button>

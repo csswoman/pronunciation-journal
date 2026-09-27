@@ -1,6 +1,18 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+// Planned structure:
+// <WordSearchSession initialPuzzle onExit>
+//   <ActiveSessionChrome />
+//   <WordSearchHeader />
+//   <ScreenReaderStatus />
+//   <SessionContentGrid>
+//     <WordSearchGrid />    (Tablero card con banner de última palabra en la parte inferior)
+//     <WordClueList />      (Pistas card con botón "Ver una letra")
+//   </SessionContentGrid>
+//   <WordSearchCompletion />
+// </WordSearchSession>
+
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type {
   CellCoordinate,
   WordSearchItem,
@@ -10,20 +22,11 @@ import type {
 import { checkWordMatch } from '@/lib/exercises/word-search/grid-generator'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { useHideMobileNavDuringSession } from '@/hooks/useHideMobileNavDuringSession'
-import PageHeader from '@/components/layout/PageHeader'
-import { PillButton } from '@/components/ui/PillButton'
-import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import WordSearchSetupView from './WordSearchSetupView'
+import { useWordSearchHints } from '@/hooks/useWordSearchHints'
+import WordSearchHeader from './WordSearchHeader'
 import WordSearchGrid from './WordSearchGrid'
 import WordClueList from './WordClueList'
-import WordFoundBanner from './WordFoundBanner'
 import WordSearchCompletion from './WordSearchCompletion'
-import WordSearchProgressBar from './WordSearchProgressBar'
-import {
-  RotateCcw,
-  Timer as TimerIcon,
-  X,
-} from '@/components/icons'
 
 function ActiveSessionChrome() {
   useHideMobileNavDuringSession()
@@ -36,24 +39,32 @@ function formatTime(seconds: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-export default function WordSearchSession() {
-  const [puzzle, setPuzzle] = useState<WordSearchPuzzle | null>(null)
-  const [runId, setRunId] = useState(0)
+interface Props {
+  /** Board configured in the games hub (/practice/games). */
+  initialPuzzle: WordSearchPuzzle
+  /** Returns to the games hub to pick another board. */
+  onExit: () => void
+}
+
+export default function WordSearchSession({ initialPuzzle, onExit }: Props) {
+  const [puzzle, setPuzzle] = useState<WordSearchPuzzle>(initialPuzzle)
+  const [runId, setRunId] = useState(1)
   const [foundWordIds, setFoundWordIds] = useState<Set<string>>(new Set())
   const [activeWordId, setActiveWordId] = useState<string | null>(null)
   const [lastFoundItem, setLastFoundItem] = useState<WordSearchItem | null>(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
-  const [statusMessage, setStatusMessage] = useState('')
-  const sessionStartRef = useRef<HTMLDivElement>(null)
-
-  const isCompleted = Boolean(
-    puzzle &&
-      puzzle.items.length > 0 &&
-      foundWordIds.size === puzzle.items.length,
+  const [statusMessage, setStatusMessage] = useState(
+    `Partida lista. Encuentra ${initialPuzzle.items.length} palabras en el tablero.`,
   )
+  const sessionStartRef = useRef<HTMLDivElement>(null)
+  const { hintCells, hintTargetId, hintProgress, revealLetter, resetHints } =
+    useWordSearchHints(puzzle, foundWordIds)
+
+  const isCompleted =
+    puzzle.items.length > 0 && foundWordIds.size === puzzle.items.length
 
   useEffect(() => {
-    if (!puzzle || isCompleted) return
+    if (isCompleted) return
 
     const timer = window.setInterval(() => {
       setElapsedSeconds((previous) => previous + 1)
@@ -63,7 +74,6 @@ export default function WordSearchSession() {
   }, [puzzle, runId, isCompleted])
 
   useEffect(() => {
-    if (!puzzle) return
     const frame = window.requestAnimationFrame(() => {
       sessionStartRef.current?.scrollIntoView({ block: 'start' })
       sessionStartRef.current?.focus({ preventScroll: true })
@@ -78,22 +88,20 @@ export default function WordSearchSession() {
     setActiveWordId(null)
     setLastFoundItem(null)
     setElapsedSeconds(0)
+    resetHints()
     setStatusMessage(
       `Partida lista. Encuentra ${nextPuzzle.items.length} palabras en el tablero.`,
     )
   }
 
   const handleExitSession = () => {
-    setPuzzle(null)
-    setFoundWordIds(new Set())
-    setActiveWordId(null)
-    setLastFoundItem(null)
-    setElapsedSeconds(0)
-    setStatusMessage('')
+    resetHints()
+    onExit()
   }
 
+
   const handleSelectPath = (path: CellCoordinate[]): WordSelectionResult => {
-    if (!puzzle || isCompleted) return 'invalid'
+    if (isCompleted) return 'invalid'
 
     const matchedWordId = checkWordMatch(path, puzzle.placements)
     if (!matchedWordId) {
@@ -131,9 +139,29 @@ export default function WordSearchSession() {
     return 'found'
   }
 
-  if (!puzzle) {
-    return <WordSearchSetupView onStartPuzzle={handleStartPuzzle} />
+  const handleRevealLetter = () => {
+    const hintedId = revealLetter()
+    playUiCue('soft')
+    if (!hintedId) {
+      setStatusMessage('Ya no quedan letras por revelar.')
+      return
+    }
+    setActiveWordId(null)
+    const index = puzzle.items.findIndex((item) => item.id === hintedId)
+    setStatusMessage(`Pista: se ilumina una letra más de la palabra ${index + 1}.`)
   }
+
+  const inspectedCells = useMemo(
+    () =>
+      activeWordId
+        ? puzzle.placements.find((item) => item.wordId === activeWordId)?.path ?? []
+        : [],
+    [activeWordId, puzzle],
+  )
+  const highlightedCells = useMemo(
+    () => [...inspectedCells, ...hintCells],
+    [inspectedCells, hintCells],
+  )
 
   const itemsWithFoundState: WordSearchItem[] = puzzle.items.map((item) => ({
     ...item,
@@ -142,59 +170,25 @@ export default function WordSearchSession() {
   const progressPercent = Math.round(
     (foundWordIds.size / Math.max(puzzle.items.length, 1)) * 100,
   )
-  const modeLabel = puzzle.mode === 'classic' ? 'Lista visible' : 'Con pistas'
-  const lastFoundIndex = lastFoundItem
-    ? puzzle.items.findIndex((item) => item.id === lastFoundItem.id)
-    : -1
-  const lastFoundTheme = lastFoundIndex >= 0 ? getWordColorTheme(lastFoundIndex) : undefined
 
   return (
     <div
       ref={sessionStartRef}
       tabIndex={-1}
-      className="flex w-full flex-col gap-layout-section-gap outline-none"
+      className="flex w-full max-w-6xl mx-auto flex-col gap-6 sm:gap-8 pt-4 pb-10 sm:pt-6 sm:pb-14 px-2 sm:px-4 outline-none"
     >
       <ActiveSessionChrome />
-      <PageHeader
-        variant="compact"
-        kicker={`Sopa de letras · ${modeLabel}`}
-        title={puzzle.title}
-        subtitle={puzzle.topic}
-        actions={
-          <div className="flex items-center gap-1.5">
-            <span
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-surface-sunken px-3 font-mono text-caption tabular-nums text-fg-muted"
-              aria-label={`Tiempo transcurrido: ${formatTime(elapsedSeconds)}`}
-            >
-              <TimerIcon className="h-4 w-4" aria-hidden />
-              {formatTime(elapsedSeconds)}
-            </span>
-            <PillButton
-              variant="outline"
-              size="sm"
-              className="min-h-11 min-w-11 px-0"
-              onClick={() => handleStartPuzzle(puzzle)}
-              aria-label="Reiniciar este tablero"
-              title="Reiniciar este tablero"
-              icon={<RotateCcw className="h-4 w-4" aria-hidden />}
-            />
-            <PillButton
-              variant="quiet"
-              size="sm"
-              className="min-h-11 min-w-11 px-0"
-              onClick={handleExitSession}
-              aria-label="Salir de la partida"
-              title="Salir de la partida"
-              icon={<X className="h-4 w-4" aria-hidden />}
-            />
-          </div>
-        }
-      />
 
-      <WordSearchProgressBar
+      <WordSearchHeader
+        title={puzzle.title}
+        mode={puzzle.mode}
         foundCount={foundWordIds.size}
         totalCount={puzzle.items.length}
         progressPercent={progressPercent}
+        elapsedSeconds={elapsedSeconds}
+        formatTime={formatTime}
+        onRestart={() => handleStartPuzzle(puzzle)}
+        onExit={handleExitSession}
         isCompleted={isCompleted}
       />
 
@@ -211,35 +205,28 @@ export default function WordSearchSession() {
           onExit={handleExitSession}
         />
       ) : (
-        <div className="grid w-full items-start gap-layout-section-gap lg:grid-cols-[minmax(22rem,32rem)_minmax(20rem,1fr)]">
-          <div className="min-w-0 lg:sticky lg:top-6">
-            <WordSearchGrid
-              key={`grid-${runId}`}
-              grid={puzzle.grid}
-              placements={puzzle.placements}
-              foundWordIds={foundWordIds}
-              activeWordId={activeWordId}
-              onSelectPath={handleSelectPath}
-            />
-          </div>
+        <div className="grid w-full items-start gap-5 sm:gap-6 lg:grid-cols-2">
+          <WordSearchGrid
+            key={`grid-${runId}`}
+            grid={puzzle.grid}
+            placements={puzzle.placements}
+            foundWordIds={foundWordIds}
+            highlightedCells={highlightedCells}
+            onSelectPath={handleSelectPath}
+            lastFoundItem={lastFoundItem}
+            onDismissLastFound={() => setLastFoundItem(null)}
+          />
 
-          <div className="flex min-w-0 flex-col gap-3">
-            {lastFoundItem ? (
-              <WordFoundBanner
-                item={lastFoundItem}
-                colorTheme={lastFoundTheme}
-                onDismiss={() => setLastFoundItem(null)}
-              />
-            ) : null}
-
-            <WordClueList
-              key={`clues-${runId}`}
-              items={itemsWithFoundState}
-              mode={puzzle.mode}
-              activeWordId={activeWordId}
-              onInspectWord={setActiveWordId}
-            />
-          </div>
+          <WordClueList
+            key={`clues-${runId}`}
+            items={itemsWithFoundState}
+            mode={puzzle.mode}
+            activeWordId={activeWordId}
+            hintTargetId={hintTargetId}
+            hintProgress={hintProgress}
+            onInspectWord={setActiveWordId}
+            onRevealLetter={handleRevealLetter}
+          />
         </div>
       )}
     </div>

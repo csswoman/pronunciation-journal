@@ -45,7 +45,7 @@ describe('WordSearchCompletion', () => {
     recordGameActivity.mockResolvedValue(undefined)
   })
 
-  it('renders completion screen and records word_bank repetitions', async () => {
+  it('renders the completion layout and records word_bank repetitions', async () => {
     recordWordSearchRepetition.mockResolvedValue(2)
 
     render(
@@ -81,8 +81,7 @@ describe('WordSearchCompletion', () => {
       )
     })
 
-    await waitFor(() => {
-      expect(screen.getByText(/2 palabras repasadas en SRS/i)).toBeInTheDocument();
-    })
+    expect(screen.getByText('Guárdalas en tu cuaderno')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Guardar las 2/ })).toBeInTheDocument()
   })
 })

@@ -22,6 +22,8 @@ diseño y planes de producto.
 | [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
 | [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
+| [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
+| [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
 | [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
 | [Recuperación de respuestas y fallos del outbox](architecture/answer-sync-recovery.md) | Clases de fallo (`permanent`/`exhausted`), recuperación acotada de `answer_history` reparada y runbook del plan 045 |

@@ -134,14 +134,31 @@ export const LEGACY_THEME_ALIASES_DARK = `  --text-primary:     var(--text);
   --accent-border: color-mix(in oklch, var(--accent) 55%, #0d1018);
 
   --primary-text:  var(--accent-text);
-  --primary-soft:  var(--accent-soft);`;
+  --primary-soft:  var(--accent-soft);
 
-export const STATIC_TOKENS_FEEDBACK_AND_MOTION = `  /* ── 4. Feedback (alias de pasteles, NO verde/rojo oscuros) ───────────── */
-  --feedback-correct:      var(--mint);
+  /* Feedback (Dark theme) — calibrados para alto contraste con fondo oscuro y texto claro */
+  --feedback-correct:      oklch(0.76 0.16 150);
+  --feedback-correct-soft: color-mix(in oklch, oklch(0.62 0.14 150) 22%, var(--surface-raised));
+  --feedback-wrong:        oklch(0.74 0.18 25);
+  --feedback-wrong-soft:   color-mix(in oklch, oklch(0.62 0.18 25) 22%, var(--surface-raised));
+  --feedback-hint:         oklch(0.78 0.16 85);
+  --feedback-hint-soft:    color-mix(in oklch, oklch(0.66 0.16 85) 22%, var(--surface-raised));
+
+  --success:         var(--feedback-correct);
+  --success-soft:    var(--feedback-correct-soft);
+  --error:           var(--feedback-wrong);
+  --error-soft:      var(--feedback-wrong-soft);
+  --warning:         var(--feedback-hint);
+  --warning-soft:    var(--feedback-hint-soft);
+  --info:            oklch(0.74 0.14 250);
+  --info-soft:       color-mix(in oklch, oklch(0.64 0.14 250) 22%, var(--surface-raised));`;
+
+export const STATIC_TOKENS_FEEDBACK_AND_MOTION = `  /* ── 4. Feedback (Light theme defaults) ─────────────────────────── */
+  --feedback-correct:      oklch(0.50 0.15 150);
   --feedback-correct-soft: var(--mint-soft);
-  --feedback-wrong:        var(--coral);
+  --feedback-wrong:        oklch(0.52 0.20 25);
   --feedback-wrong-soft:   var(--coral-soft);
-  --feedback-hint:         var(--butter);
+  --feedback-hint:         oklch(0.55 0.16 85);
   --feedback-hint-soft:    var(--butter-soft);
 
   --success:         var(--feedback-correct);
@@ -150,7 +167,7 @@ export const STATIC_TOKENS_FEEDBACK_AND_MOTION = `  /* ── 4. Feedback (alias
   --error-soft:      var(--feedback-wrong-soft);
   --warning:         var(--feedback-hint);
   --warning-soft:    var(--feedback-hint-soft);
-  --info:            var(--sky);
+  --info:            oklch(0.50 0.15 250);
   --info-soft:       var(--sky-soft);`;
 
 export const STATIC_LAYOUT_AND_MOTION = `  /* Default accent = blue */

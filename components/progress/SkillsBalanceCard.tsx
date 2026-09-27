@@ -9,12 +9,13 @@
 //       <RadarChart scores={scores} />
 //       <HorizontalSkillBars scores={scores} />
 //     </GridBody>
-//     <HighlightsFooter best={bestSkill} worst={worstSkill} />
+//     <SkillsBalanceHighlights best={bestSkill} worst={worstSkill} />
 //   </PastelCard>
 // </SkillsBalanceCard>
 
 import PastelCard from "@/components/layout/PastelCard";
-import { isFluencyProfileEmpty, type FluencyScores, type SkillKey } from "@/lib/progress/fluency-scores";
+import { SkillsBalanceHighlights } from "./SkillsBalanceHighlights";
+import { isFluencyProfileEmpty, type FluencyScores, type SkillKey, type SkillScore } from "@/lib/progress/fluency-scores";
 
 interface Props {
   scores?: FluencyScores | null;
@@ -54,9 +55,14 @@ function polarPoint(index: number, total: number, ratio: number) {
   };
 }
 
+/** Extract the numeric value for the radar polygon. null → small minimum for visual. */
+function scoreValue(s: SkillScore): number {
+  return s.score ?? 0;
+}
+
 function RadarChart({ scores }: { scores: FluencyScores }) {
   const total = RADAR_SKILLS.length;
-  const points = RADAR_SKILLS.map((s, i) => polarPoint(i, total, Math.max(0.15, (scores[s.key] ?? 0) / 100)));
+  const points = RADAR_SKILLS.map((s, i) => polarPoint(i, total, Math.max(0.15, scoreValue(scores[s.key]) / 100)));
   const polygon = points.map((p) => `${p.x},${p.y}`).join(" ");
 
   return (
@@ -163,8 +169,9 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
   }
 
   const safeScores = scores as FluencyScores;
-  const values = SKILL_ITEMS.map((s) => ({ ...s, val: safeScores[s.key] ?? 0 }));
-  const sorted = [...values].sort((a, b) => b.val - a.val);
+  const values = SKILL_ITEMS.map((s) => ({ ...s, val: scoreValue(safeScores[s.key]), skill: safeScores[s.key] }));
+  const scored = values.filter((v) => !v.skill.insufficientEvidence);
+  const sorted = [...scored].sort((a, b) => b.val - a.val);
   const best = sorted[0];
   const worst = sorted[sorted.length - 1];
 
@@ -210,7 +217,7 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
                   />
                 </div>
                 <span className="w-8 text-right font-display text-base sm:text-lg font-extrabold text-ink tabular-nums shrink-0">
-                  {item.val}
+                  {item.skill.insufficientEvidence ? '—' : item.val}
                 </span>
               </div>
             ))}
@@ -218,26 +225,7 @@ export function SkillsBalanceCard({ scores, comparisonLabel }: Props) {
         </div>
       </div>
 
-      {/* Highlights Footer */}
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-        <div className="rounded-2xl bg-white/85 p-4 shadow-xs transition-all hover:bg-white hover:shadow-sm">
-          <span className="font-kicker text-xs font-bold uppercase tracking-wider text-ink-secondary block">
-            MÁS CONSOLIDADA
-          </span>
-          <span className="font-display text-base sm:text-lg font-extrabold text-ink mt-0.5 block">
-            {best.label} · {best.val} pts
-          </span>
-        </div>
-
-        <div className="rounded-2xl bg-butter p-4 shadow-xs transition-all hover:brightness-105 hover:shadow-sm">
-          <span className="font-kicker text-xs font-bold uppercase tracking-wider text-ink-secondary block">
-            A PRIORIZAR EN TU PRÁCTICA
-          </span>
-          <span className="font-display text-base sm:text-lg font-extrabold text-ink mt-0.5 block">
-            {worst.label} · {worst.val} pts
-          </span>
-        </div>
-      </div>
+      <SkillsBalanceHighlights best={best} worst={worst} />
     </PastelCard>
   );
 }

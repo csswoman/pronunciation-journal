@@ -1,0 +1,22 @@
+[
+  { "id": "pair-1", "wordA": "ship", "wordB": "sheep", "ipaA": "/ʃɪp/", "ipaB": "/ʃiːp/", "contrast": "iː|ɪ" },
+  { "id": "pair-2", "wordA": "bit", "wordB": "beat", "ipaA": "/bɪt/", "ipaB": "/biːt/", "contrast": "iː|ɪ" },
+  { "id": "pair-3", "wordA": "sit", "wordB": "seat", "ipaA": "/sɪt/", "ipaB": "/siːt/", "contrast": "iː|ɪ" },
+  { "id": "pair-4", "wordA": "fit", "wordB": "feet", "ipaA": "/fɪt/", "ipaB": "/fiːt/", "contrast": "iː|ɪ" },
+  { "id": "pair-5", "wordA": "live", "wordB": "leave", "ipaA": "/lɪv/", "ipaB": "/liːv/", "contrast": "iː|ɪ" },
+  { "id": "pair-6", "wordA": "hit", "wordB": "heat", "ipaA": "/hɪt/", "ipaB": "/hiːt/", "contrast": "iː|ɪ" },
+  { "id": "pair-7", "wordA": "cat", "wordB": "cut", "ipaA": "/kæt/", "ipaB": "/kʌt/", "contrast": "æ|ʌ" },
+  { "id": "pair-8", "wordA": "hat", "wordB": "hut", "ipaA": "/hæt/", "ipaB": "/hʌt/", "contrast": "æ|ʌ" },
+  { "id": "pair-9", "wordA": "cap", "wordB": "cup", "ipaA": "/kæp/", "ipaB": "/kʌp/", "contrast": "æ|ʌ" },
+  { "id": "pair-10", "wordA": "bag", "wordB": "bug", "ipaA": "/bæɡ/", "ipaB": "/bʌɡ/", "contrast": "æ|ʌ" },
+  { "id": "pair-11", "wordA": "man", "wordB": "men", "ipaA": "/mæn/", "ipaB": "/men/", "contrast": "æ|e" },
+  { "id": "pair-12", "wordA": "bad", "wordB": "bed", "ipaA": "/bæd/", "ipaB": "/bed/", "contrast": "æ|e" },
+  { "id": "pair-13", "wordA": "ban", "wordB": "van", "ipaA": "/bæn/", "ipaB": "/væn/", "contrast": "b|v" },
+  { "id": "pair-14", "wordA": "best", "wordB": "vest", "ipaA": "/best/", "ipaB": "/vest/", "contrast": "b|v" },
+  { "id": "pair-15", "wordA": "boat", "wordB": "vote", "ipaA": "/boʊt/", "ipaB": "/voʊt/", "contrast": "b|v" },
+  { "id": "pair-16", "wordA": "sue", "wordB": "zoo", "ipaA": "/suː/", "ipaB": "/zuː/", "contrast": "s|z" },
+  { "id": "pair-17", "wordA": "sip", "wordB": "zip", "ipaA": "/sɪp/", "ipaB": "/zɪp/", "contrast": "s|z" },
+  { "id": "pair-18", "wordA": "ship", "wordB": "chip", "ipaA": "/ʃɪp/", "ipaB": "/tʃɪp/", "contrast": "ʃ|tʃ" },
+  { "id": "pair-19", "wordA": "share", "wordB": "chair", "ipaA": "/ʃer/", "ipaB": "/tʃer/", "contrast": "ʃ|tʃ" },
+  { "id": "pair-20", "wordA": "wash", "wordB": "watch", "ipaA": "/wɑːʃ/", "ipaB": "/wɑːtʃ/", "contrast": "ʃ|tʃ" }
+]

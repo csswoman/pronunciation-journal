@@ -1,3 +1,8 @@
+export interface ConnectedLinkStep {
+  word: string;
+  linkSound?: string;
+}
+
 export interface ConnectedPhrase {
   id: string;
   phrase: string;
@@ -9,6 +14,8 @@ export interface ConnectedPhrase {
   explanationEs: string;
   linkedWords: [string, string]; // Words that join together
   linkSound?: string; // e.g. "k", "t->ɾ", "w", "j"
+  options?: string[]; // Multiple choice options for unpacking step
+  links?: ConnectedLinkStep[]; // Detailed word & sound flow diagram
 }
 
 export const CONNECTED_SPEECH_DATA: ConnectedPhrase[] = [
@@ -17,13 +24,19 @@ export const CONNECTED_SPEECH_DATA: ConnectedPhrase[] = [
     id: "pick-it-up",
     phrase: "Pick it up",
     category: "linking-cv",
-    categoryNameEs: "Enlace Consonante + Vocal (Linking)",
-    connectedIpa: "/ˈpɪ.kɪ.tʌp/",
+    categoryNameEs: "Consonante + vocal",
+    connectedIpa: "/'pɪ.kɪ.tʌp/",
     isolatedIpa: "/pɪk/ /ɪt/ /ʌp/",
     howItSoundsEs: "«pi-ki-tap»",
-    explanationEs: "La consonante final 'k' se engancha a 'it' y la 't' se engancha a 'up'. Suena como una sola palabra fluida.",
+    explanationEs: "La consonante final salta a la vocal siguiente",
     linkedWords: ["Pick", "it"],
     linkSound: "k",
+    options: ["Pick a cup", "Pick it up", "Picked up"],
+    links: [
+      { word: "Pick", linkSound: "k→i" },
+      { word: "it", linkSound: "t→u" },
+      { word: "up" },
+    ],
   },
   {
     id: "check-in",

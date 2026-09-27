@@ -29,7 +29,7 @@ export default function HomeExtraExercisesAccordion({
             <span className="font-body-sm text-fg-muted">Práctica intensiva de fonemas y contrastes</span>
           </Link>
           <Link
-            href="/practice/word-search"
+            href="/practice/games"
             className="group flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-base p-4 shadow-sm transition-colors hover:border-border-hover hover:bg-surface-raised"
           >
             <div className="flex items-center justify-between">

@@ -425,6 +425,14 @@ export interface CoachSeenItemRecord {
   seenAt: string;
 }
 
+/** Device-local anti-repetition memory for word-search puzzles (v49). */
+export interface WordSearchSeenWordRecord {
+  id: string; // `${userId}:${word}`
+  userId: string;
+  word: string; // sanitized, uppercase
+  seenAt: string; // ISO
+}
+
 export interface GradedAnswerRecord {
   key: string;
   userId: string;
@@ -513,6 +521,7 @@ class PronunciationDB extends Dexie {
   userEdClusterProgress!: Table<UserEdClusterProgress, string>;
   edClusterAttempts!: Table<EdClusterAttempt, string>;
   coachSeenItems!: Table<CoachSeenItemRecord, string>;
+  wordSearchSeenWords!: Table<WordSearchSeenWordRecord, string>;
   gradedAnswers!: Table<GradedAnswerRecord, string>;
   contentBankCache!: Table<ContentBankCacheRecord, string>;
   coachBankLevelCache!: Table<CoachBankLevelCacheRecord, string>;
@@ -809,6 +818,10 @@ class PronunciationDB extends Dexie {
     });
     this.version(48).stores({
       practiceAttemptReceipts: 'id, userId, createdAt',
+    });
+    // v49: device-local anti-repetition memory for word-search puzzles.
+    this.version(49).stores({
+      wordSearchSeenWords: 'id, userId, seenAt, [userId+seenAt]',
     });
 
 

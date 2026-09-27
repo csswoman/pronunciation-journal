@@ -1,0 +1,120 @@
+'use client'
+
+import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
+import {
+  createInitialInvadersState,
+  invadersReducer,
+} from '@/lib/games/phoneme-invaders/engine'
+import type { MinimalPairItem } from '@/lib/games/phoneme-invaders/schema'
+import { speak } from '@/lib/phoneme-practice/tts'
+import { recordGameActivity } from '@/lib/progress/game-activity'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { isAnonymousUser } from '@/lib/auth/is-anonymous'
+
+export function usePhonemeInvadersLoop(pairs: MinimalPairItem[]) {
+  const { user } = useAuth()
+  const isGuest = isAnonymousUser(user)
+  const userId = user?.id ?? null
+  const [state, dispatch] = useReducer(
+    invadersReducer,
+    createInitialInvadersState(),
+  )
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const startTimeRef = useRef<number>(0)
+  const rafRef = useRef<number | null>(null)
+  const lastTickRef = useRef<number>(0)
+
+  const playTargetAudio = useCallback((word: string) => {
+    if (!word) return
+    speak(word, { rate: 0.9 })
+  }, [])
+
+  const spawnNextPair = useCallback(() => {
+    if (pairs.length === 0) return
+    const pair = pairs[Math.floor(Math.random() * pairs.length)]
+    const targetSide = Math.random() < 0.5 ? 'a' : 'b'
+    dispatch({ type: 'spawn', pair, targetSide, lanes: state.laneCount })
+  }, [pairs, state.laneCount])
+
+  const startGame = useCallback(() => {
+    startTimeRef.current = Date.now()
+    setIsPlaying(true)
+    spawnNextPair()
+  }, [spawnNextPair])
+
+  useEffect(() => {
+    if (isPlaying && state.target?.word) {
+      playTargetAudio(state.target.word)
+    }
+  }, [isPlaying, state.target?.word, playTargetAudio])
+
+  useEffect(() => {
+    if (
+      isPlaying &&
+      state.status === 'playing' &&
+      state.ships.length === 0 &&
+      !state.lastMissFlash
+    ) {
+      spawnNextPair()
+    }
+  }, [isPlaying, state.status, state.ships.length, state.lastMissFlash, spawnNextPair])
+
+  useEffect(() => {
+    if (!isPlaying || state.status !== 'playing' || state.lastMissFlash) return
+
+    const loop = (timestamp: number) => {
+      if (!lastTickRef.current) lastTickRef.current = timestamp
+      const delta = timestamp - lastTickRef.current
+      lastTickRef.current = timestamp
+
+      const speedFactor = 0.04 + state.wave * 0.008
+      const dy = delta * speedFactor
+      dispatch({ type: 'tick', dy })
+
+      rafRef.current = requestAnimationFrame(loop)
+    }
+
+    lastTickRef.current = performance.now()
+    rafRef.current = requestAnimationFrame(loop)
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [isPlaying, state.status, state.wave, state.lastMissFlash])
+
+  const recordedRef = useRef(false)
+  useEffect(() => {
+    if (state.status === 'game_over' && !recordedRef.current && userId && !isGuest) {
+      recordedRef.current = true
+      const elapsed = Date.now() - startTimeRef.current
+      void recordGameActivity(userId, 'phoneme_invaders', elapsed, 'phoneme-invaders', [
+        'listening',
+        'pronunciation',
+      ])
+    }
+  }, [state.status, userId, isGuest])
+
+  const shootShip = useCallback((shipId: string) => {
+    dispatch({ type: 'shoot', shipId })
+  }, [])
+
+  const repeatAudio = useCallback(() => {
+    if (state.target?.word) {
+      playTargetAudio(state.target.word)
+    }
+  }, [state.target?.word, playTargetAudio])
+
+  const dismissFlash = useCallback(() => {
+    dispatch({ type: 'clear_flash' })
+  }, [])
+
+  return {
+    state,
+    isPlaying,
+    startGame,
+    shootShip,
+    repeatAudio,
+    dismissFlash,
+  }
+}

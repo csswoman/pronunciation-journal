@@ -1194,6 +1194,7 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  color: var(--ink);
 }
 
 .course-path__hero-banner:hover .course-path__hero-illustration-box {

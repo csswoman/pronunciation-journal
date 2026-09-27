@@ -1,10 +1,13 @@
-# Live Task Tracker — Plan 049: Mostrar datos reales, estados vacíos y etiquetas fieles
+# Tarea activa — Plan 052: Ampliación de juegos de práctica
 
-| Task | Status | Details |
-| --- | --- | --- |
-| 1. Caracterizar y confirmar | Completed | 7 fallos reproducidos en truthful-progress.test.tsx evidenciando valores y etiquetas ficticias |
-| 2. Entrega 2: Eliminar datos inventados en tarjetas principales | Completed | 53/8 eliminados en ThisWeekCard, tarjeta 29/23 eliminada en DailyProgressSidebar, 0 nuevas y sin 2800 en SessionReady, 0:42 eliminado en SessionReadyHero |
-| 3. Entrega 3: Segmentos fieles, comparación y dimensiones completas | Completed | 0 segmentos en VocabularyReviewCard cuando learned=0, sin "Mejorando esta semana" ficticio en SkillsBalanceCard, writing agregado y dimensiones derivadas dinámicamente |
-| 4. Entrega 4: Etiquetas honestas (maestría y precisión 7 días) | Completed | RecommendedPracticeCard etiquetado como "precisión (7 días)", WhereToFocusSection etiquetado con "Maestría en contrastes" |
-| 5. Entrega 5: Suite focalizada de tests | Completed | truthful-progress.test.tsx completo, SessionReady.test.tsx con nuevo usuario, VocabularyReviewCard.test.tsx con 0 segmentos (30 tests verdes) |
-| 6. Entrega 6: Verificación integral y documentación | Completed | pnpm type-check (0 errores), pnpm lint (0 warnings), lint:design-tokens (OK), git diff --check (0 errores), vitest (30 tests verdes) y contrato documentado en docs/architecture/progress.md y plans/README.md |
+| # | Paso | Estado |
+|---|------|--------|
+| 0 | Fase 0: Infraestructura común (registry `skill`, `GameActivitySource`, `scoring.ts`) | ✅ |
+| 1 | Fase 1: Phoneme Invaders (juego de discriminación auditiva y pares mínimos) | ✅ |
+| 2 | Fase 2: Weak Form Catcher (juego de listening y formas reducidas) | ✅ |
+| 3 | Fase 3: Chunk Duel (juego de colocaciones y bloques frecuentes) | ✅ |
+| 4 | Fase 4: Memory Match (juego de memoria con palabras/audio/IPA) | ✅ |
+| 5 | Fase 5: Falsos Amigos «¿Trampa?» (swipe de vocabulario y trampa) | ✅ |
+| 6 | Fase 6: Registro en el hub, agrupaciones por skill y verificación final | ✅ |
+
+Cierre Plan 052: 5 nuevos juegos creados e integrados en `/practice/games` y en sus rutas individuales (`/practice/phoneme-invaders`, `/practice/weak-form-catcher`, `/practice/chunk-duel`, `/practice/memory-match`, `/practice/false-friends-swipe`). Todos 100% offline y sin llamadas a Gemini. Títulos usando la fuente Bricolage (`font-heading`). Se quitó la etiqueta "Próximamente" de estos 5 juegos (solo conservando `Word Chain`). Pruebas unitarias de reductor y tokenizador en verde. `type-check` y `lint` limpios sin errores.

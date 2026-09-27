@@ -11,7 +11,20 @@ export type SkillKey =
   | 'reading'
   | 'writing'
 
-export type FluencyScores = Record<SkillKey, number>
+export interface SkillScore {
+  /** 0-100 or null if insufficient evidence */
+  score: number | null
+  /** Accuracy % over deduplicated evaluable answers */
+  accuracy: number
+  /** Distinct content_ids with evaluated answers in the window */
+  uniqueContentCount: number
+  /** Total deduplicated evaluated answers */
+  evidenceCount: number
+  /** true when uniqueContentCount < MINIMUM_EVIDENCE_THRESHOLD */
+  insufficientEvidence: boolean
+}
+
+export type FluencyScores = Record<SkillKey, SkillScore>
 
 export const SKILL_KEYS: SkillKey[] = [
   'pronunciation',
@@ -23,12 +36,21 @@ export const SKILL_KEYS: SkillKey[] = [
   'writing',
 ]
 
+/** Below this number of distinct content_ids, no score is computed. */
+export const MINIMUM_EVIDENCE_THRESHOLD = 5
+
+/** Max attempts per content_id that contribute to the skill score. */
+export const MAX_ATTEMPTS_PER_CONTENT = 3
+
 export interface FluencyWordBankStatus {
   new: number
   learning: number
   review: number
   mastered: number
+  /** Legacy mastered rows are an exclusive SRS bucket, not verified mastery. */
+  legacyMastered?: number
 }
+
 export interface FluencyRawAnswer {
   exerciseTypeId: number
   slug?: ExerciseSlug | null
@@ -36,6 +58,8 @@ export interface FluencyRawAnswer {
   context: string | null
   isCorrect: boolean
   grade: number | null
+  /** Used for deduplication: max MAX_ATTEMPTS_PER_CONTENT per content_id. */
+  contentId?: string | null
 }
 
 export interface FluencyScoreInput {
@@ -46,12 +70,7 @@ export interface FluencyScoreInput {
   essentialWordsStudied: number
 }
 
-/** Target answers in 30 days for frequency component to reach 100. */
-const TARGET_ANSWERS_PER_SKILL = 20
-
-function answerAccuracy(answer: FluencyRawAnswer): number {
-  return answer.isCorrect ? 100 : 0
-}
+// ── Internal helpers ──────────────────────────────────────────────────────────
 
 function skillsForAnswer(answer: FluencyRawAnswer): SkillKey[] {
   const slug =
@@ -59,33 +78,17 @@ function skillsForAnswer(answer: FluencyRawAnswer): SkillKey[] {
   return [...resolveAnswerSkills(slug, answer.exercisePayload)]
 }
 
-function emptyBuckets(): Record<SkillKey, { correct: number; total: number }> {
-  return {
-    pronunciation: { correct: 0, total: 0 },
-    grammar: { correct: 0, total: 0 },
-    vocabulary: { correct: 0, total: 0 },
-    listening: { correct: 0, total: 0 },
-    speaking: { correct: 0, total: 0 },
-    reading: { correct: 0, total: 0 },
-    writing: { correct: 0, total: 0 },
-  }
-}
-
-function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, { correct: number; total: number }> {
-  const buckets = emptyBuckets()
-  for (const answer of answers) {
-    const acc = answerAccuracy(answer)
-    for (const skill of skillsForAnswer(answer)) {
-      buckets[skill].total++
-      buckets[skill].correct += acc
-    }
-  }
-  return buckets
+function exclusiveWordBankTotal(words: FluencyWordBankStatus): number {
+  return words.new
+    + words.learning
+    + words.review
+    + words.mastered
+    + (words.legacyMastered ?? 0)
 }
 
 function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
   const { wordsByStatus, contrastCorrect, contrastTotal } = input
-  const wordTotal = Object.values(wordsByStatus).reduce((a, b) => a + b, 0)
+  const wordTotal = exclusiveWordBankTotal(wordsByStatus)
 
   switch (skill) {
     case 'vocabulary': {
@@ -101,21 +104,91 @@ function retentionForSkill(skill: SkillKey, input: FluencyScoreInput): number {
   }
 }
 
+// ── Deduplication ─────────────────────────────────────────────────────────────
+
+interface SkillBucket {
+  correct: number
+  total: number
+  /** content_id → count of attempts already included */
+  contentCounts: Map<string, number>
+  /** content_ids seen (for uniqueContentCount) */
+  contentIds: Set<string>
+}
+
+function emptyBuckets(): Record<SkillKey, SkillBucket> {
+  const make = (): SkillBucket => ({
+    correct: 0,
+    total: 0,
+    contentCounts: new Map(),
+    contentIds: new Set(),
+  })
+  return {
+    pronunciation: make(),
+    grammar: make(),
+    vocabulary: make(),
+    listening: make(),
+    speaking: make(),
+    reading: make(),
+    writing: make(),
+  }
+}
+
+/**
+ * Buckets answers by skill with content deduplication.
+ *
+ * For each content_id, only the most recent MAX_ATTEMPTS_PER_CONTENT attempts
+ * contribute (answers arrive newest-last from the paginated query, so we
+ * walk them backwards and cap per content_id). Rows without content_id are
+ * treated as unique — we cannot deduplicate what has no identity.
+ */
+function bucketAnswers(answers: FluencyRawAnswer[]): Record<SkillKey, SkillBucket> {
+  const buckets = emptyBuckets()
+  for (let i = answers.length - 1; i >= 0; i--) {
+    const answer = answers[i]
+    const skills = skillsForAnswer(answer)
+    const acc = answer.isCorrect ? 100 : 0
+
+    for (const skill of skills) {
+      const bucket = buckets[skill]
+      const cid = answer.contentId
+
+      if (cid) {
+        bucket.contentIds.add(cid)
+        const count = bucket.contentCounts.get(cid) ?? 0
+        if (count >= MAX_ATTEMPTS_PER_CONTENT) continue
+        bucket.contentCounts.set(cid, count + 1)
+      }
+
+      bucket.total++
+      bucket.correct += acc
+    }
+  }
+  return buckets
+}
+
+// ── Score computation ─────────────────────────────────────────────────────────
+
 function scoreSkill(
   skill: SkillKey,
-  bucket: { correct: number; total: number },
+  bucket: SkillBucket,
   input: FluencyScoreInput,
-): number {
-  if (bucket.total === 0 && retentionForSkill(skill, input) === 0) return 0
-
+): SkillScore {
   const accuracy = bucket.total > 0
-    ? bucket.correct / bucket.total
-    : retentionForSkill(skill, input)
-
-  const frequency = Math.min(100, Math.round((bucket.total / TARGET_ANSWERS_PER_SKILL) * 100))
+    ? Math.round(bucket.correct / bucket.total)
+    : 0
   const retention = retentionForSkill(skill, input)
+  const uniqueContentCount = bucket.contentIds.size
+  const insufficientEvidence = uniqueContentCount < MINIMUM_EVIDENCE_THRESHOLD
 
-  return Math.round(Math.min(100, 0.6 * accuracy + 0.3 * frequency + 0.1 * retention))
+  if (bucket.total === 0 && retention === 0) {
+    return { score: null, accuracy: 0, uniqueContentCount, evidenceCount: 0, insufficientEvidence: true }
+  }
+
+  const score = insufficientEvidence
+    ? null
+    : Math.round(Math.min(100, 0.75 * accuracy + 0.25 * retention))
+
+  return { score, accuracy, uniqueContentCount, evidenceCount: bucket.total, insufficientEvidence }
 }
 
 export function computeFluencyScores(input: FluencyScoreInput): FluencyScores {
@@ -127,8 +200,10 @@ export function computeFluencyScores(input: FluencyScoreInput): FluencyScores {
   return scores
 }
 
+// ── Comparison & empty check ──────────────────────────────────────────────────
+
 function averageScore(scores: FluencyScores): number {
-  const values = SKILL_KEYS.map((k) => scores[k])
+  const values = SKILL_KEYS.map((k) => scores[k].score).filter((v): v is number => v != null)
   return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0
 }
 
@@ -147,8 +222,13 @@ export function fluencyComparisonLabel(
 }
 
 export function isFluencyProfileEmpty(scores: FluencyScores): boolean {
-  return SKILL_KEYS.every((k) => scores[k] <= 0)
+  return SKILL_KEYS.every((k) => {
+    const s = scores[k]
+    return s.score == null && s.evidenceCount <= 0
+  })
 }
+
+// ── Detailed metrics (Phase A, unchanged) ─────────────────────────────────────
 
 export interface SkillMetricsBreakdown {
   accuracy: number
@@ -187,7 +267,7 @@ export function computeDetailedSkillMetrics(
 
   for (const skill of SKILL_KEYS) {
     const bucket = buckets[skill]
-    const accuracy = bucket.total > 0 ? Math.round((bucket.correct / bucket.total) * 100) : 0
+    const accuracy = bucket.total > 0 ? Math.round(bucket.correct / bucket.total) : 0
     const relevantAnswers = input.answers.filter((a) => skillsForAnswer(a).includes(skill) && a.grade != null && a.grade > 0)
     const retrievalQuality = relevantAnswers.length > 0
       ? Math.round((relevantAnswers.reduce((sum, a) => sum + (a.grade ?? 0), 0) / relevantAnswers.length) * 10) / 10
@@ -234,7 +314,7 @@ export function computeSeparateLearningDimensions(
     retentionBySkill[skill] = detailed[skill].retention
   }
 
-  const wordBankTotal = Object.values(input.wordsByStatus).reduce((a, b) => a + b, 0)
+  const wordBankTotal = exclusiveWordBankTotal(input.wordsByStatus)
   const wordRetentionPct = wordBankTotal > 0
     ? Math.round((input.wordsByStatus.mastered / wordBankTotal) * 100)
     : 0

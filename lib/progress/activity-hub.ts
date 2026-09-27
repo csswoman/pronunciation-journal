@@ -18,6 +18,7 @@ import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumI
 import type { ConceptSignal } from '@/lib/courses/concept-profile'
 import type { DailyStep, PracticeContext, SessionResult } from '@/lib/practice/types'
 import type { PracticeAnswer } from '@/lib/practice/types'
+import { isEvaluatedPracticeAnswer } from '@/lib/practice/evaluation-status'
 
 export type ActivitySessionInput = {
   practiceContext: PracticeContext
@@ -58,8 +59,7 @@ export type ActivitySessionInput = {
 export function deriveSkillTags(_context: PracticeContext, result: SessionResult): SkillTag[] {
   const tags = new Set<SkillTag>()
   for (const r of result.results) {
-    const isEvaluated = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
-    if (!isEvaluated) continue
+    if (!isEvaluatedPracticeAnswer(r)) continue
     for (const t of resolveAnswerSkills(r.slug, r.exercisePayload)) tags.add(t)
   }
   return [...tags]
@@ -123,7 +123,9 @@ export function buildSessionTelemetry(
   const total = sessionResult.results.length
   const source = input.source ?? practiceContextToSource(practiceContext)
   const skillTags = input.explicitSkillTags ?? deriveSkillTags(practiceContext, sessionResult)
-  const correct = sessionResult.results.filter((r) => r.isCorrect).length
+  const correct = sessionResult.results.filter(
+    (result) => isEvaluatedPracticeAnswer(result) && result.isCorrect,
+  ).length
   const planSteps = input.dailyPlanSteps ?? []
   const baseReconciledStepIds = input.explicitReconciledStepIds ?? (
     practiceContext === 'daily'
@@ -202,8 +204,7 @@ export async function recordActivitySession(
   const lessonStats = new Map<string, { correct: number; total: number }>()
 
   for (const r of sessionResult.results) {
-    const isEvaluable = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
-    if (!isEvaluable) continue
+    if (!isEvaluatedPracticeAnswer(r)) continue
 
     const payload = r.exercisePayload as Record<string, unknown> | undefined
     const slugFromPayload = (payload?.lessonSlug as string | undefined) ?? (payload?.deckSlug as string | undefined)

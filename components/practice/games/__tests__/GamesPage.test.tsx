@@ -23,7 +23,7 @@ describe('games catalogue', () => {
       .getAllByRole('link')
       .map((link) => link.getAttribute('href'))
 
-    expect(hrefs).toEqual(['/practice/word-search', '/practice/word-rain'])
+    expect(hrefs).toEqual(PRACTICE_GAMES.map((game) => game.href))
   })
 
   it('renders upcoming games as inert text, not links', () => {

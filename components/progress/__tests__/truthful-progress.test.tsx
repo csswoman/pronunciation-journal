@@ -12,7 +12,7 @@ import { SessionReady } from '@/components/practice/essential-words/SessionReady
 import { SessionReadyHero } from '@/components/practice/essential-words/SessionReadyHero'
 import VocabularyReviewCard from '@/components/practice/hub/VocabularyReviewCard'
 import RecommendedPracticeCard from '@/components/practice/hub/RecommendedPracticeCard'
-import type { FluencyScores } from '@/lib/progress/fluency-scores'
+import type { FluencyScores, SkillScore } from '@/lib/progress/fluency-scores'
 import type { RecommendedResult } from '@/lib/practice/practice-modes'
 
 vi.mock('next/link', () => ({
@@ -32,6 +32,16 @@ vi.mock('@/hooks/useEssentialWordsReadyDashboard', () => ({
 vi.mock('@/components/practice/essential-words/SessionReadyVaultRow', () => ({
   SessionReadyVaultRow: () => <div data-testid="vault" />,
 }))
+
+/** Build a SkillScore with enough evidence to show a numeric score. */
+function scored(value: number): SkillScore {
+  return { score: value, accuracy: value, uniqueContentCount: 10, evidenceCount: 20, insufficientEvidence: false }
+}
+
+/** Build a SkillScore representing no activity at all. */
+function empty(): SkillScore {
+  return { score: null, accuracy: 0, uniqueContentCount: 0, evidenceCount: 0, insufficientEvidence: true }
+}
 
 describe('truthful-progress: validación de datos reales y ausencia de fallbacks falsos', () => {
   it('ThisWeekCard con 0 ejercicios muestra 0 y no 53 ni 8 por día', () => {
@@ -103,13 +113,13 @@ describe('truthful-progress: validación de datos reales y ausencia de fallbacks
 
   it('SkillsBalanceCard sin comparisonLabel no afirma "Mejorando esta semana"', () => {
     const scores: FluencyScores = {
-      pronunciation: 50,
-      grammar: 40,
-      vocabulary: 60,
-      listening: 30,
-      speaking: 45,
-      reading: 70,
-      writing: 55,
+      pronunciation: scored(50),
+      grammar: scored(40),
+      vocabulary: scored(60),
+      listening: scored(30),
+      speaking: scored(45),
+      reading: scored(70),
+      writing: scored(55),
     }
 
     render(<SkillsBalanceCard scores={scores} comparisonLabel={undefined} />)
@@ -118,13 +128,13 @@ describe('truthful-progress: validación de datos reales y ausencia de fallbacks
 
   it('SkillsBalanceCard incluye dimensión writing / Escritura', () => {
     const scores: FluencyScores = {
-      pronunciation: 50,
-      grammar: 40,
-      vocabulary: 60,
-      listening: 30,
-      speaking: 45,
-      reading: 70,
-      writing: 55,
+      pronunciation: scored(50),
+      grammar: scored(40),
+      vocabulary: scored(60),
+      listening: scored(30),
+      speaking: scored(45),
+      reading: scored(70),
+      writing: scored(55),
     }
 
     render(<SkillsBalanceCard scores={scores} />)
@@ -134,13 +144,13 @@ describe('truthful-progress: validación de datos reales y ausencia de fallbacks
 
   it('FluencyRadarCard anuncia 7 dimensiones en accesibilidad y en eyebrow', () => {
     const scores: FluencyScores = {
-      pronunciation: 50,
-      grammar: 40,
-      vocabulary: 60,
-      listening: 30,
-      speaking: 45,
-      reading: 70,
-      writing: 55,
+      pronunciation: scored(50),
+      grammar: scored(40),
+      vocabulary: scored(60),
+      listening: scored(30),
+      speaking: scored(45),
+      reading: scored(70),
+      writing: scored(55),
     }
 
     render(<FluencyRadarCard scores={scores} />)
@@ -257,13 +267,13 @@ describe('truthful-progress: validación de datos reales y ausencia de fallbacks
 
   it('SkillsBalanceCard con solo práctica de escritura no cae en estado vacío y muestra Escritura', () => {
     const scores: FluencyScores = {
-      pronunciation: 0,
-      grammar: 0,
-      vocabulary: 0,
-      listening: 0,
-      speaking: 0,
-      reading: 0,
-      writing: 70,
+      pronunciation: empty(),
+      grammar: empty(),
+      vocabulary: empty(),
+      listening: empty(),
+      speaking: empty(),
+      reading: empty(),
+      writing: scored(70),
     }
 
     render(<SkillsBalanceCard scores={scores} />)

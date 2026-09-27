@@ -1,5 +1,10 @@
 import lexiconIndex from '../../../public/lexicon/index.json'
-import type { WordSearchItem, WordSearchMode, WordSearchPuzzle } from './types'
+import type {
+  WordSearchDifficulty,
+  WordSearchItem,
+  WordSearchMode,
+  WordSearchPuzzle,
+} from './types'
 import {
   createWordSearchPuzzle,
   MAX_WORD_SEARCH_LENGTH,
@@ -49,7 +54,8 @@ export async function loadDictionaryPuzzle(
   categoryId: string,
   mode: WordSearchMode,
   count = 8,
-  recentWords?: Set<string>
+  recentWords?: Set<string>,
+  difficulty: WordSearchDifficulty = 'normal',
 ): Promise<WordSearchPuzzle> {
   const category = DICTIONARY_CATEGORIES.find((c) => c.id === categoryId)
   if (!category) {
@@ -102,5 +108,6 @@ export async function loadDictionaryPuzzle(
     topic: `Diccionario: Área de ${category.name}`,
     source: 'dictionary',
     mode,
+    difficulty,
   })
 }

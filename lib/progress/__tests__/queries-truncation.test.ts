@@ -6,6 +6,8 @@ type Row = Record<string, unknown>
 
 const callLog = vi.hoisted(() => ({
   limits: [] as number[],
+  ranges: [] as Array<{ from: number; to: number }>,
+  orders: [] as Array<{ column: string; ascending?: boolean }>,
   gte: [] as Array<{ column: string; value: string }>,
   tables: [] as string[],
 }))
@@ -16,6 +18,7 @@ const fixtures = vi.hoisted(() => ({
   contrasts: [] as Row[],
   wordBank: [] as Row[],
   learningItems: [] as Row[],
+  errors: {} as Record<string, unknown>,
 }))
 
 function daysAgo(n: number): string {
@@ -53,7 +56,7 @@ function makeChain(table: string) {
     if (state.head) {
       return Promise.resolve({ data: null, count: data.length, error: null })
     }
-    return Promise.resolve({ data, count: data.length, error: null })
+    return Promise.resolve({ data, count: data.length, error: fixtures.errors[table] ?? null })
   }
 
   const chain: Record<string, unknown> = {
@@ -64,7 +67,10 @@ function makeChain(table: string) {
     eq: () => chain,
     gt: () => chain,
     not: () => chain,
-    order: () => chain,
+    order: (column: string, options?: { ascending?: boolean }) => {
+      callLog.orders.push({ column, ascending: options?.ascending })
+      return chain
+    },
     gte: (column: string, value: string) => {
       state.gteColumn = column
       state.gteValue = value
@@ -74,6 +80,11 @@ function makeChain(table: string) {
     limit: (n: number) => {
       state.limitN = n
       callLog.limits.push(n)
+      return chain
+    },
+    range: (from: number, to: number) => {
+      callLog.ranges.push({ from, to })
+      rows = rows.slice(from, to + 1)
       return chain
     },
     then: (resolveFn: (value: unknown) => unknown, rejectFn?: (reason: unknown) => unknown) =>
@@ -112,6 +123,8 @@ import {
 describe('progress query truncation (oversized histories)', () => {
   beforeEach(() => {
     callLog.limits.length = 0
+    callLog.ranges.length = 0
+    callLog.orders.length = 0
     callLog.gte.length = 0
     callLog.tables.length = 0
     fixtures.sessions = []
@@ -119,6 +132,7 @@ describe('progress query truncation (oversized histories)', () => {
     fixtures.contrasts = []
     fixtures.wordBank = []
     fixtures.learningItems = []
+    fixtures.errors = {}
   })
 
   it('keeps only RECENT_ACTIVITY_SESSION_LIMIT sessions when more than 30 exist', async () => {
@@ -232,4 +246,5 @@ describe('progress query truncation (oversized histories)', () => {
     expect(callLog.tables).toContain('learning_items')
     expect(profile.essentialWords).toEqual({ studied: 1, due: 1 })
   })
+
 })

@@ -84,10 +84,45 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
   },
   {
     id: 'word-search',
-    label: 'Búsqueda de palabras',
+    label: 'Sopa de letras',
     description: 'Sopa de letras y deducción de vocabulario por pistas',
-    href: '/practice/word-search',
+    href: '/practice/games',
     icon: 'Search',
+  },
+  {
+    id: 'phoneme-invaders',
+    label: 'Phoneme Invaders',
+    description: 'Arcade de discriminación auditiva y fonemas',
+    href: '/practice/phoneme-invaders',
+    icon: 'Radio',
+  },
+  {
+    id: 'weak-form-catcher',
+    label: 'Weak Form Catcher',
+    description: 'Entrena tu oído con inglés rápido y formas reducidas',
+    href: '/practice/weak-form-catcher',
+    icon: 'Volume2',
+  },
+  {
+    id: 'chunk-duel',
+    label: 'Chunk Duel',
+    description: 'Desafío de velocidad con bloques de lenguaje frecuentes',
+    href: '/practice/chunk-duel',
+    icon: 'Zap',
+  },
+  {
+    id: 'false-friends-swipe',
+    label: 'Falsos Amigos',
+    description: 'Desactiva las traducciones falsas más engañosas',
+    href: '/practice/false-friends-swipe',
+    icon: 'Shield',
+  },
+  {
+    id: 'memory-match',
+    label: 'Memory Match',
+    description: 'Juego de memoria y asociación de vocabulario, audio e IPA',
+    href: '/practice/memory-match',
+    icon: 'Layers',
   },
 ] as const
 

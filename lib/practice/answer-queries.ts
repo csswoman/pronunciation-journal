@@ -16,6 +16,7 @@ import { recordChunkEvidence } from '@/lib/chunk-of-day/evidence'
 import type { ErrorPatternId } from '@/lib/exercises/error-patterns'
 import type { PracticeAnswer } from './types'
 import { practiceEffectId } from './attempt-identity'
+import { isEvaluatedPracticeAnswer } from './evaluation-status'
 
 export async function savePracticeAnswer(
   userId: string,
@@ -62,7 +63,7 @@ export async function savePracticeAnswer(
   )
 
   const grade = answerToGrade(answer)
-  const isAnswered = (answer.status === 'answered' || (answer.status === undefined && answer.userAnswer !== 'skip')) && grade !== null
+  const isAnswered = isEvaluatedPracticeAnswer(answer) && grade !== null
 
   // Hash before opening IndexedDB: WebCrypto can expire an active transaction.
   const attemptId = answer.attemptId ?? crypto.randomUUID()

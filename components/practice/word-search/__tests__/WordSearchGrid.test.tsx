@@ -40,7 +40,7 @@ function renderGrid(
       grid={grid}
       placements={placements}
       foundWordIds={new Set()}
-      activeWordId={null}
+      highlightedCells={[]}
       onSelectPath={onSelectPath}
     />,
   )

@@ -1,14 +1,13 @@
 import { recordActivitySession } from '@/lib/progress/activity-hub'
-import type { ActivitySource } from '@/lib/progress/activity-types'
+import type { GameActivitySource, SkillTag } from '@/lib/progress/activity-types'
 import type { SessionResult } from '@/lib/practice/types'
-
-type GameActivitySource = Extract<ActivitySource, 'games' | 'word_rain' | 'word_search'>
 
 export async function recordGameActivity(
   userId: string,
   source: GameActivitySource,
   totalTimeMs: number,
   gameId: string,
+  skillTags: SkillTag[] = ['vocabulary'],
 ): Promise<void> {
   const sessionResult: SessionResult = {
     results: [],
@@ -21,7 +20,7 @@ export async function recordGameActivity(
     practiceContext: 'practice',
     source,
     allowEmptySession: true,
-    explicitSkillTags: ['vocabulary'],
+    explicitSkillTags: skillTags,
     sessionResult,
     metadata: { gameId },
   })

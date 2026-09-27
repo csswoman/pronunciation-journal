@@ -2,69 +2,63 @@
 
 // Planned structure:
 // <WordFoundBanner>
-//   <BannerStatusIcon />
-//   <BannerContentGroup />
-//   <BannerActions />
+//   <WordPillBadge>
+//     <WordText />
+//     <IpaText />
+//   </WordPillBadge>
+//   <PlayAudioCircleButton />
+//   <SavedStatusText />
+//   <DismissButton />
 // </WordFoundBanner>
 
 import type { WordSearchItem } from '@/lib/exercises/word-search/types'
-import type { WordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import { CheckCircle2, X } from '@/components/icons'
-import { ListenButton } from '@/components/ui/ListenButton'
+import { Play, X } from '@/components/icons'
 import { speakText } from '@/lib/speech/synthesis'
 
 interface Props {
   item: WordSearchItem | null
-  colorTheme?: WordColorTheme
   onDismiss: () => void
 }
 
-export default function WordFoundBanner({ item, colorTheme, onDismiss }: Props) {
+export default function WordFoundBanner({ item, onDismiss }: Props) {
   if (!item) return null
-
-  const cardBg = colorTheme?.cardBg ?? 'bg-surface-raised'
-  const cardBorder = colorTheme?.cardBorder ?? 'border-border-subtle'
-  const iconBg = colorTheme?.iconBg ?? 'bg-success text-on-primary'
 
   return (
     <aside
       aria-label="Palabra encontrada"
-      className={`animate-state-in flex w-full items-center gap-2.5 rounded-xl border ${cardBorder} ${cardBg} px-3 py-2 shadow-2xs`}
+      className="animate-state-in flex w-full flex-wrap items-center gap-2 rounded-full border border-emerald-300/80 bg-emerald-500/10 px-2.5 py-1.5 shadow-2xs dark:border-emerald-800 dark:bg-emerald-950/40"
     >
-      <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
-        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-200/90 px-3 py-1 text-caption font-bold text-emerald-950 dark:bg-emerald-900/80 dark:text-emerald-100">
+        <span lang="en">{item.displayWord}</span>
+        {item.ipa ? (
+          <span className="font-ipa text-caption font-normal text-emerald-800 dark:text-emerald-300">
+            {item.ipa}
+          </span>
+        ) : null}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => speakText(item.displayWord)}
+        className="focus-ring flex h-7 w-7 items-center justify-center rounded-full bg-fg text-bg shadow-2xs transition-transform active:scale-95 hover:opacity-90"
+        aria-label={`Escuchar pronunciación de ${item.displayWord}`}
+        title={`Escuchar pronunciación de ${item.displayWord}`}
+      >
+        <Play className="h-3.5 w-3.5 fill-current ms-0.5" aria-hidden />
+      </button>
+
+      <span className="text-caption font-medium text-fg-muted truncate flex-1">
+        encontrada y guardada en tu vocabulario
       </span>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-          <span className="text-caption font-bold text-fg" lang="en">
-            ¡Encontraste {item.displayWord}!
-          </span>
-          {item.ipa ? (
-            <span className="font-ipa text-caption text-fg-muted">{item.ipa}</span>
-          ) : null}
-          {item.meaningEs ? (
-            <span className="text-caption text-fg-subtle truncate">— {item.meaningEs}</span>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="flex shrink-0 items-center gap-0.5">
-        <ListenButton
-          iconOnly
-          className="min-h-11 min-w-11 sm:min-h-8 sm:min-w-8 text-fg-muted hover:text-fg"
-          aria-label={`Escuchar ${item.displayWord}`}
-          onPlay={() => speakText(item.displayWord)}
-        />
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="focus-ring inline-flex min-h-11 min-w-11 sm:min-h-7 sm:min-w-7 items-center justify-center rounded-full text-fg-subtle hover:bg-surface-sunken hover:text-fg"
-          aria-label="Cerrar detalle de la palabra"
-        >
-          <X className="h-3.5 w-3.5" aria-hidden />
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
+        aria-label="Cerrar aviso de palabra encontrada"
+      >
+        <X className="h-3.5 w-3.5" aria-hidden />
+      </button>
     </aside>
   )
 }

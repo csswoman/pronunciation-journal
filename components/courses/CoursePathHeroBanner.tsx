@@ -125,7 +125,7 @@ export default function CoursePathHeroBanner({
       </div>
 
       <div className="course-path__hero-illustration-box" aria-hidden="true">
-        <KoboyoSlot name={illustrationName} variant="closing" className="w-44 h-44 sm:w-56 sm:h-56 select-none" />
+        <KoboyoSlot name={illustrationName} variant="closing" className="w-44 h-44 sm:w-56 sm:h-56 select-none text-[var(--ink)]" />
       </div>
     </Link>
   );
