@@ -43,8 +43,8 @@ interface CoachShortcutRailProps {
 
 export default function CoachShortcutRail({ onSendMessage }: CoachShortcutRailProps) {
   return (
-    <section aria-label="Atajos populares" className="mt-6 w-full sm:mt-7">
-      <p className="font-kicker mb-2.5 block text-xs font-semibold uppercase tracking-wider text-fg-subtle sm:mb-3">
+    <section aria-label="Atajos populares" className="mt-5 w-full @[28rem]:mt-7">
+      <p className="font-kicker mb-2 block text-xs font-semibold uppercase tracking-wider text-fg-subtle @[28rem]:mb-3">
         ATAJOS POPULARES
       </p>
       <div className="flex flex-wrap items-center gap-2">
@@ -55,7 +55,7 @@ export default function CoachShortcutRail({ onSendMessage }: CoachShortcutRailPr
             onClick={() => onSendMessage(prompt)}
             className={cn(
               "group flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-border-subtle",
-              "bg-surface-raised px-3.5 text-xs font-medium text-fg sm:px-4",
+              "bg-surface-raised px-3 text-xs font-medium text-fg @[28rem]:px-4",
               "transition-colors duration-150 focus-ring",
               "hover:border-primary hover:bg-surface-base hover:text-primary",
               "active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",
@@ -73,7 +73,7 @@ export default function CoachShortcutRail({ onSendMessage }: CoachShortcutRailPr
           onClick={() => onSendMessage("Ver todos los atajos")}
           className={cn(
             "flex min-h-[44px] cursor-pointer items-center gap-1 rounded-full border border-border-subtle",
-            "bg-surface-raised px-3.5 text-xs font-medium text-fg-muted sm:px-4",
+            "bg-surface-raised px-3 text-xs font-medium text-fg-muted @[28rem]:px-4",
             "transition-colors duration-150 focus-ring",
             "hover:border-border-default hover:text-fg",
             "active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",

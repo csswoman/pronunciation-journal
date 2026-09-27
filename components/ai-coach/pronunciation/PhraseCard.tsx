@@ -4,6 +4,7 @@ import { Loader2, Play, PartyPopper, RotateCcw } from "@/components/icons";
 import PastelCard from "@/components/layout/PastelCard";
 import { getPhraseMetadata } from "@/lib/ai-coach/phrase-metadata";
 import type { WordIPA } from "./types";
+import { cn } from "@/lib/cn";
 
 // Planned structure:
 // <PhraseCard>
@@ -47,17 +48,17 @@ export default function PhraseCard({
   const words = phrase.split(/\s+/).filter(Boolean);
   const focusWordsSet = new Set((meta.focusWords ?? []).map((w) => w.toLowerCase()));
 
-  // Adapta la escala tipográfica si la frase es larga o tiene muchas palabras
-  const isLongPhrase = phrase.length > 32 || words.length > 5;
+  // Adapta la escala tipográfica si la frase es muy larga (más de 38 caracteres o 6 palabras)
+  const isLongPhrase = phrase.length > 38 || words.length > 6;
 
   return (
     <PastelCard
       tone="butter"
-      className="relative p-4 sm:p-5 md:p-6 flex flex-col items-center text-center overflow-hidden rounded-3xl gap-2.5 sm:gap-3.5 shadow-xs max-w-full"
+      className="relative p-4 @[24rem]:p-5 @[28rem]:p-6 flex flex-col items-center text-center overflow-hidden rounded-3xl gap-2.5 @[28rem]:gap-3.5 shadow-xs max-w-full"
     >
       {/* Comillas decorativas superiores */}
       <svg
-        className="absolute top-3 left-3 sm:top-4 sm:left-5 w-8 h-8 sm:w-10 sm:h-10 text-[var(--ink)] opacity-15 pointer-events-none select-none"
+        className="absolute top-3 left-3 @[28rem]:top-4 @[28rem]:left-5 size-8 @[28rem]:size-10 text-[var(--ink)] opacity-15 pointer-events-none select-none"
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -76,12 +77,12 @@ export default function PhraseCard({
       </svg>
 
       {/* Kicker superior en DM Mono con tracking tipográfico técnico */}
-      <p className="font-mono text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--ink-secondary)] opacity-75">
+      <p className="font-mono text-xs @[28rem]:text-[13px] font-semibold tracking-[0.2em] uppercase text-[var(--ink-secondary)] opacity-85">
         FRASE PARA PRACTICAR
       </p>
 
       {/* Contenedor de palabras en Bricolage Grotesque / DM Sans Display */}
-      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3 my-0.5 max-w-2xl">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 @[24rem]:gap-2 @[28rem]:gap-3 my-1 max-w-2xl">
         {words.map((rawWord, index) => {
           const cleanWord = rawWord.replace(/[^a-zA-Z']/g, "");
           const cleanLower = cleanWord.toLowerCase();
@@ -100,39 +101,38 @@ export default function PhraseCard({
               key={`${rawWord}-${index}`}
               type="button"
               onClick={() => onListenWord(cleanWord)}
-              className={`group flex flex-col items-center justify-center cursor-pointer transition-all duration-150 active:scale-95 border-none ${
-                isFocus
-                  ? "bg-white/95 text-[var(--ink)] shadow-xs rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 border border-[color-mix(in_oklch,var(--ink)_10%,transparent)] hover:bg-white"
-                  : "bg-transparent text-[var(--ink)] px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-xl hover:bg-white/30"
-              }`}
+              className="group flex flex-col items-center justify-center cursor-pointer transition-all duration-150 active:scale-95 border-none bg-transparent px-1.5 py-0.5 rounded-lg hover:bg-white/25"
               aria-label={`Escuchar ${cleanWord}`}
             >
-              {/* Palabra principal en font-display */}
+              {/* Palabra principal con subrayado estilo hero landing si es de enfoque */}
               <span
-                className={`font-display font-extrabold tracking-[-0.03em] leading-tight text-[var(--ink)] group-hover:text-[var(--ink-secondary)] transition-colors ${
+                className={cn(
+                  "font-display font-extrabold tracking-[-0.03em] leading-tight text-[var(--ink)] group-hover:text-[var(--ink-secondary)] transition-colors px-1 rounded-xs",
+                  isFocus && "bg-[linear-gradient(180deg,transparent_45%,rgba(255,255,255,0.85)_45%)]",
                   isLongPhrase
-                    ? "text-xl sm:text-2xl md:text-3xl"
-                    : "text-2xl sm:text-3xl md:text-4xl"
-                }`}
+                    ? "text-lg @[24rem]:text-xl @[28rem]:text-2xl md:text-3xl"
+                    : "text-xl @[24rem]:text-2xl @[28rem]:text-3xl md:text-4xl"
+                )}
               >
                 {rawWord}
               </span>
 
               {/* Notación fonética IPA límpida en Andika (font-ipa) */}
               {ipaLoading ? (
-                <span className="h-4 flex items-center justify-center mt-0.5 sm:mt-1">
-                  <Loader2 size={11} className="animate-spin text-[var(--ink-muted)]" />
+                <span className="h-4 flex items-center justify-center mt-0.5">
+                  <Loader2 size={12} className="animate-spin text-[var(--ink-muted)]" />
                 </span>
               ) : ipaText ? (
                 <span
                   lang="en-fonipa"
-                  className={`font-ipa text-[11px] sm:text-xs font-normal tracking-wide mt-0.5 sm:mt-1 transition-colors ${
+                  className={cn(
+                    "font-ipa text-xs @[24rem]:text-sm @[28rem]:text-[15px] font-medium tracking-wide mt-0.5 transition-colors",
                     hasAnalysis && hasError
                       ? "text-rose-700 font-semibold"
                       : allCorrect
                       ? "text-emerald-800 font-semibold"
-                      : "text-[var(--ink-secondary)] opacity-80"
-                  }`}
+                      : "text-[var(--ink-secondary)] opacity-90"
+                  )}
                 >
                   {ipaText}
                 </span>
@@ -142,10 +142,12 @@ export default function PhraseCard({
         })}
       </div>
 
-      {/* Subtítulo de traducción nítido en DM Sans */}
-      <p className="text-xs sm:text-sm md:text-base font-sans font-medium text-[var(--ink-secondary)] max-w-xl leading-snug">
-        {meta.spanish}
-      </p>
+      {/* Subtítulo de traducción estilizado en DM Sans como chip sutil */}
+      <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/50 border border-[color-mix(in_oklch,var(--ink)_12%,transparent)] shadow-2xs max-w-full">
+        <span className="text-xs @[24rem]:text-sm @[28rem]:text-base font-sans font-medium text-[var(--ink)] tracking-tight">
+          {meta.spanish}
+        </span>
+      </div>
 
       {/* Feedback de análisis si es perfecto */}
       {hasAnalysis && !hasMistakes && !analyzing && (

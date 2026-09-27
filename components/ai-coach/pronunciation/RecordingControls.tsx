@@ -2,6 +2,7 @@
 
 import { Loader2, Mic, ChevronRight } from "@/components/icons";
 import { AI_TRANSCRIPTION_TIMEOUT_MESSAGE } from "@/lib/degradation/messages";
+import { PillButton } from "@/components/ui/PillButton";
 
 // Planned structure:
 // <RecordingControls>
@@ -69,10 +70,10 @@ export default function RecordingControls({
         }
       `}</style>
 
-      <div className="rounded-2xl bg-surface-sunken dark:bg-surface-raised border border-border-subtle p-4 sm:p-5 flex flex-col items-center justify-center gap-3 sm:gap-4 text-center shadow-xs">
+      <div className="rounded-2xl bg-surface-sunken dark:bg-surface-raised border border-border-subtle p-3 @[28rem]:p-4 flex flex-col items-center justify-center gap-2 @[28rem]:gap-3 text-center shadow-xs">
         {/* Visualizador de ondas compacto */}
         <div
-          className="flex items-center justify-center gap-1.5 h-6 sm:h-7 w-full max-w-[220px]"
+          className="flex items-center justify-center gap-1.5 h-4.5 @[28rem]:h-6 w-full max-w-[200px]"
           aria-hidden="true"
         >
           {WAVE_HEIGHTS.map((h, i) => (
@@ -96,7 +97,7 @@ export default function RecordingControls({
         {/* Botón principal de micrófono con halo sutil */}
         <div className="flex items-center justify-center w-full">
           <div
-            className={`p-2.5 sm:p-3 rounded-full transition-all duration-300 ${
+            className={`p-2 @[28rem]:p-2.5 rounded-full transition-all duration-300 ${
               isAnalyzing
                 ? "bg-purple-500/20 border border-purple-500/40 animate-pulse"
                 : "bg-[color-mix(in_oklch,var(--mint)_18%,transparent)] border border-[color-mix(in_oklch,var(--mint)_30%,transparent)]"
@@ -107,7 +108,7 @@ export default function RecordingControls({
               onClick={isDisabled ? undefined : onMicClick}
               disabled={isDisabled}
               aria-label={isAnalyzing ? "Analizando pronunciación" : isRecording ? "Detener grabación" : "Iniciar grabación"}
-              className={`w-16 h-16 sm:w-18 sm:h-18 rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-105 disabled:cursor-default disabled:hover:scale-100 shadow-md ${
+              className={`size-14 @[28rem]:size-16 rounded-full flex items-center justify-center border-none cursor-pointer transition-all duration-200 active:scale-95 hover:scale-105 disabled:cursor-default disabled:hover:scale-100 shadow-md ${
                 isAnalyzing
                   ? "bg-purple-600 text-white shadow-purple-500/40"
                   : isRecording
@@ -116,35 +117,37 @@ export default function RecordingControls({
               }`}
             >
               {isAnalyzing ? (
-                <Loader2 size={26} className="animate-spin text-white" />
+                <Loader2 size={24} className="animate-spin text-white" />
               ) : (
-                <Mic size={26} strokeWidth={2.4} />
+                <Mic size={24} strokeWidth={2.4} />
               )}
             </button>
           </div>
         </div>
 
         {/* Textos de estado e instrucciones */}
-        <div className="flex flex-col items-center gap-0.5">
-          <p className="text-xs sm:text-sm font-bold text-fg tracking-tight">
+        <div className="flex flex-col items-center gap-1 my-0.5">
+          <p className="text-sm @[28rem]:text-base font-extrabold text-fg tracking-tight">
             {mainTitle}
           </p>
-          <p className={errorMessage ? "text-xs text-error" : "text-xs text-fg-subtle"} role={errorMessage ? "alert" : undefined}>
+          <p className={errorMessage ? "text-xs @[28rem]:text-sm text-error font-medium" : "text-xs @[28rem]:text-sm font-medium text-fg-muted"} role={errorMessage ? "alert" : undefined}>
             {errorMessage ?? subtitle}
           </p>
         </div>
 
-        {/* Botón explícito para cambiar de frase */}
-        <div className="pt-0.5">
-          <button
-            type="button"
+        {/* Botón CTA principal para avanzar de frase */}
+        <div className="pt-1.5">
+          <PillButton
+            variant="primary"
+            size="md"
             onClick={onSkip}
             aria-label="Siguiente frase"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-fg-muted hover:text-fg bg-surface-raised border border-border-subtle hover:bg-surface-sunken transition active:scale-95 cursor-pointer shadow-2xs"
+            icon={<ChevronRight size={16} strokeWidth={2.5} />}
+            iconPosition="right"
+            className="!font-bold !text-sm sm:!text-base px-6 py-2.5 shadow-md active:scale-95 transition-transform"
           >
-            <span>Siguiente frase</span>
-            <ChevronRight size={14} strokeWidth={2.2} />
-          </button>
+            Siguiente frase
+          </PillButton>
         </div>
       </div>
     </div>

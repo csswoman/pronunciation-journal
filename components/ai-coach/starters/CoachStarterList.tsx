@@ -101,7 +101,7 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
 
   return (
     <section aria-label="Modos de práctica" className="w-full">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 @[28rem]:grid-cols-2 @[28rem]:gap-4">
         {rows.map((starter, index) => {
           const config = CARD_CONFIGS[starter.id] ?? CARD_CONFIGS.free;
           const { Icon, Watermark, tone, isDark, defaultBadges } = config;
@@ -118,8 +118,8 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
                 <button
                   type="button"
                   className={cn(
-                    "group relative flex min-h-[140px] flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl",
-                    "border border-border-subtle bg-surface-raised p-4 text-left transition-all duration-200 ease-out sm:p-5 md:p-6",
+                    "group relative flex h-full min-h-[135px] flex-col justify-between overflow-hidden rounded-2xl @[28rem]:min-h-[155px] @[28rem]:rounded-3xl",
+                    "border border-border-subtle bg-surface-raised p-4 text-left transition-all duration-200 ease-out @[28rem]:p-5",
                     "hover:-translate-y-0.5 hover:border-border-default hover:shadow-md",
                     "focus-ring active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100 min-h-[44px]",
                     loading && "animate-pulse cursor-default",
@@ -134,7 +134,7 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
                 <button
                   type="button"
                   className={cn(
-                    "w-full text-left focus-ring rounded-2xl sm:rounded-3xl active:scale-[0.99] motion-reduce:active:scale-100 min-h-[44px]",
+                    "w-full h-full text-left focus-ring rounded-2xl @[28rem]:rounded-3xl active:scale-[0.99] motion-reduce:active:scale-100 min-h-[44px]",
                     loading && "animate-pulse cursor-default",
                   )}
                   {...props}
@@ -142,7 +142,7 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
                   <PastelCard
                     tone={tone!}
                     className={cn(
-                      "group relative flex min-h-[140px] flex-col justify-between overflow-hidden rounded-2xl p-4 transition-transform duration-200 ease-out sm:min-h-[160px] sm:rounded-3xl sm:p-5 md:p-6",
+                      "group relative flex h-full min-h-[135px] flex-col justify-between overflow-hidden rounded-2xl p-4 transition-transform duration-200 ease-out @[28rem]:min-h-[155px] @[28rem]:rounded-3xl @[28rem]:p-5",
                       "hover:-translate-y-0.5 hover:shadow-sm",
                       className,
                     )}
@@ -163,18 +163,18 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
               <div className="relative z-10 flex items-start justify-between">
                 <span
                   className={cn(
-                    "flex size-9 shrink-0 items-center justify-center rounded-full shadow-xs sm:size-10",
+                    "flex size-9 shrink-0 items-center justify-center rounded-full shadow-xs @[28rem]:size-10",
                     isDark ? "bg-white/10 text-fg" : "bg-black/5 text-ink",
                   )}
                 >
-                  <Icon size={18} strokeWidth={2} className="sm:size-5" aria-hidden />
+                  <Icon size={18} strokeWidth={2} className="@[28rem]:size-5" aria-hidden />
                 </span>
               </div>
 
-              <div className="relative z-10 my-3 flex-1 sm:my-4">
+              <div className="relative z-10 my-2.5 flex-1 @[28rem]:my-4">
                 <h3
                   className={cn(
-                    "m-0 font-display text-base font-bold tracking-tight text-balance sm:text-lg md:text-xl",
+                    "m-0 font-display text-base font-bold tracking-tight text-balance @[28rem]:text-lg",
                     isDark ? "text-fg" : "text-ink",
                   )}
                 >
@@ -182,7 +182,7 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
                 </h3>
               </div>
 
-              <div className="relative z-10 flex flex-wrap items-end justify-between gap-2 pt-1 sm:gap-3 sm:pt-2">
+              <div className="relative z-10 flex flex-wrap items-end justify-between gap-2 pt-1 @[28rem]:gap-3 @[28rem]:pt-2">
                 <div className="flex flex-wrap items-center gap-1.5 min-w-0 flex-1">
                   {rawSub && <span className="sr-only">{rawSub}</span>}
                   {parsedBadges.map((badge, bIdx) => {
@@ -192,7 +192,7 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
                       <span
                         key={bIdx}
                         className={cn(
-                          "rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-tight transition-colors sm:px-2.5 sm:py-1 sm:text-xs whitespace-normal",
+                          "rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-tight transition-colors @[28rem]:px-2.5 @[28rem]:py-1 @[28rem]:text-xs line-clamp-2 break-words max-w-full",
                           isDark
                             ? "bg-white/10 text-fg-muted"
                             : isHighlight
@@ -208,11 +208,11 @@ export default function CoachStarterList({ starters, loading, onSelect }: CoachS
 
                 <span
                   className={cn(
-                    "flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ease-out group-hover:scale-105 sm:size-10 ml-auto",
+                    "flex size-8 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ease-out group-hover:scale-105 @[28rem]:size-10 ml-auto",
                     isDark ? "bg-primary text-white" : "bg-ink text-paper",
                   )}
                 >
-                  <ArrowUpRight size={16} strokeWidth={2.5} className="sm:size-4.5" aria-hidden />
+                  <ArrowUpRight size={15} strokeWidth={2.5} className="@[28rem]:size-4.5" aria-hidden />
                 </span>
               </div>
             </CardComponent>
