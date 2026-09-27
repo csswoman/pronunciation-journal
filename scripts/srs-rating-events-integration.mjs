@@ -1,20 +1,14 @@
 // Local integration checks for the SRS rating-event RPCs added in
-// supabase/migrations/20260720080000_srs_rating_events.sql (plan 061 step 2).
+// supabase/migrations/20260720080000_srs_rating_events.sql (plan 061 step 2)
+// and 20260927010000_srs_due_window.sql (plan 046 phase B).
 //
 // Mirrors scripts/rls-integration.mjs's convention: real Supabase Auth users
 // against a local Supabase instance, driven through the anon client so RLS
 // and the RPCs' internal auth.uid() checks are exercised for real.
 //
-// Verifies:
-//   1. Submitting the SAME rating event twice (same idempotency key) has
-//      exactly one effect (review_count/ease/interval/repetitions unchanged
-//      by the second call).
-//   2. Submitting TWO DIFFERENT concurrent events for the same entity both
-//      apply, serialized by the RPC's row lock, ending at review_count 2 with
-//      the second event's SM-2 transition built on the first's (not on the
-//      same starting snapshot).
-//   3. A user cannot apply a rating event against another user's word_bank
-//      row or topic_srs topic (p_user_id must equal auth.uid()).
+// Verifies idempotency, row-lock serialization, and the Plan 046 due window:
+// distinct early successes remain in the ledger without advancing the
+// materialized schedule, while current lapses and later due reviews apply.
 import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -52,6 +46,12 @@ if (!url || !anonKey || !serviceRoleKey) {
   console.error(
     "Missing NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, or SUPABASE_SERVICE_ROLE_KEY."
   );
+  process.exit(1);
+}
+
+const targetHost = new URL(url).hostname;
+if (targetHost !== "127.0.0.1" && targetHost !== "localhost") {
+  console.error(`Refusing non-local Supabase target: ${targetHost}`);
   process.exit(1);
 }
 
@@ -166,7 +166,7 @@ async function run() {
       `duplicate idempotency key must not create a second ledger row: got ${eventsForWordA.data.length}`
     );
 
-    // ── word_bank: two DIFFERENT concurrent events → two effects, ordered ──
+    // ── word_bank: two distinct concurrent successes → one spaced effect ─
     const wordB = await admin
       .from("word_bank")
       .insert({ user_id: userA.id, text: "boundary", context: "srs rpc test" })
@@ -193,14 +193,28 @@ async function run() {
 
     const finalWordB = await admin.from("word_bank").select("review_count, repetitions").eq("id", wordB.data.id).single();
     assertNoError(finalWordB, "read final word_bank state for word B");
-    assert(
-      finalWordB.data.review_count === 2,
-      `two concurrent ratings must both apply: expected review_count 2, got ${finalWordB.data.review_count}`
-    );
-    assert(
-      finalWordB.data.repetitions === 2,
-      `second rating must build on the first's repetitions, not race it: expected repetitions 2, got ${finalWordB.data.repetitions}`
-    );
+    assert(finalWordB.data.review_count === 1,
+      `early success must not count as a spaced review: got ${finalWordB.data.review_count}`);
+    assert(finalWordB.data.repetitions === 1,
+      `early success must not advance repetitions: got ${finalWordB.data.repetitions}`);
+
+    const eventsForWordB = await admin
+      .from("srs_rating_events")
+      .select("id")
+      .eq("entity_type", "word_bank")
+      .eq("entity_id", wordB.data.id);
+    assertNoError(eventsForWordB, "read concurrent word_bank events");
+    assert(eventsForWordB.data.length === 2,
+      `both evaluated events must remain in the ledger: got ${eventsForWordB.data.length}`);
+
+    const objectiveWordB = await admin
+      .from("word_bank")
+      .select("objective_evidence_count")
+      .eq("id", wordB.data.id)
+      .single();
+    assertNoError(objectiveWordB, "read objective evidence for word B");
+    assert(objectiveWordB.data.objective_evidence_count === 1,
+      `early success must not add objective spaced evidence: got ${objectiveWordB.data.objective_evidence_count}`);
 
     // ── word_bank: cannot rate another user's word ──────────────────────────
     const crossUserApply = await userB.client.rpc("apply_word_bank_rating_event", {
@@ -219,24 +233,17 @@ async function run() {
     });
     assertHasError(impersonationApply, "p_user_id must be rejected when it does not match the caller");
 
-    // ── topic_srs: two concurrent FIRST-time ratings for a brand-new topic ─
-    const topic = `srs-rpc-test:${randomUUID()}`;
-    const [topicFirst, topicSecond] = await Promise.all([
-      userA.client.rpc("apply_topic_srs_rating_event", {
-        p_idempotency_key: randomUUID(),
-        p_user_id: userA.id,
-        p_topic: topic,
-        p_grade: 4,
-      }),
+    // ── topic_srs: burst of 50 new attempts → one spaced advancement ──────
+    const topic = "grammar:present simple";
+    const topicBurst = await Promise.all(Array.from({ length: 50 }, () =>
       userA.client.rpc("apply_topic_srs_rating_event", {
         p_idempotency_key: randomUUID(),
         p_user_id: userA.id,
         p_topic: topic,
         p_grade: 5,
-      }),
-    ]);
-    assertNoError(topicFirst, "apply concurrent topic_srs event 1");
-    assertNoError(topicSecond, "apply concurrent topic_srs event 2");
+      })
+    ));
+    topicBurst.forEach((result, index) => assertNoError(result, `apply topic burst event ${index + 1}`));
 
     const finalTopicRows = await admin
       .from("topic_srs")
@@ -249,13 +256,23 @@ async function run() {
       `two concurrent first-time ratings must collapse into exactly one row: got ${finalTopicRows.data.length}`
     );
     assert(
-      finalTopicRows.data[0].review_count === 2,
-      `expected review_count 2 after two concurrent first ratings, got ${finalTopicRows.data[0].review_count}`
+      finalTopicRows.data[0].review_count === 1,
+      `expected one spaced review after 50 immediate attempts, got ${finalTopicRows.data[0].review_count}`
     );
     assert(
-      finalTopicRows.data[0].repetitions === 2,
-      `expected repetitions 2 (second builds on first), got ${finalTopicRows.data[0].repetitions}`
+      finalTopicRows.data[0].repetitions === 1,
+      `expected one repetition after 50 immediate attempts, got ${finalTopicRows.data[0].repetitions}`
     );
+
+    const topicEvents = await admin
+      .from("srs_rating_events")
+      .select("id")
+      .eq("user_id", userA.id)
+      .eq("entity_type", "topic_srs")
+      .eq("topic", topic);
+    assertNoError(topicEvents, "read topic burst ledger");
+    assert(topicEvents.data.length === 50,
+      `all 50 topic attempts must remain in the ledger: got ${topicEvents.data.length}`);
 
     // ── topic_srs: duplicate idempotency key → one effect ──────────────────
     const topicDupKey = randomUUID();
@@ -279,6 +296,60 @@ async function run() {
       topicDupSecond.data.review_count === reviewCountBeforeDup,
       `duplicate topic_srs idempotency key must not re-apply: expected ${reviewCountBeforeDup}, got ${topicDupSecond.data.review_count}`
     );
+
+    // ── lapse applies; immediate recovery waits; due recovery advances ─────
+    const lapse = await userA.client.rpc("apply_topic_srs_rating_event", {
+      p_idempotency_key: randomUUID(), p_user_id: userA.id, p_topic: topic, p_grade: 2,
+    });
+    assertNoError(lapse, "apply topic lapse");
+    assert(lapse.data.repetitions === 0, `lapse must reset repetitions: got ${lapse.data.repetitions}`);
+    const countAfterLapse = lapse.data.review_count;
+
+    const earlyRecovery = await userA.client.rpc("apply_topic_srs_rating_event", {
+      p_idempotency_key: randomUUID(), p_user_id: userA.id, p_topic: topic, p_grade: 4,
+    });
+    assertNoError(earlyRecovery, "apply early recovery");
+    assert(earlyRecovery.data.review_count === countAfterLapse,
+      "an immediate success after a lapse must not advance the schedule");
+
+    const forceDue = await admin.from("topic_srs")
+      .update({ next_review_at: new Date(Date.now() - 60_000).toISOString() })
+      .eq("user_id", userA.id).eq("topic", topic);
+    assertNoError(forceDue, "make topic due locally");
+    const dueRecoveries = await Promise.all([4, 5].map((grade) =>
+      userA.client.rpc("apply_topic_srs_rating_event", {
+        p_idempotency_key: randomUUID(), p_user_id: userA.id, p_topic: topic, p_grade: grade,
+      })
+    ));
+    dueRecoveries.forEach((result, index) => assertNoError(result, `apply due recovery ${index + 1}`));
+    const afterDueRecoveries = await admin.from("topic_srs").select("*")
+      .eq("user_id", userA.id).eq("topic", topic).single();
+    assertNoError(afterDueRecoveries, "read topic after concurrent due recoveries");
+    assert(afterDueRecoveries.data.review_count === countAfterLapse + 1,
+      "two concurrent successes on one due card must produce one spaced advancement");
+
+    // ── delayed/future client timestamps cannot distort the projection ─────
+    const beforeOldEvent = afterDueRecoveries.data;
+    const delayedFailure = await userA.client.rpc("apply_topic_srs_rating_event", {
+      p_idempotency_key: randomUUID(), p_user_id: userA.id, p_topic: topic,
+      p_grade: 1, p_occurred_at: "2020-01-01T00:00:00.000Z",
+    });
+    assertNoError(delayedFailure, "record delayed topic failure");
+    assert(delayedFailure.data.review_count === beforeOldEvent.review_count,
+      "an out-of-order event must not rewind the materialized state");
+    assert(delayedFailure.data.repetitions === beforeOldEvent.repetitions,
+      "an out-of-order lapse must not overwrite newer repetitions");
+
+    const futureTopic = "grammar:articles";
+    const beforeFuture = Date.now();
+    const futureClock = await userA.client.rpc("apply_topic_srs_rating_event", {
+      p_idempotency_key: randomUUID(), p_user_id: userA.id, p_topic: futureTopic,
+      p_grade: 4, p_occurred_at: "2099-01-01T00:00:00.000Z",
+    });
+    assertNoError(futureClock, "apply future-clock topic event");
+    const projectedReviewTime = Date.parse(futureClock.data.last_reviewed_at);
+    assert(projectedReviewTime >= beforeFuture - 5_000 && projectedReviewTime <= Date.now() + 5_000,
+      `future client clock must be clamped to server time: got ${futureClock.data.last_reviewed_at}`);
 
     console.log("SRS rating-event RPC integration checks passed.");
   } finally {

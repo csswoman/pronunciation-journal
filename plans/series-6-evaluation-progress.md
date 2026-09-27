@@ -9,7 +9,7 @@ La auditoría original se conserva en [audit-source.md](audit-source.md). Sus da
 |---|---|---|---|---|---|
 | [044](044-preserve-evaluation-evidence.md) | Conservar el estado y la calidad real de cada respuesta | P0 | M | — | TODO |
 | [045](045-recover-answer-sync.md) | Recuperar respuestas rechazadas y fallos transitorios de sincronización | P0 | M | 044 para validar elegibilidad; 046 fase A antes de reemitir efectos SRS | TODO |
-| [046](046-attempt-identity-and-spaced-srs.md) | Hacer idempotentes los intentos y evitar avances SRS por repetición inmediata | P0 | L | 044; coordinar queries.ts con 045 y 050 | TODO |
+| [046](046-attempt-identity-and-spaced-srs.md) | Hacer idempotentes los intentos y evitar avances SRS por repetición inmediata | P0 | L | 044; coordinar queries.ts con 045 y 050 | DONE: fase A y fase B verificadas; migración remota registrada y arnés SQL local verde |
 | [047](047-honest-progress-metrics.md) | Calcular métricas completas y distinguir actividad, precisión y evidencia | P1 | L | 044; 045 para cobertura real de Essential Words; 046 para replay | TODO |
 | [048](048-sound-mastery-state.md) | Separar EMA y presentación de maestría de sonidos sin perder actualizaciones | P1 | L | 046 fase A para identidad de eventos | TODO |
 | [049](049-truthful-progress-ui.md) | Mostrar datos reales, estados vacíos y etiquetas fieles | P1 | M | — para fallbacks; 047 para nuevos estados de evidencia | TODO |
@@ -54,4 +54,3 @@ La creación de planes no autoriza ejecución, commit, db push, backfill ni borr
 ## Cierre
 Estados por fase: TODO / IN PROGRESS / DONE / BLOCKED / REJECTED con evidencia.
 Un fix local con despliegue pendiente no cierra una incidencia remota. El ejecutor debe actualizar el índice del repositorio y conservar los resultados de validación.
-

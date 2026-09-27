@@ -42,6 +42,7 @@ function hasReplacementPolicy(sql) {
 }
 
 const issues = [];
+let readerPassagesExists = false;
 
 for (const file of readSqlFiles(MIGRATIONS_DIR)) {
   const sql = fs.readFileSync(file, "utf8");
@@ -65,6 +66,18 @@ for (const file of readSqlFiles(MIGRATIONS_DIR)) {
 
   if (hasDropPolicy(sql) && !hasReplacementPolicy(sql)) {
     issues.push(`${relative}: DROP POLICY without CREATE POLICY replacement detected`);
+  }
+
+  if (/drop\s+table\s+if\s+exists\s+public\.reader_passages\b/i.test(sql)) {
+    readerPassagesExists = false;
+  }
+
+  if (/create\s+table\s+if\s+not\s+exists\s+public\.reader_passages\b/i.test(sql)) {
+    readerPassagesExists = true;
+  }
+
+  if (/alter\s+table\s+public\.reader_passages\b/i.test(sql) && !readerPassagesExists) {
+    issues.push(`${relative}: references reader_passages after it was dropped and before it was restored`);
   }
 }
 

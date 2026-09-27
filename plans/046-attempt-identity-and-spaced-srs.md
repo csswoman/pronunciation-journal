@@ -1,8 +1,12 @@
 # Plan 046: Hacer idempotentes los intentos y evitar avances SRS por repetición inmediata
 
 ## Estado y base
-- Estado: IN PROGRESS. Fase A DONE (local), código en `7b7381d0`; Fase B no ejecutada (bloqueada por STOP: política temporal pendiente de decisión).
+- Estado: DONE. Fase A verificada localmente, código base en `7b7381d0`. Fase B aplicada en remoto y probada contra Postgres local real el 2026-09-26; historial remoto alineado y schema lint verde. Sin backfill ni reset de maestría.
 - Evidencia Fase A (2026-09-26): suite focalizada 4 archivos/29 tests + ToolWidget.evidence 2/2 verdes, `pnpm type-check` y `pnpm lint` exit 0. Navegador autenticado: restauración desde `hints` tras F5, fallo contado una vez en el resumen (4 de 7), 7 recibos únicos (posiciones 0–6) para la sesión de 7 ejercicios, «Progreso sincronizado». Offline y dos pestañas: solo cubiertos por tests fake-indexeddb; comprobación manual dispensada por el usuario. RPC remotas no verificadas.
+- Evidencia Fase B (2026-09-26): migración nueva y arnés local con duplicado, 50 intentos inmediatos, concurrencia sobre vencida, lapse, evento atrasado y reloj adelantado. Suite focalizada 4 archivos/30 tests, `type-check`, `lint`, `check:migrations`, `audit:rls`, auditoría de estado y `git diff --check` verdes. `audit:hard-rules` se detuvo por dos hex preexistentes en el archivo ajeno no versionado `ConnectedSpeechUnpackingCard.tsx`. Docker Desktop no inició y el servicio local no fue accesible; no se aplicó la migración en local ni se ejecutó el arnés SQL.
+- Evidencia remota Fase B (2026-09-26): la usuaria aplicó el SQL en el proyecto enlazado; `supabase db lint --linked --schema public --fail-on error` terminó sin errores. Como la ejecución manual no había escrito `supabase_migrations.schema_migrations`, se registró `20260927010000` con `supabase migration repair --status applied`; la lista posterior muestra Local = Remote. No se ejecutó el arnés con datos temporales contra producción.
+- Evidencia SQL local Fase B (2026-09-26): `pnpm test:srs-rating-events:integration` exit 0 contra `127.0.0.1`; cubre idempotency key duplicada, dos aciertos concurrentes, 50 intentos inmediatos, evidencia objetiva, RLS/cross-user, lapse, recuperación anticipada y vencida, evento atrasado y reloj adelantado. El primer fixture aleatorio chocó correctamente con el catálogo canónico de topics; se cambió el arnés a IDs canónicos y la repetición pasó. El rebuild limpio reveló deuda ajena a 046: `20260718012728` elimina `reader_passages` y `20260908120000` intenta alterarla. Para esta base desechable se reaplicó exactamente `20260619180000_reader_passages.sql` y luego `supabase migration up --local --include-all`; no se modificó SQL histórico ni el remoto por ese hallazgo.
+- Cierre de deuda de migraciones (2026-09-26): `20260908110000_restore_reader_passages.sql` reconcilia aditivamente `reader_passages` antes de que `20260908120000` agregue audio, sin editar migraciones históricas. `supabase db reset --local --yes`, `check:migrations`, `audit:rls`, tipos, lint y `git diff --check` terminaron verdes; el guard de migraciones ahora detecta futuros `ALTER` posteriores a un `DROP` sin recreación. La cobertura RLS nueva de lectura, inserción y actualización cross-user se ejecutó sin aserciones, aunque el arnés global terminó después por el fixture preexistente ausente `immersion lesson`. Producción ya tenía tabla, índices, RLS y políticas equivalentes, por lo que se registró solo `20260908110000` como aplicada; no se hizo `db push` sobre las demás divergencias del historial.
 - Prioridad: P0. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 044; coordinar queries.ts con 045 y 050.
@@ -85,15 +89,15 @@ Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexiste
 
 ## Puertas de cierre
 - [x] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
-- [ ] Fase A: replays no duplican ningún efecto incluido ✅. Fase B: ninguna ráfaga de aciertos infla el espaciado; tests SQL reales pasan localmente. Despliegue remoto se valida aparte.
+- [x] Fase A: replays no duplican ningún efecto incluido. Fase B: ninguna ráfaga de aciertos infla el espaciado; tests SQL reales pasan localmente. Despliegue remoto registrado y schema lint verificado por separado.
 - [x] Pruebas focalizadas, types y lint verificados con salida real (Fase A).
 - [x] Comprobación runtime navegador (Fase A); offline/dos pestañas dispensados por el usuario, cubiertos solo por tests.
-- [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
-- [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
-- [ ] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
+- [x] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. No se requiere backfill ni reset histórico.
+- [x] `git diff --name-only` contiene solo archivos previstos para 046, descontando cambios ajenos documentados de Connected Speech, cursos y tokens.
+- [x] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
 
 ## STOP
-Detener la fase B hasta aceptar la política temporal, incluidas evidencias objective de word_bank. Un simple sufijo de retry no resuelve la semántica. Si FSRS requiere un rediseño, separar esa fase y no prometer protección completa.
+La instrucción de continuar la fase B aceptó la política temporal el 2026-09-26, incluidas las evidencias objetivas de `word_bank`. Un simple sufijo de retry no resuelve la semántica. Si FSRS requiere un rediseño, separar esa fase y no prometer protección completa.
 Detener también si una verificación falla dos veces tras ajustes razonables, si falta una decisión de producto requerida o si se necesita sobrescribir cambios ajenos. Entregar lo independiente ya preparado, sin declarar DONE global.
 
 ## Mantenimiento
