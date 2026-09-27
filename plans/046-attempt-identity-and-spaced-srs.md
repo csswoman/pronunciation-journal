@@ -1,7 +1,8 @@
 # Plan 046: Hacer idempotentes los intentos y evitar avances SRS por repetición inmediata
 
 ## Estado y base
-- Estado: IN PROGRESS. Fase A implementada por instrucción del usuario; aceptación en navegador/offline pendiente. Fase B no ejecutada.
+- Estado: IN PROGRESS. Fase A DONE (local), código en `7b7381d0`; Fase B no ejecutada (bloqueada por STOP: política temporal pendiente de decisión).
+- Evidencia Fase A (2026-09-26): suite focalizada 4 archivos/29 tests + ToolWidget.evidence 2/2 verdes, `pnpm type-check` y `pnpm lint` exit 0. Navegador autenticado: restauración desde `hints` tras F5, fallo contado una vez en el resumen (4 de 7), 7 recibos únicos (posiciones 0–6) para la sesión de 7 ejercicios, «Progreso sincronizado». Offline y dos pestañas: solo cubiertos por tests fake-indexeddb; comprobación manual dispensada por el usuario. RPC remotas no verificadas.
 - Prioridad: P0. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 044; coordinar queries.ts con 045 y 050.
@@ -83,10 +84,10 @@ git diff --check
 Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexistentes por separado; no reparar producción para satisfacer mocks obsoletos. No ejecutar `pnpm test` completo automáticamente: AGENTS.md limita consumo en Windows. Para migraciones ejecutar además `pnpm check:migrations` y `pnpm audit:hard-rules`; estos checks no prueban comportamiento SQL. Ejecutar pruebas transaccionales solo contra entorno local desechable, confirmando primero el destino y sin imprimir secretos.
 
 ## Puertas de cierre
-- [ ] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
-- [ ] Fase A: replays no duplican ningún efecto incluido. Fase B: ninguna ráfaga de aciertos infla el espaciado; tests SQL reales pasan localmente. Despliegue remoto se valida aparte.
-- [ ] Pruebas focalizadas, types y lint verificados con salida real.
-- [ ] Comprobación runtime navegador/offline cuando aplique; si falta, fase pendiente.
+- [x] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
+- [ ] Fase A: replays no duplican ningún efecto incluido ✅. Fase B: ninguna ráfaga de aciertos infla el espaciado; tests SQL reales pasan localmente. Despliegue remoto se valida aparte.
+- [x] Pruebas focalizadas, types y lint verificados con salida real (Fase A).
+- [x] Comprobación runtime navegador (Fase A); offline/dos pestañas dispensados por el usuario, cubiertos solo por tests.
 - [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
 - [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
 - [ ] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
