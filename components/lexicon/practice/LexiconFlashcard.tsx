@@ -107,7 +107,7 @@ export function LexiconFlashcard({
   }, [revealed, canUndo, onUndo, disabled]);
 
   return (
-    <div className="flex w-full max-w-3xl flex-col gap-6 mx-auto">
+    <div className="flex w-full max-w-4xl lg:max-w-5xl flex-col gap-6 mx-auto">
       <LexiconFlashcardHeader
         categoryId={categoryId}
         categoryTitle={categoryTitle}

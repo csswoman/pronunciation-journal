@@ -35,20 +35,20 @@ function renderIpaFormatted(ipaStr: string) {
   const parts = formatted.split(/(ˈ[^\s/.,]+)/g);
 
   return (
-    <span className="font-ipa text-xl sm:text-2xl text-stone-900 font-normal leading-tight">
+    <span className="font-ipa text-2xl sm:text-3xl !text-stone-900 font-medium leading-tight">
       {parts.map((part, i) => {
         if (part.startsWith('ˈ')) {
           return (
             <span
               key={i}
-              className="font-bold underline underline-offset-4 decoration-stone-900"
+              className="font-bold underline underline-offset-4 !decoration-stone-900 !text-stone-900"
               title="Sílaba con acento primario"
             >
               {part}
             </span>
           );
         }
-        return <span key={i}>{part}</span>;
+        return <span key={i} className="!text-stone-900">{part}</span>;
       })}
     </span>
   );
@@ -92,23 +92,23 @@ export function LexiconFlashcardBody({
           onReveal();
         }
       }}
-      className="w-full cursor-pointer rounded-3xl p-7 sm:p-9 shadow-sm border border-stone-900/10 min-h-[340px] sm:min-h-[380px] flex flex-col justify-between text-left focus-ring select-none transition-all duration-150"
-      style={{ backgroundColor: pastelBg }}
+      className="w-full cursor-pointer rounded-3xl p-8 sm:p-12 shadow-sm border border-stone-900/10 min-h-[400px] sm:min-h-[460px] flex flex-col justify-between text-left focus-ring select-none transition-all duration-150"
+      style={{ backgroundColor: pastelBg, color: "#1c1917" }}
     >
       {!revealed ? (
         /* Front State */
         <div className="flex flex-col justify-between h-full gap-8 my-auto">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex flex-col gap-2">
-              <h2 className="font-display font-extrabold text-4xl sm:text-5xl text-stone-900 tracking-tight leading-tight">
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex flex-col gap-3">
+              <h2 className="font-display font-extrabold text-5xl sm:text-6xl md:text-7xl !text-stone-900 tracking-tight leading-tight">
                 {word}
               </h2>
               {ipa && renderIpaFormatted(ipa)}
             </div>
 
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
               {partOfSpeech && (
-                <span className="rounded-full bg-white/80 border border-stone-900/10 text-stone-900 text-xs font-semibold px-3 py-1">
+                <span className="rounded-full bg-white/85 border border-stone-900/15 !text-stone-900 text-xs sm:text-body-sm font-bold px-3.5 py-1">
                   {partOfSpeech}
                 </span>
               )}
@@ -116,15 +116,15 @@ export function LexiconFlashcardBody({
                 type="button"
                 onClick={(e) => onPlayAudio(e)}
                 aria-label={`Escuchar ${word}`}
-                className="h-10 w-10 rounded-full bg-stone-900 text-white hover:bg-stone-800 flex items-center justify-center shadow-2xs transition-transform hover:scale-105 active:scale-95 shrink-0"
+                className="h-11 w-11 rounded-full bg-stone-900 text-white hover:bg-stone-800 flex items-center justify-center shadow-xs transition-transform hover:scale-105 active:scale-95 shrink-0"
               >
                 🔊
               </button>
             </div>
           </div>
 
-          <div className="border-t border-stone-900/15 pt-5">
-            <p className="text-body-sm text-stone-800/80 font-medium">
+          <div className="border-t border-stone-900/15 pt-6">
+            <p className="text-body-sm sm:text-body !text-stone-800/80 font-medium">
               ¿Sabes qué significa? Piénsalo y luego dale la vuelta.
             </p>
           </div>
@@ -132,18 +132,18 @@ export function LexiconFlashcardBody({
       ) : (
         /* Back State */
         <div className="flex flex-col justify-between h-full gap-6">
-          <div className="space-y-4">
-            <div className="flex items-start justify-between gap-4 border-b border-stone-900/15 pb-4">
-              <div className="flex flex-col gap-1">
-                <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-stone-900 tracking-tight">
+          <div className="space-y-6">
+            <div className="flex items-start justify-between gap-6 border-b border-stone-900/15 pb-5">
+              <div className="flex flex-col gap-2">
+                <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl !text-stone-900 tracking-tight">
                   {word}
                 </h2>
                 {ipa && renderIpaFormatted(ipa)}
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-3 shrink-0">
                 {partOfSpeech && (
-                  <span className="rounded-full bg-white/80 border border-stone-900/10 text-stone-900 text-xs font-semibold px-3 py-1">
+                  <span className="rounded-full bg-white/85 border border-stone-900/15 !text-stone-900 text-xs sm:text-body-sm font-bold px-3.5 py-1">
                     {partOfSpeech}
                   </span>
                 )}
@@ -151,27 +151,27 @@ export function LexiconFlashcardBody({
                   type="button"
                   onClick={(e) => onPlayAudio(e)}
                   aria-label={`Escuchar ${word}`}
-                  className="h-10 w-10 rounded-full bg-stone-900 text-white hover:bg-stone-800 flex items-center justify-center shadow-2xs transition-transform hover:scale-105 active:scale-95 shrink-0"
+                  className="h-11 w-11 rounded-full bg-stone-900 text-white hover:bg-stone-800 flex items-center justify-center shadow-xs transition-transform hover:scale-105 active:scale-95 shrink-0"
                 >
                   🔊
                 </button>
               </div>
             </div>
 
-            <div className="space-y-2 pt-1">
-              <p className="font-semibold text-stone-900 text-body-lg sm:text-xl leading-relaxed">
+            <div className="space-y-3 pt-2">
+              <p className="font-semibold !text-stone-900 text-xl sm:text-2xl md:text-3xl leading-relaxed">
                 {definition}
               </p>
               {translation && (
-                <p className="text-body-sm text-stone-800/90 font-bold">
+                <p className="text-body-sm sm:text-body !text-stone-800/90 font-bold">
                   ES · {translation}
                 </p>
               )}
             </div>
 
             {example && (
-              <div className="rounded-2xl bg-white/70 border border-stone-900/10 p-4 text-body-sm text-stone-900 leading-relaxed shadow-2xs mt-2">
-                <span className="font-kicker text-[11px] font-bold uppercase tracking-wider text-stone-600 mr-2 select-none">
+              <div className="rounded-2xl bg-white/75 border border-stone-900/15 p-5 text-body-md sm:text-lg !text-stone-900 leading-relaxed shadow-2xs mt-4">
+                <span className="font-kicker text-xs font-bold uppercase tracking-wider text-stone-700 mr-2 select-none">
                   EJEMPLO
                 </span>
                 <span>{renderExampleWithBold(example, word)}</span>

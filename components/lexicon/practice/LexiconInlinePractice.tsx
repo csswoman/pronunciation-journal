@@ -79,32 +79,33 @@ export function LexiconInlinePractice({ categoryId, onExit }: LexiconInlinePract
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-3 border-b border-border-subtle/60">
-        <button
-          type="button"
-          onClick={handleFinish}
-          className="inline-flex items-center gap-1.5 text-body-sm font-medium text-fg-muted hover:text-fg transition-colors focus-ring rounded-lg p-1.5"
-          title="Volver a la lista de mazos (Esc)"
-        >
-          <span aria-hidden>←</span>
-          <span>Volver a Mazos Anki</span>
-          <span className="font-mono text-tiny text-fg-subtle ml-1">(Esc)</span>
-        </button>
+    <div className="w-full max-w-4xl lg:max-w-5xl mx-auto space-y-6">
+      {flowPhase !== "review" && (
+        <div className="flex items-center justify-between pb-3 border-b border-border-subtle/60">
+          <button
+            type="button"
+            onClick={handleFinish}
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-fg-muted hover:text-fg transition-colors focus-ring rounded-lg p-1.5"
+            title="Volver a la lista de mazos (Esc)"
+          >
+            <span aria-hidden>←</span>
+            <span>Volver a Mazos Anki</span>
+            <span className="font-mono text-tiny text-fg-subtle ml-1">(Esc)</span>
+          </button>
 
-        <div className="flex flex-col items-center text-center truncate max-w-xs">
-          <span className="font-kicker text-fg-subtle">Mazo Anki</span>
-          <span className="text-body-sm font-bold text-fg truncate">{lessonName}</span>
-        </div>
+          <div className="flex flex-col items-center text-center truncate max-w-xs">
+            <span className="font-kicker text-fg-subtle">Mazo Anki</span>
+            <span className="text-body-sm font-bold text-fg truncate">{lessonName}</span>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-caption font-mono text-fg-subtle">
-            {flowPhase === "review" && `${allEntries.length} tarjetas · Paso 1`}
-            {flowPhase === "summary" && "Paso 2: Resumen"}
-            {flowPhase === "practice" && "Paso 3: Contexto"}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-caption font-mono text-fg-subtle">
+              {flowPhase === "summary" && "Paso 2: Resumen"}
+              {flowPhase === "practice" && "Paso 3: Contexto"}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {flowPhase === "review" && (
         <LexiconReviewPhase

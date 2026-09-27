@@ -80,8 +80,8 @@ export function LexiconReviewPhase({
   if (!current) return null
 
   return (
-    <main className="flex w-full items-center justify-center px-[var(--layout-page-inline)] pt-8 sm:pt-12 pb-16">
-      <div className="flex w-full max-w-2xl flex-col gap-6">
+    <main className="flex w-full items-center justify-center px-[var(--layout-page-inline)] pt-6 sm:pt-8 pb-16">
+      <div className="flex w-full max-w-4xl lg:max-w-5xl flex-col gap-6">
         {saveError && (
           <p role="alert" className="rounded-lg border border-error bg-error-soft px-3 py-2 text-body-sm text-error">
             {saveError}
