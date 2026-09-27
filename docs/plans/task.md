@@ -1,13 +1,8 @@
-# Tarea activa — Plan 052: Ampliación de juegos de práctica
+# Tarea activa — Layout Inmersión /practice/immersion
 
 | # | Paso | Estado |
 |---|------|--------|
-| 0 | Fase 0: Infraestructura común (registry `skill`, `GameActivitySource`, `scoring.ts`) | ✅ |
-| 1 | Fase 1: Phoneme Invaders (juego de discriminación auditiva y pares mínimos) | ✅ |
-| 2 | Fase 2: Weak Form Catcher (juego de listening y formas reducidas) | ✅ |
-| 3 | Fase 3: Chunk Duel (juego de colocaciones y bloques frecuentes) | ✅ |
-| 4 | Fase 4: Memory Match (juego de memoria con palabras/audio/IPA) | ✅ |
-| 5 | Fase 5: Falsos Amigos «¿Trampa?» (swipe de vocabulario y trampa) | ✅ |
-| 6 | Fase 6: Registro en el hub, agrupaciones por skill y verificación final | ✅ |
-
-Cierre Plan 052: 5 nuevos juegos creados e integrados en `/practice/games` y en sus rutas individuales (`/practice/phoneme-invaders`, `/practice/weak-form-catcher`, `/practice/chunk-duel`, `/practice/memory-match`, `/practice/false-friends-swipe`). Todos 100% offline y sin llamadas a Gemini. Títulos usando la fuente Bricolage (`font-heading`). Se quitó la etiqueta "Próximamente" de estos 5 juegos (solo conservando `Word Chain`). Pruebas unitarias de reductor y tokenizador en verde. `type-check` y `lint` limpios sin errores.
+| 1 | Diseñar componentes modulares UI con miniaturas reales de YouTube y datos reales de la base de datos | ✅ |
+| 2 | Implementar sección "Para tus focos de esta semana", filtros reactivos y footer bar con soporte dark mode | ✅ |
+| 3 | Actualizar cabecera ("Ver y hablar"), badges y orquestación en `ImmersionCatalog` y `page.tsx` | ✅ |
+| 4 | Verificación de diseño tokens, dark mode, ESLint y type-check | ✅ |

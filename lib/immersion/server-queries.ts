@@ -188,4 +188,30 @@ export async function fetchServerTopicImmersionMap(): Promise<Record<string, Imm
   return map
 }
 
+/** Devuelve la cantidad de palabras que el usuario tiene en su banco de palabras. */
+export async function fetchUserImmersionWordsCountServer(userId: string): Promise<number> {
+  const supabase = await createSupabaseServerClient()
+  const { count, error } = await supabase
+    .from('word_bank')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+
+  if (error || count == null) return 0
+  return count
+}
+
+/** Devuelve el progreso de contrastes/fonemas del usuario para personalizar focos. */
+export async function fetchUserContrastProgressServer(
+  userId: string,
+): Promise<import('@/lib/phoneme-practice/types').UserContrastProgress[]> {
+  const supabase = await createSupabaseServerClient()
+  const { data, error } = await supabase
+    .from('user_contrast_progress')
+    .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct, raw_mastery, raw_mastery_updated_at, mastery_session_count, adaptive_score, observation_count')
+    .eq('user_id', userId)
+
+  if (error || !data) return []
+  return data as unknown as import('@/lib/phoneme-practice/types').UserContrastProgress[]
+}
+
 

@@ -149,10 +149,11 @@ describe('LessonStudyPanel', () => {
     };
     render(<LessonStudyPanel lesson={twoQuestionLesson} onSeek={onSeek} onQuizComplete={recordQuiz} />);
 
-    fireEvent.click(screen.getByText(/Comprobación/i));
-    fireEvent.click(screen.getByRole('button', { name: 'Conocido' }));
+    fireEvent.click(screen.getByRole('button', { name: /Comprobación/i }));
+    fireEvent.click(screen.getByText('Conocido'));
     expect(recordQuiz).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: 'Una relación' }));
+    fireEvent.click(screen.getByRole('button', { name: /Siguiente pregunta/i }));
+    fireEvent.click(screen.getByText('Una relación'));
 
     expect(recordQuiz).toHaveBeenCalledWith(expect.objectContaining({
       canonicalTopic: undefined,
