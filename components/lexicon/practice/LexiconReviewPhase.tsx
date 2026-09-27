@@ -15,10 +15,23 @@ interface LexiconReviewPhaseProps {
   entries: WordBankEntry[]
   posMap?: Map<string, string>
   userId: string
+  categoryId?: string
+  categoryTitle?: string
+  studyMode?: "receptive" | "productive"
+  onClose?: () => void
   onComplete: (ratings: WordRating[]) => void
 }
 
-export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: LexiconReviewPhaseProps) {
+export function LexiconReviewPhase({
+  entries,
+  posMap,
+  userId,
+  categoryId,
+  categoryTitle,
+  studyMode,
+  onClose,
+  onComplete,
+}: LexiconReviewPhaseProps) {
   const [index, setIndex] = useState(0)
   const [ratings, setRatings] = useState<WordRating[]>([])
   const [busy, setBusy] = useState(false)
@@ -76,6 +89,9 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
         )}
         <LexiconFlashcard
           key={current.id}
+          categoryId={categoryId}
+          categoryTitle={categoryTitle}
+          studyMode={studyMode}
           word={current.text}
           ipa={current.ipa ?? undefined}
           partOfSpeech={posMap?.get(current.source_ref ?? '') || undefined}
@@ -87,6 +103,7 @@ export function LexiconReviewPhase({ entries, posMap, userId, onComplete }: Lexi
           canUndo={index > 0}
           disabled={busy}
           onUndo={handleUndo}
+          onClose={onClose}
           onRate={handleRate}
         />
       </div>

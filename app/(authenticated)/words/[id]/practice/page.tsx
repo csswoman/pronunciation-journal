@@ -97,6 +97,9 @@ export default function LexiconPracticePage() {
           entries={allEntries}
           posMap={posMap}
           userId={user?.id ?? ''}
+          categoryId={categoryId}
+          categoryTitle={lessonName}
+          onClose={() => { clear(); router.push('/words?mode=learn') }}
           onComplete={handleReviewComplete}
         />
       </PageLayout>

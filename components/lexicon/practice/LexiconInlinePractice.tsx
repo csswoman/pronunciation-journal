@@ -111,6 +111,9 @@ export function LexiconInlinePractice({ categoryId, onExit }: LexiconInlinePract
           entries={allEntries}
           posMap={posMap}
           userId={user?.id ?? ""}
+          categoryId={categoryId}
+          categoryTitle={lessonName}
+          onClose={handleFinish}
           onComplete={handleReviewComplete}
         />
       )}
