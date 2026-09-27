@@ -5,15 +5,18 @@ import {
 import { flushOutbox } from '@/lib/sync/sync-manager'
 import { updateSR } from './sr'
 import { isContrastMastered } from './mastery'
-import { computeNextMasteryPct, sessionAccuracyPct } from './mastery-pct'
+import { computeNextMasteryState, priorMasterySessionCount, sessionAccuracyPct } from './mastery-pct'
 import type { UserContrastProgress, SRResult, SessionAnswer } from './types'
 import type { ExerciseResult, SessionResult } from '@/lib/practice/types'
 import { recordActivitySession } from '@/lib/progress/activity-hub'
+import { canonicalizeContrastId } from './phoneme-similarity'
+import { practiceEffectId } from '@/lib/practice/attempt-identity'
 
 export interface FinishContrastSessionOutcome {
   nextReview: Date
   contrastMastered: boolean
   masteryPct: number
+  rawMastery?: number
 }
 
 const DEFAULT_CONTRAST = (userId: string, contrastId: string): UserContrastProgress => ({
@@ -99,19 +102,43 @@ export async function finishContrastSession(
   const sr: SRResult  = updateSR(base, sessionPassed)
 
   const sessionAccuracy = sessionAccuracyPct(result.results)
-  // Estimate sessions completed including this one. total_attempts grows by
-  // `total` each session, so dividing gives approximate session count.
-  const sessionSize = total > 0 ? total : 10
-  const totalSessionsAfter = Math.ceil((base.total_attempts + total) / sessionSize)
-  const masteryPct = computeNextMasteryPct(
-    base.mastery_pct ?? 0,
+  const priorSessionCount = priorMasterySessionCount(base)
+  const totalSessionsAfter = priorSessionCount + 1
+  const occurredAt = Number.isFinite(now.getTime()) ? now.toISOString() : new Date().toISOString()
+  const canonicalContrastId = canonicalizeContrastId(contrastId)
+  const attemptId = await practiceEffectId(
+    userId,
+    result.sessionId ?? crypto.randomUUID(),
+    'contrast',
+    canonicalContrastId,
+    'sound-lab-session',
+  )
+  const masteryState = computeNextMasteryState(
+    {
+      mastery_pct: base.mastery_pct,
+      raw_mastery: base.raw_mastery,
+      raw_mastery_updated_at: base.raw_mastery_updated_at,
+      last_seen: base.last_seen,
+      observation_count: base.observation_count,
+    },
     sessionAccuracy,
-    base.last_seen,
     totalSessionsAfter,
     now,
   )
+  const { rawMastery, masteryPct } = masteryState
 
-  await updateContrastProgress(userId, contrastId, correct, total, sr, masteryPct)
+  await updateContrastProgress(
+    userId,
+    contrastId,
+    correct,
+    total,
+    sr,
+    masteryPct,
+    rawMastery,
+    attemptId,
+    occurredAt,
+    sessionAccuracy,
+  )
   if (recordActivity) {
     await recordActivitySession(userId, {
       practiceContext: 'sound_lab',
@@ -120,7 +147,7 @@ export async function finishContrastSession(
       metadata: { contrastId },
     })
   }
-  await flushOutbox()
+  await flushOutbox(userId)
 
   const updated: UserContrastProgress = {
     ...base,
@@ -128,12 +155,16 @@ export async function finishContrastSession(
     correct_answers: base.correct_answers + correct,
     streak: sr.streak,
     mastery_pct: masteryPct,
+    raw_mastery: rawMastery,
+    raw_mastery_updated_at: occurredAt,
+    mastery_session_count: totalSessionsAfter,
   }
 
   return {
     nextReview:       sr.next_review,
     contrastMastered: isContrastMastered(updated),
     masteryPct,
+    rawMastery,
   }
 }
 

@@ -115,7 +115,7 @@ export async function getWeakestPhonemeForHome(
 
   const { data, error } = await supabase
     .from("user_contrast_progress")
-    .select("contrast_id, total_attempts, correct_answers, mastery_pct")
+    .select("contrast_id, total_attempts, correct_answers, mastery_pct, raw_mastery, raw_mastery_updated_at, mastery_session_count, observation_count, last_seen")
     .eq("user_id", userId)
     .gt("total_attempts", 0);
 

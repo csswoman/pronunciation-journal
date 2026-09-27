@@ -1,12 +1,12 @@
 # Plan 048: Separar EMA y presentación de maestría de sonidos sin perder actualizaciones
 
 ## Estado y base
-- Estado: TODO; planificación, no implementación autorizada.
+- Estado: IN PROGRESS; correcciones locales verificadas con suite focalizada, type-check y lint; runtime SQL (local/remoto) y browser/outbox pendiente.
 - Prioridad: P1. Esfuerzo: L. Riesgo: alto.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: 046 fase A para identidad de eventos.
 - Fuente: auditoría aportada «evaluación → progreso → UI», conservada en audit-source.md.
-- Alcance de comprobación: lecturas locales, no reproducción runtime ni consultas remotas nuevas.
+- Alcance de comprobación: lecturas locales y fake-indexeddb. Según confirmación del usuario, la migración fue aplicada en Supabase; la firma RPC, RLS, concurrencia y replay remotos siguen sin verificarse en esta sesión.
 
 ## Problema y evidencia
 mastery-pct.ts:64 devuelve `ema * repScale`, reutilizando oldMastery ya escalado. contrast-queries.ts:145 lee current y calcula totales absolutos `current.total_attempts + sessionTotal`. La existencia y contrato del segundo escritor RPC se deben revalidar antes de intervenir.
@@ -26,6 +26,10 @@ Archivos principales permitidos:
 - `lib/phoneme-practice/mastery-pct.ts`
 - `lib/phoneme-practice/contrast-queries.ts`
 Además: tests focalizados indicados, helpers del mismo dominio necesarios y documentación del contrato. Migraciones nuevas solo donde los pasos lo indican; nunca modificar SQL histórico. Registrar rutas exactas antes de ampliar. Documentar el cambio en docs/architecture/ del dominio y enlazar desde docs/README.md; actualizar README/CLAUDE/ENGINEERING_STANDARDS solo si cambia su contrato.
+
+La identidad estable de sesión requiere además `lib/practice/types.ts`, `lib/practice/session-result.ts` y `components/practice/session/useSessionCompletion.ts`; son parte del alcance directo, no cambios ajenos.
+
+Los lectores server-side que alimentan rankings también forman parte del alcance: `lib/home/queries.ts`, `lib/progress/queries.ts` y `lib/sounds/queries.ts` ahora solicitan la EMA cruda, su reloj y el contador explícito.
 
 Fuera de alcance: refactor general, cambio de CEFR, sustitución de Dexie, estilos no necesarios, borrar historial, backfill inventado y despliegue remoto. No forzar archivos existentes grandes a una división general: nuevas piezas pequeñas, máximo 250 líneas según reglas del repo; si no puede cumplirse dentro del alcance, detener y explicar.
 
@@ -67,21 +71,24 @@ Casos obligatorios: Dos sesiones 80%; pausa larga; sesiones al mismo instante; f
 
 Comando focalizado tras crear/actualizar los tests:
 ```powershell
-pnpm exec vitest run lib/phoneme-practice/__tests__/mastery-pct.test.ts lib/phoneme-practice/__tests__/contrast-progress-concurrency.test.ts --maxWorkers=1
+pnpm exec vitest run lib/phoneme-practice/__tests__/mastery-pct.test.ts lib/phoneme-practice/__tests__/mastery-read.test.ts lib/phoneme-practice/__tests__/contrast-progress-concurrency.test.ts lib/phoneme-practice/__tests__/contrast-progress-persistence.test.ts lib/phoneme-practice/__tests__/finish-session.test.ts lib/phoneme-practice/__tests__/queries-offline.test.ts lib/practice/__tests__/session-result.test.ts lib/sounds/__tests__/queries.test.ts lib/progress/__tests__/queries-truncation.test.ts --maxWorkers=1
 pnpm type-check
 pnpm lint
 git diff --check
 ```
-Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexistentes por separado; no reparar producción para satisfacer mocks obsoletos. No ejecutar `pnpm test` completo automáticamente: AGENTS.md limita consumo en Windows. Para migraciones ejecutar además `pnpm check:migrations` y `pnpm audit:hard-rules`; estos checks no prueban comportamiento SQL. Ejecutar pruebas transaccionales solo contra entorno local desechable, confirmando primero el destino y sin imprimir secretos.
+Resultado: tests aplicables, `pnpm type-check` y lint verdes. Registrar fallos preexistentes por separado; no reparar producción para satisfacer mocks obsoletos. No ejecutar `pnpm test` completo automáticamente: AGENTS.md limita consumo en Windows. Para migraciones ejecutar además `pnpm check:migrations` y `pnpm audit:hard-rules`; estos checks no prueban comportamiento SQL. Ejecutar pruebas transaccionales solo contra entorno local desechable, confirmando primero el destino y sin imprimir secretos.
+
+Evidencia local: `pnpm audit:hard-rules` pasó prompts y auditoría estática RLS, pero se detuvo en `lint:design-tokens` por 101 violaciones preexistentes en superficies ajenas (Immersion, juegos, Word Search y Connected Speech); no se alteraron esas superficies para cerrar este plan.
 
 ## Puertas de cierre
-- [ ] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
-- [ ] Pruebas separan algoritmo puro, proyección y persistencia; ninguna caída causada por reaplicar repScale; prueba transaccional de concurrencia si se cambia el escritor.
-- [ ] Pruebas focalizadas, types y lint verificados con salida real.
-- [ ] Comprobación runtime navegador/offline cuando aplique; si falta, fase pendiente.
-- [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
-- [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
-- [ ] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
+- [x] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica (s1=25% caía a s2=13% en sesiones consecutivas al 80%).
+- [x] Pruebas separan algoritmo puro (computeNextRawEma), proyección (projectMasteryPct) y persistencia; ninguna caída causada por reaplicar repScale; la proyección Dexie y replay local cubren deltas/idempotencia sin afirmar que sustituyen la prueba SQL.
+- [x] Pruebas focalizadas (61 tests del dominio), `pnpm type-check` y lint (`eslint .`) verificados con salida real.
+- [ ] Comprobación runtime navegador/offline y sincronización outbox contra un backend real; fake-indexeddb cubre rollback/cache local, no sustituye esta puerta.
+- [x] Si hay SQL: nueva migración 20260927020000_contrast_raw_mastery_and_events.sql con RLS habilitada y verificada estáticamente con check-migrations y audit-rls.
+- [ ] Integración local/remota de RLS, firma RPC, concurrencia SQL y replay; `audit:rls` todavía reporta `contrast_session_events` sin caso en `scripts/rls-integration.mjs`.
+- [x] `git diff --name-only` contiene solo archivos previstos, descontando el WIP ajeno de AI Coach, Tracking y Vocabulary.
+- [x] Contrato y notas de mantenimiento actualizados en docs/architecture/phoneme-mastery-state.md y enlazados en docs/README.md.
 
 ## STOP
 No renombrar silenciosamente mastery_pct a EMA cruda sin actualizar todos los consumidores. Si no hay procedencia para reparar el histórico, entregar estrategia de compatibilidad antes de migrar.
@@ -89,4 +96,3 @@ Detener también si una verificación falla dos veces tras ajustes razonables, s
 
 ## Mantenimiento
 Cada nuevo productor debe cumplir los mismos casos de estado, identidad y atribución. Revisar futuras migraciones y lectores junto con sus escritores. Mantener separados actividad, respuesta evaluada, espaciado, finalización y dominio; un test estático o un mock no demuestra sincronización real.
-

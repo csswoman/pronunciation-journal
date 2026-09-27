@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
-  buildSoundMasteryMap,
   computeNextMasteryPct,
-  liveMasteryPct,
-  rankWeakestSounds,
+  computeNextMasteryState,
+  computeNextRawEma,
+  computeRepScale,
+  projectMasteryPct,
   sessionAccuracyPct,
-  soundMasteryPct,
 } from '@/lib/phoneme-practice/mastery-pct'
-import { contrastKey } from '@/lib/phoneme-practice/phoneme-similarity'
-import type { UserContrastProgress } from '@/lib/phoneme-practice/types'
 
 describe('sessionAccuracyPct', () => {
   it('uses score when present for partial credit', () => {
@@ -21,9 +19,101 @@ describe('sessionAccuracyPct', () => {
   })
 })
 
+describe('computeNextRawEma', () => {
+  it('returns clean session accuracy on first session', () => {
+    expect(computeNextRawEma(null, 80, null)).toBe(80)
+  })
+
+  it('decays toward new accuracy after long pause (>4 half-lives)', () => {
+    const longAgo = new Date('2026-01-01T00:00:00Z').toISOString()
+    const now = new Date('2026-03-01T00:00:00Z')
+    const decayed = computeNextRawEma(100, 50, longAgo, now)
+    expect(decayed).toBeGreaterThanOrEqual(50)
+    expect(decayed).toBeLessThanOrEqual(53)
+  })
+
+  it('keeps prior EMA on immediate same-instant re-practice', () => {
+    const instant = new Date('2026-06-01T12:00:00Z')
+    expect(computeNextRawEma(80, 100, instant.toISOString(), instant)).toBe(80)
+    expect(computeNextRawEma(0, 100, instant.toISOString(), instant)).toBe(0)
+  })
+
+  it('handles invalid date strings gracefully without NaN', () => {
+    expect(computeNextRawEma(80, 90, 'invalid-date')).toBe(80)
+  })
+
+  it('safely clamps NaN, Infinity and bounds to [0, 100]', () => {
+    expect(computeNextRawEma(NaN, 80, null)).toBe(80)
+    expect(computeNextRawEma(80, NaN, null)).toBe(0)
+    expect(computeNextRawEma(150, 120, null)).toBe(100)
+    expect(computeNextRawEma(-10, -50, null)).toBe(0)
+  })
+})
+
+describe('computeRepScale & projectMasteryPct', () => {
+  it('scales monotonically from 0 to 1 at 10 sessions', () => {
+    expect(computeRepScale(0)).toBe(0)
+    expect(computeRepScale(1)).toBeCloseTo(0.316, 2)
+    expect(computeRepScale(10)).toBe(1)
+    expect(computeRepScale(25)).toBe(1)
+    expect(computeRepScale(NaN)).toBe(0)
+    expect(computeRepScale(-2)).toBe(0)
+  })
+
+  it('projects raw EMA with repScale clamped to [0, 100]', () => {
+    expect(projectMasteryPct(80, 1)).toBe(25)
+    expect(projectMasteryPct(80, 10)).toBe(80)
+    expect(projectMasteryPct(150, 10)).toBe(100)
+    expect(projectMasteryPct(-10, 10)).toBe(0)
+    expect(projectMasteryPct(NaN, 5)).toBe(0)
+  })
+})
+
+describe('computeNextMasteryState', () => {
+  it('prevents mastery collapse across consecutive 80% sessions (plan 048)', () => {
+    const t1 = new Date('2026-06-01T12:00:00Z')
+    const t2 = new Date('2026-06-02T12:00:00Z')
+    const s1 = computeNextMasteryState({ mastery_pct: 0, raw_mastery: null, last_seen: null }, 80, 1, t1)
+    expect(s1.rawMastery).toBe(80)
+    expect(s1.masteryPct).toBe(25)
+
+    const s2 = computeNextMasteryState(
+      { mastery_pct: s1.masteryPct, raw_mastery: s1.rawMastery, last_seen: t1.toISOString() },
+      80,
+      2,
+      t2,
+    )
+    expect(s2.rawMastery).toBe(80)
+    expect(s2.masteryPct).toBe(36)
+    expect(s2.masteryPct).toBeGreaterThanOrEqual(s1.masteryPct)
+  })
+
+  it('supports legacy row without raw_mastery as conservative prior', () => {
+    const t1 = new Date('2026-06-01T12:00:00Z')
+    const t2 = new Date('2026-06-02T12:00:00Z')
+    const legacy = computeNextMasteryState(
+      { mastery_pct: 70, raw_mastery: null, last_seen: t1.toISOString() },
+      80,
+      5,
+      t2,
+    )
+    expect(legacy.rawMastery).toBeGreaterThanOrEqual(70)
+    expect(legacy.masteryPct).toBeGreaterThanOrEqual(49)
+  })
+
+  it('does not treat Essential Words presentation as a Sound Lab EMA prior', () => {
+    const state = computeNextMasteryState(
+      { mastery_pct: 100, raw_mastery: null, observation_count: 1, last_seen: null },
+      40,
+      1,
+    )
+    expect(state.rawMastery).toBe(40)
+    expect(state.masteryPct).toBe(13)
+  })
+})
+
 describe('computeNextMasteryPct', () => {
   it('first session scales accuracy by rep factor (~25% at 80% accuracy)', () => {
-    // session 1 of 10: sqrt(1/10) ≈ 0.316 → 80 * 0.316 ≈ 25
     const result = computeNextMasteryPct(0, 80, null, 1)
     expect(result).toBeGreaterThanOrEqual(24)
     expect(result).toBeLessThanOrEqual(26)
@@ -38,7 +128,6 @@ describe('computeNextMasteryPct', () => {
   it('decays toward a weaker session after ~7 days', () => {
     const lastSeen = new Date('2026-06-01T12:00:00Z')
     const now = new Date('2026-06-08T12:00:00Z')
-    // 10 sessions accumulated, repScale = 1; decayFactor ≈ 0.65 → ema ≈ 93
     const next = computeNextMasteryPct(100, 80, lastSeen.toISOString(), 10, now)
     expect(next).toBeGreaterThanOrEqual(88)
     expect(next).toBeLessThanOrEqual(96)
@@ -46,130 +135,16 @@ describe('computeNextMasteryPct', () => {
 
   it('barely moves on same-day re-practice', () => {
     const now = new Date('2026-06-08T12:00:00Z')
-    // 10 sessions, repScale = 1
     const next = computeNextMasteryPct(100, 60, now.toISOString(), 10, now)
     expect(next).toBeGreaterThanOrEqual(95)
   })
-})
 
-describe('soundMasteryPct', () => {
-  const row = (
-    contrastId: string,
-    mastery: number,
-    attempts = 10,
-    lastSeen: string | null = null,
-  ): UserContrastProgress => ({
-    id: '1',
-    user_id: 'u',
-    contrast_id: contrastId,
-    ease_factor: 2.5,
-    interval_days: 1,
-    next_review: null,
-    last_seen: lastSeen,
-    total_attempts: attempts,
-    correct_answers: attempts,
-    streak: 1,
-    mastery_pct: mastery,
-  })
-
-  it('uses minimum contrast mastery for a sound', () => {
-    const progress = [
-      row('/iː/|/ɪ/', 100),
-      row('/iː/|/ɛ/', 70),
-    ]
-    expect(soundMasteryPct('/iː/', progress)).toBe(70)
-  })
-
-  it('decays a stale contrast score toward zero the longer it goes unpracticed', () => {
-    const lastSeen = new Date('2026-01-01T00:00:00Z')
-    const now = new Date('2026-02-15T00:00:00Z') // ~45 days later, ~3 half-lives
-    const progress = [row('/θ/|/ð/', 90, 10, lastSeen.toISOString())]
-    const stale = soundMasteryPct('/θ/', progress, now)
-    const fresh = soundMasteryPct('/θ/', progress, lastSeen)
-    expect(stale).toBeLessThan(fresh)
-    expect(stale).toBeLessThan(50)
-  })
-
-  it('does not decay when last_seen is unknown (back-compat)', () => {
-    const progress = [row('/θ/|/ð/', 90, 10, null)]
-    expect(soundMasteryPct('/θ/', progress, new Date('2027-01-01'))).toBe(90)
-  })
-})
-
-describe('liveMasteryPct', () => {
-  it('returns the stored value unchanged when there is no last_seen', () => {
-    expect(liveMasteryPct(80, null)).toBe(80)
-  })
-
-  it('returns 0 unchanged (nothing to decay)', () => {
-    expect(liveMasteryPct(0, '2026-01-01T00:00:00Z', new Date('2026-06-01'))).toBe(0)
-  })
-
-  it('decays by exp(-1) ≈ 37% of the original value after one half-life (14 days)', () => {
-    const lastSeen = new Date('2026-01-01T00:00:00Z')
-    const now = new Date('2026-01-15T00:00:00Z') // 14 days later
-    // decayFactor = exp(-14/14) = exp(-1) ≈ 0.368 → 80 * 0.368 ≈ 29
-    expect(liveMasteryPct(80, lastSeen.toISOString(), now)).toBeCloseTo(29, -0.5)
-  })
-})
-
-describe('rankWeakestSounds', () => {
-  const row = (
-    contrastId: string,
-    mastery: number,
-    attempts = 10,
-    lastSeen: string | null = null,
-  ): UserContrastProgress => ({
-    id: '1',
-    user_id: 'u',
-    contrast_id: contrastId,
-    ease_factor: 2.5,
-    interval_days: 1,
-    next_review: null,
-    last_seen: lastSeen,
-    total_attempts: attempts,
-    correct_answers: attempts,
-    streak: 1,
-    mastery_pct: mastery,
-  })
-
-  it('surfaces a long-unpracticed sound as weak even if its stored mastery was high', () => {
-    const longAgo = new Date('2026-01-01T00:00:00Z').toISOString()
-    const recent = new Date('2026-01-14T00:00:00Z').toISOString() // 13 days later, ~1 half-life apart
-    const now = new Date('2026-01-15T00:00:00Z')
-    // Use IPAs outside PHONEME_CONFUSION so soundMasteryPct falls back to the
-    // plain "related contrasts" path instead of the confusable-pair path —
-    // that keeps the two rows fully independent for this assertion.
-    const progress = [
-      row(contrastKey('/m/', '/n/'), 90, 10, longAgo), // high stored mastery, but stale by ~14 days
-      row(contrastKey('/g/', '/k/'), 60, 10, recent),  // lower stored mastery, but practiced yesterday
-    ]
-    const ranked = rankWeakestSounds(progress, { limit: 4, now })
-    const m = ranked.find((r) => r.ipa === 'm')
-    const g = ranked.find((r) => r.ipa === 'g')
-    expect(m).toBeDefined()
-    expect(g).toBeDefined()
-    expect(m!.mastery).toBeLessThan(g!.mastery)
-  })
-})
-
-describe('buildSoundMasteryMap', () => {
-  it('exposes mastery keyed by IPA', () => {
-    const map = buildSoundMasteryMap([
-      {
-        id: '1',
-        user_id: 'u',
-        contrast_id: '/æ/|/ɛ/',
-        ease_factor: 2.5,
-        interval_days: 1,
-        next_review: null,
-        last_seen: null,
-        total_attempts: 5,
-        correct_answers: 4,
-        streak: 1,
-        mastery_pct: 72,
-      },
-    ])
-    expect(map.get('/æ/')).toBe(72)
+  it('preserves growth across sessions when rawMastery is supplied', () => {
+    const t1 = new Date('2026-06-01T12:00:00Z')
+    const t2 = new Date('2026-06-02T12:00:00Z')
+    const s1 = computeNextMasteryPct(0, 80, null, 1, t1)
+    const s2 = computeNextMasteryPct(s1, 80, t1.toISOString(), 2, t2, 80)
+    expect(s2).toBe(36)
+    expect(s2).toBeGreaterThanOrEqual(s1)
   })
 })

@@ -1,13 +1,16 @@
 "use client";
 
-// Sub-components:
+// Planned structure:
 // <EditPhraseModal>
-//   <form (Modal container, header, input fields, AI enrich action, footer)>
+//   <Backdrop />
+//   <ModalContainer: Header(Icon + BricolageTitle + Subtitle + RoundCloseButton) />
+//   <ModalForm: PhraseTextArea + AIEnrichButton + IPA + Translation + Meaning + Context />
+//   <ModalFooter: NoticeText + CancelButton + SaveButton />
 // </EditPhraseModal>
 
 import { useEffect, useRef, useState } from "react";
 import { CornerDownLeft, FileText, Sparkles, X } from "@/components/icons";
-import Button from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 import type { TrackedItem } from "@/lib/tracking/types";
 
 interface Props {
@@ -128,7 +131,7 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-[var(--layout-card-pad)] bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-[fade-in_150ms_ease-out]"
       onClick={() => !saving && !enriching && onClose()}
     >
       <form
@@ -140,19 +143,21 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
           void submit();
         }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised shadow-xl"
+        className="w-full max-w-2xl overflow-hidden rounded-[28px] border border-border-subtle bg-surface-raised p-6 sm:p-7 shadow-2xl transition-all"
       >
-        <header className="flex items-start justify-between gap-4 border-b border-border-subtle layout-card-pad">
+        <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex gap-3">
-            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-primary-soft text-primary">
+            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary-soft text-primary">
               <FileText size={18} aria-hidden />
             </span>
             <div>
-              <p className="font-kicker text-fg-subtle">TRACKING</p>
-              <h2 id="edit-phrase-title" className="mt-1 text-h3 text-fg">
+              <span className="font-mono text-overline font-semibold uppercase tracking-wider text-fg-subtle">
+                TRACKING
+              </span>
+              <h2 id="edit-phrase-title" className="font-display text-2xl font-bold text-fg mt-0.5">
                 Editar frase
               </h2>
-              <p className="mt-1 text-body-sm text-fg-muted">
+              <p className="mt-1 text-body-sm text-fg-muted font-medium">
                 Modifica el texto o enriquece su fonética y significado con IA.
               </p>
             </div>
@@ -162,16 +167,16 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
             onClick={onClose}
             disabled={saving || enriching}
             aria-label="Cerrar"
-            className="rounded-[var(--radius-sm)] p-2 text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg"
           >
-            <X size={17} />
+            <X size={18} />
           </button>
-        </header>
+        </div>
 
-        <div className="layout-card-pad space-y-4 max-h-[70vh] overflow-y-auto">
+        <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
           <div>
-            <div className="flex items-center justify-between gap-2">
-              <label htmlFor="edit-phrase-text" className="text-body-sm font-semibold text-fg">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <label htmlFor="edit-phrase-text" className="text-body-sm font-bold text-fg">
                 Frase en inglés
               </label>
               <button
@@ -179,10 +184,10 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
                 onClick={() => void handleEnrich()}
                 disabled={!text.trim() || enriching || saving}
                 aria-label="Enriquecer con IA"
-                className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-soft px-2.5 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-50"
+                className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-soft px-3 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-50"
               >
                 <Sparkles size={13} className={enriching ? "animate-spin" : ""} aria-hidden />
-                {enriching ? "Enriqueciendo…" : "Enriquecer con IA"}
+                <span>{enriching ? "Enriqueciendo…" : "Enriquecer con IA"}</span>
               </button>
             </div>
             <textarea
@@ -192,13 +197,13 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
               onChange={(event) => setText(event.target.value)}
               rows={3}
               placeholder="e.g. Break a leg"
-              className="mt-2 w-full resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 text-body-sm text-fg placeholder:text-fg-subtle outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+              className="w-full resize-none rounded-2xl border border-border-subtle bg-surface-sunken/80 p-3.5 text-body-sm text-fg placeholder:text-fg-subtle outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="edit-phrase-ipa" className="text-body-sm font-semibold text-fg">
+              <label htmlFor="edit-phrase-ipa" className="block text-body-sm font-bold text-fg mb-1.5">
                 Transcripción IPA <span className="font-normal text-fg-subtle">(opcional)</span>
               </label>
               <input
@@ -206,11 +211,11 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
                 value={ipa}
                 onChange={(event) => setIpa(event.target.value)}
                 placeholder="e.g. breɪk ə lɛɡ"
-                className="font-ipa mt-1 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg placeholder:text-fg-subtle outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+                className="font-ipa w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg placeholder:text-fg-subtle outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
             <div>
-              <label htmlFor="edit-phrase-translation" className="text-body-sm font-semibold text-fg">
+              <label htmlFor="edit-phrase-translation" className="block text-body-sm font-bold text-fg mb-1.5">
                 Traducción al español <span className="font-normal text-fg-subtle">(opcional)</span>
               </label>
               <input
@@ -218,13 +223,13 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
                 value={translation}
                 onChange={(event) => setTranslation(event.target.value)}
                 placeholder="e.g. Buena suerte"
-                className="mt-1 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg placeholder:text-fg-subtle outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+                className="w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg placeholder:text-fg-subtle outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="edit-phrase-meaning" className="text-body-sm font-semibold text-fg">
+            <label htmlFor="edit-phrase-meaning" className="block text-body-sm font-bold text-fg mb-1.5">
               Significado / Nota de uso <span className="font-normal text-fg-subtle">(opcional)</span>
             </label>
             <textarea
@@ -233,12 +238,12 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
               onChange={(event) => setMeaning(event.target.value)}
               rows={2}
               placeholder="e.g. Used to wish good luck to actors before a performance."
-              className="mt-1 w-full resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg placeholder:text-fg-subtle outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+              className="w-full resize-none rounded-2xl border border-border-subtle bg-surface-sunken/80 p-3.5 text-body-sm text-fg placeholder:text-fg-subtle outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
           <div>
-            <label htmlFor="edit-phrase-context" className="text-body-sm font-semibold text-fg">
+            <label htmlFor="edit-phrase-context" className="block text-body-sm font-bold text-fg mb-1.5">
               Contexto / Dónde la escuchaste <span className="font-normal text-fg-subtle">(opcional)</span>
             </label>
             <input
@@ -246,30 +251,34 @@ export function EditPhraseModal({ trackedItem, onClose, onSubmit }: Props) {
               value={context}
               onChange={(event) => setContext(event.target.value)}
               placeholder="e.g. In a theater before the show"
-              className="mt-1 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2 text-body-sm text-fg placeholder:text-fg-subtle outline-none focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+              className="w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg placeholder:text-fg-subtle outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
           {error ? (
-            <p role="alert" className="text-body-sm text-error">
+            <p role="alert" className="text-body-sm text-error font-medium">
               {error}
             </p>
           ) : null}
         </div>
 
-        <footer className="flex justify-end gap-2 border-t border-border-subtle bg-surface-base px-[var(--layout-card-pad)] py-4">
-          <Button variant="ghost" onClick={onClose} disabled={saving || enriching}>
+        <footer className="mt-6 pt-4 border-t border-border-subtle flex justify-end gap-2.5">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={saving || enriching}
+            className="focus-ring rounded-full px-5 py-2 text-body-sm font-semibold border border-border-subtle bg-surface-raised hover:bg-surface-sunken text-fg transition-colors"
+          >
             Cancelar
-          </Button>
-          <Button
+          </button>
+          <button
             type="submit"
             disabled={!text.trim() || saving || enriching}
-            isLoading={saving}
-            icon={<CornerDownLeft size={14} />}
-            iconPosition="right"
+            aria-label="Guardar cambios"
+            className="focus-ring rounded-full px-5 py-2 bg-primary text-on-primary font-semibold text-body-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-xs"
           >
-            Guardar cambios
-          </Button>
+            {saving ? "Guardando..." : "Guardar cambios ↵"}
+          </button>
         </footer>
       </form>
     </div>

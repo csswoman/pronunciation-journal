@@ -361,7 +361,9 @@ function entityKeyFor(entry: SyncOutboxEntry): string {
     const payload = entry.payload as Record<string, unknown>
     const identifier = typeof payload.p_word_id === 'string'
       ? payload.p_word_id
-      : `${String(payload.p_user_id ?? '')}:${String(payload.p_topic ?? '')}`
+      : typeof payload.p_contrast_id === 'string'
+        ? `${String(payload.p_user_id ?? entry.userId)}:${payload.p_contrast_id}`
+        : `${String(payload.p_user_id ?? '')}:${String(payload.p_topic ?? '')}`
     return `rpc:${entry.rpcName}:${identifier}`
   }
 

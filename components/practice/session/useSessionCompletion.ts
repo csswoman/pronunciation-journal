@@ -21,7 +21,7 @@ export function useSessionCompletion({ phase, results, config, user, completedRe
   useEffect(() => {
     if (phase !== 'complete' || completedRef.current) return
     completedRef.current = true
-    const sessionResult = buildSessionResult(results)
+    const sessionResult = buildSessionResult(results, sessionIdRef.current)
     onSessionComplete(sessionResult)
     if (user) {
       setProgressSaveStatus((prev) => (prev === 'error' ? prev : 'saving'))

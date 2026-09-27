@@ -400,6 +400,9 @@ export interface CachedContrastProgressRecord {
   correctAnswers: number;
   streak: number;
   masteryPct: number;
+  rawMastery?: number | null;
+  rawMasteryUpdatedAt?: string | null;
+  masterySessionCount?: number;
   adaptiveScore?: number;
   observationCount?: number;
   updatedAt: string;

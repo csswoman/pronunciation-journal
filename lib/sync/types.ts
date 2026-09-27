@@ -26,7 +26,12 @@ export type SyncTable =
   | 'ai_feedback_reports'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
-export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event' | 'apply_essential_word_contrast_observation' | 'merge_user_learning_state_snapshot'
+export type SyncRpc =
+  | 'apply_word_bank_rating_event'
+  | 'apply_topic_srs_rating_event'
+  | 'apply_essential_word_contrast_observation'
+  | 'merge_user_learning_state_snapshot'
+  | 'apply_contrast_session_result'
 
 /**
  * DML operations supported, plus 'rpc' — an outbox entry whose `payload` is

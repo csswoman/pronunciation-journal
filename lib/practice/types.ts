@@ -186,6 +186,8 @@ export type ExerciseResult = PracticeAnswer & { completedAt: Date }
 
 export type SessionResult = {
   results: ExerciseResult[]
+  /** Stable persisted session identity for idempotent domain writers. */
+  sessionId?: string
   /** Evaluated answers used as the accuracy denominator; activity may be larger. */
   evaluatedTotal?: number
   /** Overall accuracy as a percentage (0-100). */

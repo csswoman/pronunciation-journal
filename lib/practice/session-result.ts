@@ -5,7 +5,7 @@ function emptyBySlug(): SessionResult['bySlug'] {
   return {} as SessionResult['bySlug']
 }
 
-export function buildSessionResult(results: ExerciseResult[]): SessionResult {
+export function buildSessionResult(results: ExerciseResult[], sessionId?: string): SessionResult {
   const scoredResults = results.filter(isEvaluatedPracticeAnswer)
   const total = scoredResults.length
   const correct = scoredResults.filter((r) => r.isCorrect).length
@@ -21,5 +21,5 @@ export function buildSessionResult(results: ExerciseResult[]): SessionResult {
     }
     bySlug[r.slug] = entry
   }
-  return { results, evaluatedTotal: total, accuracy, totalTimeMs, bySlug }
+  return { results, sessionId, evaluatedTotal: total, accuracy, totalTimeMs, bySlug }
 }

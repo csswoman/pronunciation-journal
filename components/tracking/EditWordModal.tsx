@@ -1,13 +1,16 @@
 "use client";
 
-// Sub-components:
+// Planned structure:
 // <EditWordModal>
-//   <form (Modal container, header, input fields, AI enrich action, footer)>
+//   <Backdrop />
+//   <ModalContainer: Header(Icon + BricolageTitle + Subtitle + RoundCloseButton) />
+//   <ModalForm: WordInput + AIEnrichButton + IPA + Translation + Meaning + Context />
+//   <ModalFooter: NoticeText + CancelButton + SaveButton />
 // </EditWordModal>
 
 import { useEffect, useRef, useState } from "react";
 import { CornerDownLeft, Pencil, Sparkles, X } from "@/components/icons";
-import Button from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import type { WordDetailsUpdate } from "@/lib/word-bank/queries";
 
@@ -119,8 +122,7 @@ export function EditWordModal({ word, onClose, onSubmit }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-[var(--layout-card-pad)]"
-      style={{ background: "var(--overlay-medium)" }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-[fade-in_150ms_ease-out]"
       onClick={() => !saving && !enriching && onClose()}
     >
       <form
@@ -132,19 +134,21 @@ export function EditWordModal({ word, onClose, onSubmit }: Props) {
           void submit();
         }}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised shadow-xl"
+        className="w-full max-w-2xl overflow-hidden rounded-[28px] border border-border-subtle bg-surface-raised p-6 sm:p-7 shadow-2xl transition-all"
       >
-        <header className="flex items-start justify-between gap-4 border-b border-border-subtle layout-card-pad">
+        <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex gap-3">
-            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-primary-soft text-primary">
+            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary-soft text-primary">
               <Pencil size={18} aria-hidden />
             </span>
             <div>
-              <p className="font-kicker text-fg-subtle">MIS PALABRAS</p>
-              <h2 id="edit-word-title" className="mt-1 text-h3 text-fg">
+              <span className="font-mono text-overline font-semibold uppercase tracking-wider text-fg-subtle">
+                MIS PALABRAS
+              </span>
+              <h2 id="edit-word-title" className="font-display text-2xl font-bold text-fg mt-0.5">
                 Editar palabra
               </h2>
-              <p className="mt-1 text-body-sm text-fg-muted">
+              <p className="mt-1 text-body-sm text-fg-muted font-medium">
                 Corrige o enriquece los detalles con IA para estudiar mejor.
               </p>
             </div>
@@ -154,109 +158,117 @@ export function EditWordModal({ word, onClose, onSubmit }: Props) {
             onClick={onClose}
             disabled={saving || enriching}
             aria-label="Cerrar"
-            className="min-h-11 min-w-11 rounded-[var(--radius-sm)] p-2 text-fg-subtle transition-colors hover:bg-surface-sunken hover:text-fg"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken text-fg-subtle transition-colors hover:bg-surface-raised hover:text-fg"
           >
-            <X size={17} />
+            <X size={18} />
           </button>
-        </header>
+        </div>
 
-        <div className="grid gap-4 layout-card-pad sm:grid-cols-2">
-          <div className="sm:col-span-2 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <label className="flex-1 text-body-sm font-semibold text-fg">
-              Palabra
+        <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="flex-1">
+              <label className="block text-body-sm font-bold text-fg mb-1.5">
+                Palabra
+              </label>
               <input
                 ref={wordInputRef}
                 value={text}
                 onChange={(event) => setText(event.target.value)}
                 required
-                className="mt-2 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 text-fg outline-none transition-[border-color,box-shadow] focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+                className="w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-md font-medium text-fg outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
-            </label>
-            <Button
+            </div>
+            <button
               type="button"
-              variant="secondary"
-              size="sm"
               onClick={() => void handleEnrich()}
               disabled={!text.trim() || enriching || saving}
-              isLoading={enriching}
-              icon={<Sparkles size={14} className="text-primary" />}
-              className="shrink-0 sm:mb-0.5"
+              className="focus-ring inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-2xl border border-primary/20 bg-primary-soft px-4 text-body-sm font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-50"
             >
-              Enriquecer con IA
-            </Button>
+              <Sparkles size={16} className={enriching ? "animate-spin" : ""} />
+              <span>{enriching ? "Enriqueciendo…" : "Enriquecer con IA"}</span>
+            </button>
           </div>
 
-          <label className="text-body-sm font-semibold text-fg">
-            IPA <span className="font-normal text-fg-subtle">(opcional)</span>
-            <input
-              value={ipa}
-              onChange={(event) => setIpa(event.target.value)}
-              placeholder="rɪˈzɪliənt"
-              className="mt-2 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 font-ipa text-fg outline-none transition-[border-color,box-shadow] focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
-            />
-          </label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-body-sm font-bold text-fg mb-1.5">
+                IPA <span className="font-normal text-fg-subtle">(opcional)</span>
+              </label>
+              <input
+                value={ipa}
+                onChange={(event) => setIpa(event.target.value)}
+                placeholder="rɪˈzɪliənt"
+                className="font-ipa w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
 
-          <label className="text-body-sm font-semibold text-fg">
-            Traducción <span className="font-normal text-fg-subtle">(opcional)</span>
-            <input
-              value={translation}
-              onChange={(event) => setTranslation(event.target.value)}
-              className="mt-2 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 text-fg outline-none transition-[border-color,box-shadow] focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
-            />
-          </label>
+            <div>
+              <label className="block text-body-sm font-bold text-fg mb-1.5">
+                Traducción <span className="font-normal text-fg-subtle">(opcional)</span>
+              </label>
+              <input
+                value={translation}
+                onChange={(event) => setTranslation(event.target.value)}
+                className="w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </div>
 
-          <label className="sm:col-span-2 text-body-sm font-semibold text-fg">
-            Significado en inglés <span className="font-normal text-fg-subtle">(opcional)</span>
+          <div>
+            <label className="block text-body-sm font-bold text-fg mb-1.5">
+              Significado en inglés <span className="font-normal text-fg-subtle">(opcional)</span>
+            </label>
             <input
               value={meaning}
               onChange={(event) => setMeaning(event.target.value)}
-              className="mt-2 w-full rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 text-fg outline-none transition-[border-color,box-shadow] focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+              className="w-full rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-3 text-body-sm text-fg outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
-          </label>
+          </div>
 
-          <label className="sm:col-span-2 text-body-sm font-semibold text-fg">
-            Frase o contexto <span className="font-normal text-fg-subtle">(opcional)</span>
+          <div>
+            <label className="block text-body-sm font-bold text-fg mb-1.5">
+              Frase o contexto <span className="font-normal text-fg-subtle">(opcional)</span>
+            </label>
             <textarea
               value={context}
               onChange={(event) => setContext(event.target.value)}
               rows={3}
               placeholder="La frase real donde la escuchaste."
-              className="mt-2 w-full resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-3 py-2.5 text-fg outline-none transition-[border-color,box-shadow] focus:border-[var(--border-focus)] focus:shadow-[0_0_0_3px_var(--focus-color)]"
+              className="w-full resize-none rounded-2xl border border-border-subtle bg-surface-sunken/80 p-3.5 text-body-sm text-fg outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
-          </label>
+          </div>
 
           {error ? (
-            <p role="alert" className="sm:col-span-2 text-body-sm text-error">
+            <p role="alert" className="text-body-sm text-error font-medium">
               {error}
             </p>
           ) : null}
         </div>
 
-        <footer className="flex flex-col-reverse gap-3 border-t border-border-subtle bg-surface-base px-[var(--layout-card-pad)] py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-caption text-fg-subtle">
+        <footer className="mt-6 pt-4 border-t border-border-subtle flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-caption text-fg-subtle font-medium">
             La programación de repaso no cambia.
           </p>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="ghost"
+          <div className="flex justify-end gap-2.5">
+            <button
+              type="button"
               onClick={onClose}
               disabled={saving || enriching}
+              className="focus-ring rounded-full px-5 py-2 text-body-sm font-semibold border border-border-subtle bg-surface-raised hover:bg-surface-sunken text-fg transition-colors"
             >
               Cancelar
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
               disabled={!text.trim() || saving || enriching}
-              isLoading={saving}
-              icon={<CornerDownLeft size={14} />}
-              iconPosition="right"
+              aria-label="Guardar cambios"
+              className="focus-ring rounded-full px-5 py-2 bg-primary text-on-primary font-semibold text-body-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-xs"
             >
-              Guardar cambios
-            </Button>
+              {saving ? "Guardando..." : "Guardar cambios ↵"}
+            </button>
           </div>
         </footer>
       </form>
     </div>
   );
 }
-

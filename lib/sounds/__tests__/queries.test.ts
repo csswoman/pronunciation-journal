@@ -30,6 +30,11 @@ describe("sound query projections", () => {
           correct_answers: 3,
           streak: 1,
           mastery_pct: 72,
+          raw_mastery: 80,
+          raw_mastery_updated_at: null,
+          mastery_session_count: 4,
+          adaptive_score: 0,
+          observation_count: 0,
         },
       ],
       error: null,
@@ -42,7 +47,7 @@ describe("sound query projections", () => {
 
     expect(rows).toHaveLength(1);
     expect(selectMock).toHaveBeenCalledWith(
-      "id,user_id,contrast_id,ease_factor,interval_days,next_review,last_seen,total_attempts,correct_answers,streak,mastery_pct"
+      "id,user_id,contrast_id,ease_factor,interval_days,next_review,last_seen,total_attempts,correct_answers,streak,mastery_pct,raw_mastery,raw_mastery_updated_at,mastery_session_count,adaptive_score,observation_count"
     );
   });
 });

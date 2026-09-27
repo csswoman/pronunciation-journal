@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getAllSounds, getSoundById, getAllContrastProgress, getContrastProgress } from '@/lib/phoneme-practice/queries'
 import { db } from '@/lib/db'
 
+const { mockFrom } = vi.hoisted(() => ({ mockFrom: vi.fn() }))
+
 vi.mock('@/lib/supabase/client', () => ({
   getSupabaseBrowserClient: () => ({
-    from: () => {
-      throw new Error('Network error: Supabase is offline')
-    },
+    from: mockFrom,
   }),
 }))
 
@@ -20,6 +20,11 @@ describe('phoneme queries offline fallback', () => {
     // Clear test tables
     await db.cachedSounds.clear()
     await db.cachedContrastProgress.clear()
+    await db.syncOutbox.clear()
+    mockFrom.mockReset()
+    mockFrom.mockImplementation(() => {
+      throw new Error('Network error: Supabase is offline')
+    })
   })
 
   it('falls back to cachedSounds when Supabase fails on getAllSounds', async () => {
@@ -93,5 +98,80 @@ describe('phoneme queries offline fallback', () => {
     expect(result).not.toBeNull()
     expect(result?.contrast_id).toBe(contrastKey)
     expect(result?.mastery_pct).toBe(75)
+  })
+
+  it('keeps a locally pending contrast event ahead of a stale remote snapshot', async () => {
+    const contrastKey = '/ð/|/θ/'
+    await db.cachedContrastProgress.put({
+      key: `user-1:${contrastKey}`,
+      userId: 'user-1',
+      contrastId: contrastKey,
+      easeFactor: 2.3,
+      intervalDays: 2,
+      nextReview: '2026-09-04T00:00:00.000Z',
+      lastSeen: '2026-09-02T00:00:00.000Z',
+      totalAttempts: 15,
+      correctAnswers: 12,
+      streak: 4,
+      masteryPct: 82,
+      updatedAt: '2026-09-02T00:00:00.000Z',
+    })
+    await db.syncOutbox.add({
+      userId: 'user-1',
+      table: 'user_contrast_progress',
+      operation: 'rpc',
+      rpcName: 'apply_contrast_session_result',
+      payload: { p_contrast_id: contrastKey },
+      status: 'pending',
+      createdAt: '2026-09-02T00:00:00.000Z',
+      retryCount: 0,
+    })
+
+    const result = await getContrastProgress('user-1', contrastKey)
+    expect(result?.total_attempts).toBe(15)
+    expect(result?.mastery_pct).toBe(82)
+  })
+
+  it('keeps a locally pending projection when getAll receives a stale remote snapshot', async () => {
+    const contrastKey = '/ð/|/θ/'
+    await db.cachedContrastProgress.put({
+      key: `user-1:${contrastKey}`,
+      userId: 'user-1',
+      contrastId: contrastKey,
+      easeFactor: 2.3,
+      intervalDays: 2,
+      nextReview: null,
+      lastSeen: '2026-09-02T00:00:00.000Z',
+      totalAttempts: 15,
+      correctAnswers: 12,
+      streak: 4,
+      masteryPct: 82,
+      updatedAt: '2026-09-02T00:00:00.000Z',
+    })
+    await db.syncOutbox.add({
+      userId: 'user-1',
+      table: 'user_contrast_progress',
+      operation: 'rpc',
+      rpcName: 'apply_contrast_session_result',
+      payload: { p_contrast_id: contrastKey },
+      status: 'pending',
+      createdAt: '2026-09-02T00:00:00.000Z',
+      retryCount: 0,
+    })
+    mockFrom.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockResolvedValue({
+        data: [{
+          id: 'remote', user_id: 'user-1', contrast_id: contrastKey,
+          ease_factor: 2.5, interval_days: 1, next_review: null,
+          last_seen: '2026-09-01T00:00:00.000Z', total_attempts: 10,
+          correct_answers: 8, streak: 2, mastery_pct: 70,
+        }],
+        error: null,
+      }),
+    })
+
+    const result = await getAllContrastProgress('user-1')
+    expect(result[0]).toMatchObject({ total_attempts: 15, mastery_pct: 82 })
   })
 })

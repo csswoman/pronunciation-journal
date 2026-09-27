@@ -1108,6 +1108,45 @@ export type Database = {
         }
         Relationships: []
       }
+      contrast_session_events: {
+        Row: {
+          attempt_id: string
+          contrast_id: string
+          created_at: string
+          id: string
+          occurred_at: string
+          session_accuracy: number
+          session_correct: number
+          session_passed: boolean
+          session_total: number
+          user_id: string
+        }
+        Insert: {
+          attempt_id: string
+          contrast_id: string
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          session_accuracy: number
+          session_correct: number
+          session_passed?: boolean
+          session_total: number
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string
+          contrast_id?: string
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          session_accuracy?: number
+          session_correct?: number
+          session_passed?: boolean
+          session_total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_contrast_progress: {
         Row: {
           adaptive_score: number
@@ -1119,6 +1158,9 @@ export type Database = {
           interval_days: number
           last_seen: string | null
           mastery_pct: number
+          raw_mastery: number | null
+          raw_mastery_updated_at: string | null
+          mastery_session_count: number
           next_review: string | null
           observation_count: number
           streak: number
@@ -1136,6 +1178,9 @@ export type Database = {
           interval_days?: number
           last_seen?: string | null
           mastery_pct?: number
+          raw_mastery?: number | null
+          raw_mastery_updated_at?: string | null
+          mastery_session_count?: number
           next_review?: string | null
           observation_count?: number
           streak?: number
@@ -1153,6 +1198,9 @@ export type Database = {
           interval_days?: number
           last_seen?: string | null
           mastery_pct?: number
+          raw_mastery?: number | null
+          raw_mastery_updated_at?: string | null
+          mastery_session_count?: number
           next_review?: string | null
           observation_count?: number
           streak?: number
@@ -1552,6 +1600,24 @@ export type Database = {
           next_repetitions: number
           next_review_at: string
         }[]
+      }
+      apply_contrast_session_result: {
+        Args: {
+          p_attempt_id: string
+          p_contrast_id: string
+          p_ease_factor: number
+          p_interval_days: number
+          p_mastery_pct: number
+          p_next_review: string
+          p_raw_mastery?: number | null
+          p_occurred_at?: string | null
+          p_session_accuracy?: number | null
+          p_session_correct: number
+          p_session_passed?: boolean | null
+          p_session_total: number
+          p_streak: number
+        }
+        Returns: undefined
       }
       apply_essential_word_contrast_observation: {
         Args: {

@@ -160,8 +160,14 @@ export interface UserContrastProgress {
   total_attempts: number
   correct_answers: number
   streak: number
-  /** Dynamic mastery 0–100 (EMA with temporal decay). */
+  /** Dynamic mastery 0–100 (EMA scaled by repetition factor for presentation). */
   mastery_pct: number
+  /** Stored raw EMA 0–100 before presentation scaling (plan 048). */
+  raw_mastery?: number | null
+  /** Timestamp of the latest Sound Lab evidence used by raw_mastery. */
+  raw_mastery_updated_at?: string | null
+  /** Count of completed Sound Lab sessions used for presentation confidence. */
+  mastery_session_count?: number
   adaptive_score?: number
   observation_count?: number
 }

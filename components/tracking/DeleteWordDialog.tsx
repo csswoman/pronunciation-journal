@@ -1,8 +1,13 @@
 "use client";
 
+// Planned structure:
+// <DeleteWordDialog>
+//   <Backdrop />
+//   <DialogContainer: IconHeader + Title(Bricolage) + BodyText + FooterButtons />
+// </DeleteWordDialog>
+
 import { useEffect, useState } from "react";
 import { Trash2 } from "@/components/icons";
-import Button from "@/components/ui/Button";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 
 interface Props {
@@ -37,10 +42,53 @@ export function DeleteWordDialog({ word, onClose, onConfirm }: Props) {
     }
   };
 
-  return <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "var(--overlay-medium)" }} onClick={() => !deleting && onClose()}>
-    <section role="alertdialog" aria-modal="true" aria-labelledby="delete-word-title" aria-describedby="delete-word-description" onClick={(event) => event.stopPropagation()} className="w-full max-w-md rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised shadow-xl">
-      <div className="layout-card-pad"><span className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] bg-error-soft text-error"><Trash2 size={18} aria-hidden /></span><h2 id="delete-word-title" className="mt-4 text-h3 text-fg">Eliminar “{word.text}”</h2><p id="delete-word-description" className="mt-2 text-body-sm text-fg-muted">Se eliminarán la palabra, sus datos y su progreso de repaso. Esta acción no se puede deshacer.</p>{error ? <p role="alert" className="mt-3 text-body-sm text-error">{error}</p> : null}</div>
-      <footer className="flex justify-end gap-2 border-t border-border-subtle bg-surface-base px-[var(--layout-card-pad)] py-4"><Button variant="ghost" onClick={onClose} disabled={deleting}>Cancelar</Button><Button variant="danger" onClick={() => void remove()} disabled={deleting} isLoading={deleting} icon={<Trash2 size={15} aria-hidden />}>Eliminar</Button></footer>
-    </section>
-  </div>;
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-[fade-in_150ms_ease-out]"
+      onClick={() => !deleting && onClose()}
+    >
+      <section
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-word-title"
+        aria-describedby="delete-word-description"
+        onClick={(event) => event.stopPropagation()}
+        className="w-full max-w-md overflow-hidden rounded-[28px] border border-border-subtle bg-surface-raised p-6 shadow-2xl transition-all"
+      >
+        <div>
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 dark:bg-red-950/40 dark:text-red-400">
+            <Trash2 size={20} aria-hidden />
+          </span>
+          <h2 id="delete-word-title" className="mt-4 font-display text-2xl font-bold text-fg leading-tight">
+            Eliminar “{word.text}”
+          </h2>
+          <p id="delete-word-description" className="mt-2 text-body-sm text-fg-muted leading-relaxed">
+            Se eliminarán la palabra, sus datos y su progreso de repaso. Esta acción no se puede deshacer.
+          </p>
+          {error ? <p role="alert" className="mt-3 text-body-sm text-error font-medium">{error}</p> : null}
+        </div>
+
+        <footer className="mt-6 pt-4 border-t border-border-subtle flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={deleting}
+            className="focus-ring rounded-full px-5 py-2 text-body-sm font-semibold border border-border-subtle bg-surface-raised hover:bg-surface-sunken text-fg transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => void remove()}
+            disabled={deleting}
+            aria-label="Eliminar"
+            className="focus-ring rounded-full px-5 py-2 bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 font-semibold text-body-sm disabled:opacity-50 transition-colors shadow-xs flex items-center gap-2"
+          >
+            <Trash2 size={16} aria-hidden />
+            <span>{deleting ? "Eliminando..." : "Eliminar"}</span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  );
 }

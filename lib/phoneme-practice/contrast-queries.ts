@@ -1,12 +1,51 @@
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import { db } from '@/lib/db'
+import { db, type CachedContrastProgressRecord } from '@/lib/db'
 import { enqueue } from '@/lib/sync/sync-manager'
 import { canonicalizeContrastId } from './phoneme-similarity'
 import { canonicalizeProgressRows } from '@/lib/sounds/normalization'
+import { priorMasterySessionCount } from './mastery-pct'
+import {
+  fromCachedProgressRecord,
+  hasPendingContrastEvent,
+  preferPendingContrastProgress,
+  toCachedProgressRecord,
+} from './contrast-cache'
 import type { UserContrastProgress, SRResult } from './types'
 
-function supabase() {
+export function supabase() {
   return getSupabaseBrowserClient()
+}
+
+const PROGRESS_SELECT = 'id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct, raw_mastery, raw_mastery_updated_at, mastery_session_count, adaptive_score, observation_count'
+
+function latestTimestamp(previous: string | null | undefined, next: string): string {
+  const previousTime = previous ? Date.parse(previous) : Number.NaN
+  const nextTime = Date.parse(next)
+  if (!Number.isFinite(nextTime)) return previous ?? next
+  if (!Number.isFinite(previousTime) || nextTime >= previousTime) return next
+  return previous!
+}
+
+async function hasPersistedContrastEvent(
+  userId: string,
+  contrastId: string,
+  attemptId: string | undefined,
+): Promise<boolean> {
+  if (!attemptId) return false
+  try {
+    const { data, error } = await supabase()
+      .from('contrast_session_events')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('attempt_id', attemptId)
+      .eq('contrast_id', contrastId)
+      .maybeSingle()
+    return !error && Boolean(data)
+  } catch {
+    // The event table may not be available during a rolling migration or
+    // while offline. The idempotent RPC remains the final authority.
+    return false
+  }
 }
 
 export async function getAllContrastProgress(
@@ -15,49 +54,22 @@ export async function getAllContrastProgress(
   try {
     const { data, error } = await supabase()
       .from('user_contrast_progress')
-      .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct, adaptive_score, observation_count')
+      .select(PROGRESS_SELECT)
       .eq('user_id', userId)
     if (error) throw error
-    const canonical = canonicalizeProgressRows(data as unknown as UserContrastProgress[])
+    const canonical = await preferPendingContrastProgress(
+      userId,
+      canonicalizeProgressRows(data as unknown as UserContrastProgress[]),
+    )
     if (typeof indexedDB !== 'undefined') {
-      void db.cachedContrastProgress.bulkPut(canonical.map(r => ({
-        key: `${userId}:${r.contrast_id}`,
-        id: r.id,
-        userId: r.user_id,
-        contrastId: r.contrast_id,
-        easeFactor: r.ease_factor,
-        intervalDays: r.interval_days,
-        nextReview: r.next_review,
-        lastSeen: r.last_seen,
-        totalAttempts: r.total_attempts,
-        correctAnswers: r.correct_answers,
-        streak: r.streak,
-        masteryPct: r.mastery_pct,
-        adaptiveScore: r.adaptive_score,
-        observationCount: r.observation_count,
-        updatedAt: new Date().toISOString(),
-      }))).catch(() => {})
+      await db.cachedContrastProgress.bulkPut(canonical.map((r) => toCachedProgressRecord(userId, r))).catch(() => {})
     }
     return canonical
   } catch (err) {
     if (typeof indexedDB !== 'undefined') {
       const local = await db.cachedContrastProgress.where('userId').equals(userId).toArray().catch(() => [])
       if (local.length > 0) {
-        return canonicalizeProgressRows(local.map(r => ({
-          id: r.id ?? r.key,
-          user_id: r.userId,
-          contrast_id: r.contrastId,
-          ease_factor: r.easeFactor,
-          interval_days: r.intervalDays,
-          next_review: r.nextReview,
-          last_seen: r.lastSeen,
-          total_attempts: r.totalAttempts,
-          correct_answers: r.correctAnswers,
-          streak: r.streak,
-          mastery_pct: r.masteryPct,
-          adaptive_score: r.adaptiveScore,
-          observation_count: r.observationCount,
-        })))
+        return canonicalizeProgressRows(local.map(fromCachedProgressRecord))
       }
     }
     throw err
@@ -78,32 +90,24 @@ export async function getContrastProgress(
   contrastId: string
 ): Promise<UserContrastProgress | null> {
   const canonicalContrastId = canonicalizeContrastId(contrastId)
+  if (typeof indexedDB !== 'undefined') {
+    const local = await db.cachedContrastProgress.get(`${userId}:${canonicalContrastId}`).catch(() => undefined)
+    if (local && await hasPendingContrastEvent(userId, canonicalContrastId)) {
+      return canonicalizeProgressRows([fromCachedProgressRecord(local)])[0] ?? null
+    }
+  }
   try {
     const { data, error } = await supabase()
       .from('user_contrast_progress')
-      .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
+      .select(PROGRESS_SELECT)
       .eq('user_id', userId)
       .eq('contrast_id', canonicalContrastId)
       .maybeSingle()
     if (error) throw error
     if (data) {
-      const canonical = canonicalizeProgressRows([data as UserContrastProgress])[0] ?? null
+      const canonical = canonicalizeProgressRows([data as unknown as UserContrastProgress])[0] ?? null
       if (canonical && typeof indexedDB !== 'undefined') {
-        void db.cachedContrastProgress.put({
-          key: `${userId}:${canonical.contrast_id}`,
-          id: canonical.id,
-          userId: canonical.user_id,
-          contrastId: canonical.contrast_id,
-          easeFactor: canonical.ease_factor,
-          intervalDays: canonical.interval_days,
-          nextReview: canonical.next_review,
-          lastSeen: canonical.last_seen,
-          totalAttempts: canonical.total_attempts,
-          correctAnswers: canonical.correct_answers,
-          streak: canonical.streak,
-          masteryPct: canonical.mastery_pct,
-          updatedAt: new Date().toISOString(),
-        }).catch(() => {})
+        await db.cachedContrastProgress.put(toCachedProgressRecord(userId, canonical)).catch(() => {})
       }
       return canonical
     }
@@ -112,26 +116,14 @@ export async function getContrastProgress(
     if (typeof indexedDB !== 'undefined') {
       const local = await db.cachedContrastProgress.get(`${userId}:${canonicalContrastId}`).catch(() => undefined)
       if (local) {
-        return canonicalizeProgressRows([{
-          id: local.id ?? local.key,
-          user_id: local.userId,
-          contrast_id: local.contrastId,
-          ease_factor: local.easeFactor,
-          interval_days: local.intervalDays,
-          next_review: local.nextReview,
-          last_seen: local.lastSeen,
-          total_attempts: local.totalAttempts,
-          correct_answers: local.correctAnswers,
-          streak: local.streak,
-          mastery_pct: local.masteryPct,
-        }])[0] ?? null
+        return canonicalizeProgressRows([fromCachedProgressRecord(local)])[0] ?? null
       }
     }
     throw err
   }
 }
 
-/** Upserts the contrast row after a session. */
+/** Updates the contrast row after a session, supporting incremental deltas and raw EMA persistence. */
 export async function updateContrastProgress(
   userId: string,
   contrastId: string,
@@ -139,92 +131,116 @@ export async function updateContrastProgress(
   sessionTotal: number,
   sr: SRResult,
   masteryPct: number,
+  rawMastery?: number | null,
+  attemptId?: string,
+  occurredAt?: string,
+  sessionAccuracy?: number,
 ): Promise<void> {
   const canonicalContrastId = canonicalizeContrastId(contrastId)
-  const current = await getContrastProgress(userId, canonicalContrastId)
-
-  const newTotal   = (current?.total_attempts  ?? 0) + sessionTotal
-  const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
-  const nowIso = new Date().toISOString()
+  let remoteCurrent: UserContrastProgress | null = null
+  try {
+    remoteCurrent = await getContrastProgress(userId, canonicalContrastId)
+  } catch (error) {
+    if (typeof indexedDB === 'undefined') throw error
+    // A new contrast can be completed while offline with no cache row yet;
+    // the atomic local projection + RPC outbox write will establish its base.
+  }
+  if (await hasPersistedContrastEvent(userId, canonicalContrastId, attemptId)) return
+  const nowIso = occurredAt ?? new Date().toISOString()
+  const effectiveAttemptId = attemptId ?? crypto.randomUUID()
+  const resolvedRawMastery = rawMastery ?? remoteCurrent?.raw_mastery ?? null
+  const rpcPayload = {
+    p_contrast_id: canonicalContrastId,
+    p_session_correct: sessionCorrect,
+    p_session_total: sessionTotal,
+    // These legacy fields remain in the function signature for rolling
+    // compatibility; the server now derives SRS and mastery from the event.
+    p_streak: sr.streak,
+    p_ease_factor: sr.ease_factor,
+    p_interval_days: sr.interval_days,
+    p_next_review: sr.next_review.toISOString(),
+    p_mastery_pct: masteryPct,
+    p_raw_mastery: resolvedRawMastery,
+    p_attempt_id: effectiveAttemptId,
+    p_session_accuracy: sessionAccuracy ?? (sessionTotal > 0 ? (sessionCorrect / sessionTotal) * 100 : 0),
+    p_occurred_at: nowIso,
+    p_session_passed: sessionTotal > 0 && sessionCorrect >= Math.ceil(sessionTotal / 2),
+  }
 
   if (typeof indexedDB !== 'undefined') {
-    void db.cachedContrastProgress.put({
-      key: `${userId}:${canonicalContrastId}`,
-      id: current?.id,
-      userId,
-      contrastId: canonicalContrastId,
-      totalAttempts: newTotal,
-      correctAnswers: newCorrect,
-      streak: sr.streak,
-      easeFactor: sr.ease_factor,
-      intervalDays: sr.interval_days,
-      masteryPct,
-      lastSeen: nowIso,
-      nextReview: sr.next_review.toISOString(),
-      updatedAt: nowIso,
-    }).catch(() => {})
+    await db.transaction('rw', [db.cachedContrastProgress, db.syncOutbox], async () => {
+      // Read inside the same transaction as the write. Two tabs can finish
+      // offline sessions at once; using a snapshot read here would lose one
+      // local delta even though both RPC events were queued successfully.
+      const cached = await db.cachedContrastProgress.get(`${userId}:${canonicalContrastId}`)
+      const duplicate = await db.syncOutbox
+        .where('userId')
+        .equals(userId)
+        .filter((entry) => (
+          entry.rpcName === 'apply_contrast_session_result'
+          && entry.payload.p_contrast_id === canonicalContrastId
+          && entry.payload.p_attempt_id === effectiveAttemptId
+        ))
+        .first()
+      if (duplicate) return
+      const current = cached ? fromCachedProgressRecord(cached) : remoteCurrent
+      const newTotal = (current?.total_attempts ?? 0) + sessionTotal
+      const newCorrect = (current?.correct_answers ?? 0) + sessionCorrect
+      const resolvedRawMastery = rawMastery ?? current?.raw_mastery ?? null
+      const masterySessionCount = priorMasterySessionCount(current ?? {
+        total_attempts: 0,
+        mastery_session_count: 0,
+      }) + 1
+      const rawMasteryUpdatedAt = latestTimestamp(
+        current?.raw_mastery_updated_at ?? current?.last_seen,
+        nowIso,
+      )
+      const lastSeen = latestTimestamp(current?.last_seen, nowIso)
+      const localRecord: CachedContrastProgressRecord = {
+        key: `${userId}:${canonicalContrastId}`,
+        id: current?.id,
+        userId,
+        contrastId: canonicalContrastId,
+        totalAttempts: newTotal,
+        correctAnswers: newCorrect,
+        streak: sr.streak,
+        easeFactor: sr.ease_factor,
+        intervalDays: sr.interval_days,
+        masteryPct,
+        rawMastery: resolvedRawMastery,
+        rawMasteryUpdatedAt,
+        masterySessionCount,
+        adaptiveScore: current?.adaptive_score,
+        observationCount: current?.observation_count,
+        lastSeen,
+        nextReview: sr.next_review.toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      await db.cachedContrastProgress.put(localRecord)
+      await enqueue(
+        userId,
+        'user_contrast_progress',
+        'rpc',
+        rpcPayload,
+        undefined,
+        undefined,
+        'apply_contrast_session_result',
+        effectiveAttemptId,
+      )
+    })
+    return
   }
 
   await enqueue(
     userId,
     'user_contrast_progress',
-    'upsert',
-    {
-      user_id:         userId,
-      contrast_id:     canonicalContrastId,
-      total_attempts:  newTotal,
-      correct_answers: newCorrect,
-      streak:          sr.streak,
-      ease_factor:     sr.ease_factor,
-      interval_days:   sr.interval_days,
-      mastery_pct:     masteryPct,
-      last_seen:       nowIso,
-      next_review:     sr.next_review.toISOString(),
-    },
-    { user_id: userId, contrast_id: canonicalContrastId },
-    'user_id,contrast_id',
+    'rpc',
+    rpcPayload,
+    undefined,
+    undefined,
+    'apply_contrast_session_result',
+    effectiveAttemptId,
   )
 }
 
-/**
- * Returns contrasts due for review today (next_review <= now or null),
- * ordered by urgency.
- */
-export async function getContrastsForToday(
-  userId: string
-): Promise<UserContrastProgress[]> {
-  const now = new Date().toISOString()
-  try {
-    const { data, error } = await supabase()
-      .from('user_contrast_progress')
-      .select('id, user_id, contrast_id, ease_factor, interval_days, next_review, last_seen, total_attempts, correct_answers, streak, mastery_pct')
-      .eq('user_id', userId)
-      .or(`next_review.lte.${now},next_review.is.null`)
-      .order('next_review', { ascending: true })
-      .limit(10)
-    if (error) throw error
-    return canonicalizeProgressRows(data as UserContrastProgress[])
-  } catch (err) {
-    if (typeof indexedDB !== 'undefined') {
-      const all = await db.cachedContrastProgress.where('userId').equals(userId).toArray().catch(() => [])
-      const due = all.filter(r => !r.nextReview || r.nextReview <= now)
-      due.sort((a, b) => (a.nextReview ?? '').localeCompare(b.nextReview ?? ''))
-      if (due.length > 0) {
-        return canonicalizeProgressRows(due.slice(0, 10).map(r => ({
-          id: r.id ?? r.key,
-          user_id: r.userId,
-          contrast_id: r.contrastId,
-          ease_factor: r.easeFactor,
-          interval_days: r.intervalDays,
-          next_review: r.nextReview,
-          last_seen: r.lastSeen,
-          total_attempts: r.totalAttempts,
-          correct_answers: r.correctAnswers,
-          streak: r.streak,
-          mastery_pct: r.masteryPct,
-        })))
-      }
-    }
-    throw err
-  }
-}
+export { getContrastsForToday } from './contrast-schedule'

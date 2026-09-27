@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { UserContrastProgress } from '../types'
 import type { SessionResult, ExerciseResult } from '@/lib/practice/types'
+import { practiceEffectId } from '@/lib/practice/attempt-identity'
 
 const { mockUpdateContrastProgress, mockGetContrastProgress, mockRecordActivitySession, mockFlushOutbox } =
   vi.hoisted(() => ({
@@ -39,11 +40,12 @@ function makeResult(overrides: Partial<ExerciseResult> = {}): ExerciseResult {
   }
 }
 
-function makeSessionResult(results: ExerciseResult[]): SessionResult {
+function makeSessionResult(results: ExerciseResult[], sessionId?: string): SessionResult {
   const correct = results.filter((r) => r.isCorrect).length
   const total = results.length
   return {
     results,
+    sessionId,
     accuracy: total > 0 ? (correct / total) * 100 : 0,
     totalTimeMs: results.reduce((s, r) => s + r.timeMs, 0),
     bySlug: { pick_word: { total, correct } } as SessionResult['bySlug'],
@@ -101,6 +103,15 @@ describe('finishContrastSession', () => {
     expect(cid).toBe(CONTRAST_ID)
     expect(correct).toBe(1)
     expect(total).toBe(2)
+    expect(mockFlushOutbox).toHaveBeenCalledWith(USER_ID)
+  })
+
+  it('uses a stable session identity for the contrast event', async () => {
+    await finishContrastSession(USER_ID, CONTRAST_ID, makeSessionResult([makeResult()], 'session-1'))
+    const attemptId = mockUpdateContrastProgress.mock.calls[0][7]
+    expect(attemptId).toBe(
+      await practiceEffectId(USER_ID, 'session-1', 'contrast', CONTRAST_ID, 'sound-lab-session'),
+    )
   })
 
   it('records a normalized Sound Lab session while preserving contrast mastery', async () => {
@@ -191,6 +202,29 @@ describe('finishContrastSession', () => {
     const masteryArg = mockUpdateContrastProgress.mock.calls[0][5]
     expect(masteryArg).toBeGreaterThanOrEqual(90)
     expect(outcome.masteryPct).toBe(masteryArg)
+  })
+
+  it('keeps legacy confidence when the migrated session counter is still zero', async () => {
+    const progress = makeContrastProgress({
+      total_attempts: 10,
+      correct_answers: 7,
+      mastery_pct: 70,
+      mastery_session_count: 0,
+      raw_mastery: null,
+      observation_count: 0,
+      last_seen: new Date('2026-06-01T12:00:00Z').toISOString(),
+    })
+
+    await finishContrastSession(
+      USER_ID,
+      CONTRAST_ID,
+      makeSessionResult([makeResult({ isCorrect: true })]),
+      progress,
+      new Date('2026-06-01T12:00:00Z'),
+    )
+
+    const masteryArg = mockUpdateContrastProgress.mock.calls[0][5]
+    expect(masteryArg).toBeGreaterThanOrEqual(65)
   })
 
   it('skips duplicate activity recording when PracticeSession already owns it', async () => {

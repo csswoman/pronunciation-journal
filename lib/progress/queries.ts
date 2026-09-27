@@ -397,7 +397,7 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 
     supabase
       .from('user_contrast_progress')
-      .select('contrast_id, total_attempts, correct_answers, mastery_pct, last_seen')
+      .select('contrast_id, total_attempts, correct_answers, mastery_pct, raw_mastery, raw_mastery_updated_at, mastery_session_count, observation_count, last_seen')
       .eq('user_id', userId)
       .gt('total_attempts', 0)
       .order('total_attempts', { ascending: false })
@@ -441,7 +441,15 @@ export async function getSkillProfileData(userId: string): Promise<SkillProfileD
 
   const contrastRows = (phonemeResult.data ?? []) as Pick<
     UserContrastProgress,
-    'contrast_id' | 'total_attempts' | 'correct_answers' | 'mastery_pct' | 'last_seen'
+    | 'contrast_id'
+    | 'total_attempts'
+    | 'correct_answers'
+    | 'mastery_pct'
+    | 'raw_mastery'
+    | 'raw_mastery_updated_at'
+    | 'mastery_session_count'
+    | 'observation_count'
+    | 'last_seen'
   >[]
 
   const phonemes = rankWeakestSounds(contrastRows as UserContrastProgress[], { limit: 5 }).map((r) => ({

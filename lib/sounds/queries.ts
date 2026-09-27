@@ -6,7 +6,7 @@ import type { SessionResult } from "@/lib/practice/types";
 import { rankWeakestSounds } from "@/lib/phoneme-practice/mastery-pct";
 
 const USER_CONTRAST_PROGRESS_COLUMNS =
-  "id,user_id,contrast_id,ease_factor,interval_days,next_review,last_seen,total_attempts,correct_answers,streak,mastery_pct";
+  "id,user_id,contrast_id,ease_factor,interval_days,next_review,last_seen,total_attempts,correct_answers,streak,mastery_pct,raw_mastery,raw_mastery_updated_at,mastery_session_count,adaptive_score,observation_count";
 
 export {
   getAllSounds,

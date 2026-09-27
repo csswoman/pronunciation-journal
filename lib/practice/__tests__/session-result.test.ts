@@ -42,4 +42,8 @@ describe('buildSessionResult', () => {
     expect(summary.evaluatedTotal).toBe(1)
     expect(summary.accuracy).toBe(0)
   })
+
+  it('carries the persisted session identity to domain writers', () => {
+    expect(buildSessionResult([], 'session-1').sessionId).toBe('session-1')
+  })
 })
