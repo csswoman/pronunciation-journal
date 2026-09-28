@@ -20,10 +20,13 @@ export function useFalseFriendsSwipeLoop(entries: FalseFriend[]) {
   const rafRef = useRef<number | null>(null)
   const lastTickRef = useRef<number>(0)
 
+  const recordedRef = useRef(false)
+
   const startGame = useCallback(() => {
     if (entries.length === 0) return
     const deck = buildSwipeDeck(entries)
     startTimeRef.current = Date.now()
+    recordedRef.current = false
     setIsPlaying(true)
     dispatch({ type: 'start', deck })
   }, [entries])
@@ -60,7 +63,6 @@ export function useFalseFriendsSwipeLoop(entries: FalseFriend[]) {
   }, [isPlaying, state.status])
 
   // Record activity on completion
-  const recordedRef = useRef(false)
   useEffect(() => {
     if (state.status === 'completed' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true
@@ -71,9 +73,10 @@ export function useFalseFriendsSwipeLoop(entries: FalseFriend[]) {
         elapsed,
         'false-friends-swipe',
         ['vocabulary'],
+        { hits: state.hits, misses: state.misses, slug: 'multiple_choice' },
       )
     }
-  }, [state.status, userId, isGuest])
+  }, [state.status, state.hits, state.misses, userId, isGuest])
 
   const answer = useCallback((choice: 'true' | 'trap') => {
     dispatch({ type: 'answer', choice })

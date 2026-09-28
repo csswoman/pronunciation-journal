@@ -56,9 +56,16 @@ export default function WordSearchCompletion({
   useEffect(() => {
     if (!user?.id || hasRecordedActivityRef.current) return
     hasRecordedActivityRef.current = true
-    void recordGameActivity(user.id, 'word_search', elapsedSeconds * 1000, puzzle.id)
+    void recordGameActivity(
+      user.id,
+      'word_search',
+      elapsedSeconds * 1000,
+      puzzle.id,
+      undefined,
+      { hits: puzzle.items.length, misses: 0, slug: 'match_pairs' },
+    )
       .catch((err) => console.warn('[WordSearchCompletion] activity record failed', err))
-  }, [elapsedSeconds, puzzle.id, user?.id])
+  }, [elapsedSeconds, puzzle.id, puzzle.items.length, user?.id])
 
   const handlePlayAll = () => {
     cancelSpeech()

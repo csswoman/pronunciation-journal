@@ -24,10 +24,13 @@ export function useMemoryMatchLoop(words: MemoryWordItem[]) {
   const startTimeRef = useRef<number>(0)
   const mismatchTimerRef = useRef<NodeJS.Timeout | null>(null)
 
+  const recordedRef = useRef(false)
+
   const startGame = useCallback(
     (mode: MemoryMatchMode, pairCount: number) => {
       if (words.length === 0) return
       startTimeRef.current = Date.now()
+      recordedRef.current = false
       setIsPlaying(true)
       dispatch({ type: 'start', words, mode, pairCount })
     },
@@ -59,16 +62,15 @@ export function useMemoryMatchLoop(words: MemoryWordItem[]) {
   )
 
   // Record activity when completed
-  const recordedRef = useRef(false)
   useEffect(() => {
     if (state.status === 'completed' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true
       const elapsed = Date.now() - startTimeRef.current
       void recordGameActivity(userId, 'memory_match', elapsed, 'memory-match', [
         'vocabulary',
-      ])
+      ], { hits: state.hits, misses: state.misses, slug: 'match_pairs' })
     }
-  }, [state.status, userId, isGuest])
+  }, [state.status, state.hits, state.misses, userId, isGuest])
 
   return {
     state,

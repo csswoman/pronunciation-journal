@@ -38,10 +38,13 @@ export function useChunkDuelLoop(pool: ChunkDuelItem[]) {
     })
   }, [pool])
 
+  const recordedRef = useRef(false)
+
   const startGame = useCallback(() => {
     if (pool.length === 0) return
     currentRoundIndexRef.current = 1
     startTimeRef.current = Date.now()
+    recordedRef.current = false
     setIsPlaying(true)
     startNextRound()
   }, [pool, startNextRound])
@@ -75,7 +78,6 @@ export function useChunkDuelLoop(pool: ChunkDuelItem[]) {
   }, [isPlaying, state.status])
 
   // Record activity when 10 rounds finish
-  const recordedRef = useRef(false)
   useEffect(() => {
     if (state.status === 'game_over' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true
@@ -83,9 +85,9 @@ export function useChunkDuelLoop(pool: ChunkDuelItem[]) {
       void recordGameActivity(userId, 'chunk_duel', elapsed, 'chunk-duel', [
         'grammar',
         'vocabulary',
-      ])
+      ], { hits: state.hits, misses: state.misses, slug: 'reorder_words' })
     }
-  }, [state.status, userId, isGuest])
+  }, [state.status, state.hits, state.misses, userId, isGuest])
 
   const pickTile = useCallback((tileId: string) => {
     dispatch({ type: 'pick_tile', tileId })

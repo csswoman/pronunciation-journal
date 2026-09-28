@@ -30,9 +30,12 @@ export function useWeakFormCatcherLoop(phrases: WeakFormPhraseItem[]) {
     speak(fullPhrase, { rate: slow ? 0.7 : 1.1 })
   }, [])
 
+  const recordedRef = useRef(false)
+
   const startGame = useCallback(() => {
     if (phrases.length === 0) return
     startTimeRef.current = Date.now()
+    recordedRef.current = false
     setIsPlaying(true)
     dispatch({ type: 'start', phrases })
   }, [phrases])
@@ -70,16 +73,15 @@ export function useWeakFormCatcherLoop(phrases: WeakFormPhraseItem[]) {
   }, [isPlaying, state.status])
 
   // Record activity on game over
-  const recordedRef = useRef(false)
   useEffect(() => {
     if (state.status === 'game_over' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true
       const elapsed = Date.now() - startTimeRef.current
       void recordGameActivity(userId, 'weak_form_catcher', elapsed, 'weak-form-catcher', [
         'listening',
-      ])
+      ], { hits: state.hits, misses: state.misses, slug: 'dictation' })
     }
-  }, [state.status, userId, isGuest])
+  }, [state.status, state.hits, state.misses, userId, isGuest])
 
   const submitAnswer = useCallback((text: string) => {
     dispatch({ type: 'submit', text })
