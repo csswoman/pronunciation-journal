@@ -9,8 +9,7 @@
 // </EditWordModal>
 
 import { useEffect, useRef, useState } from "react";
-import { CornerDownLeft, Pencil, Sparkles, X } from "@/components/icons";
-import { cn } from "@/lib/cn";
+import { Pencil, Sparkles, X } from "@/components/icons";
 import type { WordBankEntry } from "@/lib/word-bank/types";
 import type { WordDetailsUpdate } from "@/lib/word-bank/queries";
 

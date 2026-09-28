@@ -7,6 +7,7 @@ export interface ItemDetails {
   title: string;
   ipa: string | null;
   meaning: string;
+  context: string | null;
   origin: string;
   masteryLevel: number | null;
   statusBadge: { label: string; variant: "coral" | "mint" | "sky" | "neutral" } | null;
@@ -45,14 +46,17 @@ export function getSourceDetails(source: TrackingReviewSource): ItemDetails {
       : null;
 
   const meaning =
-    word?.translation ||
     word?.meaning ||
+    word?.translation ||
     (trackedPayload &&
-      ((trackedPayload.translation ||
-        trackedPayload.meaning ||
-        trackedPayload.context) as string)) ||
+      ((trackedPayload.meaning ||
+        trackedPayload.translation) as string)) ||
     item.description ||
     "";
+
+  const context =
+    word?.context ||
+    (trackedPayload && typeof trackedPayload.context === "string" ? trackedPayload.context : null);
 
   let origin = "Diccionario";
   if (item.fromCoach) {
@@ -107,6 +111,7 @@ export function getSourceDetails(source: TrackingReviewSource): ItemDetails {
     title,
     ipa,
     meaning,
+    context,
     origin,
     masteryLevel,
     statusBadge,

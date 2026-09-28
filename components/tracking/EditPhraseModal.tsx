@@ -9,8 +9,7 @@
 // </EditPhraseModal>
 
 import { useEffect, useRef, useState } from "react";
-import { CornerDownLeft, FileText, Sparkles, X } from "@/components/icons";
-import { cn } from "@/lib/cn";
+import { FileText, Sparkles, X } from "@/components/icons";
 import type { TrackedItem } from "@/lib/tracking/types";
 
 interface Props {

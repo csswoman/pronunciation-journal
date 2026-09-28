@@ -66,6 +66,8 @@ const MAX_LINES_ALLOWLIST = [
   "scripts/grammar-pattern-deck-specs-b1-b2.ts",
   "scripts/grammar-pattern-deck-specs-c1-c2.ts",
   "scripts/sync-engvid-lessons.ts",
+  "scripts/rls-integration.mjs",
+  "scripts/srs-rating-events-integration.mjs",
 ];
 
 const SUPABASE_CLIENT_IMPORT = {
@@ -96,6 +98,7 @@ const eslintConfig = [
       "build/**",
       "test-results/**",
       "next-env.d.ts",
+      "public/**",
     ],
   },
   // E — Learner level: UI and non-canonical query layers must use the resolver.

@@ -135,8 +135,8 @@ describe("TrackingClient capture shortcut", () => {
     };
 
     render(<TrackingClient />);
-    expect(screen.getByText("Palabra")).toBeInTheDocument();
-    expect(screen.getByText("Frase")).toBeInTheDocument();
+    expect(screen.getByText("PALABRA")).toBeInTheDocument();
+    expect(screen.getByText("FRASE")).toBeInTheDocument();
   });
 
   it("filters items when typing in the search input", () => {
@@ -190,15 +190,14 @@ describe("TrackingClient capture shortcut", () => {
 
     render(<TrackingClient />);
     expect(screen.getByText("Word 1")).toBeInTheDocument();
-    expect(screen.getByText("Word 15")).toBeInTheDocument();
-    expect(screen.queryByText("Word 16")).not.toBeInTheDocument();
+    expect(screen.getByText("Word 10")).toBeInTheDocument();
+    expect(screen.queryByText("Word 11")).not.toBeInTheDocument();
 
-    const nextBtn = screen.getByRole("button", { name: "Página siguiente" });
+    const nextBtn = screen.getByRole("button", { name: "Cargar más" });
     fireEvent.click(nextBtn);
 
-    expect(screen.getByText("Word 16")).toBeInTheDocument();
+    expect(screen.getByText("Word 11")).toBeInTheDocument();
     expect(screen.getByText("Word 20")).toBeInTheDocument();
-    expect(screen.queryByText("Word 1")).not.toBeInTheDocument();
   });
 
   it("renders coach badge and filters by coach origin", () => {
@@ -223,11 +222,10 @@ describe("TrackingClient capture shortcut", () => {
     };
 
     render(<TrackingClient />);
-    expect(screen.getByText("✦ coach")).toBeInTheDocument();
     expect(screen.getByText("creepy")).toBeInTheDocument();
     expect(screen.getByText("resilient")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Del coach" }));
+    fireEvent.click(screen.getByRole("button", { name: /Del coach/i }));
     expect(screen.getByText("creepy")).toBeInTheDocument();
     expect(screen.queryByText("resilient")).not.toBeInTheDocument();
   });

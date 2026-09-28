@@ -22,7 +22,7 @@ export const todayNav: NavSectionType = {
   label: "Hoy",
   items: [
     { name: "Inicio", href: "/", icon: Home },
-    { name: "Plan del día", href: "/daily", icon: CalendarCheck },
+    { name: "Sesión de hoy", href: "/daily", icon: CalendarCheck },
     { name: "Mi diario", href: "/journal", icon: Notebook },
   ],
 };
