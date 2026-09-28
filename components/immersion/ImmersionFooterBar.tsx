@@ -33,7 +33,7 @@ export function ImmersionFooterBar({
 
       <span className="text-tiny sm:text-body-sm">
         También puedes registrar lo que veas fuera de la app desde tu{' '}
-        <Link href="/plan" className="underline hover:text-fg transition-colors">
+        <Link href="/daily" className="underline hover:text-fg transition-colors">
           plan de hoy
         </Link>
         .

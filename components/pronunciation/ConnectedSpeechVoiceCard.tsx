@@ -138,7 +138,7 @@ export function ConnectedSpeechVoiceCard({
       </div>
 
       {/* Peach/Coral Inset Card: Mic Recording vs. Waveform Comparison */}
-      <div className="bg-[#fde4dc]/80 dark:bg-rose-950/40 border border-ink/10 dark:border-rose-800/30 rounded-3xl p-6 sm:p-7 flex flex-col shadow-xs transition-colors">
+      <div className="bg-coral-soft/80 dark:bg-rose-950/40 border border-ink/10 dark:border-rose-800/30 rounded-3xl p-6 sm:p-7 flex flex-col shadow-xs transition-colors">
         {status !== "done" ? (
           <ConnectedSpeechMicPanel
             status={status}
@@ -158,7 +158,7 @@ export function ConnectedSpeechVoiceCard({
               <button
                 type="button"
                 onClick={onPlayConnected}
-                className="w-10 h-10 rounded-full bg-[#12151c] text-white flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer focus-ring"
+                className="w-10 h-10 rounded-full bg-text text-surface flex items-center justify-center shrink-0 hover:scale-105 transition-transform cursor-pointer focus-ring"
                 aria-label="Escuchar audio nativo"
               >
                 <Play size={16} className="fill-current ml-0.5" />
@@ -183,7 +183,7 @@ export function ConnectedSpeechVoiceCard({
               <span className="font-heading font-extrabold text-sm text-ink min-w-[64px]">
                 Tu intento
               </span>
-              <SimulatedWaveform colorClass="bg-[#ee9f8b]" />
+              <SimulatedWaveform colorClass="bg-coral-deep" />
             </div>
 
             {/* Re-record action button */}

@@ -72,7 +72,7 @@ export function ConnectedSpeechFooter({
           <button
             type="button"
             onClick={onCheckAnswer}
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#7c3aed] text-white font-heading font-extrabold text-base hover:bg-[#6d28d9] shadow-md transition-all cursor-pointer focus-ring"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-accent-purple text-white font-heading font-extrabold text-base hover:opacity-90 shadow-md transition-all cursor-pointer focus-ring"
           >
             <span>Comprobar</span>
             <ArrowRight size={18} />
@@ -81,7 +81,7 @@ export function ConnectedSpeechFooter({
           <button
             type="button"
             onClick={onNext}
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#7c3aed] text-white font-heading font-extrabold text-base hover:bg-[#6d28d9] shadow-md transition-all cursor-pointer focus-ring"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-accent-purple text-white font-heading font-extrabold text-base hover:opacity-90 shadow-md transition-all cursor-pointer focus-ring"
           >
             <span>Siguiente frase</span>
             <ArrowRight size={18} />

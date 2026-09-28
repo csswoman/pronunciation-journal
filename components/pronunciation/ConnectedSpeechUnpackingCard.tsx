@@ -159,10 +159,10 @@ export function ConnectedSpeechUnpackingCard({
               return (
                 <div
                   key={i}
-                  className="bg-[#fce8e6] border-2 border-ink text-ink font-bold p-4 rounded-2xl shadow-xs flex items-center justify-between min-h-[56px]"
+                  className="bg-error-soft border-2 border-ink text-ink font-bold p-4 rounded-2xl shadow-xs flex items-center justify-between min-h-[56px]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-[#ea4335] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-error text-white flex items-center justify-center font-bold text-sm shrink-0">
                       ✕
                     </div>
                     <span className="font-heading font-extrabold text-lg text-ink">{opt.text}</span>
@@ -176,10 +176,10 @@ export function ConnectedSpeechUnpackingCard({
               return (
                 <div
                   key={i}
-                  className="bg-[#e6f4ea] border-2 border-ink text-ink font-bold p-4 rounded-2xl shadow-xs flex items-center justify-between min-h-[56px]"
+                  className="bg-success-soft border-2 border-ink text-ink font-bold p-4 rounded-2xl shadow-xs flex items-center justify-between min-h-[56px]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-[#34a853] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-success text-white flex items-center justify-center font-bold text-sm shrink-0">
                       ✓
                     </div>
                     <span className="font-heading font-extrabold text-lg text-ink">{opt.text}</span>

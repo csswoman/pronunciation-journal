@@ -9,7 +9,7 @@ interface Props {
 function LinkingArcConnector({ linkSound }: { linkSound: string }) {
   return (
     <div className="relative flex flex-col items-center justify-center px-1.5 py-0.5 select-none shrink-0">
-      <span className="font-mono text-xs sm:text-sm font-bold text-[#7c3aed] dark:text-[#b388ff] -mb-1">
+      <span className="font-mono text-xs sm:text-sm font-bold text-accent-purple dark:text-purple-300 -mb-1">
         {linkSound}
       </span>
       <svg
@@ -18,7 +18,7 @@ function LinkingArcConnector({ linkSound }: { linkSound: string }) {
         viewBox="0 0 44 14"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-[#7c3aed] dark:text-[#b388ff]"
+        className="text-accent-purple dark:text-purple-300"
       >
         <path
           d="M 3,2 Q 22,12 41,2"
@@ -44,7 +44,7 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
   return (
     <section
       aria-label="Explicación pedagógica de habla conectada"
-      className="flex flex-col gap-6 rounded-3xl border border-slate-200/80 bg-white dark:bg-[#121620] dark:border-slate-800/80 p-6 sm:p-8 shadow-xs animate-fadeIn transition-colors"
+      className="flex flex-col gap-6 rounded-3xl border border-slate-200/80 bg-white dark:bg-surface-sunken dark:border-slate-800/80 p-6 sm:p-8 shadow-xs animate-fadeIn transition-colors"
     >
       {/* Header */}
       <div>
@@ -57,14 +57,14 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
       </div>
 
       {/* 1 · LOS ENLACES (Con dibujo de raya curva que une las palabras) */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-sky-100 bg-[#edf4ff] dark:bg-[#161b26] dark:border-purple-900/30 p-5 sm:p-6 transition-colors">
+      <div className="flex flex-col gap-3 rounded-2xl border border-sky-100 bg-sky-soft dark:bg-surface-raised dark:border-purple-900/30 p-5 sm:p-6 transition-colors">
         <span className="font-mono text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest block">
           1 · LOS ENLACES
         </span>
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 py-2">
           {defaultLinks.map((step, idx) => (
             <div key={idx} className="flex items-center gap-1.5 sm:gap-2.5">
-              <span className="inline-flex items-center justify-center px-5 py-2.5 rounded-2xl bg-white border-2 border-slate-950 text-slate-950 dark:bg-[#121620] dark:border-white dark:text-white font-heading font-extrabold text-base sm:text-lg shadow-2xs">
+              <span className="inline-flex items-center justify-center px-5 py-2.5 rounded-2xl bg-white border-2 border-slate-950 text-slate-950 dark:bg-surface-sunken dark:border-white dark:text-white font-heading font-extrabold text-base sm:text-lg shadow-2xs">
                 {step.word}
               </span>
               {step.linkSound && (
@@ -81,7 +81,7 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
           2 · LO QUE ESPERAS VS. LO QUE OYES
         </span>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-stone-200/60 bg-[#f4f2ee] dark:bg-[#161b26] dark:border-slate-800 p-5 flex flex-col justify-center transition-colors">
+          <div className="rounded-2xl border border-stone-200/60 bg-surface-raised dark:bg-surface-sunken dark:border-slate-800 p-5 flex flex-col justify-center transition-colors">
             <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-1">
               LO QUE ESPERAS
             </span>
@@ -90,7 +90,7 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
             </span>
           </div>
 
-          <div className="rounded-2xl border-2 border-slate-950 bg-[#eaf2fe] dark:bg-[#182642] dark:border-white p-5 flex flex-col justify-center shadow-xs transition-colors">
+          <div className="rounded-2xl border-2 border-slate-950 bg-sky-soft dark:bg-slate-900 dark:border-white p-5 flex flex-col justify-center shadow-xs transition-colors">
             <span className="font-mono text-[10px] font-bold text-slate-950 dark:text-white uppercase tracking-widest block mb-1">
               LO QUE OYES
             </span>
@@ -107,7 +107,7 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
       </div>
 
       {/* 3 · EL RITMO */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-[#faf9f6] dark:bg-[#161b26] dark:border-slate-800 p-5 sm:p-6 transition-colors">
+      <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-surface-raised dark:bg-surface-sunken dark:border-slate-800 p-5 sm:p-6 transition-colors">
         <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">
           3 · EL RITMO
         </span>
@@ -118,7 +118,7 @@ export function ConnectedSpeechPedagogicalCard({ phrase }: Props) {
               return (
                 <div key={i} className="flex flex-col items-center">
                   {isStressed ? (
-                    <span className="text-[#7c3aed] dark:text-purple-400 text-xs font-bold mb-1 leading-none">●</span>
+                    <span className="text-accent-purple dark:text-purple-400 text-xs font-bold mb-1 leading-none">●</span>
                   ) : (
                     <span className="text-transparent text-xs mb-1 leading-none">●</span>
                   )}

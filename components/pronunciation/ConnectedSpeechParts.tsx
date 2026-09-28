@@ -71,7 +71,7 @@ export function ConnectedSpeechHeaderNav({
           className={cn(
             "flex items-center gap-2 px-4.5 py-2 rounded-full font-heading font-extrabold text-sm transition-all cursor-pointer focus-ring",
             trainerMode === "unpacking"
-              ? "bg-white dark:bg-slate-900 border-2 border-[#7c3aed] text-[#7c3aed] dark:text-purple-300 shadow-xs"
+              ? "bg-white dark:bg-slate-900 border-2 border-accent-purple text-accent-purple dark:text-purple-300 shadow-xs"
               : "bg-sky-50 dark:bg-sky-950/60 text-slate-700 dark:text-sky-200 hover:bg-sky-100 dark:hover:bg-sky-900/80",
           )}
         >
@@ -85,8 +85,8 @@ export function ConnectedSpeechHeaderNav({
           className={cn(
             "flex items-center gap-2 px-4.5 py-2 rounded-full font-heading font-extrabold text-sm transition-all cursor-pointer focus-ring",
             trainerMode === "production"
-              ? "bg-white dark:bg-slate-900 border-2 border-[#ee9f8b] text-[#c2410c] dark:text-orange-300 shadow-xs"
-              : "bg-[#fde4dc] dark:bg-rose-900/60 text-[#c2410c] dark:text-rose-100 hover:bg-[#fbd3c7] dark:hover:bg-rose-800/80",
+              ? "bg-white dark:bg-slate-900 border-2 border-coral-deep text-accent-orange dark:text-orange-300 shadow-xs"
+              : "bg-coral-soft dark:bg-rose-900/60 text-accent-orange dark:text-rose-100 hover:bg-coral dark:hover:bg-rose-800/80",
           )}
         >
           <Mic className="size-4 text-coral-deep dark:text-rose-200" />
@@ -147,7 +147,7 @@ export function ConnectedSpeechCategoryDropdown({
                     className={cn(
                       "flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all text-left cursor-pointer focus-ring",
                       isSelected
-                        ? "bg-[#edf4ff] dark:bg-purple-950/50 text-[#7c3aed] dark:text-purple-300 font-bold border border-purple-200 dark:border-purple-800/60"
+                        ? "bg-sky-soft dark:bg-purple-950/50 text-accent-purple dark:text-purple-300 font-bold border border-purple-200 dark:border-purple-800/60"
                         : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
                     )}
                   >
@@ -155,7 +155,7 @@ export function ConnectedSpeechCategoryDropdown({
                       className={cn(
                         "w-4 h-4 rounded-full border flex items-center justify-center shrink-0",
                         isSelected
-                          ? "border-[#7c3aed] bg-[#7c3aed] text-white"
+                          ? "border-accent-purple bg-accent-purple text-white"
                           : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800",
                       )}
                     >
@@ -191,7 +191,7 @@ export function ConnectedSpeechFeedbackPlaceholder() {
         Elige una opción y pulsa <strong className="text-slate-950 dark:text-white font-bold">Comprobar</strong>. Te diremos si acertaste y por qué la frase suena así.
       </p>
 
-      <div className="bg-[#faf8f3] dark:bg-slate-800/60 border border-amber-200/60 dark:border-slate-700/80 rounded-2xl p-5 sm:p-6 w-full max-w-md mt-6 text-left shadow-2xs">
+      <div className="bg-surface-raised dark:bg-slate-800/60 border border-amber-200/60 dark:border-slate-700/80 rounded-2xl p-5 sm:p-6 w-full max-w-md mt-6 text-left shadow-2xs">
         <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-3">
           VAS A VER
         </span>

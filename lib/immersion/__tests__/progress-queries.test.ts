@@ -83,8 +83,8 @@ describe('markImmersionLessonWatched', () => {
     const sessions = entries.filter((entry) => entry.table === 'activity_sessions');
     expect(answers).toHaveLength(2);
     expect(answers.map((entry) => entry.payload)).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: 'immersion-attempt-1:q1', user_answer: 'A', is_correct: true }),
-      expect.objectContaining({ id: 'immersion-attempt-1:q2', user_answer: 'B', is_correct: false }),
+      expect.objectContaining({ content_id: 'immersion:lesson-1:q1', user_answer: 'A', is_correct: true }),
+      expect.objectContaining({ content_id: 'immersion:lesson-1:q2', user_answer: 'B', is_correct: false }),
     ]));
     expect(sessions).toHaveLength(1);
     expect(sessions[0]?.payload).toMatchObject({ id: 'immersion-attempt-1', source: 'immersion' });

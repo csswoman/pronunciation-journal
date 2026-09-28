@@ -21,7 +21,7 @@ function SmallLinkingArc() {
       viewBox="0 0 32 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="text-[#7c3aed] dark:text-[#b388ff] inline-block mx-0.5"
+      className="text-accent-purple dark:text-purple-300 inline-block mx-0.5"
     >
       <path
         d="M 2,2 Q 16,9 30,2"
@@ -85,7 +85,7 @@ export function ConnectedSpeechVoiceChecklist({ phrase }: Props) {
   return (
     <section
       aria-label="Lista de verificación de voz"
-      className="flex flex-col justify-between gap-6 rounded-3xl border border-slate-200/80 bg-white dark:bg-[#121620] dark:border-slate-800/80 p-6 sm:p-8 shadow-xs min-h-[480px] animate-fadeIn transition-colors"
+      className="flex flex-col justify-between gap-6 rounded-3xl border border-slate-200/80 bg-white dark:bg-surface-sunken dark:border-slate-800/80 p-6 sm:p-8 shadow-xs min-h-[480px] animate-fadeIn transition-colors"
     >
       {/* Top Header */}
       <div className="flex flex-col gap-1">
@@ -102,7 +102,7 @@ export function ConnectedSpeechVoiceChecklist({ phrase }: Props) {
         {checklistItems.map((item) => (
           <div
             key={item.num}
-            className="flex items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-slate-200/70 bg-[#faf9f6] dark:bg-[#161b26] dark:border-slate-800 transition-colors"
+            className="flex items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl border border-slate-200/70 bg-surface-raised dark:bg-surface-sunken dark:border-slate-800 transition-colors"
           >
             <div className="flex items-start gap-3.5 min-w-0">
               <span className="w-7 h-7 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-heading font-extrabold text-xs flex items-center justify-center shrink-0 shadow-2xs mt-0.5">

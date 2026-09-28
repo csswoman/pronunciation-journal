@@ -174,7 +174,7 @@ export function ConnectedSpeechSetup({
               )}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#9ec0f6]/50 text-ink flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-sky-deep/50 text-ink flex items-center justify-center shrink-0">
                   <Headphones className="size-5 text-ink" />
                 </div>
                 <div>
@@ -203,7 +203,7 @@ export function ConnectedSpeechSetup({
               )}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#f7b7a6]/50 text-ink flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-coral/50 text-ink flex items-center justify-center shrink-0">
                   <Mic className="size-5 text-ink" />
                 </div>
                 <div>

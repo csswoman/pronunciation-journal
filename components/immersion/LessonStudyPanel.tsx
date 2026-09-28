@@ -60,8 +60,8 @@ export function LessonStudyPanel({ lesson, onSeek, onQuizComplete }: LessonStudy
             <span
               className={
                 activeTab === 'timestamps'
-                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
-                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
+                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
+                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
               }
             >
               {timestampsCount}
@@ -81,8 +81,8 @@ export function LessonStudyPanel({ lesson, onSeek, onQuizComplete }: LessonStudy
             <span
               className={
                 activeTab === 'vocabulary'
-                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
-                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
+                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
+                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
               }
             >
               {vocabCount}
@@ -102,8 +102,8 @@ export function LessonStudyPanel({ lesson, onSeek, onQuizComplete }: LessonStudy
             <span
               className={
                 activeTab === 'phrases'
-                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
-                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
+                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
+                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
               }
             >
               {phrasesCount}
@@ -123,8 +123,8 @@ export function LessonStudyPanel({ lesson, onSeek, onQuizComplete }: LessonStudy
             <span
               className={
                 activeTab === 'quiz'
-                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
-                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-[18px]'
+                  ? 'inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
+                  : 'inline-flex items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-lilac-light px-1.5 py-0.5 text-tiny font-extrabold min-w-4'
               }
             >
               {quizCount}
