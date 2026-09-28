@@ -13,7 +13,7 @@ import type {
 } from "../essential-words/verification/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 import { migrateArchivedRow } from "../srs/migrate-archived";
-import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
+import { patchActivateNow, patchMaster, patchRecheck, patchSnooze } from "../srs/status";
 import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
@@ -1171,6 +1171,20 @@ export async function snoozeEssentialWord(word: string, days = 90, userId?: stri
 export async function masterEssentialWord(word: string, userId?: string): Promise<void> {
   const existing = await getOrCreateEssentialWordSrsRow(word, userId);
   if (existing) await saveSRSData(patchMaster(existing, new Date()), userId);
+}
+
+/** Programa un rechequeo sin puntuar una respuesta para una palabra esencial. */
+export async function scheduleEssentialWordRecheck(word: string, days = 4, userId?: string): Promise<void> {
+  const existing = await getOrCreateEssentialWordSrsRow(word, userId);
+  if (existing) await saveSRSData(patchRecheck(existing, new Date(), days), userId);
+}
+
+/** Elimina la entrada de SRS de una palabra esencial (usado en deshacer de triage). */
+export async function deleteEssentialWordSrs(word: string, userId?: string): Promise<void> {
+  if (!userId) return;
+  const normalized = word.toLowerCase();
+  const wordId = `${CORE1000_SRS_PREFIX}${normalized}`;
+  await db.srsData.where('[userId+wordId]').equals([userId, wordId]).delete();
 }
 
 /** Reactiva una palabra esencial para repaso inmediato. */

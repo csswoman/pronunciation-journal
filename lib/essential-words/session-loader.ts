@@ -8,6 +8,7 @@ import {
   type EssentialWord,
 } from "@/lib/essential-words/types";
 import { getEssentialWordsIntroducedToday } from "@/lib/db";
+import { getEssentialWordLearnerSignals } from "./learner-state-queries";
 import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
 import { getEssentialWordsDueTomorrowCount } from "@/lib/essential-words/due-tomorrow";
 import { phaseForEssentialWordItem, type EssentialWordsPhase } from "@/lib/essential-words/session-model";
@@ -39,10 +40,11 @@ export async function loadEssentialWordsQueue(
   options?: { maxNewWords?: number },
 ): Promise<LoadedEssentialWordsQueue> {
   const maxNewWords = options?.maxNewWords ?? GUIDED_SESSION_NEW_CARDS;
-  const [words, introducedToday, dueTomorrow] = await Promise.all([
+  const [words, introducedToday, dueTomorrow, knownClaims] = await Promise.all([
     fetchEssentialWords(),
     getEssentialWordsIntroducedToday(userId),
     getEssentialWordsDueTomorrowCount(userId),
+    getEssentialWordLearnerSignals(userId),
   ]);
 
   const now = new Date();
@@ -56,11 +58,16 @@ export async function loadEssentialWordsQueue(
     newPerDay: introducedToday.length + maxNewWords,
     levels,
     pos,
+    knownClaims,
   }).map((item) => ({
     ...item,
     fromSnooze: activatedWordIds.includes(essentialWordId(item.entry.word)),
   }));
-  const seenIds = new Set(srsEntries.map((entry) => entry.wordId));
+  const seenIds = new Set([
+    ...srsEntries.map((entry) => entry.wordId),
+    ...knownClaims.filter((claim) => claim.familiarity === "self-declared")
+      .map((claim) => claim.wordId),
+  ]);
 
   const hasFilter = (levels && levels.length > 0) || (pos && pos.length > 0);
   const scopedWords = words.filter((w) => matchesFilter(w, levels, pos));

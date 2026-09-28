@@ -11,6 +11,13 @@ export async function getEssentialWordLearnerSignal(
   return db.essentialWordLearnerSignals.get(signalId(userId, wordId));
 }
 
+export async function getEssentialWordLearnerSignals(
+  userId?: string,
+): Promise<EssentialWordLearnerSignalRecord[]> {
+  if (!userId) return [];
+  return db.essentialWordLearnerSignals.where("userId").equals(userId).toArray();
+}
+
 async function updateSignal(
   userId: string,
   wordId: string,
@@ -41,6 +48,38 @@ export function declareEssentialWordKnown(userId: string, wordId: string, now?: 
     familiarity: "self-declared",
     declaredKnownAt: occurredAt,
   }, occurredAt);
+}
+
+/** Undo one self-declared familiarity without removing other learner signals. */
+export async function restoreEssentialWordKnownClaim(
+  userId: string,
+  wordId: string,
+  previous: EssentialWordLearnerSignalRecord | undefined,
+  declaredKnownAt: string,
+): Promise<void> {
+  const id = signalId(userId, wordId);
+  await db.transaction("rw", db.essentialWordLearnerSignals, async () => {
+    const current = await db.essentialWordLearnerSignals.get(id);
+    if (!current || current.declaredKnownAt !== declaredKnownAt) {
+      throw new Error("La declaración cambió y no se puede deshacer con seguridad.");
+    }
+
+    const restored: EssentialWordLearnerSignalRecord = {
+      ...current,
+      familiarity: previous?.familiarity ?? "unknown",
+      declaredKnownAt: previous?.declaredKnownAt,
+      updatedAt: new Date().toISOString(),
+    };
+    if (
+      restored.familiarity === "unknown"
+      && restored.pronunciationDifficulty === "none"
+      && !restored.pronunciationLastRoutedAt
+    ) {
+      await db.essentialWordLearnerSignals.delete(id);
+      return;
+    }
+    await db.essentialWordLearnerSignals.put(restored);
+  });
 }
 
 /** Records a pronunciation-only need without changing meaning/listening/use. */

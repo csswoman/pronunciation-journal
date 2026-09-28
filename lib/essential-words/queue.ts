@@ -3,12 +3,16 @@
 
 import { NEW_CARDS_PER_DAY, essentialWordId, type CefrLevel, type EssentialWordPos, type EssentialWord } from "./types";
 import { isDueForQueue } from "@/lib/srs/status";
+import type { EssentialWordLearnerSignalRecord } from "@/lib/db";
+import { isKnownClaimRecheckDue } from "./triage-recheck";
 import type { SRSData } from "@/lib/types";
 
 export interface EssentialWordQueueItem {
   entry: EssentialWord;
   kind: 'new' | 'review' | 'learning';
   fromSnooze?: boolean;
+  /** Recheck for a sampled self-declared familiarity claim. */
+  familiarityClaim?: boolean;
   /**
    * SM-2 consecutive-correct count for this word, when it has SRS history.
    * Undefined for new words. Drives exercise-mode maturity tiers.
@@ -28,6 +32,7 @@ export interface BuildQueueOptions {
   levels?: readonly CefrLevel[] | null;
   /** When set (non-empty), restricts both reviews and new cards to these parts of speech. */
   pos?: readonly EssentialWordPos[] | null;
+  knownClaims?: readonly Pick<EssentialWordLearnerSignalRecord, "wordId" | "familiarity" | "declaredKnownAt">[];
 }
 
 /** True when `levels` is unset/empty (no filter) or the entry's level is included. */
@@ -66,10 +71,10 @@ export function buildSessionQueue({
   maxItems,
   levels,
   pos,
+  knownClaims = [],
 }: BuildQueueOptions): EssentialWordQueueItem[] {
   const byId = new Map(words.map((w) => [essentialWordId(w.word), w]));
-  // Every persisted entry counts as seen, including snoozed/mastered. They must
-  // not be re-introduced as new after the user presses "Ya la sé".
+  // Every persisted SRS row counts as seen, including snoozed/mastered rows.
   const seen = new Set(srsEntries.map((e) => e.wordId));
 
   // Caller must run activateExpiredSnoozes before buildSessionQueue.
@@ -89,13 +94,27 @@ export function buildSessionQueue({
     .sort((a, b) => a.entry.rank - b.entry.rank)
     .map(({ entry, repetitions }) => ({ entry, kind: 'review' as const, repetitions }));
 
+  const existingClaimIds = new Set(srsEntries.map((entry) => entry.wordId));
+  const claimedIds = new Set(knownClaims
+    .filter((claim) => claim.familiarity === "self-declared")
+    .map((claim) => claim.wordId));
+  const claimRechecks: EssentialWordQueueItem[] = knownClaims.flatMap((claim) => {
+    if (existingClaimIds.has(claim.wordId) || !isKnownClaimRecheckDue(claim, now)) return [];
+    const entry = byId.get(claim.wordId);
+    if (!entry || !matchesFilter(entry, levels, pos)) return [];
+    return [{ entry, kind: "review" as const, familiarityClaim: true }];
+  }).sort((a, b) => a.entry.rank - b.entry.rank);
+
   const quota = Math.max(0, newPerDay - introducedToday.length);
   const fresh: EssentialWordQueueItem[] = words
-    .filter((w) => !seen.has(essentialWordId(w.word)) && matchesFilter(w, levels, pos))
+    .filter((w) => {
+      const wordId = essentialWordId(w.word);
+      return !seen.has(wordId) && !claimedIds.has(wordId) && matchesFilter(w, levels, pos);
+    })
     .slice(0, quota)
     .map((entry) => ({ entry, kind: 'new' as const }));
 
-  const queue = [...due, ...fresh];
+  const queue = [...due, ...claimRechecks, ...fresh];
   return maxItems === undefined ? queue : queue.slice(0, Math.max(0, maxItems));
 }
 

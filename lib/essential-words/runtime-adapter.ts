@@ -24,6 +24,8 @@ import { modeHasData, SKILL_MODE_FALLBACKS, type EssentialWordMode } from "./exe
 import type { InitialListeningLevel } from "./initial-listening-level";
 import type { ListeningLadderState } from "./listening-ladder";
 import { planKnownClaim } from "./verification/claim-known";
+import { isKnownClaimRecheckDue } from "./triage-recheck";
+import type { EssentialWordLearnerSignalRecord } from "@/lib/db";
 
 const BASE_SKILLS: readonly BaseSkill[] = ["meaning", "listening", "production"];
 const DAILY_BUDGET_SECONDS = 8 * 60;
@@ -48,6 +50,7 @@ export interface RuntimePlanningSnapshot {
   words: EssentialWord[];
   items: LearningItem[];
   attempts: AttemptLog[];
+  knownClaims?: EssentialWordLearnerSignalRecord[];
   now: Date;
   previousMode?: "normal" | "recovery";
   maxNewWords?: number;
@@ -161,6 +164,8 @@ export function buildRuntimePlanningInput(
   };
   const existingMeaning = new Set(items.filter((item) => item.skill === "meaning")
     .map((item) => item.wordId));
+  const claimsByWordId = new Map((snapshot.knownClaims ?? [])
+    .filter((claim) => claim.familiarity === "self-declared").map((claim) => [claim.wordId, claim]));
   const placementCandidates = items.filter((item) =>
     item.placementInference && item.schedule.kind === "none");
 
@@ -179,7 +184,12 @@ export function buildRuntimePlanningInput(
         modality: "production",
         source: "usage",
       })),
-      newWords: snapshot.words.filter((word) => !existingMeaning.has(essentialWordId(word.word)))
+      newWords: snapshot.words.filter((word) => {
+        const wordId = essentialWordId(word.word);
+        if (existingMeaning.has(wordId)) return false;
+        const claim = claimsByWordId.get(wordId);
+        return !claim || isKnownClaimRecheckDue(claim, snapshot.now);
+      })
         .map((word) => ({ wordId: essentialWordId(word.word), rank: word.rank })),
       placementCandidates,
     },

@@ -354,7 +354,9 @@ export function useEssentialWordsSession() {
           repetitions: item.repetitions,
           fromSnooze: item.fromSnooze,
           forcedMode: skillItemsByWordRef.current.get(wordId)?.forcedMode
-            ?? (item.fromSnooze ? 'speak_sentence' as const : undefined),
+            ?? (item.familiarityClaim
+              ? modeHasData(item.entry, 'cloze_sentence') ? 'cloze_sentence' as const : 'speak_sentence' as const
+              : item.fromSnooze ? 'speak_sentence' as const : undefined),
         }
       }),
     ];

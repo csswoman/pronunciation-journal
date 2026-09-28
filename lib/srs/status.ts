@@ -34,6 +34,22 @@ export function patchMaster(entry: SRSData, now: Date): SRSData {
   };
 }
 
+export function patchRecheck(entry: SRSData, now: Date, days = 4): SRSData {
+  return {
+    ...entry,
+    status: undefined,
+    nextReview: addDaysIso(now, days),
+    ease: 2.5,
+    interval: days,
+    // Scheduling a later check is not a successful recall observation.
+    repetitions: entry.repetitions,
+    archived: undefined,
+    archivedAt: undefined,
+    snoozedAt: undefined,
+    masteredAt: undefined,
+  };
+}
+
 export function patchActivateNow(entry: SRSData, now: Date): SRSData {
   return {
     ...entry,

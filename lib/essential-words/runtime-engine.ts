@@ -3,8 +3,9 @@ import { createEssentialWordsEngineRouter } from "./engine-router";
 import { readSkillEngineRolloutConfig, resolveSkillEngineMode } from "../feature-flags";
 import { gradeEssentialWord, type GradeExtras } from "./grade";
 import { getAttemptLogs, getLearningItems } from "./queries";
+import { getEssentialWordLearnerSignals } from "./learner-state-queries";
 import { persistAttemptRecord, planAttemptRecord } from "./record-attempt";
-import { planRuntimeSession, createBaseLearningItems, toEssentialWordsSkillQueue, type SkillRuntimeQueueItem } from "./runtime-adapter";
+import { planRuntimeSession, createBaseLearningItems, toEssentialWordsSkillQueue, toKnownClaimQueueItem, type SkillRuntimeQueueItem } from "./runtime-adapter";
 import { runSkillModelMigration } from "./run-skill-model-migration";
 import { loadEssentialWordsQueue, type EssentialWordsStats } from "./session-loader";
 import { summarizeSkillDailyPlan } from "./shadow-metrics";
@@ -17,6 +18,7 @@ import { attributionForRenderedAttempt } from "./runtime-attribution";
 import { estimateInitialListeningLevel, retireInitialListeningLevel } from "./initial-listening-level";
 import { deriveListeningLadderLevel, resolveListeningLadderMode } from "./listening-ladder";
 import { buildAssessment } from "./verification/assessment";
+import { isKnownClaimRecheckDue } from "./triage-recheck";
 import type { DailyPlan } from "./planning-types";
 import type { AttemptLog } from "./verification/types";
 import { savePracticeAnswer } from "@/lib/practice/queries";
@@ -112,10 +114,11 @@ async function buildSkillSession(
   userId: string,
   input: RuntimeBuildInput,
 ): Promise<EssentialWordsRuntimeSession> {
-  const [allWords, items, attempts, progress, retiredBlankKeys] = await Promise.all([
+  const [allWords, items, attempts, knownClaims, progress, retiredBlankKeys] = await Promise.all([
     fetchEssentialWords(),
     getLearningItems(userId),
     getAttemptLogs(userId),
+    getEssentialWordLearnerSignals(userId),
     getAllContrastProgress(userId),
     getRetiredEssentialWordBlankKeys(),
   ]);
@@ -125,14 +128,22 @@ async function buildSkillSession(
     words,
     items,
     attempts,
+    knownClaims,
     now: input.now,
     previousMode: input.previousMode,
     maxNewWords: input.maxNewWords,
   });
+  const claimsByWordId = new Map(knownClaims.map((claim) => [claim.wordId, claim]));
   const materialized = toEssentialWordsSkillQueue(plan, words, items, (diagnostic) => {
     console.warn("[essential-words] skill mode materialization", diagnostic);
+  }).map((item) => {
+    const claim = claimsByWordId.get(item.plannedItem.wordId);
+    if (item.kind === "new" && claim && isKnownClaimRecheckDue(claim, input.now)) {
+      return toKnownClaimQueueItem(item) ?? item;
+    }
+    return item;
   });
-  const queue = materialized.flatMap((item) => {
+  const renderableQueue = materialized.flatMap((item) => {
     if (item.plannedItem.skill !== "listening") return [item];
     const listening = item.currentItems.find((current) => current.skill === "listening");
     if (!listening) return [];
@@ -148,10 +159,14 @@ async function buildSkillSession(
   });
   return {
     source: "skill",
-    items: queue,
-    stats: skillStats(words, items, attempts, queue, input.now, input.maxNewWords ?? GUIDED_SESSION_NEW_CARDS),
+    items: renderableQueue,
+    stats: skillStats(words, items, attempts, renderableQueue, input.now, input.maxNewWords ?? GUIDED_SESSION_NEW_CARDS),
     allWords,
-    seenIds: new Set(items.map((item) => item.wordId)),
+    seenIds: new Set([
+      ...items.map((item) => item.wordId),
+      ...knownClaims.filter((claim) => claim.familiarity === "self-declared")
+        .map((claim) => claim.wordId),
+    ]),
     skillPlan: plan,
   };
 }

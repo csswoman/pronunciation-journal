@@ -7,6 +7,7 @@ import { useEssentialWordsReadyDashboard } from '@/hooks/useEssentialWordsReadyD
 import { SessionReadyHero } from './SessionReadyHero'
 import { SessionReadyVaultRow } from './SessionReadyVaultRow'
 import { SessionReadyVocabulary } from './SessionReadyVocabulary'
+import { SessionReadyTriageCard } from './SessionReadyTriageCard'
 
 interface Props {
   preview: EssentialWordsSessionPreview
@@ -71,6 +72,7 @@ export function SessionReady({
             totalWords={stats.totalWords}
           />
           <SessionReadyVaultRow />
+          <SessionReadyTriageCard />
         </aside>
       </div>
     </section>
