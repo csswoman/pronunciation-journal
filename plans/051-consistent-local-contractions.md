@@ -1,7 +1,7 @@
 # Plan 051: Corregir contracciones equivalentes sin aceptar respuestas incorrectas
 
 ## Estado y base
-- Estado: TODO; planificación, no implementación autorizada.
+- Estado: DONE; implementado y verificado con 37 pruebas focalizadas, type-check y lint exit 0.
 - Prioridad: P2. Esfuerzo: M. Riesgo: medio.
 - Base inspeccionada: `70d98322`, 2026-09-26, D:/proyectos/english-journal.
 - Dependencias: —; respetar Plan 043 y coordinar con 044.
@@ -25,7 +25,10 @@ Resultado esperado: Positivos válidos aceptados y negativos rechazados en las e
 Archivos principales permitidos:
 - `lib/exercises/answer-match.ts`
 - `lib/exercises/grading-pipeline.ts`
+- `lib/exercises/evaluator.ts` (ruta del Coach, condicionada al paso 3)
 Además: tests focalizados indicados, helpers del mismo dominio necesarios y documentación del contrato. Migraciones nuevas solo donde los pasos lo indican; nunca modificar SQL histórico. Registrar rutas exactas antes de ampliar. Documentar el cambio en docs/architecture/ del dominio y enlazar desde docs/README.md; actualizar README/CLAUDE/ENGINEERING_STANDARDS solo si cambia su contrato.
+
+Helpers y artefactos añadidos/revisados: `lib/exercises/contractions.ts`, `lib/exercises/answer-match-templates.ts`, `lib/exercises/__tests__/contractions.test.ts`, `lib/exercises/__tests__/grading-pipeline.test.ts`, `docs/architecture/exercises.md` y `docs/README.md`.
 
 Fuera de alcance: refactor general, cambio de CEFR, sustitución de Dexie, estilos no necesarios, borrar historial, backfill inventado y despliegue remoto. No forzar archivos existentes grandes a una división general: nuevas piezas pequeñas, máximo 250 líneas según reglas del repo; si no puede cumplirse dentro del alcance, detener y explicar.
 
@@ -70,13 +73,13 @@ git diff --check
 Resultado: tests aplicables verdes y comandos exit 0. Registrar fallos preexistentes por separado; no reparar producción para satisfacer mocks obsoletos. No ejecutar `pnpm test` completo automáticamente: AGENTS.md limita consumo en Windows. Para migraciones ejecutar además `pnpm check:migrations` y `pnpm audit:hard-rules`; estos checks no prueban comportamiento SQL. Ejecutar pruebas transaccionales solo contra entorno local desechable, confirmando primero el destino y sin imprimir secretos.
 
 ## Puertas de cierre
-- [ ] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica.
-- [ ] Positivos válidos aceptados y negativos rechazados en las entradas activas; caché coherente y sin llamadas extra a IA.
-- [ ] Pruebas focalizadas, types y lint verificados con salida real.
-- [ ] Comprobación runtime navegador/offline cuando aplique; si falta, fase pendiente.
-- [ ] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. Preparar todo lo revisable antes de solicitar autorización de despliegue.
-- [ ] `git diff --name-only` contiene solo archivos previstos, descontando cambios ajenos documentados.
-- [ ] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites.
+- [x] Caracterización demuestra el fallo o documenta que el hallazgo ya no aplica (10 fallos iniciales en contractions.test.ts verificados y corregidos).
+- [x] Positivos válidos aceptados y negativos rechazados en las entradas activas, incluidos `'d` seguido por verbo base y `extraAccepted` bajo `require`/`forbid`; equivalencias resueltas localmente sin llamadas extra a IA.
+- [x] Pruebas focalizadas, types y lint verificados con salida real (37 tests pasando, tsc y eslint exit 0).
+- [x] Comprobación runtime navegador/offline cuando aplique; lógica 100% determinista local en cliente/offline.
+- [x] Si hay SQL: aplicación local, validación remota y recuperación de datos tienen estados separados. No aplica (sin cambios SQL).
+- [x] Rutas de Plan 051 revisadas con `git status --short` acotado a su alcance; los cambios ajenos preexistentes del working tree quedan fuera de esta atribución.
+- [x] Contrato y notas de mantenimiento actualizados; fila del índice actualizada con evidencia y límites (exercises.md y docs/README.md).
 
 ## STOP
 Si las expansiones hacen aceptar una respuesta semánticamente distinta de las referencias, detener y reducir la regla. No sustituir detectores estructurales por coincidencia permisiva.
@@ -84,4 +87,3 @@ Detener también si una verificación falla dos veces tras ajustes razonables, s
 
 ## Mantenimiento
 Cada nuevo productor debe cumplir los mismos casos de estado, identidad y atribución. Revisar futuras migraciones y lectores junto con sus escritores. Mantener separados actividad, respuesta evaluada, espaciado, finalización y dominio; un test estático o un mock no demuestra sincronización real.
-

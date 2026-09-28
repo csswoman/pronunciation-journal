@@ -8,7 +8,7 @@ diseño y planes de producto.
 
 | Documento | Descripción |
 |-----------|-------------|
-| [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, Plan diario, Repaso y Progreso |
+| [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, familiaridad declarada, verificaciones, Plan diario, Repaso y Progreso |
 | [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
 | [Identidad de intentos y ventana SRS](architecture/practice-attempt-identity.md) | Recibos duraderos, keys UUID, replay de Practice/Coach y protección temporal de las RPC SM-2 del plan 046 |
@@ -18,11 +18,10 @@ diseño y planes de producto.
 | [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
 | [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
 | [Modelos de voz locales](ai/local-voice-models.md) | Spike de Kokoro TTS (Plan 039, fase A): licencia, tamaños, voces y veredicto de la puerta (no-ship — latencia por palabra en WASM) |
-| [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
-| [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
+| [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión, persistencia y calificación tolerante de contracciones (Plan 051) |
+| [Juegos de práctica](architecture/games.md) | Motores locales, catálogo, resultados de sesión y conexión de Phoneme Invaders con SRS (Planes 052 y 054) |
 | [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
-| [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
 | [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
 | [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
@@ -103,8 +102,8 @@ La serie 5 (035–042, 2026-09-23) cubre el uso de la IA gratuita, el AI Coach y
 | [041](../plans/041-pregenerated-content-bank-from-leftover-quota.md) | Banco de ejercicios pregenerados con la cuota diaria que sobra |
 | [042](../plans/042-report-wrong-ai-feedback.md) | Botón "Esta corrección está mal" y casos de evaluación reales |
 
-Estos planes describen trabajo **pendiente**. Cada plan tiene un paso final de documentación que actualiza
-este índice, `README.md`, `CLAUDE.md` y `docs/architecture/` cuando se ejecuta.
+Estos documentos conservan el alcance de cada plan. El estado actual, el orden y las dependencias se mantienen
+en [`plans/README.md`](../plans/README.md), para distinguir los planes pendientes de los ya aplicados.
 
 ## Especificaciones y planes
 
@@ -112,6 +111,7 @@ Documentos de diseño e implementación generados en flujos de trabajo asistidos
 
 - [`superpowers/specs/`](superpowers/specs/) para especificaciones funcionales
 - [`superpowers/plans/`](superpowers/plans/) para planes de implementación
+- [Known Words Triage](plans/2026-09-27-known-words-triage.md) para la declaración de familiaridad y su verificación diferida
 
 ## Notas de uso
 

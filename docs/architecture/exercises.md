@@ -80,10 +80,19 @@ Diseñado para ejercicios escritos de drills de gramática (`sentence_transforma
 2. **Plantillas `{a|b}` y expansión combinatoria (`expandTemplate`)**:
    - Soporta sintaxis de alternancia como `I {have|'ve} seen {it|that}`.
    - Aplica un **tope estricto de 64 variantes combinatorias** (`MAX_TEMPLATE_EXPANSIONS = 64`) para proteger la memoria y evitar explosión exponencial por backtracking o regex. Si un autor o generador excede 64 variantes, se lanza un error de validación interceptado por `safeMatchAnswer`.
-3. **Manejo de contracciones (`contractions`)**:
-   - `'equivalent'` (default): Acepta indistintamente formas contraídas y expandidas (ej. *"don't"* ↔ *"do not"*, *"I've"* ↔ *"I have"*).
-   - `'require'`: Exige el uso de contracciones (típico en drills de habla o nivel A1 para naturalidad).
-   - `'forbid'`: Exige formas plenas sin contracción (típico en registro formal C1).
+3. **Manejo de contracciones (`lib/exercises/contractions.ts`)**:
+   - Helper puro `areContractionEquivalent(textA, textB)` compartido unificadamente entre `matchAnswer`, `matchesAcceptedAnswer` (`grading-pipeline.ts`) y `evaluateExercise` (`evaluator.ts` del AI Coach).
+   - Alineación de tokens memoizada, con como máximo el producto de los tokens de ambas respuestas como estados; evita expandir combinaciones.
+   - Contracciones con contexto de referencia: restringe `'s` (`is` vs `has`, ej. *"He's been"* ↔ *"He has been"* vs *"He is ready"*) y `'d` (`would` vs `had`, ej. *"I'd like"* ↔ *"I would like"* y *"I'd finished"* ↔ *"I had finished"*).
+   - No expande `'s` en sustantivos posesivos arbitrarios (*"John's book"* nunca se expande a *"John is book"* o *"John has book"*).
+   - Rechaza auxiliares inválidos (*"He is happy"* no equivale a *"He has happy"*).
+   - Soporte transparente para apóstrofos curvos (`’` y `'`).
+   - Modos de restricción (`contractions` en `AnswerSpec`):
+     - `'equivalent'` (default): Acepta indistintamente formas contraídas y expandidas.
+     - `'require'`: Exige el uso de contracciones (`expectedForm: 'contracted'`).
+     - `'forbid'`: Exige formas plenas sin contracción (`expectedForm: 'full'`).
+   - *Nota de política*: La equivalencia lingüística no altera la política de typos; cualquier error ortográfico en palabras objetivo (`targetTokens` o `mustInclude`) sigue siendo rechazado. La política de crédito parcial por typos queda diferida.
+   - Versionado de caché a `v2` en `grading-pipeline.ts`: la clave SHA-256 de caché incorpora `v2` para invalidar decisiones previas obsoletas y resolver respuestas válidas directamente en local.
 4. **Tolerancia ortográfica por distancia Damerau-Levenshtein**:
    - Permite una distancia de edición de 1 error tipográfico para palabras o tokens significativos de al menos 5 caracteres (`allowTypo: true`).
    - Distingue entre un error conceptual y un tipeo menor accidental sin penalizar injustamente al alumno.

@@ -1,8 +1,9 @@
 import { db, type GradedAnswerRecord } from '@/lib/db'
+import { areContractionEquivalent } from './contractions'
 import { gradeProduction } from './grade-production-client'
 import type { GradeProductionInput, ProductionGradeResult } from './production-grade'
 
-const CACHE_VERSION = 'v1'
+export const CACHE_VERSION = 'v2'
 const CONTRACTIONS: Record<string, string> = {
   "can't": 'cannot', "won't": 'will not', "don't": 'do not', "doesn't": 'does not',
   "didn't": 'did not', "isn't": 'is not', "aren't": 'are not', "wasn't": 'was not',
@@ -24,7 +25,11 @@ export function normalizeAcceptedAnswer(value: string): string {
 
 export function matchesAcceptedAnswer(answer: string, candidates: readonly string[]): boolean {
   const normalized = normalizeAcceptedAnswer(answer)
-  return candidates.some((candidate) => normalizeAcceptedAnswer(candidate) === normalized)
+  return candidates.some(
+    (candidate) =>
+      normalizeAcceptedAnswer(candidate) === normalized ||
+      areContractionEquivalent(answer, candidate),
+  )
 }
 
 function localResult(correct: boolean, feedback: string, corrections?: string): ProductionGradeResult {
@@ -34,7 +39,7 @@ function localResult(correct: boolean, feedback: string, corrections?: string): 
   }
 }
 
-async function cacheKey(userId: string, exerciseKey: string, normalized: string): Promise<string> {
+export async function cacheKey(userId: string, exerciseKey: string, normalized: string): Promise<string> {
   const bytes = new TextEncoder().encode(`${CACHE_VERSION}:${userId}:${exerciseKey}:${normalized}`)
   const digest = await crypto.subtle.digest('SHA-256', bytes)
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
@@ -101,7 +106,7 @@ export async function gradeWithLocalFirst(
   if (input.sourceSentence && normalized === normalizeAcceptedAnswer(input.sourceSentence)) {
     return localResult(false, 'No transformaste la oración.', reference)
   }
-  if (matchesAcceptedAnswer(normalized, input.acceptedAnswers ?? [])) {
+  if (matchesAcceptedAnswer(input.gradeInput.production, input.acceptedAnswers ?? [])) {
     return localResult(true, '¡Correcto!')
   }
   if (await deps.isAccepted(input.userId, input.exerciseKey, normalized)) {

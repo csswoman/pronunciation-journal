@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { gradeWithLocalFirst, matchesAcceptedAnswer, normalizeAcceptedAnswer } from '../grading-pipeline'
+import {
+  CACHE_VERSION,
+  cacheKey,
+  gradeWithLocalFirst,
+  matchesAcceptedAnswer,
+  normalizeAcceptedAnswer,
+} from '../grading-pipeline'
 import type { ProductionGradeResult } from '../production-grade'
 
 const aiResult: ProductionGradeResult = {
@@ -9,7 +15,7 @@ const aiResult: ProductionGradeResult = {
 
 const gradeProduction = vi.fn(async () => aiResult)
 const isAccepted = vi.fn(async () => false)
-const getCached = vi.fn(async () => undefined as ProductionGradeResult | undefined)
+const getCached = vi.fn<(key: string) => Promise<ProductionGradeResult | undefined>>(async () => undefined)
 const save = vi.fn(async () => undefined)
 const deps = { gradeProduction, isAccepted, getCached, save }
 
@@ -83,5 +89,46 @@ describe('gradeWithLocalFirst', () => {
     expect(save).toHaveBeenCalledWith(expect.objectContaining({
       userId: 'u1', exerciseKey: 'exercise-1', normalized: 'i worked late yesterday', accepted: 1,
     }))
+  })
+
+  it('uses CACHE_VERSION v2 to prevent reusing invalid decisions from v1', async () => {
+    expect(CACHE_VERSION).toBe('v2')
+
+    // Simulate an old v1 cache key computation
+    const v1Bytes = new TextEncoder().encode('v1:u1:exercise-1:i worked late yesterday')
+    const v1Digest = await crypto.subtle.digest('SHA-256', v1Bytes)
+    const v1Key = Array.from(new Uint8Array(v1Digest), (b) => b.toString(16).padStart(2, '0')).join('')
+
+    const v2Key = await cacheKey('u1', 'exercise-1', 'i worked late yesterday')
+    expect(v2Key).not.toBe(v1Key)
+
+    // Verify gradeWithLocalFirst requests the v2 key from cache, ignoring any v1 entry
+    const v2Cached: ProductionGradeResult = { ...aiResult, feedback: 'v2 valid' }
+    getCached.mockImplementation(async (key: string) => (key === v2Key ? v2Cached : undefined))
+
+    const result = await gradeWithLocalFirst(input({
+      acceptedAnswers: [],
+      gradeInput: { ...input().gradeInput, production: 'I worked late yesterday' },
+    }), deps)
+
+    expect(result).toEqual(v2Cached)
+    expect(getCached).toHaveBeenCalledWith(v2Key)
+    expect(gradeProduction).not.toHaveBeenCalled()
+  })
+
+  it('resolves valid contraction equivalence locally without calling AI or checking cache', async () => {
+    const result = await gradeWithLocalFirst(input({
+      acceptedAnswers: ['He has been waiting here.'],
+      gradeInput: {
+        targetItem: 'waiting',
+        taskPrompt: 'Write',
+        production: "He's been waiting here",
+        modality: 'written',
+      },
+    }), deps)
+
+    expect(result).toMatchObject({ correct: true, score: 100 })
+    expect(gradeProduction).not.toHaveBeenCalled()
+    expect(getCached).not.toHaveBeenCalled()
   })
 })

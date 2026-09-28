@@ -1,5 +1,14 @@
 import { diffWords } from './diff-words'
+import { expandTemplate } from './answer-match-templates'
+import {
+  areContractionEquivalent,
+  hasContractedForm,
+  hasUncontractedForm,
+  UNAMBIGUOUS_CONTRACTIONS,
+} from './contractions'
 import type { ErrorCorrectionExercise, ReorderWordsExercise, SentenceTransformationExercise } from './types'
+
+export { expandTemplate }
 
 export interface AnswerSpec {
   /** Plantillas de respuestas válidas. `{a|b}` = alternativas; `{a|}` = opcional. La 1.ª expansión es la canónica. */
@@ -28,17 +37,24 @@ export type AnswerVerdict =
   | { kind: 'known_wrong'; feedback: string }
   | { kind: 'no_match'; canonical: string }
 
-const CONTRACTIONS: Record<string, string> = {
-  "i'm": 'i am', "you're": 'you are', "he's": 'he is', "she's": 'she is',
-  "it's": 'it is', "we're": 'we are', "they're": 'they are',
-  "that's": 'that is', "there's": 'there is', "what's": 'what is', "who's": 'who is', "here's": 'here is',
-  "isn't": 'is not', "aren't": 'are not', "wasn't": 'was not', "weren't": 'were not',
-  "don't": 'do not', "doesn't": 'does not', "didn't": 'did not',
-  "haven't": 'have not', "hasn't": 'has not', "hadn't": 'had not',
-  "can't": 'cannot', "couldn't": 'could not',
-  "won't": 'will not', "wouldn't": 'would not', "shouldn't": 'should not',
-  "i've": 'i have', "you've": 'you have', "we've": 'we have', "they've": 'they have',
-  "i'll": 'i will', "you'll": 'you will', "we'll": 'we will', "they'll": 'they will',
+function contractionMismatch(
+  answer: string,
+  mode: AnswerSpec['contractions'],
+  matched: string,
+): Extract<AnswerVerdict, { kind: 'contraction_mismatch' }> | undefined {
+  if (mode === 'require' && hasUncontractedForm(answer)) {
+    return { kind: 'contraction_mismatch', matched, expectedForm: 'contracted' }
+  }
+  if (mode === 'forbid' && hasContractedForm(answer)) {
+    return { kind: 'contraction_mismatch', matched, expectedForm: 'full' }
+  }
+  return undefined
+}
+
+const DEFAULT_CONTRACTION_EXPANSIONS: Record<string, string> = {
+  ...UNAMBIGUOUS_CONTRACTIONS,
+  "he's": 'he is', "she's": 'she is', "it's": 'it is', "that's": 'that is',
+  "there's": 'there is', "what's": 'what is', "who's": 'who is', "here's": 'here is',
   "i'd": 'i would', "you'd": 'you would', "he'd": 'he would', "she'd": 'she would',
   "we'd": 'we would', "they'd": 'they would', "let's": 'let us',
 }
@@ -52,42 +68,6 @@ export function normalize(value: string): string {
     .trim()
 }
 
-export function expandTemplate(template: string): string[] {
-  const parts: string[][] = []
-  let lastIndex = 0
-  const regex = /\{([^{}]+)\}/g
-  let match: RegExpExecArray | null
-
-  while ((match = regex.exec(template)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push([template.slice(lastIndex, match.index)])
-    }
-    parts.push(match[1].split('|'))
-    lastIndex = regex.lastIndex
-  }
-  if (lastIndex < template.length) {
-    parts.push([template.slice(lastIndex)])
-  }
-  if (parts.length === 0) return ['']
-
-  const total = parts.reduce((acc, p) => acc * p.length, 1)
-  if (total > 64) {
-    throw new Error(`Template expansion exceeded limit of 64 (got ${total})`)
-  }
-
-  let combinations = parts[0]
-  for (let i = 1; i < parts.length; i++) {
-    const next: string[] = []
-    for (const prefix of combinations) {
-      for (const opt of parts[i]) {
-        next.push(prefix + opt)
-      }
-    }
-    combinations = next
-  }
-  return combinations
-}
-
 export function expandContractions(tokens: string[] | string): string[] {
   const words = Array.isArray(tokens)
     ? tokens.flatMap((t) => normalize(t).split(/\s+/).filter(Boolean))
@@ -95,7 +75,7 @@ export function expandContractions(tokens: string[] | string): string[] {
 
   const result: string[] = []
   for (const w of words) {
-    const expanded = CONTRACTIONS[w]
+    const expanded = DEFAULT_CONTRACTION_EXPANSIONS[w]
     if (expanded) {
       result.push(...expanded.split(' '))
     } else {
@@ -103,19 +83,6 @@ export function expandContractions(tokens: string[] | string): string[] {
     }
   }
   return result
-}
-
-function hasContractedForm(normalized: string): boolean {
-  const words = normalized.split(/\s+/).filter(Boolean)
-  return words.some((w) => w in CONTRACTIONS)
-}
-
-function hasUncontractedForm(normalized: string): boolean {
-  for (const expanded of Object.values(CONTRACTIONS)) {
-    const regex = new RegExp(`\\b${expanded}\\b`, 'i')
-    if (regex.test(normalized)) return true
-  }
-  return false
 }
 
 export function damerauLevenshtein(a: string, b: string): number {
@@ -179,17 +146,21 @@ export function matchAnswer(answer: string, spec: AnswerSpec, options?: MatchOpt
     }
   }
 
-  const userExpanded = expandContractions(normUser).join(' ')
   for (const exp of allExpansions) {
-    const expExpanded = expandContractions(exp).join(' ')
-    if (userExpanded === expExpanded) {
-      if (contractionMode === 'require' && hasUncontractedForm(normUser)) {
-        return { kind: 'contraction_mismatch', matched: allExpansions[0], expectedForm: 'contracted' }
-      }
-      if (contractionMode === 'forbid' && hasContractedForm(normUser)) {
-        return { kind: 'contraction_mismatch', matched: allExpansions[0], expectedForm: 'full' }
-      }
+    if (areContractionEquivalent(normUser, exp)) {
+      const mismatch = contractionMismatch(normUser, contractionMode, allExpansions[0])
+      if (mismatch) return mismatch
       return { kind: 'variant', score: 100, matched: exp }
+    }
+  }
+
+  if (options?.extraAccepted) {
+    for (const extra of options.extraAccepted) {
+      if (areContractionEquivalent(normUser, extra)) {
+        const mismatch = contractionMismatch(normUser, contractionMode, extra)
+        if (mismatch) return mismatch
+        return { kind: 'variant', score: 100, matched: extra }
+      }
     }
   }
 
