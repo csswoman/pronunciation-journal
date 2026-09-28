@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { KokoroBench } from '@/components/dev/KokoroBench'
 
 export const metadata = {
   title: 'Kokoro Bench — Dev Only',
@@ -10,10 +9,12 @@ export const metadata = {
  * dev-only, same pattern as `dev/sounds`. Delete once the fase A verdict is
  * recorded in `docs/ai/local-voice-models.md` and fase B starts.
  */
-export default function KokoroBenchPage() {
-  if (process.env.NODE_ENV === 'production') {
-    notFound()
+export default async function KokoroBenchPage() {
+  // Keep the stopped spike's worker out of the production dependency graph.
+  if (process.env.NODE_ENV === 'development') {
+    const { KokoroBench } = await import('@/components/dev/KokoroBench')
+    return <KokoroBench />
   }
 
-  return <KokoroBench />
+  notFound()
 }
