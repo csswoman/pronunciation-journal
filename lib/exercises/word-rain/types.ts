@@ -18,6 +18,7 @@ export interface FallingWordItem {
   yPercent: number // 0% (top) to 100% (hit bottom)
   speed: number // percentage per tick
   isMatched?: boolean
+  isMissed?: boolean
   isDistractor?: boolean
 }
 
