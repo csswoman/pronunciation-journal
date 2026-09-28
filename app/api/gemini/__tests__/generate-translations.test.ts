@@ -4,7 +4,7 @@ import { z } from 'zod'
 vi.mock('server-only', () => ({}))
 
 import { parseGeminiJson } from '@/lib/gemini/json-route'
-import { GenerateTranslationsResponseSchema } from '../generate-translations/route'
+import { GenerateTranslationsResponseSchema } from '@/lib/gemini/generation-schemas'
 
 const simulatedResponse = `\`\`\`json
 {
