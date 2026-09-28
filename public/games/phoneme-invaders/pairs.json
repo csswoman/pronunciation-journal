@@ -1,22 +1,970 @@
 [
-  { "id": "pair-1", "wordA": "ship", "wordB": "sheep", "ipaA": "/ʃɪp/", "ipaB": "/ʃiːp/", "contrast": "iː|ɪ" },
-  { "id": "pair-2", "wordA": "bit", "wordB": "beat", "ipaA": "/bɪt/", "ipaB": "/biːt/", "contrast": "iː|ɪ" },
-  { "id": "pair-3", "wordA": "sit", "wordB": "seat", "ipaA": "/sɪt/", "ipaB": "/siːt/", "contrast": "iː|ɪ" },
-  { "id": "pair-4", "wordA": "fit", "wordB": "feet", "ipaA": "/fɪt/", "ipaB": "/fiːt/", "contrast": "iː|ɪ" },
-  { "id": "pair-5", "wordA": "live", "wordB": "leave", "ipaA": "/lɪv/", "ipaB": "/liːv/", "contrast": "iː|ɪ" },
-  { "id": "pair-6", "wordA": "hit", "wordB": "heat", "ipaA": "/hɪt/", "ipaB": "/hiːt/", "contrast": "iː|ɪ" },
-  { "id": "pair-7", "wordA": "cat", "wordB": "cut", "ipaA": "/kæt/", "ipaB": "/kʌt/", "contrast": "æ|ʌ" },
-  { "id": "pair-8", "wordA": "hat", "wordB": "hut", "ipaA": "/hæt/", "ipaB": "/hʌt/", "contrast": "æ|ʌ" },
-  { "id": "pair-9", "wordA": "cap", "wordB": "cup", "ipaA": "/kæp/", "ipaB": "/kʌp/", "contrast": "æ|ʌ" },
-  { "id": "pair-10", "wordA": "bag", "wordB": "bug", "ipaA": "/bæɡ/", "ipaB": "/bʌɡ/", "contrast": "æ|ʌ" },
-  { "id": "pair-11", "wordA": "man", "wordB": "men", "ipaA": "/mæn/", "ipaB": "/men/", "contrast": "æ|e" },
-  { "id": "pair-12", "wordA": "bad", "wordB": "bed", "ipaA": "/bæd/", "ipaB": "/bed/", "contrast": "æ|e" },
-  { "id": "pair-13", "wordA": "ban", "wordB": "van", "ipaA": "/bæn/", "ipaB": "/væn/", "contrast": "b|v" },
-  { "id": "pair-14", "wordA": "best", "wordB": "vest", "ipaA": "/best/", "ipaB": "/vest/", "contrast": "b|v" },
-  { "id": "pair-15", "wordA": "boat", "wordB": "vote", "ipaA": "/boʊt/", "ipaB": "/voʊt/", "contrast": "b|v" },
-  { "id": "pair-16", "wordA": "sue", "wordB": "zoo", "ipaA": "/suː/", "ipaB": "/zuː/", "contrast": "s|z" },
-  { "id": "pair-17", "wordA": "sip", "wordB": "zip", "ipaA": "/sɪp/", "ipaB": "/zɪp/", "contrast": "s|z" },
-  { "id": "pair-18", "wordA": "ship", "wordB": "chip", "ipaA": "/ʃɪp/", "ipaB": "/tʃɪp/", "contrast": "ʃ|tʃ" },
-  { "id": "pair-19", "wordA": "share", "wordB": "chair", "ipaA": "/ʃer/", "ipaB": "/tʃer/", "contrast": "ʃ|tʃ" },
-  { "id": "pair-20", "wordA": "wash", "wordB": "watch", "ipaA": "/wɑːʃ/", "ipaB": "/wɑːtʃ/", "contrast": "ʃ|tʃ" }
+  {
+    "id": "pair-398",
+    "wordA": "seat",
+    "wordB": "sit",
+    "ipaA": "/siːt/",
+    "ipaB": "/sɪt/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-399",
+    "wordA": "feet",
+    "wordB": "fit",
+    "ipaA": "/fiːt/",
+    "ipaB": "/fɪt/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-400",
+    "wordA": "leave",
+    "wordB": "live",
+    "ipaA": "/liːv/",
+    "ipaB": "/lɪv/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-401",
+    "wordA": "sheep",
+    "wordB": "ship",
+    "ipaA": "/ʃiːp/",
+    "ipaB": "/ʃɪp/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-402",
+    "wordA": "bit",
+    "wordB": "beat",
+    "ipaA": "/bɪt/",
+    "ipaB": "/biːt/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-403",
+    "wordA": "sit",
+    "wordB": "seat",
+    "ipaA": "/sɪt/",
+    "ipaB": "/siːt/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-404",
+    "wordA": "ship",
+    "wordB": "sheep",
+    "ipaA": "/ʃɪp/",
+    "ipaB": "/ʃiːp/",
+    "contrast": "/iː/|/ɪ/"
+  },
+  {
+    "id": "pair-405",
+    "wordA": "bed",
+    "wordB": "bad",
+    "ipaA": "/bɛd/",
+    "ipaB": "/bæd/",
+    "contrast": "/æ/|/ɛ/"
+  },
+  {
+    "id": "pair-406",
+    "wordA": "pen",
+    "wordB": "pan",
+    "ipaA": "/pɛn/",
+    "ipaB": "/pæn/",
+    "contrast": "/æ/|/ɛ/"
+  },
+  {
+    "id": "pair-407",
+    "wordA": "set",
+    "wordB": "sat",
+    "ipaA": "/sɛt/",
+    "ipaB": "/sæt/",
+    "contrast": "/æ/|/ɛ/"
+  },
+  {
+    "id": "pair-408",
+    "wordA": "bad",
+    "wordB": "bed",
+    "ipaA": "/bæd/",
+    "ipaB": "/bɛd/",
+    "contrast": "/æ/|/ɛ/"
+  },
+  {
+    "id": "pair-409",
+    "wordA": "man",
+    "wordB": "men",
+    "ipaA": "/mæn/",
+    "ipaB": "/mɛn/",
+    "contrast": "/æ/|/ɛ/"
+  },
+  {
+    "id": "pair-410",
+    "wordA": "cat",
+    "wordB": "cut",
+    "ipaA": "/kæt/",
+    "ipaB": "/kʌt/",
+    "contrast": "/æ/|/ʌ/"
+  },
+  {
+    "id": "pair-411",
+    "wordA": "heart",
+    "wordB": "hurt",
+    "ipaA": "/hɑrt/",
+    "ipaB": "/hɜrt/",
+    "contrast": "/ɑ/|/ɜr/"
+  },
+  {
+    "id": "pair-412",
+    "wordA": "farm",
+    "wordB": "firm",
+    "ipaA": "/fɑrm/",
+    "ipaB": "/fɜrm/",
+    "contrast": "/ɑ/|/ɜr/"
+  },
+  {
+    "id": "pair-413",
+    "wordA": "car",
+    "wordB": "cur",
+    "ipaA": "/kɑr/",
+    "ipaB": "/kɜr/",
+    "contrast": "/ɑ/|/ɜr/"
+  },
+  {
+    "id": "pair-414",
+    "wordA": "hot",
+    "wordB": "hut",
+    "ipaA": "/hɑt/",
+    "ipaB": "/hʌt/",
+    "contrast": "/ɑ/|/ʌ/"
+  },
+  {
+    "id": "pair-415",
+    "wordA": "cot",
+    "wordB": "cut",
+    "ipaA": "/kɑt/",
+    "ipaB": "/kʌt/",
+    "contrast": "/ɑ/|/ʌ/"
+  },
+  {
+    "id": "pair-416",
+    "wordA": "top",
+    "wordB": "tap",
+    "ipaA": "/tɑp/",
+    "ipaB": "/tæp/",
+    "contrast": "/æ/|/ɑ/"
+  },
+  {
+    "id": "pair-417",
+    "wordA": "law",
+    "wordB": "low",
+    "ipaA": "/lɔ/",
+    "ipaB": "/loʊ/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-418",
+    "wordA": "caught",
+    "wordB": "coat",
+    "ipaA": "/kɔt/",
+    "ipaB": "/koʊt/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-419",
+    "wordA": "tall",
+    "wordB": "toll",
+    "ipaA": "/tɔl/",
+    "ipaB": "/toʊl/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-420",
+    "wordA": "book",
+    "wordB": "boot",
+    "ipaA": "/bʊk/",
+    "ipaB": "/buːt/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-421",
+    "wordA": "pull",
+    "wordB": "pool",
+    "ipaA": "/pʊl/",
+    "ipaB": "/puːl/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-422",
+    "wordA": "full",
+    "wordB": "fool",
+    "ipaA": "/fʊl/",
+    "ipaB": "/fuːl/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-423",
+    "wordA": "food",
+    "wordB": "foot",
+    "ipaA": "/fuːd/",
+    "ipaB": "/fʊt/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-424",
+    "wordA": "pool",
+    "wordB": "pull",
+    "ipaA": "/puːl/",
+    "ipaB": "/pʊl/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-425",
+    "wordA": "cool",
+    "wordB": "could",
+    "ipaA": "/kuːl/",
+    "ipaB": "/kʊd/",
+    "contrast": "/uː/|/ʊ/"
+  },
+  {
+    "id": "pair-426",
+    "wordA": "cup",
+    "wordB": "cap",
+    "ipaA": "/kʌp/",
+    "ipaB": "/kæp/",
+    "contrast": "/æ/|/ʌ/"
+  },
+  {
+    "id": "pair-427",
+    "wordA": "cut",
+    "wordB": "cat",
+    "ipaA": "/kʌt/",
+    "ipaB": "/kæt/",
+    "contrast": "/æ/|/ʌ/"
+  },
+  {
+    "id": "pair-428",
+    "wordA": "luck",
+    "wordB": "lack",
+    "ipaA": "/lʌk/",
+    "ipaB": "/læk/",
+    "contrast": "/æ/|/ʌ/"
+  },
+  {
+    "id": "pair-429",
+    "wordA": "bird",
+    "wordB": "bard",
+    "ipaA": "/bɜrd/",
+    "ipaB": "/bɑrd/",
+    "contrast": "/ɑ/|/ɜr/"
+  },
+  {
+    "id": "pair-430",
+    "wordA": "hurt",
+    "wordB": "heart",
+    "ipaA": "/hɜrt/",
+    "ipaB": "/hɑrt/",
+    "contrast": "/ɑ/|/ɜr/"
+  },
+  {
+    "id": "pair-431",
+    "wordA": "word",
+    "wordB": "ward",
+    "ipaA": "/wɜrd/",
+    "ipaB": "/wɔrd/",
+    "contrast": "/ɔ/|/ɜr/"
+  },
+  {
+    "id": "pair-432",
+    "wordA": "pat",
+    "wordB": "bat",
+    "ipaA": "/pæt/",
+    "ipaB": "/bæt/",
+    "contrast": "/b/|/p/"
+  },
+  {
+    "id": "pair-433",
+    "wordA": "pig",
+    "wordB": "big",
+    "ipaA": "/pɪɡ/",
+    "ipaB": "/bɪɡ/",
+    "contrast": "/b/|/p/"
+  },
+  {
+    "id": "pair-434",
+    "wordA": "pie",
+    "wordB": "buy",
+    "ipaA": "/paɪ/",
+    "ipaB": "/baɪ/",
+    "contrast": "/b/|/p/"
+  },
+  {
+    "id": "pair-435",
+    "wordA": "ban",
+    "wordB": "van",
+    "ipaA": "/bæn/",
+    "ipaB": "/væn/",
+    "contrast": "/b/|/v/"
+  },
+  {
+    "id": "pair-436",
+    "wordA": "berry",
+    "wordB": "very",
+    "ipaA": "/ˈbɛri/",
+    "ipaB": "/ˈvɛri/",
+    "contrast": "/b/|/v/"
+  },
+  {
+    "id": "pair-437",
+    "wordA": "back",
+    "wordB": "pack",
+    "ipaA": "/bæk/",
+    "ipaB": "/pæk/",
+    "contrast": "/b/|/p/"
+  },
+  {
+    "id": "pair-438",
+    "wordA": "ten",
+    "wordB": "den",
+    "ipaA": "/tɛn/",
+    "ipaB": "/dɛn/",
+    "contrast": "/d/|/t/"
+  },
+  {
+    "id": "pair-439",
+    "wordA": "tip",
+    "wordB": "dip",
+    "ipaA": "/tɪp/",
+    "ipaB": "/dɪp/",
+    "contrast": "/d/|/t/"
+  },
+  {
+    "id": "pair-440",
+    "wordA": "town",
+    "wordB": "down",
+    "ipaA": "/taʊn/",
+    "ipaB": "/daʊn/",
+    "contrast": "/d/|/t/"
+  },
+  {
+    "id": "pair-441",
+    "wordA": "den",
+    "wordB": "ten",
+    "ipaA": "/dɛn/",
+    "ipaB": "/tɛn/",
+    "contrast": "/d/|/t/"
+  },
+  {
+    "id": "pair-442",
+    "wordA": "day",
+    "wordB": "they",
+    "ipaA": "/deɪ/",
+    "ipaB": "/ðeɪ/",
+    "contrast": "/d/|/ð/"
+  },
+  {
+    "id": "pair-443",
+    "wordA": "dare",
+    "wordB": "there",
+    "ipaA": "/dɛr/",
+    "ipaB": "/ðɛr/",
+    "contrast": "/d/|/ð/"
+  },
+  {
+    "id": "pair-444",
+    "wordA": "came",
+    "wordB": "game",
+    "ipaA": "/keɪm/",
+    "ipaB": "/ɡeɪm/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-445",
+    "wordA": "coat",
+    "wordB": "goat",
+    "ipaA": "/koʊt/",
+    "ipaB": "/ɡoʊt/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-446",
+    "wordA": "cold",
+    "wordB": "gold",
+    "ipaA": "/koʊld/",
+    "ipaB": "/ɡoʊld/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-447",
+    "wordA": "goat",
+    "wordB": "coat",
+    "ipaA": "/ɡoʊt/",
+    "ipaB": "/koʊt/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-448",
+    "wordA": "gold",
+    "wordB": "cold",
+    "ipaA": "/ɡoʊld/",
+    "ipaB": "/koʊld/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-449",
+    "wordA": "glass",
+    "wordB": "class",
+    "ipaA": "/ɡlæs/",
+    "ipaB": "/klæs/",
+    "contrast": "/g/|/k/"
+  },
+  {
+    "id": "pair-450",
+    "wordA": "fan",
+    "wordB": "van",
+    "ipaA": "/fæn/",
+    "ipaB": "/væn/",
+    "contrast": "/f/|/v/"
+  },
+  {
+    "id": "pair-451",
+    "wordA": "fat",
+    "wordB": "vat",
+    "ipaA": "/fæt/",
+    "ipaB": "/væt/",
+    "contrast": "/f/|/v/"
+  },
+  {
+    "id": "pair-452",
+    "wordA": "fine",
+    "wordB": "vine",
+    "ipaA": "/faɪn/",
+    "ipaB": "/vaɪn/",
+    "contrast": "/f/|/v/"
+  },
+  {
+    "id": "pair-453",
+    "wordA": "van",
+    "wordB": "ban",
+    "ipaA": "/væn/",
+    "ipaB": "/bæn/",
+    "contrast": "/b/|/v/"
+  },
+  {
+    "id": "pair-454",
+    "wordA": "vat",
+    "wordB": "bat",
+    "ipaA": "/væt/",
+    "ipaB": "/bæt/",
+    "contrast": "/b/|/v/"
+  },
+  {
+    "id": "pair-455",
+    "wordA": "vine",
+    "wordB": "fine",
+    "ipaA": "/vaɪn/",
+    "ipaB": "/faɪn/",
+    "contrast": "/f/|/v/"
+  },
+  {
+    "id": "pair-456",
+    "wordA": "think",
+    "wordB": "sink",
+    "ipaA": "/θɪŋk/",
+    "ipaB": "/sɪŋk/",
+    "contrast": "/s/|/θ/"
+  },
+  {
+    "id": "pair-457",
+    "wordA": "thin",
+    "wordB": "tin",
+    "ipaA": "/θɪn/",
+    "ipaB": "/tɪn/",
+    "contrast": "/t/|/θ/"
+  },
+  {
+    "id": "pair-458",
+    "wordA": "three",
+    "wordB": "free",
+    "ipaA": "/θriː/",
+    "ipaB": "/friː/",
+    "contrast": "/f/|/θ/"
+  },
+  {
+    "id": "pair-459",
+    "wordA": "then",
+    "wordB": "den",
+    "ipaA": "/ðɛn/",
+    "ipaB": "/dɛn/",
+    "contrast": "/d/|/ð/"
+  },
+  {
+    "id": "pair-460",
+    "wordA": "though",
+    "wordB": "dough",
+    "ipaA": "/ðoʊ/",
+    "ipaB": "/doʊ/",
+    "contrast": "/d/|/ð/"
+  },
+  {
+    "id": "pair-461",
+    "wordA": "either",
+    "wordB": "ether",
+    "ipaA": "/ˈiːðər/",
+    "ipaB": "/ˈiːθər/",
+    "contrast": "/ð/|/θ/"
+  },
+  {
+    "id": "pair-462",
+    "wordA": "sue",
+    "wordB": "zoo",
+    "ipaA": "/suː/",
+    "ipaB": "/zuː/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-463",
+    "wordA": "sip",
+    "wordB": "zip",
+    "ipaA": "/sɪp/",
+    "ipaB": "/zɪp/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-464",
+    "wordA": "seal",
+    "wordB": "zeal",
+    "ipaA": "/siːl/",
+    "ipaB": "/ziːl/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-465",
+    "wordA": "zip",
+    "wordB": "sip",
+    "ipaA": "/zɪp/",
+    "ipaB": "/sɪp/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-466",
+    "wordA": "zeal",
+    "wordB": "seal",
+    "ipaA": "/ziːl/",
+    "ipaB": "/siːl/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-467",
+    "wordA": "buzz",
+    "wordB": "bus",
+    "ipaA": "/bʌz/",
+    "ipaB": "/bʌs/",
+    "contrast": "/s/|/z/"
+  },
+  {
+    "id": "pair-468",
+    "wordA": "she",
+    "wordB": "see",
+    "ipaA": "/ʃiː/",
+    "ipaB": "/siː/",
+    "contrast": "/s/|/ʃ/"
+  },
+  {
+    "id": "pair-469",
+    "wordA": "ship",
+    "wordB": "sip",
+    "ipaA": "/ʃɪp/",
+    "ipaB": "/sɪp/",
+    "contrast": "/s/|/ʃ/"
+  },
+  {
+    "id": "pair-470",
+    "wordA": "shoe",
+    "wordB": "sue",
+    "ipaA": "/ʃuː/",
+    "ipaB": "/suː/",
+    "contrast": "/s/|/ʃ/"
+  },
+  {
+    "id": "pair-471",
+    "wordA": "glazier",
+    "wordB": "glacier",
+    "ipaA": "/ˈɡleɪʒər/",
+    "ipaB": "/ˈɡleɪʃər/",
+    "contrast": "/ʃ/|/ʒ/"
+  },
+  {
+    "id": "pair-472",
+    "wordA": "version",
+    "wordB": "virgin",
+    "ipaA": "/ˈvɜrʒən/",
+    "ipaB": "/ˈvɜrdʒən/",
+    "contrast": "/dʒ/|/ʒ/"
+  },
+  {
+    "id": "pair-473",
+    "wordA": "composure",
+    "wordB": "composer",
+    "ipaA": "/kəmˈpoʊʒər/",
+    "ipaB": "/kəmˈpoʊzər/",
+    "contrast": "/z/|/ʒ/"
+  },
+  {
+    "id": "pair-474",
+    "wordA": "hat",
+    "wordB": "at",
+    "ipaA": "/hæt/",
+    "ipaB": "/æt/",
+    "contrast": "/h/|/æ/"
+  },
+  {
+    "id": "pair-475",
+    "wordA": "hit",
+    "wordB": "it",
+    "ipaA": "/hɪt/",
+    "ipaB": "/ɪt/",
+    "contrast": "/h/|/ɪ/"
+  },
+  {
+    "id": "pair-476",
+    "wordA": "hold",
+    "wordB": "old",
+    "ipaA": "/hoʊld/",
+    "ipaB": "/oʊld/",
+    "contrast": "/h/|/oʊ/"
+  },
+  {
+    "id": "pair-477",
+    "wordA": "chair",
+    "wordB": "share",
+    "ipaA": "/tʃɛr/",
+    "ipaB": "/ʃɛr/",
+    "contrast": "/tʃ/|/ʃ/"
+  },
+  {
+    "id": "pair-478",
+    "wordA": "cheap",
+    "wordB": "sheep",
+    "ipaA": "/tʃiːp/",
+    "ipaB": "/ʃiːp/",
+    "contrast": "/tʃ/|/ʃ/"
+  },
+  {
+    "id": "pair-479",
+    "wordA": "chin",
+    "wordB": "shin",
+    "ipaA": "/tʃɪn/",
+    "ipaB": "/ʃɪn/",
+    "contrast": "/tʃ/|/ʃ/"
+  },
+  {
+    "id": "pair-480",
+    "wordA": "gin",
+    "wordB": "chin",
+    "ipaA": "/dʒɪn/",
+    "ipaB": "/tʃɪn/",
+    "contrast": "/dʒ/|/tʃ/"
+  },
+  {
+    "id": "pair-481",
+    "wordA": "jet",
+    "wordB": "yet",
+    "ipaA": "/dʒɛt/",
+    "ipaB": "/jɛt/",
+    "contrast": "/dʒ/|/j/"
+  },
+  {
+    "id": "pair-482",
+    "wordA": "jam",
+    "wordB": "yam",
+    "ipaA": "/dʒæm/",
+    "ipaB": "/jæm/",
+    "contrast": "/dʒ/|/j/"
+  },
+  {
+    "id": "pair-483",
+    "wordA": "mail",
+    "wordB": "nail",
+    "ipaA": "/meɪl/",
+    "ipaB": "/neɪl/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-484",
+    "wordA": "meet",
+    "wordB": "neat",
+    "ipaA": "/miːt/",
+    "ipaB": "/niːt/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-485",
+    "wordA": "might",
+    "wordB": "night",
+    "ipaA": "/maɪt/",
+    "ipaB": "/naɪt/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-486",
+    "wordA": "nail",
+    "wordB": "mail",
+    "ipaA": "/neɪl/",
+    "ipaB": "/meɪl/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-487",
+    "wordA": "night",
+    "wordB": "might",
+    "ipaA": "/naɪt/",
+    "ipaB": "/maɪt/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-488",
+    "wordA": "nine",
+    "wordB": "mine",
+    "ipaA": "/naɪn/",
+    "ipaB": "/maɪn/",
+    "contrast": "/m/|/n/"
+  },
+  {
+    "id": "pair-489",
+    "wordA": "sing",
+    "wordB": "sin",
+    "ipaA": "/sɪŋ/",
+    "ipaB": "/sɪn/",
+    "contrast": "/n/|/ŋ/"
+  },
+  {
+    "id": "pair-490",
+    "wordA": "wing",
+    "wordB": "win",
+    "ipaA": "/wɪŋ/",
+    "ipaB": "/wɪn/",
+    "contrast": "/n/|/ŋ/"
+  },
+  {
+    "id": "pair-491",
+    "wordA": "bang",
+    "wordB": "ban",
+    "ipaA": "/bæŋ/",
+    "ipaB": "/bæn/",
+    "contrast": "/n/|/ŋ/"
+  },
+  {
+    "id": "pair-492",
+    "wordA": "led",
+    "wordB": "red",
+    "ipaA": "/lɛd/",
+    "ipaB": "/rɛd/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-493",
+    "wordA": "late",
+    "wordB": "rate",
+    "ipaA": "/leɪt/",
+    "ipaB": "/reɪt/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-494",
+    "wordA": "light",
+    "wordB": "right",
+    "ipaA": "/laɪt/",
+    "ipaB": "/raɪt/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-495",
+    "wordA": "red",
+    "wordB": "led",
+    "ipaA": "/rɛd/",
+    "ipaB": "/lɛd/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-496",
+    "wordA": "rate",
+    "wordB": "late",
+    "ipaA": "/reɪt/",
+    "ipaB": "/leɪt/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-497",
+    "wordA": "rain",
+    "wordB": "lane",
+    "ipaA": "/reɪn/",
+    "ipaB": "/leɪn/",
+    "contrast": "/l/|/r/"
+  },
+  {
+    "id": "pair-498",
+    "wordA": "yam",
+    "wordB": "jam",
+    "ipaA": "/jæm/",
+    "ipaB": "/dʒæm/",
+    "contrast": "/dʒ/|/j/"
+  },
+  {
+    "id": "pair-499",
+    "wordA": "yet",
+    "wordB": "jet",
+    "ipaA": "/jɛt/",
+    "ipaB": "/dʒɛt/",
+    "contrast": "/dʒ/|/j/"
+  },
+  {
+    "id": "pair-500",
+    "wordA": "year",
+    "wordB": "ear",
+    "ipaA": "/jɪr/",
+    "ipaB": "/ɪr/",
+    "contrast": "/j/|/ɪ/"
+  },
+  {
+    "id": "pair-501",
+    "wordA": "wine",
+    "wordB": "vine",
+    "ipaA": "/waɪn/",
+    "ipaB": "/vaɪn/",
+    "contrast": "/v/|/w/"
+  },
+  {
+    "id": "pair-502",
+    "wordA": "west",
+    "wordB": "vest",
+    "ipaA": "/wɛst/",
+    "ipaB": "/vɛst/",
+    "contrast": "/v/|/w/"
+  },
+  {
+    "id": "pair-503",
+    "wordA": "wet",
+    "wordB": "yet",
+    "ipaA": "/wɛt/",
+    "ipaB": "/jɛt/",
+    "contrast": "/j/|/w/"
+  },
+  {
+    "id": "pair-504",
+    "wordA": "day",
+    "wordB": "die",
+    "ipaA": "/deɪ/",
+    "ipaB": "/daɪ/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-505",
+    "wordA": "late",
+    "wordB": "light",
+    "ipaA": "/leɪt/",
+    "ipaB": "/laɪt/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-506",
+    "wordA": "pain",
+    "wordB": "pine",
+    "ipaA": "/peɪn/",
+    "ipaB": "/paɪn/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-507",
+    "wordA": "light",
+    "wordB": "late",
+    "ipaA": "/laɪt/",
+    "ipaB": "/leɪt/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-508",
+    "wordA": "time",
+    "wordB": "tame",
+    "ipaA": "/taɪm/",
+    "ipaB": "/teɪm/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-509",
+    "wordA": "price",
+    "wordB": "place",
+    "ipaA": "/praɪs/",
+    "ipaB": "/pleɪs/",
+    "contrast": "/aɪ/|/eɪ/"
+  },
+  {
+    "id": "pair-510",
+    "wordA": "boy",
+    "wordB": "bay",
+    "ipaA": "/bɔɪ/",
+    "ipaB": "/beɪ/",
+    "contrast": "/eɪ/|/ɔɪ/"
+  },
+  {
+    "id": "pair-511",
+    "wordA": "coin",
+    "wordB": "cone",
+    "ipaA": "/kɔɪn/",
+    "ipaB": "/koʊn/",
+    "contrast": "/oʊ/|/ɔɪ/"
+  },
+  {
+    "id": "pair-512",
+    "wordA": "oil",
+    "wordB": "ale",
+    "ipaA": "/ɔɪl/",
+    "ipaB": "/eɪl/",
+    "contrast": "/eɪ/|/ɔɪ/"
+  },
+  {
+    "id": "pair-513",
+    "wordA": "low",
+    "wordB": "law",
+    "ipaA": "/loʊ/",
+    "ipaB": "/lɔ/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-514",
+    "wordA": "coat",
+    "wordB": "caught",
+    "ipaA": "/koʊt/",
+    "ipaB": "/kɔt/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-515",
+    "wordA": "bowl",
+    "wordB": "ball",
+    "ipaA": "/boʊl/",
+    "ipaB": "/bɔl/",
+    "contrast": "/oʊ/|/ɔ/"
+  },
+  {
+    "id": "pair-516",
+    "wordA": "now",
+    "wordB": "no",
+    "ipaA": "/naʊ/",
+    "ipaB": "/noʊ/",
+    "contrast": "/aʊ/|/oʊ/"
+  },
+  {
+    "id": "pair-517",
+    "wordA": "out",
+    "wordB": "oat",
+    "ipaA": "/aʊt/",
+    "ipaB": "/oʊt/",
+    "contrast": "/aʊ/|/oʊ/"
+  },
+  {
+    "id": "pair-518",
+    "wordA": "down",
+    "wordB": "done",
+    "ipaA": "/daʊn/",
+    "ipaB": "/dʌn/",
+    "contrast": "/aʊ/|/ʌ/"
+  }
 ]
