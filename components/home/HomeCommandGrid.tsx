@@ -15,6 +15,7 @@ import HomeHeader from "@/components/home/HomeHeader";
 import HomeStatsRow from "@/components/home/HomeStatsRow";
 import HomeExtraExercisesAccordion from "@/components/home/HomeExtraExercisesAccordion";
 import HomeRightSidebar from "@/components/home/HomeRightSidebar";
+import NewChunkInvitation from "@/components/daily/NewChunkInvitation";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomePlanRationale from "@/components/home/HomePlanRationale";
 import HomePlanDone from "@/components/home/HomePlanDone";
@@ -177,6 +178,8 @@ export default function HomeCommandGrid({
               }
             />
           </div>
+
+          {user && !showPostPlan ? <NewChunkInvitation userId={user.id} /> : null}
 
           {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
 

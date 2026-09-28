@@ -7,6 +7,7 @@ function builder(result: { data: Array<Record<string, unknown>>; error: null }) 
     select: () => chain,
     eq: () => chain,
     not: () => chain,
+    or: () => chain,
     then: (resolve: (value: typeof result) => unknown) => Promise.resolve(result).then(resolve),
   }
   return chain

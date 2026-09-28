@@ -137,7 +137,7 @@ describe('DailyChecklist (checklist surface)', () => {
   it('shows the session hub by default — no auto-start into a step session', async () => {
     render(<DailyChecklist conceptLesson={lesson} />)
     expect(screen.queryByText('Step session')).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tu sesión de hoy' })).toBeInTheDocument()
     expect(await screen.findByText('Lesson: Formas débiles')).toBeInTheDocument()
     expect(screen.getByText('Study tip')).toBeInTheDocument()
   })
@@ -189,7 +189,7 @@ describe('DailyChecklist (checklist surface)', () => {
     const exitBtn = screen.getByRole('button', { name: 'Exit step' })
     exitBtn.click()
 
-    expect(await screen.findByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Tu sesión de hoy' })).toBeInTheDocument()
     expect(screen.queryByText(/Step session:/i)).not.toBeInTheDocument()
   })
 
@@ -197,7 +197,7 @@ describe('DailyChecklist (checklist surface)', () => {
     mockState.steps = [makeStep({ id: 's1', kind: 'concept', title: 'Teoría' })]
     render(<DailyChecklist conceptLesson={null} />)
     expect(screen.queryByText(/Step session/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Tu día completo' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tu sesión de hoy' })).toBeInTheDocument()
   })
 
   it('shows the empty lesson state when there is no lesson today', () => {

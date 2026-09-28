@@ -33,6 +33,8 @@ import { PedagogicalContextBanner } from "@/components/daily/PedagogicalContextB
 import { getIllustration } from "@/lib/illustrations/registry";
 import { getHeroIllustrationKey } from "@/lib/home/hero-illustration";
 import HomeHeroStepList from "@/components/home/HomeHeroStepList";
+import HomeHeroNewContent from "@/components/home/HomeHeroNewContent";
+import { isOptionalLinkStep, requiredPracticeSteps } from "@/lib/practice/daily-plan/step-completion";
 
 interface HomeHeroCardProps {
   steps: DailyStep[];
@@ -62,7 +64,7 @@ export default function HomeHeroCard({
 
   const entryIndex = steps.findIndex((s) => {
     const st = getStepStatus(s.id);
-    return st !== "done" && st !== "resolved";
+    return !isOptionalLinkStep(s) && st !== "done" && st !== "resolved";
   });
 
   const activeStepIndex = inProgressStepId
@@ -74,17 +76,14 @@ export default function HomeHeroCard({
   const currentStep = steps[activeStepIndex] ?? steps[0];
   const isMidSession = Boolean(inProgressStepId) && !allDone;
 
-  const isRequiredStep = (s: DailyStep) =>
-    s.id !== "journal_entry" && s.href !== "/journal";
-  const requiredSteps = steps.filter(isRequiredStep);
+  const requiredSteps = requiredPracticeSteps(steps);
   const requiredCount = requiredSteps.length;
-  const isCurrentOptional = currentStep ? !isRequiredStep(currentStep) : false;
+  const isCurrentOptional = currentStep ? isOptionalLinkStep(currentStep) : false;
   const currentRequiredIndex = currentStep
     ? requiredSteps.findIndex((s) => s.id === currentStep.id)
     : 0;
 
-  const totalMinutes = steps.reduce((sum, s) => sum + (s.estMinutes || 0), 0);
-
+  const totalMinutes = requiredSteps.reduce((sum, s) => sum + (s.estMinutes || 0), 0);
   const stepTitle = currentStep
     ? localizeDailyStepTitle(currentStep.title)
     : "Sesión diaria";
@@ -158,6 +157,7 @@ export default function HomeHeroCard({
 
             {/* Contexto pedagógico del foco del día */}
             {!allDone && <PedagogicalContextBanner arc={arc} />}
+            {!allDone ? <HomeHeroNewContent steps={steps} /> : null}
 
             {/* Botón Principal de Acción (CTA) de la pantalla */}
             {!allDone && currentStep ? (

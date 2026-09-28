@@ -181,8 +181,8 @@ export default function DailyChecklist({
       <PageHeader
         variant="default"
         kicker={todayDateFormatted}
-        title="Tu día completo"
-        subtitle="El plan, la lección y la práctica extra."
+        title="Tu sesión de hoy"
+        subtitle="Aprende, practica y vuelve a usarlo. Puedes salir y continuar después."
       />
 
       {/* Dos columnas: el día a la izquierda, el corte semanal a la derecha,
@@ -219,30 +219,20 @@ export default function DailyChecklist({
           collapseFutureSteps={false}
         />
 
-        {/* El estado de error lo renderiza DailyPlanCard (con su Reintentar);
-            aquí sólo va el contenido complementario del día. */}
-        {status === 'ready' ? (
-          <div className="flex flex-col gap-4">
-            <DailyLessonCard lesson={conceptLesson} />
-            <StudyTipDisclosure />
+        <details className="rounded-[var(--radius-md)] border border-border-default bg-surface-raised p-[var(--layout-card-pad)]">
+          <summary className="focus-ring cursor-pointer font-label text-fg">Explorar libremente</summary>
+          <div className="mt-4 flex flex-col gap-4">
+            {status === 'ready' ? (
+              <>
+                <DailyLessonCard lesson={conceptLesson} />
+                <StudyTipDisclosure />
+              </>
+            ) : null}
+            <ImmersionLogCard />
+            {recommendation ? <RecommendedPracticeCard recommendation={recommendation} /> : null}
+            <DailyExploreLinks />
           </div>
-        ) : null}
-
-        {/* External Immersion Logger */}
-        <div>
-          <ImmersionLogCard />
-        </div>
-
-        {recommendation ? (
-          <div>
-            <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
-              Ejercicios extra de hoy
-            </p>
-            <RecommendedPracticeCard recommendation={recommendation} />
-          </div>
-        ) : null}
-
-        <DailyExploreLinks />
+        </details>
         </div>
 
         {weeklyProgress ? (

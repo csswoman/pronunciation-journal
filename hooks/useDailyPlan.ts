@@ -13,7 +13,7 @@ import {
 import { localizeDailyPlanSubtitles } from '@/lib/daily/localize-step-copy'
 import { isDailyStepAlreadyRecorded, recordDailyStepCompletion } from '@/lib/progress/activity-hub'
 import { syncTodayReconciledSteps } from '@/lib/progress/activity-queries-client'
-import { DAILY_PLAN_STEP_COUNT } from '@/lib/practice/daily-plan/constants'
+import { DAILY_PLAN_STEP_COUNT, RESERVED_CHUNK_NEW_SLOTS } from '@/lib/practice/daily-plan/constants'
 import { requiredPracticeSteps } from '@/lib/practice/daily-plan/step-completion'
 import type { DailyPlan, DailyStep } from '@/lib/practice/types'
 import { candidate, selectDailyCandidates } from '@/lib/practice/daily-plan/policy'
@@ -92,7 +92,14 @@ export function useDailyPlan({ conceptLesson, autoLoad = true }: UseDailyPlanOpt
       steps.map((step) => candidate(step, step.selection ?? {
         reason: 'variety', targetRefs: [step.id], source: step.kind,
       })),
-      { limit: DAILY_PLAN_STEP_COUNT },
+      {
+        limit: DAILY_PLAN_STEP_COUNT,
+        // The composer already reserved new material. Reapplying selection to
+        // append the optional lesson must keep those slots or it removes every
+        // chunk/word intro whenever five non-new candidates are available.
+        reservedChunkNewSlots: Math.min(RESERVED_CHUNK_NEW_SLOTS, steps.filter((step) =>
+          step.selection?.reason === 'chunk_new' || step.selection?.reason === 'word_new').length),
+      },
     )
     const finalPlan = { ...built, steps: selectedSteps }
     setPlan(finalPlan)

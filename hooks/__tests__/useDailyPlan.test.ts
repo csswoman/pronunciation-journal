@@ -129,6 +129,27 @@ describe('useDailyPlan', () => {
     expect(mockSaveCachedDailyPlan).toHaveBeenCalled()
   })
 
+  it('preserves a new chunk when adding the optional lesson to a full plan', async () => {
+    const otherSteps = ['review', 'grammar', 'sound', 'reader'].map((id) => ({
+      id, kind: 'word_review' as const, title: id, subtitle: '', icon: 'BookOpen',
+      exercises: [], estMinutes: 3,
+      selection: { reason: 'route_next' as const, source: id, targetRefs: [id] },
+    }))
+    const newChunk = {
+      id: 'new-chunk', kind: 'chunk_intro' as const, title: 'Nuevo chunk', subtitle: '',
+      icon: 'BookOpen', exercises: [], estMinutes: 5,
+      selection: { reason: 'chunk_new' as const, source: 'chunk_intro', targetRefs: ['chunk:new'] },
+    }
+    mockBuildDailyPlan.mockResolvedValueOnce({ ...mockBuiltPlan, steps: [...otherSteps, newChunk] })
+    const lesson = { slug: 'extra', title: 'Lección extra', subtitle: '', body: '' }
+
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: lesson, autoLoad: true }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    expect(result.current.steps).toHaveLength(5)
+    expect(result.current.steps.map((step) => step.id)).toContain('new-chunk')
+  })
+
   it('transitions to status: error when buildDailyPlan fails', async () => {
     storedCachedPlan = null
     mockBuildDailyPlan.mockRejectedValueOnce(new Error('Network or Dexie error'))

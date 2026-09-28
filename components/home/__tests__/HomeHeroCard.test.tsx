@@ -112,4 +112,28 @@ describe("HomeHeroCard", () => {
 
     expect(onStartStep).toHaveBeenCalledWith(steps[1]);
   });
+
+  it("starts the next required step and previews new content without making theory mandatory", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const onStartStep = vi.fn();
+    const steps = [
+      makeStep({ id: "theory", kind: "concept", title: "Teoría", href: "/mini-lessons/example" }),
+      makeStep({ id: "review", title: "Repaso" }),
+      makeStep({
+        id: "new", kind: "word_intro", title: "Palabras nuevas", featuredWords: ["achieve"],
+        selection: { reason: "word_new", source: "word_intro", targetRefs: ["word:achieve"] },
+      }),
+    ];
+    render(<HomeHeroCard
+      steps={steps}
+      getStepStatus={statusMap({ review: "resolved" })}
+      completedCount={1}
+      allDone={false}
+      onStartStep={onStartStep}
+    />);
+
+    expect(screen.getByText("achieve")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /^empezar · 5 min$/i }));
+    expect(onStartStep).toHaveBeenCalledWith(steps[2]);
+  });
 });
