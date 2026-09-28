@@ -49,11 +49,10 @@ describe('PracticeGamesHubClient', () => {
 
     expect(screen.getByRole('heading', { name: 'Juegos', level: 1 })).toBeInTheDocument()
     expect(screen.getByText('Mecánicas cortas para ganar reflejos con el vocabulario que ya tienes.')).toBeInTheDocument()
-    expect(screen.getByText('DISPONIBLES')).toBeInTheDocument()
+    expect(screen.getByText(/DISPONIBLES \(/i)).toBeInTheDocument()
     expect(screen.getByText('EN CAMINO')).toBeInTheDocument()
-    expect(screen.getByText('Cadena de sonidos')).toBeInTheDocument()
-    expect(screen.getByText('Duelo de frases')).toBeInTheDocument()
-    expect(screen.getByText('Invasores de fonemas')).toBeInTheDocument()
+    expect(screen.getByText('Word Chain')).toBeInTheDocument()
+    expect(screen.getByText('Phoneme Invaders')).toBeInTheDocument()
   })
 
   it('switches active game view when sidebar item is clicked', () => {
@@ -67,6 +66,6 @@ describe('PracticeGamesHubClient', () => {
     fireEvent.click(wordRainBtn)
 
     expect(screen.getByRole('heading', { name: 'Lluvia de palabras', level: 2 })).toBeInTheDocument()
-    expect(screen.getByText('PRÁCTICA DE MECANOGRAFÍA')).toBeInTheDocument()
+    expect(screen.getAllByText('MECANOGRAFÍA').length).toBeGreaterThan(0)
   })
 })

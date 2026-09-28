@@ -57,7 +57,7 @@ export default function WordSearchSaveWordsButton({ items, puzzleTitle, classNam
 
   if (state.status === 'done') {
     return (
-      <span role="status" className="inline-flex items-center gap-1.5 text-caption font-bold text-[#78350f] dark:text-amber-200">
+      <span role="status" className="inline-flex items-center gap-1.5 text-caption font-bold text-amber-900 dark:text-amber-200">
         <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
         <span>{summarize(state)}</span>
       </span>
@@ -71,7 +71,7 @@ export default function WordSearchSaveWordsButton({ items, puzzleTitle, classNam
       isLoading={state.status === 'saving'}
       className={
         className ??
-        'bg-[#12151c] text-white hover:bg-black dark:bg-amber-400 dark:text-amber-950 font-bold px-4 py-2.5 rounded-full flex items-center gap-2 text-caption shrink-0'
+        'bg-text text-surface hover:bg-black dark:bg-amber-400 dark:text-amber-950 font-bold px-4 py-2.5 rounded-full flex items-center gap-2 text-caption shrink-0'
       }
     >
       <BookmarkPlus className="h-4 w-4" aria-hidden />

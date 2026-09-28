@@ -63,7 +63,7 @@ export function buildMemoryCards(
   pairCount: number,
   rng: () => number = Math.random,
 ): MemoryCard[] {
-  const selectedWords = words.slice(0, pairCount)
+  const selectedWords = shuffle(words, rng).slice(0, pairCount)
   const cards: MemoryCard[] = []
 
   for (const item of selectedWords) {
@@ -93,7 +93,7 @@ export function buildMemoryCards(
         id: `${pairId}-audio`,
         pairId,
         kind: 'audio',
-        content: '🔊 Escuchar',
+        content: 'Escuchar',
         word: item.word,
         isFlipped: false,
         isMatched: false,
@@ -129,15 +129,19 @@ export function buildMemoryCards(
     }
   }
 
-  // Shuffle cards
-  for (let i = cards.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1))
-    const temp = cards[i]!
-    cards[i] = cards[j]!
-    cards[j] = temp
-  }
+  return shuffle(cards, rng)
+}
 
-  return cards
+/** Fisher–Yates over a copy, so the caller's array is never mutated. */
+function shuffle<T>(items: readonly T[], rng: () => number): T[] {
+  const out = [...items]
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1))
+    const temp = out[i]!
+    out[i] = out[j]!
+    out[j] = temp
+  }
+  return out
 }
 
 export function memoryReducer(

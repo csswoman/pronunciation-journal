@@ -30,7 +30,7 @@ export function useMemoryMatchLoop(words: MemoryWordItem[]) {
     (mode: MemoryMatchMode, pairCount: number) => {
       if (words.length === 0) return
       startTimeRef.current = Date.now()
-      recordedRef.current = false
+    recordedRef.current = false
       setIsPlaying(true)
       dispatch({ type: 'start', words, mode, pairCount })
     },
@@ -53,12 +53,14 @@ export function useMemoryMatchLoop(words: MemoryWordItem[]) {
   const flipCard = useCallback(
     (cardId: string) => {
       const card = state.cards.find((c) => c.id === cardId)
-      if (card && (card.kind === 'audio' || card.kind === 'word')) {
+      // In audio mode the word card stays silent, otherwise pairs match by ear alone
+      const speaksWord = card?.kind === 'word' && state.mode !== 'audio_word'
+      if (card && (card.kind === 'audio' || speaksWord)) {
         speak(card.word, { rate: 0.9 })
       }
       dispatch({ type: 'flip', cardId })
     },
-    [state.cards],
+    [state.cards, state.mode],
   )
 
   // Record activity when completed

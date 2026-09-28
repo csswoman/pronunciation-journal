@@ -2,88 +2,118 @@
 
 // Planned structure:
 // <InvadersArena>
-//   <LanesContainer cols={lanes}>
-//     <LaneColumn key={lane}>
-//       <ShipCard ship={ship} onShoot={onShoot} />
-//     </LaneColumn>
-//   </LanesContainer>
+//   <RepeatButton />
+//   <LaneGrid>
+//     <Lane key={lane}>
+//       <InvaderShipButton ship lane onShoot />
+//       <LaneKeyHint />
+//     </Lane>
+//   </LaneGrid>
+//   <GroundLine />
 // </InvadersArena>
 
 import { useEffect } from 'react'
 import type { InvaderShip } from '@/lib/games/phoneme-invaders/engine'
+import { cn } from '@/lib/cn'
+import { Volume2 } from '@/components/icons'
 
 interface InvadersArenaProps {
   ships: InvaderShip[]
   laneCount: number
+  paused: boolean
   onShoot: (shipId: string) => void
+  onRepeatAudio: () => void
+}
+
+const LANE_COLS: Record<number, string> = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+}
+
+/**
+ * Space a ship cannot enter: its own height plus the ground strip with the
+ * key hints. y=100 (landed) puts the ship's bottom edge right on the ground.
+ */
+const SHIP_TRAVEL_INSET = '7.75rem'
+
+function shipTop(y: number): string {
+  const progress = Math.min(1, Math.max(0, y / 100))
+  return `calc((100% - ${SHIP_TRAVEL_INSET}) * ${progress.toFixed(4)})`
 }
 
 export default function InvadersArena({
   ships,
   laneCount,
+  paused,
   onShoot,
+  onRepeatAudio,
 }: InvadersArenaProps) {
-  // Keyboard listener for keys 1, 2, 3, 4 corresponding to lanes
   useEffect(() => {
+    if (paused) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      const keyNum = parseInt(e.key, 10)
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.key === 'r' || e.key === 'R') {
+        onRepeatAudio()
+        return
+      }
+      const keyNum = Number.parseInt(e.key, 10)
       if (keyNum >= 1 && keyNum <= laneCount) {
-        const laneIndex = keyNum - 1
-        const shipInLane = ships.find((s) => s.lane === laneIndex)
-        if (shipInLane) {
-          onShoot(shipInLane.id)
-        }
+        const shipInLane = ships.find((s) => s.lane === keyNum - 1)
+        if (shipInLane) onShoot(shipInLane.id)
       }
     }
-
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [ships, laneCount, onShoot])
+  }, [ships, laneCount, paused, onShoot, onRepeatAudio])
 
   return (
-    <div className="relative w-full h-[360px] sm:h-[420px] rounded-3xl bg-surface-base border border-border/60 overflow-hidden shadow-inner flex flex-col justify-between p-4">
-      {/* Lanes Grid background */}
-      <div
-        className="absolute inset-0 grid divide-x divide-border/20 pointer-events-none"
-        style={{ gridTemplateColumns: `repeat(${laneCount}, 1fr)` }}
-      >
-        {Array.from({ length: laneCount }).map((_, i) => (
-          <div key={i} className="relative h-full flex flex-col justify-end pb-3 items-center">
-            <span className="font-mono text-tiny font-bold text-fg-muted/40 bg-surface-card/60 px-2 py-0.5 rounded-full border border-border/20">
-              [{i + 1}]
-            </span>
-          </div>
-        ))}
+    <section
+      aria-label="Zona de juego"
+      className="relative flex h-96 w-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-surface-sunken sm:h-110"
+    >
+      <div className="relative z-10 flex justify-center pt-3">
+        <button
+          type="button"
+          onClick={onRepeatAudio}
+          disabled={paused}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border-default bg-surface-raised px-4 font-sans text-body-sm font-bold text-fg transition-colors hover:bg-surface focus-ring disabled:opacity-50"
+        >
+          <Volume2 size={18} className="text-primary-text" aria-hidden />
+          Repetir
+          <kbd className="hidden rounded-md border border-border-subtle px-1.5 font-mono text-caption text-fg-muted sm:inline">
+            R
+          </kbd>
+        </button>
       </div>
 
-      {/* Ships */}
-      <div
-        className="relative w-full h-full grid"
-        style={{ gridTemplateColumns: `repeat(${laneCount}, 1fr)` }}
-      >
+      <div className={cn('grid flex-1 divide-x divide-border-subtle', LANE_COLS[laneCount] ?? 'grid-cols-2')}>
         {Array.from({ length: laneCount }).map((_, laneIdx) => {
           const ship = ships.find((s) => s.lane === laneIdx)
           return (
-            <div key={laneIdx} className="relative w-full h-full">
+            <div key={laneIdx} className="relative flex flex-col justify-end">
               {ship && (
                 <button
                   type="button"
                   onClick={() => onShoot(ship.id)}
-                  style={{ top: `${Math.min(85, ship.y)}%` }}
-                  className="absolute left-1/2 -translate-x-1/2 w-[85%] max-w-[140px] p-3 rounded-2xl bg-surface-card border-2 border-primary/40 hover:border-primary shadow-md hover:scale-105 active:scale-95 transition-all text-center group cursor-pointer"
+                  disabled={paused}
+                  aria-label={`Disparar a ${ship.word}, carril ${laneIdx + 1}`}
+                  style={{ top: shipTop(ship.y) }}
+                  className="absolute left-1/2 flex w-11/12 max-w-40 -translate-x-1/2 flex-col items-center gap-0.5 rounded-2xl border-2 border-border-strong bg-surface-raised px-2 py-3 shadow-sm text-center transition-colors hover:border-primary focus-ring active:scale-95"
                 >
-                  <div className="font-mono text-tiny font-bold text-primary tracking-wider uppercase mb-0.5">
-                    {ship.ipa}
-                  </div>
-                  <div className="font-heading text-lg font-extrabold text-fg group-hover:text-primary transition-colors">
-                    {ship.word}
-                  </div>
+                  <span className="font-heading text-h4 font-extrabold text-fg">{ship.word}</span>
+                  <span className="font-ipa text-body-sm text-fg-muted">{ship.ipa}</span>
                 </button>
               )}
+              <div className="flex justify-center border-t-2 border-dashed border-border-default py-2">
+                <kbd className="grid size-7 place-items-center rounded-md border border-border-subtle bg-surface-raised font-mono text-caption font-bold text-fg-muted">
+                  {laneIdx + 1}
+                </kbd>
+              </div>
             </div>
           )
         })}
       </div>
-    </div>
+    </section>
   )
 }

@@ -87,6 +87,7 @@ describe('Phoneme Invaders engine', () => {
     expect(s.lastMissFlash).toEqual({
       heard: { word: 'ship', ipa: '/ʃɪp/' },
       chosen: { word: 'sheep', ipa: '/ʃiːp/' },
+      distractor: { word: 'sheep', ipa: '/ʃiːp/' },
       contrast: 'iː|ɪ',
     })
   })
@@ -122,5 +123,25 @@ describe('Phoneme Invaders engine', () => {
     s = invadersReducer(s, { type: 'tick', dy: 105 })
     expect(s.shields).toBe(2)
     expect(s.lastMissFlash?.chosen.word).toBe('Tiempo agotado')
+  })
+})
+
+describe('Phoneme Invaders restart', () => {
+  it('reset leaves game_over and restores a fresh state', () => {
+    let s: InvadersState = { ...createInitialInvadersState(), status: 'game_over', score: 900, shields: 0 }
+    s = invadersReducer(s, { type: 'reset' })
+    expect(s.status).toBe('playing')
+    expect(s.score).toBe(0)
+    expect(s.shields).toBe(3)
+    expect(s.missHistory).toEqual([])
+  })
+})
+
+describe('Phoneme Invaders miss record', () => {
+  it('keeps the distractor word on timeout so both can be compared', () => {
+    let s = createInitialInvadersState()
+    s = invadersReducer(s, { type: 'spawn', pair: samplePair, targetSide: 'a', lanes: 2 })
+    s = invadersReducer(s, { type: 'tick', dy: 105 })
+    expect(s.lastMissFlash?.distractor.word).toBe('sheep')
   })
 })

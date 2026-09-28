@@ -1,101 +1,90 @@
 'use client'
 
 // Planned structure:
-// <InvadersResults>
-//   <PastelCard tone="sky">
-//     <HeaderTitle font-heading />
-//     <MetricsGrid score hits maxStreak />
-//     <ContrastMissesList />
-//     <ActionButtons onRestart onHome />
-//   </PastelCard>
-// </InvadersResults>
+// <GameResultsPanel tone="sky" headline summary stats>
+//   <GameReviewList title="Contrastes para repasar">
+//     <ContrastRow contrast count heard />
+//   </GameReviewList>
+// </GameResultsPanel>
 
-import Link from 'next/link'
-import PastelCard from '@/components/layout/PastelCard'
-import type { InvadersState } from '@/lib/games/phoneme-invaders/engine'
+import type { InvadersState, MissRecord } from '@/lib/games/phoneme-invaders/engine'
+import { formatContrast } from '@/lib/games/phoneme-invaders/format'
+import { speak } from '@/lib/phoneme-practice/tts'
+import { ListenButton } from '@/components/ui/ListenButton'
+import GameResultsPanel from '@/components/practice/games/shared/GameResultsPanel'
+import GameReviewList from '@/components/practice/games/shared/GameReviewList'
 
 interface InvadersResultsProps {
   state: InvadersState
   onRestart: () => void
 }
 
-export default function InvadersResults({
-  state,
-  onRestart,
-}: InvadersResultsProps) {
-  // Group misses by contrast
-  const contrastStats = state.missHistory.reduce<Record<string, number>>((acc, miss) => {
-    if (miss.contrast) {
-      acc[miss.contrast] = (acc[miss.contrast] || 0) + 1
-    }
-    return acc
-  }, {})
+interface ContrastSummary {
+  contrast: string
+  count: number
+  example: MissRecord
+}
+
+function summarizeContrasts(misses: MissRecord[]): ContrastSummary[] {
+  const byContrast = new Map<string, ContrastSummary>()
+  for (const miss of misses) {
+    if (!miss.contrast) continue
+    const current = byContrast.get(miss.contrast)
+    byContrast.set(miss.contrast, {
+      contrast: miss.contrast,
+      count: (current?.count ?? 0) + 1,
+      example: miss,
+    })
+  }
+  return [...byContrast.values()].sort((a, b) => b.count - a.count)
+}
+
+function summaryFor(hits: number, wave: number): string {
+  if (hits === 0) return 'Esta vez no cayó ninguna nave. Escucha los contrastes de abajo y vuelve a intentarlo.'
+  return `Derribaste ${hits} ${hits === 1 ? 'nave' : 'naves'} y llegaste a la oleada ${wave}.`
+}
+
+function headlineFor(hits: number): string {
+  if (hits >= 20) return 'Oído afinado'
+  if (hits >= 8) return 'Buen entrenamiento'
+  return 'Cada partida afina el oído'
+}
+
+export default function InvadersResults({ state, onRestart }: InvadersResultsProps) {
+  const contrasts = summarizeContrasts(state.missHistory)
 
   return (
-    <div className="w-full max-w-lg mx-auto py-8">
-      <PastelCard tone="sky" className="p-6 sm:p-8 rounded-3xl text-ink space-y-6">
-        <div className="text-center space-y-2">
-          <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink/70">
-            PARTIDA FINALIZADA
-          </span>
-          <h2 className="font-heading text-3xl font-extrabold text-ink">
-            ¡Buen entrenamiento! 🚀
-          </h2>
-        </div>
-
-        {/* Primary Metrics */}
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <div className="p-3 rounded-2xl bg-ink/5 border border-ink/10">
-            <div className="font-mono text-tiny font-bold text-ink/60 uppercase">Puntos</div>
-            <div className="font-heading text-2xl font-extrabold text-ink">{state.score}</div>
-          </div>
-          <div className="p-3 rounded-2xl bg-ink/5 border border-ink/10">
-            <div className="font-mono text-tiny font-bold text-ink/60 uppercase">Aciertos</div>
-            <div className="font-sans text-2xl font-bold text-ink">{state.hits}</div>
-          </div>
-          <div className="p-3 rounded-2xl bg-ink/5 border border-ink/10">
-            <div className="font-mono text-tiny font-bold text-ink/60 uppercase">Racha máx.</div>
-            <div className="font-sans text-2xl font-bold text-ink">{state.maxStreak}×</div>
-          </div>
-        </div>
-
-        {/* Contrast Errors breakdown */}
-        {Object.keys(contrastStats).length > 0 && (
-          <div className="space-y-3 pt-2">
-            <h4 className="font-sans text-body-sm font-bold text-ink">
-              Contrastes para reforzar:
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(contrastStats).map(([contrast, count]) => (
-                <span
-                  key={contrast}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-ink/10 font-mono text-caption font-bold text-ink"
-                >
-                  <span className="text-primary font-bold">/{contrast}/</span>
-                  <span className="text-ink/60">({count} fallos)</span>
+    <GameResultsPanel
+      tone="sky"
+      headline={headlineFor(state.hits)}
+      summary={summaryFor(state.hits, state.wave)}
+      stats={[
+        { label: 'Puntos', value: state.score },
+        { label: 'Aciertos', value: state.hits },
+        { label: 'Racha máx.', value: state.maxStreak },
+      ]}
+      onRestart={onRestart}
+    >
+      {contrasts.length > 0 && (
+        <GameReviewList title="Contrastes para repasar">
+          {contrasts.map(({ contrast, count, example }) => (
+            <li key={contrast} className="flex items-center justify-between gap-3 py-2.5">
+              <div className="flex min-w-0 flex-col">
+                <span className="font-ipa text-body-md font-bold text-ink">{formatContrast(contrast)}</span>
+                <span className="font-sans text-caption text-ink-secondary">
+                  {count} {count === 1 ? 'fallo' : 'fallos'} · p. ej. «{example.heard.word}»
                 </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4">
-          <button
-            type="button"
-            onClick={onRestart}
-            className="flex-1 py-3.5 px-4 rounded-2xl bg-ink text-surface-base font-sans text-body-sm font-bold hover:opacity-95 transition-opacity text-center"
-          >
-            Jugar otra vez
-          </button>
-          <Link
-            href="/practice/games"
-            className="flex-1 py-3.5 px-4 rounded-2xl bg-ink/10 text-ink font-sans text-body-sm font-bold hover:bg-ink/15 transition-colors text-center"
-          >
-            Volver a Juegos
-          </Link>
-        </div>
-      </PastelCard>
-    </div>
+              </div>
+              <ListenButton
+                iconOnly
+                aria-label={`Escuchar ${example.heard.word}`}
+                onPlay={() => speak(example.heard.word, { rate: 0.8 })}
+                className="size-11"
+              />
+            </li>
+          ))}
+        </GameReviewList>
+      )}
+    </GameResultsPanel>
   )
 }

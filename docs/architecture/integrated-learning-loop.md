@@ -81,6 +81,23 @@ sesión y presupuesto de acciones independientes. El Plan diario puede recomenda
 una sesión o reutilizar evidencia/targets válidos, pero no debe restar su historial,
 cuota o `introducedToday` del presupuesto interno de Palabras esenciales.
 
+#### Known Words Triage
+
+La ruta `/practice/essential-words/known` permite declarar familiaridad con
+palabras aún no vistas, filtradas por nivel CEFR. El mazo usa el índice del
+catálogo y carga el contenido completo al acercarse a cada tarjeta. La acción
+“Ya la sé” escribe `familiarity: "self-declared"` en
+`essentialWordLearnerSignals`; no marca la palabra como `mastered`, no registra
+un acierto y no crea evidencia objetiva. Saltar una tarjeta no escribe una
+señal. Si falla una escritura, la tarjeta se conserva para reintentar; Deshacer
+restaura la declaración anterior sin borrar otras señales del alumno.
+
+Las colas legacy y skill omiten las declaraciones al seleccionar palabras
+nuevas. De forma determinista, aproximadamente una de cada quince declaraciones
+vuelve como verificación después de cuatro días, siempre que aún no tenga una
+entrada SRS. Esa inclusión no precarga una respuesta correcta ni adelanta el
+dominio: la evidencia aparece cuando el alumno responde una práctica real.
+
 ### Ruta, Mazos y Mini-lecciones
 
 - Ruta ordena y recomienda; no crea evidencia por navegación.

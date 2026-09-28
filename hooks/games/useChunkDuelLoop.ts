@@ -45,9 +45,17 @@ export function useChunkDuelLoop(pool: ChunkDuelItem[]) {
     currentRoundIndexRef.current = 1
     startTimeRef.current = Date.now()
     recordedRef.current = false
+    dispatch({ type: 'reset' })
     setIsPlaying(true)
     startNextRound()
   }, [pool, startNextRound])
+
+  // A wrong tile shakes briefly, then settles so it can be read again
+  useEffect(() => {
+    if (!state.shakeTileId) return
+    const timer = setTimeout(() => dispatch({ type: 'clear_shake' }), 450)
+    return () => clearTimeout(timer)
+  }, [state.shakeTileId])
 
   // Play audio when round is won
   useEffect(() => {
@@ -95,13 +103,12 @@ export function useChunkDuelLoop(pool: ChunkDuelItem[]) {
 
   const nextRound = useCallback(() => {
     if (currentRoundIndexRef.current >= totalRounds) {
-      dispatch({ type: 'start_round', round: state.currentRound!, totalRounds: 10, roundIndex: 10, ghostSpeed: 0 })
-      // Trigger game over via status update or state
+      dispatch({ type: 'finish' })
       return
     }
     currentRoundIndexRef.current += 1
     startNextRound()
-  }, [state.currentRound, startNextRound])
+  }, [startNextRound])
 
   return {
     state,

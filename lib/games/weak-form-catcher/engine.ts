@@ -7,7 +7,11 @@ export type WeakFormMissRecord = {
   userAnswer: string
 }
 
+/** A game ends after this many missed phrases. */
+export const WEAK_FORM_MAX_MISSES = 3
+
 export interface WeakFormState extends BaseScoringState {
+  queue: WeakFormPhraseItem[]
   currentPhrase: WeakFormPhraseItem | null
   phraseIndex: number
   totalPhrases: number
@@ -36,6 +40,7 @@ export function createInitialWeakFormState(): WeakFormState {
     maxStreak: 0,
     hits: 0,
     misses: 0,
+    queue: [],
     currentPhrase: null,
     phraseIndex: 0,
     totalPhrases: 0,
@@ -51,7 +56,7 @@ export function createInitialWeakFormState(): WeakFormState {
 }
 
 export function weakFormReducer(state: WeakFormState, action: WeakFormAction): WeakFormState {
-  if (state.status === 'game_over') return state
+  if (state.status === 'game_over' && action.type !== 'start') return state
 
   switch (action.type) {
     case 'clear_rejection':
@@ -63,6 +68,7 @@ export function weakFormReducer(state: WeakFormState, action: WeakFormAction): W
       }
       return {
         ...createInitialWeakFormState(),
+        queue: action.phrases,
         currentPhrase: action.phrases[0],
         phraseIndex: 0,
         totalPhrases: action.phrases.length,
@@ -159,7 +165,7 @@ export function weakFormReducer(state: WeakFormState, action: WeakFormAction): W
     case 'dismiss_rule': {
       const nextIndex = state.phraseIndex + 1
       const isFinished = nextIndex >= state.totalPhrases
-      if (isFinished || state.misses >= 3) {
+      if (isFinished || state.misses >= WEAK_FORM_MAX_MISSES) {
         return { ...state, status: 'game_over', lastRule: null }
       }
 
@@ -167,7 +173,7 @@ export function weakFormReducer(state: WeakFormState, action: WeakFormAction): W
         ...state,
         status: 'playing',
         phraseIndex: nextIndex,
-        currentPhrase: state.currentPhrase ? state.currentPhrase : null,
+        currentPhrase: state.queue[nextIndex] ?? null,
         lastRule: null,
         y: 0,
       }

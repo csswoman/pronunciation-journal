@@ -19,15 +19,21 @@ const { persistenceState, sessionStoreMocks } = vi.hoisted(() => {
       answers: unknown[]
     },
   }
+  const mocks = {
+    evictExpiredSessions: vi.fn(async () => undefined),
+    loadActiveSession: vi.fn(async () => state.active),
+    createSession: vi.fn(async (...args: unknown[]) => { void args; return undefined }),
+    getOrCreateSession: vi.fn(async (params: { userId: string; soundId: number; exercises: unknown[] }) => {
+      if (state.active) return state.active
+      await mocks.createSession(params)
+      return null
+    }),
+    updateSessionProgress: vi.fn(async () => undefined),
+    deleteSession: vi.fn(async () => undefined),
+  }
   return {
     persistenceState: state,
-    sessionStoreMocks: {
-      evictExpiredSessions: vi.fn(async () => undefined),
-      loadActiveSession: vi.fn(async () => state.active),
-      createSession: vi.fn(async () => undefined),
-      updateSessionProgress: vi.fn(async () => undefined),
-      deleteSession: vi.fn(async () => undefined),
-    },
+    sessionStoreMocks: mocks,
   }
 })
 vi.mock('@/lib/practice/session-store', () => sessionStoreMocks)

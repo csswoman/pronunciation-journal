@@ -11,6 +11,18 @@ import { recordGameActivity } from '@/lib/progress/game-activity'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 
+/** Phrases per game: short enough to finish in ~3 minutes. */
+const PHRASES_PER_GAME = 10
+
+function shufflePhrases(phrases: WeakFormPhraseItem[]): WeakFormPhraseItem[] {
+  const out = [...phrases]
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[out[i], out[j]] = [out[j]!, out[i]!]
+  }
+  return out.slice(0, PHRASES_PER_GAME)
+}
+
 export function useWeakFormCatcherLoop(phrases: WeakFormPhraseItem[]) {
   const { user } = useAuth()
   const isGuest = isAnonymousUser(user)
@@ -37,7 +49,7 @@ export function useWeakFormCatcherLoop(phrases: WeakFormPhraseItem[]) {
     startTimeRef.current = Date.now()
     recordedRef.current = false
     setIsPlaying(true)
-    dispatch({ type: 'start', phrases })
+    dispatch({ type: 'start', phrases: shufflePhrases(phrases) })
   }, [phrases])
 
   // Play phrase audio when current phrase changes or hint slow changes

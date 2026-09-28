@@ -63,7 +63,7 @@ export default function PracticeGamesHubClient() {
           <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-3.5 py-1 font-sans text-caption font-bold text-fg-muted">
             7 disponibles
           </span>
-          <span className="inline-flex items-center rounded-full bg-[#a8e6c9] dark:bg-[#1f5e43] dark:text-[#a8e6c9] px-3.5 py-1 font-sans text-caption font-bold text-[#12151c]">
+          <span className="inline-flex items-center rounded-full bg-mint dark:bg-emerald-900/60 dark:text-mint px-3.5 py-1 font-sans text-caption font-bold text-ink">
             38 palabras ganadas jugando
           </span>
         </div>

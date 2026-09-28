@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createInitialSwipeState, swipeReducer } from '../engine'
+import { createInitialSwipeState, swipeReducer, type SwipeState } from '../engine'
 import type { SwipeCard } from '../deck-builder'
 
 const sampleCard: SwipeCard = {
@@ -62,5 +62,15 @@ describe('False Friends Swipe engine', () => {
     s = swipeReducer(s, { type: 'answer_rescue', choiceIndex: 1 })
     expect(s.status).toBe('completed')
     expect(s.rescueSuccesses).toBe(1)
+  })
+})
+
+describe('False Friends swipe restart', () => {
+  it('start restarts a completed game', () => {
+    let s: SwipeState = { ...createInitialSwipeState(), status: 'completed', score: 500 }
+    s = swipeReducer(s, { type: 'start', deck: [sampleCard] })
+    expect(s.status).toBe('swiping')
+    expect(s.score).toBe(0)
+    expect(s.currentCard?.id).toBe('c1')
   })
 })

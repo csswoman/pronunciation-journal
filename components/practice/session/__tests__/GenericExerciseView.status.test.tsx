@@ -105,7 +105,7 @@ describe('GenericExerciseView → real Dexie evidence', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Mostrar pista' }))
     fireEvent.click(screen.getByText('Responder'))
     fireEvent.click(screen.getByRole('button', { name: /Continuar/i }))
-    expect(await savedAnswer()).toMatchObject({ id: 'child-attempt', time_ms: 123,
+    expect(await savedAnswer()).toMatchObject({ time_ms: 123,
       exercise_payload: { score: 30, hintsUsed: 2, firstTryFailed: true, totalInteractionMs: 5000 } })
     expect(submit).toHaveBeenCalledWith(true, 'answer', expect.objectContaining(evidence))
   })

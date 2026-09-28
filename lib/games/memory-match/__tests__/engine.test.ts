@@ -83,3 +83,18 @@ describe('Memory Match engine', () => {
     expect(s.cards.find((c) => c.id === card1.id)?.isFlipped).toBe(false)
   })
 })
+
+describe('Memory Match word selection', () => {
+  it('samples the pool with rng instead of always taking the first words', () => {
+    const pool: MemoryWordItem[] = Array.from({ length: 10 }, (_, i) => ({
+      id: `p${i}`, word: `w${i}`, meaningEs: `m${i}`, ipa: `/i${i}/`,
+    }))
+    // rng close to 0 makes Fisher-Yates swap each element with index 0 → last items rise to the front
+    const s = memoryReducer(createInitialMemoryState(), {
+      type: 'start', words: pool, mode: 'word_meaning', pairCount: 2, rng: () => 0,
+    })
+    const pairIds = new Set(s.cards.map((c) => c.pairId))
+    expect(pairIds.size).toBe(2)
+    expect([...pairIds].sort()).not.toEqual(['p0', 'p1'])
+  })
+})

@@ -71,3 +71,34 @@ describe('Weak Form Catcher engine', () => {
     expect(s.misses).toBe(1)
   })
 })
+
+describe('Weak Form Catcher progression', () => {
+  const second: WeakFormPhraseItem = {
+    id: 'wf-2',
+    reduced: 'gonna go',
+    full: 'going to go',
+    ipa: '/ˈɡʌnə ɡoʊ/',
+    ruleEs: "'going to' se reduce a 'gonna'",
+  }
+
+  it('advances to the next phrase after dismissing the rule', () => {
+    let s = createInitialWeakFormState()
+    s = weakFormReducer(s, { type: 'start', phrases: [samplePhrase, second] })
+    s = weakFormReducer(s, { type: 'submit', text: 'what do you want' })
+    s = weakFormReducer(s, { type: 'dismiss_rule' })
+    expect(s.status).toBe('playing')
+    expect(s.phraseIndex).toBe(1)
+    expect(s.currentPhrase?.id).toBe('wf-2')
+  })
+
+  it('start restarts a finished game', () => {
+    let s = createInitialWeakFormState()
+    s = weakFormReducer(s, { type: 'start', phrases: [samplePhrase] })
+    s = weakFormReducer(s, { type: 'submit', text: 'what do you want' })
+    s = weakFormReducer(s, { type: 'dismiss_rule' })
+    expect(s.status).toBe('game_over')
+    s = weakFormReducer(s, { type: 'start', phrases: [samplePhrase, second] })
+    expect(s.status).toBe('playing')
+    expect(s.score).toBe(0)
+  })
+})

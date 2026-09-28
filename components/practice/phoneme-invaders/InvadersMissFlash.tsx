@@ -1,72 +1,52 @@
 'use client'
 
 // Planned structure:
-// <InvadersMissFlash>
-//   <ToastCard>
-//     <ComparisonLine heard chosen contrast />
-//     <AudioCompareButtons />
-//     <ContinueButton />
-//   </ToastCard>
-// </InvadersMissFlash>
+// <GameRoundFeedback state="wrong" title explanation={contrast}>
+//   <ListenPair heard chosen />
+// </GameRoundFeedback>
 
 import type { MissRecord } from '@/lib/games/phoneme-invaders/engine'
+import { formatContrast } from '@/lib/games/phoneme-invaders/format'
 import { speak } from '@/lib/phoneme-practice/tts'
-import { Volume2 } from '@/components/icons'
+import { ListenButton } from '@/components/ui/ListenButton'
+import GameRoundFeedback from '@/components/practice/games/shared/GameRoundFeedback'
 
 interface InvadersMissFlashProps {
   miss: MissRecord
   onDismiss: () => void
 }
 
-export default function InvadersMissFlash({
-  miss,
-  onDismiss,
-}: InvadersMissFlashProps) {
+const TIMEOUT_WORD = 'Tiempo agotado'
+
+export default function InvadersMissFlash({ miss, onDismiss }: InvadersMissFlashProps) {
+  const timedOut = miss.chosen.word === TIMEOUT_WORD
+  const title = timedOut
+    ? `Se te escapó: sonaba «${miss.heard.word}»`
+    : `Sonaba «${miss.heard.word}», elegiste «${miss.chosen.word}»`
+  const contrast = formatContrast(miss.contrast)
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-xs">
-      <div className="w-full max-w-md p-6 rounded-3xl bg-surface-card border border-border shadow-xl text-center space-y-4 animate-in fade-in zoom-in duration-200">
-        <span className="inline-block px-3 py-1 rounded-full bg-accent-rose/10 font-mono text-tiny font-bold uppercase tracking-wider text-accent-rose">
-          ¡Casi! Revisa el contraste {miss.contrast}
-        </span>
-
-        <h3 className="font-heading text-xl font-extrabold text-fg">
-          Sonó <span className="text-primary">{miss.heard.word}</span> ({miss.heard.ipa})
-        </h3>
-
-        <p className="font-sans text-body-sm text-fg-muted">
-          Elegiste: <span className="font-bold text-fg">{miss.chosen.word}</span> ({miss.chosen.ipa})
-        </p>
-
-        <div className="flex items-center justify-center gap-3 py-2">
-          <button
-            type="button"
-            onClick={() => speak(miss.heard.word, { rate: 0.8 })}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 text-primary font-sans text-body-sm font-bold hover:bg-primary/20 transition-colors"
-          >
-            <Volume2 size={16} />
-            Escuchar {miss.heard.word}
-          </button>
-
-          {miss.chosen.word !== 'Tiempo agotado' && (
-            <button
-              type="button"
-              onClick={() => speak(miss.chosen.word, { rate: 0.8 })}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-base border border-border text-fg font-sans text-body-sm font-bold hover:bg-surface-elevated transition-colors"
-            >
-              <Volume2 size={16} />
-              Escuchar {miss.chosen.word}
-            </button>
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="w-full py-3 rounded-2xl bg-ink text-surface-base font-sans text-body font-bold hover:opacity-90 transition-opacity"
-        >
-          Continuar 🚀
-        </button>
+    <GameRoundFeedback
+      state="wrong"
+      title={title}
+      explanation={contrast ? `La diferencia está en ${contrast}. Escúchalas seguidas:` : undefined}
+      continueLabel="Continuar"
+      onContinue={onDismiss}
+    >
+      <div className="flex flex-wrap gap-2">
+        <ListenButton
+          label={`${miss.heard.word} ${miss.heard.ipa}`}
+          onPlay={() => speak(miss.heard.word, { rate: 0.8 })}
+          className="min-h-11 font-ipa text-ink"
+        />
+        {miss.distractor.word && (
+          <ListenButton
+            label={`${miss.distractor.word} ${miss.distractor.ipa}`}
+            onPlay={() => speak(miss.distractor.word, { rate: 0.8 })}
+            className="min-h-11 font-ipa text-ink"
+          />
+        )}
       </div>
-    </div>
+    </GameRoundFeedback>
   )
 }

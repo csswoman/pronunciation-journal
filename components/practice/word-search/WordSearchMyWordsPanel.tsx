@@ -97,7 +97,7 @@ export default function WordSearchMyWordsPanel({
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 pt-1">
           <Button
             variant="primary"
-            className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-[#2563eb] text-white hover:bg-[#1d4ed8] shrink-0"
+            className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-accent-blue text-white hover:opacity-90 shrink-0"
             onClick={onStart}
           >
             <span>Comenzar partida</span>

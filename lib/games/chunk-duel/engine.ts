@@ -27,6 +27,8 @@ export type DuelAction =
   | { type: 'tick'; dt: number }
   | { type: 'next_round' }
   | { type: 'clear_shake' }
+  | { type: 'finish' }
+  | { type: 'reset' }
 
 export function createInitialDuelState(): DuelState {
   return {
@@ -49,11 +51,15 @@ export function createInitialDuelState(): DuelState {
 }
 
 export function duelReducer(state: DuelState, action: DuelAction): DuelState {
+  if (action.type === 'reset') return createInitialDuelState()
   if (state.status === 'game_over') return state
 
   switch (action.type) {
     case 'clear_shake':
       return { ...state, shakeTileId: null }
+
+    case 'finish':
+      return { ...state, status: 'game_over' }
 
     case 'start_round': {
       return {

@@ -61,7 +61,7 @@ export default function WordRainSetupForm({ onStartGame }: WordRainSetupFormProp
               onClick={() => setSelectedLevel(lvl)}
               className={`flex flex-col items-center justify-center py-3 px-2 rounded-2xl border font-heading text-lg font-bold transition-all focus-ring ${
                 isSelected
-                  ? 'border-[#12151c] bg-[#b9d3fb] text-[#12151c] shadow-xs'
+                  ? 'border-ink bg-sky text-ink shadow-xs'
                   : 'border-border-default bg-surface hover:bg-surface-sunken text-fg'
               }`}
             >

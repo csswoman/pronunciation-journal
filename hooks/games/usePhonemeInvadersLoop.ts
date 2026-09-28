@@ -32,17 +32,21 @@ export function usePhonemeInvadersLoop(pairs: MinimalPairItem[]) {
     speak(word, { rate: 0.9 })
   }, [])
 
-  const spawnNextPair = useCallback(() => {
+  const spawnNextPair = useCallback((lanes: number = state.laneCount) => {
     if (pairs.length === 0) return
     const pair = pairs[Math.floor(Math.random() * pairs.length)]
     const targetSide = Math.random() < 0.5 ? 'a' : 'b'
-    dispatch({ type: 'spawn', pair, targetSide, lanes: state.laneCount })
+    dispatch({ type: 'spawn', pair, targetSide, lanes })
   }, [pairs, state.laneCount])
+
+  const recordedRef = useRef(false)
 
   const startGame = useCallback(() => {
     startTimeRef.current = Date.now()
+    recordedRef.current = false
+    dispatch({ type: 'reset' })
     setIsPlaying(true)
-    spawnNextPair()
+    spawnNextPair(createInitialInvadersState().laneCount)
   }, [spawnNextPair])
 
   useEffect(() => {
@@ -70,7 +74,8 @@ export function usePhonemeInvadersLoop(pairs: MinimalPairItem[]) {
       const delta = timestamp - lastTickRef.current
       lastTickRef.current = timestamp
 
-      const speedFactor = 0.04 + state.wave * 0.008
+      // Wave 1 ≈ 6 s to land (time to hear the word and decide); wave 5 ≈ 3.5 s
+      const speedFactor = 0.014 + state.wave * 0.003
       const dy = delta * speedFactor
       dispatch({ type: 'tick', dy })
 
@@ -85,7 +90,6 @@ export function usePhonemeInvadersLoop(pairs: MinimalPairItem[]) {
     }
   }, [isPlaying, state.status, state.wave, state.lastMissFlash])
 
-  const recordedRef = useRef(false)
   useEffect(() => {
     if (state.status === 'game_over' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true

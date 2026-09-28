@@ -75,7 +75,7 @@ export default function WordSearchGeminiPanel({
                   onClick={() => onCustomLevelChange(level)}
                   className={`focus-ring flex h-11 items-center justify-center rounded-lg px-3 py-2 font-sans text-caption font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-[#b9d3fb] text-[#12151c] border-2 border-[#12151c] dark:bg-primary dark:text-on-primary dark:border-primary shadow-xs'
+                      ? 'bg-sky text-ink border-2 border-ink dark:bg-primary dark:text-on-primary dark:border-primary shadow-xs'
                       : 'border border-transparent text-fg-muted hover:bg-surface-sunken hover:text-fg'
                   }`}
                 >
@@ -96,7 +96,7 @@ export default function WordSearchGeminiPanel({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 pt-1">
         <Button
           variant="primary"
-          className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-[#2563eb] text-white hover:bg-[#1d4ed8] shrink-0"
+          className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-accent-blue text-white hover:opacity-90 shrink-0"
           isLoading={isGenerating}
           onClick={onGenerate}
         >

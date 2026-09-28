@@ -59,25 +59,25 @@ export default function WordSearchCuratedPanel({
                 onClick={() => onSelectPresetId(preset.id)}
                 className={`group focus-ring flex min-h-20 flex-col justify-between gap-2 rounded-2xl p-4 text-left transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                   isSelected
-                    ? 'border-2 border-[#12151c] bg-[#b9d3fb] text-[#12151c] shadow-xs'
+                    ? 'border-2 border-ink bg-sky text-ink shadow-xs'
                     : 'border-2 border-border-default bg-surface hover:border-border-strong text-fg'
                 }`}
               >
                 <div className="flex w-full items-start justify-between gap-2">
-                  <span className={`font-heading text-body-md font-bold leading-snug ${isSelected ? 'text-[#12151c]' : 'text-fg'}`}>
+                  <span className={`font-heading text-body-md font-bold leading-snug ${isSelected ? 'text-ink' : 'text-fg'}`}>
                     {preset.title}
                   </span>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 font-sans text-tiny font-bold uppercase ${
                       isSelected
-                        ? 'border border-[#12151c]/30 bg-black/10 text-[#12151c]'
+                        ? 'border border-ink/30 bg-black/10 text-ink'
                         : 'border border-border-subtle bg-surface-sunken text-fg-muted'
                     }`}
                   >
                     {LEVEL_LABELS[preset.level]}
                   </span>
                 </div>
-                <span className={`font-sans text-body-sm text-pretty ${isSelected ? 'text-[#4a5263]' : 'text-fg-muted'}`}>
+                <span className={`font-sans text-body-sm text-pretty ${isSelected ? 'text-text-muted' : 'text-fg-muted'}`}>
                   {preset.description}
                 </span>
               </button>
@@ -95,7 +95,7 @@ export default function WordSearchCuratedPanel({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3.5 pt-1">
         <Button
           variant="primary"
-          className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-[#2563eb] text-white hover:bg-[#1d4ed8] shrink-0"
+          className="h-14 px-7 text-base font-bold rounded-full gap-2 bg-accent-blue text-white hover:opacity-90 shrink-0"
           onClick={onStart}
         >
           <span>Comenzar partida</span>

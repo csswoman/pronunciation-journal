@@ -78,6 +78,8 @@ describe('WordSearchCompletion', () => {
         'word_search',
         45000,
         'puzzle-wb-1',
+        undefined,
+        { hits: 2, misses: 0, slug: 'match_pairs' },
       )
     })
 

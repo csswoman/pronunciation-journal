@@ -90,6 +90,13 @@ export const PRACTICE_MODES: readonly PracticeMode[] = [
     icon: 'Search',
   },
   {
+    id: 'word-rain',
+    label: 'Lluvia de palabras',
+    description: 'Escribe las palabras antes de que toquen el suelo',
+    href: '/practice/word-rain',
+    icon: 'CloudRain',
+  },
+  {
     id: 'phoneme-invaders',
     label: 'Phoneme Invaders',
     description: 'Arcade de discriminación auditiva y fonemas',

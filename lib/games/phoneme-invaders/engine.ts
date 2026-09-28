@@ -13,6 +13,8 @@ export type InvaderShip = {
 export type MissRecord = {
   heard: { word: string; ipa: string }
   chosen: { word: string; ipa: string }
+  /** The other word of the minimal pair, so a timeout can still be compared. */
+  distractor: { word: string; ipa: string }
   contrast: string
 }
 
@@ -34,6 +36,9 @@ export type InvadersAction =
   | { type: 'tick'; dy: number }
   | { type: 'shoot'; shipId: string }
   | { type: 'clear_flash' }
+  | { type: 'reset' }
+
+export const INVADERS_MAX_SHIELDS = 3
 
 export function createInitialInvadersState(): InvadersState {
   return {
@@ -45,7 +50,7 @@ export function createInitialInvadersState(): InvadersState {
     ships: [],
     target: null,
     targetPair: null,
-    shields: 3,
+    shields: INVADERS_MAX_SHIELDS,
     wave: 1,
     status: 'playing',
     lastMissFlash: null,
@@ -56,6 +61,7 @@ export function createInitialInvadersState(): InvadersState {
 }
 
 export function invadersReducer(state: InvadersState, action: InvadersAction): InvadersState {
+  if (action.type === 'reset') return createInitialInvadersState()
   if (state.status === 'game_over') return state
 
   switch (action.type) {
@@ -113,9 +119,11 @@ export function invadersReducer(state: InvadersState, action: InvadersAction): I
 
       const targetShip = updatedShips.find((s) => s.isTarget)
       if (targetShip && targetShip.y >= 100) {
+        const distractorShip = updatedShips.find((s) => !s.isTarget)
         const missRecord: MissRecord = {
           heard: { word: targetShip.word, ipa: targetShip.ipa },
           chosen: { word: 'Tiempo agotado', ipa: '-' },
+          distractor: { word: distractorShip?.word ?? '', ipa: distractorShip?.ipa ?? '' },
           contrast: state.targetPair?.contrast ?? '',
         }
         const newShields = state.shields - 1
@@ -164,6 +172,7 @@ export function invadersReducer(state: InvadersState, action: InvadersAction): I
         const missRecord: MissRecord = {
           heard: { word: state.target.word, ipa: state.target.ipa },
           chosen: { word: shotShip.word, ipa: shotShip.ipa },
+          distractor: { word: shotShip.word, ipa: shotShip.ipa },
           contrast: state.targetPair?.contrast ?? '',
         }
         const newShields = state.shields - 1

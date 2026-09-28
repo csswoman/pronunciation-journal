@@ -52,7 +52,7 @@ export function swipeReducer(
   state: SwipeState,
   action: SwipeAction,
 ): SwipeState {
-  if (state.status === 'completed') return state
+  if (state.status === 'completed' && action.type !== 'start') return state
 
   switch (action.type) {
     case 'start': {

@@ -86,3 +86,16 @@ describe('Chunk Duel engine', () => {
     expect(s.status).toBe('round_result')
   })
 })
+
+describe('Chunk Duel lifecycle', () => {
+  it('finish ends the duel and reset starts over', () => {
+    let s = createInitialDuelState()
+    s = duelReducer(s, { type: 'start_round', round: roundSpec, totalRounds: 10, roundIndex: 10, ghostSpeed: 0.05 })
+    s = duelReducer(s, { type: 'finish' })
+    expect(s.status).toBe('game_over')
+    s = duelReducer(s, { type: 'reset' })
+    expect(s.status).toBe('playing')
+    expect(s.score).toBe(0)
+    expect(s.missHistory).toEqual([])
+  })
+})

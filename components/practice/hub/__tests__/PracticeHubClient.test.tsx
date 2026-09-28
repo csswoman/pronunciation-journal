@@ -66,7 +66,7 @@ describe('PracticeHubClient', () => {
     expect(screen.getByText('Inmersión y conversación')).toBeInTheDocument()
     expect(screen.getByText('Lectura en contexto')).toBeInTheDocument()
     expect(screen.getByText('Ruta guiada')).toBeInTheDocument()
-    expect(screen.getByText('Juegos de vocabulario')).toBeInTheDocument()
+    expect(screen.getByText('Juegos de práctica')).toBeInTheDocument()
     expect(screen.getByText('Diccionario')).toBeInTheDocument()
     expect(screen.getByTestId('speak-with-coach')).toBeInTheDocument()
   })

@@ -4,10 +4,15 @@
 // <WeakFormSession>
 //   {status === 'game_over' ? (
 //     <WeakFormResults state={state} onRestart={startGame} />
-//   ) : !isPlaying ? (
-//     <StartSetupCard onStart={startGame} />
+//   ) : !isPlaying || !currentPhrase ? (
+//     <GameIntroPanel copy={WEAK_FORM_INTRO} onStart={startGame} />
 //   ) : (
 //     <GameContainer>
+//       <GameSessionBar title progressLabel>
+//         <StreakBadge />
+//         <ShieldsMeter />
+//         <GameSessionStat label="Puntos" />
+//       </GameSessionBar>
 //       <WeakFormStage />
 //       <WeakFormInput />
 //       {lastRule && <WeakFormRuleCard />}
@@ -15,21 +20,24 @@
 //   )}
 // </WeakFormSession>
 
+import { Flame, Heart } from '@/components/icons'
+import { cn } from '@/lib/cn'
 import { useWeakFormCatcherLoop } from '@/hooks/games/useWeakFormCatcherLoop'
+import { WEAK_FORM_MAX_MISSES } from '@/lib/games/weak-form-catcher/engine'
 import type { WeakFormPhraseItem } from '@/lib/games/weak-form-catcher/schema'
+import GameIntroPanel from '@/components/practice/games/shared/GameIntroPanel'
+import { WEAK_FORM_INTRO } from '@/components/practice/games/shared/game-intro-copy'
+import GameSessionBar, { GameSessionStat } from '@/components/practice/games/shared/GameSessionBar'
 import WeakFormStage from './WeakFormStage'
 import WeakFormInput from './WeakFormInput'
 import WeakFormRuleCard from './WeakFormRuleCard'
 import WeakFormResults from './WeakFormResults'
-import PastelCard from '@/components/layout/PastelCard'
 
 interface WeakFormSessionProps {
   phrases: WeakFormPhraseItem[]
 }
 
-export default function WeakFormSession({
-  phrases,
-}: WeakFormSessionProps) {
+export default function WeakFormSession({ phrases }: WeakFormSessionProps) {
   const {
     state,
     isPlaying,
@@ -46,45 +54,54 @@ export default function WeakFormSession({
 
   if (!isPlaying || !state.currentPhrase) {
     return (
-      <div className="w-full max-w-lg mx-auto py-8">
-        <PastelCard tone="mint" className="p-6 sm:p-8 rounded-3xl text-ink space-y-6">
-          <div className="space-y-2 text-center">
-            <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink/70">
-              ENTRENAMIENTO DE COMPRENSIÓN
-            </span>
-            <h1 className="font-heading text-3xl font-extrabold text-ink leading-tight">
-              Weak Form Catcher
-            </h1>
-            <p className="font-sans text-body-sm text-ink/80 text-pretty">
-              Escucha frases a velocidad real. La transcripción reducida caerá lentamente: escribe la <strong>forma completa en inglés</strong> antes de que toque el suelo.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-ink/5 border border-ink/10 space-y-2 text-body-sm font-sans text-ink/90">
-            <div className="font-bold flex items-center gap-2">
-              <span>💡 Reglas de juego:</span>
-            </div>
-            <ul className="list-disc list-inside space-y-1 text-caption text-ink/80">
-              <li>Si cae «whaddya want», escribe <strong>what do you want</strong>.</li>
-              <li>Tienes 2 ayudas por partida (Audio lento 🐢 y Revelar 1.ª palabra 💡).</li>
-              <li>Tras cada frase verás la explicación gramatical del cambio de sonido.</li>
-            </ul>
-          </div>
-
-          <button
-            type="button"
-            onClick={startGame}
-            className="w-full py-4 rounded-2xl bg-ink text-surface-base font-sans text-body font-bold hover:opacity-95 transition-opacity text-center shadow-md cursor-pointer"
-          >
-            Empezar entrenamiento 🎧
-          </button>
-        </PastelCard>
-      </div>
+      <GameIntroPanel
+        copy={WEAK_FORM_INTRO}
+        onStart={startGame}
+        unavailableReason={
+          phrases.length === 0
+            ? 'No pudimos cargar las frases. Recarga la página.'
+            : undefined
+        }
+      />
     )
   }
 
+  const shieldsLeft = Math.max(0, WEAK_FORM_MAX_MISSES - state.misses)
+
   return (
-    <div className="w-full max-w-xl mx-auto space-y-4 py-4">
+    <div className="mx-auto flex w-full max-w-xl flex-col gap-4 py-4">
+      <GameSessionBar
+        title="Weak Form Catcher"
+        progressLabel={`Frase ${state.phraseIndex + 1} de ${state.totalPhrases}`}
+      >
+        {state.streak >= 3 && (
+          <span className="hidden items-center gap-1 rounded-full bg-butter-soft px-2.5 py-1 font-sans text-caption font-bold tabular-nums text-ink sm:inline-flex">
+            <Flame size={14} aria-hidden />
+            Racha {state.streak}
+          </span>
+        )}
+
+        <div
+          className="flex items-center gap-0.5"
+          role="img"
+          aria-label={`${shieldsLeft} de ${WEAK_FORM_MAX_MISSES} escudos`}
+        >
+          {Array.from({ length: WEAK_FORM_MAX_MISSES }).map((_, i) => (
+            <Heart
+              key={i}
+              size={18}
+              aria-hidden
+              className={cn(
+                'transition-opacity duration-200',
+                i < shieldsLeft ? 'fill-error text-error' : 'text-fg-faint opacity-60',
+              )}
+            />
+          ))}
+        </div>
+
+        <GameSessionStat label="Puntos" value={state.score} />
+      </GameSessionBar>
+
       <WeakFormStage
         phrase={state.currentPhrase}
         y={state.y}

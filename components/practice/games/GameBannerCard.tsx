@@ -48,7 +48,7 @@ export default function GameBannerCard({
           <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-ink leading-tight">
             {game.title}
           </h2>
-          <p className="font-sans text-body-sm text-[#4a5263] text-pretty">
+          <p className="font-sans text-body-sm text-text-muted text-pretty">
             {description}
           </p>
         </div>

@@ -73,7 +73,7 @@ export async function savePracticeAnswer(
     practiceEffectId(userId, attemptId, 'topic_srs', canonicalSrsTopic ?? '', 'rating'),
   ])
   const row = {
-    id: answerId,
+    id: attemptId,
     user_id: userId,
     sound_id: answer.soundId ?? null,
     exercise_type_id: answer.exerciseTypeId,

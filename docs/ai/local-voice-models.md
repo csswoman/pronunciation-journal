@@ -163,6 +163,12 @@ mínima usada para medir (no se conecta a ningún flujo de usuario):
 - `lib/speech/kokoro/kokoro-worker.ts` y `lib/speech/kokoro/types.ts` — worker y protocolo de mensajes.
 - `app/(authenticated)/dev/kokoro-bench` + `components/dev/KokoroBench.tsx` — página dev-only (sigue el
   patrón de `dev/sounds`) para volver a medir en un navegador real sin reconstruir el harness.
+  Desde el 2026-09-27, la página importa el benchmark dinámicamente solo dentro de una rama
+  `NODE_ENV === 'development'`; producción devuelve `notFound()`. El import estático anterior
+  hacía compilar el worker incluso con la ruta bloqueada. La rama permite excluirlo del grafo de
+  producción sin ampliar el alias ni resolver los assets internos de ONNX. Los bloqueos del
+  bundler descritos arriba siguen pendientes para desarrollo: este aislamiento mantiene el STOP
+  de la fase A y no habilita Kokoro ni las fases B/C.
 - `proxy.ts` — CSP con `'wasm-unsafe-eval'` y los hosts de Hugging Face en `connect-src`.
 - `next.config.mjs` — alias de `kokoro-js` al build de navegador para que el bundle de cliente no
   arrastre `onnxruntime-node`.

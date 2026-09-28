@@ -3,7 +3,8 @@
 // Planned structure:
 // <GamesSidebar>
 //   <SidebarHeader title="DISPONIBLES" />
-//   <GamesList>
+//   <GamesList (grouped by skill when >= 5)>
+//     <GroupHeader />
 //     <GameItem key={game.id} ... />
 //   </GamesList>
 //   <Divider />
@@ -24,6 +25,12 @@ const GAME_ICONS: Record<string, typeof Grid2x2> = {
   'memory-match': Layers,
 }
 
+const SKILL_GROUPS = [
+  { label: 'Oído', skills: ['listening', 'pronunciation'] },
+  { label: 'Chunks y gramática', skills: ['grammar'] },
+  { label: 'Vocabulario', skills: ['vocabulary'] },
+] as const
+
 interface GamesSidebarProps {
   games: readonly PracticeGame[]
   selectedGameId: string
@@ -37,6 +44,55 @@ export default function GamesSidebar({
   onSelectGame,
   bestScoreLabel = '8 de 8 · 3:12',
 }: GamesSidebarProps) {
+  const renderGameButton = (game: PracticeGame) => {
+    const isSelected = selectedGameId === game.id
+    const Icon = GAME_ICONS[game.id] ?? Grid2x2
+
+    return (
+      <button
+        key={game.id}
+        type="button"
+        onClick={() => onSelectGame(game.id)}
+        className={`group flex items-center gap-3 rounded-2xl p-3 text-left transition-all duration-150 active:scale-[0.98] focus-ring ${
+          isSelected
+            ? 'bg-primary text-primary-fg shadow-xs'
+            : 'bg-transparent text-fg hover:bg-surface-sunken'
+        }`}
+      >
+        <span
+          className={`flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-xl transition-colors ${
+            isSelected
+              ? 'bg-white/20 text-primary-fg'
+              : 'bg-surface-sunken text-fg'
+          }`}
+        >
+          <Icon size={19} aria-hidden="true" />
+        </span>
+
+        <div className="flex flex-1 flex-col gap-0.5 min-w-0">
+          <span className="font-heading text-body-md font-bold leading-tight truncate">
+            {game.title}
+          </span>
+          <span
+            className={`text-caption truncate ${
+              isSelected ? 'opacity-90' : 'text-fg-muted'
+            }`}
+          >
+            {game.kicker}
+          </span>
+        </div>
+
+        <ChevronRight
+          size={16}
+          className={`shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 ${
+            isSelected ? 'text-primary-fg' : 'text-fg-subtle'
+          }`}
+          aria-hidden="true"
+        />
+      </button>
+    )
+  }
+
   return (
     <section className="flex flex-col gap-2 rounded-3xl border border-border-default bg-surface-raised p-3.5 shadow-xs">
       <span className="px-2 pt-1 font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted">
@@ -44,54 +100,24 @@ export default function GamesSidebar({
       </span>
 
       <div className="flex flex-col gap-1 max-h-[480px] overflow-y-auto pr-1 no-scrollbar">
-        {games.map((game) => {
-          const isSelected = selectedGameId === game.id
-          const Icon = GAME_ICONS[game.id] ?? Grid2x2
-
-          return (
-            <button
-              key={game.id}
-              type="button"
-              onClick={() => onSelectGame(game.id)}
-              className={`group flex items-center gap-3 rounded-2xl p-3 text-left transition-all duration-150 active:scale-[0.98] focus-ring ${
-                isSelected
-                  ? 'bg-primary text-primary-fg shadow-xs'
-                  : 'bg-transparent text-fg hover:bg-surface-sunken'
-              }`}
-            >
-              <span
-                className={`flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-xl transition-colors ${
-                  isSelected
-                    ? 'bg-white/20 text-primary-fg'
-                    : 'bg-surface-sunken text-fg'
-                }`}
-              >
-                <Icon size={19} aria-hidden="true" />
-              </span>
-
-              <div className="flex flex-1 flex-col gap-0.5 min-w-0">
-                <span className="font-heading text-body-md font-bold leading-tight truncate">
-                  {game.title}
+        {games.length >= 5 ? (
+          SKILL_GROUPS.map((group) => {
+            const groupGames = games.filter((g) =>
+              (group.skills as readonly string[]).includes(g.skill),
+            )
+            if (groupGames.length === 0) return null
+            return (
+              <div key={group.label} className="flex flex-col gap-1 pt-1.5 first:pt-0">
+                <span className="px-2 pt-1 font-mono text-[10px] font-bold uppercase tracking-wider text-fg-muted/80">
+                  {group.label}
                 </span>
-                <span
-                  className={`text-caption truncate ${
-                    isSelected ? 'opacity-90' : 'text-fg-muted'
-                  }`}
-                >
-                  {game.kicker}
-                </span>
+                {groupGames.map(renderGameButton)}
               </div>
-
-              <ChevronRight
-                size={16}
-                className={`shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 ${
-                  isSelected ? 'text-primary-fg' : 'text-fg-subtle'
-                }`}
-                aria-hidden="true"
-              />
-            </button>
-          )
-        })}
+            )
+          })
+        ) : (
+          games.map(renderGameButton)
+        )}
       </div>
 
       {UPCOMING_GAMES.length > 0 && (

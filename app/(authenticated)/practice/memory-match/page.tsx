@@ -10,8 +10,8 @@ export const metadata = {
 }
 
 function loadMemoryWords(): MemoryWordItem[] {
+  const filePath = resolve(process.cwd(), 'public/essential-words/words-001.json')
   try {
-    const filePath = resolve(process.cwd(), 'public/essential-words/words-001.json')
     const fileData = readFileSync(filePath, 'utf-8')
     const parsed = JSON.parse(fileData)
     const entries = parsed.entries ?? []
@@ -30,7 +30,8 @@ function loadMemoryWords(): MemoryWordItem[] {
           ipa: e.ipa_strong,
         }),
       )
-  } catch {
+  } catch (err) {
+    console.error(`[MemoryMatchPage] Failed to load ${filePath}; using fallback words:`, err)
     return [
       { id: 'm1', word: 'apple', meaningEs: 'manzana', ipa: '/ˈæp.əl/' },
       { id: 'm2', word: 'water', meaningEs: 'agua', ipa: '/ˈwɔː.tər/' },

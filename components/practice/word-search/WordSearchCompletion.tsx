@@ -6,7 +6,7 @@
 //   <WordsReviewPanel>   (Right column: "Escúchalas antes de seguir", 2-col words grid, Guardar cuaderno banner)
 // </WordSearchCompletion>
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { WordSearchPuzzle } from '@/lib/exercises/word-search/types'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
 import { WORD_SEARCH_MODE_LABELS } from '@/lib/exercises/word-search/mode-labels'
@@ -82,24 +82,24 @@ export default function WordSearchCompletion({
       aria-label="Resultados de la partida"
     >
       {/* Left Column: Celebration Hero Card */}
-      <div className="relative flex min-h-[30rem] flex-col justify-between overflow-hidden rounded-3xl border border-emerald-400/40 bg-[#a8e6c9] p-6 text-[#12151c] shadow-sm dark:border-emerald-800 dark:bg-[#1b4332] dark:text-emerald-50">
+      <div className="relative flex min-h-[30rem] flex-col justify-between overflow-hidden rounded-3xl border border-emerald-400/40 bg-mint p-6 text-ink shadow-sm dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-50">
         <span
-          className="pointer-events-none absolute -right-4 -top-6 select-none font-heading text-[140px] font-black leading-none text-black/5 dark:text-white/5"
+          className="pointer-events-none absolute -right-4 -top-6 select-none font-heading text-hero font-black leading-none text-black/5 dark:text-white/5"
           aria-hidden
         >
           {puzzle.items.length}/{puzzle.items.length}
         </span>
 
         <div className="relative flex flex-col items-start gap-4">
-          <span className="inline-flex items-center rounded-full bg-[#12151c] px-3.5 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-white dark:bg-emerald-300 dark:text-emerald-950">
+          <span className="inline-flex items-center rounded-full bg-text px-3.5 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-surface dark:bg-emerald-300 dark:text-emerald-950">
             TABLERO COMPLETADO
           </span>
 
           <div className="flex flex-col gap-2">
-            <h2 className="font-heading text-3xl font-extrabold leading-tight text-[#12151c] sm:text-4xl dark:text-emerald-50">
+            <h2 className="font-heading text-3xl font-extrabold leading-tight text-text sm:text-4xl dark:text-emerald-50">
               ¡Encontraste todas las palabras!
             </h2>
-            <p className="text-body-sm leading-relaxed text-[#374151] dark:text-emerald-200/90">
+            <p className="text-body-sm leading-relaxed text-text-secondary dark:text-emerald-200/90">
               Terminaste «<span className="font-bold">{puzzle.title}</span>». Ahora escúchalas: así las recordarás por el sonido, no solo por la forma.
             </p>
           </div>
@@ -109,7 +109,7 @@ export default function WordSearchCompletion({
               <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
                 PALABRAS
               </span>
-              <span className="font-mono text-body-md font-extrabold text-[#12151c] dark:text-emerald-50">
+              <span className="font-mono text-body-md font-extrabold text-text dark:text-emerald-50">
                 {puzzle.items.length}/{puzzle.items.length}
               </span>
             </div>
@@ -118,7 +118,7 @@ export default function WordSearchCompletion({
               <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
                 TIEMPO
               </span>
-              <span className="font-mono text-body-md font-extrabold text-[#12151c] dark:text-emerald-50">
+              <span className="font-mono text-body-md font-extrabold text-text dark:text-emerald-50">
                 {formatTime(elapsedSeconds)}
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function WordSearchCompletion({
               <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
                 MODO
               </span>
-              <span className="text-caption font-bold text-[#12151c] dark:text-emerald-50 truncate w-full">
+              <span className="text-caption font-bold text-text dark:text-emerald-50 truncate w-full">
                 {modeLabel}
               </span>
             </div>
@@ -138,7 +138,7 @@ export default function WordSearchCompletion({
           <button
             type="button"
             onClick={onExit}
-            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-[#12151c] px-6 py-3.5 text-body-sm font-bold text-white shadow-xs transition-all active:scale-[0.98] hover:bg-black dark:bg-emerald-300 dark:text-emerald-950"
+            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-text px-6 py-3.5 text-body-sm font-bold text-surface shadow-xs transition-all active:scale-[0.98] hover:bg-black dark:bg-emerald-300 dark:text-emerald-950"
           >
             <span>Elegir otro tema</span>
             <ArrowRight className="h-4 w-4" aria-hidden />
@@ -147,7 +147,7 @@ export default function WordSearchCompletion({
           <button
             type="button"
             onClick={onRepeat}
-            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-white/80 px-6 py-3.5 text-body-sm font-bold text-[#12151c] shadow-2xs transition-all active:scale-[0.98] hover:bg-white dark:bg-surface-sunken dark:text-fg dark:border-border-subtle"
+            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-white/80 px-6 py-3.5 text-body-sm font-bold text-text shadow-2xs transition-all active:scale-[0.98] hover:bg-white dark:bg-surface-sunken dark:text-fg dark:border-border-subtle"
           >
             <RotateCcw className="h-4 w-4" aria-hidden />
             <span>Repetir este tablero</span>
@@ -219,12 +219,12 @@ export default function WordSearchCompletion({
           })}
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-[#fef3c7] dark:bg-amber-950/60 border border-[#fde68a] dark:border-amber-700/60 p-4 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-butter-soft dark:bg-amber-950/60 border border-butter-deep/40 dark:border-amber-700/60 p-4 shadow-2xs">
           <div className="flex flex-col gap-0.5">
-            <span className="font-heading text-body-md font-bold text-[#78350f] dark:text-amber-200">
+            <span className="font-heading text-body-md font-bold text-amber-900 dark:text-amber-200">
               Guárdalas en tu cuaderno
             </span>
-            <span className="text-caption text-[#92400e] dark:text-amber-300/80">
+            <span className="text-caption text-amber-800 dark:text-amber-300/80">
               Volverán en tu repaso para que no se te olviden.
             </span>
           </div>

@@ -95,13 +95,13 @@ export default function WordSearchSourceTabs({
               onKeyDown={(e) => handleKeyDown(id, e)}
               className={`focus-ring flex flex-col items-start gap-2 rounded-2xl p-3.5 text-left transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                 isSelected
-                  ? 'border-2 border-[#12151c] bg-[#b9d3fb] text-[#12151c] shadow-xs'
+                  ? 'border-2 border-ink bg-sky text-ink shadow-xs'
                   : 'border-2 border-border-default bg-surface hover:border-border-strong text-fg'
               }`}
             >
               <span
                 className={`flex h-8.5 w-8.5 items-center justify-center rounded-xl transition-colors ${
-                  isSelected ? 'bg-black/12 text-[#12151c]' : 'bg-surface-sunken text-fg'
+                  isSelected ? 'bg-black/12 text-ink' : 'bg-surface-sunken text-fg'
                 }`}
               >
                 <Icon size={17} aria-hidden />
