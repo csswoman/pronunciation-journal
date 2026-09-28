@@ -1,8 +1,10 @@
-# Tarea activa — Layout Inmersión /practice/immersion
+# Known Words Triage
 
 | # | Paso | Estado |
 |---|------|--------|
-| 1 | Diseñar componentes modulares UI con miniaturas reales de YouTube y datos reales de la base de datos | ✅ |
-| 2 | Implementar sección "Para tus focos de esta semana", filtros reactivos y footer bar con soporte dark mode | ✅ |
-| 3 | Actualizar cabecera ("Ver y hablar"), badges y orquestación en `ImmersionCatalog` y `page.tsx` | ✅ |
-| 4 | Verificación de diseño tokens, dark mode, ESLint y type-check | ✅ |
+| 1 | Task 1: Core Logic & DB Helpers (triage-deck, triage-recheck, patchRecheck, scheduleEssentialWordRecheck) | ✅ |
+| 2 | Task 2: Swipe Gesture Pure Logic & Hook (swipe-direction & useSwipeCard) | ✅ |
+| 3 | Task 3: Triage Orchestration Hook (useKnownWordsTriage) | ✅ |
+| 4 | Task 4: UI Components (TriageCard, TriageActionHints, TriageDeck, TriageLevelPicker, TriageSummary, KnownWordsTriage) | ✅ |
+| 5 | Task 5: Route & SessionReady Entry Point | ✅ |
+| 6 | Task 6: End-to-end Verification (types, lint, design-tokens, audit:hard-rules, unit tests) | ✅ |
