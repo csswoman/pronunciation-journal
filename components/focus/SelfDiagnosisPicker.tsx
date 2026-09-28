@@ -2,9 +2,12 @@
 
 // Planned structure:
 // <SelfDiagnosisPicker>
-//   <SelfDiagnosisTile />   (uno por situación)
+//   <SelfDiagnosisTile />   (grid de tarjetas pastel por situación)
+// </SelfDiagnosisPicker>
 
 import React from 'react'
+import PastelCard, { type PastelTone } from '@/components/layout/PastelCard'
+import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { getIllustration } from '@/lib/illustrations/registry'
 import { SELF_DIAGNOSIS_ITEMS, type SelfDiagnosisItem } from '@/lib/focus/self-diagnosis'
@@ -14,6 +17,8 @@ interface SelfDiagnosisPickerProps {
   selectedIds: string[]
   onToggle: (id: string) => void
 }
+
+const TONES: PastelTone[] = ['butter', 'coral', 'mint', 'lilac']
 
 function getTargetLabel(item: SelfDiagnosisItem): string {
   if (item.topicIds.length === 0) {
@@ -26,70 +31,90 @@ function getTargetLabel(item: SelfDiagnosisItem): string {
 function SelfDiagnosisTile({
   item,
   selected,
+  tone,
   onToggle,
 }: {
   item: SelfDiagnosisItem
   selected: boolean
+  tone: PastelTone
   onToggle: () => void
 }) {
-  // Las ilustraciones no son una grilla cuadrada: fijar un solo eje evita
-  // deformarlas (ver lib/illustrations/registry.ts).
   const Illustration = getIllustration(item.illustration)
   const targetLabel = getTargetLabel(item)
 
   return (
-    <button
-      type="button"
+    <PastelCard
+      tone={tone}
+      onClick={onToggle}
       role="checkbox"
       aria-checked={selected}
-      onClick={onToggle}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onToggle()
+        }
+      }}
       className={cn(
-        'focus-ring flex items-start gap-3 rounded-xl border p-3.5 text-left transition-colors',
+        'focus-ring relative flex flex-col justify-between gap-4 rounded-3xl p-5 sm:p-6 text-left transition-all overflow-hidden cursor-pointer hover:scale-[1.008]',
         selected
-          ? 'border-primary bg-primary-soft shadow-xs'
-          : 'border-border-default bg-surface-raised hover:border-border-hover',
+          ? 'ring-2 ring-ink ring-offset-2 shadow-md'
+          : 'shadow-xs hover:shadow-md',
       )}
     >
-      <Illustration
-        className={cn('h-10 w-auto shrink-0', selected ? 'text-primary' : 'text-fg-subtle')}
-        aria-hidden="true"
-      />
-      <span className="min-w-0 flex-1">
-        <span className="block text-body-sm font-medium text-fg">{item.statement}</span>
-        <span className="mt-0.5 block text-tiny text-fg-subtle">{item.example}</span>
-        <span
-          className={cn(
-            'mt-2 inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-tiny font-medium transition-colors',
-            selected
-              ? 'bg-primary text-on-primary'
-              : 'bg-surface-sunken text-fg-muted',
-          )}
-        >
-          <span className="opacity-70">Foco:</span> {targetLabel}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-tight pr-4">
+            {item.statement}
+          </h3>
+          <div
+            aria-hidden="true"
+            className={cn(
+              'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all mt-1',
+              selected
+                ? 'border-transparent bg-ink text-white shadow-xs'
+                : 'border-black/30 bg-white/90',
+            )}
+          >
+            {selected && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white/90 p-4 text-body-sm text-ink-secondary font-medium shadow-xs">
+          {item.example}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-2 mt-1">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1 text-tiny font-bold text-ink">
+          <span className="h-2 w-2 rounded-full bg-ink" />
+          <span>{targetLabel}</span>
         </span>
-      </span>
-    </button>
+
+        <Illustration
+          className="absolute bottom-3 right-3 h-16 sm:h-20 w-auto opacity-15 text-ink pointer-events-none"
+          aria-hidden="true"
+        />
+      </div>
+    </PastelCard>
   )
 }
 
 /**
- * Selector de dificultades en situaciones cotidianas.
- *
- * Permite al usuario describir lo que le pasa al hablar y el mapeo a temas
- * ocurre en topicsFromSelection.
+ * Selector de dificultades en situaciones cotidianas (Imagen 1).
  */
 export function SelfDiagnosisPicker({ selectedIds, onToggle }: SelfDiagnosisPickerProps) {
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" role="group" aria-label="¿Qué se te hace difícil?">
-      {SELF_DIAGNOSIS_ITEMS.map((item) => (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5" role="group" aria-label="¿Qué se te dificulta?">
+      {SELF_DIAGNOSIS_ITEMS.map((item, idx) => (
         <SelfDiagnosisTile
           key={item.id}
           item={item}
           selected={selectedIds.includes(item.id)}
+          tone={TONES[idx % TONES.length]}
           onToggle={() => onToggle(item.id)}
         />
       ))}
     </div>
   )
 }
-

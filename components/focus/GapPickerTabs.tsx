@@ -12,7 +12,9 @@
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
 import { getTopicMetadata } from '@/lib/focus/topic-metadata'
+import { suggestionsIntro } from '@/lib/focus/setup-copy'
 import { topicsFromSelection, selectionNeedsPhoneme, DEFAULT_PHONEME_TARGET } from '@/lib/focus/self-diagnosis'
+import type { PastelTone } from '@/components/layout/PastelCard'
 import type { GapSuggestion } from '@/lib/focus/gap-suggestions'
 import type { SprintGap } from '@/lib/focus/types'
 import { GapSuggestionCard } from './GapSuggestionCard'
@@ -25,9 +27,17 @@ type Tab = 'suggestions' | 'diagnosis' | 'catalog' | 'freeform'
 const TABS: { id: Tab; label: string }[] = [
   { id: 'suggestions', label: 'Sugerencias' },
   { id: 'diagnosis', label: '¿Qué se te dificulta?' },
-  { id: 'catalog', label: 'Catálogo de temas' },
-  { id: 'freeform', label: 'Describir con mis palabras' },
+  { id: 'catalog', label: 'Todos los temas' },
+  { id: 'freeform', label: 'Contarlo con mis palabras' },
 ]
+
+/** Una línea bajo las pestañas que explica qué hace cada una. */
+const TAB_HINTS: Partial<Record<Tab, string>> = {
+  diagnosis: 'Marca las situaciones en las que te trabas y elegimos el tema por ti.',
+  catalog: 'Si ya sabes qué quieres practicar, búscalo por nombre, nivel o ejemplo.',
+}
+
+const CARD_TONES: PastelTone[] = ['coral', 'coral', 'sky', 'coral']
 
 interface GapPickerTabsProps {
   suggestedGaps: GapSuggestion[]
@@ -62,7 +72,6 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
     setDiagnosisIds(next)
 
     if (isCurrentlySelected) {
-      // Al desmarcar una situación, removemos los gaps asociados que ya no correspondan
       const currentTopics = topicsFromSelection(diagnosisIds)
       const nextTopics = topicsFromSelection(next)
       const removedTopics = currentTopics.filter((t) => !nextTopics.includes(t))
@@ -77,7 +86,6 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
       return
     }
 
-    // Al marcar una situación, seleccionamos directamente su tema central
     const topicIds = topicsFromSelection(next)
     for (const topicId of topicIds) {
       const gap = gapFromTopicId(curriculumGaps, topicId)
@@ -93,7 +101,7 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
 
   return (
     <div className="mb-8">
-      <div className="mb-4 flex flex-wrap gap-2" role="tablist" aria-label="Cómo elegir tu foco de estudio">
+      <div className="mb-5 flex flex-wrap gap-2.5" role="tablist" aria-label="Cómo elegir tu foco de estudio">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -102,9 +110,9 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              'focus-ring rounded-full px-4 py-1.5 text-body-sm font-medium transition-all',
+              'focus-ring rounded-full px-5 py-2 font-display text-body-sm font-semibold transition-all',
               tab === t.id
-                ? 'bg-primary text-on-primary shadow-xs'
+                ? 'bg-primary text-white shadow-xs'
                 : 'border border-border-subtle bg-surface-raised text-fg-muted hover:border-border-default hover:text-fg shadow-xs',
             )}
           >
@@ -113,14 +121,21 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
         ))}
       </div>
 
+      {(tab === 'suggestions' || TAB_HINTS[tab]) && (
+        <p className="mb-4 text-body-sm text-fg-muted">
+          {tab === 'suggestions' ? suggestionsIntro(suggestedGaps) : TAB_HINTS[tab]}
+        </p>
+      )}
+
       {tab === 'suggestions' && (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {suggestedGaps.map((gap) => (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:gap-5">
+          {suggestedGaps.map((gap, idx) => (
             <GapSuggestionCard
               key={gap.targetId}
               suggestion={gap}
               selected={selectedIds.includes(gap.targetId)}
               disabled={selectionFull && !selectedIds.includes(gap.targetId)}
+              tone={CARD_TONES[idx % CARD_TONES.length]}
               onToggle={() => onToggle(gap)}
             />
           ))}
