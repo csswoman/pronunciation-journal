@@ -10,20 +10,27 @@ export const metadata = {
 }
 
 function loadFalseFriendsData(): FalseFriend[] {
+  const dirPath = resolve(process.cwd(), 'public/false-friends')
   try {
-    const dirPath = resolve(process.cwd(), 'public/false-friends')
     const files = readdirSync(dirPath).filter((f) => f.endsWith('.json'))
     const collected: FalseFriend[] = []
 
     for (const file of files) {
-      const content = readFileSync(resolve(dirPath, file), 'utf-8')
-      const parsed = JSON.parse(content)
-      if (Array.isArray(parsed.entries)) {
-        collected.push(...parsed.entries)
+      const filePath = resolve(dirPath, file)
+      try {
+        const content = readFileSync(filePath, 'utf-8')
+        const parsed = JSON.parse(content)
+        if (Array.isArray(parsed.entries)) {
+          collected.push(...parsed.entries)
+        }
+      } catch (err) {
+        console.error(`[FalseFriendsSwipePage] Failed to load ${filePath}:`, err)
+        return []
       }
     }
     return collected
-  } catch {
+  } catch (err) {
+    console.error(`[FalseFriendsSwipePage] Failed to read content directory ${dirPath}:`, err)
     return []
   }
 }

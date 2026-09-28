@@ -10,11 +10,12 @@ export const metadata = {
 }
 
 function loadPairsData(): MinimalPairItem[] {
+  const filePath = resolve(process.cwd(), 'public/games/phoneme-invaders/pairs.json')
   try {
-    const filePath = resolve(process.cwd(), 'public/games/phoneme-invaders/pairs.json')
     const fileData = readFileSync(filePath, 'utf-8')
     return JSON.parse(fileData)
-  } catch {
+  } catch (err) {
+    console.error(`[PhonemeInvadersPage] Failed to load ${filePath}:`, err)
     return []
   }
 }

@@ -10,11 +10,12 @@ export const metadata = {
 }
 
 function loadPhrasesData(): WeakFormPhraseItem[] {
+  const filePath = resolve(process.cwd(), 'public/games/weak-forms/phrases-001.json')
   try {
-    const filePath = resolve(process.cwd(), 'public/games/weak-forms/phrases-001.json')
     const fileData = readFileSync(filePath, 'utf-8')
     return JSON.parse(fileData)
-  } catch {
+  } catch (err) {
+    console.error(`[WeakFormCatcherPage] Failed to load ${filePath}:`, err)
     return []
   }
 }
