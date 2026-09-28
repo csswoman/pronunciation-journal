@@ -84,15 +84,17 @@ export function useKnownWordsTriage({ levels, userId }: UseKnownWordsTriageOptio
     };
   }, [userId, retryLoadKey]);
 
+  const levelsKey = levels.join(",");
+
   useEffect(() => {
     const data = cachedRef.current;
     if (!data) return;
-    setDeck(buildTriageCatalogDeck(data.catalog, data.srs, data.signals, levels));
+    setDeck(buildTriageCatalogDeck(data.catalog, data.srs, data.signals, levelsRef.current));
     setCurrentIndex(0);
     setCounts({ known: 0, skipped: 0 });
     setUndoItem(null);
     setActionError(null);
-  }, [levels]);
+  }, [levelsKey]);
 
   const currentEntry = deck[currentIndex];
   const nextEntry = deck[currentIndex + 1];

@@ -33,7 +33,7 @@ export function TriageActionHints({
       if (
         target &&
         (target.isContentEditable
-          || Boolean(target.closest("input, textarea, select, button, a, [role='button'], [role='slider']")))
+          || Boolean(target.closest?.("input, textarea, select, button, a, [role='button'], [role='slider']")))
       ) {
         return;
       }

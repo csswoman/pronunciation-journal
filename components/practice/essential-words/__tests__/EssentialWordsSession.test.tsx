@@ -106,6 +106,7 @@ vi.mock('@/lib/db', () => {
       // recordLegacySkillAttempt reads/writes the skill-model tables even when
       // SKILL_MODEL_MODE=off. Keep a Dexie-shaped stub so Continue does not
       // log "[essential-words] legacy skill evidence failed".
+      essentialWordLearnerSignals: { where: emptyWhere },
       learningItems: { where: emptyWhere },
       attemptLogs: { where: emptyWhere },
       srsReviewEvents: { where: emptyWhere },

@@ -4,7 +4,7 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useKnownWordsTriage } from "../useKnownWordsTriage";
 import * as client from "@/lib/essential-words/client";
 import * as db from "@/lib/db";
-import * as recheck from "@/lib/essential-words/triage-recheck";
+import * as learnerStateQueries from "@/lib/essential-words/learner-state-queries";
 import type { EssentialWord } from "@/lib/essential-words/types";
 
 const mockWords: EssentialWord[] = [
@@ -13,14 +13,33 @@ const mockWords: EssentialWord[] = [
   { word: "cherry", rank: 3, pos: "noun", ipa_strong: "/ˈtʃer.i/", example_sentence: "A cherry.", cefr_level: "A2" },
 ];
 
+const mockCatalogIndex = mockWords.map((w) => ({
+  word: w.word,
+  rank: w.rank,
+  pos: w.pos,
+  cefr_level: w.cefr_level,
+  chunk: 1,
+  ipa_strong: w.ipa_strong,
+}));
+
 describe("useKnownWordsTriage", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.spyOn(client, "fetchEssentialWords").mockResolvedValue(mockWords);
+    vi.spyOn(client, "fetchCatalogIndex").mockResolvedValue(mockCatalogIndex);
+    vi.spyOn(client, "fetchChunk").mockResolvedValue(mockWords);
     vi.spyOn(db, "getEssentialWordsSrsEntries").mockResolvedValue([]);
-    vi.spyOn(db, "masterEssentialWord").mockResolvedValue(undefined);
-    vi.spyOn(db, "scheduleEssentialWordRecheck").mockResolvedValue(undefined);
-    vi.spyOn(db, "deleteEssentialWordSrs").mockResolvedValue(undefined);
+    vi.spyOn(learnerStateQueries, "getEssentialWordLearnerSignals").mockResolvedValue([]);
+    vi.spyOn(learnerStateQueries, "getEssentialWordLearnerSignal").mockResolvedValue(undefined);
+    vi.spyOn(learnerStateQueries, "declareEssentialWordKnown").mockImplementation(async (userId, wordId, now) => ({
+      id: `${userId}:${wordId}`,
+      userId,
+      wordId,
+      familiarity: "self-declared",
+      declaredKnownAt: now ?? new Date().toISOString(),
+      pronunciationDifficulty: "none",
+      updatedAt: new Date().toISOString(),
+    }));
+    vi.spyOn(learnerStateQueries, "restoreEssentialWordKnownClaim").mockResolvedValue(undefined);
   });
 
   it("loads words, builds deck filtered by levels, and exposes initial state", async () => {
@@ -30,6 +49,7 @@ describe("useKnownWordsTriage", () => {
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
+      expect(result.current.isCardLoading).toBe(false);
     });
 
     expect(result.current.deck).toHaveLength(2);
@@ -39,9 +59,7 @@ describe("useKnownWordsTriage", () => {
     expect(result.current.canUndo).toBe(false);
   });
 
-  it("markKnown calls masterEssentialWord when not sampled for recheck", async () => {
-    vi.spyOn(recheck, "shouldSampleForRecheck").mockReturnValue(false);
-
+  it("markKnown saves familiarity claim and advances deck", async () => {
     const { result } = renderHook(() =>
       useKnownWordsTriage({ levels: ["A1"], userId: "user-123" })
     );
@@ -52,34 +70,18 @@ describe("useKnownWordsTriage", () => {
       await result.current.markKnown();
     });
 
-    expect(db.masterEssentialWord).toHaveBeenCalledWith("apple", "user-123");
-    expect(db.scheduleEssentialWordRecheck).not.toHaveBeenCalled();
+    expect(learnerStateQueries.declareEssentialWordKnown).toHaveBeenCalledWith(
+      "user-123",
+      "c1k:apple",
+      expect.any(String),
+    );
     expect(result.current.current?.word).toBe("banana");
     expect(result.current.remaining).toBe(1);
     expect(result.current.counts).toEqual({ known: 1, skipped: 0 });
     expect(result.current.canUndo).toBe(true);
   });
 
-  it("markKnown calls scheduleEssentialWordRecheck when sampled for recheck", async () => {
-    vi.spyOn(recheck, "shouldSampleForRecheck").mockReturnValue(true);
-
-    const { result } = renderHook(() =>
-      useKnownWordsTriage({ levels: ["A1"], userId: "user-123" })
-    );
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
-    await act(async () => {
-      await result.current.markKnown();
-    });
-
-    expect(db.scheduleEssentialWordRecheck).toHaveBeenCalledWith("apple", 4, "user-123");
-    expect(db.masterEssentialWord).not.toHaveBeenCalled();
-    expect(result.current.current?.word).toBe("banana");
-    expect(result.current.counts).toEqual({ known: 1, skipped: 0 });
-  });
-
-  it("skip advances without saving to DB", async () => {
+  it("skip advances without saving learner signal", async () => {
     const { result } = renderHook(() =>
       useKnownWordsTriage({ levels: ["A1"], userId: "user-123" })
     );
@@ -90,17 +92,14 @@ describe("useKnownWordsTriage", () => {
       result.current.skip();
     });
 
-    expect(db.masterEssentialWord).not.toHaveBeenCalled();
-    expect(db.scheduleEssentialWordRecheck).not.toHaveBeenCalled();
+    expect(learnerStateQueries.declareEssentialWordKnown).not.toHaveBeenCalled();
     expect(result.current.current?.word).toBe("banana");
     expect(result.current.remaining).toBe(1);
     expect(result.current.counts).toEqual({ known: 0, skipped: 1 });
     expect(result.current.canUndo).toBe(true);
   });
 
-  it("undoLast reverts last markKnown by deleting SRS row and decrementing counts", async () => {
-    vi.spyOn(recheck, "shouldSampleForRecheck").mockReturnValue(false);
-
+  it("undoLast reverts last markKnown by restoring claim state and decrementing counts", async () => {
     const { result } = renderHook(() =>
       useKnownWordsTriage({ levels: ["A1"], userId: "user-123" })
     );
@@ -117,7 +116,12 @@ describe("useKnownWordsTriage", () => {
       await result.current.undoLast();
     });
 
-    expect(db.deleteEssentialWordSrs).toHaveBeenCalledWith("apple", "user-123");
+    expect(learnerStateQueries.restoreEssentialWordKnownClaim).toHaveBeenCalledWith(
+      "user-123",
+      "c1k:apple",
+      undefined,
+      expect.any(String),
+    );
     expect(result.current.current?.word).toBe("apple");
     expect(result.current.counts.known).toBe(0);
     expect(result.current.remaining).toBe(2);

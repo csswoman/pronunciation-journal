@@ -46,6 +46,13 @@ vi.mock("@/lib/db", () => ({
     srsData: {
       put: vi.fn(async () => undefined),
     },
+    essentialWordLearnerSignals: {
+      where: () => ({
+        equals: () => ({
+          toArray: async () => [],
+        }),
+      }),
+    },
   },
   getEssentialWordsSrsEntries: vi.fn(async () => []),
   getEssentialWordsIntroducedToday: vi.fn(async () => []),

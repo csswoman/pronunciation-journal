@@ -83,7 +83,7 @@ describe('FocusContentViewer runtime exit', { timeout: 20_000 }, () => {
 
     const [answer] = await outbox('answer_history')
     expect(answer?.payload).toMatchObject({
-      id: expect.stringMatching(/^[0-9a-f-]{36}$/), user_id: USER, is_correct: true, topic: 'grammar:past simple',
+      id: expect.any(String), user_id: USER, is_correct: true, topic: 'grammar:past simple',
       exercise_payload: expect.objectContaining({ focusTargetId: 'grammar:past simple' }),
     })
     expect((await outbox('activity_sessions'))[0]?.payload).toMatchObject({

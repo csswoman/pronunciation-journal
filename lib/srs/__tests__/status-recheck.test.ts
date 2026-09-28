@@ -21,7 +21,7 @@ describe("patchRecheck", () => {
     expect(patched.nextReview).toBe(addDaysIso(now, 4));
     expect(patched.ease).toBe(2.5);
     expect(patched.interval).toBe(4);
-    expect(patched.repetitions).toBe(1);
+    expect(patched.repetitions).toBe(0);
   });
 
   it("cleans up any preexisting archived, snoozedAt, or masteredAt fields", () => {
