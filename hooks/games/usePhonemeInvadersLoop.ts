@@ -7,7 +7,9 @@ import {
 } from '@/lib/games/phoneme-invaders/engine'
 import type { MinimalPairItem } from '@/lib/games/phoneme-invaders/schema'
 import { speak } from '@/lib/phoneme-practice/tts'
+import { finishAttributedContrastSessions } from '@/lib/phoneme-practice/finish-session'
 import { recordGameActivity } from '@/lib/progress/game-activity'
+import type { ExerciseResult, SessionResult } from '@/lib/practice/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 
@@ -88,12 +90,59 @@ export function usePhonemeInvadersLoop(pairs: MinimalPairItem[]) {
     if (state.status === 'game_over' && !recordedRef.current && userId && !isGuest) {
       recordedRef.current = true
       const elapsed = Date.now() - startTimeRef.current
-      void recordGameActivity(userId, 'phoneme_invaders', elapsed, 'phoneme-invaders', [
-        'listening',
-        'pronunciation',
-      ])
+      void recordGameActivity(
+        userId,
+        'phoneme_invaders',
+        elapsed,
+        'phoneme-invaders',
+        ['listening', 'pronunciation'],
+        { hits: state.hits, misses: state.misses, slug: 'minimal_pair' },
+      )
+
+      const total = state.hits + state.misses
+      const perResultMs = total > 0 ? Math.round(elapsed / total) : 0
+      const sessionResult: SessionResult = {
+        results: [
+          ...state.hitHistory.map((hit, index): ExerciseResult => ({
+            exerciseId: `phoneme-invaders-hit-${index}`,
+            slug: 'minimal_pair',
+            exerciseTypeId: null,
+            isCorrect: true,
+            timeMs: perResultMs,
+            contentId: `phoneme-invaders-hit-${index}`,
+            context: 'practice',
+            exercisePayload: { contrastId: hit.contrast },
+            completedAt: new Date(),
+          })),
+          ...state.missHistory.map((miss, index): ExerciseResult => ({
+            exerciseId: `phoneme-invaders-miss-${index}`,
+            slug: 'minimal_pair',
+            exerciseTypeId: null,
+            isCorrect: false,
+            timeMs: perResultMs,
+            contentId: `phoneme-invaders-miss-${index}`,
+            context: 'practice',
+            exercisePayload: { contrastId: miss.contrast },
+            completedAt: new Date(),
+          })),
+        ],
+        accuracy: total > 0 ? (state.hits / total) * 100 : 0,
+        totalTimeMs: Math.max(0, Math.round(elapsed)),
+        bySlug: {} as SessionResult['bySlug'],
+      }
+      void finishAttributedContrastSessions(userId, sessionResult).catch((err) => {
+        console.warn('[PhonemeInvaders] contrast SRS update failed', err)
+      })
     }
-  }, [state.status, userId, isGuest])
+  }, [
+    state.status,
+    state.hits,
+    state.misses,
+    state.hitHistory,
+    state.missHistory,
+    userId,
+    isGuest,
+  ])
 
   const shootShip = useCallback((shipId: string) => {
     dispatch({ type: 'shoot', shipId })

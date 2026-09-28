@@ -26,6 +26,7 @@ export interface InvadersState extends BaseScoringState {
   lastMissFlash: MissRecord | null
   laneCount: number
   missHistory: MissRecord[]
+  hitHistory: Array<{ contrast: string }>
 }
 
 export type InvadersAction =
@@ -50,6 +51,7 @@ export function createInitialInvadersState(): InvadersState {
     lastMissFlash: null,
     laneCount: 2,
     missHistory: [],
+    hitHistory: [],
   }
 }
 
@@ -156,6 +158,7 @@ export function invadersReducer(state: InvadersState, action: InvadersAction): I
           targetPair: null,
           wave: nextWave,
           laneCount: nextLanes,
+          hitHistory: [...state.hitHistory, { contrast: state.targetPair?.contrast ?? '' }],
         }
       } else {
         const missRecord: MissRecord = {

@@ -55,6 +55,21 @@ describe('Phoneme Invaders engine', () => {
     expect(s.ships.length).toBe(0)
   })
 
+  it('tracks the contrast for a successful shot', () => {
+    let s = createInitialInvadersState()
+    s = invadersReducer(s, {
+      type: 'spawn',
+      pair: samplePair,
+      targetSide: 'a',
+      lanes: 2,
+    })
+
+    const targetShipId = s.target!.shipId
+    s = invadersReducer(s, { type: 'shoot', shipId: targetShipId })
+
+    expect(s.hitHistory).toEqual([{ contrast: 'iː|ɪ' }])
+  })
+
   it('shooting wrong ship decreases shields and records miss', () => {
     let s = createInitialInvadersState()
     s = invadersReducer(s, {
