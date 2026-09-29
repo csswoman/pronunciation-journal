@@ -348,7 +348,7 @@ export interface EssentialWordSessionDraftRecord {
   plan: unknown;
   results: unknown[];
   progress: unknown[];
-  summary: { practiced: number; correct: number } | null;
+  summary: { practiced: number; correct: number; reviewed: number } | null;
   activeElapsedMs: number;
   createdAt: string;
   updatedAt: string;

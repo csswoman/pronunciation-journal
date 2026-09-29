@@ -39,7 +39,7 @@ function draft(userId = 'user-a'): EssentialWordsSessionDraft {
     plan: { actionBudget: 15, completedActions: 2, pending: [], reserve: [], claimedKnownWordIds: [] },
     results: [],
     progress: [],
-    summary: { practiced: 2, correct: 1 },
+    summary: { practiced: 2, correct: 1, reviewed: 1 },
     activeElapsedMs: 1_000,
     createdAt: now,
     updatedAt: now,

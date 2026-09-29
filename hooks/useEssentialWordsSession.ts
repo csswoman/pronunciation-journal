@@ -112,6 +112,7 @@ export function useEssentialWordsSession() {
   const wordsByIdRef = useRef<Map<string, EssentialWord>>(new Map());
   const repetitionsByIdRef = useRef<Map<string, number | undefined>>(new Map());
   const progressByWordRef = useRef(new Map<string, Awaited<ReturnType<typeof getEssentialWordProgressForUser>>[number]>());
+  const reviewedWordIdsRef = useRef<Set<string>>(new Set());
   const activeStepIdRef = useRef<string | null>(null);
   const [stats, setStats] = useState<EssentialWordsStats>(EMPTY_STATS);
   const [counts, setCounts] = useState<EssentialWordsCounts>(EMPTY_COUNTS);
@@ -389,6 +390,7 @@ export function useEssentialWordsSession() {
     seenStepIdsRef.current.clear();
     setSessionProgress(null);
     sessionResultsRef.current = resumed ? storedDraft?.results ?? [] : [];
+    reviewedWordIdsRef.current = new Set();
     if (resumed && storedDraft) {
       progressByWordRef.current = new Map(
         storedDraft.progress.map((record) => [record.wordId, record]),
@@ -690,7 +692,9 @@ export function useEssentialWordsSession() {
       }
       await persistLearningStep(currentAction, correct);
       sessionResultsRef.current.push(result);
-      setSessionSummary((prev) => advanceSummary(prev, correct));
+      const countsAsReview = currentAction.source === 'review' && !reviewedWordIdsRef.current.has(wordId);
+      if (countsAsReview) reviewedWordIdsRef.current.add(wordId);
+      setSessionSummary((prev) => advanceSummary(prev, correct, countsAsReview));
       let nextPlanState = completeCurrentAction(planState, {
         retry: !correct && currentAction.source !== 'review' && !claimedKnown,
       });

@@ -19,6 +19,7 @@ const stats: EssentialWordsStats = {
 const sessionSummary: EssentialWordsSessionSummary = {
   practiced: 18,
   correct: 15,
+  reviewed: 13,
 }
 
 const strugglingWords = ['apple', 'banana', 'cherry']
@@ -35,7 +36,7 @@ describe('SessionDone', () => {
 
     // newToday = 5
     expect(screen.getByText('5')).toBeTruthy()
-    // practiced(18) - newToday(5) = 13
+    // sessionSummary.reviewed = 13
     expect(screen.getByText('13')).toBeTruthy()
     // practiced(18) - strugglingWords.length(3) = 15
     expect(screen.getByText('15')).toBeTruthy()
