@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { explicitRuntimeCaching } from "../sw-runtime-caching";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { OfflineDownloadsFirst, explicitRuntimeCaching } from "../sw-runtime-caching";
 
 function runMatcher(
   rule: (typeof explicitRuntimeCaching)[number],
@@ -79,5 +79,45 @@ describe("Service Worker Runtime Caching Policy", () => {
 
     expect(fontRule).toBeDefined();
     expect(fontRule?.handler.constructor.name).toBe("CacheFirst");
+  });
+
+  describe("offline downloads for audio", () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    const audioUrl = new URL("https://example.com/sounds/Close%20Front%20Unrounded%20Vowel.ogg");
+    const audioRule = () =>
+      explicitRuntimeCaching.find((rule) => runMatcher(rule, audioUrl, new Request(audioUrl)));
+
+    function stubCaches(entries: Record<string, Response | undefined>) {
+      vi.stubGlobal("caches", {
+        keys: async () => Object.keys(entries),
+        open: async (name: string) => ({ match: async () => entries[name]?.clone() }),
+      });
+    }
+
+    it("routes /sounds/ audio through the offline-downloads-first handler", () => {
+      expect(audioRule()?.handler.constructor.name).toBe("OfflineDownloadsFirst");
+    });
+
+    it("serves audio from a CEFR pack cache without touching the fallback", async () => {
+      stubCaches({ "offline-pack-A1-v1-x": new Response("pack-audio"), "unrelated-cache": new Response("nope") });
+      const fallback = { handle: vi.fn() };
+      const handler = new OfflineDownloadsFirst(fallback);
+
+      const res = await handler.handle({ request: new Request(audioUrl), url: audioUrl, event: {} as never });
+
+      expect(await res.text()).toBe("pack-audio");
+      expect(fallback.handle).not.toHaveBeenCalled();
+    });
+
+    it("ignores caches that were not filled by explicit downloads", async () => {
+      stubCaches({ "unrelated-cache": new Response("nope") });
+      const fallback = { handle: vi.fn(async () => new Response("network")) };
+      const handler = new OfflineDownloadsFirst(fallback);
+
+      const res = await handler.handle({ request: new Request(audioUrl), url: audioUrl, event: {} as never });
+
+      expect(await res.text()).toBe("network");
+    });
   });
 });

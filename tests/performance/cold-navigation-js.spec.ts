@@ -19,21 +19,31 @@ function getCompiledRunnerChunks(): string[] {
   ];
 
   const runnerChunks: string[] = [];
-  for (const file of fs.readdirSync(chunksDir)) {
-    if (!file.endsWith(".js")) continue;
+  for (const file of getJavaScriptFiles(chunksDir)) {
     try {
-      const content = fs.readFileSync(path.join(chunksDir, file), "utf8");
+      const content = fs.readFileSync(file, "utf8");
       if (
-        RUNNER_PROBES.some((probe) => content.includes(probe)) &&
+        (RUNNER_PROBES.some((probe) => content.includes(probe)) ||
+          content.includes("ReviewSessionRunner")) &&
         !content.includes("ReviewHubClient")
       ) {
-        runnerChunks.push(file);
+        runnerChunks.push(
+          path.relative(chunksDir, file).split(path.sep).join("/"),
+        );
       }
     } catch {
       // ignore read error
     }
   }
   return runnerChunks;
+}
+
+function getJavaScriptFiles(directory: string): string[] {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(directory, entry.name);
+    if (entry.isDirectory()) return getJavaScriptFiles(file);
+    return entry.isFile() && entry.name.endsWith(".js") ? [file] : [];
+  });
 }
 
 /**
@@ -114,11 +124,14 @@ test.describe("cold navigation JavaScript payload", () => {
     const hubMarkers = page.getByText(
       /estás al día|oraciones fallidas|palabras débiles|vocabulario pendiente|srs history/i,
     );
-    const guestCta = page.getByRole("button", { name: /iniciar sesión/i });
-
-    await expect(reviewCta.or(hubMarkers).or(guestCta).first()).toBeVisible({
-      timeout: 15_000,
+    const guestCta = page.getByRole("link", { name: /iniciar sesión/i });
+    const guestStatus = page.getByRole("heading", {
+      name: /inicia sesión para ver tu seguimiento/i,
     });
+
+    await expect(
+      reviewCta.or(hubMarkers).or(guestCta).or(guestStatus).first(),
+    ).toBeVisible({ timeout: 15_000 });
 
     const totalRawBytes = downloadedJs.reduce((acc, curr) => acc + curr.size, 0);
     const totalRawKb = Math.round((totalRawBytes / 1024) * 10) / 10;

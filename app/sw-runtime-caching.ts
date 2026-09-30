@@ -1,9 +1,18 @@
-import { CacheFirst, ExpirationPlugin, NetworkOnly, StaleWhileRevalidate, type RuntimeCaching } from "serwist";
+import {
+  CacheFirst,
+  ExpirationPlugin,
+  NetworkOnly,
+  StaleWhileRevalidate,
+  type RouteHandlerCallbackOptions,
+  type RouteHandlerObject,
+  type RuntimeCaching,
+} from "serwist";
 
 export const STATIC_CACHE_NAMES = {
   nextStatic: "static-next-assets",
   fonts: "static-fonts",
   media: "static-media-assets",
+  searchIndex: "public-search-index",
 } as const;
 
 export const LEGACY_SENSITIVE_CACHES = [
@@ -16,6 +25,42 @@ export const LEGACY_SENSITIVE_CACHES = [
   "start-url",
   "user-cache",
 ] as const;
+
+/**
+ * Caches filled only by explicit learner downloads: individually downloaded
+ * lessons (`lib/offline/download-manager.ts`) and CEFR resource packs
+ * (`lib/offline/resource-pack-storage.ts`, one cache per level/version).
+ */
+export const OFFLINE_DOWNLOAD_CACHE_PREFIXES = ["offline-lessons-media", "offline-pack-"] as const;
+
+const mediaStrategy = new StaleWhileRevalidate({
+  cacheName: STATIC_CACHE_NAMES.media,
+  plugins: [
+    new ExpirationPlugin({
+      maxEntries: 120,
+      maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+    }),
+  ],
+});
+
+/**
+ * Serves a request from the learner's offline downloads when present, so a
+ * downloaded lesson or pack keeps its audio after reload without connection;
+ * anything not downloaded falls through to `fallback` unchanged.
+ */
+export class OfflineDownloadsFirst implements RouteHandlerObject {
+  constructor(private readonly fallback: RouteHandlerObject) {}
+
+  async handle(options: RouteHandlerCallbackOptions): Promise<Response> {
+    const keys = await caches.keys();
+    for (const key of keys) {
+      if (!OFFLINE_DOWNLOAD_CACHE_PREFIXES.some((prefix) => key.startsWith(prefix))) continue;
+      const hit = await (await caches.open(key)).match(options.request, { ignoreSearch: true });
+      if (hit) return hit;
+    }
+    return this.fallback.handle(options);
+  }
+}
 
 /**
  * Strict runtime caching configuration for Serwist.
@@ -51,7 +96,26 @@ export const explicitRuntimeCaching: RuntimeCaching[] = [
     handler: new NetworkOnly(),
   },
 
-  // 4. Next.js static chunks and CSS (_next/static/**): CacheFirst with expiration.
+  // 4. Public search data is safe to cache and needed for offline search.
+  {
+    matcher: ({ request, sameOrigin, url }) =>
+      Boolean(
+        sameOrigin &&
+          request.method === "GET" &&
+          url.pathname === "/search/content-index.json",
+      ),
+    handler: new StaleWhileRevalidate({
+      cacheName: STATIC_CACHE_NAMES.searchIndex,
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 1,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
+        }),
+      ],
+    }),
+  },
+
+  // 5. Next.js static chunks and CSS (_next/static/**): CacheFirst with expiration.
   {
     matcher: ({ url, sameOrigin }) =>
       Boolean(sameOrigin && url.pathname.startsWith("/_next/static/")),
@@ -66,7 +130,7 @@ export const explicitRuntimeCaching: RuntimeCaching[] = [
     }),
   },
 
-  // 5. Fonts (static fonts under /fonts/ or font file extensions): CacheFirst with expiration.
+  // 6. Fonts (static fonts under /fonts/ or font file extensions): CacheFirst with expiration.
   {
     matcher: ({ url, sameOrigin }) =>
       Boolean(
@@ -85,7 +149,20 @@ export const explicitRuntimeCaching: RuntimeCaching[] = [
     }),
   },
 
-  // 6. Public static media (images and audio files in public folder): StaleWhileRevalidate.
+  // 7. Audio downloaded for offline study (lesson downloads + CEFR packs)
+  //    is served from those caches first; otherwise the media policy below.
+  {
+    matcher: ({ url, sameOrigin, request }) =>
+      Boolean(
+        sameOrigin &&
+          request.method === "GET" &&
+          url.pathname.startsWith("/sounds/") &&
+          /\.(?:ogg|mp3)$/i.test(url.pathname),
+      ),
+    handler: new OfflineDownloadsFirst(mediaStrategy),
+  },
+
+  // 8. Public static media (images and audio files in public folder): StaleWhileRevalidate.
   {
     matcher: ({ url, sameOrigin }) =>
       Boolean(
@@ -93,14 +170,6 @@ export const explicitRuntimeCaching: RuntimeCaching[] = [
           /\.(?:png|jpg|jpeg|svg|webp|gif|ico|ogg|mp3)$/i.test(url.pathname) &&
           !url.pathname.startsWith("/api/"),
       ),
-    handler: new StaleWhileRevalidate({
-      cacheName: STATIC_CACHE_NAMES.media,
-      plugins: [
-        new ExpirationPlugin({
-          maxEntries: 120,
-          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-        }),
-      ],
-    }),
+    handler: mediaStrategy,
   },
 ];
