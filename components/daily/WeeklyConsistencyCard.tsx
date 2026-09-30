@@ -35,10 +35,10 @@ export default function WeeklyConsistencyCard({ heatmap7, completedDays7, rate7 
   return (
     <PastelCard tone="lilac" className="flex flex-col gap-4 p-5 sm:p-6 motion-reduce:shadow-none">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-sans text-caption font-bold uppercase tracking-wider text-ink-muted">
+        <span className="ts-kicker text-ink-muted">
           Tu semana
         </span>
-        <span className="inline-flex items-center rounded-full border border-ink/15 bg-ink/10 px-3 py-1 font-sans text-caption font-bold tabular-nums text-ink">
+        <span className="inline-flex items-center rounded-full border border-ink/15 bg-ink/10 px-3 py-1 ts-pill tabular-nums text-ink">
           {completedDays7} de 7 días
         </span>
       </div>
@@ -54,14 +54,14 @@ export default function WeeklyConsistencyCard({ heatmap7, completedDays7, rate7 
               className={cn('aspect-square w-full rounded-full transition-colors', HEAT_CLASS[level])}
               aria-hidden
             />
-            <span className="font-sans text-caption font-bold text-ink-secondary" aria-hidden>
+            <span className="ts-label text-ink-secondary" aria-hidden>
               {initials[i]}
             </span>
           </div>
         ))}
       </div>
 
-      <p className="font-body-sm text-ink-secondary">
+      <p className="ts-caption text-ink-secondary">
         El tono indica cuánto practicaste ese día.
       </p>
     </PastelCard>

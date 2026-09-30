@@ -21,6 +21,19 @@ interface DailyLessonCardProps {
   } | null
 }
 
+// Planned structure:
+// <DailyLessonCard>
+//   <PastelCard>
+//     <CardHeader>
+//       <ChipGroup />
+//       <Title />
+//     </CardHeader>
+//     <MarkdownBody />
+//     <ExamplesSection />
+//     <CardFooter />
+//   </PastelCard>
+// </DailyLessonCard>
+
 export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
   const openCoach = useAICoachStore((s) => s.openCoach)
   const [saved, setSaved] = useState(false)
@@ -44,35 +57,35 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
           <Chip variant="ink" className="uppercase tracking-wide font-extrabold px-3 py-1">
             LA LECCIÓN DE HOY
           </Chip>
+          {lesson.subtitle ? (
+            <Chip variant="outline" className="border-ink/20 text-ink-secondary px-3 py-1 font-medium">
+              {lesson.subtitle}
+            </Chip>
+          ) : null}
           <Chip variant="outline" className="border-ink/20 text-ink-secondary px-3 py-1 font-medium">
             4 min de lectura
           </Chip>
         </div>
-        <h2 className="font-heading text-h1 font-extrabold text-ink text-balance tracking-tight">
+        <h2 className="ts-headline text-ink text-balance">
           {lesson.title}
         </h2>
-        {lesson.subtitle ? (
-          <p className="font-ipa text-body-md font-bold text-ink-secondary">
-            {lesson.subtitle}
-          </p>
-        ) : null}
       </header>
 
-      <div className="flex flex-col gap-2 font-body-sm text-ink leading-relaxed">
+      <div className="flex flex-col gap-2 ts-body text-ink">
         <ReactMarkdown>{lesson.body}</ReactMarkdown>
       </div>
 
       {/* Ejemplos destacados en contención suave */}
-      <div className="relative flex flex-wrap items-center gap-3 rounded-full bg-paper/60 border border-ink/10 px-4 py-2.5 text-body-sm">
+      <div className="relative flex flex-wrap items-center gap-3 rounded-full bg-paper/60 border border-ink/10 px-4 py-2.5">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
-            cats <span className="font-ipa font-bold text-ink-secondary">/s/</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 ts-chip text-ink">
+            cats <span className="ts-ipa-xs text-ink-secondary">/s/</span>
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
-            dogs <span className="font-ipa font-bold text-ink-secondary">/z/</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 ts-chip text-ink">
+            dogs <span className="ts-ipa-xs text-ink-secondary">/z/</span>
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 font-sans font-medium text-ink">
-            watches <span className="font-ipa font-bold text-ink-secondary">/ɪz/</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/30 bg-paper px-3.5 py-1 ts-chip text-ink">
+            watches <span className="ts-ipa-xs text-ink-secondary">/ɪz/</span>
           </span>
         </div>
       </div>
@@ -88,7 +101,7 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
       <footer className="flex flex-wrap items-center gap-3 pt-2">
         <Link
           href={`/mini-lessons/${lesson.slug}`}
-          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-6 py-2.5 font-label text-body-sm font-bold text-paper transition-colors hover:bg-ink-secondary cursor-pointer shadow-xs"
+          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-6 py-2.5 ts-button text-paper transition-colors hover:bg-ink-secondary cursor-pointer shadow-xs"
         >
           Ver la lección
         </Link>
@@ -96,7 +109,7 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
         <button
           type="button"
           onClick={() => setSaved(!saved)}
-          className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors cursor-pointer ${
+          className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2.5 ts-button text-ink transition-colors cursor-pointer ${
             saved ? 'bg-ink text-paper' : 'bg-transparent hover:bg-ink/10'
           }`}
         >
@@ -107,7 +120,7 @@ export default function DailyLessonCard({ lesson }: DailyLessonCardProps) {
         <button
           type="button"
           onClick={() => openCoach({ tab: 'chat', prefill: `Explícame más sobre "${lesson.title}"` })}
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-2.5 font-label text-body-sm font-bold text-ink transition-colors hover:bg-ink/10 cursor-pointer"
+          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-ink bg-transparent px-5 py-2.5 ts-button text-ink transition-colors hover:bg-ink/10 cursor-pointer"
         >
           <MessageCircle size={16} aria-hidden />
           <span>Preguntar al coach</span>

@@ -51,24 +51,24 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-xs">
+    <div className="flex flex-col gap-4 sm:gap-4.5 rounded-3xl border border-border-subtle bg-surface-raised p-4 sm:p-5 shadow-xs">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
             <Video size={20} aria-hidden />
           </div>
           <div className="flex flex-col min-w-0">
-            <h3 className="font-heading text-body-md font-extrabold text-fg truncate">
+            <h3 className="ts-row-title font-bold text-fg truncate">
               ¿Viste o escuchaste algo en inglés?
             </h3>
-            <p className="font-caption text-fg-muted truncate">
+            <p className="ts-caption text-fg-muted truncate">
               Regístralo y cuenta como exposición real.
             </p>
           </div>
         </div>
 
-        <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-3.5 py-1 font-caption font-semibold text-fg-muted">
+        <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-3.5 py-1 ts-pill font-semibold text-fg-muted">
           0 min esta semana
         </span>
       </div>
@@ -83,27 +83,33 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
               key={cat.id}
               type="button"
               onClick={() => setMediaType(cat.id)}
-              className={`press-feedback focus-ring flex min-h-12 items-center gap-2.5 rounded-xl px-4 py-3 text-body-sm transition-all cursor-pointer ${
+              className={`press-feedback focus-ring flex min-h-12 items-center gap-2.5 rounded-xl p-2 transition-all cursor-pointer ${
                 isSelected
-                  ? 'bg-primary-soft text-primary font-bold border border-primary/30 shadow-xs'
-                  : 'bg-surface-raised border border-border-default text-fg font-semibold hover:bg-surface-sunken'
+                  ? 'bg-[var(--coral)] border border-ink text-ink shadow-xs'
+                  : 'bg-surface-raised border border-border-default text-fg hover:bg-surface-sunken'
               }`}
             >
-              <Icon size={18} aria-hidden />
-              <span>{cat.label}</span>
+              <div
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                  isSelected ? 'bg-ink/10 text-ink' : 'bg-surface-sunken text-fg'
+                }`}
+              >
+                <Icon size={17} aria-hidden />
+              </div>
+              <span className="ts-chip font-bold">{cat.label}</span>
             </button>
           );
         })}
       </div>
 
       {/* Controles de tiempo, notas y acción de registro */}
-      <div className="flex flex-wrap items-center gap-3 pt-1">
+      <div className="flex flex-wrap items-center gap-3 pt-0.5">
         {/* Selector de tiempo */}
-        <div className="flex items-center gap-2">
-          <span className="font-caption font-medium text-fg-muted whitespace-nowrap">
+        <div className="flex items-center gap-2.5">
+          <span className="ts-caption font-medium text-fg-muted whitespace-nowrap">
             Cuánto tiempo
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 rounded-full bg-surface-sunken p-1 border border-border-subtle">
             {[15, 30, 45, 60].map((m) => {
               const isSel = minutes === m;
               return (
@@ -111,13 +117,13 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
                   key={m}
                   type="button"
                   onClick={() => setMinutes(m)}
-                  className={`focus-ring rounded-full px-3 py-1 font-label text-caption transition-colors cursor-pointer ${
+                  className={`focus-ring rounded-full px-3 py-1 ts-pill transition-all cursor-pointer ${
                     isSel
                       ? 'bg-accent text-on-accent font-bold shadow-xs'
-                      : 'bg-surface-sunken text-fg-muted font-medium hover:text-fg'
+                      : 'text-fg-muted hover:text-fg font-medium'
                   }`}
                 >
-                  {m === 30 ? `${m} min` : m}
+                  {isSel ? `${m} min` : m}
                 </button>
               );
             })}
@@ -130,7 +136,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
           placeholder="Título del video, serie o canal (opcional)"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="min-w-[220px] flex-1 rounded-xl border border-border-subtle bg-surface-sunken/80 px-4 py-2.5 font-body-sm text-fg placeholder:text-fg-muted focus-ring"
+          className="min-w-[200px] flex-1 rounded-2xl border border-border-subtle bg-surface-sunken/80 px-4 py-2 ts-body text-fg placeholder:text-fg-muted focus-ring"
         />
 
         {/* Botón registrar */}
@@ -138,7 +144,7 @@ export function ImmersionLogCard({ onLogImmersion }: ImmersionLogCardProps) {
           type="button"
           onClick={handleSave}
           disabled={logged}
-          className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-6 py-2.5 font-label text-body-sm font-bold text-on-accent shadow-sm hover:bg-primary-hover transition-colors cursor-pointer whitespace-nowrap"
+          className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-accent px-5 py-2 ts-button font-bold text-on-accent shadow-sm hover:bg-primary-hover transition-colors cursor-pointer whitespace-nowrap"
         >
           {logged ? (
             <>

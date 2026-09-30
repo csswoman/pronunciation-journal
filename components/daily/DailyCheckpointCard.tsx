@@ -1,17 +1,17 @@
 // Planned structure:
 // <DailyCheckpointCard>
-//   <ProgressCard>
-//     <ProgressCardHeader />
-//     [if ready] ReadyState (indicador 100% completado + CTA al examen)
-//     [if lessons_missing] MissingLessonsState (barra de progreso + conteo de lecciones restantes)
-//     [if no_evidence] NoEvidenceState (nota sobre afianzar vocabulario)
-//     [if recent_attempt] RecentAttemptState (nota de espera tras intento reciente)
-//   </ProgressCard>
+//   <PastelCard tone="mint">
+//     <Header> (Icon + Eyebrow Pill + Title)
+//     [if ready] ReadyState (descripción + CTA al examen)
+//     [if lessons_missing] MissingLessonsState (stat row + barra de progreso con borde + desc + CTA)
+//     [if no_evidence] NoEvidenceState (nota sobre afianzar vocabulario + CTA)
+//     [if recent_attempt] RecentAttemptState (nota de espera tras intento reciente + CTA)
+//   </PastelCard>
 // </DailyCheckpointCard>
 
 import Link from "next/link";
 import { ArrowRight, GraduationCap } from "@/components/icons";
-import { ProgressCard, ProgressCardHeader } from "@/components/progress/ProgressCard";
+import PastelCard from "@/components/layout/PastelCard";
 import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 
 const NEXT_LEVEL_LABEL: Record<string, string> = {
@@ -31,25 +31,35 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
 
   if (readiness.reason === "ready") {
     return (
-      <ProgressCard>
-        <ProgressCardHeader
-          icon={<GraduationCap size={16} />}
-          eyebrow="¡Hito alcanzado!"
-          title={`Listo para Checkpoint ${nextLevel}`}
-        />
-        <div className="flex flex-col gap-3">
-          <p className="font-body-sm text-fg-muted">
+      <PastelCard tone="mint" className="flex flex-col gap-4 rounded-3xl p-5 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-fg bg-transparent text-fg shadow-xs">
+            <GraduationCap size={22} strokeWidth={2} />
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
+              ¡Hito alcanzado!
+            </span>
+            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+              Listo para Checkpoint {nextLevel}
+            </h3>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3.5">
+          <p className="font-sans text-caption font-medium text-fg-muted leading-relaxed">
             Has completado todas las lecciones requeridas ({readiness.completedRequired}/{readiness.requiredTotal}) para desbloquear la prueba de nivel.
           </p>
           <Link
             href={`/assessment?mode=checkpoint&level=${readiness.level}`}
-            className="focus-ring inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 font-label text-body-sm font-semibold text-primary-contrast transition-colors hover:bg-primary-hover"
+            className="focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 font-display text-body-sm font-extrabold text-paper shadow-md transition-all active:scale-[0.98] hover:bg-ink/90 hover:shadow-lg"
           >
-            Hacer checkpoint
-            <ArrowRight size={14} aria-hidden />
+            <span>Hacer checkpoint</span>
+            <ArrowRight size={16} strokeWidth={2.5} aria-hidden />
           </Link>
         </div>
-      </ProgressCard>
+      </PastelCard>
     );
   }
 
@@ -59,17 +69,33 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
       ? Math.round((readiness.completedRequired / readiness.requiredTotal) * 100)
       : 0;
 
+    const nextLessonHref = readiness.missingSlugs.length > 0
+      ? `/lessons/${readiness.missingSlugs[0]}`
+      : "/daily";
+
     return (
-      <ProgressCard>
-        <ProgressCardHeader
-          icon={<GraduationCap size={16} />}
-          eyebrow="Siguiente hito"
-          title={`Rumbo al Checkpoint ${nextLevel}`}
-        />
+      <PastelCard tone="mint" className="flex flex-col gap-4.5 rounded-3xl p-5 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-fg bg-transparent text-fg shadow-xs">
+            <GraduationCap size={22} strokeWidth={2} />
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
+              Siguiente hito
+            </span>
+            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+              Rumbo al Checkpoint {nextLevel}
+            </h3>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-2.5">
-          <div className="flex items-center justify-between text-caption text-fg-muted font-medium">
-            <span>Progreso de lecciones</span>
-            <span className="font-semibold tabular-nums text-fg">
+          <div className="flex items-center justify-between text-body-sm text-fg">
+            <span className="font-sans text-caption font-semibold text-fg-muted">
+              Progreso de lecciones
+            </span>
+            <span className="font-display text-[20px] font-extrabold text-fg tabular-nums">
               {readiness.completedRequired}/{readiness.requiredTotal}
             </span>
           </div>
@@ -80,53 +106,98 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label={`Progreso rumbo al checkpoint ${nextLevel}`}
-            className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken"
+            className="h-3.5 w-full overflow-hidden rounded-full border-2 border-fg bg-transparent p-0.5 shadow-inner"
           >
             <div
-              className="h-full rounded-full bg-primary transition-all duration-300"
+              className="h-full rounded-full bg-fg transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
 
-          <p className="text-caption text-fg-muted leading-relaxed">
+          <p className="font-sans text-caption font-medium text-fg-muted leading-relaxed">
             {missingCount === 1
               ? "Te falta 1 lección para desbloquear el examen."
               : `Te faltan ${missingCount} lecciones para desbloquear el examen.`}
           </p>
         </div>
-      </ProgressCard>
+
+        <Link
+          href={nextLessonHref}
+          className="focus-ring mt-0.5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 font-display text-body-sm font-extrabold text-paper shadow-md transition-all active:scale-[0.98] hover:bg-ink/90 hover:shadow-lg"
+        >
+          <span>Seguir con la lección</span>
+          <ArrowRight size={16} strokeWidth={2.5} aria-hidden />
+        </Link>
+      </PastelCard>
     );
   }
 
   if (readiness.reason === "no_evidence") {
     return (
-      <ProgressCard>
-        <ProgressCardHeader
-          icon={<GraduationCap size={16} />}
-          eyebrow="Siguiente hito"
-          title={`Checkpoint ${nextLevel}`}
-        />
-        <p className="text-caption text-fg-muted leading-relaxed">
+      <PastelCard tone="mint" className="flex flex-col gap-4 rounded-3xl p-5 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-fg bg-transparent text-fg shadow-xs">
+            <GraduationCap size={22} strokeWidth={2} />
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
+              Siguiente hito
+            </span>
+            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+              Checkpoint {nextLevel}
+            </h3>
+          </div>
+        </div>
+
+        <p className="font-sans text-caption font-medium text-fg-muted leading-relaxed">
           Completaste las lecciones, pero necesitas afianzar más vocabulario en tus repasos antes de presentar el examen.
         </p>
-      </ProgressCard>
+
+        <Link
+          href="/practice"
+          className="focus-ring mt-0.5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 font-display text-body-sm font-extrabold text-paper shadow-md transition-all active:scale-[0.98] hover:bg-ink/90 hover:shadow-lg"
+        >
+          <span>Ir a repasar</span>
+          <ArrowRight size={16} strokeWidth={2.5} aria-hidden />
+        </Link>
+      </PastelCard>
     );
   }
 
   if (readiness.reason === "recent_attempt") {
     return (
-      <ProgressCard>
-        <ProgressCardHeader
-          icon={<GraduationCap size={16} />}
-          eyebrow="Siguiente hito"
-          title={`Checkpoint ${nextLevel}`}
-        />
-        <p className="text-caption text-fg-muted leading-relaxed">
+      <PastelCard tone="mint" className="flex flex-col gap-4 rounded-3xl p-5 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-fg bg-transparent text-fg shadow-xs">
+            <GraduationCap size={22} strokeWidth={2} />
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
+              Siguiente hito
+            </span>
+            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+              Checkpoint {nextLevel}
+            </h3>
+          </div>
+        </div>
+
+        <p className="font-sans text-caption font-medium text-fg-muted leading-relaxed">
           Presentaste el checkpoint recientemente. Sigue practicando en tu plan diario antes de volver a intentarlo.
         </p>
-      </ProgressCard>
+
+        <Link
+          href="/daily"
+          className="focus-ring mt-0.5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 font-display text-body-sm font-extrabold text-paper shadow-md transition-all active:scale-[0.98] hover:bg-ink/90 hover:shadow-lg"
+        >
+          <span>Ir al plan diario</span>
+          <ArrowRight size={16} strokeWidth={2.5} aria-hidden />
+        </Link>
+      </PastelCard>
     );
   }
 
   return null;
 }
+

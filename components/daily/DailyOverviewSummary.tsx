@@ -54,25 +54,25 @@ export default function DailyOverviewSummary({
           <div className="flex items-center gap-4 min-w-0 flex-1">
             {soundIpa ? (
               <div
-                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink/10 text-ink font-ipa text-display-ipa font-bold select-none"
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink/10 text-ink ts-ipa-lg select-none"
                 aria-label={`Sonido del día ${soundIpa}`}
               >
                 {soundIpa}
               </div>
             ) : null}
             <div className="flex flex-col min-w-0">
-              <span className="font-sans text-caption font-bold uppercase tracking-wider text-ink-muted">
+              <span className="ts-kicker text-ink-muted">
                 {soundIpa ? 'Sonido del día' : 'Foco de hoy'}
               </span>
-              <h2 className="font-heading text-h2 font-extrabold text-ink truncate">
+              <h2 className="ts-headline text-ink truncate">
                 {topicTitle}
               </h2>
               {arc?.topicLabel && soundIpa ? (
-                <p className="font-body-sm text-ink-secondary truncate">
+                <p className="ts-caption text-ink-secondary truncate">
                   Sonido {soundIpa}
                 </p>
               ) : (
-                <p className="font-body-sm text-ink-secondary truncate">
+                <p className="ts-caption text-ink-secondary truncate">
                   {exampleWords}
                 </p>
               )}
@@ -83,28 +83,28 @@ export default function DailyOverviewSummary({
           <div className="flex items-center gap-4 sm:gap-6 self-start md:self-center shrink-0 border-t border-ink/10 pt-3 md:border-t-0 md:pt-0">
             <div className="grid grid-cols-3 items-center gap-4 sm:gap-6 text-center md:text-left">
               <div className="flex flex-col">
-                <span className="font-sans text-tiny font-bold uppercase tracking-wider text-ink-muted">
+                <span className="ts-kicker text-ink-muted">
                   Actividades
                 </span>
-                <span className="font-heading text-h3 font-extrabold text-ink tabular-nums">
+                <span className="ts-stat text-ink tabular-nums">
                   {`${completedCount} / ${steps.length}`}
                 </span>
               </div>
 
               <div className="flex flex-col border-l border-ink/10 pl-4 sm:pl-6">
-                <span className="font-sans text-tiny font-bold uppercase tracking-wider text-ink-muted">
+                <span className="ts-kicker text-ink-muted">
                   Te queda
                 </span>
-                <span className="font-heading text-h3 font-extrabold text-ink tabular-nums">
+                <span className="ts-stat text-ink tabular-nums">
                   {remainingMinutes} min
                 </span>
               </div>
 
               <div className="flex flex-col border-l border-ink/10 pl-4 sm:pl-6">
-                <span className="font-sans text-tiny font-bold uppercase tracking-wider text-ink-muted">
+                <span className="ts-kicker text-ink-muted">
                   Mañana
                 </span>
-                <span className="font-heading text-h3 font-extrabold text-ink tabular-nums">
+                <span className="ts-stat text-ink tabular-nums">
                   <span>{dueTomorrow ?? 0}</span> repasos
                 </span>
               </div>
@@ -126,10 +126,10 @@ export default function DailyOverviewSummary({
         {learned > 0 ? (
           <div className="border-t border-ink/10 pt-3 flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between text-body-sm">
-              <span className="font-sans text-caption font-bold uppercase tracking-wider text-ink-muted">
+              <span className="ts-kicker text-ink-muted">
                 Palabras esenciales
               </span>
-              <span className="font-heading font-extrabold text-ink tabular-nums">
+              <span className="ts-stat text-ink tabular-nums">
                 <span>{learned}</span>
                 {essentialWordsTotal != null ? (
                   <span className="text-ink-secondary"> / {essentialWordsTotal}</span>

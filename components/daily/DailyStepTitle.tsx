@@ -39,12 +39,12 @@ export function DailyStepTitle({
       )}
     >
       <span className="flex min-w-0 items-baseline gap-2 truncate">
-        <span className="truncate font-semibold">{plainTitle}</span>
+        <span className="truncate ts-row-title">{plainTitle}</span>
         {formatted ? (
           <span
             className={cn(
-              'font-ipa shrink-0 text-body-md',
-              muted ? 'text-fg-muted' : 'text-primary font-semibold',
+              'ts-ipa-sm shrink-0',
+              muted ? 'text-fg-muted' : 'text-primary',
             )}
           >
             {formatted}

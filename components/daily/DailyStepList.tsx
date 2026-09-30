@@ -165,7 +165,7 @@ export default function DailyStepList({
         <button
           type="button"
           aria-expanded={false}
-          className="press-feedback focus-ring -mx-1.5 inline-flex min-h-11 items-center gap-1.5 self-start rounded-lg px-1.5 font-body-sm font-medium text-fg-muted transition-colors hover:bg-surface-sunken/70 hover:text-fg"
+          className="press-feedback focus-ring -mx-1.5 inline-flex min-h-11 items-center gap-1.5 self-start rounded-lg px-1.5 ts-button text-fg-muted transition-colors hover:bg-surface-sunken/70 hover:text-fg"
           onClick={() => {
             playUiCue('nav-open')
             setShowAllCompact(true)

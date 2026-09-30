@@ -219,20 +219,15 @@ export default function DailyChecklist({
           collapseFutureSteps={false}
         />
 
-        <details className="rounded-[var(--radius-md)] border border-border-default bg-surface-raised p-[var(--layout-card-pad)]">
-          <summary className="focus-ring cursor-pointer font-label text-fg">Explorar libremente</summary>
-          <div className="mt-4 flex flex-col gap-4">
-            {status === 'ready' ? (
-              <>
-                <DailyLessonCard lesson={conceptLesson} />
-                <StudyTipDisclosure />
-              </>
-            ) : null}
-            <ImmersionLogCard />
-            {recommendation ? <RecommendedPracticeCard recommendation={recommendation} /> : null}
-            <DailyExploreLinks />
-          </div>
-        </details>
+        {status === 'ready' ? (
+          <>
+            <DailyLessonCard lesson={conceptLesson} />
+            <StudyTipDisclosure />
+          </>
+        ) : null}
+        <ImmersionLogCard />
+        {recommendation ? <RecommendedPracticeCard recommendation={recommendation} /> : null}
+        <DailyExploreLinks />
         </div>
 
         {weeklyProgress ? (

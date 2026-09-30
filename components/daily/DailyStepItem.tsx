@@ -80,7 +80,7 @@ export function DailyStepItem({
   const stepNumber = (
     <span
       className={cn(
-        "flex h-7 w-7 items-center justify-center rounded-full text-caption font-bold shrink-0 select-none",
+        "flex h-7 w-7 items-center justify-center rounded-full ts-row-number shrink-0 select-none",
         visual === 'entry' || visual === 'current'
           ? 'bg-primary text-on-primary shadow-xs'
           : done
@@ -99,7 +99,7 @@ export function DailyStepItem({
         <div className="min-w-0 flex-1">
           <span
             className={cn(
-              'block truncate font-body-sm font-medium',
+              'block truncate ts-row-title',
               done ? 'text-fg-muted' : 'text-fg',
             )}
           >
@@ -147,7 +147,7 @@ export function DailyStepItem({
           {(localizedSubtitle || stepMetaText) ? (
             <p
               className={cn(
-                'mt-0.5 truncate font-body-sm',
+                'mt-0.5 truncate ts-caption',
                 done
                   ? 'text-fg-muted'
                   : isEntryOrCurrent

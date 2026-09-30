@@ -46,9 +46,9 @@ export function StepThreadHints({ hints, className }: StepThreadHintsProps) {
             className="inline-flex max-w-full items-center gap-2 rounded-lg border border-border-subtle bg-surface-sunken px-2.5 py-1.5"
           >
             <span className="dot-info" aria-hidden />
-            <span className="font-body-sm font-medium capitalize text-fg">{hint.word}</span>
+            <span className="ts-chip capitalize text-fg">{hint.word}</span>
             {ipa ? (
-              <span className="font-ipa shrink-0 text-caption">{ipa}</span>
+              <span className="ts-ipa-xs shrink-0">{ipa}</span>
             ) : null}
             <span className="font-caption shrink-0 text-fg-muted">de {source}</span>
           </li>

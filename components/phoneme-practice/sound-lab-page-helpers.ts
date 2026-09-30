@@ -135,7 +135,7 @@ export function soundLabHeaderCopy(
 ) {
   if (tab !== "sounds") return WORKSPACE_HEADER_COPY[tab];
   return {
-    kicker: "Práctica",
+    kicker: "PRÁCTICA · PRONUNCIACIÓN",
     title: "Laboratorio de sonidos",
     subtitle: headerStatsLine(inProgressCount, totalCount, groupBy),
   };
