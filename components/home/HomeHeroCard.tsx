@@ -137,7 +137,7 @@ export default function HomeHeroCard({
                   <Chip variant="status">En curso</Chip>
                 ) : null}
               </div>
-              <h2 className="font-heading text-h1 font-bold text-ink text-balance">
+              <h2 className="font-heading text-h1 font-extrabold text-ink leading-[1.15] tracking-tight text-balance">
                 {allDone ? "¡Todo listo por hoy!" : stepTitle}
               </h2>
             </div>

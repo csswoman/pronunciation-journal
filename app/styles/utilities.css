@@ -751,6 +751,14 @@
   --text-secondary: rgb(18 21 28 / 0.75);
   --text-tertiary: rgb(18 21 28 / 0.55);
   --text-quaternary: rgb(18 21 28 / 0.55);
+  --text-muted: rgb(18 21 28 / 0.65);
+  --text-faint: rgb(18 21 28 / 0.55);
+  --text-strong: #12151c;
+  --text: #12151c;
+  --fg: #12151c;
+  --fg-muted: rgb(18 21 28 / 0.75);
+  --fg-subtle: rgb(18 21 28 / 0.65);
+  --fg-faint: rgb(18 21 28 / 0.55);
   --border: rgb(18 21 28 / 0.15);
   --border-subtle: rgb(18 21 28 / 0.15);
   --border-default: rgb(18 21 28 / 0.15);

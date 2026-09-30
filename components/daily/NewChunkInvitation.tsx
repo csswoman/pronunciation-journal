@@ -62,7 +62,7 @@ export default function NewChunkInvitation({ userId }: Props) {
             Para descubrir
           </span>
         </div>
-        <p className="text-body-sm text-fg-muted">Buscando una expresión para ti…</p>
+        <p className="text-body-sm text-ink-secondary">Buscando una expresión para ti…</p>
       </PastelCard>
     )
   }
@@ -75,8 +75,8 @@ export default function NewChunkInvitation({ userId }: Props) {
         <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
           Para descubrir
         </span>
-        <h2 className="text-h3 text-fg">Explora algo nuevo</h2>
-        <p className="text-body-sm text-fg-muted">
+        <h2 className="text-h3 text-ink">Explora algo nuevo</h2>
+        <p className="text-body-sm text-ink-secondary">
           {suggestion.status === 'unavailable'
             ? 'No pudimos comprobar qué expresión te corresponde.'
             : 'No encontramos otra expresión disponible para tu nivel.'}
@@ -126,15 +126,15 @@ export default function NewChunkInvitation({ userId }: Props) {
       {/* Title + Audio trigger */}
       <div className="flex w-full items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight text-fg sm:text-4xl" lang="en">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl" lang="en">
             {textToSpeak}
           </h2>
           {chunk.ipa && (
-            <p className="font-ipa text-body-md text-fg-muted">
+            <p className="font-ipa text-body-md text-ink-secondary">
               {chunk.ipa}
             </p>
           )}
-          <p className="text-body-md font-bold text-fg">
+          <p className="text-body-md font-bold text-ink">
             {chunk.meaning}
           </p>
         </div>
@@ -151,25 +151,25 @@ export default function NewChunkInvitation({ userId }: Props) {
 
       {/* Example Card */}
       {exampleEn && (
-        <div className="w-full rounded-2xl bg-white/60 p-4 dark:bg-black/20 sm:p-5">
+        <div className="pastel-card-inset w-full rounded-2xl p-4 sm:p-5">
           <div className="mb-2 flex items-center justify-between gap-2">
-            <span className="font-kicker text-xs uppercase tracking-wider text-fg-muted">
+            <span className="font-kicker text-xs uppercase tracking-wider text-ink-secondary">
               EJEMPLO
             </span>
             <button
               type="button"
               onClick={() => speakText(exampleEn)}
               aria-label="Escuchar ejemplo"
-              className="focus-ring flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ink/10 text-fg transition-colors hover:bg-ink/20 active:scale-95"
+              className="focus-ring flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ink/10 text-ink transition-colors hover:bg-ink/20 active:scale-95"
             >
               <Volume2 size={14} aria-hidden />
             </button>
           </div>
-          <p className="text-body-md font-medium text-fg" lang="en">
+          <p className="text-body-md font-medium text-ink" lang="en">
             {exampleEn}
           </p>
           {exampleEs && (
-            <p className="mt-1 text-body-sm text-fg-muted">
+            <p className="mt-1 text-body-sm text-ink-secondary">
               {exampleEs}
             </p>
           )}
