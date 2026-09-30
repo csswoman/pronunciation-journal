@@ -12,6 +12,7 @@ alter table public.ai_usage_daily enable row level security;
 alter table public.ai_usage_daily force row level security;
 revoke all on public.ai_usage_daily from public, anon, authenticated;
 grant select, insert, update on public.ai_usage_daily to service_role;
+drop policy if exists "ai_usage_daily_service_role_only" on public.ai_usage_daily;
 create policy "ai_usage_daily_service_role_only"
   on public.ai_usage_daily for all to service_role
   using (true) with check (true);
