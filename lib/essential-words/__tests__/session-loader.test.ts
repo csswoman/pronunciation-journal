@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { loadEssentialWordsQueue } from "../session-loader";
-import { fetchEssentialWords } from "../client";
+import { fetchEssentialWords, fetchEssentialWordsForLevel } from "../client";
 import { getEssentialWordsIntroducedToday, getEssentialWordsSrsEntries } from "@/lib/db";
 import { getEssentialWordsDueTomorrowCount } from "../due-tomorrow";
 import type { SRSData } from "@/lib/types";
@@ -19,8 +19,12 @@ vi.mock("../client", () => {
     },
   ];
   const fetchEssentialWords = vi.fn(async () => mockWords);
+  const fetchEssentialWordsForLevel = vi.fn(async (level: string) =>
+    mockWords.filter((w) => w.cefr_level === level),
+  );
   return {
     fetchEssentialWords,
+    fetchEssentialWordsForLevel,
     fetchCatalogIndex: vi.fn(async () => {
       const words = await fetchEssentialWords();
       return words.map((w) => ({
@@ -77,6 +81,17 @@ describe("loadEssentialWordsQueue", () => {
     vi.mocked(getEssentialWordsSrsEntries).mockResolvedValue([]);
     vi.mocked(getEssentialWordsIntroducedToday).mockResolvedValue([]);
     vi.mocked(getEssentialWordsDueTomorrowCount).mockResolvedValue(0);
+    vi.mocked(fetchEssentialWordsForLevel).mockClear();
+    vi.mocked(fetchEssentialWordsForLevel).mockResolvedValue([
+      {
+        rank: 1,
+        word: "test",
+        pos: "noun",
+        ipa_strong: "test",
+        example_sentence: "This is a test.",
+        cefr_level: "A1",
+      },
+    ]);
   });
 
   it("limits a first session to one complete three-word guided block", async () => {
@@ -227,5 +242,38 @@ describe("loadEssentialWordsQueue", () => {
     const result = await loadEssentialWordsQueue(null, null, "user-1");
 
     expect(result.stats.dueTomorrow).toBe(3);
+  });
+
+  it("falls back to the level-scoped offline pack when the network fetch fails and exactly one level was requested", async () => {
+    const networkError = new Error("offline");
+    vi.mocked(fetchEssentialWords).mockRejectedValue(networkError);
+    const packWords: EssentialWord[] = [
+      {
+        rank: 1,
+        word: "pack-word",
+        pos: "noun",
+        ipa_strong: "pack-word",
+        example_sentence: "This word came from the offline pack.",
+        cefr_level: "A1",
+      },
+    ];
+    vi.mocked(fetchEssentialWordsForLevel).mockResolvedValue(packWords);
+
+    const result = await loadEssentialWordsQueue(["A1"]);
+
+    expect(fetchEssentialWordsForLevel).toHaveBeenCalledWith("A1");
+    expect(result.items).toHaveLength(1);
+    expect(result.items[0].entry.word).toBe("pack-word");
+  });
+
+  it("does not attempt a pack fallback and propagates the network error when levels is null or names more than one level", async () => {
+    const networkError = new Error("offline");
+    vi.mocked(fetchEssentialWords).mockRejectedValue(networkError);
+
+    await expect(loadEssentialWordsQueue(null)).rejects.toThrow("offline");
+    expect(fetchEssentialWordsForLevel).not.toHaveBeenCalled();
+
+    await expect(loadEssentialWordsQueue(["A1", "A2"])).rejects.toThrow("offline");
+    expect(fetchEssentialWordsForLevel).not.toHaveBeenCalled();
   });
 });

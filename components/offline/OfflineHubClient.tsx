@@ -2,129 +2,78 @@
 
 // Planned structure:
 // <OfflineHubClient>
-//   <OfflineStudyActiveView />
-//   <OfflineHeaderBanner />
+//   <OfflineStudyDeck /> | <OfflineEssentialWords />  (active study view)
+//   <OfflineHubHeader />
 //   <DownloadedLessonsSection />
 //     <DownloadedLessonCard />
+//   <OfflineLevelPacks /> (deferred chunk)
+//   <OfflineCoachPack /> (mounted only when opened)
 //   <OfflineCapabilitiesList />
 // </OfflineHubClient>
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Download, RefreshCw } from "@/components/icons";
+import dynamic from "next/dynamic";
+import { ArrowLeft, BookOpen, Download } from "@/components/icons";
 import { PillButton } from "@/components/ui/PillButton";
-import { useAuthOptional } from "@/components/auth/AuthProvider";
-import GrammarStudyDeck from "@/components/courses/grammar-deck/GrammarStudyDeck";
-import type { CoursePathTrackId } from "@/lib/courses/types";
 import type { DownloadedLessonRecord } from "@/lib/db";
-import type { CEFRLevel } from "@/lib/exercises/cefr";
-import {
-  downloadCoachExercises,
-  getCoachExercisesOfflineCount,
-  removeCoachExercisesOffline,
-  useAllDownloadedLessons,
-  useCoachExercisesOfflineCount,
-} from "@/lib/offline/download-manager";
-import { getCoachBankLevel } from "@/lib/content-bank/queries";
+import type { CefrLevel } from "@/lib/essential-words/types";
+import { useAllDownloadedLessons } from "@/lib/offline/download-manager";
 import { DownloadedLessonCard } from "./DownloadedLessonCard";
+import { OfflineCapabilitiesList } from "./OfflineCapabilitiesList";
+import { OfflineHubHeader } from "./OfflineHubHeader";
+import { OfflineLoadingState } from "./OfflineLoadingState";
+import { OfflineStudyDeck } from "./OfflineStudyDeck";
+
+const OfflineCoachPack = dynamic(
+  () => import("./OfflineCoachPack").then((module) => module.OfflineCoachPack),
+  {
+    loading: ({ error, retry }) => (
+      <OfflineLoadingState
+        message="Preparando las opciones del Coach…"
+        error={error}
+        retry={retry}
+      />
+    ),
+  },
+);
+
+const OfflineEssentialWords = dynamic(
+  () => import("./OfflineEssentialWords").then((module) => module.OfflineEssentialWords),
+  {
+    loading: ({ error, retry }) => (
+      <OfflineLoadingState message="Abriendo Essential Words…" error={error} retry={retry} />
+    ),
+  },
+);
+
+// Deferred so Dexie receipts + the pack manager stay out of the hub's first chunk.
+const OfflineLevelPacks = dynamic(
+  () => import("./OfflineLevelPacks").then((module) => module.OfflineLevelPacks),
+  {
+    loading: ({ error, retry }) => (
+      <OfflineLoadingState message="Preparando los paquetes por nivel…" error={error} retry={retry} />
+    ),
+  },
+);
 
 export function OfflineHubClient() {
   const [activeLesson, setActiveLesson] = useState<DownloadedLessonRecord | null>(null);
-  const auth = useAuthOptional();
-  const userId = auth?.user?.id ?? null;
   const downloadedLessons = useAllDownloadedLessons();
-  const [coachLevel, setCoachLevel] = useState<CEFRLevel | null>(null);
-  const [isOnline, setIsOnline] = useState(false);
-  const [packBusy, setPackBusy] = useState(false);
-  const [packMessage, setPackMessage] = useState("");
-  const coachExerciseCount = useCoachExercisesOfflineCount(coachLevel ?? "");
-
-  useEffect(() => {
-    let active = true;
-    void getCoachBankLevel(userId).then((level) => {
-      if (active) setCoachLevel(level);
-    });
-    return () => { active = false; };
-  }, [userId]);
-
-  useEffect(() => {
-    const updateOnline = () => setIsOnline(navigator.onLine);
-    updateOnline();
-    window.addEventListener("online", updateOnline);
-    window.addEventListener("offline", updateOnline);
-    return () => {
-      window.removeEventListener("online", updateOnline);
-      window.removeEventListener("offline", updateOnline);
-    };
-  }, []);
-
-  const handleDownloadCoachPack = async () => {
-    if (!coachLevel || !userId || !isOnline) return;
-    setPackBusy(true);
-    setPackMessage("");
-    try {
-      const result = await downloadCoachExercises(coachLevel, 100);
-      const total = await getCoachExercisesOfflineCount(coachLevel);
-      setPackMessage(result.count > 0
-        ? `La descarga encontró ${result.count} ejercicios; ahora tienes ${total} guardados para ${coachLevel}.`
-        : total > 0
-          ? `Ya tienes ${total} ejercicios descargados para ${coachLevel}.`
-          : "No hay ejercicios disponibles para descargar en este nivel.");
-    } catch {
-      setPackMessage("No se pudo descargar el set. Comprueba tu conexión e inténtalo de nuevo.");
-    } finally {
-      setPackBusy(false);
-    }
-  };
-
-  const handleRemoveCoachPack = async () => {
-    if (!coachLevel) return;
-    setPackBusy(true);
-    try {
-      await removeCoachExercisesOffline(coachLevel);
-      setPackMessage(`Se quitaron los ejercicios descargados de ${coachLevel}.`);
-    } catch {
-      setPackMessage("No se pudo quitar la descarga. Inténtalo de nuevo.");
-    } finally {
-      setPackBusy(false);
-    }
-  };
+  const [showCoachPack, setShowCoachPack] = useState(false);
+  const [activeWordsLevel, setActiveWordsLevel] = useState<CefrLevel | null>(null);
 
   // If the user selected an offline lesson to study, render the full deck experience
   if (activeLesson) {
-    return (
-      <div className="min-h-screen">
-        <GrammarStudyDeck
-          deck={activeLesson.deck}
-          backHref="/offline"
-          backLabel="Volver a mis descargas"
-          courseTitle={activeLesson.title}
-          levelId={activeLesson.trackId as CoursePathTrackId}
-          lessonId={String(activeLesson.lessonNumber)}
-          deckSlug={activeLesson.slug}
-        />
-      </div>
-    );
+    return <OfflineStudyDeck lesson={activeLesson} />;
+  }
+  if (activeWordsLevel) {
+    return <OfflineEssentialWords level={activeWordsLevel} onBack={() => setActiveWordsLevel(null)} />;
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 flex flex-col gap-6">
-      {/* Header */}
-      <div className="flex flex-col items-center text-center gap-2">
-        <div className="text-h1">📡</div>
-        <h1 className="text-h3 font-semibold text-fg">Modo sin conexión</h1>
-        <p className="text-body text-fg-muted max-w-md">
-          Estás navegando sin internet. Puedes continuar estudiando las lecciones que descargaste previamente.
-        </p>
-        <button
-          type="button"
-          onClick={() => window.location.reload()}
-          className="inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-full text-caption font-mono text-fg-muted hover:text-fg bg-surface-raised border border-line transition-colors"
-        >
-          <RefreshCw size={12} />
-          Comprobar conexión
-        </button>
-      </div>
+      <OfflineHubHeader />
 
       {/* Downloaded Lessons Section */}
       <section className="flex flex-col gap-3">
@@ -166,75 +115,30 @@ export function OfflineHubClient() {
         )}
       </section>
 
+      <OfflineLevelPacks onStudyLesson={setActiveLesson} onStudyWords={setActiveWordsLevel} />
+
       <section className="flex flex-col gap-3 rounded-xl border border-line bg-surface-raised p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-body font-semibold text-fg">Ejercicios del Coach{coachLevel ? ` · ${coachLevel}` : ""}</h2>
+            <h2 className="text-body font-semibold text-fg">Ejercicios del Coach</h2>
             <p className="text-caption text-fg-muted">
-              {coachExerciseCount} ejercicios guardados para practicar sin conexión.
+              Prepara hasta 100 ejercicios del nivel de tu cuenta para estudiar sin conexión.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <PillButton
-              variant="outline"
-              size="sm"
-              icon={<Download size={14} />}
-              isLoading={packBusy}
-              disabled={!coachLevel || !userId || !isOnline}
-              onClick={() => void handleDownloadCoachPack()}
-            >
-              {coachExerciseCount > 0 ? "Actualizar descarga" : "Descargar hasta 100"}
-            </PillButton>
-            {coachExerciseCount > 0 && (
-              <PillButton variant="quiet" size="sm" disabled={packBusy} onClick={() => void handleRemoveCoachPack()}>
-                Quitar descarga
-              </PillButton>
-            )}
-          </div>
+          <PillButton
+            variant="outline"
+            size="sm"
+            icon={<Download size={14} />}
+            aria-expanded={showCoachPack}
+            onClick={() => setShowCoachPack((open) => !open)}
+          >
+            {showCoachPack ? "Cerrar opciones" : "Ver opciones"}
+          </PillButton>
         </div>
-        <p className="text-caption text-fg-subtle" role="status">
-          {packMessage || (!coachLevel
-            ? "Conéctate para resolver el nivel de tu cuenta."
-            : !userId
-              ? "Inicia sesión para descargar ejercicios del Coach."
-              : !isOnline
-                ? "Conéctate para descargar nuevos ejercicios; los ya guardados siguen disponibles."
-                : "El set se guarda en este dispositivo y funciona sin conexión.")}
-        </p>
+        {showCoachPack && <OfflineCoachPack />}
       </section>
 
-      {/* Capabilities summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-        <div className="bg-surface-raised rounded-xl p-4 border border-line">
-          <p className="text-body-sm font-medium text-fg mb-2">Disponible sin conexión:</p>
-          <ul className="space-y-1.5 text-caption text-fg-muted">
-            <li className="flex items-center gap-1.5">
-              <span className="text-primary">✓</span> Lecciones descargadas y sus quizzes
-            </li>
-            <li className="flex items-center gap-1.5">
-              <span className="text-primary">✓</span> Registro local de progreso (se sincroniza al volver)
-            </li>
-            <li className="flex items-center gap-1.5">
-              <span className="text-primary">✓</span> Audios fonéticos de lecciones guardadas
-            </li>
-          </ul>
-        </div>
-
-        <div className="bg-surface-raised rounded-xl p-4 border border-line">
-          <p className="text-body-sm font-medium text-fg mb-2">Requiere conexión:</p>
-          <ul className="space-y-1.5 text-caption text-fg-muted">
-            <li className="flex items-center gap-1.5">
-              <span className="text-fg-subtle">✗</span> Generar ejercicios nuevos con IA
-            </li>
-            <li className="flex items-center gap-1.5">
-              <span className="text-fg-subtle">✗</span> Descargar nuevas lecciones no guardadas
-            </li>
-            <li className="flex items-center gap-1.5">
-              <span className="text-fg-subtle">✗</span> Sincronización en tiempo real con la nube
-            </li>
-          </ul>
-        </div>
-      </div>
+      <OfflineCapabilitiesList />
     </div>
   );
 }

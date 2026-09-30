@@ -1,4 +1,4 @@
-import { fetchEssentialWords } from "./client";
+import { fetchEssentialWords, fetchEssentialWordsForLevel } from "./client";
 import { createEssentialWordsEngineRouter } from "./engine-router";
 import { readSkillEngineRolloutConfig, resolveSkillEngineMode } from "../feature-flags";
 import { gradeEssentialWord, type GradeExtras } from "./grade";
@@ -110,12 +110,31 @@ function skillStats(
     vaulted: 0,
   };
 }
+/**
+ * Same narrow offline-pack fallback as `session-loader.ts`'s
+ * `loadWordsForQueue` (Plan 057, Step 4): only falls back to the
+ * single-level pack adapter when the network fetch fails AND exactly one
+ * level was requested. `input.levels` null/empty (whole catalog) or
+ * multi-level keeps today's behavior and re-throws — there's no single pack
+ * to serve in those cases.
+ */
+async function loadWordsForSkillSession(levels: readonly CefrLevel[] | null): Promise<EssentialWord[]> {
+  try {
+    return await fetchEssentialWords();
+  } catch (err) {
+    if (!levels || levels.length !== 1) {
+      throw err;
+    }
+    return fetchEssentialWordsForLevel(levels[0]);
+  }
+}
+
 async function buildSkillSession(
   userId: string,
   input: RuntimeBuildInput,
 ): Promise<EssentialWordsRuntimeSession> {
   const [allWords, items, attempts, knownClaims, progress, retiredBlankKeys] = await Promise.all([
-    fetchEssentialWords(),
+    loadWordsForSkillSession(input.levels),
     getLearningItems(userId),
     getAttemptLogs(userId),
     getEssentialWordLearnerSignals(userId),

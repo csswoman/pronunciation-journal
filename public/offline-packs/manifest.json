@@ -1,0 +1,1898 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "v1",
+  "generatedAt": "2026-09-29T12:35:36.119Z",
+  "levels": [
+    {
+      "schemaVersion": 1,
+      "contentVersion": "v1",
+      "level": "A1",
+      "estimatedBytes": 3200802,
+      "required": [
+        {
+          "kind": "essential-words",
+          "url": "/offline-packs/v1/A1/essential-words.json",
+          "estimatedBytes": 2779244,
+          "wordCount": 740
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-adverbios-frecuencia",
+          "title": "Always, usually, never",
+          "lessonNumber": 23,
+          "url": "/grammar-decks/a1-adverbios-frecuencia.json",
+          "estimatedBytes": 6233
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-alfabeto-deletreo",
+          "title": "Deletrear con confianza",
+          "lessonNumber": 29,
+          "url": "/grammar-decks/a1-alfabeto-deletreo.json",
+          "estimatedBytes": 8306
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-articulos-basicos",
+          "title": "Artículos básicos",
+          "lessonNumber": 5,
+          "url": "/grammar-decks/a1-articulos-basicos.json",
+          "estimatedBytes": 6057
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-audio-ingles-viajes",
+          "title": "Escucha: en el aeropuerto",
+          "lessonNumber": 37,
+          "url": "/grammar-decks/a1-audio-ingles-viajes.json",
+          "estimatedBytes": 6423
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-audio-preposiciones",
+          "title": "Escucha: preposiciones",
+          "lessonNumber": 36,
+          "url": "/grammar-decks/a1-audio-preposiciones.json",
+          "estimatedBytes": 6886
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-can-capacidad-permiso",
+          "title": "Can y can't: capacidad y permiso",
+          "lessonNumber": 16,
+          "url": "/grammar-decks/a1-can-capacidad-permiso.json",
+          "estimatedBytes": 6016
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-conjunciones-basicas",
+          "title": "And, but, or: conectores básicos",
+          "lessonNumber": 24,
+          "url": "/grammar-decks/a1-conjunciones-basicas.json",
+          "estimatedBytes": 6328
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-construccion-oraciones",
+          "title": "Partes de la oración",
+          "lessonNumber": 10,
+          "url": "/grammar-decks/a1-construccion-oraciones.json",
+          "estimatedBytes": 7265
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-contables-incontables",
+          "title": "Contables e incontables",
+          "lessonNumber": 25,
+          "url": "/grammar-decks/a1-contables-incontables.json",
+          "estimatedBytes": 6126
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-cuanto-cuantos",
+          "title": "How much / how many",
+          "lessonNumber": 15,
+          "url": "/grammar-decks/a1-cuanto-cuantos.json",
+          "estimatedBytes": 6005
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-demostrativos",
+          "title": "Demostrativos",
+          "lessonNumber": 6,
+          "url": "/grammar-decks/a1-demostrativos.json",
+          "estimatedBytes": 6322
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-escritura-basica",
+          "title": "Escribir frases simples",
+          "lessonNumber": 33,
+          "url": "/grammar-decks/a1-escritura-basica.json",
+          "estimatedBytes": 7180
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-estrategias-aprender-ingles",
+          "title": "Cómo estudiar por tu cuenta",
+          "lessonNumber": 1,
+          "url": "/grammar-decks/a1-estrategias-aprender-ingles.json",
+          "estimatedBytes": 7128
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-fechas-horas-descripciones",
+          "title": "Fechas, horas y adjetivos",
+          "lessonNumber": 31,
+          "url": "/grammar-decks/a1-fechas-horas-descripciones.json",
+          "estimatedBytes": 7439
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-genitivo-sajon",
+          "title": "El posesivo con 's",
+          "lessonNumber": 8,
+          "url": "/grammar-decks/a1-genitivo-sajon.json",
+          "estimatedBytes": 5975
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-imperativo",
+          "title": "Instrucciones y órdenes",
+          "lessonNumber": 19,
+          "url": "/grammar-decks/a1-imperativo.json",
+          "estimatedBytes": 8172
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-ingles-principiantes",
+          "title": "Tus primeras frases",
+          "lessonNumber": 2,
+          "url": "/grammar-decks/a1-ingles-principiantes.json",
+          "estimatedBytes": 7215
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-ingles-telefonico",
+          "title": "Una llamada corta",
+          "lessonNumber": 30,
+          "url": "/grammar-decks/a1-ingles-telefonico.json",
+          "estimatedBytes": 10304
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-palabras-interrogativas",
+          "title": "What, where, who…: preguntas abiertas",
+          "lessonNumber": 13,
+          "url": "/grammar-decks/a1-palabras-interrogativas.json",
+          "estimatedBytes": 6311
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-plurales",
+          "title": "Plurales regulares e irregulares",
+          "lessonNumber": 7,
+          "url": "/grammar-decks/a1-plurales.json",
+          "estimatedBytes": 6516
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-posesivos",
+          "title": "Adjetivos posesivos",
+          "lessonNumber": 9,
+          "url": "/grammar-decks/a1-posesivos.json",
+          "estimatedBytes": 5623
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-practico-elementos-trabajo",
+          "title": "En el trabajo (básico)",
+          "lessonNumber": 35,
+          "url": "/grammar-decks/a1-practico-elementos-trabajo.json",
+          "estimatedBytes": 6584
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-practico-familia",
+          "title": "Hablar de tu familia",
+          "lessonNumber": 34,
+          "url": "/grammar-decks/a1-practico-familia.json",
+          "estimatedBytes": 6971
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-preguntas-do-does",
+          "title": "Preguntas con do y does",
+          "lessonNumber": 12,
+          "url": "/grammar-decks/a1-preguntas-do-does.json",
+          "estimatedBytes": 5968
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-preposiciones-lugar-tiempo",
+          "title": "Preposiciones básicas de lugar y tiempo",
+          "lessonNumber": 22,
+          "url": "/grammar-decks/a1-preposiciones-lugar-tiempo.json",
+          "estimatedBytes": 6045
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-presente-continuo",
+          "title": "Lo que pasa ahora (continuo)",
+          "lessonNumber": 20,
+          "url": "/grammar-decks/a1-presente-continuo.json",
+          "estimatedBytes": 6002
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-presente-simple",
+          "title": "Hábitos y rutinas (presente simple)",
+          "lessonNumber": 11,
+          "url": "/grammar-decks/a1-presente-simple.json",
+          "estimatedBytes": 6722
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-presente-simple-vs-continuo",
+          "title": "Present Simple vs Continuous",
+          "lessonNumber": 21,
+          "url": "/grammar-decks/a1-presente-simple-vs-continuo.json",
+          "estimatedBytes": 6067
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-pronombres-objeto",
+          "title": "me, te, lo… (objeto)",
+          "lessonNumber": 18,
+          "url": "/grammar-decks/a1-pronombres-objeto.json",
+          "estimatedBytes": 7351
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-pronombres-sujeto",
+          "title": "Pronombres sujeto",
+          "lessonNumber": 3,
+          "url": "/grammar-decks/a1-pronombres-sujeto.json",
+          "estimatedBytes": 6327
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-pronunciacion-basica",
+          "title": "Primeros sonidos",
+          "lessonNumber": 26,
+          "url": "/grammar-decks/a1-pronunciacion-basica.json",
+          "estimatedBytes": 7202
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-sonido-r-americano",
+          "title": "La erre americana /ɹ/",
+          "lessonNumber": 27,
+          "url": "/grammar-decks/a1-sonido-r-americano.json",
+          "estimatedBytes": 9322
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-there-is-there-are",
+          "title": "There is y there are",
+          "lessonNumber": 14,
+          "url": "/grammar-decks/a1-there-is-there-are.json",
+          "estimatedBytes": 6198
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-verbo-to-be",
+          "title": "Ser y estar (to be)",
+          "lessonNumber": 4,
+          "url": "/grammar-decks/a1-verbo-to-be.json",
+          "estimatedBytes": 10708
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-verbos-comunes",
+          "title": "Los verbos que más salen",
+          "lessonNumber": 17,
+          "url": "/grammar-decks/a1-verbos-comunes.json",
+          "estimatedBytes": 7894
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-vocabulario-expresiones-basicas",
+          "title": "Palabras del día a día",
+          "lessonNumber": 32,
+          "url": "/grammar-decks/a1-vocabulario-expresiones-basicas.json",
+          "estimatedBytes": 7132
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-vocales-ae-ua",
+          "title": "Vocales /æ/ y /ʌ/",
+          "lessonNumber": 28,
+          "url": "/grammar-decks/a1-vocales-ae-ua.json",
+          "estimatedBytes": 8579
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "v",
+          "url": "/sounds/Voiced%20Labiodental%20Fricative.ogg",
+          "estimatedBytes": 32344
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "æ",
+          "url": "/sounds/Near-open%20Front%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 14961
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ð",
+          "url": "/sounds/Voiced%20Dental%20Fricative.ogg",
+          "estimatedBytes": 28539
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ə",
+          "url": "/sounds/Mid%20Central%20Vowel.ogg",
+          "estimatedBytes": 10959
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ɪ",
+          "url": "/sounds/Near-close%20Front%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 13435
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ɹ",
+          "url": "/sounds/Voiced%20Alveolar%20Approximant.ogg",
+          "estimatedBytes": 23547
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ʌ",
+          "url": "/sounds/Open-mid%20Back%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 11696
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "θ",
+          "url": "/sounds/Voiceless%20Dental%20Fricative.ogg",
+          "estimatedBytes": 27175
+        }
+      ],
+      "optional": []
+    },
+    {
+      "schemaVersion": 1,
+      "contentVersion": "v1",
+      "level": "A2",
+      "estimatedBytes": 3103269,
+      "required": [
+        {
+          "kind": "essential-words",
+          "url": "/offline-packs/v1/A2/essential-words.json",
+          "estimatedBytes": 2808743,
+          "wordCount": 645
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-audio-preposiciones",
+          "title": "Escucha: preposiciones",
+          "lessonNumber": 30,
+          "url": "/grammar-decks/a1-audio-preposiciones.json",
+          "estimatedBytes": 6886
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-posesivos",
+          "title": "Adjetivos posesivos",
+          "lessonNumber": 20,
+          "url": "/grammar-decks/a1-posesivos.json",
+          "estimatedBytes": 5623
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a1-preferencias-habilidades",
+          "title": "Lo que te gusta y lo que sabes hacer",
+          "lessonNumber": 28,
+          "url": "/grammar-decks/a1-preferencias-habilidades.json",
+          "estimatedBytes": 6763
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-adverbios-expresiones-tiempo",
+          "title": "Tiempo, frecuencia y lugar",
+          "lessonNumber": 15,
+          "url": "/grammar-decks/a2-adverbios-expresiones-tiempo.json",
+          "estimatedBytes": 7061
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-adverbios-grado",
+          "title": "Very, really, quite",
+          "lessonNumber": 16,
+          "url": "/grammar-decks/a2-adverbios-grado.json",
+          "estimatedBytes": 7237
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-another-other-others",
+          "title": "Another, other, others y the other",
+          "lessonNumber": 19,
+          "url": "/grammar-decks/a2-another-other-others.json",
+          "estimatedBytes": 6703
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-audio-aventura-ciudad",
+          "title": "Historia: tarde en la ciudad",
+          "lessonNumber": 33,
+          "url": "/grammar-decks/a2-audio-aventura-ciudad.json",
+          "estimatedBytes": 7396
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-colocaciones-comunes",
+          "title": "Make, do, take y have",
+          "lessonNumber": 29,
+          "url": "/grammar-decks/a2-colocaciones-comunes.json",
+          "estimatedBytes": 6843
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-conjunciones-verbos",
+          "title": "Conectores y verbos",
+          "lessonNumber": 25,
+          "url": "/grammar-decks/a2-conjunciones-verbos.json",
+          "estimatedBytes": 6676
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-cuantificadores-esenciales",
+          "title": "Some, any, much y many",
+          "lessonNumber": 17,
+          "url": "/grammar-decks/a2-cuantificadores-esenciales.json",
+          "estimatedBytes": 6159
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-cuantificadores-superlativos",
+          "title": "Mucho, poco y superlativos",
+          "lessonNumber": 13,
+          "url": "/grammar-decks/a2-cuantificadores-superlativos.json",
+          "estimatedBytes": 6990
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-descripciones-comparaciones",
+          "title": "Describir y comparar",
+          "lessonNumber": 12,
+          "url": "/grammar-decks/a2-descripciones-comparaciones.json",
+          "estimatedBytes": 6122
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-determinantes",
+          "title": "Each, every, all, both…",
+          "lessonNumber": 35,
+          "url": "/grammar-decks/a2-determinantes.json",
+          "estimatedBytes": 9804
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-experiencias-pasadas-planes",
+          "title": "Pasado y planes futuros",
+          "lessonNumber": 2,
+          "url": "/grammar-decks/a2-experiencias-pasadas-planes.json",
+          "estimatedBytes": 7437
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-futuro-contraste",
+          "title": "Will vs going to vs continuo",
+          "lessonNumber": 11,
+          "url": "/grammar-decks/a2-futuro-contraste.json",
+          "estimatedBytes": 6483
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-infinitivos-presente-continuo",
+          "title": "Lo que estás haciendo ahora",
+          "lessonNumber": 26,
+          "url": "/grammar-decks/a2-infinitivos-presente-continuo.json",
+          "estimatedBytes": 6511
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-modales-consejo-posibilidad",
+          "title": "Should, could y must",
+          "lessonNumber": 22,
+          "url": "/grammar-decks/a2-modales-consejo-posibilidad.json",
+          "estimatedBytes": 6280
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-obligacion-prohibicion",
+          "title": "Debes, no debes, prohibido",
+          "lessonNumber": 21,
+          "url": "/grammar-decks/a2-obligacion-prohibicion.json",
+          "estimatedBytes": 8519
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-one-ones",
+          "title": "The red one / these ones",
+          "lessonNumber": 32,
+          "url": "/grammar-decks/a2-one-ones.json",
+          "estimatedBytes": 7061
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-orden-adjetivos",
+          "title": "Orden de los adjetivos",
+          "lessonNumber": 14,
+          "url": "/grammar-decks/a2-orden-adjetivos.json",
+          "estimatedBytes": 9742
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-pasado-continuo",
+          "title": "Pasado continuo",
+          "lessonNumber": 3,
+          "url": "/grammar-decks/a2-pasado-continuo.json",
+          "estimatedBytes": 7145
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-pasado-to-be",
+          "title": "Was y were en pasado",
+          "lessonNumber": 1,
+          "url": "/grammar-decks/a2-pasado-to-be.json",
+          "estimatedBytes": 10147
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-practico-cocina",
+          "title": "En la cocina",
+          "lessonNumber": 38,
+          "url": "/grammar-decks/a2-practico-cocina.json",
+          "estimatedBytes": 6041
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-practico-compras",
+          "title": "De compras",
+          "lessonNumber": 37,
+          "url": "/grammar-decks/a2-practico-compras.json",
+          "estimatedBytes": 6056
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-practico-partes-cuerpo",
+          "title": "Partes del cuerpo",
+          "lessonNumber": 40,
+          "url": "/grammar-decks/a2-practico-partes-cuerpo.json",
+          "estimatedBytes": 5940
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-practico-viajes-turismo",
+          "title": "De viaje turístico",
+          "lessonNumber": 39,
+          "url": "/grammar-decks/a2-practico-viajes-turismo.json",
+          "estimatedBytes": 6280
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-preguntas-indirectas",
+          "title": "Preguntas indirectas básicas",
+          "lessonNumber": 24,
+          "url": "/grammar-decks/a2-preguntas-indirectas.json",
+          "estimatedBytes": 6398
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-preguntas-respuestas",
+          "title": "Preguntas que siempre vuelven",
+          "lessonNumber": 23,
+          "url": "/grammar-decks/a2-preguntas-respuestas.json",
+          "estimatedBytes": 7344
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-presente-continuo-futuro",
+          "title": "Planes ya acordados (continuo)",
+          "lessonNumber": 8,
+          "url": "/grammar-decks/a2-presente-continuo-futuro.json",
+          "estimatedBytes": 7241
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-pronombres-indefinidos",
+          "title": "Somebody, anything, nowhere…",
+          "lessonNumber": 18,
+          "url": "/grammar-decks/a2-pronombres-indefinidos.json",
+          "estimatedBytes": 6440
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-pronombres-reflexivos",
+          "title": "Myself, yourself…: reflexivos",
+          "lessonNumber": 31,
+          "url": "/grammar-decks/a2-pronombres-reflexivos.json",
+          "estimatedBytes": 7422
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-propuestas-permisos",
+          "title": "Proponer y pedir permiso",
+          "lessonNumber": 36,
+          "url": "/grammar-decks/a2-propuestas-permisos.json",
+          "estimatedBytes": 6467
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-so-such",
+          "title": "So y such",
+          "lessonNumber": 34,
+          "url": "/grammar-decks/a2-so-such.json",
+          "estimatedBytes": 8579
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-sustantivos-intenciones-futuras",
+          "title": "Planes e intenciones",
+          "lessonNumber": 10,
+          "url": "/grammar-decks/a2-sustantivos-intenciones-futuras.json",
+          "estimatedBytes": 6884
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-used-to",
+          "title": "Hábitos del pasado con used to",
+          "lessonNumber": 5,
+          "url": "/grammar-decks/a2-used-to.json",
+          "estimatedBytes": 6132
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-verbos-confusos",
+          "title": "Verbos que se confunden",
+          "lessonNumber": 27,
+          "url": "/grammar-decks/a2-verbos-confusos.json",
+          "estimatedBytes": 9994
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-when-while-pasado",
+          "title": "When y while en pasado",
+          "lessonNumber": 4,
+          "url": "/grammar-decks/a2-when-while-pasado.json",
+          "estimatedBytes": 7315
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-will-going-to",
+          "title": "Will o going to",
+          "lessonNumber": 9,
+          "url": "/grammar-decks/a2-will-going-to.json",
+          "estimatedBytes": 6284
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-condicional-cero",
+          "title": "Condicional cero",
+          "lessonNumber": 7,
+          "url": "/grammar-decks/b1-condicional-cero.json",
+          "estimatedBytes": 6926
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-habitos-pasados",
+          "title": "Hábitos pasados: used to y would",
+          "lessonNumber": 6,
+          "url": "/grammar-decks/b1-habitos-pasados.json",
+          "estimatedBytes": 6236
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ə",
+          "url": "/sounds/Mid%20Central%20Vowel.ogg",
+          "estimatedBytes": 10959
+        }
+      ],
+      "optional": []
+    },
+    {
+      "schemaVersion": 1,
+      "contentVersion": "v1",
+      "level": "B1",
+      "estimatedBytes": 2701063,
+      "required": [
+        {
+          "kind": "essential-words",
+          "url": "/offline-packs/v1/B1/essential-words.json",
+          "estimatedBytes": 2393598,
+          "wordCount": 523
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "a2-presente-perfecto-experiencias",
+          "title": "Presente perfecto: experiencias",
+          "lessonNumber": 1,
+          "url": "/grammar-decks/a2-presente-perfecto-experiencias.json",
+          "estimatedBytes": 6368
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-adjetivos-preguntas-indirectas",
+          "title": "Adjetivos y preguntas indirectas",
+          "lessonNumber": 14,
+          "url": "/grammar-decks/b1-adjetivos-preguntas-indirectas.json",
+          "estimatedBytes": 6659
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-articulos-superlativos-cero",
+          "title": "Artículos con superlativos y cero",
+          "lessonNumber": 4,
+          "url": "/grammar-decks/b1-articulos-superlativos-cero.json",
+          "estimatedBytes": 7223
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-audio-misterios-sin-resolver",
+          "title": "Historia: misterios sin resolver",
+          "lessonNumber": 31,
+          "url": "/grammar-decks/b1-audio-misterios-sin-resolver.json",
+          "estimatedBytes": 7140
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-both-either-neither",
+          "title": "Both, either y neither",
+          "lessonNumber": 27,
+          "url": "/grammar-decks/b1-both-either-neither.json",
+          "estimatedBytes": 7181
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-comparativos-planes-futuros",
+          "title": "Comparar y planear el futuro",
+          "lessonNumber": 6,
+          "url": "/grammar-decks/b1-comparativos-planes-futuros.json",
+          "estimatedBytes": 6631
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-conectores-discurso",
+          "title": "Conectores para organizar ideas",
+          "lessonNumber": 16,
+          "url": "/grammar-decks/b1-conectores-discurso.json",
+          "estimatedBytes": 8333
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-conectores-preferencias",
+          "title": "Conectores y preferencias",
+          "lessonNumber": 36,
+          "url": "/grammar-decks/b1-conectores-preferencias.json",
+          "estimatedBytes": 6403
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-conectores-proposito",
+          "title": "Conectores de propósito (in order to, so that)",
+          "lessonNumber": 17,
+          "url": "/grammar-decks/b1-conectores-proposito.json",
+          "estimatedBytes": 6377
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-confirmacion-posibilidades",
+          "title": "Coletillas y posibilidad",
+          "lessonNumber": 23,
+          "url": "/grammar-decks/b1-confirmacion-posibilidades.json",
+          "estimatedBytes": 6849
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-cuantificadores",
+          "title": "All, most, none, each, every",
+          "lessonNumber": 22,
+          "url": "/grammar-decks/b1-cuantificadores.json",
+          "estimatedBytes": 7013
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-emociones-estados-animo",
+          "title": "Emociones y estados de ánimo",
+          "lessonNumber": 33,
+          "url": "/grammar-decks/b1-emociones-estados-animo.json",
+          "estimatedBytes": 10481
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-estilo-indirecto",
+          "title": "Estilo indirecto",
+          "lessonNumber": 24,
+          "url": "/grammar-decks/b1-estilo-indirecto.json",
+          "estimatedBytes": 6333
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-estrategias-escucha",
+          "title": "Escuchar con estrategia",
+          "lessonNumber": 35,
+          "url": "/grammar-decks/b1-estrategias-escucha.json",
+          "estimatedBytes": 11462
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-expresiones-tiempo-cantidad",
+          "title": "Tiempo, cantidad y frecuencia",
+          "lessonNumber": 32,
+          "url": "/grammar-decks/b1-expresiones-tiempo-cantidad.json",
+          "estimatedBytes": 6644
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-finanzas-personales",
+          "title": "Finanzas personales",
+          "lessonNumber": 34,
+          "url": "/grammar-decks/b1-finanzas-personales.json",
+          "estimatedBytes": 10088
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-formacion-palabras",
+          "title": "Formación de palabras (prefijos/sufijos)",
+          "lessonNumber": 26,
+          "url": "/grammar-decks/b1-formacion-palabras.json",
+          "estimatedBytes": 6600
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-futuro-continuo",
+          "title": "Futuro continuo (will be + -ing)",
+          "lessonNumber": 11,
+          "url": "/grammar-decks/b1-futuro-continuo.json",
+          "estimatedBytes": 7016
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-gerundios-infinitivos",
+          "title": "Gerundios e infinitivos",
+          "lessonNumber": 12,
+          "url": "/grammar-decks/b1-gerundios-infinitivos.json",
+          "estimatedBytes": 6300
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-habitos-pasados",
+          "title": "Hábitos pasados: used to y would",
+          "lessonNumber": 30,
+          "url": "/grammar-decks/b1-habitos-pasados.json",
+          "estimatedBytes": 6236
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-make-let-allow",
+          "title": "Make, let y allow",
+          "lessonNumber": 28,
+          "url": "/grammar-decks/b1-make-let-allow.json",
+          "estimatedBytes": 6927
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-modales-deduccion",
+          "title": "Modales de deducción",
+          "lessonNumber": 18,
+          "url": "/grammar-decks/b1-modales-deduccion.json",
+          "estimatedBytes": 6290
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-modificadores-comparativos",
+          "title": "Much, far, a bit + comparativo",
+          "lessonNumber": 5,
+          "url": "/grammar-decks/b1-modificadores-comparativos.json",
+          "estimatedBytes": 7336
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-palabras-interrogativas-propositos",
+          "title": "Para qué, por qué, cuándo…",
+          "lessonNumber": 38,
+          "url": "/grammar-decks/b1-palabras-interrogativas-propositos.json",
+          "estimatedBytes": 6690
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-pasado-perfecto",
+          "title": "Pasado perfecto",
+          "lessonNumber": 20,
+          "url": "/grammar-decks/b1-pasado-perfecto.json",
+          "estimatedBytes": 7063
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-phrasal-verbs-tipos",
+          "title": "Phrasal verbs: los tipos",
+          "lessonNumber": 21,
+          "url": "/grammar-decks/b1-phrasal-verbs-tipos.json",
+          "estimatedBytes": 8943
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-practico-consultas-medicas",
+          "title": "En la consulta médica",
+          "lessonNumber": 42,
+          "url": "/grammar-decks/b1-practico-consultas-medicas.json",
+          "estimatedBytes": 6295
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-practico-musica-arte",
+          "title": "Música y arte",
+          "lessonNumber": 41,
+          "url": "/grammar-decks/b1-practico-musica-arte.json",
+          "estimatedBytes": 5949
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-practico-nutricion-fitness",
+          "title": "Nutrición y fitness",
+          "lessonNumber": 43,
+          "url": "/grammar-decks/b1-practico-nutricion-fitness.json",
+          "estimatedBytes": 6144
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-practico-viajes-negocios",
+          "title": "Viaje de negocios",
+          "lessonNumber": 40,
+          "url": "/grammar-decks/b1-practico-viajes-negocios.json",
+          "estimatedBytes": 6607
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-preguntas-negativas-recomendaciones",
+          "title": "Preguntas negativas y recomendaciones",
+          "lessonNumber": 39,
+          "url": "/grammar-decks/b1-preguntas-negativas-recomendaciones.json",
+          "estimatedBytes": 6640
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-preguntas-sujeto-objeto",
+          "title": "Preguntas de sujeto vs objeto",
+          "lessonNumber": 15,
+          "url": "/grammar-decks/b1-preguntas-sujeto-objeto.json",
+          "estimatedBytes": 6240
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-preposiciones-dependientes",
+          "title": "Preposiciones tras adjetivos y verbos",
+          "lessonNumber": 9,
+          "url": "/grammar-decks/b1-preposiciones-dependientes.json",
+          "estimatedBytes": 7248
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-presente-perfecto-continuo",
+          "title": "Presente perfecto continuo",
+          "lessonNumber": 3,
+          "url": "/grammar-decks/b1-presente-perfecto-continuo.json",
+          "estimatedBytes": 6486
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-presente-perfecto-preposiciones",
+          "title": "Presente perfecto y preposiciones",
+          "lessonNumber": 2,
+          "url": "/grammar-decks/b1-presente-perfecto-preposiciones.json",
+          "estimatedBytes": 7465
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-primer-condicional-pasado-continuo",
+          "title": "Primer condicional y pasado continuo",
+          "lessonNumber": 10,
+          "url": "/grammar-decks/b1-primer-condicional-pasado-continuo.json",
+          "estimatedBytes": 6297
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-pronombres-clausulas-relativas",
+          "title": "Pronombres y oraciones de relativo",
+          "lessonNumber": 8,
+          "url": "/grammar-decks/b1-pronombres-clausulas-relativas.json",
+          "estimatedBytes": 6590
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-segundo-condicional",
+          "title": "Segundo condicional",
+          "lessonNumber": 25,
+          "url": "/grammar-decks/b1-segundo-condicional.json",
+          "estimatedBytes": 10850
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-so-vs-such",
+          "title": "So vs Such: tan vs tal",
+          "lessonNumber": 7,
+          "url": "/grammar-decks/b1-so-vs-such.json",
+          "estimatedBytes": 6063
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-solicitudes-pronombres-reflexivos",
+          "title": "Peticiones y pronombres reflexivos",
+          "lessonNumber": 37,
+          "url": "/grammar-decks/b1-solicitudes-pronombres-reflexivos.json",
+          "estimatedBytes": 6476
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-voz-pasiva-consejos",
+          "title": "Voz pasiva y consejos",
+          "lessonNumber": 19,
+          "url": "/grammar-decks/b1-voz-pasiva-consejos.json",
+          "estimatedBytes": 6454
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b1-wish-presente",
+          "title": "Wish + pasado simple",
+          "lessonNumber": 29,
+          "url": "/grammar-decks/b1-wish-presente.json",
+          "estimatedBytes": 6951
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-gerundio-significado",
+          "title": "Gerundio vs infinitivo: significado",
+          "lessonNumber": 13,
+          "url": "/grammar-decks/b2-gerundio-significado.json",
+          "estimatedBytes": 8124
+        }
+      ],
+      "optional": []
+    },
+    {
+      "schemaVersion": 1,
+      "contentVersion": "v1",
+      "level": "B2",
+      "estimatedBytes": 3849850,
+      "required": [
+        {
+          "kind": "essential-words",
+          "url": "/offline-packs/v1/B2/essential-words.json",
+          "estimatedBytes": 3524408,
+          "wordCount": 752
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-audio-atrapados-tecnologia",
+          "title": "Historia: atrapados en la tecnología",
+          "lessonNumber": 30,
+          "url": "/grammar-decks/b2-audio-atrapados-tecnologia.json",
+          "estimatedBytes": 7562
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-audio-origen-idioma",
+          "title": "Historia: origen del idioma",
+          "lessonNumber": 31,
+          "url": "/grammar-decks/b2-audio-origen-idioma.json",
+          "estimatedBytes": 6924
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-causativo",
+          "title": "Have/get something done",
+          "lessonNumber": 7,
+          "url": "/grammar-decks/b2-causativo.json",
+          "estimatedBytes": 8861
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-clausulas-participio",
+          "title": "Cláusulas de participio",
+          "lessonNumber": 16,
+          "url": "/grammar-decks/b2-clausulas-participio.json",
+          "estimatedBytes": 6441
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-comentarios-opiniones",
+          "title": "Opinar y comentar",
+          "lessonNumber": 35,
+          "url": "/grammar-decks/b2-comentarios-opiniones.json",
+          "estimatedBytes": 6739
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-concesion",
+          "title": "Even though, while y whereas",
+          "lessonNumber": 9,
+          "url": "/grammar-decks/b2-concesion.json",
+          "estimatedBytes": 7826
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-condicionales-mixtos",
+          "title": "Condicionales mixtos",
+          "lessonNumber": 14,
+          "url": "/grammar-decks/b2-condicionales-mixtos.json",
+          "estimatedBytes": 8339
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-conectores-avanzados",
+          "title": "Conectores avanzados",
+          "lessonNumber": 6,
+          "url": "/grammar-decks/b2-conectores-avanzados.json",
+          "estimatedBytes": 8162
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-conectores-condicionales",
+          "title": "Unless, provided y as long as",
+          "lessonNumber": 10,
+          "url": "/grammar-decks/b2-conectores-condicionales.json",
+          "estimatedBytes": 7833
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-contar-anecdotas",
+          "title": "Contar anécdotas",
+          "lessonNumber": 33,
+          "url": "/grammar-decks/b2-contar-anecdotas.json",
+          "estimatedBytes": 8583
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-conversaciones-trabajo",
+          "title": "Conversaciones en el trabajo",
+          "lessonNumber": 3,
+          "url": "/grammar-decks/b2-conversaciones-trabajo.json",
+          "estimatedBytes": 7519
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-deduccion-presente-pasado",
+          "title": "Deducción en presente vs pasado",
+          "lessonNumber": 20,
+          "url": "/grammar-decks/b2-deduccion-presente-pasado.json",
+          "estimatedBytes": 6587
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-deseos-arrepentimientos",
+          "title": "Deseos y arrepentimientos",
+          "lessonNumber": 25,
+          "url": "/grammar-decks/b2-deseos-arrepentimientos.json",
+          "estimatedBytes": 9345
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-despite-in-spite",
+          "title": "Despite / in spite of",
+          "lessonNumber": 27,
+          "url": "/grammar-decks/b2-despite-in-spite.json",
+          "estimatedBytes": 8033
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-discurso-indirecto-condicionales",
+          "title": "Estilo indirecto y condicionales",
+          "lessonNumber": 22,
+          "url": "/grammar-decks/b2-discurso-indirecto-condicionales.json",
+          "estimatedBytes": 7104
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-enfasis-auxiliares",
+          "title": "Énfasis con do/does/did",
+          "lessonNumber": 11,
+          "url": "/grammar-decks/b2-enfasis-auxiliares.json",
+          "estimatedBytes": 7647
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-escritura-intermedia",
+          "title": "Escribir con más soltura",
+          "lessonNumber": 38,
+          "url": "/grammar-decks/b2-escritura-intermedia.json",
+          "estimatedBytes": 6336
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-formacion-palabras-colocaciones",
+          "title": "Formación de palabras y colocaciones",
+          "lessonNumber": 28,
+          "url": "/grammar-decks/b2-formacion-palabras-colocaciones.json",
+          "estimatedBytes": 6476
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-futuro-perfecto-continuo",
+          "title": "Futuro perfecto y continuo",
+          "lessonNumber": 12,
+          "url": "/grammar-decks/b2-futuro-perfecto-continuo.json",
+          "estimatedBytes": 9205
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-habitos-aproximaciones",
+          "title": "Hábitos y aproximaciones",
+          "lessonNumber": 36,
+          "url": "/grammar-decks/b2-habitos-aproximaciones.json",
+          "estimatedBytes": 6685
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-ingles-practico-conversacional",
+          "title": "Inglés conversacional en la práctica",
+          "lessonNumber": 1,
+          "url": "/grammar-decks/b2-ingles-practico-conversacional.json",
+          "estimatedBytes": 7416
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-inversion-enfasis",
+          "title": "Inversión para dar énfasis",
+          "lessonNumber": 13,
+          "url": "/grammar-decks/b2-inversion-enfasis.json",
+          "estimatedBytes": 6235
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-modales-pasado",
+          "title": "Modales en el pasado",
+          "lessonNumber": 19,
+          "url": "/grammar-decks/b2-modales-pasado.json",
+          "estimatedBytes": 9279
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-narracion-integrada",
+          "title": "Tiempos mezclados al narrar",
+          "lessonNumber": 32,
+          "url": "/grammar-decks/b2-narracion-integrada.json",
+          "estimatedBytes": 9410
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-oraciones-hendidas",
+          "title": "Oraciones hendidas (cleft)",
+          "lessonNumber": 8,
+          "url": "/grammar-decks/b2-oraciones-hendidas.json",
+          "estimatedBytes": 7787
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-oraciones-resultado",
+          "title": "So/such … that",
+          "lessonNumber": 23,
+          "url": "/grammar-decks/b2-oraciones-resultado.json",
+          "estimatedBytes": 7862
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-ortografia-puntuacion",
+          "title": "Ortografía y puntuación",
+          "lessonNumber": 39,
+          "url": "/grammar-decks/b2-ortografia-puntuacion.json",
+          "estimatedBytes": 6884
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-pasado-perfecto-frases-adverbiales",
+          "title": "Pasado perfecto y frases adverbiales",
+          "lessonNumber": 5,
+          "url": "/grammar-decks/b2-pasado-perfecto-frases-adverbiales.json",
+          "estimatedBytes": 6508
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-pasiva-completa",
+          "title": "Pasiva en todos los tiempos",
+          "lessonNumber": 18,
+          "url": "/grammar-decks/b2-pasiva-completa.json",
+          "estimatedBytes": 7841
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-pasiva-reportada",
+          "title": "Reportaje pasivo",
+          "lessonNumber": 17,
+          "url": "/grammar-decks/b2-pasiva-reportada.json",
+          "estimatedBytes": 8039
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-phrasal-verbs-comunes",
+          "title": "Phrasal verbs del día a día",
+          "lessonNumber": 2,
+          "url": "/grammar-decks/b2-phrasal-verbs-comunes.json",
+          "estimatedBytes": 6989
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-pronunciacion-intermedia",
+          "title": "Sonidos con más confianza",
+          "lessonNumber": 4,
+          "url": "/grammar-decks/b2-pronunciacion-intermedia.json",
+          "estimatedBytes": 8158
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-registro-formal-informal",
+          "title": "Registro formal e informal",
+          "lessonNumber": 29,
+          "url": "/grammar-decks/b2-registro-formal-informal.json",
+          "estimatedBytes": 6516
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-relativas-no-definitorias",
+          "title": "Cláusulas relativas explicativas",
+          "lessonNumber": 15,
+          "url": "/grammar-decks/b2-relativas-no-definitorias.json",
+          "estimatedBytes": 8258
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-relativas-preposiciones",
+          "title": "Relativas con preposiciones",
+          "lessonNumber": 21,
+          "url": "/grammar-decks/b2-relativas-preposiciones.json",
+          "estimatedBytes": 8036
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-suposiciones-instrucciones",
+          "title": "Suposiciones e instrucciones",
+          "lessonNumber": 34,
+          "url": "/grammar-decks/b2-suposiciones-instrucciones.json",
+          "estimatedBytes": 6444
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-tercer-condicional",
+          "title": "Tercer condicional",
+          "lessonNumber": 24,
+          "url": "/grammar-decks/b2-tercer-condicional.json",
+          "estimatedBytes": 12083
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-verbo-objeto-gerundio",
+          "title": "Verbo + objeto + -ing/to",
+          "lessonNumber": 26,
+          "url": "/grammar-decks/b2-verbo-objeto-gerundio.json",
+          "estimatedBytes": 7999
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "b2-vocabulario-expresiones-intermedio",
+          "title": "Vocabulario y expresiones útiles",
+          "lessonNumber": 37,
+          "url": "/grammar-decks/b2-vocabulario-expresiones-intermedio.json",
+          "estimatedBytes": 7097
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ə",
+          "url": "/sounds/Mid%20Central%20Vowel.ogg",
+          "estimatedBytes": 10959
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ɪ",
+          "url": "/sounds/Near-close%20Front%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 13435
+        }
+      ],
+      "optional": []
+    },
+    {
+      "schemaVersion": 1,
+      "contentVersion": "v1",
+      "level": "C1",
+      "estimatedBytes": 1135862,
+      "required": [
+        {
+          "kind": "essential-words",
+          "url": "/offline-packs/v1/C1/essential-words.json",
+          "estimatedBytes": 666546,
+          "wordCount": 137
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-anteposicion-enfasis",
+          "title": "Anteposición para énfasis",
+          "lessonNumber": 8,
+          "url": "/grammar-decks/c1-anteposicion-enfasis.json",
+          "estimatedBytes": 7944
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-argumentos-discusiones",
+          "title": "Argumentar y debatir",
+          "lessonNumber": 22,
+          "url": "/grammar-decks/c1-argumentos-discusiones.json",
+          "estimatedBytes": 5982
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-clausulas-reducidas-participiales",
+          "title": "Oraciones de participio perfecto y pasivo",
+          "lessonNumber": 14,
+          "url": "/grammar-decks/c1-clausulas-reducidas-participiales.json",
+          "estimatedBytes": 5627
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-cleft-estructura-informativa",
+          "title": "Oraciones de escisión y pseudoescisión",
+          "lessonNumber": 3,
+          "url": "/grammar-decks/c1-cleft-estructura-informativa.json",
+          "estimatedBytes": 5539
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-cohesion-discurso",
+          "title": "Cohesión y referencia avanzada",
+          "lessonNumber": 1,
+          "url": "/grammar-decks/c1-cohesion-discurso.json",
+          "estimatedBytes": 6720
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-comparativos-dobles",
+          "title": "Comparativos dobles (the … the …)",
+          "lessonNumber": 2,
+          "url": "/grammar-decks/c1-comparativos-dobles.json",
+          "estimatedBytes": 7872
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-comunicacion-persuasiva-efectiva",
+          "title": "Persuadir con sutileza",
+          "lessonNumber": 39,
+          "url": "/grammar-decks/c1-comunicacion-persuasiva-efectiva.json",
+          "estimatedBytes": 6213
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-conectores-contracciones-informales",
+          "title": "Conectores y reducciones informales",
+          "lessonNumber": 18,
+          "url": "/grammar-decks/c1-conectores-contracciones-informales.json",
+          "estimatedBytes": 6806
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-desacuerdo-colaborativo",
+          "title": "Desacuerdo colaborativo",
+          "lessonNumber": 33,
+          "url": "/grammar-decks/c1-desacuerdo-colaborativo.json",
+          "estimatedBytes": 6755
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-elipsis-sustitucion-referencia",
+          "title": "Elipsis y sustitución",
+          "lessonNumber": 7,
+          "url": "/grammar-decks/c1-elipsis-sustitucion-referencia.json",
+          "estimatedBytes": 5376
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-enfasis-inversion-avanzada",
+          "title": "Inversión avanzada",
+          "lessonNumber": 11,
+          "url": "/grammar-decks/c1-enfasis-inversion-avanzada.json",
+          "estimatedBytes": 12674
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-entonacion-actitud-cortesia",
+          "title": "Entonación para actitud y cortesía",
+          "lessonNumber": 35,
+          "url": "/grammar-decks/c1-entonacion-actitud-cortesia.json",
+          "estimatedBytes": 7003
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-escritura-academica-profesional",
+          "title": "Escritura académica y profesional",
+          "lessonNumber": 25,
+          "url": "/grammar-decks/c1-escritura-academica-profesional.json",
+          "estimatedBytes": 6747
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-escritura-avanzada",
+          "title": "Escribir con precisión",
+          "lessonNumber": 41,
+          "url": "/grammar-decks/c1-escritura-avanzada.json",
+          "estimatedBytes": 5945
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-explicar-conceptos-complejos",
+          "title": "Explicar conceptos complejos",
+          "lessonNumber": 32,
+          "url": "/grammar-decks/c1-explicar-conceptos-complejos.json",
+          "estimatedBytes": 5831
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-expresiones-idiomaticas-negocios",
+          "title": "Modismos de negocios",
+          "lessonNumber": 42,
+          "url": "/grammar-decks/c1-expresiones-idiomaticas-negocios.json",
+          "estimatedBytes": 5658
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-futuro-en-pasado",
+          "title": "Futuro en el pasado",
+          "lessonNumber": 9,
+          "url": "/grammar-decks/c1-futuro-en-pasado.json",
+          "estimatedBytes": 7550
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-hedging-matices",
+          "title": "Lenguaje de cautela y atenuación",
+          "lessonNumber": 10,
+          "url": "/grammar-decks/c1-hedging-matices.json",
+          "estimatedBytes": 6389
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-humor-ironia",
+          "title": "Humor e ironía",
+          "lessonNumber": 38,
+          "url": "/grammar-decks/c1-humor-ironia.json",
+          "estimatedBytes": 12900
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-informes-propuestas-resumenes-ejecutivos",
+          "title": "Informes, propuestas y resúmenes ejecutivos",
+          "lessonNumber": 37,
+          "url": "/grammar-decks/c1-informes-propuestas-resumenes-ejecutivos.json",
+          "estimatedBytes": 6870
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-lenguaje-coloquial-habitual",
+          "title": "Inglés coloquial del día a día",
+          "lessonNumber": 20,
+          "url": "/grammar-decks/c1-lenguaje-coloquial-habitual.json",
+          "estimatedBytes": 6246
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-marcadores-discurso",
+          "title": "Marcadores del discurso avanzados",
+          "lessonNumber": 6,
+          "url": "/grammar-decks/c1-marcadores-discurso.json",
+          "estimatedBytes": 7794
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-matices-modales",
+          "title": "Matices modales (will/would, may/might)",
+          "lessonNumber": 12,
+          "url": "/grammar-decks/c1-matices-modales.json",
+          "estimatedBytes": 7717
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-modalidad-evidencialidad",
+          "title": "Modalidad y evidencialidad",
+          "lessonNumber": 28,
+          "url": "/grammar-decks/c1-modalidad-evidencialidad.json",
+          "estimatedBytes": 5345
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-nominalizacion",
+          "title": "Nominalización",
+          "lessonNumber": 13,
+          "url": "/grammar-decks/c1-nominalizacion.json",
+          "estimatedBytes": 9892
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-pasado-irreal-avanzado",
+          "title": "Pasado irreal avanzado",
+          "lessonNumber": 17,
+          "url": "/grammar-decks/c1-pasado-irreal-avanzado.json",
+          "estimatedBytes": 7817
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-phrasal-verbs-avanzados",
+          "title": "Phrasal verbs avanzados",
+          "lessonNumber": 15,
+          "url": "/grammar-decks/c1-phrasal-verbs-avanzados.json",
+          "estimatedBytes": 7762
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-ambiguedad-vaguedad-estrategica",
+          "title": "Ambigüedad y vaguedad estratégica",
+          "lessonNumber": 45,
+          "url": "/grammar-decks/c1-plus-ambiguedad-vaguedad-estrategica.json",
+          "estimatedBytes": 6777
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-connotacion-prosodia-semantica",
+          "title": "Connotación y prosodia semántica",
+          "lessonNumber": 43,
+          "url": "/grammar-decks/c1-plus-connotacion-prosodia-semantica.json",
+          "estimatedBytes": 6774
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-edicion-precision-concision",
+          "title": "Edición avanzada: precisión y concisión",
+          "lessonNumber": 49,
+          "url": "/grammar-decks/c1-plus-edicion-precision-concision.json",
+          "estimatedBytes": 5440
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-evaluacion-reconciliacion-fuentes",
+          "title": "Evaluación y reconciliación de fuentes",
+          "lessonNumber": 51,
+          "url": "/grammar-decks/c1-plus-evaluacion-reconciliacion-fuentes.json",
+          "estimatedBytes": 5748
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-lectura-critica-evidencia",
+          "title": "Lectura crítica de evidencia",
+          "lessonNumber": 50,
+          "url": "/grammar-decks/c1-plus-lectura-critica-evidencia.json",
+          "estimatedBytes": 5575
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-mediacion-conflictos",
+          "title": "Mediación en conflictos complejos",
+          "lessonNumber": 52,
+          "url": "/grammar-decks/c1-plus-mediacion-conflictos.json",
+          "estimatedBytes": 5412
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-metafora-alusion-lenguaje-figurado",
+          "title": "Metáfora, alusión y lenguaje figurado",
+          "lessonNumber": 44,
+          "url": "/grammar-decks/c1-plus-metafora-alusion-lenguaje-figurado.json",
+          "estimatedBytes": 6722
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-negociacion-alto-riesgo",
+          "title": "Negociación de alto riesgo",
+          "lessonNumber": 53,
+          "url": "/grammar-decks/c1-plus-negociacion-alto-riesgo.json",
+          "estimatedBytes": 5604
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-pragmatica-intercultural",
+          "title": "Pragmática intercultural avanzada",
+          "lessonNumber": 56,
+          "url": "/grammar-decks/c1-plus-pragmatica-intercultural.json",
+          "estimatedBytes": 5683
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-preguntas-hostiles-interrupciones",
+          "title": "Preguntas hostiles e interrupciones",
+          "lessonNumber": 54,
+          "url": "/grammar-decks/c1-plus-preguntas-hostiles-interrupciones.json",
+          "estimatedBytes": 5566
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-produccion-espontanea-extensa",
+          "title": "Producción espontánea extensa",
+          "lessonNumber": 55,
+          "url": "/grammar-decks/c1-plus-produccion-espontanea-extensa.json",
+          "estimatedBytes": 5603
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-ritmo-retorico-escritura",
+          "title": "Ritmo retórico de la escritura",
+          "lessonNumber": 48,
+          "url": "/grammar-decks/c1-plus-ritmo-retorico-escritura.json",
+          "estimatedBytes": 5717
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-transformacion-registro",
+          "title": "Transformación completa de registro",
+          "lessonNumber": 46,
+          "url": "/grammar-decks/c1-plus-transformacion-registro.json",
+          "estimatedBytes": 7114
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-plus-voz-persona-estilo",
+          "title": "Voz, persona y estilo propio",
+          "lessonNumber": 47,
+          "url": "/grammar-decks/c1-plus-voz-persona-estilo.json",
+          "estimatedBytes": 5926
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-pragmatica-tono",
+          "title": "Pragmática: intención, tono y cortesía",
+          "lessonNumber": 26,
+          "url": "/grammar-decks/c1-pragmatica-tono.json",
+          "estimatedBytes": 6521
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-precision-lexica",
+          "title": "Precisión léxica y colocaciones",
+          "lessonNumber": 24,
+          "url": "/grammar-decks/c1-precision-lexica.json",
+          "estimatedBytes": 6396
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-presentaciones-expresion-oral",
+          "title": "Presentaciones y expresión oral",
+          "lessonNumber": 23,
+          "url": "/grammar-decks/c1-presentaciones-expresion-oral.json",
+          "estimatedBytes": 6461
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-pronunciacion-avanzada",
+          "title": "Sonidos avanzados",
+          "lessonNumber": 19,
+          "url": "/grammar-decks/c1-pronunciacion-avanzada.json",
+          "estimatedBytes": 6149
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-prosodia-thought-groups-foco-nuclear",
+          "title": "Prosodia: thought groups y foco nuclear",
+          "lessonNumber": 34,
+          "url": "/grammar-decks/c1-prosodia-thought-groups-foco-nuclear.json",
+          "estimatedBytes": 6908
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-recursos-conversacionales",
+          "title": "Recursos para sonar natural",
+          "lessonNumber": 21,
+          "url": "/grammar-decks/c1-recursos-conversacionales.json",
+          "estimatedBytes": 6023
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-relativas-complejas",
+          "title": "Estructuras relativas complejas",
+          "lessonNumber": 4,
+          "url": "/grammar-decks/c1-relativas-complejas.json",
+          "estimatedBytes": 7921
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-sesgo-framing-lenguaje-evaluativo",
+          "title": "Sesgo, framing y lenguaje evaluativo",
+          "lessonNumber": 30,
+          "url": "/grammar-decks/c1-sesgo-framing-lenguaje-evaluativo.json",
+          "estimatedBytes": 5982
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-significado-implicito-presuposiciones",
+          "title": "Significado implícito y presuposiciones",
+          "lessonNumber": 29,
+          "url": "/grammar-decks/c1-significado-implicito-presuposiciones.json",
+          "estimatedBytes": 5905
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-sintesis-multiples-fuentes",
+          "title": "Síntesis de múltiples fuentes",
+          "lessonNumber": 31,
+          "url": "/grammar-decks/c1-sintesis-multiples-fuentes.json",
+          "estimatedBytes": 5916
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-subjuntivo-formal",
+          "title": "Subjuntivo formal (suggest/insist + base)",
+          "lessonNumber": 16,
+          "url": "/grammar-decks/c1-subjuntivo-formal.json",
+          "estimatedBytes": 7857
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-tiempo-aspecto-punto-vista",
+          "title": "Tiempo, aspecto y punto de vista",
+          "lessonNumber": 27,
+          "url": "/grammar-decks/c1-tiempo-aspecto-punto-vista.json",
+          "estimatedBytes": 5756
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-variacion-ingles-americano",
+          "title": "Variación del inglés americano",
+          "lessonNumber": 36,
+          "url": "/grammar-decks/c1-variacion-ingles-americano.json",
+          "estimatedBytes": 7490
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-verbos-delexicales",
+          "title": "Verbos delexicales (make/do/take/have)",
+          "lessonNumber": 5,
+          "url": "/grammar-decks/c1-verbos-delexicales.json",
+          "estimatedBytes": 7617
+        },
+        {
+          "kind": "grammar-deck",
+          "slug": "c1-vocabulario-expresiones-avanzado",
+          "title": "Vocabulario y expresiones avanzadas",
+          "lessonNumber": 40,
+          "url": "/grammar-decks/c1-vocabulario-expresiones-avanzado.json",
+          "estimatedBytes": 6104
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "r",
+          "url": "/sounds/Voiced%20Alveolar%20Trill.ogg",
+          "estimatedBytes": 25254
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "t",
+          "url": "/sounds/Voiceless%20Alveolar%20Plosive.ogg",
+          "estimatedBytes": 27066
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "æ",
+          "url": "/sounds/Near-open%20Front%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 14961
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ə",
+          "url": "/sounds/Mid%20Central%20Vowel.ogg",
+          "estimatedBytes": 10959
+        },
+        {
+          "kind": "audio",
+          "ipaSymbol": "ɪ",
+          "url": "/sounds/Near-close%20Front%20Unrounded%20Vowel.ogg",
+          "estimatedBytes": 13435
+        }
+      ],
+      "optional": []
+    }
+  ]
+}

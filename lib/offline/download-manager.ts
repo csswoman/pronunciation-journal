@@ -8,7 +8,6 @@ import {
 } from "@/lib/db";
 import type { GrammarStudyDeckData } from "@/lib/courses/grammar-deck/types";
 import { IPA_AUDIO_MAP, SOUNDS_BASE_URL } from "@/lib/pronunciation/ipa-audio";
-import { fetchBankItems, cacheBankItems } from "@/lib/content-bank/queries";
 
 export const OFFLINE_MEDIA_CACHE = "offline-lessons-media";
 
@@ -140,6 +139,7 @@ export async function downloadCoachExercises(
 ): Promise<{ count: number }> {
   const safeLimit = Math.max(0, Math.min(100, Math.floor(limit)));
   if (safeLimit === 0) return { count: 0 };
+  const { fetchBankItems, cacheBankItems } = await import("@/lib/content-bank/queries");
   const items = await fetchBankItems(level, undefined, safeLimit);
   if (items.length > 0) {
     await cacheBankItems(items);

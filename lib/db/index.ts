@@ -20,6 +20,7 @@ import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
 import type { FocusSprint, FocusContent } from '../focus/types';
 import type { EdClusterAttempt, UserEdClusterProgress } from '../pronunciation/ed-drills/types';
+import type { CefrLevel } from '../essential-words/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -436,6 +437,57 @@ export interface WordSearchSeenWordRecord {
   seenAt: string; // ISO
 }
 
+/**
+ * Durable device-local receipt for a downloaded CEFR resource pack
+ * (Plan 057 Step 2). This is metadata only — the actual pack payload
+ * (Essential Words JSON, grammar decks, audio) lives in CacheStorage under
+ * `cacheName`, never here. Do not add content fields to this record.
+ *
+ * `id` is the level itself (`"A1"`..`"C1"`), not `${level}:${contentVersion}`:
+ * a device has at most one pack per level at a time, and this table holds
+ * only **terminal** receipts — `ready`, `failed`, or `stale` (written after a
+ * startup repair check finds a required URL missing) — never `downloading`.
+ * Plan Step 3 point 8 ("escribir el recibo ready solo al final") means the
+ * in-flight download itself is tracked as ephemeral UI state (Zustand, per
+ * CLAUDE.md's "Zustand = ephemeral UI state only"), not persisted here. A
+ * level update writes its new `ready` row (new `contentVersion`/`cacheName`)
+ * in a single atomic `put()` only once the new pack has been verified —
+ * replacing the old `ready` row for that level in one step, with no
+ * intermediate state where the row is missing or shows `downloading`. That
+ * is what keeps `id = level` safe: the old `ready` receipt (and the
+ * "available offline" promise it backs) stays intact for the entire download
+ * window and only flips atomically at the end, never overwritten mid-flight.
+ * If a later step ever needs `downloading` to be queryable across page
+ * reloads, that is new scope requiring a design revisit — don't persist it
+ * here speculatively.
+ *
+ * `downloading` remains part of the `status` union below only because a
+ * caller may hold an in-memory value shaped like this record (e.g. inside
+ * the Zustand store) before the terminal write; Dexie itself should never
+ * see a `downloading` row persisted.
+ */
+export type OfflineResourcePackStatus = "downloading" | "ready" | "stale" | "failed";
+
+export interface OfflineResourcePackRecord {
+  id: string; // level, e.g. "A1" — see rationale above
+  level: CefrLevel;
+  contentVersion: string;
+  status: OfflineResourcePackStatus;
+  cacheName: string;
+  resourceCount: number;
+  estimatedBytes: number;
+  downloadedAt: string; // ISO
+  lastVerifiedAt: string; // ISO
+  error?: string; // public-safe message only, never a raw stack/response body
+}
+
+/** True only for a receipt that may be presented as "available offline". */
+export function isOfflineResourcePackReady(
+  record: Pick<OfflineResourcePackRecord, "status">,
+): boolean {
+  return record.status === "ready";
+}
+
 export interface GradedAnswerRecord {
   key: string;
   userId: string;
@@ -518,6 +570,7 @@ class PronunciationDB extends Dexie {
   cachedSounds!: Table<CachedSoundRecord, number>;
   cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
   downloadedLessons!: Table<DownloadedLessonRecord, string>;
+  offlineResourcePacks!: Table<OfflineResourcePackRecord, string>;
   focusSprints!: Table<FocusSprint, string>;
   focusContent!: Table<FocusContent, string>;
   immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
@@ -825,6 +878,11 @@ class PronunciationDB extends Dexie {
     // v49: device-local anti-repetition memory for word-search puzzles.
     this.version(49).stores({
       wordSearchSeenWords: 'id, userId, seenAt, [userId+seenAt]',
+    });
+    // v50: durable receipts for downloaded CEFR resource packs (Plan 057).
+    // Metadata only — the pack payload lives in CacheStorage under `cacheName`.
+    this.version(50).stores({
+      offlineResourcePacks: 'id, level, status, contentVersion, [level+status]',
     });
 
 
@@ -1564,4 +1622,22 @@ export async function listDownloadedLessons(trackId?: string): Promise<Downloade
 export async function isLessonDownloaded(id: string): Promise<boolean> {
   const record = await db.downloadedLessons.get(id);
   return record !== undefined;
+}
+
+export async function getOfflineResourcePack(
+  level: CefrLevel,
+): Promise<OfflineResourcePackRecord | undefined> {
+  return db.offlineResourcePacks.get(level);
+}
+
+export async function saveOfflineResourcePack(record: OfflineResourcePackRecord): Promise<void> {
+  await db.offlineResourcePacks.put(record);
+}
+
+export async function deleteOfflineResourcePack(level: CefrLevel): Promise<void> {
+  await db.offlineResourcePacks.delete(level);
+}
+
+export async function listOfflineResourcePacks(): Promise<OfflineResourcePackRecord[]> {
+  return db.offlineResourcePacks.toArray();
 }

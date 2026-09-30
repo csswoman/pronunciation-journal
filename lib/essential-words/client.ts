@@ -8,7 +8,7 @@
 // z.* calls) here would ship Zod to every route that loads Essential Words. The
 // full Zod schema in ./schema.ts still validates this data at build/test time.
 
-import { MAX_CHUNKS, essentialWordId, type EssentialWord } from "./types";
+import { MAX_CHUNKS, essentialWordId, type CefrLevel, type EssentialWord } from "./types";
 import { parseCatalogIndex, type CatalogIndexEntry, type RawCatalogIndex } from "./catalog-index";
 
 let cache: EssentialWord[] | null = null;
@@ -163,6 +163,49 @@ export async function fetchEssentialWords(): Promise<EssentialWord[]> {
   });
 
   return pending;
+}
+
+/**
+ * Level-scoped variant of `fetchEssentialWords()` with an offline-pack
+ * fallback (Plan 057, Step 4).
+ *
+ * Why a new function instead of retrofitting `fetchChunk`/`fetchChunks`:
+ * those operate on chunk NUMBERS (1-28), and chunks mix CEFR levels — a
+ * failed chunk fetch doesn't tell you which level(s) it was carrying, so
+ * there's no safe way to map that failure onto "the right level's pack"
+ * from inside `fetchChunk` itself. The offline pack, by contrast, is
+ * organized strictly by level. This function is the seam where a caller
+ * that already knows the level it wants can get a correctly-scoped offline
+ * fallback, without changing the chunk-number-based functions' existing
+ * behavior at all.
+ *
+ * Behavior: tries the normal network/HTTP-cache path first via
+ * `fetchEssentialWords()` (unchanged, so already-working online/cached
+ * scenarios are untouched), filtered to `level`. Only if that throws
+ * (genuine fetch failure, e.g. offline with nothing HTTP-cached) does it
+ * defer-import the offline-pack adapter and check for a `ready` pack for
+ * this exact level. If the pack isn't ready (never downloaded, stale,
+ * downloading, or failed), the original network error is re-thrown — never
+ * substituted with A1, another level, or a silent empty array.
+ *
+ * The adapter import is dynamic (`await import(...)`) so the offline-pack
+ * code (CacheStorage lookups, Dexie receipt reads) is not pulled into the
+ * initial bundle for the common case of users who never go offline.
+ */
+export async function fetchEssentialWordsForLevel(level: CefrLevel): Promise<EssentialWord[]> {
+  try {
+    const words = await fetchEssentialWords();
+    return words.filter((word) => word.cefr_level === level);
+  } catch (err) {
+    const { loadEssentialWordsFromPack } = await import("@/lib/offline/essential-words-pack-adapter");
+    const result = await loadEssentialWordsFromPack(level);
+    if (result.status === "ready") {
+      return result.words;
+    }
+    // No pack for this level (or not ready) — surface the original network
+    // failure rather than mixing in another level's words or an empty array.
+    throw err;
+  }
 }
 
 /** Solo para tests. */

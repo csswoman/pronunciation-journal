@@ -1,23 +1,45 @@
 "use client";
 
-// Planned structure: OfflineEntry → AuthProvider → DailyChecklist | OfflineHubClient.
+// Planned structure:
+// <OfflineEntry>
+//   <OfflineLoadingState />
+//   <OfflineDailyClient /> | <OfflineHubClient />
+// </OfflineEntry>
+
 import { useEffect, useState } from "react";
-import AuthProvider from "@/components/auth/AuthProvider";
-import DailyChecklist from "@/components/daily/DailyChecklist";
-import { OfflineHubClient } from "./OfflineHubClient";
+import dynamic from "next/dynamic";
+import { OfflineLoadingState } from "./OfflineLoadingState";
+
+const OfflineDailyClient = dynamic(
+  () => import("./OfflineDailyClient").then((module) => module.OfflineDailyClient),
+  {
+    loading: ({ error, retry }) => (
+      <OfflineLoadingState
+        message="Preparando tu plan diario sin conexión…"
+        error={error}
+        retry={retry}
+      />
+    ),
+  },
+);
+
+const OfflineHubClient = dynamic(
+  () => import("./OfflineHubClient").then((module) => module.OfflineHubClient),
+  {
+    loading: ({ error, retry }) => (
+      <OfflineLoadingState error={error} retry={retry} />
+    ),
+  },
+);
 
 /** Public, user-free HTML. Account data is restored only in the browser. */
 export function OfflineEntry() {
   const [isDaily, setIsDaily] = useState<boolean | null>(null);
+
   useEffect(() => {
     setIsDaily(window.location.pathname.replace(/\/$/, "") === "/daily");
   }, []);
 
-  if (isDaily === null) return <p role="status">Preparando contenido sin conexión…</p>;
-  if (!isDaily) return <OfflineHubClient />;
-  return (
-    <AuthProvider>
-      <DailyChecklist conceptLesson={null} />
-    </AuthProvider>
-  );
+  if (isDaily === null) return <OfflineLoadingState />;
+  return isDaily ? <OfflineDailyClient /> : <OfflineHubClient />;
 }

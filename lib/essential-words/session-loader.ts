@@ -1,4 +1,4 @@
-import { fetchEssentialWords } from "@/lib/essential-words/client";
+import { fetchEssentialWords, fetchEssentialWordsForLevel } from "@/lib/essential-words/client";
 import { buildSessionQueue, matchesFilter, type EssentialWordQueueItem } from "@/lib/essential-words/queue";
 import {
   essentialWordId,
@@ -33,6 +33,28 @@ export interface LoadedEssentialWordsQueue {
   initialPhase: EssentialWordsPhase;
 }
 
+/**
+ * Loads the dataset for `loadEssentialWordsQueue`. Tries the normal network
+ * path first (`fetchEssentialWords()`, unchanged — this is the same call
+ * every existing caller already relies on). Only falls back to the
+ * offline-pack adapter (Plan 057, Step 4) when that throws AND the caller
+ * asked for exactly one level: packs are single-level, so there's no
+ * sensible pack to fall back to when `levels` is null/empty (whole catalog)
+ * or names more than one level — mixing two levels' packs together, or
+ * guessing which of several requested levels to serve, is out of scope here,
+ * so those cases simply keep today's behavior and re-throw.
+ */
+async function loadWordsForQueue(levels?: readonly CefrLevel[] | null): Promise<EssentialWord[]> {
+  try {
+    return await fetchEssentialWords();
+  } catch (err) {
+    if (!levels || levels.length !== 1) {
+      throw err;
+    }
+    return fetchEssentialWordsForLevel(levels[0]);
+  }
+}
+
 export async function loadEssentialWordsQueue(
   levels?: readonly CefrLevel[] | null,
   pos?: readonly EssentialWordPos[] | null,
@@ -41,7 +63,7 @@ export async function loadEssentialWordsQueue(
 ): Promise<LoadedEssentialWordsQueue> {
   const maxNewWords = options?.maxNewWords ?? GUIDED_SESSION_NEW_CARDS;
   const [words, introducedToday, dueTomorrow, knownClaims] = await Promise.all([
-    fetchEssentialWords(),
+    loadWordsForQueue(levels),
     getEssentialWordsIntroducedToday(userId),
     getEssentialWordsDueTomorrowCount(userId),
     getEssentialWordLearnerSignals(userId),
