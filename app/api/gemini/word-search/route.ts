@@ -3,6 +3,13 @@ import { z } from 'zod'
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from '@/lib/api/guards'
 import { callGeminiJson, parseGeminiJson } from '@/lib/gemini/json-route'
 import { buildWordSearchUserPrompt, WORD_SEARCH_SYSTEM_PROMPT } from '@/lib/ai-prompts'
+import {
+  buildAiResponseCacheKey,
+  getAiResponseCache,
+  normalizeAiCacheText,
+  setAiResponseCache,
+} from '@/lib/ai-usage/response-cache'
+import { recordSharedCacheHit } from '@/lib/ai-usage/budget'
 
 const WordSearchRequestSchema = z.object({
   topic: z.string().min(1).max(150),
@@ -47,8 +54,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   )
   if (validationError) return validationError as NextResponse
 
+  const feature = '/api/gemini/word-search'
+  const normalizeWords = (words: string[] | undefined) =>
+    [...new Set((words ?? []).map((word) => normalizeAiCacheText(word).toLocaleLowerCase('en-US')))].sort()
+  const cacheInput = {
+    topic: normalizeAiCacheText(body.topic),
+    level: body.level,
+    count: body.count,
+    knownWords: normalizeWords(body.knownWords),
+    excludeWords: normalizeWords(body.excludeWords),
+  }
+  const cacheKey = buildAiResponseCacheKey(feature, cacheInput)
+  const cached = WordSearchResponseSchema.safeParse(await getAiResponseCache<unknown>(feature, cacheKey))
+  if (cached.success) {
+    void recordSharedCacheHit(feature)
+    return NextResponse.json(cached.data)
+  }
+
   const { data: parsed, response } = await callGeminiJson({
-    endpoint: '/api/gemini/word-search',
+    endpoint: feature,
     userId: user.id,
     params: {
       contents: buildWordSearchUserPrompt(body),
@@ -57,11 +81,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         responseMimeType: 'application/json',
       },
     },
+    schema: WordSearchResponseSchema,
     parse: (text) => parseGeminiJson(text, (json) => WordSearchResponseSchema.parse(json)),
     failureMessage: 'No se pudo generar la búsqueda de palabras con IA',
   })
 
   if (response) return response
 
-  return NextResponse.json(parsed)
+  const validated = WordSearchResponseSchema.safeParse(parsed)
+  if (!validated.success) {
+    return NextResponse.json({ error: 'No se pudo generar la búsqueda de palabras con IA' }, { status: 500 })
+  }
+  void setAiResponseCache(feature, cacheKey, validated.data)
+
+  return NextResponse.json(validated.data)
 }

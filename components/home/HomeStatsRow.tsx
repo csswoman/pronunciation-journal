@@ -3,15 +3,13 @@
 // Sub-components:
 // <HomeStatsRow>
 //   <HomeEssentialWordsCount /> (lazy — carries Dexie)
-//   <HomeImmersionCard />
 // </HomeStatsRow>
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import HomeEssentialWordsBody from "@/components/home/HomeEssentialWordsBody";
-import HomeImmersionCard from "@/components/home/HomeImmersionCard";
-import type { HomeImmersionSummary } from "@/lib/home/constants";
+import NewChunkInvitation from "@/components/daily/NewChunkInvitation";
 
 // Catalog + Dexie progress load after first paint instead of blocking hydration.
 // Until they arrive, the card renders the same geometry with an unknown count.
@@ -22,14 +20,12 @@ const HomeEssentialWordsCount = dynamic(
 
 interface HomeStatsRowProps {
   profileLevel?: string | null;
-  showImmersionCard?: boolean;
-  immersionSummary?: HomeImmersionSummary | null;
+  userId?: string | null;
 }
 
 export default function HomeStatsRow({
   profileLevel = "A1",
-  showImmersionCard = true,
-  immersionSummary = null,
+  userId = null,
 }: HomeStatsRowProps) {
   const levelKey = (profileLevel || "A1").toUpperCase();
 
@@ -41,13 +37,13 @@ export default function HomeStatsRow({
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5.5 items-stretch">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5.5 items-start">
       {/* Palabras esenciales / Tu Mazo */}
       <Link
         href="/practice/essential-words"
         prefetch={false}
         data-tone="lilac"
-        className="pastel-card focus-ring group flex flex-col justify-between gap-4 rounded-3xl p-4 sm:p-5 transition-transform hover:-translate-y-px"
+        className="pastel-card focus-ring group flex flex-col gap-4 rounded-3xl p-4 sm:p-5 transition-transform hover:-translate-y-px"
       >
         {showLiveCount ? (
           <HomeEssentialWordsCount
@@ -62,8 +58,8 @@ export default function HomeStatsRow({
         )}
       </Link>
 
-      {/* Registro de inmersión: ¿Viste algo en inglés hoy? */}
-      {showImmersionCard ? <HomeImmersionCard summary={immersionSummary} /> : null}
+      {userId ? <NewChunkInvitation userId={userId} /> : null}
+
     </div>
   );
 }

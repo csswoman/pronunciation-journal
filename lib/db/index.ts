@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import type { PracticeAttemptReceipt } from '../practice/attempt-identity';
 import type { AIConversation, Attempt, DailyProgress, FavoriteWord, SRSData, UserStats } from "../types";
 import type { SyncOutboxEntry } from "../sync/types";
 import type { UserLearningState } from "../ai-practice/learning-state";
@@ -12,13 +13,14 @@ import type {
 } from "../essential-words/verification/types";
 import { getRelativeLocalDateKey, getTodayLocalDateKey } from "../date/local-date";
 import { migrateArchivedRow } from "../srs/migrate-archived";
-import { patchActivateNow, patchMaster, patchSnooze } from "../srs/status";
+import { patchActivateNow, patchMaster, patchRecheck, patchSnooze } from "../srs/status";
 import type { JournalEntryRecord } from '../journal/types';
 import type { TrackingReviewQueue } from '../tracking/review-queue';
 import type { ScriptedMission } from '../ai-practice/missions/types';
 import type { GrammarStudyDeckData } from '../courses/grammar-deck/types';
 import type { FocusSprint, FocusContent } from '../focus/types';
 import type { EdClusterAttempt, UserEdClusterProgress } from '../pronunciation/ed-drills/types';
+import type { CefrLevel } from '../essential-words/types';
 
 export interface GeneratedScriptRecord {
   id: string;
@@ -37,6 +39,8 @@ export interface GeneratedScriptRecord {
  * One row per (userId, soundId) — composite key `${userId}:${soundId}`.
  */
 export interface PracticeSessionRecord {
+  sessionId?: string;
+  phase?: 'exercising' | 'hints';
   id: string;          // `${userId}:${soundId}`
   soundId: number;
   userId: string;
@@ -75,6 +79,7 @@ export type AnalyticsEventName =
   | "time_to_first_exercise"
   | "session_started"
   | "session_ended"
+  | "coach_turn_latency"
   | "daily_step_started"
   | "daily_step_completed"
   | "daily_step_exited";
@@ -344,7 +349,7 @@ export interface EssentialWordSessionDraftRecord {
   plan: unknown;
   results: unknown[];
   progress: unknown[];
-  summary: { practiced: number; correct: number } | null;
+  summary: { practiced: number; correct: number; reviewed: number } | null;
   activeElapsedMs: number;
   createdAt: string;
   updatedAt: string;
@@ -396,6 +401,9 @@ export interface CachedContrastProgressRecord {
   correctAnswers: number;
   streak: number;
   masteryPct: number;
+  rawMastery?: number | null;
+  rawMasteryUpdatedAt?: string | null;
+  masterySessionCount?: number;
   adaptiveScore?: number;
   observationCount?: number;
   updatedAt: string;
@@ -412,6 +420,116 @@ export interface DownloadedLessonRecord {
   downloadedAt: string; // ISO
 }
 
+/** Device-local anti-repetition memory for AI Coach exercise prompts. */
+export interface CoachSeenItemRecord {
+  id: string;
+  userId: string;
+  topic: string;
+  stem: string;
+  seenAt: string;
+}
+
+/** Device-local anti-repetition memory for word-search puzzles (v49). */
+export interface WordSearchSeenWordRecord {
+  id: string; // `${userId}:${word}`
+  userId: string;
+  word: string; // sanitized, uppercase
+  seenAt: string; // ISO
+}
+
+/**
+ * Durable device-local receipt for a downloaded CEFR resource pack
+ * (Plan 057 Step 2). This is metadata only — the actual pack payload
+ * (Essential Words JSON, grammar decks, audio) lives in CacheStorage under
+ * `cacheName`, never here. Do not add content fields to this record.
+ *
+ * `id` is the level itself (`"A1"`..`"C1"`), not `${level}:${contentVersion}`:
+ * a device has at most one pack per level at a time, and this table holds
+ * only **terminal** receipts — `ready`, `failed`, or `stale` (written after a
+ * startup repair check finds a required URL missing) — never `downloading`.
+ * Plan Step 3 point 8 ("escribir el recibo ready solo al final") means the
+ * in-flight download itself is tracked as ephemeral UI state (Zustand, per
+ * CLAUDE.md's "Zustand = ephemeral UI state only"), not persisted here. A
+ * level update writes its new `ready` row (new `contentVersion`/`cacheName`)
+ * in a single atomic `put()` only once the new pack has been verified —
+ * replacing the old `ready` row for that level in one step, with no
+ * intermediate state where the row is missing or shows `downloading`. That
+ * is what keeps `id = level` safe: the old `ready` receipt (and the
+ * "available offline" promise it backs) stays intact for the entire download
+ * window and only flips atomically at the end, never overwritten mid-flight.
+ * If a later step ever needs `downloading` to be queryable across page
+ * reloads, that is new scope requiring a design revisit — don't persist it
+ * here speculatively.
+ *
+ * `downloading` remains part of the `status` union below only because a
+ * caller may hold an in-memory value shaped like this record (e.g. inside
+ * the Zustand store) before the terminal write; Dexie itself should never
+ * see a `downloading` row persisted.
+ */
+export type OfflineResourcePackStatus = "downloading" | "ready" | "stale" | "failed";
+
+export interface OfflineResourcePackRecord {
+  id: string; // level, e.g. "A1" — see rationale above
+  level: CefrLevel;
+  contentVersion: string;
+  status: OfflineResourcePackStatus;
+  cacheName: string;
+  resourceCount: number;
+  estimatedBytes: number;
+  downloadedAt: string; // ISO
+  lastVerifiedAt: string; // ISO
+  error?: string; // public-safe message only, never a raw stack/response body
+}
+
+/** True only for a receipt that may be presented as "available offline". */
+export function isOfflineResourcePackReady(
+  record: Pick<OfflineResourcePackRecord, "status">,
+): boolean {
+  return record.status === "ready";
+}
+
+export interface GradedAnswerRecord {
+  key: string;
+  userId: string;
+  exerciseKey: string;
+  normalized: string;
+  result: import('../exercises/production-grade').ProductionGradeResult;
+  createdAt: string;
+  accepted: 0 | 1;
+}
+
+export interface ContentBankCacheRecord {
+  id: string;
+  kind: "coach_exercise";
+  tool_name: string;
+  level: string;
+  topic_id: string;
+  payload: Record<string, unknown>;
+  prompt_version: string;
+  stem_hash: string;
+  quality_flags: number;
+  created_at: string;
+  cachedAt?: string;
+}
+
+export interface CoachBankLevelCacheRecord {
+  userId: string;
+  level: string;
+  cachedAt: string;
+}
+
+export interface AIFeedbackReportRecord {
+  id: string;
+  userId: string;
+  feature: "coach_correction" | "production_grade" | "journal_correction";
+  promptVersion: string;
+  inputSnapshot: unknown;
+  outputSnapshot: unknown;
+  errorPattern?: string | null;
+  comment?: string | null;
+  createdAt: string;
+}
+
 class PronunciationDB extends Dexie {
   attempts!: Table<Attempt, number>;
   srsData!: Table<SRSData, string>;
@@ -426,6 +544,7 @@ class PronunciationDB extends Dexie {
   analyticsEvents!: Table<AnalyticsEvent, number>;
   generatedExercises!: Table<CachedExercise, string>;
   practiceSessions!: Table<PracticeSessionRecord, string>;
+  practiceAttemptReceipts!: Table<PracticeAttemptReceipt, string>;
   ipaExplorations!: Table<IpaExplorationRecord, string>;
   readerPassages!: Table<ReaderPassage, string>;
   practicePrefs!: Table<PracticePrefRecord, string>;
@@ -451,11 +570,18 @@ class PronunciationDB extends Dexie {
   cachedSounds!: Table<CachedSoundRecord, number>;
   cachedContrastProgress!: Table<CachedContrastProgressRecord, string>;
   downloadedLessons!: Table<DownloadedLessonRecord, string>;
+  offlineResourcePacks!: Table<OfflineResourcePackRecord, string>;
   focusSprints!: Table<FocusSprint, string>;
   focusContent!: Table<FocusContent, string>;
   immersionLessonProgress!: Table<ImmersionLessonProgressRecord, string>;
   userEdClusterProgress!: Table<UserEdClusterProgress, string>;
   edClusterAttempts!: Table<EdClusterAttempt, string>;
+  coachSeenItems!: Table<CoachSeenItemRecord, string>;
+  wordSearchSeenWords!: Table<WordSearchSeenWordRecord, string>;
+  gradedAnswers!: Table<GradedAnswerRecord, string>;
+  contentBankCache!: Table<ContentBankCacheRecord, string>;
+  coachBankLevelCache!: Table<CoachBankLevelCacheRecord, string>;
+  aiFeedbackReports!: Table<AIFeedbackReportRecord, string>;
 
 
   constructor() {
@@ -726,6 +852,39 @@ class PronunciationDB extends Dexie {
     this.version(42).stores({
       edClusterAttempts: 'id, userId, cluster, occurredAt, [userId+cluster], [userId+occurredAt]',
     });
+    // v43: device-local anti-repetition memory for AI Coach exercise sets.
+    this.version(43).stores({
+      coachSeenItems: 'id, userId, seenAt, [userId+seenAt]',
+    });
+    // v44: per-account production-grade cache and accepted-answer bank.
+    this.version(44).stores({
+      gradedAnswers: 'key, userId, exerciseKey, normalized, accepted, [userId+exerciseKey+normalized]',
+    });
+    // v45: offline cache for pregenerated content bank items.
+    this.version(45).stores({
+      contentBankCache: 'id, level, topic_id, kind, [level+topic_id], stem_hash',
+    });
+    // v46: offline storage for AI feedback error reports.
+    this.version(46).stores({
+      aiFeedbackReports: 'id, userId, feature, createdAt, [userId+createdAt]',
+    });
+    // v47: keep the last resolved Coach level available for offline bank lookup.
+    this.version(47).stores({
+      coachBankLevelCache: 'userId, level, cachedAt',
+    });
+    this.version(48).stores({
+      practiceAttemptReceipts: 'id, userId, createdAt',
+    });
+    // v49: device-local anti-repetition memory for word-search puzzles.
+    this.version(49).stores({
+      wordSearchSeenWords: 'id, userId, seenAt, [userId+seenAt]',
+    });
+    // v50: durable receipts for downloaded CEFR resource packs (Plan 057).
+    // Metadata only — the pack payload lives in CacheStorage under `cacheName`.
+    this.version(50).stores({
+      offlineResourcePacks: 'id, level, status, contentVersion, [level+status]',
+    });
+
 
     this.pronunciationMastery = this.table("pronunciationMasteryV2") as Table<PronunciationMasteryRecord, string>;
     this.pronunciationCoachState = this.table("pronunciationCoachStateV2") as Table<PronunciationCoachStateRecord, string>;
@@ -1070,6 +1229,20 @@ export async function snoozeEssentialWord(word: string, days = 90, userId?: stri
 export async function masterEssentialWord(word: string, userId?: string): Promise<void> {
   const existing = await getOrCreateEssentialWordSrsRow(word, userId);
   if (existing) await saveSRSData(patchMaster(existing, new Date()), userId);
+}
+
+/** Programa un rechequeo sin puntuar una respuesta para una palabra esencial. */
+export async function scheduleEssentialWordRecheck(word: string, days = 4, userId?: string): Promise<void> {
+  const existing = await getOrCreateEssentialWordSrsRow(word, userId);
+  if (existing) await saveSRSData(patchRecheck(existing, new Date(), days), userId);
+}
+
+/** Elimina la entrada de SRS de una palabra esencial (usado en deshacer de triage). */
+export async function deleteEssentialWordSrs(word: string, userId?: string): Promise<void> {
+  if (!userId) return;
+  const normalized = word.toLowerCase();
+  const wordId = `${CORE1000_SRS_PREFIX}${normalized}`;
+  await db.srsData.where('[userId+wordId]').equals([userId, wordId]).delete();
 }
 
 /** Reactiva una palabra esencial para repaso inmediato. */
@@ -1449,4 +1622,22 @@ export async function listDownloadedLessons(trackId?: string): Promise<Downloade
 export async function isLessonDownloaded(id: string): Promise<boolean> {
   const record = await db.downloadedLessons.get(id);
   return record !== undefined;
+}
+
+export async function getOfflineResourcePack(
+  level: CefrLevel,
+): Promise<OfflineResourcePackRecord | undefined> {
+  return db.offlineResourcePacks.get(level);
+}
+
+export async function saveOfflineResourcePack(record: OfflineResourcePackRecord): Promise<void> {
+  await db.offlineResourcePacks.put(record);
+}
+
+export async function deleteOfflineResourcePack(level: CefrLevel): Promise<void> {
+  await db.offlineResourcePacks.delete(level);
+}
+
+export async function listOfflineResourcePacks(): Promise<OfflineResourcePackRecord[]> {
+  return db.offlineResourcePacks.toArray();
 }

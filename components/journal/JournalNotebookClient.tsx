@@ -160,12 +160,14 @@ export function JournalNotebookClient({ userId, todayDate }: JournalNotebookClie
   }, [rawEntries, todayDate])
 
   return (
-    <PageLayout archetype="session">
+    <PageLayout archetype="catalog">
       <NotebookHomeView
         initialData={notebook}
         learnings={learnings}
         savedPronunciationWords={savedPronunciationWords}
         onSavePronunciationWords={(words) => void handleSavePronunciationWords(words)}
+        userId={userId}
+        todayDate={todayDate}
       />
     </PageLayout>
   )

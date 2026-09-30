@@ -43,6 +43,7 @@ const MAX_LINES_ALLOWLIST = [
   "lib/ai-practice/missions/registry.ts",
   "lib/ai-practice/tools/registry.ts",
   "lib/chunk-of-day/data.ts",
+  "lib/chunk-of-day/data-tech.ts",
   "lib/courses/level-curriculum-order.ts",
   "lib/essential-words/__tests__/queue.test.ts",
   "lib/essential-words/__tests__/runtime-engine.integration.test.ts",
@@ -66,6 +67,8 @@ const MAX_LINES_ALLOWLIST = [
   "scripts/grammar-pattern-deck-specs-b1-b2.ts",
   "scripts/grammar-pattern-deck-specs-c1-c2.ts",
   "scripts/sync-engvid-lessons.ts",
+  "scripts/rls-integration.mjs",
+  "scripts/srs-rating-events-integration.mjs",
 ];
 
 const SUPABASE_CLIENT_IMPORT = {
@@ -91,11 +94,14 @@ const eslintConfig = [
       ".agents/**",
       ".claude/**",
       ".next/**",
+      "**/.next/**",
+      "tmp/**",
       "coverage/**",
       "out/**",
       "build/**",
       "test-results/**",
       "next-env.d.ts",
+      "public/**",
     ],
   },
   // E — Learner level: UI and non-canonical query layers must use the resolver.

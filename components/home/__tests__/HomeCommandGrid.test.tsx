@@ -35,6 +35,12 @@ beforeEach(() => {
   });
 });
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => "/",
+}));
+
 vi.mock("next/dynamic", () => ({
   default: (
     loader: () => Promise<{ default: ComponentType<Record<string, unknown>> }>,
@@ -134,6 +140,7 @@ vi.mock("@/components/home/GuestSaveProgressBanner", () => ({
     </div>
   ),
 }));
+vi.mock("@/components/home/HomeWelcomeTourModal", () => ({ default: () => null }));
 
 import HomeCommandGrid from "@/components/home/HomeCommandGrid";
 
@@ -454,7 +461,7 @@ describe("HomeCommandGrid review banner", () => {
 });
 
 describe("HomeCommandGrid lifecycle states", () => {
-  it("hides immersion card and full-width locked exercises on Day 1", async () => {
+  it("hides full-width locked exercises on Day 1", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     dailyCardState.allDone = false;
@@ -469,13 +476,11 @@ describe("HomeCommandGrid lifecycle states", () => {
     await waitFor(() => {
       expect(screen.getByText("Daily plan")).toBeInTheDocument();
     });
-    // Immersion prompt should not distract a day 1 learner
-    expect(screen.queryByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).not.toBeInTheDocument();
     // Full width locked exercises card is replaced by reward item inside plan
     expect(screen.queryByLabelText("Ejercicios adicionales bloqueados")).not.toBeInTheDocument();
   });
 
-  it("shows immersion card and unlocks extra exercises when plan is done", async () => {
+  it("unlocks extra exercises when plan is done", async () => {
     dailyCardState.empty = false;
     dailyCardState.settled = true;
     dailyCardState.allDone = true;
@@ -489,7 +494,6 @@ describe("HomeCommandGrid lifecycle states", () => {
     );
     await waitFor(() => {
       expect(screen.getByText("Daily plan")).toBeInTheDocument();
-      expect(screen.getByRole("heading", { name: /¿viste algo en inglés hoy\?/i })).toBeInTheDocument();
       expect(screen.getByRole("heading", { name: "Ejercicios extra" })).toBeInTheDocument();
     });
   });

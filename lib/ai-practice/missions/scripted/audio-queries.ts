@@ -1,4 +1,5 @@
 import type { ScriptLine } from '../types'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 const memoryAudioCache = new Map<string, string>()
 
@@ -16,13 +17,13 @@ export async function fetchMissionLineAudio(
     return line.modelAudio.path
   }
 
-  const cacheKey = `${missionId}:${line.id}`
+  const cacheKey = `mission-audio-cache-v2:${missionId}:${line.id}:${voice ?? "Puck"}:${line.text.normalize("NFKC").trim().replace(/\s+/g, " ")}`
   const cachedUrl = memoryAudioCache.get(cacheKey)
   if (cachedUrl) {
     return cachedUrl
   }
 
-  const res = await fetch('/api/gemini/mission-audio', {
+  const res = await fetchWithTimeout('/api/gemini/mission-audio', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -31,7 +32,7 @@ export async function fetchMissionLineAudio(
       missionId,
       voice,
     }),
-  })
+  }, 12_000)
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}))

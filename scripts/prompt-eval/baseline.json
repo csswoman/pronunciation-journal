@@ -1,0 +1,313 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "passed": 8,
+  "parseErrors": 0,
+  "results": [
+    {
+      "id": "grade-a1-article",
+      "ok": false,
+      "issues": [
+        "correct: expected true, got false"
+      ],
+      "output": {
+        "correct": false,
+        "usedTarget": true,
+        "grammaticallyCorrect": true,
+        "constraintMet": true,
+        "feedback": "¡Muy bien por la idea! Solo falta \"a\" o \"the\" antes de \"cat\".",
+        "corrections": "I saw a cat yesterday.",
+        "errorPattern": "article_use",
+        "score": 85
+      }
+    },
+    {
+      "id": "grade-a1-correct",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correct": true,
+        "usedTarget": true,
+        "grammaticallyCorrect": true,
+        "constraintMet": true,
+        "feedback": "¡Muy bien! Tu oración es clara, usa perfectamente la palabra requerida y la gramática es totalmente correcta para tu nivel.",
+        "score": 100
+      }
+    },
+    {
+      "id": "grade-a2-spanish",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correct": false,
+        "usedTarget": false,
+        "grammaticallyCorrect": true,
+        "constraintMet": false,
+        "feedback": "¡Muy bien por explicar tu idea, pero recuerda que debes escribir tu respuesta en inglés! Prueba usando \"because\".",
+        "corrections": "I stayed home because I was tired.",
+        "errorPattern": "vocabulary_choice",
+        "score": 30
+      }
+    },
+    {
+      "id": "grade-b1-constraint",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correct": false,
+        "usedTarget": true,
+        "grammaticallyCorrect": true,
+        "constraintMet": false,
+        "feedback": "Usaste la palabra correctamente, pero recuerda que debías usar el pasado simple para describir una visita ya terminada. Cambia \"visit\" por \"visited\".",
+        "corrections": "I visited my aunt last Sunday.",
+        "errorPattern": "tense_present_for_past",
+        "score": 50
+      }
+    },
+    {
+      "id": "grade-b1-target-missing",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correct": false,
+        "usedTarget": false,
+        "grammaticallyCorrect": true,
+        "constraintMet": false,
+        "feedback": "¡Buen intento! Sin embargo, la tarea pedía usar \"although\" para contrastar las ideas. Intenta escribir: «Although it was raining, we went out».",
+        "corrections": "Although it was raining, we went out.",
+        "errorPattern": "vocabulary_choice",
+        "score": 50
+      }
+    },
+    {
+      "id": "grade-b2-perfect",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correct": true,
+        "usedTarget": true,
+        "grammaticallyCorrect": true,
+        "constraintMet": true,
+        "feedback": "¡Muy bien! Has usado \"however\" perfectamente con la puntuación adecuada y una estructura muy natural para nivel B2.",
+        "score": 100
+      }
+    },
+    {
+      "id": "journal-a1",
+      "ok": false,
+      "issues": [
+        "errors: expected at most 3, got 5"
+      ],
+      "output": {
+        "correctedContent": "Yesterday I went to the park. I saw a dog. It was very happy. I played with the dog.",
+        "errors": [
+          {
+            "quote": "go",
+            "correction": "went",
+            "type": "grammar",
+            "explanationEs": "Como la acción ocurrió ayer, debes usar el pasado simple (went) en lugar del presente (go).",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "park",
+            "correction": "the park",
+            "type": "grammar",
+            "explanationEs": "En inglés solemos usar un artículo (the) antes de mencionar lugares específicos como el parque.",
+            "topic": "grammar:articles"
+          },
+          {
+            "quote": "I see",
+            "correction": "I saw",
+            "type": "grammar",
+            "explanationEs": "Nuevamente, para hablar del pasado se usa el verbo en pasado (saw).",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "dog",
+            "correction": "a dog",
+            "type": "grammar",
+            "explanationEs": "Los sustantivos contables singulares como 'dog' necesitan un artículo (a/an) la primera vez que se mencionan.",
+            "topic": "grammar:articles"
+          },
+          {
+            "quote": "play",
+            "correction": "played",
+            "type": "grammar",
+            "explanationEs": "Mantén la coherencia en el tiempo pasado utilizando 'played' para acciones terminadas en el pasado.",
+            "topic": "grammar:past simple"
+          }
+        ],
+        "newWords": [
+          "stroll",
+          "friendly",
+          "fetch",
+          "enjoyable"
+        ]
+      }
+    },
+    {
+      "id": "journal-a2",
+      "ok": false,
+      "issues": [
+        "errors: expected at most 3, got 5"
+      ],
+      "output": {
+        "correctedContent": "Last weekend I went to the market with my sister. We bought fruit and then we ate in a small restaurant. The food was good.",
+        "errors": [
+          {
+            "quote": "goed",
+            "correction": "went",
+            "type": "grammar",
+            "explanationEs": "El verbo 'go' es irregular en pasado simple, por lo que su forma correcta no es 'goed' sino 'went'.",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "buyed",
+            "correction": "bought",
+            "type": "grammar",
+            "explanationEs": "El verbo 'buy' también es irregular en pasado simple y cambia a 'bought' en lugar de añadir '-ed'.",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "eat",
+            "correction": "ate",
+            "type": "grammar",
+            "explanationEs": "Como estás contando una historia del pasado, debes usar el pasado simple 'ate' en vez del presente 'eat'.",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "fruits",
+            "correction": "fruit",
+            "type": "vocabulary",
+            "explanationEs": "En inglés, la palabra 'fruit' se suele usar en singular de forma general cuando nos referimos a ella como alimento.",
+            "topic": "grammar:articles"
+          },
+          {
+            "quote": "The food were",
+            "correction": "The food was",
+            "type": "grammar",
+            "explanationEs": "La palabra 'food' es incontable en inglés y siempre toma el verbo en singular ('was', no 'were').",
+            "topic": "grammar:past simple"
+          }
+        ],
+        "newWords": [
+          "market",
+          "restaurant",
+          "delicious",
+          "weekend"
+        ]
+      }
+    },
+    {
+      "id": "journal-b1",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correctedContent": "I moved to a new apartment last month. At first, I was worried because I didn't know anyone. Now I am getting used to the neighborhood and I can see my friends more often.",
+        "errors": [
+          {
+            "quote": "I have moved",
+            "correction": "I moved",
+            "type": "grammar",
+            "explanationEs": "En inglés, cuando mencionamos un momento específico en el pasado ('last month'), debemos usar el pasado simple en lugar del presente perfecto.",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "didn't knew",
+            "correction": "didn't know",
+            "type": "grammar",
+            "explanationEs": "Después del auxiliar 'did' (o 'didn't'), el verbo principal siempre debe ir en su forma base (infinitivo sin 'to').",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "getting used with",
+            "correction": "getting used to",
+            "type": "preposition",
+            "explanationEs": "La expresión 'to be/get used to' (acostumbrarse a) siempre va seguida de la preposición 'to', no 'with'.",
+            "topic": "grammar:word order"
+          }
+        ],
+        "newWords": [
+          "neighborhood",
+          "move",
+          "get used to"
+        ]
+      }
+    },
+    {
+      "id": "journal-b2",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correctedContent": "Although remote work has given me more flexibility, it has also made it harder to separate my job from my personal life. I wish my team would set clearer boundaries, because otherwise people feel they must answer messages all the time.",
+        "errors": [
+          {
+            "quote": "has gave",
+            "correction": "has given",
+            "type": "grammar",
+            "explanationEs": "El tiempo presente perfecto se forma con 'have/has' seguido del participio pasado del verbo, no del pasado simple. El participio de 'give' es 'given'.",
+            "topic": "grammar:past simple"
+          },
+          {
+            "quote": "made harder",
+            "correction": "made it harder",
+            "type": "grammar",
+            "explanationEs": "En inglés, cuando usamos un adjetivo seguido de un infinitivo o una cláusula después de un verbo como 'make', necesitamos usar un objeto formal ('it').",
+            "topic": "grammar:word order"
+          },
+          {
+            "quote": "people feels",
+            "correction": "people feel",
+            "type": "grammar",
+            "explanationEs": "En inglés, la palabra 'people' es un sustantivo plural, por lo que el verbo debe ir en plural sin la 's' final.",
+            "topic": "grammar:present simple"
+          }
+        ],
+        "newWords": [
+          "flexibility",
+          "boundaries",
+          "remote work",
+          "work-life balance"
+        ]
+      }
+    },
+    {
+      "id": "journal-false-friend",
+      "ok": false,
+      "issues": [
+        "correctedContent: missing one of currently, at the moment, now"
+      ],
+      "output": {
+        "correctedContent": "Actually, I am studying English every day because I want to speak with my new colleagues. Yesterday I attended a meeting at work.",
+        "errors": [
+          {
+            "quote": "assisted",
+            "correction": "attended",
+            "type": "vocabulary",
+            "explanationEs": "En inglés, 'assist' significa ayudar. Para decir que fuiste a una reunión o evento, el verbo correcto es 'attend'.",
+            "topic": "grammar:past simple"
+          }
+        ],
+        "newWords": [
+          "attend a meeting",
+          "colleague",
+          "practice"
+        ]
+      }
+    },
+    {
+      "id": "journal-no-errors",
+      "ok": true,
+      "issues": [],
+      "output": {
+        "correctedContent": "I spent the afternoon reading in the park. The weather was warm, and I enjoyed having some quiet time after a busy week.",
+        "errors": [],
+        "newWords": [
+          "peaceful",
+          "unwind",
+          "stroll",
+          "refreshing"
+        ]
+      }
+    }
+  ]
+}

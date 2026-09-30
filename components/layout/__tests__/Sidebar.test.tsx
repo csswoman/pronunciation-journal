@@ -68,7 +68,7 @@ describe("Sidebar component", () => {
     expect(Object.fromEntries(links)).toMatchObject({
       // Group 1: Hoy
       Inicio: "/",
-      "Plan del día": "/daily",
+      "Sesión de hoy": "/daily",
       "Mi diario": "/journal",
       // Group 2: Aprender
       Ruta: "/courses",

@@ -6,8 +6,14 @@
     "goal": "Ya puedes desenvolverte en la oficina: herramientas, documentos, reuniones y dar el estado de tu trabajo."
   },
   "related": [
-    { "slug": "a1-practico-elementos-trabajo", "label": "A1 · Elementos de trabajo (básico)" },
-    { "slug": "biz-vocabulario-trabajo", "label": "Biz · Vocabulario para el trabajo" }
+    {
+      "slug": "a1-practico-elementos-trabajo",
+      "label": "A1 · Elementos de trabajo (básico)"
+    },
+    {
+      "slug": "biz-vocabulario-trabajo",
+      "label": "Biz · Vocabulario para el trabajo"
+    }
   ],
   "cards": [
     {
@@ -19,9 +25,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Espacios", "value": "open space, meeting room, desk, cubicle" },
-            { "key": "Remoto", "value": "remote work, home office, hybrid", "highlights": ["remote work"] },
-            { "key": "Equipo", "value": "laptop, headset, monitor, webcam" }
+            {
+              "key": "Espacios",
+              "value": "open space, meeting room, desk, cubicle"
+            },
+            {
+              "key": "Remoto",
+              "value": "remote work, home office, hybrid",
+              "highlights": [
+                "remote work"
+              ]
+            },
+            {
+              "key": "Equipo",
+              "value": "laptop, headset, monitor, webcam"
+            }
           ]
         }
       ]
@@ -35,9 +53,21 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Comunicación", "value": "email, chat, video call, thread" },
-            { "key": "Gestión", "value": "spreadsheet, dashboard, task board" },
-            { "key": "Verbos", "value": "share a file · join a call · log in", "highlights": ["share a file"] }
+            {
+              "key": "Comunicación",
+              "value": "email, chat, video call, thread"
+            },
+            {
+              "key": "Gestión",
+              "value": "spreadsheet, dashboard, task board"
+            },
+            {
+              "key": "Verbos",
+              "value": "share a file · join a call · log in",
+              "highlights": [
+                "share a file"
+              ]
+            }
           ]
         }
       ]
@@ -51,9 +81,25 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Tipos", "value": "report, proposal, invoice, contract" },
-            { "key": "Acciones", "value": "draft · review · sign · approve", "highlights": ["draft", "approve"] },
-            { "key": "Versión", "value": "the latest version · the final draft", "highlights": ["the latest version"] }
+            {
+              "key": "Tipos",
+              "value": "report, proposal, invoice, contract"
+            },
+            {
+              "key": "Acciones",
+              "value": "draft · review · sign · approve",
+              "highlights": [
+                "draft",
+                "approve"
+              ]
+            },
+            {
+              "key": "Versión",
+              "value": "the latest version · the final draft",
+              "highlights": [
+                "the latest version"
+              ]
+            }
           ]
         }
       ]
@@ -67,9 +113,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Intervenir", "value": "Can I add something here?", "highlights": ["Can I add something"] },
-            { "key": "Aclarar", "value": "Just to clarify, ...", "highlights": ["Just to clarify"] },
-            { "key": "Acordar", "value": "Let's move on to the next point.", "highlights": ["Let's move on"] }
+            {
+              "key": "Intervenir",
+              "value": "Can I add something here?",
+              "highlights": [
+                "Can I add something"
+              ]
+            },
+            {
+              "key": "Aclarar",
+              "value": "Just to clarify, ...",
+              "highlights": [
+                "Just to clarify"
+              ]
+            },
+            {
+              "key": "Acordar",
+              "value": "Let's move on to the next point.",
+              "highlights": [
+                "Let's move on"
+              ]
+            }
           ]
         }
       ],
@@ -87,9 +151,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Pedir", "value": "Could you send me the report?", "highlights": ["Could you"] },
-            { "key": "Delegar", "value": "Would you mind handling this?", "highlights": ["Would you mind"] },
-            { "key": "Plazo", "value": "Could you have it ready by Friday?", "highlights": ["by Friday"] }
+            {
+              "key": "Pedir",
+              "value": "Could you send me the report?",
+              "highlights": [
+                "Could you"
+              ]
+            },
+            {
+              "key": "Delegar",
+              "value": "Would you mind handling this?",
+              "highlights": [
+                "Would you mind"
+              ]
+            },
+            {
+              "key": "Plazo",
+              "value": "Could you have it ready by Friday?",
+              "highlights": [
+                "by Friday"
+              ]
+            }
           ]
         }
       ]
@@ -103,13 +185,58 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "It's on track.", "note": "va bien" },
-            { "variant": "good", "text": "We're slightly behind schedule.", "note": "con retraso" },
-            { "variant": "good", "text": "It's almost done.", "note": "casi listo" },
-            { "variant": "good", "text": "I'm waiting on feedback.", "note": "a la espera" }
+            {
+              "variant": "good",
+              "text": "It's on track.",
+              "note": "va bien"
+            },
+            {
+              "variant": "good",
+              "text": "We're slightly behind schedule.",
+              "note": "con retraso"
+            },
+            {
+              "variant": "good",
+              "text": "It's almost done.",
+              "note": "casi listo"
+            },
+            {
+              "variant": "good",
+              "text": "I'm waiting on feedback.",
+              "note": "a la espera"
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is most appropriate when you want to politely ask a colleague to take responsibility for a specific task?",
+      "options": [
+        "Would you mind handling this?",
+        "Do this task now."
+      ],
+      "answer": 0,
+      "explain": "Usar 'Would you mind' es una forma educada y profesional de delegar tareas en un entorno laboral."
+    },
+    {
+      "q": "If you want to interrupt a meeting respectfully to contribute an idea, which phrase should you use?",
+      "options": [
+        "Can I add something here?",
+        "Stop talking, I have an idea."
+      ],
+      "answer": 0,
+      "explain": "Esta frase es una manera cortés de pedir permiso para intervenir durante una discusión sin sonar grosero."
+    },
+    {
+      "q": "When referring to the most recent document you have been working on, what is the correct term?",
+      "options": [
+        "The latest version",
+        "The first draft"
+      ],
+      "answer": 0,
+      "explain": "'The latest version' indica que es la edición más reciente y actualizada de un archivo."
     }
   ]
 }

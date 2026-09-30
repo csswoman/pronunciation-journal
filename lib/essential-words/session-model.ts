@@ -9,6 +9,8 @@ export type EssentialWordsPhase = "loading" | "ready" | "study" | "speak" | "don
 export interface EssentialWordsSessionSummary {
   practiced: number;
   correct: number;
+  /** Distinct due-for-review words actually reviewed (excludes new-word drills and skip verifications). */
+  reviewed: number;
 }
 
 export function phaseForEssentialWordItem(item: EssentialWordQueueItem): EssentialWordsPhase {
@@ -46,9 +48,11 @@ export function buildEssentialWordExerciseResult(
 export function advanceSummary(
   previous: EssentialWordsSessionSummary | null,
   isCorrect: boolean,
+  countsAsReview = false,
 ): EssentialWordsSessionSummary {
   return {
     practiced: (previous?.practiced ?? 0) + 1,
     correct: (previous?.correct ?? 0) + (isCorrect ? 1 : 0),
+    reviewed: (previous?.reviewed ?? 0) + (countsAsReview ? 1 : 0),
   };
 }

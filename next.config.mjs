@@ -7,11 +7,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
+  register: false,
   disable: process.env.NODE_ENV !== "production",
+  // The root layout is dynamic for CSP nonces, so /offline is not discovered
+  // as a static page. It is a public shell; proxy deliberately skips auth here.
+  additionalPrecacheEntries: [{ url: "/offline", revision: String(Date.now()) }],
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
   exclude: [
     /^\/api\/gemini\//,
     /^\/api\/auth\//,
     /^\/practice\/sounds\//,
+    // Downloadable CEFR resource packs (Plan 057) must only enter
+    // CacheStorage via an explicit, user-triggered download — never via
+    // Serwist's default precache of public/.
+    /^\/offline-packs\//,
   ],
 });
 
@@ -32,8 +41,35 @@ const nextPolyfillModuleIds = [
 // indexes so rama URLs never surface publicly.
 const isPublicProductionDeploy = process.env.VERCEL_ENV === "production";
 
+function getLocalSupabaseOrigin() {
+  if (process.env.NODE_ENV !== "development") return null;
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    const isLoopback =
+      url.protocol === "http:" &&
+      ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+    return isLoopback ? url.origin : null;
+  } catch {
+    return null;
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    const localSupabaseOrigin = getLocalSupabaseOrigin();
+    return localSupabaseOrigin
+      ? [
+          {
+            source: "/__supabase-local/:path*",
+            destination: `${localSupabaseOrigin}/:path*`,
+          },
+        ]
+      : [];
+  },
   turbopack: {
     resolveAlias: Object.fromEntries(
       nextPolyfillModuleIds.map((id) => [id, emptyNextPolyfill]),
@@ -150,6 +186,21 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       ...Object.fromEntries(nextPolyfillModuleIds.map((id) => [id, false])),
+      // `kokoro-js`'s package.json `exports` only declares `node` / `default`
+      // conditions (no `browser`), so webpack's client bundle resolves the
+      // `node` condition and drags in `@huggingface/transformers`'s Node
+      // build — which requires `onnxruntime-node`'s native `.node` binary and
+      // fails to parse under webpack. Force the client bundle (and the
+      // Kokoro worker, Plan 039) onto the browser build the package already
+      // ships for CDN use (`dist/kokoro.web.js`). `exports` blocks resolving
+      // that subpath by name, so alias straight to the file on disk.
+      ...(isServer
+        ? {}
+        : {
+          "kokoro-js": fileURLToPath(
+            new URL("./node_modules/kokoro-js/dist/kokoro.web.js", import.meta.url)
+          ),
+        }),
     };
     // Keep `*.svg` imports as React components under webpack too — the
     // turbopack.rules entry above only applies to the turbopack pipeline,

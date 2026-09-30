@@ -126,3 +126,57 @@ export function useAllDownloadedLessons() {
   const lessons = useLiveQuery(() => db.downloadedLessons.toArray(), [], []);
   return lessons;
 }
+
+// ── Content Bank Offline (Plan 041) ──
+
+/**
+ * Downloads up to `limit` pregenerated coach exercises for a specific CEFR level
+ * and stores them in Dexie contentBankCache for offline practice.
+ */
+export async function downloadCoachExercises(
+  level: string,
+  limit = 100,
+): Promise<{ count: number }> {
+  const safeLimit = Math.max(0, Math.min(100, Math.floor(limit)));
+  if (safeLimit === 0) return { count: 0 };
+  const { fetchBankItems, cacheBankItems } = await import("@/lib/content-bank/queries");
+  const items = await fetchBankItems(level, undefined, safeLimit);
+  if (items.length > 0) {
+    await cacheBankItems(items);
+  }
+  return { count: items.length };
+}
+
+/**
+ * Counts how many exercises for this level are cached offline.
+ */
+export async function getCoachExercisesOfflineCount(level: string): Promise<number> {
+  return db.contentBankCache
+    .where("level")
+    .equals(level)
+    .and((item) => item.quality_flags < 3)
+    .count();
+}
+
+/**
+ * React hook to reactively observe cached coach exercises for a level.
+ */
+export function useCoachExercisesOfflineCount(level: string): number {
+  const count = useLiveQuery(
+    () => db.contentBankCache
+      .where("level")
+      .equals(level)
+      .and((item) => item.quality_flags < 3)
+      .count(),
+    [level],
+    0,
+  );
+  return count ?? 0;
+}
+
+/**
+ * Removes cached coach exercises for a specific level.
+ */
+export async function removeCoachExercisesOffline(level: string): Promise<void> {
+  await db.contentBankCache.where("level").equals(level).delete();
+}

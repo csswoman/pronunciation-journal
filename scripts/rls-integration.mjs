@@ -113,6 +113,7 @@ async function cleanup(users) {
     await admin.from("decks").delete().eq("user_id", user.id);
     await admin.from("stt_transcription_cache").delete().eq("user_id", user.id);
     await admin.from("sentence_transcription_cache").delete().eq("user_id", user.id);
+    await admin.from("reader_passages").delete().eq("user_id", user.id);
     await admin.from("text_fragments").delete().eq("user_id", user.id);
     await admin.from("tracked_items").delete().eq("user_id", user.id);
     await admin.from("pronunciation_assessments").delete().eq("user_id", user.id);
@@ -177,6 +178,50 @@ async function run() {
       .from("word_bank_decks")
       .insert({ word_id: wordB.id, deck_id: deckA.id });
     assertHasError(bLinksOwnWordToADeck, "user B can link own word to user A deck");
+
+    const passageA = await insertSingle(
+      userA.client,
+      "reader_passages",
+      {
+        user_id: userA.id,
+        target_items: ["resilient"],
+        target_hash: `rls-reader-${randomUUID()}`,
+        topic: "RLS",
+        passage: "A resilient reader passage.",
+      },
+      "user A creates own reader passage"
+    );
+    const bReadsAPassage = await userB.client
+      .from("reader_passages")
+      .select("id")
+      .eq("id", passageA.id);
+    assertNoError(bReadsAPassage, "user B reads user A reader passage query");
+    assert(bReadsAPassage.data.length === 0, "user B can read user A reader passage");
+
+    const bWritesPassageForA = await userB.client.from("reader_passages").insert({
+      user_id: userA.id,
+      target_items: ["boundary"],
+      target_hash: `rls-reader-cross-${randomUUID()}`,
+      topic: "RLS",
+      passage: "Cross-user passage.",
+    });
+    assertHasError(bWritesPassageForA, "user B can write a reader passage for user A");
+
+    const aUpdatesOwnPassage = await userA.client
+      .from("reader_passages")
+      .update({ audio_url: "audio/test.ogg" })
+      .eq("id", passageA.id)
+      .select("id");
+    assertNoError(aUpdatesOwnPassage, "user A updates own reader passage");
+    assert(aUpdatesOwnPassage.data.length === 1, "user A cannot update own reader passage");
+
+    const bUpdatesAPassage = await userB.client
+      .from("reader_passages")
+      .update({ audio_url: "audio/cross-user.ogg" })
+      .eq("id", passageA.id)
+      .select("id");
+    assertNoError(bUpdatesAPassage, "user B updates user A reader passage query");
+    assert(bUpdatesAPassage.data.length === 0, "user B can update user A reader passage");
 
     const sttKey = `rls-stt-${randomUUID()}`;
     await insertSingle(

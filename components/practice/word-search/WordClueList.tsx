@@ -2,196 +2,130 @@
 
 // Planned structure:
 // <WordClueList>
-//   <CluesHeader />         (título, badge de progreso y kicker sutil)
-//   <WordBankContainer />   (rejilla responsiva compacta de 2 columnas con scroll contenido)
-//     <FoundWordRow />      (fila compacta reutilizable para palabras ya descubiertas)
-//     <WordClueCard />      (tarjeta compacta adaptativa para palabras por descubrir)
+//   <CluesHeader>
+//     <CluesTitleGroup />
+//     <RevealLetterButton />
+//   </CluesHeader>
+//   <CluesScrollArea>
+//     <ClueCardFound />
+//     <WordCluePendingCard />
+//   </CluesScrollArea>
+//   <CluesFooter />
 // </WordClueList>
 
-import { useState } from 'react'
 import type { WordSearchItem, WordSearchMode } from '@/lib/exercises/word-search/types'
-import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import { Eye, EyeOff } from '@/components/icons'
-import WordSearchFoundRow from './WordSearchFoundRow'
+import type { WordSearchHintProgress } from '@/lib/exercises/word-search/hints'
+import { PillButton } from '@/components/ui/PillButton'
+import { Check } from '@/components/icons'
+import WordCluePendingCard from './WordCluePendingCard'
 
 interface Props {
   items: WordSearchItem[]
   mode: WordSearchMode
   activeWordId: string | null
+  hintTargetId: string | null
+  hintProgress: WordSearchHintProgress
   onInspectWord: (wordId: string | null) => void
+  onRevealLetter?: () => void
 }
 
 export default function WordClueList({
   items,
   mode,
   activeWordId,
+  hintTargetId,
+  hintProgress,
   onInspectWord,
+  onRevealLetter,
 }: Props) {
-  const [revealedHints, setRevealedHints] = useState<Set<string>>(new Set())
-
-  const toggleHint = (id: string) => {
-    setRevealedHints((current) => {
-      const next = new Set(current)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
   const foundCount = items.filter((i) => i.found).length
+  const unfoundCount = items.length - foundCount
 
   return (
-    <section className="flex min-w-0 flex-col gap-2" aria-labelledby="word-search-clues-title">
-      <div className="flex items-baseline justify-between gap-2 px-0.5">
-        <div className="flex items-center gap-2">
-          <h2 id="word-search-clues-title" className="text-label font-bold text-fg">
-            {mode === 'classic' ? 'Palabras a buscar' : 'Pistas (Modo Difícil)'}
+    <section
+      className="flex w-full min-w-0 flex-col justify-between gap-4 rounded-3xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-sm"
+      aria-labelledby="word-search-clues-title"
+    >
+      <div className="flex items-center justify-between gap-3 pb-1 border-b border-border-subtle/40">
+        <div className="flex items-center gap-2.5">
+          <h2
+            id="word-search-clues-title"
+            className="font-mono text-caption font-bold uppercase tracking-wider text-fg-subtle"
+          >
+            PISTAS
           </h2>
-          <span className="rounded-full bg-surface-sunken px-2 py-0.5 font-mono text-caption font-semibold text-fg-muted">
-            {foundCount}/{items.length}
+          <span className="inline-flex items-center rounded-full bg-surface-sunken border border-border-subtle/50 px-3 py-0.5 font-mono text-caption font-semibold text-fg-muted">
+            {foundCount} de {items.length}
           </span>
         </div>
-        <span className="text-caption text-fg-subtle">
-          {mode === 'classic' ? 'Reconocimiento visual' : 'Deducción'}
-        </span>
+
+        {onRevealLetter && mode !== 'classic' ? (
+          <PillButton
+            variant="outline"
+            size="sm"
+            onClick={onRevealLetter}
+            disabled={unfoundCount === 0}
+            className="rounded-full px-3.5 py-1 text-caption font-semibold hover:bg-surface-sunken"
+          >
+            Ver una letra
+          </PillButton>
+        ) : null}
       </div>
 
-      <div className="max-h-[calc(100vh-14rem)] overflow-y-auto pr-0.5 scrollbar-thin sm:max-h-[38rem]">
-        {mode === 'classic' ? (
-          <div className="grid grid-cols-1 gap-2">
-            {items.map((item, index) => {
-              const isFound = item.found
-              const isInspected = activeWordId === item.id
-              const colorTheme = getWordColorTheme(index)
+      <div className="flex max-h-[32rem] sm:max-h-[36rem] flex-col gap-3 overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-border-strong/40 scrollbar-track-transparent">
+        {items.map((item, index) => {
+          const isFound = item.found
+          const isInspected = activeWordId === item.id
 
-              if (isFound) {
-                return (
-                  <WordSearchFoundRow
-                    key={item.id}
-                    item={item}
-                    isInspected={isInspected}
-                    colorTheme={colorTheme}
-                    onInspect={() => onInspectWord(isInspected ? null : item.id)}
-                  />
-                )
-              }
-
-              return (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-raised px-3 py-2 shadow-2xs transition-colors hover:border-border-default hover:bg-surface-sunken/40"
-                >
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <span
-                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken font-mono text-caption font-semibold text-fg-subtle"
-                      aria-hidden
-                    >
-                      {index + 1}
-                    </span>
-
-                    <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                      <span className="text-body-sm font-bold text-fg" lang="en">
-                        {item.displayWord}
-                      </span>
-                      {item.ipa ? (
-                        <span className="font-ipa text-caption text-fg-muted">
-                          {item.ipa}
-                        </span>
-                      ) : null}
-                      {item.meaningEs ? (
-                        <span className="text-caption text-fg-subtle truncate">
-                          — {item.meaningEs}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <ol className="grid grid-cols-1 gap-2">
-            {items.map((item, index) => {
-              const isFound = item.found
-              const isInspected = activeWordId === item.id
-              const isHintRevealed = revealedHints.has(item.id)
-              const hintId = `word-search-hint-${item.id}`
-              const colorTheme = getWordColorTheme(index)
-
-              if (isFound) {
-                return (
-                  <li key={item.id}>
-                    <WordSearchFoundRow
-                      item={item}
-                      isInspected={isInspected}
-                      colorTheme={colorTheme}
-                      onInspect={() => onInspectWord(isInspected ? null : item.id)}
-                    />
-                  </li>
-                )
-              }
-
-              return (
-                <li
-                  key={item.id}
-                  className="flex flex-col justify-between gap-2 rounded-xl border border-border-subtle bg-surface-raised p-3 shadow-2xs transition-colors hover:border-border-default"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-sunken font-mono text-caption font-semibold text-fg-subtle"
-                        aria-hidden
-                      >
-                        {index + 1}
-                      </span>
-                      <span className="font-mono text-caption font-medium text-fg-muted">
-                        {item.word.length} letras
-                      </span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleHint(item.id)}
-                      aria-expanded={isHintRevealed}
-                      aria-controls={hintId}
-                      className="focus-ring inline-flex min-h-11 sm:min-h-6 items-center gap-1 rounded-full border border-border-subtle bg-surface-sunken px-2 py-0.5 text-caption font-medium text-fg-muted transition-colors hover:bg-surface-base hover:text-fg"
-                    >
-                      {isHintRevealed ? (
-                        <EyeOff className="h-3 w-3" aria-hidden />
-                      ) : (
-                        <Eye className="h-3 w-3" aria-hidden />
-                      )}
-                      <span>{isHintRevealed ? 'Ocultar' : 'Pista'}</span>
-                    </button>
-                  </div>
-
-                  <p lang="en" className="text-pretty text-caption italic text-fg leading-snug line-clamp-2">
-                    “{item.clue}”
-                  </p>
-
-                  {isHintRevealed ? (
-                    <div id={hintId} className="rounded-lg border border-border-subtle/80 bg-surface-sunken/80 px-2 py-1 text-caption text-fg-subtle">
-                      {item.ipa ? (
-                        <span>
-                          Sonido: <strong className="font-ipa text-fg">{item.ipa}</strong>
-                        </span>
-                      ) : (
-                        <span>
-                          Empieza por: <strong className="font-mono text-fg">{item.word[0]}</strong>
-                        </span>
-                      )}
-                      {item.meaningEs ? (
-                        <span className="ms-1.5 text-fg-subtle">
-                          · {item.meaningEs}
-                        </span>
-                      ) : null}
-                    </div>
+          if (isFound) {
+            return (
+              <div
+                key={item.id}
+                onClick={() => onInspectWord(isInspected ? null : item.id)}
+                className={`flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 shadow-2xs transition-colors dark:border-emerald-700/40 dark:bg-emerald-950/40 ${
+                  isInspected ? 'ring-2 ring-emerald-500/60' : ''
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white dark:bg-emerald-400 dark:text-emerald-950">
+                    <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden />
+                  </span>
+                  <span className="text-body-md font-bold text-fg" lang="en">
+                    {item.displayWord}
+                  </span>
+                  {item.ipa ? (
+                    <span className="font-ipa text-caption text-fg-muted">{item.ipa}</span>
                   ) : null}
-                </li>
-              )
-            })}
-          </ol>
-        )}
+                </div>
+                <p className="text-caption leading-relaxed text-fg-muted">
+                  {item.meaningEs || item.clue}
+                </p>
+              </div>
+            )
+          }
+
+          return (
+            <WordCluePendingCard
+              key={item.id}
+              item={item}
+              index={index}
+              mode={mode}
+              revealedLetters={hintProgress[item.id] ?? 0}
+              isHintTarget={hintTargetId === item.id}
+            />
+          )
+        })}
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-2 px-0.5 pt-2.5 text-caption text-fg-subtle border-t border-border-subtle/40">
+        <span>
+          {unfoundCount > 0 ? `Te faltan ${unfoundCount}` : '¡Todas las palabras encontradas!'}
+        </span>
+        <span>
+          {mode === 'listen'
+            ? 'Escucha cada palabra y búscala en el tablero.'
+            : 'Las definiciones van en español; las palabras, en inglés.'}
+        </span>
       </div>
     </section>
   )

@@ -26,13 +26,13 @@ export default function ChatEmptyState({
   onSendMessage,
 }: ChatEmptyStateProps) {
   return (
-    <div className="@container relative flex min-h-full flex-1 flex-col justify-center chat-bg">
+    <div className="@container relative flex min-h-full flex-1 flex-col chat-bg py-5 pb-8 @[28rem]:py-8 @[28rem]:pb-12">
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
       <div className="blob blob-4" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col px-3 py-6 @[22rem]:px-4 @[22rem]:py-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col my-auto px-3.5 @[22rem]:px-5 @[28rem]:px-6">
         <CoachGreeting />
         <CoachStarterList starters={starters} loading={loading} onSelect={onSelectStarter ?? (() => {})} />
         <CoachShortcutRail onSendMessage={onSendMessage} />

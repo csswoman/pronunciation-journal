@@ -1,4 +1,4 @@
-import { db } from '@/lib/db'
+import { db, getCachedUserInterests } from '@/lib/db'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 import { buildChunkExercises, filterChunksForLevel } from './exercises'
 import { LEARNING_CHUNKS } from './catalog'
@@ -139,6 +139,24 @@ function buildChunkIntroStep(chunks: LearningChunk[], learnerLevel: CEFRLevel): 
   }
 }
 
+const TECH_TRACK_INTERESTS = new Set(['technology', 'work'])
+
+/**
+ * Keeps the "tech" track (interviews, selling yourself, engineering,
+ * design critique, stakeholder meetings) out of the daily thread unless the
+ * learner opted into `technology` or `work` interests. Reads the Dexie cache
+ * so this stays correct offline; a learner with no cached interests yet
+ * (never set the preference) sees only the general catalog.
+ */
+export function filterChunksForInterests(
+  catalog: readonly LearningChunk[],
+  interests: readonly string[] | null,
+): LearningChunk[] {
+  const wantsTech = (interests ?? []).some((interest) => TECH_TRACK_INTERESTS.has(interest))
+  if (wantsTech) return [...catalog]
+  return catalog.filter((chunk) => chunk.track !== 'tech')
+}
+
 const CEFR_ORDER: readonly CEFRLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
 /**
@@ -170,7 +188,9 @@ export async function loadDailyChunkIntroStep(
   const rows = await db.srsData.where('userId').equals(userId).toArray()
   const seenIds = new Set(rows.filter((row) => row.wordId.startsWith('chunk:'))
     .map((row) => row.wordId.slice('chunk:'.length)))
-  const eligible = chunkPoolForLevel(LEARNING_CHUNKS, level, seenIds)
+  const interests = await getCachedUserInterests(userId)
+  const catalog = filterChunksForInterests(LEARNING_CHUNKS, interests)
+  const eligible = chunkPoolForLevel(catalog, level, seenIds)
   return buildChunkIntroStep(selectNewChunkThread(
     eligible,
     seenIds,

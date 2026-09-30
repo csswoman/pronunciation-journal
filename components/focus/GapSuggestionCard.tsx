@@ -2,26 +2,31 @@
 
 // Planned structure:
 // <GapSuggestionCard>
-//   <badges + checkbox />
-//   <label + reason />
-//   <AccuracyBar />        (solo con evidencia real)
-//   <AccuracyTrendSparkline />
-//   <example wrong → right />
+//   <PastelCard tone={tone}>
+//     <HeaderBadgeRow>
+//       <Badges (Sonido/Gramatica + Level + Source)>
+//       <CheckboxCircle />
+//     </HeaderBadgeRow>
+//     <Title (Bricolage font)>
+//     <ReasonSubtitle>
+//     <BottomWhiteInsetPanel>
+//       <AccuracyMeter OR ExampleCompare OR PhonemeChips>
+//     </BottomWhiteInsetPanel>
+//   </PastelCard>
 // </GapSuggestionCard>
 
 import React from 'react'
-import Badge from '@/components/ui/Badge'
+import PastelCard, { type PastelTone } from '@/components/layout/PastelCard'
 import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import { getTopicMetadata, hasExample } from '@/lib/focus/topic-metadata'
 import type { GapSuggestion } from '@/lib/focus/gap-suggestions'
-import { AccuracyBar } from './AccuracyBar'
-import { AccuracyTrendSparkline } from './AccuracyTrendSparkline'
 
 interface GapSuggestionCardProps {
   suggestion: GapSuggestion
   selected: boolean
   disabled?: boolean
+  tone?: PastelTone
   onToggle: () => void
 }
 
@@ -35,6 +40,7 @@ export function GapSuggestionCard({
   suggestion,
   selected,
   disabled = false,
+  tone = 'coral',
   onToggle,
 }: GapSuggestionCardProps) {
   const isPhoneme = suggestion.kind === 'phoneme'
@@ -43,7 +49,8 @@ export function GapSuggestionCard({
   const hasEvidence = typeof suggestion.accuracy === 'number'
 
   return (
-    <div
+    <PastelCard
+      tone={tone}
       onClick={disabled ? undefined : onToggle}
       role="checkbox"
       aria-checked={selected}
@@ -57,62 +64,99 @@ export function GapSuggestionCard({
         }
       }}
       className={cn(
-        'focus-ring relative flex flex-col gap-2.5 rounded-xl border p-4 text-left transition-all',
-        disabled ? 'cursor-not-allowed opacity-55' : 'cursor-pointer',
+        'focus-ring relative flex flex-col justify-between gap-4 rounded-3xl p-5 sm:p-6 text-left transition-all',
+        disabled ? 'cursor-not-allowed opacity-55' : 'cursor-pointer hover:scale-[1.008]',
         selected
-          ? 'border-primary bg-primary-soft shadow-xs'
-          : 'border-border-default bg-surface-raised hover:border-border-hover',
+          ? 'ring-2 ring-ink ring-offset-2 shadow-md'
+          : 'shadow-xs hover:shadow-md',
       )}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge label={isPhoneme ? 'Sonido' : 'Gramática'} variant={isPhoneme ? 'info' : 'default'} size="sm" />
-          <Badge label={suggestion.level.toUpperCase()} variant="neutral" size="sm" />
-          <span className="text-tiny text-fg-subtle">{SOURCE_LABEL[suggestion.source]}</span>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="inline-flex items-center rounded-full bg-black/10 px-2.5 py-0.5 text-tiny font-semibold text-ink">
+              {isPhoneme ? 'Sonido' : 'Gramática'}
+            </span>
+            <span className="inline-flex items-center rounded-full bg-black/10 px-2 py-0.5 text-tiny font-semibold text-ink">
+              {suggestion.level.toUpperCase()}
+            </span>
+            <span className="text-tiny font-medium text-ink-secondary">
+              {SOURCE_LABEL[suggestion.source]}
+            </span>
+          </div>
+          <div
+            aria-hidden="true"
+            className={cn(
+              'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all',
+              selected
+                ? 'border-transparent bg-ink text-white shadow-xs'
+                : 'border-black/30 bg-white/80',
+            )}
+          >
+            {selected && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+          </div>
         </div>
-        <div
-          aria-hidden="true"
-          className={cn(
-            'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs transition-colors',
-            selected
-              ? 'border-primary bg-primary text-on-primary'
-              : 'border-border-default bg-surface-sunken',
-          )}
-        >
-          {selected && <Check className="h-3.5 w-3.5 text-on-primary" strokeWidth={2.5} />}
+
+        <div>
+          <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-tight">
+            {suggestion.label}
+          </h3>
+          <p className="mt-1.5 text-body-sm leading-relaxed text-ink-secondary font-normal">
+            {suggestion.reason}
+          </p>
         </div>
       </div>
 
-      <div>
-        <h4 className="text-body font-semibold text-fg">{suggestion.label}</h4>
-        <p className="mt-1 text-body-sm leading-relaxed text-fg-muted">{suggestion.reason}</p>
-      </div>
-
-      {hasEvidence && (
-        <div className="flex items-end gap-3">
-          <AccuracyBar
-            label="Tu precisión"
-            value={suggestion.accuracy!}
-            sampleCount={suggestion.sampleCount}
-            className="min-w-0 flex-1"
-          />
-          {suggestion.trend && <AccuracyTrendSparkline trend={suggestion.trend} />}
-        </div>
-      )}
-
-      {showExample && (
-        <div className="flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-sunken p-2.5">
-          <div className="flex items-center gap-1.5 text-tiny">
-            <span className="shrink-0 font-medium text-warning">✕ Decías:</span>
-            <span className="line-through decoration-1 text-fg-muted">{meta.wrong}</span>
+      {hasEvidence ? (
+        <div className="rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+              TU PRECISIÓN
+            </span>
+            <span className="font-display text-2xl font-extrabold text-ink tabular-nums">
+              {suggestion.accuracy}%
+            </span>
           </div>
-          <div className="flex items-center gap-1.5 text-tiny">
-            <span className="shrink-0 font-semibold text-success">✓ Lo ideal:</span>
-            <span className="font-medium text-fg">{meta.right}</span>
+          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-black/10">
+            <div
+              className="h-full rounded-full bg-ink transition-all duration-500"
+              style={{ width: `${Math.max(0, Math.min(100, suggestion.accuracy!))}%` }}
+            />
+          </div>
+          {suggestion.sampleCount ? (
+            <span className="mt-1.5 block text-tiny text-ink-muted font-medium">
+              Basado en {suggestion.sampleCount} intentos
+            </span>
+          ) : null}
+        </div>
+      ) : showExample ? (
+        <div className="flex flex-col gap-1.5 rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
+          <div className="flex items-center gap-2 text-body-sm text-red-600">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-tiny font-bold">
+              ✕
+            </span>
+            <span className="line-through decoration-1 opacity-80">{meta.wrong}</span>
+          </div>
+          <div className="flex items-center gap-2 text-body-sm text-emerald-800 font-semibold">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-tiny font-bold">
+              ✓
+            </span>
+            <span>{meta.right}</span>
           </div>
         </div>
-      )}
-    </div>
+      ) : suggestion.targetId === 'vowel:/ɪ/' ? (
+        <div className="flex items-center justify-between gap-2 rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-black/5 px-3 py-1 font-ipa text-body-sm font-semibold text-ink border border-black/10">
+              ship /ʃɪp/
+            </span>
+            <span className="rounded-full bg-black/5 px-3 py-1 font-ipa text-body-sm font-semibold text-ink border border-black/10">
+              sheep /ʃi:p/
+            </span>
+          </div>
+          <span className="text-tiny text-ink-muted font-medium shrink-0">Aún sin medir</span>
+        </div>
+      ) : null}
+    </PastelCard>
   )
 }
-

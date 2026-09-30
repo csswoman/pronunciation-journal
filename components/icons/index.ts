@@ -131,6 +131,12 @@ import {
   Waves as LucideWaves,
   X as LucideX,
   Zap as LucideZap,
+  Crosshair as LucideCrosshair,
+  Ghost as LucideGhost,
+  Keyboard as LucideKeyboard,
+  Puzzle as LucidePuzzle,
+  ShieldAlert as LucideShieldAlert,
+  Snail as LucideSnail,
 } from "lucide-react";
 import { createIcon } from "./createIcon";
 
@@ -264,3 +270,9 @@ export const VolumeX = createIcon(LucideVolumeX, "VolumeX");
 export const Waves = createIcon(LucideWaves, "Waves");
 export const X = createIcon(LucideX, "X");
 export const Zap = createIcon(LucideZap, "Zap");
+export const Crosshair = createIcon(LucideCrosshair, "Crosshair");
+export const Ghost = createIcon(LucideGhost, "Ghost");
+export const Keyboard = createIcon(LucideKeyboard, "Keyboard");
+export const Puzzle = createIcon(LucidePuzzle, "Puzzle");
+export const ShieldAlert = createIcon(LucideShieldAlert, "ShieldAlert");
+export const Snail = createIcon(LucideSnail, "Snail");

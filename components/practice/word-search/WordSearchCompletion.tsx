@@ -2,24 +2,21 @@
 
 // Planned structure:
 // <WordSearchCompletion>
-//   <VictoryIllustrationGroup /> (win.svg con halo suave y escala generosa)
-//   <CompletionBadgeGroup />     (badge de victoria y refuerzo SRS si aplica)
-//   <HeadingGroup />             (título y subtítulo claros con voz activa)
-//   <StatsMetricsGroup />        (cápsula Inset Grouped de 3 columnas: palabras, tiempo, modo)
-//   <VocabularyConsolidated />   (chips táctiles de vocabulario con audio y transcripción IPA)
-//   <ActionGroup />              (Elegir nuevo tema primary CTA, Repetir tablero secondary CTA)
+//   <CelebrationHeroCard> (Left column: watermark 8/8, TABLERO COMPLETADO badge, stats chips, actions)
+//   <WordsReviewPanel>   (Right column: "Escúchalas antes de seguir", 2-col words grid, Guardar cuaderno banner)
 // </WordSearchCompletion>
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { WordSearchPuzzle } from '@/lib/exercises/word-search/types'
 import { getWordColorTheme } from '@/lib/exercises/word-search/word-colors'
-import { getIllustration } from '@/lib/illustrations/registry'
+import { WORD_SEARCH_MODE_LABELS } from '@/lib/exercises/word-search/mode-labels'
 import { recordWordSearchRepetition } from '@/lib/word-bank/domain-queries'
 import { recordGameActivity } from '@/lib/progress/game-activity'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
-import Button from '@/components/ui/Button'
-import { ListenButton } from '@/components/ui/ListenButton'
-import { CheckCircle2, RotateCcw, Sparkles } from '@/components/icons'
+import { speakText, cancelSpeech } from '@/lib/speech/synthesis'
+import { PillButton } from '@/components/ui/PillButton'
+import { ArrowRight, Play, RotateCcw, Volume2 } from '@/components/icons'
+import WordSearchSaveWordsButton from './WordSearchSaveWordsButton'
 
 interface WordSearchCompletionProps {
   puzzle: WordSearchPuzzle
@@ -27,15 +24,6 @@ interface WordSearchCompletionProps {
   formatTime: (seconds: number) => string
   onRepeat: () => void
   onExit: () => void
-}
-
-function playWordAudio(text: string) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'en-US'
-  utterance.rate = 0.9
-  window.speechSynthesis.speak(utterance)
 }
 
 export default function WordSearchCompletion({
@@ -47,11 +35,9 @@ export default function WordSearchCompletion({
 }: WordSearchCompletionProps) {
   const auth = useAuthOptional()
   const user = auth?.user ?? null
-  const [recordedCount, setRecordedCount] = useState<number | null>(null)
   const hasRecordedRef = useRef(false)
   const hasRecordedActivityRef = useRef(false)
-  const Illustration = getIllustration('stateWin')
-  const modeLabel = puzzle.mode === 'classic' ? 'Lista visible' : 'Con pistas'
+  const modeLabel = WORD_SEARCH_MODE_LABELS[puzzle.mode]
 
   useEffect(() => {
     if (!user?.id || hasRecordedRef.current || puzzle.source !== 'word_bank') return
@@ -64,127 +50,187 @@ export default function WordSearchCompletion({
     }))
 
     void recordWordSearchRepetition(user.id, items)
-      .then((count) => setRecordedCount(count))
       .catch((err) => console.warn('[WordSearchCompletion] record error', err))
   }, [user?.id, puzzle, elapsedSeconds])
 
   useEffect(() => {
     if (!user?.id || hasRecordedActivityRef.current) return
     hasRecordedActivityRef.current = true
-    void recordGameActivity(user.id, 'word_search', elapsedSeconds * 1000, puzzle.id)
+    void recordGameActivity(
+      user.id,
+      'word_search',
+      elapsedSeconds * 1000,
+      puzzle.id,
+      undefined,
+      { hits: puzzle.items.length, misses: 0, slug: 'match_pairs' },
+    )
       .catch((err) => console.warn('[WordSearchCompletion] activity record failed', err))
-  }, [elapsedSeconds, puzzle.id, user?.id])
+  }, [elapsedSeconds, puzzle.id, puzzle.items.length, user?.id])
+
+  const handlePlayAll = () => {
+    cancelSpeech()
+    puzzle.items.forEach((item, index) => {
+      window.setTimeout(() => {
+        speakText(item.displayWord)
+      }, index * 1200)
+    })
+  }
 
   return (
     <section
-      className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center gap-6 rounded-2xl border border-border-subtle bg-surface-raised p-6 text-center shadow-xs transition-all duration-200 md:gap-7 md:p-9"
+      className="grid w-full items-stretch gap-5 lg:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]"
       aria-label="Resultados de la partida"
     >
-      <div className="relative flex items-center justify-center pt-2">
-        <div
-          className="absolute inset-0 scale-125 rounded-full bg-primary-soft/60 opacity-80 blur-2xl"
+      {/* Left Column: Celebration Hero Card */}
+      <div className="relative flex min-h-[30rem] flex-col justify-between overflow-hidden rounded-3xl border border-emerald-400/40 bg-mint p-6 text-ink shadow-sm dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-50">
+        <span
+          className="pointer-events-none absolute -right-4 -top-6 select-none font-heading text-hero font-black leading-none text-black/5 dark:text-white/5"
           aria-hidden
-        />
-        <div className="relative flex h-32 w-auto items-center justify-center text-primary sm:h-40">
-          <Illustration className="h-full w-auto" aria-hidden />
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center gap-2">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-caption font-bold text-success">
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
-            <span>¡Tablero completado!</span>
-          </div>
-          {recordedCount !== null && recordedCount > 0 && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-caption font-medium text-primary">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden />
-              <span>{recordedCount} palabras repasadas en SRS (+XP)</span>
-            </div>
-          )}
-        </div>
-
-        <h2 className="text-balance text-h2 font-bold text-fg">
-          ¡Encontraste todas las palabras!
-        </h2>
-        <p className="max-w-md text-pretty text-body-sm text-fg-muted">
-          Completaste “<span className="font-semibold text-fg">{puzzle.title}</span>” en{' '}
-          <span className="font-mono font-bold tabular-nums text-fg">
-            {formatTime(elapsedSeconds)}
-          </span>
-          . Escucha cada palabra para afinar tu pronunciación antes de continuar.
-        </p>
-      </div>
-
-      <div className="grid w-full max-w-md grid-cols-3 divide-x divide-border-subtle rounded-xl border border-border-subtle/80 bg-surface-sunken p-3 text-center shadow-2xs">
-        <div className="flex flex-col items-center gap-0.5 px-2">
-          <span className="text-caption text-fg-subtle">Palabras</span>
-          <span className="font-mono text-label font-bold tabular-nums text-fg">
-            {puzzle.items.length} / {puzzle.items.length}
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-0.5 px-2">
-          <span className="text-caption text-fg-subtle">Tiempo</span>
-          <span className="font-mono text-label font-bold tabular-nums text-fg">
-            {formatTime(elapsedSeconds)}
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-0.5 px-2">
-          <span className="text-caption text-fg-subtle">Modo</span>
-          <span className="text-caption font-semibold text-fg">{modeLabel}</span>
-        </div>
-      </div>
-
-      <div className="flex w-full flex-col gap-2.5">
-        <div className="flex flex-col items-center gap-0.5">
-          <h3 className="text-label font-bold text-fg">Vocabulario consolidado</h3>
-          <p className="text-caption text-fg-muted">
-            Toca el altavoz para escuchar la pronunciación y su sonido IPA:
-          </p>
-        </div>
-
-        <div
-          className="flex flex-wrap justify-center gap-2 md:gap-2.5"
-          aria-label="Palabras encontradas"
         >
+          {puzzle.items.length}/{puzzle.items.length}
+        </span>
+
+        <div className="relative flex flex-col items-start gap-4">
+          <span className="inline-flex items-center rounded-full bg-text px-3.5 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-surface dark:bg-emerald-300 dark:text-emerald-950">
+            TABLERO COMPLETADO
+          </span>
+
+          <div className="flex flex-col gap-2">
+            <h2 className="font-heading text-3xl font-extrabold leading-tight text-text sm:text-4xl dark:text-emerald-50">
+              ¡Encontraste todas las palabras!
+            </h2>
+            <p className="text-body-sm leading-relaxed text-text-secondary dark:text-emerald-200/90">
+              Terminaste «<span className="font-bold">{puzzle.title}</span>». Ahora escúchalas: así las recordarás por el sonido, no solo por la forma.
+            </p>
+          </div>
+
+          <div className="grid w-full grid-cols-3 gap-2.5 pt-2">
+            <div className="flex flex-col items-start gap-0.5 rounded-2xl bg-white/80 p-3 shadow-2xs dark:bg-emerald-900/60">
+              <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
+                PALABRAS
+              </span>
+              <span className="font-mono text-body-md font-extrabold text-text dark:text-emerald-50">
+                {puzzle.items.length}/{puzzle.items.length}
+              </span>
+            </div>
+
+            <div className="flex flex-col items-start gap-0.5 rounded-2xl bg-white/80 p-3 shadow-2xs dark:bg-emerald-900/60">
+              <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
+                TIEMPO
+              </span>
+              <span className="font-mono text-body-md font-extrabold text-text dark:text-emerald-50">
+                {formatTime(elapsedSeconds)}
+              </span>
+            </div>
+
+            <div className="flex flex-col items-start gap-0.5 rounded-2xl bg-white/80 p-3 shadow-2xs dark:bg-emerald-900/60">
+              <span className="font-mono text-tiny font-bold uppercase tracking-wider text-black/60 dark:text-emerald-300">
+                MODO
+              </span>
+              <span className="text-caption font-bold text-text dark:text-emerald-50 truncate w-full">
+                {modeLabel}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative flex flex-col gap-2.5 pt-6">
+          <button
+            type="button"
+            onClick={onExit}
+            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-text px-6 py-3.5 text-body-sm font-bold text-surface shadow-xs transition-all active:scale-[0.98] hover:bg-black dark:bg-emerald-300 dark:text-emerald-950"
+          >
+            <span>Elegir otro tema</span>
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </button>
+
+          <button
+            type="button"
+            onClick={onRepeat}
+            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full border border-black/10 bg-white/80 px-6 py-3.5 text-body-sm font-bold text-text shadow-2xs transition-all active:scale-[0.98] hover:bg-white dark:bg-surface-sunken dark:text-fg dark:border-border-subtle"
+          >
+            <RotateCcw className="h-4 w-4" aria-hidden />
+            <span>Repetir este tablero</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Right Column: Words Review Panel */}
+      <div className="flex w-full min-w-0 flex-col justify-between gap-5 rounded-3xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-col gap-0.5">
+            <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+              LAS {puzzle.items.length} PALABRAS DE ESTE TABLERO
+            </span>
+            <h3 className="font-heading text-2xl font-bold text-fg">
+              Escúchalas antes de seguir
+            </h3>
+          </div>
+
+          <PillButton
+            variant="outline"
+            size="sm"
+            onClick={handlePlayAll}
+            className="rounded-full px-4 py-2 font-bold hover:bg-surface-sunken"
+          >
+            <Play className="h-3.5 w-3.5 fill-current me-1.5" aria-hidden />
+            Escuchar todas
+          </PillButton>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto max-h-[24rem] pr-1 scrollbar-thin">
           {puzzle.items.map((item, index) => {
             const colorTheme = getWordColorTheme(index)
             return (
               <div
                 key={item.id}
-                className="inline-flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-sunken ps-3 pe-1.5 py-1.5 text-caption font-medium text-fg shadow-2xs transition-colors hover:border-border-default hover:bg-surface-base"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border-subtle/80 bg-surface-sunken/60 p-3.5 shadow-2xs transition-colors hover:bg-surface-sunken"
               >
-                <span
-                  className={`h-2 w-2 shrink-0 rounded-full ${colorTheme.iconBg}`}
-                  aria-hidden
-                />
-                <span className="font-bold">{item.displayWord}</span>
-                {item.ipa ? (
-                  <span className="font-ipa text-caption text-fg-muted">
-                    {item.ipa}
-                  </span>
-                ) : null}
-                <ListenButton
-                  iconOnly
-                  label={`Escuchar ${item.displayWord}`}
-                  onPlay={() => playWordAudio(item.word)}
-                  className="min-h-11 min-w-11 sm:min-h-7 sm:min-w-7 text-fg-muted hover:text-fg"
-                />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span
+                    className={`h-2.5 w-2.5 shrink-0 rounded-full ${colorTheme.iconBg}`}
+                    aria-hidden
+                  />
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className="font-bold text-body-sm text-fg" lang="en">
+                        {item.displayWord}
+                      </span>
+                      {item.ipa ? (
+                        <span className="font-ipa text-caption text-fg-muted">{item.ipa}</span>
+                      ) : null}
+                    </div>
+                    <span className="text-caption text-fg-subtle truncate">
+                      {item.meaningEs || item.clue}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => speakText(item.displayWord)}
+                  className="focus-ring flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-base border border-border-subtle text-fg-muted hover:text-fg hover:bg-surface-raised transition-colors"
+                  aria-label={`Escuchar ${item.displayWord}`}
+                >
+                  <Volume2 className="h-4 w-4" aria-hidden />
+                </button>
               </div>
             )
           })}
         </div>
-      </div>
 
-      <div className="flex w-full flex-col-reverse gap-2.5 sm:w-auto sm:flex-row sm:gap-3 pt-1">
-        <Button variant="secondary" onClick={onRepeat} className="w-full sm:w-auto">
-          <RotateCcw className="me-1.5 h-4 w-4" aria-hidden />
-          <span>Repetir este tablero</span>
-        </Button>
-        <Button variant="primary" onClick={onExit} className="w-full sm:w-auto">
-          <Sparkles className="me-1.5 h-4 w-4" aria-hidden />
-          <span>Elegir nuevo tema</span>
-        </Button>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-butter-soft dark:bg-amber-950/60 border border-butter-deep/40 dark:border-amber-700/60 p-4 shadow-2xs">
+          <div className="flex flex-col gap-0.5">
+            <span className="font-heading text-body-md font-bold text-amber-900 dark:text-amber-200">
+              Guárdalas en tu cuaderno
+            </span>
+            <span className="text-caption text-amber-800 dark:text-amber-300/80">
+              Volverán en tu repaso para que no se te olviden.
+            </span>
+          </div>
+
+          <WordSearchSaveWordsButton items={puzzle.items} puzzleTitle={puzzle.title} />
+        </div>
       </div>
     </section>
   )

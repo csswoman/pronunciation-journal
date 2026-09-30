@@ -3,11 +3,12 @@ import PageHeader from "@/components/layout/PageHeader";
 import { GuestBanner } from "@/components/layout/stats/GuestBanner";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import { ReviewHubClient } from "@/components/practice/review/ReviewHubClient";
+import { ReviewHeaderFilters } from "@/components/practice/review/ReviewHeaderFilters";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getReviewHubSummary } from "@/lib/review/server-queries";
 
-export const metadata = { title: "Review Hub" };
+export const metadata = { title: "Tu repaso - Review Hub" };
 
 export default async function PracticeReviewPage() {
   const user = await getSupabaseServerUser();
@@ -17,9 +18,10 @@ export default async function PracticeReviewPage() {
   return (
     <PageLayout archetype="dashboard">
       <PageHeader
-        kicker="Seguimiento"
-        title="Review"
-        subtitle="Oraciones fallidas, palabras débiles, SRS de vocabulario y sonidos pendientes — en un solo lugar."
+        kicker="SEGUIMIENTO"
+        title="Tu repaso"
+        subtitle="Qué toca hoy, cuándo vuelve cada cosa y qué ya tienes afianzado."
+        actions={<ReviewHeaderFilters />}
       />
 
       {!user || !summary ? (

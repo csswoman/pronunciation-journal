@@ -145,67 +145,9 @@ export async function updateWordDetails(id: string, input: WordDetailsUpdate): P
   return data as WordBankEntry;
 }
 
-export interface LexiconWordInput {
-  sourceRef: string;       // lexicon word id
-  text: string;
-  definition: string;
-  example?: string | null;
-  ipa?: string | null;
-  audioUrl?: string | null;
-  difficulty?: number;
-}
-
-/**
- * Idempotent "mark learned" from the lexicon.
- *
- * Merge policy:
- *   - Match on (user_id, text) — case-insensitive via lower().
- *   - If already in word_bank: return existing row untouched (no SRS reset, no source overwrite).
- *   - If new: insert with source='lexicon', status='ready', enrichment pre-filled.
- *
- * Returns { entry, alreadyExisted }.
- */
-export async function markLexiconWordLearned(
-  input: LexiconWordInput
-): Promise<{ entry: WordBankEntry; alreadyExisted: boolean }> {
-  const supabase = getSupabaseBrowserClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
-
-  // Check for existing row by text (case-insensitive) first.
-  const { data: existing, error: selectError } = await supabase
-    .from(TABLE)
-    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, is_favorite, familiarity_status, familiarity_confidence, verification_due_at, mastery_provenance, mastery_version, objective_evidence_count, source, source_ref, created_at, updated_at")
-    .eq("user_id", user.id)
-    .ilike("text", input.text)
-    .maybeSingle();
-
-  if (selectError) throw selectError;
-
-  if (existing) {
-    return { entry: existing as WordBankEntry, alreadyExisted: true };
-  }
-
-  const { data: inserted, error: insertError } = await supabase
-    .from(TABLE)
-    .insert({
-      user_id: user.id,
-      text: input.text,
-      meaning: input.definition,
-      example: input.example ?? null,
-      ipa: input.ipa ?? null,
-      audio_url: input.audioUrl ?? null,
-      difficulty: input.difficulty ?? 0,
-      status: "ready",
-      source: "lexicon",
-      source_ref: input.sourceRef,
-    })
-    .select("id, user_id, text, context, meaning, translation, ipa, example, synonyms, image_prompt, audio_url, status, difficulty, error_reason, audio_fetch_attempts, has_audio, ease_factor, interval_days, repetitions, srs_status, next_review_at, last_reviewed_at, review_count, source, source_ref, created_at, updated_at")
-    .single();
-
-  if (insertError) throw insertError;
-  return { entry: inserted as WordBankEntry, alreadyExisted: false };
-}
+// Re-exportados desde lexicon-mark-queries.ts para mantener compatibilidad con imports existentes.
+export type { LexiconWordInput } from "@/lib/word-bank/lexicon-mark-queries";
+export { markLexiconWordLearned, markLexiconWordMastered } from "@/lib/word-bank/lexicon-mark-queries";
 
 /** Minimal word data for loading animations — only text, ipa, status. */
 export async function getReadyWordSummaries(): Promise<{ text: string; ipa: string | null }[]> {

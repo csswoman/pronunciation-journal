@@ -29,11 +29,16 @@ export const NON_EVALUABLE_CONTENT_ALLOWLIST: readonly NonEvaluableContentAllowa
 
 export const PRACTICE_ROUTE_SURFACES: Record<string, readonly LearningSurface[]> = {
   chunks: ['chunks'],
+  'chunk-duel': ['games'],
   decks: ['grammar_deck', 'user_decks'],
   'essential-words': ['essential_words'],
+  'false-friends-swipe': ['games'],
   games: ['games'],
   immersion: ['immersion'],
+  'memory-match': ['games'],
+  'phoneme-invaders': ['games'],
   sounds: ['sound_lab', 'pronunciation_path'],
+  'weak-form-catcher': ['games'],
   'word-rain': ['games'],
   'word-search': ['games'],
 }

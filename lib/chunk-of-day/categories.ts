@@ -30,6 +30,11 @@ const CHUNK_CATEGORY_LABELS: Record<string, string> = {
   "conversation": "Conversación",
   "phrasal verbs": "Phrasal verbs",
   "phrasal verb": "Phrasal verb",
+  "tech interviews": "Entrevistas técnicas",
+  "selling yourself": "Venderte a ti misma",
+  "engineering day-to-day": "Día a día de ingeniería",
+  "design critique": "Crítica de diseño",
+  "stakeholder meetings": "Reuniones con stakeholders",
 };
 
 export function formatChunkCategory(cat?: string): string | null {

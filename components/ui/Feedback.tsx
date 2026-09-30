@@ -10,6 +10,8 @@ interface FeedbackProps {
   expected?: string;
   explanation?: string;
   action?: ReactNode;
+  /** Extra body content rendered below the explanation (e.g. listen buttons). */
+  children?: ReactNode;
   className?: string;
 }
 
@@ -46,6 +48,7 @@ export default function Feedback({
   expected,
   explanation,
   action,
+  children,
   className,
 }: FeedbackProps) {
   const styles = stateStyles[state];
@@ -83,6 +86,8 @@ export default function Feedback({
           {explanation}
         </p>
       )}
+
+      {children}
     </div>
   );
 }

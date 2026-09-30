@@ -1,11 +1,23 @@
 import { describe, it, expect } from "vitest";
-import { computeCheckpointReadiness } from "@/lib/home/checkpoint-readiness";
+import { computeCheckpointReadiness, lastCompletedCheckpointAt } from "@/lib/home/checkpoint-readiness";
 import { LEVEL_ASSESSMENT_CONTRACTS } from "@/lib/courses/curriculum";
 
 const a1Slugs = LEVEL_ASSESSMENT_CONTRACTS.a1.requiredLessonSlugs;
 const NOW = new Date("2026-09-21T00:00:00.000Z").getTime();
 
 describe("computeCheckpointReadiness", () => {
+  it("ignores an oral-pending result when finding the last completed checkpoint", () => {
+    const recent = new Date(NOW - 60_000).toISOString();
+    const older = new Date(NOW - 24 * 60 * 60 * 1000).toISOString();
+    expect(lastCompletedCheckpointAt([
+      { completed_at: recent, topic_scores: { oralEvidence: { status: "pending" } } },
+      { completed_at: older, topic_scores: { oralEvidence: { status: "passed" } } },
+    ])).toBe(older);
+    expect(lastCompletedCheckpointAt([
+      { completed_at: recent, topic_scores: { oralEvidence: { status: "pending" } } },
+    ])).toBeNull();
+  });
+
   it("is ready when all lessons are done, half have evidence, and no recent attempt", () => {
     const readiness = computeCheckpointReadiness({
       level: "a1",

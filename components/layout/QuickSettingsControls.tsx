@@ -5,16 +5,15 @@
 //   <AccordionRow> — Apariencia (light/dark/system segmented)
 //   <AccordionRow> — Color del tema (hue preset swatches)
 //   <AccordionRow> — Sonidos (mute/exercise/all + volume)
-// <StudyLevelControls /> — CEFR A1–C1, used in the profile preferences panel
 
-import { type CSSProperties, type ReactNode, useId, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useId, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useOKLCHTheme, type ThemePreference } from "@/hooks/useOKLCHTheme";
 import { useUISoundsStore } from "@/lib/stores/uiSoundsStore";
-import { CEFR_LEVELS, type CefrLevel } from "@/lib/essential-words/types";
-import { Check, ChevronDown, Laptop, Moon, Palette, Sun, Target, Volume2 } from "@/components/icons";
-import ContentLevelSelector from "@/components/ui/ContentLevelSelector";
+import { Check, ChevronDown, Laptop, Moon, Palette, Sun, Volume2 } from "@/components/icons";
 import { ACCENT_PRESETS, DEFAULT_ACCENT_ID } from "@/lib/theme/accent-presets";
+
+export { StudyLevelControls } from "./StudyLevelControls";
 
 const APPEARANCE_OPTIONS: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
   { value: "light", label: "Claro", icon: Sun },
@@ -103,8 +102,11 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
   const volume = useUISoundsStore((state) => state.volume);
   const setVolume = useUISoundsStore((state) => state.setVolume);
   const [section, setSection] = useState<AccordionSection | null>("appearance");
+  const [hydrated, setHydrated] = useState(false);
 
-  if (!mounted) return null;
+  useEffect(() => setHydrated(true), []);
+
+  if (!mounted || !hydrated) return null;
 
   const toggle = (next: AccordionSection) => setSection((current) => (current === next ? null : next));
 
@@ -246,33 +248,5 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         </div>
       </AccordionRow>
     </div>
-  );
-}
-
-export function StudyLevelControls({
-  level,
-  onChange,
-  className,
-  footer,
-}: {
-  level: CefrLevel;
-  onChange: (next: CefrLevel) => void;
-  className?: string;
-  footer?: ReactNode;
-}) {
-  return (
-    <section className={cn("border-t border-border-subtle py-3", className)}>
-      <div className="mb-2 flex items-center gap-2">
-        <Target size={15} className="text-fg-subtle" aria-hidden />
-        <p className="font-kicker text-fg-muted">Tu nivel</p>
-      </div>
-      <ContentLevelSelector
-        levels={CEFR_LEVELS}
-        value={level}
-        onChange={onChange}
-        ariaLabel="Nivel de estudio"
-      />
-      {footer}
-    </section>
   );
 }

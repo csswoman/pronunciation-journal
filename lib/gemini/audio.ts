@@ -6,16 +6,64 @@
 // </GeminiAudio>
 
 import { GoogleGenAI } from "@google/genai";
-import { buildReaderAudioPrompt, buildMissionAudioPrompt } from "@/lib/ai-prompts";
+import type { GenerateContentParameters } from "@google/genai";
+import { createHash } from "node:crypto";
+import {
+  buildReaderAudioPrompt,
+  buildMissionAudioPrompt,
+  buildListeningAudioPrompt,
+} from "@/lib/ai-prompts";
+import { getErrorStatus, shouldTryNextModel } from "@/lib/gemini/fallback";
+import { filterAvailable, markCooldownFromError } from "@/lib/gemini/cooldown";
+import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
-/** Default sampling rate for Gemini 2.5/3.1 speech synthesis. */
+/** Fallback sample rate for raw PCM responses from Gemini speech synthesis. */
 export const DEFAULT_SAMPLE_RATE = 24_000;
 
 export const AUDIO_MODELS = [
-  "gemini-2.5-flash-preview-tts",
-  "gemini-2.5-flash",
-  "gemini-3.1-flash-tts-preview",
+  "gemini-3.8-flash-lite-tts",
+  "gemini-3.8-flash-tts",
 ] as const;
+
+export const AUDIO_CACHE_VERSION = "tts-v2";
+export const MIN_TTS_MODEL_INTERVAL_MS = 20_000;
+
+const lastModelStartedAt = new Map<string, number>();
+const inFlightSpeech = new Map<string, Promise<Buffer>>();
+
+function claimModelSlot(model: string): { claimedAt?: number; retryAfterMs?: number } {
+  const now = Date.now();
+  const lastStartedAt = lastModelStartedAt.get(model);
+  if (lastStartedAt !== undefined) {
+    const retryAfterMs = lastStartedAt + MIN_TTS_MODEL_INTERVAL_MS - now;
+    if (retryAfterMs > 0) return { retryAfterMs };
+  }
+  lastModelStartedAt.set(model, now);
+  return { claimedAt: now };
+}
+
+function releaseModelSlot(model: string, claimedAt: number): void {
+  if (lastModelStartedAt.get(model) === claimedAt) lastModelStartedAt.delete(model);
+}
+
+/** Cache identity includes the feature, normalized spoken text, voice, model and manual version. */
+export function buildSpeechCacheKey(
+  feature: string,
+  text: string,
+  voice: string,
+  model: string,
+): string {
+  const normalizedText = text.normalize("NFKC").trim().replace(/\s+/g, " ");
+  return createHash("sha256")
+    .update(JSON.stringify([feature, AUDIO_CACHE_VERSION, normalizedText, voice, model]))
+    .digest("hex");
+}
+
+/** Reset queue timing in unit tests after all queued work has completed. */
+export function _resetSpeechQueueStateForTests(): void {
+  lastModelStartedAt.clear();
+  inFlightSpeech.clear();
+}
 
 /**
  * Prepends a standard 44-byte canonical WAV header to linear PCM 16-bit audio data.
@@ -68,23 +116,73 @@ export interface GenerateSpeechOptions {
   voice?: string;
   models?: readonly string[];
   timeoutMs?: number;
+  feature?: string;
+  onModelUsed?: (model: string) => void;
 }
 
 async function synthesizeGeminiSpeech(
   apiKey: string,
-  prompt: string,
+  prompt: { transcript: string; style: string },
   options: GenerateSpeechOptions = {}
 ): Promise<Buffer> {
-  const { voice = "Puck", models = AUDIO_MODELS, timeoutMs = 45_000 } = options;
+  const voice = options.voice ?? "Puck";
+  const feature = options.feature ?? "tts-unattributed";
+  const models = options.models ?? AUDIO_MODELS;
+  const dedupeKey = createHash("sha256")
+    .update(JSON.stringify([feature, AUDIO_CACHE_VERSION, prompt.transcript, voice, models]))
+    .digest("hex");
+  const existing = inFlightSpeech.get(dedupeKey);
+  if (existing) return existing;
+
+  const task = synthesizeGeminiSpeechNow(apiKey, prompt, options).finally(() => {
+    if (inFlightSpeech.get(dedupeKey) === task) inFlightSpeech.delete(dedupeKey);
+  });
+  inFlightSpeech.set(dedupeKey, task);
+  return task;
+}
+
+async function synthesizeGeminiSpeechNow(
+  apiKey: string,
+  prompt: { transcript: string; style: string },
+  options: GenerateSpeechOptions,
+): Promise<Buffer> {
+  const {
+    voice = "Puck",
+    models = AUDIO_MODELS,
+    timeoutMs = 45_000,
+    feature = "tts-unattributed",
+  } = options;
   const ai = new GoogleGenAI({ apiKey });
 
   let lastError: unknown;
+  let budgetDenied = false;
+  let shortestRetryAfterMs: number | undefined;
+  const deadlineAt = Date.now() + timeoutMs;
 
-  for (const model of models) {
+  for (const model of filterAvailable(models)) {
+    if (Date.now() >= deadlineAt) break;
+    const slot = claimModelSlot(model);
+    if (slot.claimedAt === undefined) {
+      shortestRetryAfterMs = Math.min(shortestRetryAfterMs ?? Number.POSITIVE_INFINITY, slot.retryAfterMs ?? MIN_TTS_MODEL_INTERVAL_MS);
+      continue;
+    }
+    if (!(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      releaseModelSlot(model, slot.claimedAt);
+      continue;
+    }
+    const startedAt = Date.now();
     try {
-      const callPromise = ai.models.generateContent({
+      const remainingMs = Math.max(1, deadlineAt - Date.now());
+      // SDK 2.23 does not type the GenerateContent speechMetadata field yet,
+      // but the Gemini API accepts it and keeps style directions out of speech.
+      const contents = [{
+        role: "user" as const,
+        parts: [{ text: prompt.transcript, speechMetadata: { style: prompt.style } }],
+      }] as unknown as GenerateContentParameters["contents"];
+      const response = await ai.models.generateContent({
         model,
-        contents: prompt,
+        contents,
         config: {
           responseModalities: ["AUDIO"],
           speechConfig: {
@@ -94,14 +192,10 @@ async function synthesizeGeminiSpeech(
               },
             },
           },
+          httpOptions: { timeout: remainingMs },
+          abortSignal: AbortSignal.timeout(remainingMs),
         },
       });
-
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error(`Audio generation timeout (${model})`)), timeoutMs);
-      });
-
-      const response = await Promise.race([callPromise, timeoutPromise]);
       const candidate = response.candidates?.[0];
       const audioPart = candidate?.content?.parts?.find(
         (p) => p.inlineData?.data && p.inlineData?.mimeType?.toLowerCase().startsWith("audio/")
@@ -120,18 +214,38 @@ async function synthesizeGeminiSpeech(
         rawBuffer.length > 12 &&
         rawBuffer.toString("ascii", 0, 4) === "RIFF"
       ) {
+        options.onModelUsed?.(model);
+        void recordModelSuccess(model, feature, Date.now() - startedAt);
         return rawBuffer;
       }
 
       // Convert PCM to standard WAV
       const sampleRate = parseSampleRateFromMime(mime, DEFAULT_SAMPLE_RATE);
+      options.onModelUsed?.(model);
+      void recordModelSuccess(model, feature, Date.now() - startedAt);
       return pcmToWav(rawBuffer, sampleRate);
     } catch (err) {
       lastError = err;
-      // Try next fallback model
+      markCooldownFromError(model, err);
+      void recordModelFailure(model, feature, getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
+      const invalidAudio = String((err as { message?: unknown })?.message ?? "")
+        .includes("did not return audio data in parts");
+      if (!invalidAudio && !shouldTryNextModel(err)) throw err;
     }
   }
 
+  if (Date.now() >= deadlineAt) {
+    throw Object.assign(new Error(`Gemini TTS timed out after ${timeoutMs}ms`), { status: 504 });
+  }
+  if (!lastError && shortestRetryAfterMs !== undefined) {
+    throw Object.assign(new Error("TTS capacity is busy; use local speech and retry later"), {
+      status: 503,
+      retryAfterMs: shortestRetryAfterMs,
+    });
+  }
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily TTS model budget exhausted"), { status: 429 });
+  }
   throw lastError ?? new Error("All TTS audio models failed to generate speech");
 }
 
@@ -157,3 +271,15 @@ export async function generateMissionSpeech(
   return synthesizeGeminiSpeech(apiKey, buildMissionAudioPrompt(lineText), options);
 }
 
+/**
+ * Generates natural spoken audio for a single listening-assessment dialogue line.
+ * Returned as a WAV Buffer; callers may strip the 44-byte header to concatenate
+ * multiple lines into one clip.
+ */
+export async function generateListeningSpeech(
+  apiKey: string,
+  lineText: string,
+  options: GenerateSpeechOptions = {}
+): Promise<Buffer> {
+  return synthesizeGeminiSpeech(apiKey, buildListeningAudioPrompt(lineText), options);
+}

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  DIRECTIONS_BY_DIFFICULTY,
   sanitizeWord,
   calculateOptimalGridSize,
   getPathBetween,
@@ -100,5 +101,23 @@ describe('WordSearch Grid Generator', () => {
         { id: '3', word: 'THISWORDISTOOLONG', displayWord: 'long', clue: 'Too long' },
       ]),
     ).toThrow('Se necesitan al menos 3 palabras distintas')
+  })
+
+  it('only uses the reading directions allowed by the difficulty', () => {
+    const items = ['HOUSE', 'WATER', 'TABLE', 'CHAIR', 'GREEN', 'PLANT'].map((word, index) => ({
+      id: String(index),
+      word,
+      displayWord: word.toLowerCase(),
+      clue: word,
+    }))
+    for (const difficulty of ['easy', 'normal', 'hard'] as const) {
+      const allowed = DIRECTIONS_BY_DIFFICULTY[difficulty].map((d) => d.join(','))
+      for (let run = 0; run < 20; run++) {
+        const puzzle = createWordSearchPuzzle(items, { difficulty })
+        for (const placement of puzzle.placements) {
+          expect(allowed).toContain(placement.direction.join(','))
+        }
+      }
+    }
   })
 })

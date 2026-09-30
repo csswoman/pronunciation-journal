@@ -246,8 +246,8 @@ export function buildWordBankRatingEvent(
   grade: number,
   occurredAt: string = new Date().toISOString(),
   evaluatorMetadata?: Record<string, unknown>,
+  idempotencyKey: string = crypto.randomUUID(),
 ): { event: SRSRatingEventRecord; rpcArgs: Record<string, unknown> } {
-  const idempotencyKey = crypto.randomUUID()
   const event: SRSRatingEventRecord = {
     id: idempotencyKey,
     userId,
@@ -282,8 +282,9 @@ export async function enqueueWordBankSRSUpdate(
   wordId: string,
   grade: number,
   evaluatorMetadata?: Record<string, unknown>,
+  idempotencyKey?: string,
 ): Promise<void> {
-  const { event, rpcArgs } = buildWordBankRatingEvent(userId, wordId, grade, new Date().toISOString(), evaluatorMetadata)
+  const { event, rpcArgs } = buildWordBankRatingEvent(userId, wordId, grade, new Date().toISOString(), evaluatorMetadata, idempotencyKey)
   await db.srsRatingEvents.add(event)
   await enqueue(userId, 'word_bank', 'rpc', rpcArgs, undefined, undefined, 'apply_word_bank_rating_event')
 }

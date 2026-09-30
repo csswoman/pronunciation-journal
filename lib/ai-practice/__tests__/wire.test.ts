@@ -5,7 +5,7 @@ import {
   extractLastTopicFromWire,
   lastUserVoiceMetadataFromWire,
 } from "../wire";
-import { BASE_TUTOR_PROMPT, VOICE_TURN_INSTRUCTION } from "../prompts";
+import { BASE_TUTOR_PROMPT, EXERCISE_SET_INSTRUCTION, VOICE_TURN_INSTRUCTION } from "../prompts";
 import { createEmptyState } from "../learning-state";
 import type { AIMessage } from "../types";
 
@@ -88,7 +88,7 @@ describe("buildSystemPrompt voice instruction", () => {
 // ─── buildSystemPrompt: coach reply language ────────────────────────────────
 
 describe("buildSystemPrompt language policy", () => {
-  const stateAt = (level: "A1" | "A2" | "B1" | "B2") => {
+  const stateAt = (level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2") => {
     const state = createEmptyState("u1", "d1");
     return { ...state, level: { ...state.level, cefrEstimate: level } };
   };
@@ -99,10 +99,50 @@ describe("buildSystemPrompt language policy", () => {
     }
   });
 
+  it("makes early-level chat teach English and request an English retry after correction", () => {
+    const prompt = buildSystemPrompt(stateAt("A1"));
+    expect(prompt).toContain("one short sentence about a concrete familiar topic");
+    expect(prompt).toContain("invite an English attempt");
+    expect(prompt).toContain("apply the corrected form to a NEW example in English");
+  });
+
   it("writes prose in English from B1 upward", () => {
-    for (const level of ["B1", "B2"] as const) {
+    for (const level of ["B1", "B2", "C1", "C2"] as const) {
       expect(buildSystemPrompt(stateAt(level))).toContain("Write your prose in ENGLISH");
     }
+  });
+
+  it("sets a distinct communicative task for each advanced level", () => {
+    expect(buildSystemPrompt(stateAt("B1"))).toContain("connected account, plan, or opinion");
+    expect(buildSystemPrompt(stateAt("B2"))).toContain("defend a viewpoint");
+    expect(buildSystemPrompt(stateAt("C1"))).toContain("audience-aware explanation");
+    expect(buildSystemPrompt(stateAt("C2"))).toContain("fine shades of meaning");
+  });
+
+  it("keeps advanced tasks and correction practice when explanations are in Spanish", () => {
+    const prompt = buildSystemPrompt(stateAt("C1"), { languagePreference: "es" });
+    expect(prompt).toContain("Write your prose in SPANISH");
+    expect(prompt).toContain("audience-aware explanation");
+    expect(prompt).toContain("apply the corrected form to a NEW example in English");
+    expect(prompt).not.toContain("one short sentence about a concrete familiar topic");
+  });
+
+  it("reserves the next-exercise hint for exercise requests", () => {
+    const state = stateAt("B1");
+    expect(buildSystemPrompt(state)).not.toContain("Next exercise:");
+    expect(buildSystemPrompt(state, { exerciseRequested: true })).toContain("Next exercise:");
+  });
+
+  it("requests five varied tool calls only for exercise turns", () => {
+    expect(buildSystemPrompt(null)).not.toContain(EXERCISE_SET_INSTRUCTION);
+    expect(buildSystemPrompt(null, { exerciseRequested: true })).toContain(EXERCISE_SET_INSTRUCTION);
+  });
+
+  it("uses the canonical learner level over a stale coach state estimate", () => {
+    const prompt = buildSystemPrompt(stateAt("A1"), { learnerLevel: "C1" });
+    expect(prompt).toContain("Student: C1");
+    expect(prompt).toContain("audience-aware explanation");
+    expect(prompt).not.toContain("one short sentence about a concrete familiar topic");
   });
 
   it("defaults to Spanish (A1) when there is no learning state yet", () => {
@@ -112,6 +152,8 @@ describe("buildSystemPrompt language policy", () => {
   it("lets an explicit preference override the level default", () => {
     expect(buildSystemPrompt(stateAt("A1"), { languagePreference: "en" }))
       .toContain("Write your prose in ENGLISH");
+    expect(buildSystemPrompt(stateAt("A1"), { languagePreference: "en" }))
+      .toContain("one short sentence about a concrete familiar topic");
     expect(buildSystemPrompt(stateAt("B2"), { languagePreference: "es" }))
       .toContain("Write your prose in SPANISH");
   });
@@ -197,5 +239,36 @@ describe("buildSystemPrompt interests", () => {
   it("keeps interests in mission mode", () => {
     const prompt = buildSystemPrompt(null, { missionId: "roleplay.cafe", interests: ["travel"] });
     expect(prompt).toContain("travel");
+  });
+});
+
+describe("buildSystemPrompt recent stems", () => {
+  it("adds the anti-repetition list", () => {
+    const prompt = buildSystemPrompt(null, {
+      exerciseRequested: true,
+      recentStems: ["where did you go yesterday?", "i have worked here since may"],
+    });
+    expect(prompt).toContain("Do not repeat these exercise sentences");
+    expect(prompt).toContain("- where did you go yesterday?");
+    expect(prompt).toContain("- i have worked here since may");
+  });
+
+  it("omits the block when there are no recent stems", () => {
+    expect(buildSystemPrompt(null, { recentStems: [] }))
+      .not.toContain("Do not repeat these exercise sentences");
+  });
+});
+
+describe("buildSystemPrompt practice rotation", () => {
+  it("includes the client-selected angle and exact format order", () => {
+    const prompt = buildSystemPrompt(null, {
+      exerciseRequested: true,
+      practiceContext: {
+        angle: "travel",
+        formats: ["fill-blank", "multiple-choice", "fill-blank", "multiple-choice", "speaking"],
+      },
+    });
+    expect(prompt).toContain('scenario angle "travel"');
+    expect(prompt).toContain("fill-blank, multiple-choice, fill-blank, multiple-choice, speaking");
   });
 });

@@ -18,12 +18,14 @@ interface JournalDeleteEntryButtonProps {
   entry: JournalEntryRecord
   /** Ruta a la que navegar tras borrar. */
   redirectTo?: string
+  onDeleteSuccess?: () => void
 }
 
 /** Two-step (confirm-then-commit) destructive action — no modal needed for a single record delete. */
 export function JournalDeleteEntryButton({
   entry,
   redirectTo = '/journal',
+  onDeleteSuccess,
 }: JournalDeleteEntryButtonProps) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
@@ -34,7 +36,11 @@ export function JournalDeleteEntryButton({
     setIsDeleting(true)
     try {
       await deleteJournalEntry(entry)
-      router.push(redirectTo)
+      if (onDeleteSuccess) {
+        onDeleteSuccess()
+      } else {
+        router.push(redirectTo)
+      }
     } catch {
       setIsDeleting(false)
       setConfirming(false)

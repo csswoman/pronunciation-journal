@@ -2,6 +2,7 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PracticeExercise } from "@/lib/practice/types";
 
 interface TrackingMockValue {
   items: unknown[];
@@ -17,6 +18,7 @@ interface TrackingMockValue {
 const trackingState = vi.hoisted(() => ({
   value: { items: [], reviewSources: [], words: [], loading: false, userId: "user-1", addWord: vi.fn(), updateWord: vi.fn(), removeWord: vi.fn() } as TrackingMockValue,
 }));
+const reviewQueueState = vi.hoisted(() => ({ exercises: [] as unknown[] }));
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("@/hooks/useTracking", () => ({
@@ -37,21 +39,27 @@ vi.mock("@/components/vocabulary/words/QuickAddModal", () => ({
     </div>
   ) : null,
 }));
-vi.mock("@/lib/tracking/review-queue", () => ({ buildTrackingReviewQueue: () => ({ items: [] }) }));
+vi.mock("@/lib/tracking/review-queue", () => ({
+  buildTrackingReviewQueue: () => ({ exercises: reviewQueueState.exercises }),
+}));
+vi.mock("../TrackingReviewRunner", () => ({
+  default: () => <div data-testid="tracking-review-runner">Sesión de repaso</div>,
+}));
 
 import TrackingClient from "../TrackingClient";
 
 describe("TrackingClient capture shortcut", () => {
   beforeEach(() => {
     trackingState.value = { items: [], reviewSources: [], words: [], loading: false, userId: "user-1", addWord: vi.fn(), updateWord: vi.fn(), removeWord: vi.fn() };
+    reviewQueueState.exercises = [];
   });
 
-  it("opens Tracking word capture with N outside an editable field", () => {
+  it("opens Tracking word capture with N outside an editable field", async () => {
     render(<TrackingClient />);
 
     fireEvent.keyDown(window, { key: "n" });
 
-    expect(screen.getByRole("dialog")).toHaveTextContent("TRACKING");
+    expect(await screen.findByRole("dialog")).toHaveTextContent("TRACKING");
   });
 
   it("does not steal N while the user is typing", () => {
@@ -62,7 +70,7 @@ describe("TrackingClient capture shortcut", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("shows Dictionary word details instead of reducing a word to its translation", () => {
+  it("shows Dictionary word details instead of reducing a word to its translation", async () => {
     trackingState.value = {
       items: [],
       words: [],
@@ -86,13 +94,13 @@ describe("TrackingClient capture shortcut", () => {
     expect(screen.getByText("able to recover quickly")).toBeInTheDocument();
     expect(screen.getByText("“She is resilient after setbacks.”")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Editar resilient" }));
-    expect(screen.getByRole("dialog", { name: "Editar palabra" })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "Editar palabra" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Cancelar" }));
     fireEvent.click(screen.getByRole("button", { name: "Eliminar resilient" }));
-    expect(screen.getByRole("alertdialog", { name: "Eliminar “resilient”" })).toBeInTheDocument();
+    expect(await screen.findByRole("alertdialog", { name: "Eliminar “resilient”" })).toBeInTheDocument();
   });
 
-  it("opens the existing word in the editor instead of saving a duplicate", () => {
+  it("opens the existing word in the editor instead of saving a duplicate", async () => {
     trackingState.value = {
       items: [],
       reviewSources: [],
@@ -106,11 +114,24 @@ describe("TrackingClient capture shortcut", () => {
 
     render(<TrackingClient />);
     fireEvent.keyDown(window, { key: "n" });
+    await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "Editar la que ya tienes" }));
 
-    const editor = screen.getByRole("dialog", { name: "Editar palabra" });
+    const editor = await screen.findByRole("dialog", { name: "Editar palabra" });
     expect(editor).toBeInTheDocument();
     expect(screen.getByDisplayValue("resilient")).toBeInTheDocument();
+  });
+
+  it("loads the review runner only after starting a session", async () => {
+    reviewQueueState.exercises = [{} as PracticeExercise];
+
+    render(<TrackingClient />);
+
+    expect(screen.queryByTestId("tracking-review-runner")).not.toBeInTheDocument();
+    const startReview = screen.getByRole("button", { name: "Repasar" });
+    expect(startReview).toBeEnabled();
+    fireEvent.click(startReview);
+    expect(await screen.findByTestId("tracking-review-runner")).toBeInTheDocument();
   });
 
   it("renders kind badge (chip) for saved items", () => {
@@ -135,8 +156,8 @@ describe("TrackingClient capture shortcut", () => {
     };
 
     render(<TrackingClient />);
-    expect(screen.getByText("Palabra")).toBeInTheDocument();
-    expect(screen.getByText("Frase")).toBeInTheDocument();
+    expect(screen.getByText("PALABRA")).toBeInTheDocument();
+    expect(screen.getByText("FRASE")).toBeInTheDocument();
   });
 
   it("filters items when typing in the search input", () => {
@@ -190,15 +211,14 @@ describe("TrackingClient capture shortcut", () => {
 
     render(<TrackingClient />);
     expect(screen.getByText("Word 1")).toBeInTheDocument();
-    expect(screen.getByText("Word 15")).toBeInTheDocument();
-    expect(screen.queryByText("Word 16")).not.toBeInTheDocument();
+    expect(screen.getByText("Word 10")).toBeInTheDocument();
+    expect(screen.queryByText("Word 11")).not.toBeInTheDocument();
 
-    const nextBtn = screen.getByRole("button", { name: "Página siguiente" });
+    const nextBtn = screen.getByRole("button", { name: "Cargar más" });
     fireEvent.click(nextBtn);
 
-    expect(screen.getByText("Word 16")).toBeInTheDocument();
+    expect(screen.getByText("Word 11")).toBeInTheDocument();
     expect(screen.getByText("Word 20")).toBeInTheDocument();
-    expect(screen.queryByText("Word 1")).not.toBeInTheDocument();
   });
 
   it("renders coach badge and filters by coach origin", () => {
@@ -223,11 +243,10 @@ describe("TrackingClient capture shortcut", () => {
     };
 
     render(<TrackingClient />);
-    expect(screen.getByText("✦ coach")).toBeInTheDocument();
     expect(screen.getByText("creepy")).toBeInTheDocument();
     expect(screen.getByText("resilient")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Del coach" }));
+    fireEvent.click(screen.getByRole("button", { name: /Del coach/i }));
     expect(screen.getByText("creepy")).toBeInTheDocument();
     expect(screen.queryByText("resilient")).not.toBeInTheDocument();
   });

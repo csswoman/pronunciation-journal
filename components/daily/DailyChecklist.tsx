@@ -8,8 +8,6 @@
 //   StudyTipDisclosure
 //   ImmersionLogCard
 //   RecommendedPracticeCard
-// </DailyChecklist>
-
 import { useEffect, useMemo, useState } from 'react'
 import PageLayout from '@/components/layout/PageLayout'
 import PageHeader from '@/components/layout/PageHeader'
@@ -21,11 +19,15 @@ const DailyStepSession = dynamic(() => import('./DailyStepSession'), {
   loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando sesión…</div>,
 })
 import SessionRecapCard from './SessionRecapCard'
-import DailyPlanCard from './DailyPlanCard'
+import HomeDailyCard from '@/components/home/HomeDailyCard'
 import DailyOverviewSummary from './DailyOverviewSummary'
 import DailyProgressSidebar from './DailyProgressSidebar'
 import DailyExploreLinks from './DailyExploreLinks'
 import type { WeeklyProgressData } from '@/lib/progress/weekly-queries'
+import type { CheckpointReadiness } from '@/lib/home/checkpoint-readiness'
+import type { WeakestPhonemeHome } from '@/lib/home/constants'
+import type { HomePlacementState } from '@/lib/home/placement-state'
+import type { HomePronunciationDiagnosticState } from '@/lib/home/pronunciation-diagnostic-state'
 import DailyLessonCard from './DailyLessonCard'
 import StudyTipDisclosure from './StudyTipDisclosure'
 import { ImmersionLogCard } from './ImmersionLogCard'
@@ -48,6 +50,10 @@ interface DailyChecklistProps {
   streak?: number | null
   /** Corte semanal del progreso para el sidebar. null si falló o no hay sesión. */
   weeklyProgress?: WeeklyProgressData | null
+  checkpointReadiness?: CheckpointReadiness | null
+  weakestPhoneme?: WeakestPhonemeHome | null
+  placementState?: HomePlacementState
+  pronunciationDiagnosticState?: HomePronunciationDiagnosticState
 }
 
 // ── Component ───────────────────────────────────────────────────────────────
@@ -57,12 +63,17 @@ export default function DailyChecklist({
   initialStepId,
   streak = null,
   weeklyProgress = null,
+  checkpointReadiness = null,
+  weakestPhoneme = null,
+  placementState,
+  pronunciationDiagnosticState,
 }: DailyChecklistProps) {
   const { user } = useAuth()
-  const { plan, status, steps, allDone, completedCount, getStepStatus, load, markDone, celebrate } = useDailyPlan({
+  const planState = useDailyPlan({
     conceptLesson,
     autoLoad: true,
   })
+  const { plan, status, steps, allDone, completedCount, getStepStatus, markDone, celebrate } = planState
 
   const {
     view,
@@ -121,6 +132,19 @@ export default function DailyChecklist({
     })
   }, [status, plan?.arc])
 
+  const todayDateFormatted = useMemo(() => {
+    try {
+      const raw = new Date().toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+      })
+      return `HOY · ${raw.replace(',', '').toUpperCase()}`
+    } catch {
+      return 'HOY'
+    }
+  }, [])
+
   // ── Render: sesión de un paso ──────────────────────────────────────────────
   if (view.mode === 'step') {
     const { step, exerciseIndex } = view
@@ -151,27 +175,14 @@ export default function DailyChecklist({
     )
   }
 
-  // ── Render: hub sin paso activo ────────────────────────────────────────────
-  // Home y /daily comparten el mismo plan (useDailyPlan) y el mismo motor de
-  // sesión (useDailySessionRunner). La diferencia es el encuadre: Home muestra
-  // sólo el paso siguiente para ejecutar; /daily despliega el día entero —
-  // los pasos con su porqué, el resumen de progreso, la lección, inmersión y
-  // práctica extra. Tocar un paso aquí lo corre en sitio, igual que en Home.
+  // Render: hub sin paso activo (plan desplegado, progreso y práctica complementaria)
   return (
     <PageLayout archetype="dashboard">
       <PageHeader
-        variant="compact"
-        kicker="Hoy"
-        title="Tu día completo"
-        subtitle="Todo lo de hoy: el plan, la lección y práctica extra"
-        actions={
-          streak != null && streak > 0 ? (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-raised px-3 py-1 font-kicker text-caption font-medium text-fg">
-              <span aria-hidden>🔥</span>
-              <span>{streak} {streak === 1 ? 'día' : 'días'}</span>
-            </div>
-          ) : undefined
-        }
+        variant="default"
+        kicker={todayDateFormatted}
+        title="Tu sesión de hoy"
+        subtitle="Aprende, practica y vuelve a usarlo. Puedes salir y continuar después."
       />
 
       {/* Dos columnas: el día a la izquierda, el corte semanal a la derecha,
@@ -192,58 +203,44 @@ export default function DailyChecklist({
             arc={plan?.arc}
             dueTomorrow={dueTomorrow}
             learned={learnedCount}
-            // TODO: no total-words-per-level source available in this render path
-            // without a new query (Home's totalLevelWords comes from
-            // getEssentialWordsLevelCount, a Dexie call keyed by CEFR level that
-            // isn't fetched anywhere in DailyChecklist today). See
-            // plans/005-remove-fabricated-ui-data.md.
+            // Sin fuente directa de total-words-per-level en este render path (ver plans/005-remove-fabricated-ui-data.md)
             essentialWordsTotal={null}
           />
         ) : null}
 
-        {/* El plan del día, desplegado entero. Home usa este mismo componente
-            con collapseFutureSteps y hideThreadHints; aquí van al revés. */}
-        <DailyPlanCard
-          status={status}
-          steps={steps}
-          getStepStatus={getStepStatus}
-          completedCount={completedCount}
-          allDone={allDone}
+        {/* Mismo componente del Home para mostrar la sesión de hoy */}
+        <HomeDailyCard
+          conceptLesson={conceptLesson}
+          weakestPhoneme={weakestPhoneme}
+          needsPlacement={placementState ? !placementState.hasPlacement : false}
+          needsPronunciation={pronunciationDiagnosticState ? !pronunciationDiagnosticState.hasPronunciationDiagnostic : false}
           onStartStep={startStep}
-          onRetry={() => void load()}
+          planState={planState}
           collapseFutureSteps={false}
-          hideThreadHints={false}
-          showTitle
-          arc={plan?.arc}
         />
 
-        {/* El estado de error lo renderiza DailyPlanCard (con su Reintentar);
-            aquí sólo va el contenido complementario del día. */}
-        {status === 'ready' ? (
-          <div className="flex flex-col gap-4">
-            <DailyLessonCard lesson={conceptLesson} />
-            <StudyTipDisclosure />
+        <details className="rounded-[var(--radius-md)] border border-border-default bg-surface-raised p-[var(--layout-card-pad)]">
+          <summary className="focus-ring cursor-pointer font-label text-fg">Explorar libremente</summary>
+          <div className="mt-4 flex flex-col gap-4">
+            {status === 'ready' ? (
+              <>
+                <DailyLessonCard lesson={conceptLesson} />
+                <StudyTipDisclosure />
+              </>
+            ) : null}
+            <ImmersionLogCard />
+            {recommendation ? <RecommendedPracticeCard recommendation={recommendation} /> : null}
+            <DailyExploreLinks />
           </div>
-        ) : null}
-
-        {/* External Immersion Logger */}
-        <div>
-          <ImmersionLogCard />
+        </details>
         </div>
 
-        {recommendation ? (
-          <div>
-            <p className="font-kicker mb-[var(--layout-stack-tight)] text-fg-muted">
-              Ejercicios extra de hoy
-            </p>
-            <RecommendedPracticeCard recommendation={recommendation} />
-          </div>
+        {weeklyProgress ? (
+          <DailyProgressSidebar
+            data={weeklyProgress}
+            checkpointReadiness={checkpointReadiness}
+          />
         ) : null}
-
-        <DailyExploreLinks />
-        </div>
-
-        {weeklyProgress ? <DailyProgressSidebar data={weeklyProgress} /> : null}
       </div>
     </PageLayout>
   )

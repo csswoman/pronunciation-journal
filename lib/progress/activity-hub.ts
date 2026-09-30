@@ -14,10 +14,10 @@ import {
 } from '@/lib/progress/activity-types'
 import { resolveAnswerSkills } from '@/lib/progress/skill-matrix'
 import { updateConceptSignalsWithEvidence } from '@/lib/courses/assessment-profile'
-import { findStudyByDeckSlug, parseCefrLevelId } from '@/lib/courses/curriculumIndex'
-import type { ConceptSignal } from '@/lib/courses/concept-profile'
+import { collectConceptSignals } from '@/lib/progress/concept-evidence'
 import type { DailyStep, PracticeContext, SessionResult } from '@/lib/practice/types'
 import type { PracticeAnswer } from '@/lib/practice/types'
+import { isEvaluatedPracticeAnswer } from '@/lib/practice/evaluation-status'
 
 export type ActivitySessionInput = {
   practiceContext: PracticeContext
@@ -58,8 +58,7 @@ export type ActivitySessionInput = {
 export function deriveSkillTags(_context: PracticeContext, result: SessionResult): SkillTag[] {
   const tags = new Set<SkillTag>()
   for (const r of result.results) {
-    const isEvaluated = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
-    if (!isEvaluated) continue
+    if (!isEvaluatedPracticeAnswer(r)) continue
     for (const t of resolveAnswerSkills(r.slug, r.exercisePayload)) tags.add(t)
   }
   return [...tags]
@@ -68,6 +67,7 @@ export function deriveSkillTags(_context: PracticeContext, result: SessionResult
 export function sessionXp(result: SessionResult): number {
   let xp = 0
   for (const r of result.results) {
+    if (!isEvaluatedPracticeAnswer(r)) continue
     if (r.score != null) {
       xp += calculateXP(r.score)
     } else {
@@ -123,7 +123,9 @@ export function buildSessionTelemetry(
   const total = sessionResult.results.length
   const source = input.source ?? practiceContextToSource(practiceContext)
   const skillTags = input.explicitSkillTags ?? deriveSkillTags(practiceContext, sessionResult)
-  const correct = sessionResult.results.filter((r) => r.isCorrect).length
+  const correct = sessionResult.results.filter(
+    (result) => isEvaluatedPracticeAnswer(result) && result.isCorrect,
+  ).length
   const planSteps = input.dailyPlanSteps ?? []
   const baseReconciledStepIds = input.explicitReconciledStepIds ?? (
     practiceContext === 'daily'
@@ -179,12 +181,6 @@ export async function recordActivitySession(
   }, { id: input.activitySessionId })
   const { reconciledStepIds } = telemetry
 
-  if (reconciledStepIds.length > 0) {
-    const merged = loadResolvedIds(userId)
-    for (const id of reconciledStepIds) merged.add(id)
-    saveResolvedIds(userId, merged)
-  }
-
   try {
     await enqueue(
       userId,
@@ -194,61 +190,38 @@ export async function recordActivitySession(
       undefined,
       'id',
     )
+    // Only durable session evidence may suppress the manual Daily fallback.
+    if (reconciledStepIds.length > 0) {
+      const merged = loadResolvedIds(userId)
+      for (const id of reconciledStepIds) merged.add(id)
+      saveResolvedIds(userId, merged)
+    }
   } catch (err) {
     console.error('[activity-hub] enqueue activity_sessions failed', err)
   }
 
-  // Aggregate lesson exercise evidence for concept signals (Pieza 7)
-  const lessonStats = new Map<string, { correct: number; total: number }>()
-
-  for (const r of sessionResult.results) {
-    const isEvaluable = r.status === 'answered' || (r.status === undefined && r.userAnswer !== 'skip')
-    if (!isEvaluable) continue
-
-    const payload = r.exercisePayload as Record<string, unknown> | undefined
-    const slugFromPayload = (payload?.lessonSlug as string | undefined) ?? (payload?.deckSlug as string | undefined)
-    const slugFromSourceRef = r.sourceRef?.source === 'grammar_deck' ? r.sourceRef.id : undefined
-    // Metadata describes the session, not every answer. An explicit result-level
-    // slug wins so each evaluable answer contributes to one concept at most.
-    const slug = slugFromPayload ?? slugFromSourceRef ?? input.metadata?.lessonSlug
-    if (slug) {
-      const curr = lessonStats.get(slug) ?? { correct: 0, total: 0 }
-      curr.total += 1
-      if (r.isCorrect) curr.correct += 1
-      lessonStats.set(slug, curr)
-    }
-  }
-
-  if (lessonStats.size > 0) {
-    const nowIso = new Date().toISOString()
-    const signals: ConceptSignal[] = []
-    for (const [lessonSlug, stats] of lessonStats.entries()) {
-      if (stats.total === 0) continue
-      const passed = stats.correct / stats.total >= 0.8
-      // Resolve real CEFR level and human title; falling back to the slug keeps
-      // evidence flowing for decks that are not part of the course curriculum.
-      const study = findStudyByDeckSlug(lessonSlug)
-      signals.push({
-        lessonSlug,
-        // Elective tracks (business, chunks…) are not CEFR levels: fall back to a1.
-        level: parseCefrLevelId(study?.trackId) ?? 'a1',
-        title: study?.lesson.title ?? lessonSlug,
-        selfRating: passed ? 'confident' : 'familiar',
-        status: passed ? 'mastered' : 'review',
-        correct: stats.correct,
-        total: stats.total,
-        assessedAt: nowIso,
-        source: 'exercise',
-      })
-    }
-    if (signals.length > 0) {
-      void updateConceptSignalsWithEvidence(userId, signals).catch((err) => {
-        console.error('[activity-hub] updateConceptSignalsWithEvidence failed', err)
-      })
-    }
+  // Concept evidence (Pieza 7): accumulated per unique attempt and content.
+  const signals = collectConceptSignals(sessionResult, {
+    sessionId: input.activitySessionId ?? sessionResult.sessionId,
+    metadataLessonSlug: input.metadata?.lessonSlug,
+    nowIso: new Date().toISOString(),
+  })
+  if (signals.length > 0) {
+    void updateConceptSignalsWithEvidence(userId, signals).catch((err) => {
+      console.error('[activity-hub] updateConceptSignalsWithEvidence failed', err)
+    })
   }
 
   return { reconciledStepIds }
+}
+
+/**
+ * True when an activity row already reconciles this exact step today — e.g.
+ * the Daily session that just finished it. A manual checklist row would then
+ * duplicate that session (plan 050). Manual-only steps still get their row.
+ */
+export function isDailyStepAlreadyRecorded(userId: string, stepId: string): boolean {
+  return loadResolvedIds(userId).has(stepId)
 }
 
 /**

@@ -26,11 +26,17 @@ function createContentSecurityPolicy(nonce: string): string {
     // The root layout is dynamically rendered so Next can apply this nonce to
     // its inline RSC payloads and framework scripts. The hash also keeps the
     // blocking theme script independently verifiable.
-    `script-src 'self' 'nonce-${nonce}' 'sha256-${THEME_INIT_SCRIPT_SHA256}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
+    // 'wasm-unsafe-eval' only allows compiling WebAssembly modules (Kokoro's
+    // ONNX Runtime, Plan 039) — it is not 'unsafe-eval' and does not enable
+    // string-based JS eval.
+    `script-src 'self' 'nonce-${nonce}' 'sha256-${THEME_INIT_SCRIPT_SHA256}' 'strict-dynamic' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
     // Styles: keep 'unsafe-inline' — runtime style attributes and CSS tooling still need it.
     // A style nonce alone would ignore unsafe-inline in modern browsers and break them.
     "style-src 'self' 'unsafe-inline'",
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com https://api.dictionaryapi.dev",
+    // https://huggingface.co + https://*.hf.co: on-demand download of the
+    // Kokoro TTS model weights (Plan 039). The .wasm runtime itself ships
+    // from public/wasm/ (same-origin), so worker-src stays 'self'.
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://accounts.google.com https://api.dictionaryapi.dev https://huggingface.co https://*.hf.co",
   ].join("; ");
 }
 
@@ -47,7 +53,22 @@ export async function proxy(request: NextRequest) {
     return response;
   };
 
-  if (!isSupabaseConfigured()) {
+  const pathname = request.nextUrl.pathname.replace(/\/$/, "");
+  if (
+    process.env.NODE_ENV !== "development" &&
+    (pathname === "/test" || pathname === "/dev/sounds")
+  ) {
+    return new NextResponse("Not Found", {
+      status: 404,
+      headers: {
+        "Content-Security-Policy": contentSecurityPolicy,
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
+  }
+
+  // The precached shell must never refresh auth or serialize account data.
+  if (request.nextUrl.pathname === "/offline" || !isSupabaseConfigured()) {
     return nextResponse();
   }
 
@@ -97,7 +118,7 @@ export async function proxy(request: NextRequest) {
     // cookies so we stop retrying the same doomed refresh on every request.
     const code = (error as { code?: string } | null)?.code;
     if (code === "refresh_token_not_found" || code === "refresh_token_already_used") {
-      await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+      await supabase.auth.signOut({ scope: "local" }).catch(() => { });
     } else {
       console.error("[auth] proxy getClaims failed", error);
     }

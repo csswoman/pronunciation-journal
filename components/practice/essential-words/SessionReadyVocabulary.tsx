@@ -15,9 +15,9 @@ interface Props {
   totalWords?: number
 }
 
-export function SessionReadyVocabulary({ buckets, totalWords = 2800 }: Props) {
+export function SessionReadyVocabulary({ buckets, totalWords = 0 }: Props) {
   const touched = LABELS.reduce((sum, row) => sum + (buckets[row.key] ?? 0), 0)
-  const displayTotal = totalWords && totalWords > 0 ? totalWords : 2800
+  const displayTotal = totalWords ?? 0
 
   return (
     <PastelCard
@@ -42,7 +42,7 @@ export function SessionReadyVocabulary({ buckets, totalWords = 2800 }: Props) {
       >
         {LABELS.map((row) => {
           const value = buckets[row.key] ?? 0
-          if (value <= 0) return null
+          if (value <= 0 || displayTotal <= 0) return null
           const pct = Math.max(1.5, (value / displayTotal) * 100)
           return (
             <div

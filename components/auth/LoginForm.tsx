@@ -2,7 +2,6 @@ import { AuthInput } from "@/components/auth/AuthInput";
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthCheckbox } from "@/components/auth/AuthCheckbox";
 import { AuthGoogleButton } from "@/components/auth/AuthGoogleButton";
-import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { SocialDivider } from "@/components/auth/SocialDivider";
 
 interface LoginFormProps {
@@ -16,7 +15,7 @@ interface LoginFormProps {
   onSubmit: (e: React.FormEvent) => void;
   onForgot: () => void;
   onGoogle: () => void;
-  onGuest: () => void;
+  onGuest?: () => void;
   /** When false, guest CTA lives at the panel level (explore-first). */
   showGuest?: boolean;
   submitLabel?: string;
@@ -34,14 +33,15 @@ export function LoginForm({
   onSubmit,
   onForgot,
   onGoogle,
-  onGuest,
-  showGuest = true,
   submitLabel = "Iniciar sesión",
   googleLabel,
 }: LoginFormProps) {
   return (
     <form onSubmit={onSubmit} className="flex flex-col">
-      <div className="flex flex-col gap-3">
+      <AuthGoogleButton onClick={onGoogle} pending={pending} label={googleLabel} />
+      <SocialDivider label="o con tu correo" />
+
+      <div className="flex flex-col gap-4">
         <AuthInput
           type="email"
           label="Correo electrónico"
@@ -54,25 +54,27 @@ export function LoginForm({
         <AuthInput
           type="password"
           label="Contraseña"
-          placeholder=""
+          placeholder="Tu contraseña"
           value={password}
           onChange={setPassword}
           required
           autoComplete="current-password"
           minLength={6}
+          rightLabel={
+            <AuthButton
+              label="¿La olvidaste?"
+              pending={false}
+              type="button"
+              variant="secondary"
+              onClick={onForgot}
+            />
+          }
         />
-        <div className="flex items-center justify-between">
+        <div className="flex items-center pt-0.5">
           <AuthCheckbox
-            label="Recordarme"
+            label="Recordarme en este equipo"
             checked={rememberMe}
             onChange={setRememberMe}
-          />
-          <AuthButton
-            label="¿Olvidaste la contraseña?"
-            pending={false}
-            type="button"
-            variant="secondary"
-            onClick={onForgot}
           />
         </div>
       </div>
@@ -80,14 +82,7 @@ export function LoginForm({
       <div className="mt-6">
         <AuthButton label={submitLabel} pending={pending} />
       </div>
-
-      <div className="mt-8">
-        <SocialDivider />
-        <div className="mt-4 flex flex-col gap-2.5">
-          <AuthGoogleButton onClick={onGoogle} pending={pending} label={googleLabel} />
-          {showGuest ? <AuthGuestButton onClick={onGuest} pending={pending} /> : null}
-        </div>
-      </div>
     </form>
   );
 }
+

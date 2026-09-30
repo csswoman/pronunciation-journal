@@ -31,7 +31,7 @@ export default function VocabularyReviewCard({ dueCount, learnedCount, totalCoun
   const progressRatio = hasCounts ? learned / totalCount! : 0
   const progressPct = Math.round(progressRatio * 100)
   const isFresh = hasCounts && learned === 0
-  const activeSegments = learned > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 1
+  const activeSegments = learned > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 0
 
   return (
     <Link

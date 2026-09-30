@@ -94,6 +94,25 @@ describe('answerToGrade', () => {
   })
 
   describe('discriminated status and retry behavior', () => {
+    it('transports hints without activating the pending hint penalty', () => {
+      expect(answerToGrade({ ...input({ slug: 'written_production', score: 10 }), hintsUsed: 1 })).toBe(0)
+      expect(answerToGrade({ ...input({ slug: 'written_production', score: 100 }), hintsUsed: 2 })).toBe(5)
+    })
+    it.each(['speak_word', 'written_production', 'spoken_production'] as const)(
+      '%s caps a scored retry without raising an already lower grade', (slug) => {
+        expect(answerToGrade({ ...input({ slug, score: 100 }), firstTryFailed: true })).toBe(1)
+        expect(answerToGrade({ ...input({ slug, score: 0 }), firstTryFailed: true })).toBe(0)
+      },
+    )
+
+    it.each(['unscored', 'evaluator_failed', 'skipped'] as const)(
+      '%s overrides score and prior failure', (status) => {
+        expect(answerToGrade({
+          ...input({ slug: 'written_production', score: 100 }), status, firstTryFailed: true,
+        })).toBeNull()
+      },
+    )
+
     it('skipped status returns null grade', () => {
       expect(answerToGrade({ ...input({ isCorrect: false }), status: 'skipped' })).toBeNull()
       expect(answerToGrade({ ...input({ isCorrect: false }), userAnswer: 'skip' })).toBeNull()

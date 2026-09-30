@@ -2,6 +2,7 @@ import type { CEFRLevel } from '@/lib/exercises/cefr'
 import type { PronunciationTargetId } from '@/lib/pronunciation/targets/types'
 import type { SpeechConstraint } from '@/lib/exercises/speech-constraints'
 import type { ExerciseType as CanonicalExerciseType } from './taxonomy'
+import type { AnswerSpec } from './answer-match'
 
 // ── Source references ──────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ export type GenericExerciseType =
   | 'sentence_transformation'
   | 'translation_es_en'
   | 'cs_shadow_phrase'
+  | 'personalization'
 
 interface BaseGenericExercise {
   /** Deterministic id: hash of type + sourceRef + stable payload fields. */
@@ -107,6 +109,7 @@ export interface ReorderWordsExercise extends BaseGenericExercise {
   sentence: string
   /** Shuffled tokens (words). */
   tokens: string[]
+  answerSpec?: AnswerSpec
 }
 
 // Sentence context ───────────────────────────────────────────────────────────
@@ -158,6 +161,8 @@ export interface ErrorCorrectionExercise extends BaseGenericExercise {
   sentence: string
   correctSentence: string
   explanation?: string
+  answerSpec?: AnswerSpec
+  alreadyCorrect?: boolean
 }
 
 export interface ConjugationBlankExercise extends BaseGenericExercise {
@@ -175,6 +180,8 @@ export interface SentenceTransformationExercise extends BaseGenericExercise {
   instruction: string
   referenceAnswer?: string
   acceptedAnswers?: string[]
+  answerSpec?: AnswerSpec
+  requires?: import('./structure-checks').StructureCheckId[]
 }
 
 export interface TranslationEsEnExercise extends BaseGenericExercise {
@@ -228,6 +235,15 @@ export interface CsShadowPhraseExercise extends BaseGenericExercise {
   pronunciationTargetId?: PronunciationTargetId
 }
 
+export type PersonalizationExercise = BaseGenericExercise & {
+  type: 'personalization'
+  hintEs?: string
+  example?: string
+} & (
+  | { mode: 'frame'; frame: string; slot: 'number' | 'word' | 'phrase'; requires?: import('./structure-checks').StructureCheckId[] }
+  | { mode: 'open'; promptEs: string; starter?: string; requires: import('./structure-checks').StructureCheckId[]; minWords: number; maxWords: number }
+)
+
 export type GenericExercise =
   | FillBlankExercise
   | SentenceDictationExercise
@@ -242,6 +258,7 @@ export type GenericExercise =
   | WrittenProductionExercise
   | SpokenProductionExercise
   | CsShadowPhraseExercise
+  | PersonalizationExercise
 
 // ── Session answer ─────────────────────────────────────────────────────────
 

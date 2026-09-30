@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 import { GoogleGenAI } from "@google/genai";
 import { streamWithFallback } from "@/lib/gemini/chat-route";
 import { buildSystemPrompt } from "@/lib/ai-practice/wire";

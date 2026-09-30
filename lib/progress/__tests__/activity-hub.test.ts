@@ -181,7 +181,7 @@ describe('recordActivitySession concept signals (Pieza 7)', () => {
     )
   })
 
-  it('updates ConceptSignal with mastered status on 100% success', async () => {
+  it('keeps a single correct answer in review instead of mastered (plan 050)', async () => {
     enqueueMock.mockResolvedValue(1)
     const completedAt = new Date('2026-08-27T12:00:00Z')
     const results: ExerciseResult[] = [
@@ -208,7 +208,7 @@ describe('recordActivitySession concept signals (Pieza 7)', () => {
       expect.arrayContaining([
         expect.objectContaining({
           lessonSlug: 'present-simple',
-          status: 'mastered',
+          status: 'review',
           correct: 1,
           total: 1,
           source: 'exercise',

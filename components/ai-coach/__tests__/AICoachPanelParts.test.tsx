@@ -103,6 +103,6 @@ describe("ConversationHistoryPanel", () => {
     );
 
     expect(screen.getByText("Conversación libre")).toBeInTheDocument();
-    expect(screen.getByText("Pedir una bebida y confirmar tus preferencias.")).toBeInTheDocument();
+    expect(screen.getByText("Pedir un café y confirmar tus preferencias.")).toBeInTheDocument();
   });
 });

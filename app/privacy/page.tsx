@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="June 20, 2026">
+    <LegalPage title="Privacy Policy" updated="September 24, 2026">
       <p>
         English Journal (also called Pronunciation Journal) is a personal,
         non-commercial web app for practicing English pronunciation, vocabulary,
@@ -39,7 +39,10 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Audio you choose to record</strong> — only when you use
-          pronunciation practice features that request microphone access.
+          pronunciation practice features that request microphone access. For
+          A1/A2 oral checkpoints, submitted audio is sent to Google Gemini for
+          transcription. English Journal does not store the original recording
+          or its transcript.
         </li>
       </ul>
 
@@ -55,9 +58,20 @@ export default function PrivacyPage() {
           States.
         </li>
         <li>
-          <strong>Google Gemini</strong> — when you use AI-powered features, the
-          text you submit is sent to Google&apos;s Gemini API to generate practice
-          content. We do not use your data to train AI models.
+          <strong>Google Gemini</strong> — text or audio you submit to AI-powered
+          features is sent to the Gemini API. Google retains submitted content
+          for 55 days for abuse monitoring; handling also differs by
+          service tier, and unpaid services may use content to improve Google
+          products and allow human review. Do not submit personal or sensitive
+          information. See Google&apos;s{" "}
+          <a
+            href="https://ai.google.dev/gemini-api/docs/usage-policies"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Gemini API data handling policy
+          </a>
+          . English Journal does not use your data to train its own models.
         </li>
       </ul>
 

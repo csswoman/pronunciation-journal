@@ -43,8 +43,16 @@ describe("core 1000 session model", () => {
   });
 
   it("advances session summary", () => {
-    expect(advanceSummary(null, true)).toEqual({ practiced: 1, correct: 1 });
-    expect(advanceSummary({ practiced: 3, correct: 2 }, false)).toEqual({ practiced: 4, correct: 2 });
+    expect(advanceSummary(null, true)).toEqual({ practiced: 1, correct: 1, reviewed: 0 });
+    expect(advanceSummary({ practiced: 3, correct: 2, reviewed: 1 }, false)).toEqual({
+      practiced: 4,
+      correct: 2,
+      reviewed: 1,
+    });
+  });
+
+  it("counts a review only when explicitly flagged", () => {
+    expect(advanceSummary(null, true, true)).toEqual({ practiced: 1, correct: 1, reviewed: 1 });
   });
 });
 

@@ -3,6 +3,7 @@ import {
   AI_COACH_RATE_LIMITED_MESSAGE,
   AI_QUOTA_EXHAUSTED_MESSAGE,
   AI_SESSION_REQUIRED_MESSAGE,
+  AI_TRANSCRIPTION_TIMEOUT_MESSAGE,
   AI_UNAVAILABLE_MESSAGE,
   DATA_UNAVAILABLE_MESSAGE,
   isQuotaLikeError,
@@ -22,6 +23,11 @@ describe("degradation messages", () => {
     expect(publicAiErrorMessage(401, "Unauthorized")).toBe(AI_SESSION_REQUIRED_MESSAGE);
     expect(publicAiErrorMessage(429, "Gemini quota")).toBe(AI_QUOTA_EXHAUSTED_MESSAGE);
     expect(DATA_UNAVAILABLE_MESSAGE).toMatch(/sync will retry/i);
+  });
+
+  it("maps 504 to the timeout message and preserves it across client boundaries", () => {
+    expect(publicAiErrorMessage(504, "Transcription failed")).toBe(AI_TRANSCRIPTION_TIMEOUT_MESSAGE);
+    expect(publicAiErrorMessage(undefined, AI_TRANSCRIPTION_TIMEOUT_MESSAGE)).toBe(AI_TRANSCRIPTION_TIMEOUT_MESSAGE);
   });
 
   it("keeps the transient rate-limit copy distinct from the quota wall", () => {

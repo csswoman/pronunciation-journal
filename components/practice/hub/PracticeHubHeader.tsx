@@ -37,7 +37,7 @@ export default function PracticeHubHeader({
         <p className="font-sans text-body-sm text-fg-muted">
           {fromDaily
             ? 'Terminaste el plan de hoy. Elige qué reforzar ahora.'
-            : 'Elige por dónde entrar. Sin orden, sin ruta.'}
+            : 'Descubre una expresión recomendada o elige libremente qué practicar.'}
         </p>
       </div>
 

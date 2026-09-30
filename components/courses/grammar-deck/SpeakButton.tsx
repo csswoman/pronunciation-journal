@@ -49,7 +49,7 @@ export default function SpeakButton({ text, label, className, size = "sm" }: Spe
       aria-label={label ?? `Escuchar: ${text}`}
       title="Escuchar"
     >
-      <Volume2 size={size === "md" ? 16 : 13} strokeWidth={2.25} aria-hidden />
+      <Volume2 size={size === "md" ? 18 : 16} strokeWidth={2} aria-hidden />
     </button>
   );
 }

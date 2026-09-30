@@ -103,7 +103,11 @@ export default function GrammarStudyDeck({
       const resolvedSlug = (deckSlug ?? lessonId) ?? "";
       if (!resolvedSlug) console.warn("[GrammarStudyDeck] deckSlug missing — practice session may be empty");
       const level: CefrLevel = cefrLevel ?? "A1";
-      const exercises = await buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level });
+      const exercises = await buildCoursePracticeSession({
+        deckSlug: resolvedSlug,
+        cefrLevel: level,
+        drill: deck.drill,
+      });
       if (exercises.length > 0) {
         setPracticeExercises(exercises);
         setPhase("practice");
@@ -115,7 +119,7 @@ export default function GrammarStudyDeck({
     } finally {
       setPracticeLoading(false);
     }
-  }, [deck.meta, lessonId, deckSlug, cefrLevel, practiceLoading]);
+  }, [deck.meta, deck.drill, lessonId, deckSlug, cefrLevel, practiceLoading]);
 
   useEffect(() => {
     if (phase !== "cards") return;
@@ -139,7 +143,11 @@ export default function GrammarStudyDeck({
     const resolvedSlug = (deckSlug ?? lessonId) ?? "";
     if (!resolvedSlug) return;
     const level: CefrLevel = cefrLevel ?? "A1";
-    void buildCoursePracticeSession({ deckSlug: resolvedSlug, cefrLevel: level })
+    void buildCoursePracticeSession({
+      deckSlug: resolvedSlug,
+      cefrLevel: level,
+      drill: deck.drill,
+    })
       .then((exercises) => {
         if (exercises.length === 0) {
           setPracticeError(true);
@@ -148,7 +156,7 @@ export default function GrammarStudyDeck({
         }
       })
       .catch(() => setPracticeError(true));
-  }, [finished, deckSlug, lessonId, cefrLevel]);
+  }, [finished, deckSlug, lessonId, cefrLevel, deck.drill]);
 
   const meta = useMemo(() => {
     if (!courseTitle) return deck.meta;

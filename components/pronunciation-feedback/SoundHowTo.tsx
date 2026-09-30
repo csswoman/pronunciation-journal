@@ -3,11 +3,14 @@
 
 // Planned structure:
 // <SoundHowTo>  — collapsible "Cómo se hace" block
-//   <button> toggle
-//   <div> hookEs title + articulationEs <ul> + short spanishTip
+//   <button> toggle trigger
+//   <div> dark surface panel
+//     <h4> hookEs title
+//     <ol> numbered steps
+//     <div> mint tip callout with sparkles icon
 
 import { useState } from 'react'
-import { cn } from '@/lib/cn'
+import { ChevronDown, ChevronUp, Sparkles } from '@/components/icons'
 
 interface Props {
   /** IPA symbol with slashes, e.g. "/z/" — fallback title when hookEs is null. */
@@ -25,29 +28,43 @@ export function SoundHowTo({ ipa, hookEs, articulationEs, spanishTip, defaultOpe
   if (articulationEs.length === 0 && !spanishTip) return null
 
   return (
-    <div className="mt-2">
+    <div className="mt-3">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1 text-caption text-fg-subtle hover:text-fg-muted"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-fg-subtle hover:text-fg transition-colors cursor-pointer py-1"
       >
-        Cómo se hace {open ? '↓' : '→'}
+        <span>Cómo se hace</span>
+        {open ? <ChevronUp size={14} aria-hidden /> : <ChevronDown size={14} aria-hidden />}
       </button>
 
       {open && (
-        <div className="mt-1.5 flex flex-col gap-1.5">
-          <p className="m-0 text-caption font-semibold text-fg">{hookEs ?? ipa}</p>
+        <div className="mt-2 flex flex-col gap-3 rounded-2xl bg-surface-sunken border border-border-subtle p-4 shadow-inner">
+          <p className="m-0 text-sm font-bold text-fg">{hookEs ?? ipa}</p>
+
           {articulationEs.length > 0 && (
-            <ul className={cn('m-0 flex list-disc flex-col gap-1 pl-4')}>
+            <ol className="m-0 flex flex-col gap-2 p-0 list-none">
               {articulationEs.map((step, i) => (
-                <li key={i} className="text-caption text-fg-muted">{step}</li>
+                <li key={i} className="flex items-start gap-2.5 text-xs text-fg-muted leading-relaxed">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 font-bold text-[11px]">
+                    {i + 1}
+                  </span>
+                  <span className="pt-0.5">{step}</span>
+                </li>
               ))}
-            </ul>
+            </ol>
           )}
-          {spanishTip && <p className="m-0 text-caption text-fg-muted">{spanishTip}</p>}
+
+          {spanishTip && (
+            <div className="mt-1 flex items-start gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs text-emerald-800 dark:text-emerald-200">
+              <Sparkles size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" aria-hidden />
+              <p className="m-0 leading-normal">{spanishTip}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
   )
 }
+

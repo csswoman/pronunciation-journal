@@ -6,12 +6,17 @@ import PracticeSession from "../PracticeSession";
 import type { ToolCall } from "@/lib/ai-practice/types";
 
 vi.mock("../chat/ToolWidget", () => ({
-  default: ({ toolCall, onAnswer }: { toolCall: ToolCall; onAnswer: (callId: string, res: { correct: boolean }) => void }) => (
+  default: ({ toolCall, onAnswer, onNext }: {
+    toolCall: ToolCall;
+    onAnswer: (callId: string, res: { correct: boolean }) => void;
+    onNext: () => void;
+  }) => (
     <div>
       <p>Mock Widget ({toolCall.name})</p>
       <button type="button" onClick={() => onAnswer("call-1", { correct: true })}>
         Responder correcto
       </button>
+      <button type="button" onClick={onNext}>Siguiente local</button>
     </div>
   ),
 }));
@@ -52,7 +57,7 @@ describe("PracticeSession", () => {
     expect(screen.queryByText(/Progreso/i)).not.toBeInTheDocument();
   });
 
-  it("shows final completion feedback and automatically calls onComplete when finished", async () => {
+  it("shows a local summary and contacts the coach only after explicit confirmation", async () => {
     const user = userEvent.setup({ delay: null });
     const onComplete = vi.fn();
     render(
@@ -67,12 +72,50 @@ describe("PracticeSession", () => {
 
     await vi.waitFor(() => {
       expect(screen.getByText("¡Práctica finalizada!")).toBeInTheDocument();
-      expect(onComplete).toHaveBeenCalledWith({ total: 1, correct: 1 });
     }, { timeout: 4000 });
 
     expect(screen.getByText(/1 de 1 ejercicio correcto/)).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Continuar con el Coach/ })).not.toBeInTheDocument();
+    expect(onComplete).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "Comentar con el Coach" }));
+
+    expect(onComplete).toHaveBeenCalledWith({ total: 1, correct: 1, reviewItems: [] });
     expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it("consumes a five-exercise set locally without contacting the coach", async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    const fiveExercises = Array.from({ length: 5 }, (_, index): ToolCall => ({
+      id: `call-${index + 1}`,
+      name: index === 4 ? "render_speaking" : "render_multiple_choice",
+      args: index === 4
+        ? { prompt: "Tell me about yesterday", topic: "past_simple" }
+        : {
+            question: `Question ${index + 1}`,
+            options: ["a", "b"],
+            correctIndex: 0,
+            topic: "past_simple",
+          },
+      status: "rendered",
+    }));
+
+    render(
+      <PracticeSession
+        initialExercises={fiveExercises}
+        onAnswer={vi.fn()}
+        onComplete={onComplete}
+      />,
+    );
+
+    for (let current = 1; current <= 5; current += 1) {
+      expect(screen.getByText(`EJERCICIO ${current} DE 5`)).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: "Siguiente local" }));
+      expect(onComplete).not.toHaveBeenCalled();
+    }
+
+    expect(screen.getByText("¡Práctica finalizada!")).toBeInTheDocument();
+    expect(onComplete).not.toHaveBeenCalled();
   });
 
   it("renders long titles and counter pill in two-row layout", () => {

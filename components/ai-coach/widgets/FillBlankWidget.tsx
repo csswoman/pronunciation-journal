@@ -11,6 +11,8 @@ import { getEffectiveLearnerLevelForViewer } from "@/lib/learner-level/client-qu
 import type { CEFRLevel } from "@/lib/exercises/cefr";
 import ExerciseFeedback from "./ExerciseFeedback";
 
+// Structure: sentence inputs, optional answer choices, submit, ExerciseFeedback.
+
 interface Props {
   args: FillBlankArgs;
   status: "pending" | "rendered" | "answered" | "error";
@@ -49,10 +51,10 @@ export default function FillBlankWidget({ args, status, onAnswer, onNext, onRetr
   }, [user?.id]);
 
   function handleSubmit() {
-    if (!combined || answered) return;
+    if (!combined || answered || evaluation) return;
     const result = evaluateExercise(combined, design, userLevel);
     setEvaluation(result);
-    onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client" });
+    onAnswer({ correct: result.correct, topic: args.topic, gradedBy: "client", firstTryFailed: retried, hintsUsed: showOptions ? 1 : 0 });
   }
 
   function handleRetry() {

@@ -1,0 +1,42 @@
+name: Fill Content Bank
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-content-bank-fill
+  cancel-in-progress: false
+
+jobs:
+  fill:
+    name: Fill content bank with leftover quota
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CONTENT_BANK_FILL_URL: ${{ vars.CONTENT_BANK_FILL_URL }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Validate configuration
+        run: |
+          if [ -z "$CONTENT_BANK_FILL_URL" ]; then
+            echo "Set CONTENT_BANK_FILL_URL to https://your-domain/api/jobs/fill-content-bank"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Set the CRON_SECRET repository secret to the same value configured in Vercel"
+            exit 1
+          fi
+
+      - name: Trigger content bank fill
+        run: |
+          curl --fail --show-error --silent \
+            --max-time 130 \
+            --retry 1 \
+            --retry-delay 10 \
+            --header "Authorization: Bearer $CRON_SECRET" \
+            "$CONTENT_BANK_FILL_URL"

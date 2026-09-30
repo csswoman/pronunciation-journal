@@ -25,15 +25,17 @@ export function buildExerciseResult(params: {
   userAnswer: string
   timeMs: number
   context: ExerciseResult['context']
+  attemptId?: string
   extras?: import('@/lib/practice/types').PracticeSubmitExtras
 }): ExerciseResult {
-  const { current, isCorrect, userAnswer, timeMs, context, extras } = params
+  const { current, isCorrect, userAnswer, timeMs, context, attemptId, extras } = params
   const attribution = resolveAnswerAttribution(current, isCorrect, extras?.score)
   const taskSkill = taskSkillForExercise(current)
   const status = extras?.status ?? (userAnswer === 'skip' ? 'skipped' : 'answered')
   const responseTimeMs = extras?.responseTimeMs ?? timeMs
 
   return {
+    attemptId: attemptId ?? extras?.attemptId,
     exerciseId: current.id,
     slug: current.slug,
     exerciseTypeId: current.exerciseTypeId,
@@ -44,6 +46,7 @@ export function buildExerciseResult(params: {
     responseTimeMs,
     totalInteractionMs: extras?.totalInteractionMs,
     firstTryFailed: extras?.firstTryFailed,
+    hintsUsed: extras?.hintsUsed,
     score: extras?.score,
     feedback: extras?.feedback,
     contentId: current.contentId,
@@ -67,6 +70,9 @@ export function buildExerciseResult(params: {
         : {
             type: current.slug,
             taskSkill,
+            // Authored concept owner; wins over sourceRef ids such as
+            // `grammar-deck:<slug>` or `<slug>:rule:<n>` in concept evidence.
+            lessonSlug: current.payload.kind === 'generic' ? current.payload.data.lessonSlug : undefined,
             sourceRef: current.sourceRef,
             contentId: current.contentId,
             constraintId:

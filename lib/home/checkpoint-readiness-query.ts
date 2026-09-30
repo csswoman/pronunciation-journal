@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { computeCheckpointReadiness, type CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
+import { computeCheckpointReadiness, lastCompletedCheckpointAt, type CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 import type { CefrLevelId } from "@/lib/courses/types";
 import { buildTopicStatusByDeck } from "@/lib/progress/topic-progress";
 import type { TopicProgressRow } from "@/lib/progress/domain-queries";
@@ -35,11 +35,11 @@ export async function getCheckpointReadiness(
       .eq("user_id", userId),
     supabase
       .from("assessment_results")
-      .select("completed_at")
+      .select("completed_at, topic_scores")
       .eq("user_id", userId)
       .eq("mode", "checkpoint")
       .order("completed_at", { ascending: false })
-      .limit(1),
+      .limit(50),
   ]);
 
   if (lessonsResult.error) throw lessonsResult.error;
@@ -80,10 +80,9 @@ export async function getCheckpointReadiness(
     if (hasEnoughRepetitions) evidencedDeckSlugs.add(deckSlug);
   }
 
-  const lastCheckpointAt =
-    !checkpointResult.error && checkpointResult.data && checkpointResult.data.length > 0
-      ? (checkpointResult.data[0].completed_at as string)
-      : null;
+  const lastCheckpointAt = !checkpointResult.error
+    ? lastCompletedCheckpointAt(checkpointResult.data ?? [])
+    : null;
 
   return computeCheckpointReadiness({
     level,

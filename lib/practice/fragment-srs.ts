@@ -90,6 +90,8 @@ export async function upsertFragmentSrs(
     difficulty: scheduled.difficulty,
     state: scheduled.state,
     fsrsRealReviews: nextFsrsRealReviews(fsrsState.fsrsRealReviews, { isRepair: false }),
+    // Keep the legacy interval in step with FSRS; content_srs mirrors it.
+    interval: scheduled.interval,
     nextReview: scheduled.dueAt.toISOString(),
     lastReview: now.toISOString(),
     repetitions: current.repetitions + (grade === "Again" ? 0 : 1),

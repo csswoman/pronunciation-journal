@@ -18,7 +18,7 @@ export function LessonGrid({
 }: LessonGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="h-24 rounded-2xl bg-surface-raised animate-pulse border border-border-subtle" />
         ))}
@@ -35,7 +35,7 @@ export function LessonGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {lessons.map((lesson) => (
         <LessonCard
           key={lesson.id}

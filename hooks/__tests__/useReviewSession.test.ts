@@ -49,8 +49,10 @@ const sampleReviewPlan: ReviewPlan = {
 const summary = {
   failedSentences: [], weakWords: [], dueWords: [], soundsDue: [], dueTopics: [], weakTopics: [],
   dueLessons: [], essentialWordsDue: [], canStartReview: true, nothingDue: false,
-  counts: { failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
-    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, executable: 1, elsewhere: 0, total: 1 },
+  counts: {
+    failedSentences: 0, weakWords: 0, dueWords: 0, soundsDue: 0, dueTopics: 0,
+    weakTopics: 0, dueLessons: 0, essentialWordsDue: 0, executable: 1, elsewhere: 0, total: 1
+  },
 } as ReviewHubSummary
 
 describe('useReviewSession', () => {
@@ -142,5 +144,80 @@ describe('useReviewSession', () => {
     })
 
     expect(result.current.state.phase).toBe('idle')
+  })
+
+  it('startCategoryReview scopes the plan to the chosen domain only', async () => {
+    mockBuildReviewPlan.mockResolvedValueOnce(sampleReviewPlan)
+
+    const scopedSummary = {
+      ...summary,
+      weakWords: [{ id: 'w1' }] as unknown as ReviewHubSummary['weakWords'],
+      dueWords: [{ id: 'w2' }] as unknown as ReviewHubSummary['dueWords'],
+      soundsDue: [{ soundId: 3 }] as unknown as ReviewHubSummary['soundsDue'],
+    }
+
+    const { result } = renderHook(() => useReviewSession())
+
+    act(() => {
+      void result.current.startCategoryReview(scopedSummary, 'weak_words')
+    })
+
+    await waitFor(() => {
+      expect(result.current.state.phase).toBe('session')
+    })
+
+    expect(mockBuildReviewPlan).toHaveBeenCalledWith(mockUser.id, expect.objectContaining({
+      weakWords: scopedSummary.weakWords,
+      dueWords: [],
+      dueSoundIds: [],
+      failedItems: [],
+      includeChunkReview: false,
+    }))
+    // Category sessions never fetch grammar topics — they stay scoped.
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it('startShortReview truncates the composed plan to at most 10 exercises', async () => {
+    const exercise = { id: 'ex', slug: 'fill_blank', exerciseTypeId: 5 } as unknown as import('@/lib/practice/types').PracticeExercise
+    const longPlan: ReviewPlan = {
+      steps: [
+        {
+          id: 'step-a',
+          kind: 'word_review',
+          title: 'A',
+          subtitle: 'A',
+          icon: 'BookOpen',
+          exercises: Array.from({ length: 7 }, (_, i) => ({ ...exercise, id: `a-${i}` })),
+          estMinutes: 5,
+        },
+        {
+          id: 'step-b',
+          kind: 'word_review',
+          title: 'B',
+          subtitle: 'B',
+          icon: 'BookOpen',
+          exercises: Array.from({ length: 7 }, (_, i) => ({ ...exercise, id: `b-${i}` })),
+          estMinutes: 5,
+        },
+      ],
+      totalExercises: 14,
+      nothingDue: false,
+    }
+    mockBuildReviewPlan.mockResolvedValueOnce(longPlan)
+
+    const { result } = renderHook(() => useReviewSession())
+
+    act(() => {
+      void result.current.startShortReview(summary)
+    })
+
+    await waitFor(() => {
+      expect(result.current.state.phase).toBe('session')
+    })
+
+    if (result.current.state.phase === 'session') {
+      const totalExercises = result.current.state.steps.reduce((sum, step) => sum + step.exercises.length, 0)
+      expect(totalExercises).toBeLessThanOrEqual(10)
+    }
   })
 })

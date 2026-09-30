@@ -100,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         config: { temperature: 0, maxOutputTokens: 300 },
       },
       (text) => text.trim(),
-      { timeoutMs: 45_000 }
+      { timeoutMs: 45_000, feature: "/api/gemini/transcribe-sentence" }
     );
 
     transcriptionCache.setL1(key, transcript);

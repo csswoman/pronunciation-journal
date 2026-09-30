@@ -121,6 +121,10 @@ export const EXERCISE_CAPABILITIES = {
     status: 'active', producerIds: ['connected_speech_shadow', 'tracking_phrase_shadow'], renderer: 'generic', evaluator: 'local', modality: 'production', sources: ['text_fragments', 'tracked_items'],
     surfaces: ['daily_plan', 'free_practice', 'review'], selectable: true, writesAnswerHistory: true,
   }),
+  personalization: capability('personalization', {
+    status: 'active', producerIds: ['grammar_deck'], renderer: 'generic', evaluator: 'local', modality: 'production', sources: ['grammar_deck'],
+    surfaces: ['daily_plan', 'free_practice', 'review'], selectable: true, writesAnswerHistory: true,
+  }),
 } as const satisfies Record<ExerciseSlug, ExerciseCapability>
 
 export function isExerciseAvailableOnSurface(slug: ExerciseSlug, surface: ExerciseSurface): boolean {

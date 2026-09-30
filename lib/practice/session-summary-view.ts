@@ -63,6 +63,7 @@ const SLUG_FACET: Record<ExerciseSlug, SessionFacet> = {
   sentence_transformation: 'grammar',
   translation_es_en: 'vocabulary',
   cs_shadow_phrase: 'speak',
+  personalization: 'grammar',
 }
 
 export type PerformanceRow = {

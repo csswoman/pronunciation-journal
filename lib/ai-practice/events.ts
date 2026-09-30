@@ -13,6 +13,7 @@ export type EventPayloads = {
   time_to_first_exercise: { timeMs: number };
   session_started:       { mode: string; conversationId?: number };
   session_ended:         { mode: string; exercisesCompleted: number; correctRate: number; durationMs: number };
+  coach_turn_latency:    { mode: string; timeToFirstTextMs: number | null; totalMs: number };
 };
 
 export async function logEvent<N extends keyof EventPayloads>(

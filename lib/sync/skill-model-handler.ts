@@ -15,6 +15,8 @@ export type RemoteEntryResult =
       details?: string;
       hint?: string;
       permanent: boolean;
+      /** Parked only because transient retries ran out (see failureKind). */
+      exhausted?: boolean;
       retryCount: number;
       attemptedAt: string;
       nextRetryAt?: string;
@@ -40,6 +42,7 @@ export function remoteFailureChanges(
 ): Partial<SyncOutboxEntry> {
   return {
     status: result.permanent ? "failed" : "pending",
+    failureKind: result.permanent ? (result.exhausted ? "exhausted" : "permanent") : undefined,
     retryCount: result.retryCount,
     errorMessage: result.message,
     ...(result.code ? { errorCode: result.code } : {}),

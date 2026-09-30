@@ -42,13 +42,13 @@ describe('DailyLessonCard', () => {
   it('links "Ver lección completa" to the mini-lesson slug', () => {
     render(<DailyLessonCard lesson={lesson} />)
     expect(
-      screen.getByRole('link', { name: /Ver lección completa/i }),
+      screen.getByRole('link', { name: /Ver (la )?lección/i }),
     ).toHaveAttribute('href', '/mini-lessons/weak-forms')
   })
 
   it('opens the coach chat with a prefill about the lesson', async () => {
     render(<DailyLessonCard lesson={lesson} />)
-    await userEvent.click(screen.getByRole('button', { name: /Pregúntale al coach/i }))
+    await userEvent.click(screen.getByRole('button', { name: /Preguntar(le)? al coach/i }))
     expect(openCoach).toHaveBeenCalledWith({
       tab: 'chat',
       prefill: 'Explícame más sobre "Formas débiles"',
@@ -58,6 +58,6 @@ describe('DailyLessonCard', () => {
   it('shows the placeholder empty state when lesson is null', () => {
     render(<DailyLessonCard lesson={null} />)
     expect(screen.getByText('Hoy no hay lección nueva')).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /Ver lección completa/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Ver (la )?lección/i })).not.toBeInTheDocument()
   })
 })

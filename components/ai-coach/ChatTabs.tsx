@@ -5,8 +5,7 @@ import { cn } from "@/lib/cn";
 
 // Planned structure:
 // <ChatTabs>
-//   <TabList> — equal tabs (icon + label)
-//   <ActiveTabHint> — shared description under the strip
+//   <TabList> — pill container with 3 equal tabs (icon + label)
 // </ChatTabs>
 
 export const TABS = [
@@ -24,11 +23,11 @@ interface ChatTabsProps {
 
 export default function ChatTabs({ active, onChange }: ChatTabsProps) {
   return (
-    <div className="@container flex w-full flex-col">
+    <div className="@container flex w-full flex-col px-3.5 py-2 sm:px-4 sm:py-2.5">
       <div
         role="tablist"
         aria-label="Modos del asistente"
-        className="grid w-full grid-cols-3 border-b border-border-subtle"
+        className="grid w-full grid-cols-3 items-center rounded-full border border-border-subtle/70 bg-surface-sunken/80 p-1 shadow-inner"
       >
         {TABS.map(({ id, label, icon: Icon }) => {
           const isActive = active === id;
@@ -41,24 +40,20 @@ export default function ChatTabs({ active, onChange }: ChatTabsProps) {
               title={label}
               onClick={() => onChange(id)}
               className={cn(
-                // Narrow panel/phone: icon above label. Wider coach chrome: one row.
-                "flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 px-1 py-2",
-                "@[22rem]:flex-row @[22rem]:gap-1.5 @[22rem]:px-2",
-                "cursor-pointer border-none border-b-2 -mb-px bg-transparent",
-                "text-caption transition-colors duration-(--transition-fast) focus-ring",
-                "motion-reduce:transition-none",
+                "flex min-h-[38px] w-full cursor-pointer items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-xs font-semibold sm:gap-2 sm:px-4",
+                "transition-all duration-200 ease-out focus-ring motion-reduce:transition-none",
                 isActive
-                  ? "border-b-primary font-medium text-fg"
-                  : "border-b-transparent font-normal text-fg-subtle hover:text-fg-muted",
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-fg-muted hover:bg-surface-raised/50 hover:text-fg",
               )}
             >
               <Icon
                 size={16}
-                strokeWidth={isActive ? 2 : 1.6}
-                className="shrink-0"
+                strokeWidth={isActive ? 2.2 : 1.8}
+                className={cn("shrink-0", isActive ? "text-white" : "text-fg-muted")}
                 aria-hidden
               />
-              <span className="max-w-full truncate">{label}</span>
+              <span className="truncate">{label}</span>
             </button>
           );
         })}

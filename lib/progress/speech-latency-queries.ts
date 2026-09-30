@@ -5,10 +5,12 @@ import {
   type LatencyTrend,
   type SpeechAnswerRow,
 } from './speech-metrics'
+import { isEvaluatedHistoryRow } from '@/lib/practice/evaluation-status'
 
 export interface SpeechLatencyData {
   averageMs: number | null
   trend: LatencyTrend | null
+  hasError?: boolean
 }
 
 const ROLLING_WINDOW_DAYS = 30
@@ -26,18 +28,24 @@ export async function getSpeechLatencyData(
 
   const { data, error } = await supabase
     .from('answer_history')
-    .select('exercise_type_id, time_ms, is_correct, answered_at, exercise_payload')
+    .select('exercise_type_id, time_ms, is_correct, grade, user_answer, answered_at, exercise_payload')
     .eq('user_id', userId)
     .in('exercise_type_id', [16, 17, 23]) // 16: spoken_production, 17: speak_word, 23: cs_shadow_phrase
     .gte('answered_at', since)
     .order('answered_at', { ascending: false })
     .limit(500)
 
-  if (error || !data || data.length === 0) {
+  if (error) {
+    console.error('[progress] getSpeechLatencyData: answer_history query failed', error)
+    return { averageMs: null, trend: null, hasError: true }
+  }
+
+  const evaluatedRows = (data ?? []).filter(isEvaluatedHistoryRow)
+  if (evaluatedRows.length === 0) {
     return { averageMs: null, trend: null }
   }
 
-  const rows: SpeechAnswerRow[] = data.map((r) => {
+  const rows: SpeechAnswerRow[] = evaluatedRows.map((r) => {
     const slug =
       r.exercise_type_id === 16
         ? 'spoken_production'

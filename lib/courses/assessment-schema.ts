@@ -1,9 +1,12 @@
 import { z } from "zod";
 import type { CefrLevelId } from "@/lib/courses/types";
 
+const LEVEL_SCHEMA = z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]);
+const LEVEL_ORDER: CefrLevelId[] = ["a1", "a2", "b1", "b2", "c1", "c2"];
+
 const ConceptSignalSchema = z.object({
   lessonSlug: z.string().trim().min(1).max(200),
-  level: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]),
+  level: LEVEL_SCHEMA,
   title: z.string().trim().min(1).max(200),
   selfRating: z.enum(["unknown", "familiar", "confident"]),
   status: z.enum(["mastered", "review", "learn"]),
@@ -15,14 +18,52 @@ const ConceptSignalSchema = z.object({
   path: ["correct"],
 });
 
+const AssessmentLevelScoreSchema = z.object({
+  level: LEVEL_SCHEMA,
+  correct: z.number().int().min(0).max(84),
+  total: z.number().int().min(1).max(84),
+  minimumCorrect: z.number().int().min(0).max(84),
+  listeningCorrect: z.number().int().min(0).max(36),
+  listeningTotal: z.number().int().min(0).max(36),
+  minimumListeningCorrect: z.number().int().min(0).max(36),
+  writtenListeningMet: z.boolean().optional(),
+  oralRequired: z.boolean().optional(),
+  oralPassed: z.boolean().optional(),
+  thresholdMet: z.boolean(),
+}).strict().refine((score) => score.correct <= score.total, {
+  message: "correct cannot exceed total",
+  path: ["correct"],
+}).refine((score) => score.listeningCorrect <= score.listeningTotal, {
+  message: "listeningCorrect cannot exceed listeningTotal",
+  path: ["listeningCorrect"],
+});
+
+const AssessmentQuestionOutcomeSchema = z.object({
+  questionId: z.string().trim().min(1).max(120),
+  level: LEVEL_SCHEMA,
+  questionNumber: z.number().int().min(1).max(84),
+  correct: z.boolean(),
+}).strict();
+
+const AssessmentQuestionFeedbackSchema = AssessmentQuestionOutcomeSchema.extend({
+  lessonSlug: z.string().trim().min(1).max(200),
+  topicTitle: z.string().trim().min(1).max(200),
+  prompt: z.string().trim().min(1).max(2000),
+  selectedAnswer: z.string().max(500).nullable(),
+  correctAnswer: z.string().trim().min(1).max(500),
+  explanation: z.string().trim().max(4000).optional(),
+}).strict();
+
 export const AssessmentPayloadSchema = z.object({
   assignedLevel: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
-  evaluatedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(6).optional(),
+  evaluatedLevels: z.array(LEVEL_SCHEMA).max(6).optional(),
   confidence: z.enum(["low", "medium", "high"]).optional(),
   passed: z.boolean(),
-  passedLevels: z.array(z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]])).max(6),
+  passedLevels: z.array(LEVEL_SCHEMA).max(6),
   score: z.number().int().min(0),
-  total: z.number().int().min(1).max(500),
+  total: z.number().int().min(0).max(500),
+  listeningScore: z.number().int().min(0).max(36),
+  listeningTotal: z.number().int().min(0).max(36),
   topicScores: z.array(z.object({
     lessonSlug: z.string().min(1).max(200),
     title: z.string().min(1).max(200),
@@ -36,15 +77,81 @@ export const AssessmentPayloadSchema = z.object({
   needsReview: z.array(z.object({
     lessonSlug: z.string().min(1).max(200),
     title: z.string().min(1).max(200),
+    lessonHref: z.string().startsWith("/").max(500).optional(),
   }).strict()).max(100),
   conceptSignals: z.array(ConceptSignalSchema).max(100),
-}).strict();
+  levelScores: z.array(AssessmentLevelScoreSchema).max(6).optional(),
+  oralEvidence: z.object({
+    level: LEVEL_SCHEMA,
+    status: z.enum(["passed", "pending", "not-required"]),
+  }).strict().optional(),
+  questionOutcomes: z.array(AssessmentQuestionOutcomeSchema).max(84).optional(),
+  questionFeedback: z.array(AssessmentQuestionFeedbackSchema).max(84).optional(),
+}).strict().refine((result) => result.score <= result.total, {
+  message: "score cannot exceed total",
+  path: ["score"],
+}).refine((result) => result.listeningScore <= result.listeningTotal, {
+  message: "listeningScore cannot exceed listeningTotal",
+  path: ["listeningScore"],
+});
+
+const AnswersSchema = z.record(z.string().min(1).max(120), z.number().int().min(0).max(10))
+  .refine((answers) => Object.keys(answers).length <= 84, "Too many assessment answers");
+const SelfRatingsSchema = z.record(z.string().min(1).max(200), z.enum(["unknown", "familiar", "confident"]));
+
+function hasValidPlacementLevels(levels: CefrLevelId[] | undefined): boolean {
+  if (!levels || levels.length === 0 || new Set(levels).size !== levels.length) return false;
+  const indices = levels.map((level) => LEVEL_ORDER.indexOf(level));
+  return indices.every((index, position) => position === 0 || index === indices[position - 1] + 1);
+}
+
+const AssessmentRequestFields = {
+  mode: z.enum(["placement", "checkpoint"]),
+  evaluatedLevels: z.array(LEVEL_SCHEMA).min(1).max(6).optional(),
+  evaluatedLevel: LEVEL_SCHEMA.nullable().optional(),
+  checkpointLevel: LEVEL_SCHEMA.nullable().optional(),
+  answers: AnswersSchema.optional(),
+  selfRatings: SelfRatingsSchema.optional(),
+  assessmentAttemptId: z.string().uuid().optional(),
+};
+
+export const AssessmentScoreRequestSchema = z.object({
+  mode: AssessmentRequestFields.mode,
+  evaluatedLevels: AssessmentRequestFields.evaluatedLevels,
+  checkpointLevel: LEVEL_SCHEMA.optional(),
+  answers: AnswersSchema,
+  selfRatings: SelfRatingsSchema.optional(),
+}).strict().superRefine((body, context) => {
+  if (body.mode === "checkpoint" && !body.checkpointLevel) {
+    context.addIssue({ code: "custom", path: ["checkpointLevel"], message: "Checkpoint level required" });
+  }
+  if (body.mode === "placement" && !hasValidPlacementLevels(body.evaluatedLevels)) {
+    context.addIssue({ code: "custom", path: ["evaluatedLevels"], message: "Placement levels must be a contiguous selection" });
+  }
+});
+
+export const AssessmentOralAttemptRequestSchema = z.object({
+  level: z.enum(["a1", "a2"]),
+  assessmentAttemptId: z.string().uuid().optional(),
+  answers: AnswersSchema.optional(),
+}).strict().superRefine((body, context) => {
+  if (!body.assessmentAttemptId && !body.answers) {
+    context.addIssue({ code: "custom", path: ["answers"], message: "Answers are required to start an oral attempt" });
+  }
+  if (body.assessmentAttemptId && body.answers) {
+    context.addIssue({ code: "custom", path: ["answers"], message: "Saved attempt answers cannot be replaced" });
+  }
+});
 
 export const AssessmentResultSchema = z.object({
-  mode: z.enum(["placement", "checkpoint"]),
-  evaluatedLevel: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
-  checkpointLevel: z.enum(["a1", "a2", "b1", "b2", "c1", "c2"] satisfies [CefrLevelId, ...CefrLevelId[]]).nullable().optional(),
-  answers: z.record(z.string().min(1).max(120), z.number().int().min(0).max(10)).optional(),
-  selfRatings: z.record(z.string(), z.enum(["unknown", "familiar", "confident"])).optional(),
+  ...AssessmentRequestFields,
   result: AssessmentPayloadSchema.optional(),
-}).strict();
+}).strict().superRefine((body, context) => {
+  if (body.answers && body.mode === "placement") {
+    if (body.evaluatedLevels && !hasValidPlacementLevels(body.evaluatedLevels)) {
+      context.addIssue({ code: "custom", path: ["evaluatedLevels"], message: "Placement levels must be a contiguous selection" });
+    } else if (!body.evaluatedLevels && !body.evaluatedLevel) {
+      context.addIssue({ code: "custom", path: ["evaluatedLevels"], message: "Placement levels required" });
+    }
+  }
+});

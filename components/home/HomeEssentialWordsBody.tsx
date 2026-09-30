@@ -40,13 +40,13 @@ export default function HomeEssentialWordsBody({
     hasCount && learnedCount > 0 ? Math.max(1, Math.round(progressRatio * TOTAL_SEGMENTS)) : 0;
 
   return (
-    <div className="flex h-full flex-col justify-between gap-4 overflow-hidden">
+    <div className="flex flex-col gap-4 overflow-hidden">
       {/* Encabezado: Kicker "TU MAZO" + Badge de nivel */}
       <div className="flex items-center justify-between gap-2">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-ink select-none">
+        <span className="ts-kicker text-ink select-none">
           TU MAZO
         </span>
-        <span className="inline-flex items-center rounded-full bg-ink px-2.5 py-0.5 font-sans text-caption font-bold text-paper">
+        <span className="inline-flex items-center rounded-full bg-ink px-2.5 py-0.5 ts-badge text-paper">
           {levelKey}
         </span>
       </div>
@@ -56,19 +56,22 @@ export default function HomeEssentialWordsBody({
         <div className="flex items-baseline gap-1.5">
           {hasCount ? (
             <>
-              <span className="font-heading text-4xl font-extrabold text-ink tabular-nums leading-none sm:text-5xl">
+              <span className="ts-display-numeral text-ink tabular-nums leading-none">
                 {learnedCount}
               </span>
-              <span className="font-sans text-body-sm font-medium text-ink-secondary">
-                /{totalLevelWords} palabras
+              <span className="ts-numeral-unit text-ink-secondary tabular-nums">
+                / {totalLevelWords}
+              </span>
+              <span className="ts-body text-ink-secondary">
+                palabras
               </span>
             </>
           ) : (
-            <span className="font-sans text-body-sm font-medium text-ink-secondary">Calculando progreso…</span>
+            <span className="ts-body text-ink-secondary">Calculando progreso…</span>
           )}
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-all group-hover:bg-ink-secondary shrink-0">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 ts-pill text-paper transition-all group-hover:bg-ink-secondary shrink-0">
           <span>Empezar · 4 min</span>
           <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
         </span>
@@ -103,14 +106,14 @@ export default function HomeEssentialWordsBody({
             <div
               key={card.word}
               className={cn(
-                "flex flex-col justify-center rounded-lg border-2 border-ink bg-paper px-3 py-1.5 shadow-xs transition-transform duration-200 group-hover:rotate-0 select-none",
+                "flex flex-col justify-center rounded-md border-2 border-ink bg-paper px-3 py-1.5 shadow-xs transition-transform duration-200 group-hover:rotate-0 select-none",
                 card.rotate,
               )}
             >
-              <span className="font-heading text-caption sm:text-body-sm font-extrabold leading-tight text-ink">
+              <span className="ts-flashcard-word leading-tight text-ink">
                 {card.word}
               </span>
-              <span className="font-phoneme text-caption font-medium leading-tight text-ink-secondary">
+              <span className="ts-ipa-xs text-ink-secondary leading-tight">
                 {card.ipa}
               </span>
             </div>
@@ -118,7 +121,7 @@ export default function HomeEssentialWordsBody({
         </div>
 
         {remainingCount > 0 && (
-          <span className="font-mono text-caption font-semibold text-ink-secondary tabular-nums select-none shrink-0 self-end">
+          <span className="ts-stat text-ink-secondary select-none shrink-0 self-end">
             +{remainingCount}
           </span>
         )}

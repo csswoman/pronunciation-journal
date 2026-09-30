@@ -1,4 +1,8 @@
 import type { CEFRLevel } from "@/lib/exercises/cefr";
+import {
+  AI_COACH_ENGLISH_LANGUAGE_PROMPT,
+  AI_COACH_SPANISH_LANGUAGE_PROMPT,
+} from "@/lib/ai-prompts";
 
 /**
  * Which language the coach writes its *scaffolding* in — explanations,
@@ -31,21 +35,6 @@ export function resolveCoachLanguage(
   return preference ?? defaultCoachLanguage(level);
 }
 
-const SPANISH_POLICY = `LANGUAGE OF YOUR REPLIES:
-Write your prose in SPANISH. The student is an early learner, and an
-explanation they cannot decode teaches nothing.
-The English you are teaching stays in English and is never translated inline:
-example sentences, model answers, and the words or phrases under discussion.
-Quote that English as-is, then explain it in Spanish.
-Never mix the two mid-sentence beyond quoting the English being taught.`;
-
-const ENGLISH_POLICY = `LANGUAGE OF YOUR REPLIES:
-Write your prose in ENGLISH, pitched at the student's level — short sentences,
-concrete words, no idioms they have not met. The student can translate any
-message on demand, so do not pre-translate or append a Spanish gloss.
-Switch to Spanish for one sentence ONLY if the student writes to you in Spanish
-because they are stuck, then return to English.`;
-
 /**
  * The prose-language rule for the system prompt. Card metadata (`rule`,
  * `meaning`, `concept.title`) stays Spanish at every level — those are
@@ -53,5 +42,5 @@ because they are stuck, then return to English.`;
  * instructions live with the tool contracts in `prompts.ts`.
  */
 export function languagePolicyBlock(language: CoachLanguage): string {
-  return language === "es" ? SPANISH_POLICY : ENGLISH_POLICY;
+  return language === "es" ? AI_COACH_SPANISH_LANGUAGE_PROMPT : AI_COACH_ENGLISH_LANGUAGE_PROMPT;
 }

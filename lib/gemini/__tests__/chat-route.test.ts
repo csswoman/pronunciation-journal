@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+vi.mock('server-only', () => ({}))
 import { buildHistory, buildToolConfig, encodeChunk, streamWithFallback } from '../chat-route'
 
 async function readStream(run: (controller: ReadableStreamDefaultController) => unknown): Promise<string> {
@@ -103,6 +104,51 @@ describe('gemini chat-route helpers', () => {
     expect(text).toContain('"type":"tool_call_args_delta"')
     expect(text).toContain('\\"word\\":\\"focus\\"')
     expect(text).toContain('"type":"tool_call_end"')
+  })
+
+  it('sends only the selected tool declarations in AUTO mode', async () => {
+    const create = vi.fn((config: unknown) => {
+      void config
+      return {
+        async *sendMessageStream() {
+          yield { candidates: [{ content: { parts: [{ text: 'Hello' }] } }] }
+        },
+      }
+    })
+    await readStream((controller) => streamWithFallback(
+      { chats: { create } } as never,
+      'system', [], 'hello',
+      { toolChoice: 'auto', allowedTools: ['annotate_turn'] },
+      controller, new AbortController().signal,
+    ))
+    const config = create.mock.calls[0][0] as { config: { tools: Array<{ functionDeclarations: Array<{ name: string }> }> } }
+    expect(config.config.tools[0].functionDeclarations.map((tool) => tool.name)).toEqual(['annotate_turn'])
+  })
+
+  it('uses the exercise and conversation generation budgets', async () => {
+    const create = vi.fn((config: unknown) => {
+      void config
+      return {
+        async *sendMessageStream() {
+          yield { candidates: [{ content: { parts: [{ text: 'ok' }] } }] }
+        },
+      }
+    })
+    const ai = { chats: { create } } as never
+
+    await readStream((controller) => streamWithFallback(
+      ai, 'system', [], 'practice', { toolChoice: 'any', allowedTools: ['render_fill_blank'] },
+      controller, new AbortController().signal,
+    ))
+    await readStream((controller) => streamWithFallback(
+      ai, 'system', [], 'hello', { toolChoice: 'auto', allowedTools: ['annotate_turn'] },
+      controller, new AbortController().signal,
+    ))
+
+    const exerciseConfig = (create.mock.calls[0][0] as { config: object }).config
+    const conversationConfig = (create.mock.calls[1][0] as { config: object }).config
+    expect(exerciseConfig).toMatchObject({ temperature: 0.7, maxOutputTokens: 4096 })
+    expect(conversationConfig).toMatchObject({ temperature: 0.9, maxOutputTokens: 2048 })
   })
 
   it('truncates streams that exceed the chunk limit', async () => {

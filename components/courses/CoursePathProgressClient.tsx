@@ -17,7 +17,6 @@
  */
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
 import CoursePathAsideProgress from "@/components/courses/CoursePathAsideProgress";
 import CoursePathC1Electives from "@/components/courses/CoursePathC1Electives";
 import CoursePathHeroBanner from "@/components/courses/CoursePathHeroBanner";
@@ -28,13 +27,8 @@ import CoursePathSearch from "@/components/courses/CoursePathSearch";
 import CoursePathYaPuedesDecirEsto from "@/components/courses/CoursePathYaPuedesDecirEsto";
 import CoursePracticeSuggestions from "@/components/courses/CoursePracticeSuggestions";
 import { WordCarousel } from "@/components/practice/session/WordCarousel";
-import { useLoadingWords } from "@/hooks/useLoadingWords";
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth/session";
-import { useLearnerLevelId } from "@/hooks/useLearnerLevelId";
-import { deriveLevelView, lessonProgressKey } from "@/lib/courses/progress";
-import type { CefrLevelId, CoursePathLevel } from "@/lib/courses/types";
+import { useCoursePathProgressData } from "@/components/courses/useCoursePathProgressData";
+import type { CoursePathLevel } from "@/lib/courses/types";
 import type { ImmersionLesson } from "@/lib/immersion/types";
 import { cn } from "@/lib/cn";
 
@@ -48,19 +42,6 @@ interface CoursePathProgressClientProps {
   topicImmersionMap?: Record<string, ImmersionLesson>;
 }
 
-async function getOptionalUserId(): Promise<string | null> {
-  try {
-    const user = await getCurrentUser();
-    return user?.id ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function completionKey(userId: string, courseSlug: string, lessonSlug: string): string {
-  return `${userId}:${courseSlug}:${lessonSlug}`;
-}
-
 export default function CoursePathProgressClient({
   level,
   compactHead,
@@ -70,95 +51,20 @@ export default function CoursePathProgressClient({
   electiveTracks,
   topicImmersionMap,
 }: CoursePathProgressClientProps) {
-  const loadingWords = useLoadingWords();
-  const [completedIds, setCompletedIds] = useState<Set<string> | null>(null);
-  const [loadError, setLoadError] = useState(false);
-  const [retryKey, setRetryKey] = useState(0);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-  const navigatedLevelId = level.id as CefrLevelId;
-  const learnerLevelId = useLearnerLevelId(navigatedLevelId);
-  const isNavigatingOwnLevel = learnerLevelId === navigatedLevelId;
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(`course-path:groups:${level.id}`);
-      setExpandedGroups(saved ? (JSON.parse(saved) as Record<string, boolean>) : {});
-    } catch {
-      setExpandedGroups({});
-    }
-  }, [level.id]);
-
-  const handleGroupToggle = (id: string, open: boolean) => {
-    setExpandedGroups((previous) => {
-      const next = { ...previous, [id]: open };
-      try {
-        window.localStorage.setItem(`course-path:groups:${level.id}`, JSON.stringify(next));
-      } catch {
-        // Storage unavailable fallback
-      }
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    let cancelled = false;
-    setCompletedIds(null);
-    setLoadError(false);
-
-    async function loadProgress() {
-      const userId = await getOptionalUserId();
-
-      if (!userId) {
-        if (!cancelled) setCompletedIds(new Set());
-        return;
-      }
-
-      const rows = await db.completedLessons.bulkGet(
-        level.units.flatMap((unit) =>
-          unit.lessons.map((lesson) => completionKey(userId, level.id, lesson.id))
-        )
-      );
-
-      if (cancelled) return;
-
-      setCompletedIds(
-        new Set(
-          rows
-            .filter((row): row is NonNullable<typeof row> => Boolean(row))
-            .map((row) => lessonProgressKey(level.id, row.lessonSlug))
-        )
-      );
-    }
-
-    loadProgress().catch(() => {
-      if (!cancelled) {
-        setCompletedIds(new Set());
-        setLoadError(true);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [level, retryKey]);
-
-  const derived = useMemo(() => {
-    if (!completedIds) return null;
-    return deriveLevelView(level, completedIds);
-  }, [completedIds, level]);
-
-  const currentLesson = derived?.units.flatMap((unit) => unit.lessons).find((lesson) => lesson.state === "current");
-  const firstLesson = derived?.units[0]?.lessons[0];
-
-  const downloadedRows = useLiveQuery(
-    () => db.downloadedLessons.where("trackId").equals(level.id).toArray(),
-    [level.id],
-    [],
-  );
-  const downloadedIds = useMemo(
-    () => new Set((downloadedRows ?? []).map((row) => `${row.trackId}:${row.lessonNumber}`)),
-    [downloadedRows],
-  );
+  const {
+    loadingWords,
+    completedIds,
+    loadError,
+    setRetryKey,
+    expandedGroups,
+    handleGroupToggle,
+    learnerLevelId,
+    isNavigatingOwnLevel,
+    derived,
+    firstLesson,
+    currentLesson,
+    downloadedIds,
+  } = useCoursePathProgressData(level, electiveTracks);
 
   if (!derived || !completedIds) {
     return (
@@ -202,7 +108,7 @@ export default function CoursePathProgressClient({
         {!compactHead && (
           <div className="course-path__head-row flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between mb-2 sm:mb-6">
             <div className="course-path__head min-w-0 flex-1 hidden lg:block">
-              <h2 className="text-h2 font-bold text-fg">{derived.level.title}</h2>
+              <h2 className="text-h2 font-heading font-bold text-fg">{derived.level.title}</h2>
               {derived.level.description && (
                 <p className="course-path__head-subtitle text-body-sm text-fg-muted mt-1">
                   {derived.level.description}
@@ -238,10 +144,17 @@ export default function CoursePathProgressClient({
             ? targetUnit.lessons.filter((l) => l.state === "done").length
             : 0;
           const unitTotalCount = targetUnit ? targetUnit.unit.lessons.length : 6;
+          const targetTrack =
+            level.id === "opcionales" && electiveTracks
+              ? electiveTracks.find((t) =>
+                  t.units.some((u) => u.lessons.some((l) => l.id === targetLesson?.id))
+                )
+              : undefined;
 
           return (
             <CoursePathHeroBanner
               levelId={level.id}
+              trackId={targetTrack?.id}
               levelTitle={level.title}
               levelSpineLabel={level.spineLabel}
               firstLesson={firstLesson}
@@ -260,7 +173,15 @@ export default function CoursePathProgressClient({
         )}
 
         <div className="course-path__units" aria-label="Unidades del curso">
-          {level.isElective ? (
+          {level.id === "opcionales" ? (
+            <CoursePathC1Electives
+              tracks={electiveTracks ?? []}
+              topicImmersionMap={topicImmersionMap}
+              completedIds={completedIds}
+              downloadedIds={downloadedIds}
+              isStandaloneTab
+            />
+          ) : level.isElective ? (
             <div className="course-path__spine-body p-1 sm:p-2">
               {derived.units
                 .flatMap((u) => u.lessons)
@@ -320,8 +241,13 @@ export default function CoursePathProgressClient({
 
         <CoursePracticeSuggestions level={level} levelId={level.id} completedIds={completedIds} />
 
-        {electiveTracks && electiveTracks.length > 0 && (
-          <CoursePathC1Electives tracks={electiveTracks} topicImmersionMap={topicImmersionMap} />
+        {level.id !== "opcionales" && electiveTracks && electiveTracks.length > 0 && (
+          <CoursePathC1Electives
+            tracks={electiveTracks}
+            topicImmersionMap={topicImmersionMap}
+            completedIds={completedIds}
+            downloadedIds={downloadedIds}
+          />
         )}
       </div>
 
@@ -332,6 +258,7 @@ export default function CoursePathProgressClient({
             selectedLevelId={level.id}
             completedCount={completedLessonCount}
             totalCount={totalLessonCount}
+            showCheckpoint={level.id !== "opcionales"}
           />
         </div>
       )}

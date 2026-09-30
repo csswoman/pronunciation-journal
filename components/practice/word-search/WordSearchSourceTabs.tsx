@@ -2,13 +2,19 @@
 
 // Planned structure:
 // <WordSearchSourceTabs>
-//   <TabListContainer />   (role="tablist" con estilo segmented control)
-//     <TabItem />          (Diccionario, Mis palabras, Fonética, Con IA)
+//   <TabsHeader title="3 · DE DÓNDE SALEN LAS PALABRAS" />
+//   <TabsGrid>
+//     <SourceCard option="essential" label="Esenciales" icon={GraduationCap} />
+//     <SourceCard option="dictionary" label="Diccionario" icon={BookOpen} />
+//     <SourceCard option="word_bank" label="Mis mazos" icon={Layers} />
+//     <SourceCard option="curated" label="Por sonido" icon={Volume2} />
+//     <SourceCard option="gemini" label="Con IA" icon={Sparkles} />
+//   </TabsGrid>
 // </WordSearchSourceTabs>
 
 import type { KeyboardEvent } from 'react'
 import type { WordSearchSource } from '@/lib/exercises/word-search/types'
-import { BookOpen, Layers, Sparkles, Volume2 } from '@/components/icons'
+import { BookOpen, GraduationCap, Layers, Sparkles, Volume2 } from '@/components/icons'
 
 interface Props {
   activeSource: WordSearchSource
@@ -21,9 +27,10 @@ const SOURCES: Array<{
   label: string
   icon: typeof BookOpen
 }> = [
+  { id: 'essential', label: 'Esenciales', icon: GraduationCap },
   { id: 'dictionary', label: 'Diccionario', icon: BookOpen },
-  { id: 'word_bank', label: 'Mis palabras', icon: Layers },
-  { id: 'curated', label: 'Fonética', icon: Volume2 },
+  { id: 'word_bank', label: 'Mis mazos', icon: Layers },
+  { id: 'curated', label: 'Por sonido', icon: Volume2 },
   { id: 'gemini', label: 'Con IA', icon: Sparkles },
 ]
 
@@ -59,39 +66,53 @@ export default function WordSearchSourceTabs({
   }
 
   return (
-    <div
-      role="tablist"
-      aria-label="Origen del vocabulario para la sopa de letras"
-      className="grid grid-cols-2 gap-1 rounded-xl border border-border-subtle bg-surface-sunken p-1 shadow-xs sm:grid-cols-4"
-    >
-      {SOURCES.map(({ id, label, icon: Icon }) => {
-        const isSelected = activeSource === id
-        const ariaLabel =
-          id === 'word_bank' ? `${label}, ${myWordsCount} palabras disponibles` : label
+    <div className="flex flex-col gap-2.5">
+      <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted">
+        3 · DE DÓNDE SALEN LAS PALABRAS
+      </span>
 
-        return (
-          <button
-            key={id}
-            type="button"
-            id={`word-search-tab-${id}`}
-            role="tab"
-            aria-selected={isSelected}
-            aria-controls={`word-search-panel-${id}`}
-            aria-label={ariaLabel}
-            tabIndex={isSelected ? 0 : -1}
-            onClick={() => onSelect(id)}
-            onKeyDown={(e) => handleKeyDown(id, e)}
-            className={`focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-2.5 py-2 text-caption font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out-quart active:scale-[0.98] motion-reduce:transform-none sm:px-3 sm:text-body-sm ${
-              isSelected
-                ? 'border border-border-subtle/80 bg-surface-raised text-fg shadow-xs'
-                : 'text-fg-muted hover:bg-surface-raised/40 hover:text-fg'
-            }`}
-          >
-            <Icon className="h-4 w-4 shrink-0" aria-hidden />
-            <span>{label}</span>
-          </button>
-        )
-      })}
+      <div
+        role="tablist"
+        aria-label="Origen del vocabulario para la sopa de letras"
+        className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5"
+      >
+        {SOURCES.map(({ id, label, icon: Icon }) => {
+          const isSelected = activeSource === id
+          const ariaLabel =
+            id === 'word_bank' ? `${label}, ${myWordsCount} palabras disponibles` : label
+
+          return (
+            <button
+              key={id}
+              type="button"
+              id={`word-search-tab-${id}`}
+              role="tab"
+              aria-selected={isSelected}
+              aria-controls={`word-search-panel-${id}`}
+              aria-label={ariaLabel}
+              tabIndex={isSelected ? 0 : -1}
+              onClick={() => onSelect(id)}
+              onKeyDown={(e) => handleKeyDown(id, e)}
+              className={`focus-ring flex flex-col items-start gap-2 rounded-2xl p-3.5 text-left transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                isSelected
+                  ? 'border-2 border-ink bg-sky text-ink shadow-xs'
+                  : 'border-2 border-border-default bg-surface hover:border-border-strong text-fg'
+              }`}
+            >
+              <span
+                className={`flex h-8.5 w-8.5 items-center justify-center rounded-xl transition-colors ${
+                  isSelected ? 'bg-black/12 text-ink' : 'bg-surface-sunken text-fg'
+                }`}
+              >
+                <Icon size={17} aria-hidden />
+              </span>
+              <span className="font-heading text-body-sm font-bold leading-snug">
+                {label}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

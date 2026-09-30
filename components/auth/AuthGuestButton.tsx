@@ -24,11 +24,10 @@ export function AuthGuestButton({
         onClick={onClick}
         disabled={pending}
         className={cn(
-          "focus-ring inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 font-label text-on-primary transition-colors",
-          "hover:bg-primary-hover disabled:opacity-50",
+          "w-full h-12 rounded-full bg-[var(--cta-bg)] hover:bg-[var(--cta-bg-hover)] text-[var(--cta-fg)] font-semibold text-base flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] shadow-xs focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:opacity-50 select-none",
         )}
       >
-        <GuestIcon />
+        <PlayIcon />
         <span>{pending ? "Entrando…" : label}</span>
       </button>
     );
@@ -39,6 +38,21 @@ export function AuthGuestButton({
       <GuestIcon />
       <span>{pending ? "Entrando…" : label}</span>
     </button>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <polygon points="6,3 20,12 6,21" />
+    </svg>
   );
 }
 
@@ -61,3 +75,4 @@ function GuestIcon() {
     </svg>
   );
 }
+

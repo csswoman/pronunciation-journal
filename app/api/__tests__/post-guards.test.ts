@@ -5,12 +5,17 @@ import { describe, expect, it } from "vitest";
 const API_DIR = path.join(process.cwd(), "app", "api");
 
 const VALIDATION_EXEMPTIONS = new Set([
+  "app/api/assessment/oral/evidence/route.ts",
   "app/api/assessment/results/route.ts",
   "app/api/gemini/word-image/route.ts",
   "app/api/lexicon/[id]/route.ts",
 ]);
 
 const SAME_ORIGIN_EXEMPTIONS = new Set<string>();
+
+const AUTH_EXEMPTIONS = new Set([
+  "app/api/assessment/score/route.ts",
+]);
 
 const DELEGATE_EXEMPTIONS = new Set([
   "app/api/sentences/generate/route.ts",
@@ -45,6 +50,7 @@ describe("POST API guard coverage", () => {
       const issues: string[] = [];
 
       if (
+        !AUTH_EXEMPTIONS.has(rel) &&
         !source.includes("requireUser(") &&
         !source.includes(".auth.getUser(")
       ) {

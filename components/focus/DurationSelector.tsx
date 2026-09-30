@@ -1,6 +1,15 @@
 'use client'
 
+// Planned structure:
+// <DurationSelector>
+//   <KickerLabel />
+//   <OptionsGrid>
+//     <DurationOptionCard (3 days / 7 days / 14 days)>
+//   </OptionsGrid>
+// </DurationSelector>
+
 import { cn } from '@/lib/cn'
+import PastelCard from '@/components/layout/PastelCard'
 
 interface DurationSelectorProps {
   value: number
@@ -8,46 +17,114 @@ interface DurationSelectorProps {
   disabled?: boolean
 }
 
-const OPTIONS: { days: number; label: string; hint: string }[] = [
+type OptionDef = {
+  days: number
+  label: string
+  hint: string
+  badge?: string
+}
+
+const OPTIONS: OptionDef[] = [
   { days: 3, label: '3 días', hint: 'Prueba rápida' },
-  { days: 7, label: '7 días', hint: 'Recomendado' },
-  { days: 14, label: '14 días', hint: 'Afianzar bien' },
+  { days: 7, label: '7 días', hint: 'El equilibrio entre hábito y resultado', badge: 'RECOMENDADO' },
+  { days: 14, label: '14 días', hint: 'Para afianzarlo de verdad' },
 ]
 
-/**
- * Selector de duración del sprint con opciones predefinidas.
- */
 export function DurationSelector({ value, onChange, disabled = false }: DurationSelectorProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-body-sm font-semibold text-fg">Duración del sprint</span>
-      <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Duración del sprint">
+    <div className="flex flex-col gap-2.5">
+      <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+        DURACIÓN DEL SPRINT
+      </span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Duración del sprint">
         {OPTIONS.map((opt) => {
           const selected = value === opt.days
+
+          if (selected) {
+            return (
+              <PastelCard
+                key={opt.days}
+                tone="lilac"
+                onClick={() => !disabled && onChange(opt.days)}
+                role="radio"
+                aria-checked={true}
+                tabIndex={0}
+                className="focus-ring relative flex flex-col justify-between gap-4 rounded-3xl p-5 border-2 border-ink shadow-md cursor-pointer transition-all"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-ink">
+                    <div className="h-2 w-2 rounded-full bg-white" />
+                  </div>
+                  {opt.badge && (
+                    <span className="rounded-full bg-primary px-2.5 py-0.5 text-tiny font-extrabold uppercase tracking-wider text-white">
+                      {opt.badge}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h4 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+                    {opt.label}
+                  </h4>
+                  <p className="mt-1 text-tiny font-medium text-ink-secondary">
+                    {opt.hint}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-end gap-1.5 opacity-60">
+                  {Array.from({ length: opt.days > 7 ? 6 : opt.days }).map((_, i) => (
+                    <span key={i} className="h-2 w-2 rounded-full bg-ink" />
+                  ))}
+                </div>
+              </PastelCard>
+            )
+          }
+
           return (
-            <button
+            <div
               key={opt.days}
-              type="button"
+              onClick={() => !disabled && onChange(opt.days)}
               role="radio"
-              aria-checked={selected}
-              disabled={disabled}
-              onClick={() => onChange(opt.days)}
+              aria-checked={false}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault()
+                  onChange(opt.days)
+                }
+              }}
               className={cn(
-                'focus-ring flex flex-col items-center gap-0.5 rounded-lg border px-2 py-2.5 text-center transition-colors disabled:opacity-60',
-                selected
-                  ? 'border-primary bg-primary-soft shadow-xs'
-                  : 'border-border-default bg-surface-raised hover:bg-surface-sunken hover:border-border-hover shadow-xs',
+                'focus-ring relative flex flex-col justify-between gap-4 rounded-3xl border border-border-default bg-surface-raised p-5 transition-all cursor-pointer hover:border-border-hover hover:shadow-xs',
+                disabled && 'cursor-not-allowed opacity-50',
               )}
             >
-              <span className={cn('text-body-sm font-semibold', selected ? 'text-primary' : 'text-fg')}>
-                {opt.label}
-              </span>
-              <span className="text-tiny text-fg-subtle">{opt.hint}</span>
-            </button>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/30 bg-white" />
+                {opt.badge && (
+                  <span className="rounded-full bg-primary px-2.5 py-0.5 text-tiny font-extrabold uppercase tracking-wider text-white">
+                    {opt.badge}
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <h4 className="font-display text-2xl sm:text-3xl font-extrabold text-fg tracking-tight">
+                  {opt.label}
+                </h4>
+                <p className="mt-1 text-tiny font-medium text-fg-muted">
+                  {opt.hint}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-1.5 opacity-30">
+                {Array.from({ length: opt.days > 7 ? 6 : opt.days }).map((_, i) => (
+                  <span key={i} className="h-2 w-2 rounded-full bg-fg" />
+                ))}
+              </div>
+            </div>
           )
         })}
       </div>
     </div>
   )
 }
-

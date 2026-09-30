@@ -122,6 +122,9 @@ describe('MiniLessonQuiz', () => {
         timeMs: expect.any(Number),
         topic: 'mini:schwa sound',
       })]),
+      expect.objectContaining({
+        attemptId: expect.any(String),
+      }),
     )
   })
 

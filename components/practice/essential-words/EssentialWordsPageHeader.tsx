@@ -1,11 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Search, X } from '@/components/icons'
-import { SearchModal } from '@/components/search/SearchModal'
 import { SessionReadyRouteChips } from './SessionReadyRouteChips'
 import { essentialWordsHeaderStatsLine } from '@/lib/essential-words/header-stats'
 import type { EssentialWordsPhase, EssentialWordsStats } from '@/hooks/useEssentialWordsSession'
+
+const SearchModal = dynamic(
+  () => import('@/components/search/SearchModal').then((module) => module.SearchModal),
+  { ssr: false },
+)
 
 interface Props {
   phase: EssentialWordsPhase

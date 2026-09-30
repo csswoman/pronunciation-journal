@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_daily: {
+        Row: {
+          cache_hits: number
+          day: string
+          failures: number
+          feature: string
+          last_attempt_at: string | null
+          last_error_code: string | null
+          last_status: number | null
+          latency_ms_total: number
+          model: string
+          requests: number
+          successes: number
+        }
+        Insert: {
+          cache_hits?: number
+          day: string
+          failures?: number
+          feature: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          last_status?: number | null
+          latency_ms_total?: number
+          model: string
+          requests?: number
+          successes?: number
+        }
+        Update: {
+          cache_hits?: number
+          day?: string
+          failures?: number
+          feature?: string
+          last_attempt_at?: string | null
+          last_error_code?: string | null
+          last_status?: number | null
+          latency_ms_total?: number
+          model?: string
+          requests?: number
+          successes?: number
+        }
+        Relationships: []
+      }
+      ai_feedback_reports: {
+        Row: {
+          comment: string | null
+          created_at: string
+          error_pattern: string | null
+          feature: "coach_correction" | "production_grade" | "journal_correction"
+          id: string
+          input_snapshot: Json
+          output_snapshot: Json
+          prompt_version: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          error_pattern?: string | null
+          feature: "coach_correction" | "production_grade" | "journal_correction"
+          id?: string
+          input_snapshot: Json
+          output_snapshot: Json
+          prompt_version?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          error_pattern?: string | null
+          feature?: "coach_correction" | "production_grade" | "journal_correction"
+          id?: string
+          input_snapshot?: Json
+          output_snapshot?: Json
+          prompt_version?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_response_cache: {
+        Row: {
+          created_at: string
+          feature: string
+          key: string
+          payload: Json
+        }
+        Insert: {
+          created_at?: string
+          feature: string
+          key: string
+          payload: Json
+        }
+        Update: {
+          created_at?: string
+          feature?: string
+          key?: string
+          payload?: Json
+        }
+        Relationships: []
+      }
       activity_sessions: {
         Row: {
           accuracy_pct: number
@@ -200,6 +299,60 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_oral_attempts: {
+        Row: {
+          answers: Json
+          challenge_expires_at: string | null
+          challenge_id: string | null
+          completed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          item_id: string | null
+          level: string
+          oral_audio_sha256: string | null
+          rubric_version: string | null
+          self_ratings: Json
+          status: string
+          used_item_ids: string[]
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          challenge_expires_at?: string | null
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          item_id?: string | null
+          level: string
+          oral_audio_sha256?: string | null
+          rubric_version?: string | null
+          self_ratings?: Json
+          status?: string
+          used_item_ids?: string[]
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          challenge_expires_at?: string | null
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          item_id?: string | null
+          level?: string
+          oral_audio_sha256?: string | null
+          rubric_version?: string | null
+          self_ratings?: Json
+          status?: string
+          used_item_ids?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
       attempt_logs: {
         Row: {
           assessment: Json
@@ -239,6 +392,45 @@ export type Database = {
           session_id?: string
           user_id?: string
           word_id?: string
+        }
+        Relationships: []
+      }
+      content_bank_items: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          level: string
+          payload: Json
+          prompt_version: string
+          quality_flags: number
+          stem_hash: string
+          tool_name: string
+          topic_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          level: string
+          payload: Json
+          prompt_version?: string
+          quality_flags?: number
+          stem_hash: string
+          tool_name: string
+          topic_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          level?: string
+          payload?: Json
+          prompt_version?: string
+          quality_flags?: number
+          stem_hash?: string
+          tool_name?: string
+          topic_id?: string
         }
         Relationships: []
       }
@@ -1303,6 +1495,45 @@ export type Database = {
         }
         Relationships: []
       }
+      contrast_session_events: {
+        Row: {
+          attempt_id: string
+          contrast_id: string
+          created_at: string
+          id: string
+          occurred_at: string
+          session_accuracy: number
+          session_correct: number
+          session_passed: boolean
+          session_total: number
+          user_id: string
+        }
+        Insert: {
+          attempt_id: string
+          contrast_id: string
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          session_accuracy: number
+          session_correct: number
+          session_passed?: boolean
+          session_total: number
+          user_id: string
+        }
+        Update: {
+          attempt_id?: string
+          contrast_id?: string
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          session_accuracy?: number
+          session_correct?: number
+          session_passed?: boolean
+          session_total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_contrast_progress: {
         Row: {
           adaptive_score: number
@@ -1314,6 +1545,9 @@ export type Database = {
           interval_days: number
           last_seen: string | null
           mastery_pct: number
+          raw_mastery: number | null
+          raw_mastery_updated_at: string | null
+          mastery_session_count: number
           next_review: string | null
           observation_count: number
           streak: number
@@ -1331,6 +1565,9 @@ export type Database = {
           interval_days?: number
           last_seen?: string | null
           mastery_pct?: number
+          raw_mastery?: number | null
+          raw_mastery_updated_at?: string | null
+          mastery_session_count?: number
           next_review?: string | null
           observation_count?: number
           streak?: number
@@ -1348,6 +1585,9 @@ export type Database = {
           interval_days?: number
           last_seen?: string | null
           mastery_pct?: number
+          raw_mastery?: number | null
+          raw_mastery_updated_at?: string | null
+          mastery_session_count?: number
           next_review?: string | null
           observation_count?: number
           streak?: number
@@ -1754,6 +1994,24 @@ export type Database = {
           next_review_at: string
         }[]
       }
+      apply_contrast_session_result: {
+        Args: {
+          p_attempt_id: string
+          p_contrast_id: string
+          p_ease_factor: number
+          p_interval_days: number
+          p_mastery_pct: number
+          p_next_review: string
+          p_raw_mastery?: number | null
+          p_occurred_at?: string | null
+          p_session_accuracy?: number | null
+          p_session_correct: number
+          p_session_passed?: boolean | null
+          p_session_total: number
+          p_streak: number
+        }
+        Returns: undefined
+      }
       apply_essential_word_contrast_observation: {
         Args: {
           p_attempt_id: string
@@ -1873,6 +2131,30 @@ export type Database = {
           allowed: boolean
           retry_after_seconds: number
         }[]
+      }
+      ai_usage_record: {
+        Args: {
+          p_cache_hit_delta?: number
+          p_failure_delta?: number
+          p_feature: string
+          p_model: string
+        }
+        Returns: undefined
+      }
+      ai_usage_record_outcome: {
+        Args: {
+          p_error_code?: string | null
+          p_feature: string
+          p_latency_ms: number
+          p_model: string
+          p_status?: number | null
+          p_success: boolean
+        }
+        Returns: undefined
+      }
+      ai_usage_try_reserve: {
+        Args: { p_feature: string; p_limit: number; p_model: string }
+        Returns: boolean
       }
       get_activity_totals: {
         Args: never

@@ -1,12 +1,5 @@
 'use client'
 
-// Planned structure:
-// <ScriptedMissionRunner>
-//   <ScriptTranscript /> (dialogo recorrido, solo lectura)
-//   <CoachLine />        (turno del coach)
-//   <LearnerLine />      (turno del estudiante)
-//   <ScriptedResult />   (puntuación final)
-
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import {
@@ -29,6 +22,10 @@ import type { ScriptedMission } from '@/lib/ai-practice/missions/types'
 import { fetchMissionLineAudio } from '@/lib/ai-practice/missions/scripted/audio-queries'
 import { updateGeneratedScriptLineAudio } from '@/lib/ai-practice/missions/scripted/generated-store'
 import type { WordResult } from '@/lib/types'
+import PastelCard from '@/components/layout/PastelCard'
+import { getIllustration } from '@/lib/illustrations/registry'
+import { MISSION_CATEGORY_LABELS } from '../mission-category-labels'
+import { getCategoryTone, getMissionIllustrationKey } from '../MissionCard'
 
 interface Props {
   mission: ScriptedMission
@@ -54,15 +51,6 @@ function toLineScore(lineId: string, wordResults: WordResult[]): LineScore {
 
   return { lineId, correctPhonemes, totalPhonemes }
 }
-
-// Planned structure:
-// <ScriptedMissionRunner>
-//   <ScriptedMissionHeader />
-//   <ConversationStage>
-//     <ScriptTranscript />
-//     <ActiveSpeakerTurn />
-//   </ConversationStage>
-// </ScriptedMissionRunner>
 
 export default function ScriptedMissionRunner({ mission, onExit }: Props) {
   const { user } = useAuth()
@@ -131,8 +119,6 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
 
   const handleCoachContinue = useCallback(() => setState(advanceLine(state)), [state])
 
-  // Repetir arranca un guión limpio, pero conserva `previousBest`: la gracia
-  // de reintentar es ver si superas tu marca.
   const handleRetry = useCallback(() => {
     hasPersistedRef.current = false
     startedAtRef.current = new Date().toISOString()
@@ -153,6 +139,11 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView?.({ behavior: 'smooth' })
   }, [state.currentIndex])
+
+  const illustrationKey = getMissionIllustrationKey(mission)
+  const Illustration = getIllustration(illustrationKey)
+  const tone = getCategoryTone(mission.category)
+  const cefrUpper = mission.recommendedCefr.toUpperCase()
 
   if (isCompleted) {
     const sessionScore = scoreScriptSession(lineScores)
@@ -184,9 +175,6 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
           </button>
 
           <div className="flex items-center gap-2 min-w-0">
-            <h2 className="m-0 text-label font-semibold text-fg truncate">
-              {mission.context}
-            </h2>
             <span className="text-xxs font-mono font-medium text-fg-muted bg-surface-base/80 border border-border-subtle px-2 py-0.5 rounded-full shrink-0">
               {Math.min(state.currentIndex + 1, state.script.length)}/{state.script.length}
             </span>
@@ -198,8 +186,41 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
         role="region"
         aria-label="Diálogo de la misión guiada"
         tabIndex={0}
-        className="@container relative z-10 flex-1 min-h-0 overflow-y-auto px-4 pt-6 pb-12 @[22rem]:px-6 space-y-5 [scrollbar-width:thin]"
+        className="@container relative z-10 flex-1 min-h-0 overflow-y-auto px-4 pt-4 pb-12 @[22rem]:px-6 space-y-4 [scrollbar-width:thin]"
       >
+        {/* Active Mission Hero Card */}
+        <PastelCard
+          tone={tone}
+          className="relative flex flex-col justify-between gap-3 p-4 @[28rem]:p-5 overflow-hidden rounded-3xl group"
+        >
+          <div className="flex flex-col gap-2 min-w-0 z-10 max-w-xl">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-0.5 text-tiny font-bold text-ink select-none">
+                {MISSION_CATEGORY_LABELS[mission.category]}
+              </span>
+              <span className="inline-flex items-center rounded-full bg-ink/10 border border-ink/20 px-2.5 py-0.5 text-tiny font-bold text-ink select-none">
+                {cefrUpper}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1 pr-6">
+              <h2 className="m-0 font-display text-base @[28rem]:text-lg font-extrabold text-ink leading-tight tracking-tight">
+                {mission.communicativeGoal}
+              </h2>
+              <p className="m-0 text-xs text-ink-secondary text-pretty">
+                {mission.context}
+              </p>
+            </div>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-4 -bottom-4 text-ink/15 transition-all duration-300 group-hover:scale-105 group-hover:text-ink/25 [&>svg]:h-36 @[28rem]:[&>svg]:h-44 [&>svg]:w-auto"
+          >
+            <Illustration />
+          </div>
+        </PastelCard>
+
         <ScriptTranscript
           script={state.script}
           currentIndex={state.currentIndex}
@@ -209,7 +230,6 @@ export default function ScriptedMissionRunner({ mission, onExit }: Props) {
           {line.speaker === 'coach'
             ? <CoachLine line={line} missionId={mission.id} onContinue={handleCoachContinue} />
             : <LearnerLine line={line} missionId={mission.id} onLineComplete={handleLineComplete} />}
-
         </div>
         <div ref={bottomRef} className="h-px shrink-0" aria-hidden />
       </div>

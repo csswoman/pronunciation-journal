@@ -4,10 +4,9 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LexiconHeroSearch } from "@/components/lexicon/LexiconHeroSearch";
 import { LexiconTodayPanel } from "@/components/lexicon/LexiconTodayPanel";
-import { LexiconContinueSection } from "@/components/lexicon/LexiconContinueSection";
-import { LessonGrid } from "@/components/lexicon/LessonGrid";
-import { AnkiDeckGrid } from "@/components/lexicon/AnkiDeckGrid";
+import { LessonCard } from "@/components/lexicon/LessonCard";
 import { LexiconInlinePractice } from "@/components/lexicon/practice/LexiconInlinePractice";
+import { LearnDashboard } from "@/components/lexicon/learn/LearnDashboard";
 import { groupLessonsByDomain, LEXICON_DOMAINS } from "@/lib/lexicon/domains";
 import type { LessonViewModel } from "@/lib/lexicon/types";
 import type { WordsMode } from "@/components/words/WordsTopbar";
@@ -101,21 +100,37 @@ export function LexiconView({
                 <div key={domain.id} className="space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-3 pb-2.5 border-b border-border-subtle/50">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-h3 font-bold text-fg tracking-tight">{domain.name}</h3>
-                      <span className="rounded-full bg-primary-soft/80 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-semibold">
-                        {domain.studyMode === "receptive" ? "Reconocer" : "Producir"}
+                      <h3 className="text-h3 font-display font-extrabold text-fg tracking-tight">{domain.name}</h3>
+                      <span className="rounded-full bg-amber-100 text-amber-950 dark:bg-amber-950/80 dark:text-amber-200 border border-amber-300/60 dark:border-amber-800/50 px-2.5 py-0.5 text-xs font-semibold">
+                        objetivo: {domain.studyMode === "receptive" ? "reconocer" : "producir"}
                       </span>
                     </div>
-                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right">
+                    <p className="text-caption sm:text-body-sm text-fg-muted max-w-md text-right font-medium">
                       {domain.description}
                     </p>
                   </div>
-                  <LessonGrid
-                    lessons={group.lessons}
-                    nextLessonId={nextLesson?.id}
-                    onLessonClick={(id) => router.push(`/words/${id}`)}
-                    compact
-                  />
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {group.lessons.map((lesson) => (
+                      <LessonCard
+                        key={lesson.id}
+                        {...lesson}
+                        isNext={lesson.id === nextLesson?.id}
+                        onClick={(id) => router.push(`/words/${id}`)}
+                        compact
+                      />
+                    ))}
+                    {domain.id === "professional" && (
+                      <button
+                        type="button"
+                        onClick={() => router.push("/words?mode=learn")}
+                        className="group flex w-full items-center justify-center gap-2 rounded-2xl border border-border-subtle/80 bg-surface-raised p-4 text-center transition-all duration-150 focus-ring hover:border-primary/60 hover:shadow-xs min-h-[84px]"
+                      >
+                        <span className="font-bold text-fg text-body-sm sm:text-body group-hover:text-primary transition-colors flex items-center gap-1.5">
+                          Ver las 9 áreas <span aria-hidden className="transition-transform group-hover:translate-x-0.5">›</span>
+                        </span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -133,45 +148,11 @@ export function LexiconView({
       ) : null}
 
       {mode === "learn" && activeDeckId === null ? (
-        <div className="space-y-8 pt-3">
-          {dueForReview > 0 && (
-            <div className="group relative rounded-2xl border border-border-subtle bg-surface-raised p-6 sm:p-7 flex flex-wrap items-center justify-between gap-6 shadow-xs hover:border-border-strong transition-all duration-200">
-              <div className="space-y-2 flex-1 min-w-[280px]">
-                <div className="inline-flex items-center gap-2 rounded-full bg-primary-soft/80 border border-primary/20 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                  <span className="font-kicker text-[11px] uppercase tracking-wider">REPASO ANKI PENDIENTE</span>
-                </div>
-                <h3 className="text-h3 font-bold text-fg tracking-tight leading-snug">
-                  Tienes {dueForReview} {dueForReview === 1 ? "palabra" : "palabras"} por repasar hoy
-                </h3>
-                <p className="text-body-sm text-fg-muted max-w-xl leading-relaxed">
-                  Refuerza tu memoria con tarjetas de repaso adaptativo combinando palabras de todos tus mazos.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveDeckId(nextLesson?.id ?? "backend-infra")}
-                className="inline-flex items-center justify-center gap-2 min-h-[48px] rounded-xl bg-cta-bg text-cta-fg px-6 py-3.5 text-body-sm font-semibold hover:bg-cta-bg-hover active:scale-[0.98] transition-all shadow-xs focus-ring shrink-0"
-              >
-                <span>Iniciar repaso Anki mixto ({dueForReview})</span>
-                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
-              </button>
-            </div>
-          )}
-
-          {inProgress.length > 0 ? (
-            <LexiconContinueSection
-              lessons={inProgress}
-              onLessonClick={(id) => setActiveDeckId(id)}
-            />
-          ) : null}
-
-          <section aria-label="Catálogo de mazos">
-            <AnkiDeckGrid
-              lessons={lessons}
-              onSelectDeck={(id) => setActiveDeckId(id)}
-            />
-          </section>
-        </div>
+        <LearnDashboard
+          lessons={lessons}
+          dueForReview={dueForReview}
+          onSelectDeck={(id) => setActiveDeckId(id)}
+        />
       ) : null}
     </>
   );

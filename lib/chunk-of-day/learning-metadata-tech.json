@@ -1,0 +1,1902 @@
+[
+  {
+    "id": "tech-int-01-let-me-think-out-loud-for-a-second",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "narrate_reasoning",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let me think out loud for a second.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Estás resolviendo un problema técnico en una entrevista y quieres narrar tu razonamiento mientras piensas.",
+      "productionCueEs": "Estás en una entrevista técnica resolviendo un problema en la pizarra. Antes de responder, pide un momento para pensar en voz alta.",
+      "practiceAnswer": "Let me think out loud for a second.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-02-could-you-repeat-the-question-please",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_repetition",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Could you repeat the question, please?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "No escuchaste bien la pregunta del entrevistador y necesitas que la repita.",
+      "productionCueEs": "El entrevistador hizo una pregunta larga y no estás segura de haberla entendido bien. Pídele que la repita.",
+      "practiceAnswer": "Could you repeat the question, please?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-03-whats-the-expected-input-size-here",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "clarify_constraints",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What's the expected input size here?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Antes de resolver un problema de código, preguntas sobre las restricciones de tamaño de los datos.",
+      "productionCueEs": "Te dan un problema de algoritmos sin especificar el tamaño de los datos. Pregunta por esa restricción antes de empezar.",
+      "practiceAnswer": "What's the expected input size here?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-04-lets-start-with-a-brute-force-approach",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "propose_approach",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's start with a brute-force approach.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones resolver primero con la solución más simple, aunque no sea la más eficiente.",
+      "productionCueEs": "En una entrevista técnica, decides resolver primero de la forma más simple posible antes de optimizar. Dilo en voz alta.",
+      "practiceAnswer": "Let's start with a brute-force approach.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-05-the-time-complexity-here-is-o-n-log-n",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "explain_complexity",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "The time complexity here is O(n log n).",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Explicas la eficiencia de tu algoritmo usando notación Big O.",
+      "productionCueEs": "El entrevistador pregunta por el rendimiento de tu solución. Describe su complejidad temporal.",
+      "practiceAnswer": "The time complexity here is O(n log n).",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-06-id-optimize-this-later-if-i-had-more-tim",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "acknowledge_tradeoff",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd optimize this later if I had more time.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Reconoces que tu solución no es óptima pero explicas que la mejorarías con más tiempo.",
+      "productionCueEs": "Terminaste una solución funcional pero no óptima en el tiempo asignado. Explica que la mejorarías con más tiempo.",
+      "practiceAnswer": "I'd optimize this later if I had more time.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-07-can-i-ask-a-clarifying-question-first",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_clarification",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can I ask a clarifying question first?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides permiso para aclarar un punto antes de comenzar a resolver el problema.",
+      "productionCueEs": "Antes de comenzar a resolver un problema técnico, quieres asegurarte de entender un detalle. Pide permiso para preguntar.",
+      "practiceAnswer": "Can I ask a clarifying question first?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-08-in-my-previous-role-i-was-responsible-fo",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "describe_past_role",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "In my previous role, I was responsible for the backend.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Describes tu área de responsabilidad en un trabajo anterior.",
+      "productionCueEs": "El entrevistador pregunta por tu experiencia anterior. Describe qué parte del sistema era tu responsabilidad.",
+      "practiceAnswer": "In my previous role, I was responsible for the backend.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-09-i-led-a-team-of-four-engineers",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "describe_leadership",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I led a team of four engineers.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Mencionas experiencia previa liderando un equipo pequeño.",
+      "productionCueEs": "Te preguntan por tu experiencia de liderazgo. Menciona que lideraste un equipo pequeño.",
+      "practiceAnswer": "I led a team of four engineers.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-10-thats-a-great-question-let-me-break-it-d",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "buy_time_respond",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "That's a great question, let me break it down.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Ganas tiempo para organizar tu respuesta a una pregunta compleja.",
+      "productionCueEs": "Te hacen una pregunta difícil en la entrevista. Gana un momento para pensar reconociendo que es una buena pregunta.",
+      "practiceAnswer": "That's a great question, let me break it down.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-11-i-ran-into-a-tricky-edge-case-with-null-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "report_edge_case",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I ran into a tricky edge case with null values.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Explicas que encontraste un caso especial difícil relacionado con valores nulos.",
+      "productionCueEs": "Mientras resuelves el problema, te encuentras con un caso especial inesperado. Explícalo en voz alta.",
+      "practiceAnswer": "I ran into a tricky edge case with null values.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-12-id-rather-trade-off-readability-for-perf",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "justify_tradeoff",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I'd rather trade off readability for performance here.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Justificas una decisión técnica priorizando el rendimiento sobre la claridad del código.",
+      "productionCueEs": "Tu código es rápido pero difícil de leer. Explica por qué elegiste el rendimiento sobre la legibilidad.",
+      "practiceAnswer": "I'd rather trade off readability for performance here.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-13-walk-me-through-your-thought-process",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_reasoning",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Walk me through your thought process.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Le pides al candidato que explique cómo llegó a su solución.",
+      "productionCueEs": "Estás entrevistando a un candidato y quieres que explique cómo razonó su solución. Pídeselo.",
+      "practiceAnswer": "Walk me through your thought process.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-14-im-not-100-sure-but-my-best-guess-is",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "hedge_uncertainty",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'm not 100% sure, but my best guess is...",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Compartes una hipótesis mientras admites que no tienes certeza total.",
+      "productionCueEs": "Te preguntan la causa de un problema técnico y no estás completamente segura. Comparte tu mejor hipótesis.",
+      "practiceAnswer": "I'm not 100% sure, but my best guess is...",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-15-id-like-to-revisit-that-decision-if-we-h",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "request_revisit",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I'd like to revisit that decision if we have time.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides volver a un tema anterior más adelante si el tiempo lo permite.",
+      "productionCueEs": "Tomaste una decisión rápida y quieres reconsiderarla más tarde. Pide volver a ese tema si hay tiempo.",
+      "practiceAnswer": "I'd like to revisit that decision if we have time.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-16-thats-outside-my-area-of-expertise-but-i",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "admit_knowledge_gap",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "That's outside my area of expertise, but I'd research it.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Admites honestamente que no dominas un tema, pero muestras disposición a investigarlo.",
+      "productionCueEs": "Te preguntan sobre un tema que no dominas. Admítelo con honestidad y muestra disposición a investigarlo.",
+      "practiceAnswer": "That's outside my area of expertise, but I'd research it.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-17-i-made-a-mistake-there-let-me-fix-it",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "acknowledge_error",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I made a mistake there — let me fix it.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Reconoces un error propio durante la entrevista y ofreces corregirlo sin ponerte a la defensiva.",
+      "productionCueEs": "El entrevistador señala un error en tu código. Reconócelo con calma y ofrece corregirlo.",
+      "practiceAnswer": "I made a mistake there — let me fix it.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-18-what-would-you-like-me-to-focus-on-first",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_priority",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What would you like me to focus on first?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides prioridades claras antes de empezar a resolver el problema.",
+      "productionCueEs": "El entrevistador te da libertad total. Pregunta qué debería priorizar primero.",
+      "practiceAnswer": "What would you like me to focus on first?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-19-i-usually-write-tests-before-i-write-the",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "describe_workflow",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I usually write tests before I write the implementation.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Describes tu hábito de escribir pruebas antes que el código de producción.",
+      "productionCueEs": "Te preguntan por tu proceso de desarrollo. Describe tu hábito con las pruebas.",
+      "practiceAnswer": "I usually write tests before I write the implementation.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-int-20-do-you-want-me-to-code-this-in-typescrip",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "confirm_format",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Do you want me to code this in TypeScript or pseudocode?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Confirmas el formato esperado antes de empezar a escribir código en la entrevista.",
+      "productionCueEs": "Antes de comenzar el ejercicio de código, no sabes si debes usar un lenguaje real o pseudocódigo. Pregunta.",
+      "practiceAnswer": "Do you want me to code this in TypeScript or pseudocode?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-01-i-led-the-migration-that-cut-load-time-b",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "quantify_achievement",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I led the migration that cut load time by 40%.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Presentas un logro cuantificable de un proyecto que lideraste.",
+      "productionCueEs": "Te preguntan por un logro profesional. Menciona un resultado medible que lograste.",
+      "practiceAnswer": "I led the migration that cut load time by 40%.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-02-im-looking-for-a-role-where-i-can-grow-i",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "state_career_goal",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'm looking for a role where I can grow into a senior position.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Explicas tus metas de crecimiento profesional a largo plazo.",
+      "productionCueEs": "Te preguntan qué buscas en tu próximo empleo. Explica tu meta de crecimiento profesional.",
+      "practiceAnswer": "I'm looking for a role where I can grow into a senior position.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-03-is-there-any-flexibility-on-the-base-sal",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "negotiate_salary",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Is there any flexibility on the base salary?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Preguntas educadamente si el salario ofrecido se puede negociar.",
+      "productionCueEs": "Te acaban de dar una oferta salarial. Pregunta con cortesía si hay margen de negociación.",
+      "practiceAnswer": "Is there any flexibility on the base salary?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-04-i-shipped-that-feature-ahead-of-schedule",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "highlight_delivery",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I shipped that feature ahead of schedule.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Destacas que entregaste un proyecto antes del plazo esperado.",
+      "productionCueEs": "Te preguntan sobre un proyecto reciente. Destaca que lo entregaste antes de tiempo.",
+      "practiceAnswer": "I shipped that feature ahead of schedule.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-05-my-strongest-skill-is-turning-ambiguous-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "state_strength",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "My strongest skill is turning ambiguous requirements into a plan.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Describes tu fortaleza principal en el trabajo.",
+      "productionCueEs": "Te preguntan por tu mayor fortaleza profesional. Descríbela con un ejemplo concreto.",
+      "practiceAnswer": "My strongest skill is turning ambiguous requirements into a plan.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-06-i-mentored-two-junior-developers-on-my-l",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "describe_mentorship",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I mentored two junior developers on my last team.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Mencionas tu experiencia formando a compañeros menos experimentados.",
+      "productionCueEs": "Te preguntan si tienes experiencia como mentora. Menciona un ejemplo concreto.",
+      "practiceAnswer": "I mentored two junior developers on my last team.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-07-id-love-to-hear-more-about-the-teams-roa",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "show_interest",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd love to hear more about the team's roadmap.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Muestras interés genuino haciendo una pregunta sobre el futuro del equipo.",
+      "productionCueEs": "Al final de la entrevista te preguntan si tienes dudas. Pregunta por los planes futuros del equipo.",
+      "practiceAnswer": "I'd love to hear more about the team's roadmap.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-08-what-does-success-look-like-in-this-role",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "clarify_expectations",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What does success look like in this role after six months?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Preguntas por expectativas concretas de desempeño a mediano plazo.",
+      "productionCueEs": "Quieres entender qué se espera de ti en el nuevo puesto. Pregunta por las expectativas a seis meses.",
+      "practiceAnswer": "What does success look like in this role after six months?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-09-i-reduced-our-bug-backlog-by-half-in-one",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "quantify_impact",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I reduced our bug backlog by half in one quarter.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Presentas un resultado medible de tu trabajo con errores acumulados.",
+      "productionCueEs": "Te preguntan por tu impacto en un equipo anterior. Da un resultado medible.",
+      "practiceAnswer": "I reduced our bug backlog by half in one quarter.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-10-im-comfortable-working-across-the-stack",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "describe_versatility",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'm comfortable working across the stack.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Describes tu versatilidad técnica en distintas capas del sistema.",
+      "productionCueEs": "Te preguntan tu especialidad técnica. Explica que te sientes cómoda en todo el stack.",
+      "practiceAnswer": "I'm comfortable working across the stack.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-11-that-aligns-with-what-im-looking-for-in-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "confirm_fit",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "That aligns with what I'm looking for in my next role.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Confirmas que la oferta coincide con tus metas profesionales.",
+      "productionCueEs": "Te describen algo del puesto que te interesa mucho. Confirma que coincide con lo que buscas.",
+      "practiceAnswer": "That aligns with what I'm looking for in my next role.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-12-can-we-talk-about-the-equity-package-as-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "negotiate_equity",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can we talk about the equity package as well?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Amplías la negociación para incluir compensación en acciones.",
+      "productionCueEs": "Te dan una oferta con solo salario base. Pregunta por el paquete de acciones también.",
+      "practiceAnswer": "Can we talk about the equity package as well?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-13-i-take-ownership-of-my-projects-end-to-e",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "describe_ownership",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I take ownership of my projects end to end.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Describes tu nivel de responsabilidad sobre tus proyectos.",
+      "productionCueEs": "Te preguntan por tu estilo de trabajo. Describe tu nivel de responsabilidad end-to-end.",
+      "practiceAnswer": "I take ownership of my projects end to end.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-14-id-appreciate-some-time-to-think-it-over",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_time",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd appreciate some time to think it over before I accept.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides tiempo antes de comprometerte a una oferta de trabajo.",
+      "productionCueEs": "Te presionan para aceptar una oferta de inmediato. Pide tiempo educadamente para pensarlo.",
+      "practiceAnswer": "I'd appreciate some time to think it over before I accept.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-15-i-negotiated-a-signing-bonus-with-my-las",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "share_negotiation_experience",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I negotiated a signing bonus with my last offer.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Compartes experiencia previa negociando condiciones de una oferta laboral.",
+      "productionCueEs": "Te preguntan si tienes experiencia negociando. Comparte un ejemplo concreto.",
+      "practiceAnswer": "I negotiated a signing bonus with my last offer.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-16-my-proudest-achievement-was-launching-th",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "state_proudest_achievement",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "My proudest achievement was launching this feature from scratch.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Compartes el logro profesional del que más te enorgulleces.",
+      "productionCueEs": "Te preguntan por tu mayor logro profesional. Comparte uno concreto y con detalle.",
+      "practiceAnswer": "My proudest achievement was launching this feature from scratch.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-17-im-confident-i-can-hit-the-ground-runnin",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "express_confidence",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I'm confident I can hit the ground running.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Expresas confianza en que te adaptarás rápido al nuevo puesto.",
+      "productionCueEs": "Te preguntan cuánto tardarías en adaptarte. Expresa confianza en tu rapidez de adaptación.",
+      "practiceAnswer": "I'm confident I can hit the ground running.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-18-let-me-tell-you-about-a-project-im-reall",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "introduce_star_story",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Let me tell you about a project I'm really proud of.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Introduces una historia sobre un proyecto significativo (formato STAR).",
+      "productionCueEs": "Te piden un ejemplo de un problema difícil que resolviste. Introduce tu historia.",
+      "practiceAnswer": "Let me tell you about a project I'm really proud of.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-19-im-open-to-relocating-for-the-right-oppo",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "express_flexibility",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I'm open to relocating for the right opportunity.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Muestras flexibilidad geográfica para un puesto que te interesa.",
+      "productionCueEs": "El puesto requiere mudarte de ciudad. Expresa que estás abierta a considerarlo.",
+      "practiceAnswer": "I'm open to relocating for the right opportunity.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-sell-20-thank-you-for-the-offer-ill-get-back-to-",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "close_negotiation",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Thank you for the offer — I'll get back to you by Friday.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Agradeces una oferta de trabajo y das un plazo claro para tu respuesta.",
+      "productionCueEs": "Recibiste una oferta formal de trabajo. Agradece y da un plazo concreto para responder.",
+      "practiceAnswer": "Thank you for the offer — I'll get back to you by Friday.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-01-im-blocked-on-the-api-not-being-ready-ye",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "report_blocker",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'm blocked on the API not being ready yet.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Reportas en el standup que dependes de otro equipo para avanzar.",
+      "productionCueEs": "En el standup diario, no puedes avanzar porque otro equipo no ha entregado su parte. Repórtalo.",
+      "practiceAnswer": "I'm blocked on the API not being ready yet.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-02-can-we-push-this-to-the-next-sprint",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "propose_reschedule",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can we push this to the next sprint?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones mover una tarea al siguiente ciclo de trabajo por falta de tiempo.",
+      "productionCueEs": "Es viernes y una tarea no estará lista. Propón moverla al siguiente sprint.",
+      "practiceAnswer": "Can we push this to the next sprint?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-03-nit-this-variable-name-could-be-clearer",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "give_minor_feedback",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Nit: this variable name could be clearer.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Das una sugerencia menor y opcional en una revisión de código.",
+      "productionCueEs": "Estás revisando el código de un compañero y ves un detalle sin importancia. Coméntalo marcándolo como opcional.",
+      "practiceAnswer": "Nit: this variable name could be clearer.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-04-it-works-on-my-machine-but-let-me-check-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "react_to_ci_failure",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "It works on my machine, but let me check the CI logs.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Reaccionas a un fallo de CI que no puedes reproducir localmente.",
+      "productionCueEs": "Tu build falla en el servidor de integración continua pero no localmente. Reacciona y ofrece investigar.",
+      "practiceAnswer": "It works on my machine, but let me check the CI logs.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-05-lets-pair-on-this-for-twenty-minutes",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "propose_pairing",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's pair on this for twenty minutes.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones programar en pareja con un compañero para resolver algo más rápido.",
+      "productionCueEs": "Un compañero lleva rato atascado con un error. Ofrécele programar juntos un rato.",
+      "practiceAnswer": "Let's pair on this for twenty minutes.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-06-i-opened-a-pr-can-you-take-a-look-when-y",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_pr_review",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I opened a PR, can you take a look when you get a chance?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides amablemente que revisen tu código sin presionar por urgencia.",
+      "productionCueEs": "Terminaste un cambio y abriste un pull request. Pide a un compañero que lo revise sin presionarlo.",
+      "practiceAnswer": "I opened a PR, can you take a look when you get a chance?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-07-this-ticket-is-bigger-than-it-looks-lets",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_task_split",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "This ticket is bigger than it looks — let's split it up.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones dividir una tarea que resultó ser más compleja de lo esperado.",
+      "productionCueEs": "Al empezar una tarea, te das cuenta de que es mucho más grande de lo estimado. Propón dividirla.",
+      "practiceAnswer": "This ticket is bigger than it looks — let's split it up.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-08-ill-take-this-one-its-in-my-wheelhouse",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "volunteer_for_task",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'll take this one, it's in my wheelhouse.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Te ofreces voluntaria para una tarea que coincide con tu especialidad.",
+      "productionCueEs": "En una reunión de planeación, ves una tarea que encaja con tu especialidad. Ofrécete a tomarla.",
+      "practiceAnswer": "I'll take this one, it's in my wheelhouse.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-09-can-someone-review-my-pr-before-end-of-d",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_urgent_review",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can someone review my PR before end of day?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides con una razón concreta que revisen tu código con cierta urgencia.",
+      "productionCueEs": "Necesitas que aprueben tu código hoy porque planeas desplegar mañana. Pide la revisión con esa razón.",
+      "practiceAnswer": "Can someone review my PR before end of day?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-10-i-found-a-bug-in-production-looking-into",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "report_incident",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I found a bug in production, looking into it now.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Comunicas de inmediato que encontraste y estás investigando un error grave.",
+      "productionCueEs": "Detectas un error en el sistema en vivo. Avisa al equipo que lo estás investigando.",
+      "practiceAnswer": "I found a bug in production, looking into it now.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-11-lets-roll-this-back-until-we-find-the-ro",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_rollback",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's roll this back until we find the root cause.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones revertir un cambio en producción mientras se investiga el problema.",
+      "productionCueEs": "Un despliegue reciente está causando errores. Propón revertirlo mientras investigan.",
+      "practiceAnswer": "Let's roll this back until we find the root cause.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-12-im-going-to-refactor-this-before-adding-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "justify_refactor",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'm going to refactor this before adding more features.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Explicas que priorizarás limpiar el código antes de seguir añadiendo funciones.",
+      "productionCueEs": "El código está desordenado y te piden una nueva función. Explica que primero refactorizarás.",
+      "practiceAnswer": "I'm going to refactor this before adding more features.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-13-the-build-is-failing-on-the-main-branch",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "alert_broken_build",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "The build is failing on the main branch.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Avisas al equipo de un problema en la rama principal para evitar más merges.",
+      "productionCueEs": "Detectas que la rama principal está rota. Avisa al equipo antes de que otros hagan merge.",
+      "practiceAnswer": "The build is failing on the main branch.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-14-can-you-approve-this-so-i-can-merge",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_approval",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can you approve this so I can merge?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides la aprobación final después de resolver los comentarios de revisión.",
+      "productionCueEs": "Ya resolviste los comentarios de tu revisor. Pídele que apruebe para poder integrar tu código.",
+      "practiceAnswer": "Can you approve this so I can merge?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-15-i-dont-think-we-have-enough-test-coverag",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "raise_quality_concern",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I don't think we have enough test coverage here.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Expresas una objeción constructiva sobre la falta de pruebas en un PR.",
+      "productionCueEs": "Estás revisando un PR y notas que faltan pruebas importantes. Exprésalo con respeto.",
+      "practiceAnswer": "I don't think we have enough test coverage here.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-16-lets-sync-offline-about-this-instead-of-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_offline_sync",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's sync offline about this instead of in the thread.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones mover una discusión larga fuera del canal público.",
+      "productionCueEs": "Una discusión en el chat del equipo se está alargando demasiado. Propón hablarlo en privado.",
+      "practiceAnswer": "Let's sync offline about this instead of in the thread.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-17-ill-write-up-a-postmortem-after-the-inci",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "commit_to_postmortem",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I'll write up a postmortem after the incident.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Te comprometes a documentar formalmente un incidente para el equipo.",
+      "productionCueEs": "Después de resolver una caída grave, ofrece documentar lo ocurrido en un postmortem.",
+      "practiceAnswer": "I'll write up a postmortem after the incident.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-18-this-deadline-feels-unrealistic-given-th",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "push_back_deadline",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "This deadline feels unrealistic given the scope.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Cuestionas con argumentos una fecha límite que consideras poco realista.",
+      "productionCueEs": "Te dan una fecha límite que no crees poder cumplir dado el trabajo pendiente. Exprésalo con argumentos.",
+      "practiceAnswer": "This deadline feels unrealistic given the scope.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-19-i-pushed-a-hotfix-for-the-login-issue",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "report_hotfix",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I pushed a hotfix for the login issue.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Informas que ya aplicaste una solución urgente a un problema en producción.",
+      "productionCueEs": "Acabas de arreglar un error urgente en producción. Informa al equipo que ya lo solucionaste.",
+      "practiceAnswer": "I pushed a hotfix for the login issue.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-eng-20-lets-timebox-this-investigation-to-one-d",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "propose_timebox",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Let's timebox this investigation to one day.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones un límite de tiempo claro para no invertir demasiado en una investigación.",
+      "productionCueEs": "Un problema difícil podría consumir mucho tiempo del equipo. Propón un límite de tiempo razonable.",
+      "practiceAnswer": "Let's timebox this investigation to one day.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-01-what-problem-are-we-solving-for-the-user",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "clarify_user_problem",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What problem are we solving for the user?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Cuestionas el propósito de una propuesta antes de evaluar los detalles visuales.",
+      "productionCueEs": "En una crítica de diseño, quieres entender el propósito antes de opinar sobre detalles. Pregunta por el problema del usuario.",
+      "practiceAnswer": "What problem are we solving for the user?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-02-id-push-back-on-that-a-little",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "push_back_gently",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd push back on that a little.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Expresas un desacuerdo suave y respetuoso con una propuesta de diseño.",
+      "productionCueEs": "No estás de acuerdo con una decisión de diseño, pero quieres expresarlo con tacto. Hazlo.",
+      "practiceAnswer": "I'd push back on that a little.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-03-lets-validate-this-with-users-before-com",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_validation",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's validate this with users before committing.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones validar una idea con usuarios reales antes de invertir tiempo de desarrollo.",
+      "productionCueEs": "El equipo quiere construir algo grande sin haberlo probado con usuarios. Propón validarlo primero.",
+      "practiceAnswer": "Let's validate this with users before committing.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-04-this-flow-feels-like-it-has-too-many-ste",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "flag_friction",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "This flow feels like it has too many steps.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Señalas que un flujo tiene fricción innecesaria por exceso de pasos.",
+      "productionCueEs": "Revisas un flujo de usuario y notas demasiados pasos. Señálalo constructivamente.",
+      "practiceAnswer": "This flow feels like it has too many steps.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-05-can-you-walk-me-through-the-users-mental",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_design_rationale",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can you walk me through the user's mental model here?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides que expliquen el razonamiento detrás de una decisión de diseño relacionada con cómo piensa el usuario.",
+      "productionCueEs": "No entiendes por qué se organizó algo de cierta forma. Pide que expliquen el modelo mental del usuario.",
+      "practiceAnswer": "Can you walk me through the user's mental model here?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-06-i-like-the-direction-but-the-hierarchy-f",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "give_balanced_feedback",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I like the direction, but the hierarchy feels off.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Das retroalimentación balanceada: algo positivo seguido de una crítica específica.",
+      "productionCueEs": "Ves un diseño con potencial pero con problemas de jerarquía visual. Da retroalimentación balanceada.",
+      "practiceAnswer": "I like the direction, but the hierarchy feels off.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-07-whats-the-empty-state-for-this-screen",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "ask_about_empty_state",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What's the empty state for this screen?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Preguntas por un caso de diseño que se olvida con frecuencia: cuando no hay datos.",
+      "productionCueEs": "Revisas un diseño que solo muestra datos de ejemplo. Pregunta por el caso sin datos.",
+      "practiceAnswer": "What's the empty state for this screen?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-08-lets-a-b-test-these-two-versions",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_ab_test",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's A/B test these two versions.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones resolver un desacuerdo de diseño con datos en vez de opinión.",
+      "productionCueEs": "El equipo no se pone de acuerdo entre dos opciones de diseño. Propón probarlas con una prueba A/B.",
+      "practiceAnswer": "Let's A/B test these two versions.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-09-this-copy-doesnt-match-our-brand-voice",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "flag_tone_mismatch",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "This copy doesn't match our brand voice.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Señalas una inconsistencia entre el tono del texto y la voz de la marca.",
+      "productionCueEs": "Lees un texto de la interfaz que no suena como tu marca. Señálalo.",
+      "practiceAnswer": "This copy doesn't match our brand voice.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-10-id-love-to-see-this-on-a-smaller-screen",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_responsive_check",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd love to see this on a smaller screen.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides ver un diseño en formato móvil antes de aprobarlo.",
+      "productionCueEs": "Solo viste el diseño en pantalla grande. Pide verlo también en móvil.",
+      "practiceAnswer": "I'd love to see this on a smaller screen.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-11-what-happens-if-the-user-has-no-data-yet",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "ask_edge_case_design",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What happens if the user has no data yet?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Preguntas por un caso extremo del diseño relacionado con la ausencia de datos.",
+      "productionCueEs": "Ves un diseño que asume que siempre hay datos. Pregunta qué pasa cuando no los hay.",
+      "practiceAnswer": "What happens if the user has no data yet?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-12-this-interaction-isnt-accessible-for-scr",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "flag_accessibility_issue",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "This interaction isn't accessible for screen readers.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Señalas un problema de accesibilidad en una interacción de la interfaz.",
+      "productionCueEs": "Notas que un componente nuevo no funciona con lectores de pantalla. Señálalo.",
+      "practiceAnswer": "This interaction isn't accessible for screen readers.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-13-can-we-simplify-this-down-to-one-primary",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_simplification",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can we simplify this down to one primary action?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones reducir la complejidad visual enfocándose en una sola acción.",
+      "productionCueEs": "Un diseño tiene demasiadas opciones compitiendo entre sí. Propón simplificarlo a una acción principal.",
+      "practiceAnswer": "Can we simplify this down to one primary action?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-14-i-think-were-solving-the-wrong-problem",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "challenge_direction",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I think we're solving the wrong problem.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Expresas una preocupación de fondo sobre la dirección estratégica de un proyecto.",
+      "productionCueEs": "Sientes que el equipo lleva tiempo trabajando en algo que no resuelve la necesidad real. Dilo con claridad.",
+      "practiceAnswer": "I think we're solving the wrong problem.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-15-lets-ship-an-mvp-and-iterate-from-feedba",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_mvp",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's ship an MVP and iterate from feedback.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones lanzar una versión mínima viable en lugar de seguir puliendo antes de lanzar.",
+      "productionCueEs": "El equipo quiere seguir puliendo antes de lanzar. Propón lanzar una versión mínima e iterar después.",
+      "practiceAnswer": "Let's ship an MVP and iterate from feedback.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-16-the-contrast-here-is-too-low-to-read-com",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "flag_contrast_issue",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "The contrast here is too low to read comfortably.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Señalas un problema de legibilidad relacionado con el contraste de color.",
+      "productionCueEs": "Ves un texto difícil de leer por su bajo contraste. Señálalo con un argumento de accesibilidad.",
+      "practiceAnswer": "The contrast here is too low to read comfortably.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-17-id-like-to-see-the-data-before-we-finali",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_data_before_decision",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'd like to see the data before we finalize this.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides evidencia cuantitativa antes de comprometerte a una decisión final.",
+      "productionCueEs": "El equipo está por decidir algo importante sin datos de respaldo. Pide verlos primero.",
+      "practiceAnswer": "I'd like to see the data before we finalize this.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-18-this-feels-inconsistent-with-the-rest-of",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "flag_inconsistency",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "This feels inconsistent with the rest of the product.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Señalas que un diseño nuevo no encaja con los patrones existentes del producto.",
+      "productionCueEs": "Un diseño nuevo usa patrones distintos a los del resto del producto. Señálalo.",
+      "practiceAnswer": "This feels inconsistent with the rest of the product.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-19-who-are-we-designing-this-for-exactly",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "challenge_target_audience",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Who are we designing this for, exactly?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Cuestionas la audiencia objetivo de un diseño para enfocar la conversación.",
+      "productionCueEs": "Notas que el diseño no tiene claro para quién está pensado. Pregunta por la audiencia objetivo.",
+      "practiceAnswer": "Who are we designing this for, exactly?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-design-20-lets-park-this-idea-and-revisit-it-next-",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "propose_deferral",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Let's park this idea and revisit it next sprint.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones posponer una idea ambiciosa sin descartarla por completo.",
+      "productionCueEs": "Una idea es buena pero demasiado grande para ahora. Propón dejarla en pausa para más adelante.",
+      "practiceAnswer": "Let's park this idea and revisit it next sprint.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-01-just-to-make-sure-were-on-the-same-page",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "confirm_alignment",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Just to make sure we're on the same page…",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Confirmas un acuerdo compartido antes de seguir avanzando en la reunión.",
+      "productionCueEs": "Antes de cerrar un punto en una reunión, quieres confirmar que todos entendieron lo mismo. Dilo.",
+      "practiceAnswer": "Just to make sure we're on the same page…",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-02-what-does-success-look-like-here",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "request_success_criteria",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "What does success look like here?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides una definición concreta de éxito para un objetivo vago.",
+      "productionCueEs": "Un stakeholder plantea un objetivo vago. Pide que definan qué significa el éxito concretamente.",
+      "practiceAnswer": "What does success look like here?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-03-let-me-circle-back-on-that",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "defer_response",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let me circle back on that.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pospones una respuesta definitiva hasta consultar con tu equipo.",
+      "productionCueEs": "Te piden un compromiso que no puedes dar de inmediato. Pospón la respuesta educadamente.",
+      "practiceAnswer": "Let me circle back on that.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-04-i-hear-your-concern-but-i-see-it-differe",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "disagree_respectfully",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I hear your concern, but I see it differently.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Reconoces una objeción y luego presentas tu propia perspectiva con respeto.",
+      "productionCueEs": "Un stakeholder expresa una preocupación con la que no estás de acuerdo. Reconócela y da tu perspectiva.",
+      "practiceAnswer": "I hear your concern, but I see it differently.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-05-can-we-table-this-for-the-next-meeting",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "propose_tabling",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can we table this for the next meeting?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones posponer un tema debido a la falta de tiempo en la reunión.",
+      "productionCueEs": "La reunión se está quedando sin tiempo. Propón posponer un tema para la siguiente.",
+      "practiceAnswer": "Can we table this for the next meeting?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-06-ill-follow-up-with-an-email-summarizing-",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "commit_to_followup",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'll follow up with an email summarizing next steps.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Te comprometes a documentar por escrito los acuerdos de la reunión.",
+      "productionCueEs": "Al cerrar una reunión, ofrece enviar un resumen por correo de lo acordado.",
+      "practiceAnswer": "I'll follow up with an email summarizing next steps.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-07-thats-not-something-we-can-commit-to-thi",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "set_scope_boundary",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "That's not something we can commit to this quarter.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Estableces un límite claro sobre lo que el equipo puede comprometerse a entregar.",
+      "productionCueEs": "Un stakeholder pide algo que excede la capacidad del equipo. Establece el límite con claridad.",
+      "practiceAnswer": "That's not something we can commit to this quarter.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-08-lets-align-on-priorities-before-we-dive-",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "propose_alignment",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's align on priorities before we dive into details.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones establecer prioridades generales antes de discutir detalles técnicos.",
+      "productionCueEs": "Una reunión está por empezar a discutir detalles sin acordar prioridades. Propón alinear primero.",
+      "practiceAnswer": "Let's align on priorities before we dive into details.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-09-i-want-to-make-sure-expectations-are-rea",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "manage_expectations",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I want to make sure expectations are realistic.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Expresas cautela antes de que el equipo prometa algo a un cliente o stakeholder.",
+      "productionCueEs": "El equipo está por prometer algo a un cliente. Expresa que quieres expectativas realistas primero.",
+      "practiceAnswer": "I want to make sure expectations are realistic.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-10-could-you-clarify-what-you-mean-by-urgen",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_precision",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Could you clarify what you mean by 'urgent'?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides que definan con precisión una palabra ambigua como 'urgente'.",
+      "productionCueEs": "Un stakeholder usa una palabra vaga como 'urgente'. Pide que la aclare con precisión.",
+      "practiceAnswer": "Could you clarify what you mean by 'urgent'?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-11-ill-loop-in-the-design-team-on-this",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "commit_to_loop_in",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I'll loop in the design team on this.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Te comprometes a incluir a otro equipo relevante en una conversación.",
+      "productionCueEs": "Te das cuenta de que otro equipo debería estar al tanto de una decisión. Ofrece incluirlos.",
+      "practiceAnswer": "I'll loop in the design team on this.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-12-lets-take-this-offline-and-revisit-with-",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "propose_offline_discussion",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Let's take this offline and revisit with more context.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones sacar una discusión larga de la reunión principal para resolverla aparte.",
+      "productionCueEs": "Un tema se está debatiendo demasiado en la reunión. Propón resolverlo aparte con más información.",
+      "practiceAnswer": "Let's take this offline and revisit with more context.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-13-i-appreciate-the-feedback-ill-take-it-in",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "acknowledge_feedback",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I appreciate the feedback, I'll take it into account.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Agradeces una crítica sin comprometerte de inmediato a cambiar algo.",
+      "productionCueEs": "Recibes una crítica que no esperabas. Agradécela con calma sin comprometerte de inmediato.",
+      "practiceAnswer": "I appreciate the feedback, I'll take it into account.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-14-whos-the-decision-maker-on-this-one",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "identify_decision_maker",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Who's the decision-maker on this one?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Preguntas quién tiene la autoridad final para desbloquear una decisión estancada.",
+      "productionCueEs": "Una decisión lleva tiempo estancada sin avanzar. Pregunta quién tiene la autoridad de decidir.",
+      "practiceAnswer": "Who's the decision-maker on this one?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-15-lets-set-a-follow-up-to-check-on-progres",
+    "learning": {
+      "cefr": "B1",
+      "communicativeFunction": "propose_followup_meeting",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Let's set a follow-up to check on progress.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones una reunión de seguimiento para dar continuidad a un acuerdo.",
+      "productionCueEs": "Se acordó un plan y quieres asegurar continuidad. Propón una reunión de seguimiento.",
+      "practiceAnswer": "Let's set a follow-up to check on progress.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-16-i-dont-think-thats-feasible-with-our-cur",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "state_infeasibility",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "I don't think that's feasible with our current resources.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Explicas con honestidad que una solicitud no es realista dados los recursos disponibles.",
+      "productionCueEs": "Te piden algo que el equipo no puede lograr con los recursos actuales. Explícalo con honestidad.",
+      "practiceAnswer": "I don't think that's feasible with our current resources.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-17-can-we-get-alignment-from-the-whole-team",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "request_team_alignment",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Can we get alignment from the whole team first?",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Pides consenso del equipo completo antes de proceder con un anuncio importante.",
+      "productionCueEs": "Alguien quiere anunciar algo sin consultar a todo el equipo. Pide alinear primero con todos.",
+      "practiceAnswer": "Can we get alignment from the whole team first?",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-18-i-want-to-flag-a-risk-before-we-move-for",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "raise_risk",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "I want to flag a risk before we move forward.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Interrumpes con respeto para señalar un riesgo importante antes de que el grupo avance.",
+      "productionCueEs": "Ves un riesgo importante que el equipo está pasando por alto. Señálalo antes de que avancen.",
+      "practiceAnswer": "I want to flag a risk before we move forward.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-19-lets-agree-on-a-single-source-of-truth-f",
+    "learning": {
+      "cefr": "C1",
+      "communicativeFunction": "propose_source_of_truth",
+      "secondaryFunctions": [],
+      "register": "formal",
+      "patternType": "fixed",
+      "coreText": "Let's agree on a single source of truth for this data.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Propones resolver una discrepancia de datos acordando una fuente única y confiable.",
+      "productionCueEs": "Dos equipos tienen cifras distintas para lo mismo. Propón acordar una única fuente de verdad.",
+      "practiceAnswer": "Let's agree on a single source of truth for this data.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  },
+  {
+    "id": "tech-stake-20-thanks-for-your-patience-while-we-sort-t",
+    "learning": {
+      "cefr": "B2",
+      "communicativeFunction": "acknowledge_delay",
+      "secondaryFunctions": [],
+      "register": "neutral",
+      "patternType": "fixed",
+      "coreText": "Thanks for your patience while we sort this out.",
+      "template": null,
+      "slots": [],
+      "acceptedAnswers": [],
+      "recognitionCueEs": "Agradeces la paciencia de un stakeholder mientras se resuelve un problema pendiente.",
+      "productionCueEs": "Un problema está tardando más de lo esperado en resolverse. Agradece la paciencia del stakeholder.",
+      "practiceAnswer": "Thanks for your patience while we sort this out.",
+      "confidence": "high",
+      "reviewFlags": []
+    }
+  }
+]

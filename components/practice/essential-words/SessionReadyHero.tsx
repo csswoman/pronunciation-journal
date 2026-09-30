@@ -130,11 +130,7 @@ export function SessionReadyHero({
           <div className="text-xs sm:text-sm font-semibold text-ink-secondary">
             <SessionReadyRecap session={lastSession} />
           </div>
-        ) : (
-          <span className="text-xs sm:text-sm font-semibold text-ink-secondary">
-            Última: sin fallos · 1/1 · 0:42
-          </span>
-        )}
+        ) : null}
       </div>
 
       {/* Main Indicator: Big number on left, column on right */}

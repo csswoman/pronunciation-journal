@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "led", "value": "lideré · Led a team of 6.", "highlights": ["Led"] },
-            { "key": "improved", "value": "mejoré · Improved sales by 20%.", "highlights": ["Improved"] },
-            { "key": "launched", "value": "lancé · Launched a new product.", "highlights": ["Launched"] },
-            { "key": "managed", "value": "gestioné · Managed a budget.", "highlights": ["Managed"] }
+            {
+              "key": "led",
+              "value": "lideré · Led a team of 6.",
+              "highlights": [
+                "Led"
+              ]
+            },
+            {
+              "key": "improved",
+              "value": "mejoré · Improved sales by 20%.",
+              "highlights": [
+                "Improved"
+              ]
+            },
+            {
+              "key": "launched",
+              "value": "lancé · Launched a new product.",
+              "highlights": [
+                "Launched"
+              ]
+            },
+            {
+              "key": "managed",
+              "value": "gestioné · Managed a budget.",
+              "highlights": [
+                "Managed"
+              ]
+            }
           ]
         }
       ],
@@ -35,10 +59,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I aim to...", "value": "mi meta es... · I aim to lead projects.", "highlights": ["I aim to"] },
-            { "key": "In five years, I see myself...", "value": "en cinco años me veo...", "highlights": ["I see myself"] },
-            { "key": "I'd like to develop...", "value": "me gustaría desarrollar...", "highlights": ["develop"] },
-            { "key": "I'm keen to take on...", "value": "tengo ganas de asumir...", "highlights": ["keen to take on"] }
+            {
+              "key": "I aim to...",
+              "value": "mi meta es... · I aim to lead projects.",
+              "highlights": [
+                "I aim to"
+              ]
+            },
+            {
+              "key": "In five years, I see myself...",
+              "value": "en cinco años me veo...",
+              "highlights": [
+                "I see myself"
+              ]
+            },
+            {
+              "key": "I'd like to develop...",
+              "value": "me gustaría desarrollar...",
+              "highlights": [
+                "develop"
+              ]
+            },
+            {
+              "key": "I'm keen to take on...",
+              "value": "tengo ganas de asumir...",
+              "highlights": [
+                "keen to take on"
+              ]
+            }
           ]
         }
       ]
@@ -52,10 +100,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Recibir", "value": "Thanks for the feedback. I'll work on it.", "highlights": ["Thanks for the feedback"] },
-            { "key": "Pedir", "value": "Do you have any feedback for me?", "highlights": ["any feedback"] },
-            { "key": "Dar (positivo)", "value": "You did a great job on...", "highlights": ["great job"] },
-            { "key": "Dar (a mejorar)", "value": "One thing to work on might be...", "highlights": ["One thing to work on"] }
+            {
+              "key": "Recibir",
+              "value": "Thanks for the feedback. I'll work on it.",
+              "highlights": [
+                "Thanks for the feedback"
+              ]
+            },
+            {
+              "key": "Pedir",
+              "value": "Do you have any feedback for me?",
+              "highlights": [
+                "any feedback"
+              ]
+            },
+            {
+              "key": "Dar (positivo)",
+              "value": "You did a great job on...",
+              "highlights": [
+                "great job"
+              ]
+            },
+            {
+              "key": "Dar (a mejorar)",
+              "value": "One thing to work on might be...",
+              "highlights": [
+                "One thing to work on"
+              ]
+            }
           ]
         }
       ]
@@ -69,10 +141,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "Sorry, maybe could I have a raise?" },
-            { "variant": "good", "text": "Based on my results this year, I'd like to discuss my salary.", "note": "seguro y con datos" },
-            { "variant": "bad", "text": "I need more money." },
-            { "variant": "good", "text": "I believe my contribution justifies a review of my role.", "note": "profesional" }
+            {
+              "variant": "bad",
+              "text": "Sorry, maybe could I have a raise?"
+            },
+            {
+              "variant": "good",
+              "text": "Based on my results this year, I'd like to discuss my salary.",
+              "note": "seguro y con datos"
+            },
+            {
+              "variant": "bad",
+              "text": "I need more money."
+            },
+            {
+              "variant": "good",
+              "text": "I believe my contribution justifies a review of my role.",
+              "note": "profesional"
+            }
           ]
         }
       ]
@@ -86,10 +172,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "background in", "value": "formación/experiencia en · a background in design", "highlights": ["background in"] },
-            { "key": "passionate about", "value": "apasionado por", "highlights": ["passionate about"] },
-            { "key": "open to opportunities", "value": "abierto a oportunidades", "highlights": ["open to opportunities"] },
-            { "key": "Let's connect", "value": "conectemos · invitación", "highlights": ["Let's connect"] }
+            {
+              "key": "background in",
+              "value": "formación/experiencia en · a background in design",
+              "highlights": [
+                "background in"
+              ]
+            },
+            {
+              "key": "passionate about",
+              "value": "apasionado por",
+              "highlights": [
+                "passionate about"
+              ]
+            },
+            {
+              "key": "open to opportunities",
+              "value": "abierto a oportunidades",
+              "highlights": [
+                "open to opportunities"
+              ]
+            },
+            {
+              "key": "Let's connect",
+              "value": "conectemos · invitación",
+              "highlights": [
+                "Let's connect"
+              ]
+            }
           ]
         }
       ]
@@ -103,10 +213,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "upskill", "value": "mejorar tus competencias", "highlights": ["upskill"] },
-            { "key": "stay up to date with", "value": "mantenerse al día con", "highlights": ["stay up to date with"] },
-            { "key": "take a course in", "value": "hacer un curso de", "highlights": ["take a course in"] },
-            { "key": "step out of my comfort zone", "value": "salir de mi zona de confort", "highlights": ["comfort zone"] }
+            {
+              "key": "upskill",
+              "value": "mejorar tus competencias",
+              "highlights": [
+                "upskill"
+              ]
+            },
+            {
+              "key": "stay up to date with",
+              "value": "mantenerse al día con",
+              "highlights": [
+                "stay up to date with"
+              ]
+            },
+            {
+              "key": "take a course in",
+              "value": "hacer un curso de",
+              "highlights": [
+                "take a course in"
+              ]
+            },
+            {
+              "key": "step out of my comfort zone",
+              "value": "salir de mi zona de confort",
+              "highlights": [
+                "comfort zone"
+              ]
+            }
           ]
         }
       ],
@@ -114,6 +248,35 @@
         "label": "Mentalidad:",
         "body": "en entornos anglosajones se valora mucho la growth mindset: mostrar que quieres aprender."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which action verb is best to start a bullet point about increasing company revenue by 15%?",
+      "options": [
+        "Improved",
+        "Managed"
+      ],
+      "answer": 0,
+      "explain": "El verbo 'improved' es ideal para resaltar resultados positivos y crecimiento, mientras que 'managed' se enfoca más en la administración de recursos."
+    },
+    {
+      "q": "If you want to express your interest in learning new skills during an interview, which phrase should you use?",
+      "options": [
+        "I'm keen to upskill",
+        "I'm keen to stay up to date with"
+      ],
+      "answer": 0,
+      "explain": "'Upskill' es el término preciso para referirse a la mejora de competencias profesionales, mientras que 'stay up to date' se refiere a estar informado sobre tendencias."
+    },
+    {
+      "q": "When receiving constructive feedback from your manager, what is the most professional response?",
+      "options": [
+        "Thanks for the feedback. I'll work on it.",
+        "I don't think that is correct."
+      ],
+      "answer": 0,
+      "explain": "Agradecer el feedback y mostrar disposición para mejorar demuestra una mentalidad abierta y profesional, algo muy valorado en entornos anglosajones."
     }
   ]
 }

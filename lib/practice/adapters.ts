@@ -23,6 +23,7 @@ const GENERIC_TYPE_TO_SLUG: Record<GenericExerciseType, ExerciseSlug> = {
   sentence_transformation: 'sentence_transformation',
   translation_es_en: 'translation_es_en',
   cs_shadow_phrase: 'cs_shadow_phrase',
+  personalization: 'personalization',
 }
 
 /**

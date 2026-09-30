@@ -52,14 +52,6 @@ vi.mock('@/lib/ui-sounds/cues', () => ({
   playUiCue: vi.fn(),
 }))
 
-vi.mock('../WordSearchSetup', () => ({
-  default: ({ onStartPuzzle }: { onStartPuzzle: (puzzle: typeof fixtures.puzzle) => void }) => (
-    <button type="button" onClick={() => onStartPuzzle(fixtures.puzzle)}>
-      Iniciar prueba
-    </button>
-  ),
-}))
-
 vi.mock('../WordSearchGrid', () => ({
   default: ({
     placements,
@@ -102,8 +94,7 @@ describe('WordSearchSession', () => {
   })
 
   it('resets the timer and session state when replaying the same board', () => {
-    render(<WordSearchSession />)
-    fireEvent.click(screen.getByRole('button', { name: 'Iniciar prueba' }))
+    render(<WordSearchSession initialPuzzle={fixtures.puzzle} onExit={vi.fn()} />)
 
     act(() => {
       vi.advanceTimersByTime(2100)
@@ -116,10 +107,18 @@ describe('WordSearchSession', () => {
     expect(fixtures.hideSessionChrome).toHaveBeenCalled()
   })
 
+  it('returns to the games hub when leaving the board', () => {
+    const onExit = vi.fn()
+    render(<WordSearchSession initialPuzzle={fixtures.puzzle} onExit={onExit} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /Salir/ }))
+
+    expect(onExit).toHaveBeenCalledTimes(1)
+  })
+
   it('derives completion from the words actually selected', () => {
     vi.stubGlobal('speechSynthesis', { speak: vi.fn(), cancel: vi.fn() })
-    render(<WordSearchSession />)
-    fireEvent.click(screen.getByRole('button', { name: 'Iniciar prueba' }))
+    render(<WordSearchSession initialPuzzle={fixtures.puzzle} onExit={vi.fn()} />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Encontrar CAT' }))
     fireEvent.click(screen.getByRole('button', { name: 'Encontrar DOG' }))

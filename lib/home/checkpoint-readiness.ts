@@ -3,6 +3,18 @@ import type { CefrLevelId } from "@/lib/courses/types";
 
 const RECENT_ATTEMPT_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
 
+export function lastCompletedCheckpointAt(
+  rows: Array<{ completed_at: string; topic_scores: unknown }>,
+): string | null {
+  const completed = rows.find(({ topic_scores }) => {
+    if (!topic_scores || typeof topic_scores !== "object" || Array.isArray(topic_scores)) return true;
+    const oralEvidence = (topic_scores as Record<string, unknown>).oralEvidence;
+    return !oralEvidence || typeof oralEvidence !== "object" || Array.isArray(oralEvidence)
+      || (oralEvidence as Record<string, unknown>).status !== "pending";
+  });
+  return completed?.completed_at ?? null;
+}
+
 export interface CheckpointReadinessInput {
   /** Nivel resuelto del alumno, ya en minúsculas (ver nota de mapeo en el plan). */
   level: CefrLevelId;

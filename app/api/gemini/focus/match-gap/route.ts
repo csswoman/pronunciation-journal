@@ -57,6 +57,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 512,
       },
     },
+    schema: ResponseSchema,
     parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)),
     failureMessage: 'Failed to match focus gap',
   })

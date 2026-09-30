@@ -6,12 +6,16 @@
 
 import { GoogleGenAI } from "@google/genai";
 import type { GenerateContentParameters } from "@google/genai";
-import { FALLBACK_MODELS, getFastThinkingConfig, shouldTryNextModel } from "./fallback";
+import { FALLBACK_MODELS, getErrorStatus, getFastThinkingConfig, shouldTryNextModel } from "./fallback";
+import { filterAvailable, markCooldownFromError } from "./cooldown";
+import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
 export { getErrorStatus, shouldTryNextModel } from "./fallback";
 
 /** Default timeout per Gemini model attempt. */
-export const DEFAULT_GEMINI_TIMEOUT_MS = 30_000;
+export const DEFAULT_GEMINI_TIMEOUT_MS = 12_000;
+export const DEFAULT_GEMINI_TOTAL_TIMEOUT_MS = 25_000;
+export const DEFAULT_GEMINI_MAX_ATTEMPTS = 2;
 
 /**
  * Wraps a promise with a hard deadline.
@@ -31,8 +35,18 @@ export function withGeminiTimeout<T>(promise: Promise<T>, ms: number): Promise<T
 export type GeminiCallParams = Omit<GenerateContentParameters, "model">;
 
 export interface CallWithFallbackOptions {
-  /** Hard deadline per model attempt. Default: 30 s. */
+  /** Hard deadline per model attempt. Default: 12 s. */
   timeoutMs?: number;
+  /** End-to-end deadline shared by reservations and every model attempt. */
+  totalTimeoutMs?: number;
+  /** Maximum provider calls for an interactive request. */
+  maxAttempts?: number;
+  /** Model order for this task. Defaults to the high-throughput chain. */
+  models?: readonly string[];
+  /** Stable route/feature label used for shared daily quota reservations. */
+  feature?: string;
+  /** Skip a reservation only when the caller already made an equivalent atomic reservation. */
+  skipBudgetReservation?: boolean;
   /**
    * Return true to try the next fallback model after this error.
    * Defaults to `shouldTryNextModel` from `./fallback`.
@@ -59,29 +73,66 @@ export async function callWithFallback<T>(
   parse: (text: string) => T,
   options: CallWithFallbackOptions = {}
 ): Promise<T> {
-  const { timeoutMs = DEFAULT_GEMINI_TIMEOUT_MS, shouldRetry = shouldTryNextModel } = options;
+  const {
+    timeoutMs = DEFAULT_GEMINI_TIMEOUT_MS,
+    totalTimeoutMs = DEFAULT_GEMINI_TOTAL_TIMEOUT_MS,
+    maxAttempts = DEFAULT_GEMINI_MAX_ATTEMPTS,
+    shouldRetry = shouldTryNextModel,
+    models = FALLBACK_MODELS,
+    feature = "gemini-unattributed",
+    skipBudgetReservation = false,
+  } = options;
   const ai = new GoogleGenAI({ apiKey });
   let lastError: unknown;
+  let budgetDenied = false;
+  const deadlineAt = Date.now() + totalTimeoutMs;
 
-  for (const model of FALLBACK_MODELS) {
+  for (const model of filterAvailable(models).slice(0, maxAttempts)) {
+    const remainingBeforeReservation = deadlineAt - Date.now();
+    if (remainingBeforeReservation <= 0) break;
+    if (!skipBudgetReservation && !(await reserveModel(model, feature))) {
+      budgetDenied = true;
+      continue;
+    }
+    const startedAt = Date.now();
     try {
+      const remainingMs = deadlineAt - Date.now();
+      if (remainingMs <= 0) break;
+      const attemptTimeoutMs = Math.max(1, Math.min(timeoutMs, remainingMs));
+      const abortSignal = AbortSignal.timeout(attemptTimeoutMs);
       const thinkingConfig = getFastThinkingConfig(model);
       const effectiveConfig = thinkingConfig
         ? { ...params.config, thinkingConfig: (params.config as { thinkingConfig?: unknown } | undefined)?.thinkingConfig ?? thinkingConfig }
-        : params.config;
+        : { ...params.config };
 
-      const result = await withGeminiTimeout(
-        ai.models.generateContent({ model, ...params, config: effectiveConfig }),
-        timeoutMs
-      );
+      const result = await ai.models.generateContent({
+        model,
+        ...params,
+        config: {
+          ...effectiveConfig,
+          httpOptions: { ...effectiveConfig?.httpOptions, timeout: attemptTimeoutMs },
+          abortSignal,
+        },
+      });
       if (!result.text) throw new Error("Empty response from AI");
-      return parse(result.text);
+      const parsed = parse(result.text);
+      void recordModelSuccess(model, feature, Date.now() - startedAt);
+      return parsed;
     } catch (err: unknown) {
       lastError = err;
+      markCooldownFromError(model, err);
+      void recordModelFailure(model, feature, getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
+      if (Date.now() >= deadlineAt) break;
       if (!shouldRetry(err)) throw err;
     }
   }
 
+  if (budgetDenied && !lastError) {
+    throw Object.assign(new Error("Daily AI model budget exhausted"), { status: 429 });
+  }
+  if (Date.now() >= deadlineAt) {
+    throw Object.assign(new Error(`Gemini request timed out after ${totalTimeoutMs}ms`), { status: 504 });
+  }
   throw lastError ?? new Error("All fallback models failed");
 }
 

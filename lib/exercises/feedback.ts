@@ -112,6 +112,16 @@ export function buildPedagogicalFeedback(
         errorCode: isCorrect ? 'correct' : 'unknown',
         nextAction: 'continue',
       }
+    case 'personalization':
+      return {
+        immediate: isCorrect ? '¡Tu respuesta cumple con los requisitos y habla de ti!' : 'Revisa que tu respuesta use la estructura pedida y tenga la longitud adecuada.',
+        explanation: isCorrect ? undefined : (exercise.mode === 'open' ? exercise.promptEs : exercise.hintEs),
+        expectedAnswer: exercise.example,
+        correction: exercise.example,
+        errorCode: isCorrect ? 'correct' : 'unknown',
+        canRetry: !isCorrect,
+        nextAction: isCorrect ? 'continue' : 'retry',
+      }
   }
 }
 

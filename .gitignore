@@ -29,13 +29,8 @@ bundle-summary.json
 .DS_Store
 *.pem
 .claude/
-CLAUDE.md
 
 # documentation & config
-DESIGN.md
-ENGINEERING_STANDARDS.md
-PRODUCT.md
-THEME_SYSTEM.md
 .impeccable/
 .superpowers/
 .vscode/
@@ -68,3 +63,4 @@ public/workbox-*.js.map
 # working scratch (lexicon gap generation, etc.)
 tmp/
 .cache/
+scripts/prompt-eval/cases/reported/

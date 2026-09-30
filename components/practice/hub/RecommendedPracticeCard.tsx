@@ -32,7 +32,7 @@ interface Props {
 
 export default function RecommendedPracticeCard({ recommendation, data = EMPTY_DATA }: Props) {
   const { mode, headline, subtext, reason } = recommendation
-  const { dueCount, criticalCount, retentionPct, previewWords } = data
+  const { dueCount, criticalCount, retentionPct, previewWords } = reason === 'due-review' ? data : EMPTY_DATA
 
   const match = headline.match(/^(\d+)\s*(.*)$/)
   const numberStr = match ? match[1] : null
@@ -49,7 +49,7 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
         {/* Encabezado: Kicker tinta sólida + Badge recomendada contorno */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-paper select-none">
-            REPASO DE HOY
+            {reason === 'due-review' ? 'REPASO DE HOY' : 'SIGUIENTE PRÁCTICA'}
           </span>
           <span className="inline-flex items-center rounded-full border border-ink/40 bg-transparent px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
             Recomendado
@@ -84,7 +84,7 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
                 )}
                 {retentionPct !== null && (
                   <span className="inline-flex items-center rounded-full bg-ink/10 px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
-                    {retentionPct} % de retención
+                    {retentionPct} % precisión (7 días)
                   </span>
                 )}
               </div>

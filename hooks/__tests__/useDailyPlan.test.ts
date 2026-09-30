@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useDailyPlan } from '../useDailyPlan'
 import type { DailyPlan } from '@/lib/practice/types'
@@ -68,6 +68,16 @@ vi.mock('@/lib/daily/plan-storage', () => ({
   saveResolvedIds: vi.fn(),
 }))
 
+const { recordDailyStepCompletionMock, isDailyStepAlreadyRecordedMock } = vi.hoisted(() => ({
+  recordDailyStepCompletionMock: vi.fn().mockResolvedValue(undefined),
+  isDailyStepAlreadyRecordedMock: vi.fn(() => false),
+}))
+
+vi.mock('@/lib/progress/activity-hub', () => ({
+  recordDailyStepCompletion: recordDailyStepCompletionMock,
+  isDailyStepAlreadyRecorded: isDailyStepAlreadyRecordedMock,
+}))
+
 vi.mock('@/lib/progress/activity-queries-client', () => ({
   syncTodayReconciledSteps: vi.fn().mockResolvedValue(new Set<string>()),
 }))
@@ -119,6 +129,27 @@ describe('useDailyPlan', () => {
     expect(mockSaveCachedDailyPlan).toHaveBeenCalled()
   })
 
+  it('preserves a new chunk when adding the optional lesson to a full plan', async () => {
+    const otherSteps = ['review', 'grammar', 'sound', 'reader'].map((id) => ({
+      id, kind: 'word_review' as const, title: id, subtitle: '', icon: 'BookOpen',
+      exercises: [], estMinutes: 3,
+      selection: { reason: 'route_next' as const, source: id, targetRefs: [id] },
+    }))
+    const newChunk = {
+      id: 'new-chunk', kind: 'chunk_intro' as const, title: 'Nuevo chunk', subtitle: '',
+      icon: 'BookOpen', exercises: [], estMinutes: 5,
+      selection: { reason: 'chunk_new' as const, source: 'chunk_intro', targetRefs: ['chunk:new'] },
+    }
+    mockBuildDailyPlan.mockResolvedValueOnce({ ...mockBuiltPlan, steps: [...otherSteps, newChunk] })
+    const lesson = { slug: 'extra', title: 'Lección extra', subtitle: '', body: '' }
+
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: lesson, autoLoad: true }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    expect(result.current.steps).toHaveLength(5)
+    expect(result.current.steps.map((step) => step.id)).toContain('new-chunk')
+  })
+
   it('transitions to status: error when buildDailyPlan fails', async () => {
     storedCachedPlan = null
     mockBuildDailyPlan.mockRejectedValueOnce(new Error('Network or Dexie error'))
@@ -144,5 +175,29 @@ describe('useDailyPlan', () => {
     expect(result.current.status).toBe('loading')
     expect(mockBuildDailyPlan).not.toHaveBeenCalled()
     expect(mockLoadCachedDailyPlan).not.toHaveBeenCalled()
+  })
+
+  it('does not add an empty manual row for a step a real session already recorded', async () => {
+    storedCachedPlan = mockCachedPlan
+    isDailyStepAlreadyRecordedMock.mockReturnValueOnce(true)
+    recordDailyStepCompletionMock.mockClear()
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: null }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    await act(() => result.current.markDone('step-1'))
+
+    expect(recordDailyStepCompletionMock).not.toHaveBeenCalled()
+    expect(result.current.getStepStatus('step-1')).toBe('done')
+  })
+
+  it('records the manual checklist row when no session recorded the step', async () => {
+    storedCachedPlan = mockCachedPlan
+    recordDailyStepCompletionMock.mockClear()
+    const { result } = renderHook(() => useDailyPlan({ conceptLesson: null }))
+    await waitFor(() => expect(result.current.status).toBe('ready'))
+
+    await act(() => result.current.markDone('step-1'))
+
+    expect(recordDailyStepCompletionMock).toHaveBeenCalledWith(mockUser.id, 'step-1')
   })
 })

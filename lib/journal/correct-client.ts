@@ -1,5 +1,7 @@
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
 import type { JournalCorrectRequest, JournalCorrectionResponse } from '@/lib/journal/correction'
+import { refreshLearningStateFromRemote } from '@/lib/ai-practice/queries'
+import { fetchWithTimeout } from '@/lib/api/timeout'
 
 export type { JournalCorrectRequest, JournalCorrectionResponse }
 
@@ -33,11 +35,11 @@ export async function correctJournalEntry(
 
   let res: Response
   try {
-    res = await fetch('/api/gemini/journal-correct', {
+    res = await fetchWithTimeout('/api/gemini/journal-correct', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
-    })
+    }, 30_000)
   } catch {
     throw new JournalCorrectionError(
       publicAiErrorMessage(undefined, '', JOURNAL_AI_UNAVAILABLE_MESSAGE),
@@ -53,5 +55,10 @@ export async function correctJournalEntry(
     )
   }
 
-  return res.json() as Promise<JournalCorrectionResponse>
+  const correction = await res.json() as JournalCorrectionResponse
+  // The server commits recurrence atomically with the correction. Refresh the
+  // local Dexie snapshot after confirmation; later auth hydration recovers it
+  // when the response itself was lost.
+  await refreshLearningStateFromRemote()
+  return correction
 }

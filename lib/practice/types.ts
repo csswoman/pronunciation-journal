@@ -42,6 +42,7 @@ export type ExerciseSlug =
   | 'sentence_transformation' // id: 20
   | 'translation_es_en' // id: 22
   | 'cs_shadow_phrase' // id: 23 — connected-speech shadow/production step (local STT, no Gemini)
+  | 'personalization' // no DB row — drills de gramática, auto-personalización
 
 // null signals "no exercise_types FK" — this exercise does not write to answer_history.
 export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
@@ -68,6 +69,7 @@ export const EXERCISE_TYPE_IDS: Record<ExerciseSlug, number | null> = {
   sentence_transformation: 20,
   translation_es_en: 22,
   cs_shadow_phrase: 23,
+  personalization: null,
 }
 
 const EXERCISE_SLUG_BY_TYPE_ID = new Map<number, ExerciseSlug>()
@@ -154,6 +156,10 @@ export type PracticeAnswer = {
   totalInteractionMs?: number
   /** True if the user failed their first try before retrying and succeeding. */
   firstTryFailed?: boolean
+  /** Observed hint count; transport only until a hint penalty is approved. */
+  hintsUsed?: number
+  /** False when a producer has no measured response latency. */
+  responseTimeKnown?: boolean
   /** 0-100, currently used by speak_word. */
   score?: number
   feedback?: PedagogicalFeedback
@@ -180,6 +186,10 @@ export type ExerciseResult = PracticeAnswer & { completedAt: Date }
 
 export type SessionResult = {
   results: ExerciseResult[]
+  /** Stable persisted session identity for idempotent domain writers. */
+  sessionId?: string
+  /** Evaluated answers used as the accuracy denominator; activity may be larger. */
+  evaluatedTotal?: number
   /** Overall accuracy as a percentage (0-100). */
   accuracy: number
   totalTimeMs: number
@@ -343,12 +353,14 @@ export type PedagogicalFeedback = {
 }
 
 export type PracticeSubmitExtras = {
+  attemptId?: string
   score?: number
   feedback?: PedagogicalFeedback
   status?: PracticeResultStatus
   responseTimeMs?: number
   totalInteractionMs?: number
   firstTryFailed?: boolean
+  hintsUsed?: number
 }
 
 export type PracticeConfig = {
@@ -376,4 +388,9 @@ export type PracticeConfig = {
   footer?: React.ReactNode
   /** Start at this exercise index (0-based). Undefined = start from 0. */
   initialIndex?: number
+  /**
+   * Exact Daily step this session completes. The session's activity row
+   * reconciles it, so the checklist does not add an empty manual row.
+   */
+  dailyStepId?: string
 }

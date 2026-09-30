@@ -20,6 +20,7 @@ interface WordCardProps {
   difficulty: number;
   view?: "grid" | "list";
   onMarkLearned?: () => void;
+  onMarkMastered?: () => void;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
   isInMyWords?: boolean;
@@ -66,6 +67,7 @@ export function WordCard({
   difficulty,
   view = "grid",
   onMarkLearned,
+  onMarkMastered,
   isFavorite,
   onToggleFavorite,
   isInMyWords,
@@ -177,17 +179,33 @@ export function WordCard({
             ) : null}
           </div>
 
-          {onMarkLearned ? (
-            <PillButton
-              variant={isLearned ? "quiet" : "outline"}
-              size="sm"
-              icon={<Check size={14} />}
-              onClick={onMarkLearned}
-              disabled={isLearned}
-              aria-label={isLearned ? "Marcada como aprendida" : "Marcar como aprendida"}
-            >
-              {isLearned ? "Aprendida" : "Marcar"}
-            </PillButton>
+          {(onMarkLearned || onMarkMastered) && !isLearned ? (
+            <div className="flex items-center gap-1.5">
+              {onMarkMastered ? (
+                <PillButton
+                  variant="outline"
+                  size="sm"
+                  onClick={onMarkMastered}
+                  aria-label="Ya la domino — marcar como dominada sin practicar"
+                  title="Ya sé esta palabra de memoria"
+                >
+                  Ya la domino
+                </PillButton>
+              ) : null}
+              {onMarkLearned ? (
+                <PillButton
+                  variant="outline"
+                  size="sm"
+                  icon={<Check size={14} />}
+                  onClick={onMarkLearned}
+                  aria-label="Agregar a mis palabras para practicar"
+                >
+                  Practicar
+                </PillButton>
+              ) : null}
+            </div>
+          ) : isLearned ? (
+            <Badge variant="success" label="Dominada" dot />
           ) : null}
         </div>
       </div>

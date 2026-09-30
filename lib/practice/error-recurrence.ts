@@ -25,13 +25,67 @@ export interface ErrorRecurrenceEntry {
   /** Total times the learner has produced this error. */
   failCount: number
   lastFailedAt: number
+  /** Epoch ms of the last queue mutation, used to merge corrections across devices. */
+  revisionAt?: number
 }
 
 export interface ErrorRecurrenceQueue {
   entries: ErrorRecurrenceEntry[]
+  /** Server-mergeable removals prevent older device snapshots from resurrecting repaired patterns. */
+  removedAtByPattern?: Partial<Record<ErrorPatternId, number>>
 }
 
 export const EMPTY_RECURRENCE_QUEUE: ErrorRecurrenceQueue = { entries: [] }
+
+function revisionAt(entry: ErrorRecurrenceEntry): number {
+  return entry.revisionAt ?? entry.lastFailedAt
+}
+
+function nextRevisionAt(entry: ErrorRecurrenceEntry | undefined, now: number): number {
+  return Math.max(now, (entry ? revisionAt(entry) : now - 1) + 1)
+}
+
+function nextPatternRevisionAt(
+  queue: ErrorRecurrenceQueue,
+  patternId: ErrorPatternId,
+  existing: ErrorRecurrenceEntry | undefined,
+  now: number,
+): number {
+  const previous = existing
+    ? revisionAt(existing)
+    : (queue.removedAtByPattern?.[patternId] ?? now - 1)
+  return Math.max(now, previous + 1)
+}
+
+/** Merge device snapshots without treating omission as deletion. */
+export function mergeErrorRecurrenceQueues(
+  local: ErrorRecurrenceQueue | undefined,
+  remote: ErrorRecurrenceQueue | undefined,
+  preferRemoteOnTie: boolean,
+): ErrorRecurrenceQueue {
+  const tombstones = { ...local?.removedAtByPattern }
+  for (const [pattern, removedAt] of Object.entries(remote?.removedAtByPattern ?? {})) {
+    if (removedAt !== undefined) {
+      const key = pattern as ErrorPatternId
+      tombstones[key] = Math.max(tombstones[key] ?? -1, removedAt)
+    }
+  }
+
+  const candidates = new Map<ErrorPatternId, ErrorRecurrenceEntry>()
+  for (const entry of local?.entries ?? []) candidates.set(entry.patternId, entry)
+  for (const entry of remote?.entries ?? []) {
+    const current = candidates.get(entry.patternId)
+    if (!current || revisionAt(entry) > revisionAt(current) ||
+      (revisionAt(entry) === revisionAt(current) && preferRemoteOnTie)) {
+      candidates.set(entry.patternId, entry)
+    }
+  }
+
+  const entries = [...candidates.values()]
+    .filter((entry) => (tombstones[entry.patternId] ?? -1) < revisionAt(entry))
+
+  return { entries, removedAtByPattern: tombstones }
+}
 
 /** Record a fresh failure: resets the pattern to the shortest interval. */
 export function recordErrorPattern(
@@ -46,9 +100,11 @@ export function recordErrorPattern(
     dueAt: now + RECURRENCE_INTERVALS_DAYS[0]! * DAY_MS,
     failCount: (existing?.failCount ?? 0) + 1,
     lastFailedAt: now,
+    revisionAt: nextPatternRevisionAt(queue, patternId, existing, now),
   }
   return {
     entries: [...queue.entries.filter((e) => e.patternId !== patternId), entry],
+    removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
   }
 }
 
@@ -91,15 +147,23 @@ export function markPatternRehearsed(
           dueAt: now + RECURRENCE_INTERVALS_DAYS[0]! * DAY_MS,
           failCount: existing.failCount + 1,
           lastFailedAt: now,
+          revisionAt: nextRevisionAt(existing, now),
         },
       ],
+      removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
     }
   }
 
   const nextStage = existing.stage + 1
   // Cleared the final interval — the pattern is considered repaired.
   if (nextStage >= RECURRENCE_INTERVALS_DAYS.length) {
-    return { entries: others }
+    return {
+      entries: others,
+      removedAtByPattern: {
+        ...queue.removedAtByPattern,
+        [patternId]: nextRevisionAt(existing, now),
+      },
+    }
   }
 
   return {
@@ -109,7 +173,62 @@ export function markPatternRehearsed(
         ...existing,
         stage: nextStage,
         dueAt: now + RECURRENCE_INTERVALS_DAYS[nextStage]! * DAY_MS,
+        revisionAt: nextRevisionAt(existing, now),
       },
     ],
+    removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
+  }
+}
+
+function withoutPattern(
+  tombstones: ErrorRecurrenceQueue['removedAtByPattern'],
+  patternId: ErrorPatternId,
+): ErrorRecurrenceQueue['removedAtByPattern'] {
+  if (!tombstones?.[patternId]) return tombstones
+  const next = { ...tombstones }
+  delete next[patternId]
+  return next
+}
+
+/**
+ * Retract an error pattern that was recorded by mistake.
+ * If the entry exists:
+ * - decrements failCount by 1
+ * - if failCount reaches 0, removes the entry and writes a tombstone
+ *   at removedAtByPattern[patternId] = now so older device snapshots do not resurrect it.
+ * - if failCount > 0, keeps the entry with decremented failCount.
+ * If the entry does not exist, returns queue unmodified.
+ */
+export function retractErrorPattern(
+  queue: ErrorRecurrenceQueue,
+  patternId: ErrorPatternId,
+  now: number,
+): ErrorRecurrenceQueue {
+  const existing = queue.entries.find((e) => e.patternId === patternId)
+  if (!existing) return queue
+
+  const others = queue.entries.filter((e) => e.patternId !== patternId)
+  const nextFailCount = existing.failCount - 1
+
+  if (nextFailCount <= 0) {
+    return {
+      entries: others,
+      removedAtByPattern: {
+        ...queue.removedAtByPattern,
+        [patternId]: nextRevisionAt(existing, now),
+      },
+    }
+  }
+
+  return {
+    entries: [
+      ...others,
+      {
+        ...existing,
+        failCount: nextFailCount,
+        revisionAt: nextRevisionAt(existing, now),
+      },
+    ],
+    removedAtByPattern: withoutPattern(queue.removedAtByPattern, patternId),
   }
 }

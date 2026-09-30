@@ -41,7 +41,7 @@ export default function HomeActivationStrip({
         >
           Una práctica ahora — sin cuenta
         </h2>
-        <p className="font-body-sm max-w-[60ch] text-pretty text-fg-muted">
+        <p className="ts-body max-w-[60ch] text-pretty text-fg-muted">
           El plan se arma al practicar. Empieza con sonidos o un curso corto; no hace
           falta saber IPA para sentir el progreso.
         </p>
@@ -61,7 +61,7 @@ export default function HomeActivationStrip({
         <Link
           href="/courses"
           prefetch={false}
-          className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm font-medium text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
+          className="focus-ring inline-flex min-h-10 items-center gap-1.5 ts-caption text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
         >
           Explorar cursos
           <ArrowRight size={16} aria-hidden />
@@ -69,7 +69,7 @@ export default function HomeActivationStrip({
       </div>
 
       {showAssessments ? (
-        <p className="font-body-sm text-fg-muted">
+        <p className="ts-caption text-fg-muted">
           Si quieres afinar la ruta primero:{" "}
           {showPlacementLink ? (
             <Link

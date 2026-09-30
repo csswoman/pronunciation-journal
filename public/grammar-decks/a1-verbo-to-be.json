@@ -278,5 +278,112 @@
       "answer": 0,
       "explain": "La tercera persona del singular 'she' utiliza el verbo 'Is'."
     }
-  ]
+  ],
+  "drill": {
+    "level": "A1",
+    "reviewed": true,
+    "transform": [
+      {
+        "source": "I am from Spain.",
+        "instruction": "Escribe la oración usando la contracción en el sujeto.",
+        "accept": ["I'm from Spain."],
+        "contractions": "require"
+      },
+      {
+        "source": "She is a doctor.",
+        "instruction": "Escribe la oración usando la contracción en el sujeto.",
+        "accept": ["She's a doctor."],
+        "contractions": "require"
+      },
+      {
+        "source": "They are not ready.",
+        "instruction": "Escribe la oración usando la contracción.",
+        "accept": ["{They're not|They aren't} ready."],
+        "contractions": "require"
+      },
+      {
+        "source": "We are very tired.",
+        "instruction": "Escribe la oración usando la contracción en el sujeto.",
+        "accept": ["We're very tired."],
+        "contractions": "require"
+      }
+    ],
+    "build": [
+      {
+        "kind": "reorder",
+        "accept": ["I am very happy today."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["She is a good student."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["They are at the park."]
+      },
+      {
+        "kind": "reorder",
+        "accept": ["My brother is at home."]
+      }
+    ],
+    "correct": [
+      {
+        "sentence": "I are from Mexico.",
+        "accept": ["{I am|I'm|We are|We're|They are|They're} from Mexico."],
+        "explanation": "Con I se usa am (o la contracción I'm)."
+      },
+      {
+        "sentence": "She are very smart.",
+        "accept": ["{She is|She's} very smart."],
+        "explanation": "La tercera persona singular usa is."
+      },
+      {
+        "sentence": "They is at work.",
+        "accept": ["{They are|They're} at work."],
+        "explanation": "El pronombre they usa are."
+      },
+      {
+        "sentence": "You is my friend.",
+        "accept": ["{You are|You're} my friend."],
+        "explanation": "El pronombre you siempre va con are."
+      },
+      {
+        "sentence": "We am ready now.",
+        "accept": ["{We are|We're} ready now."],
+        "explanation": "El pronombre we va con are."
+      }
+    ],
+    "personalize": [
+      {
+        "mode": "frame",
+        "frame": "I'm ___ years old.",
+        "slot": "number",
+        "hintEs": "Escribe tu edad en números o letras."
+      },
+      {
+        "mode": "frame",
+        "frame": "I'm from ___.",
+        "slot": "word",
+        "hintEs": "Escribe tu ciudad o país."
+      },
+      {
+        "mode": "frame",
+        "frame": "I'm a ___.",
+        "slot": "phrase",
+        "hintEs": "Escribe tu profesión o rol."
+      },
+      {
+        "mode": "frame",
+        "frame": "My best friend is ___.",
+        "slot": "phrase",
+        "hintEs": "Escribe el nombre o rol de tu mejor amigo/a."
+      },
+      {
+        "mode": "frame",
+        "frame": "Right now, I'm ___.",
+        "slot": "phrase",
+        "hintEs": "Escribe cómo te sientes o dónde estás."
+      }
+    ]
+  }
 }

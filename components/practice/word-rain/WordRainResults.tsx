@@ -24,7 +24,8 @@
 
 import { useState } from 'react'
 import type { RainWord, WordRainStats } from '@/lib/exercises/word-rain/types'
-import { quickAddWord } from '@/lib/word-bank/queries'
+import { playSpeech } from '@/lib/exercises/word-rain/audio'
+import { DuplicateWordError, quickAddWord } from '@/lib/word-bank/queries'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import Button from '@/components/ui/Button'
 import { CheckCircle2, RotateCcw, Volume2, Sparkles, Plus, Check } from '@/components/icons'
@@ -37,15 +38,6 @@ interface WordRainResultsProps {
   onExit: () => void
 }
 
-function playSpeech(text: string) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'en-US'
-  utterance.rate = 0.9
-  window.speechSynthesis.speak(utterance)
-}
-
 export default function WordRainResults({
   isVictory,
   stats,
@@ -56,6 +48,7 @@ export default function WordRainResults({
   const auth = useAuthOptional()
   const user = auth?.user ?? null
   const [addedWords, setAddedWords] = useState<Record<string, boolean>>({})
+  const [failedWords, setFailedWords] = useState<Record<string, boolean>>({})
   const [isAddingAll, setIsAddingAll] = useState(false)
 
   const handleSaveToBank = async (word: string) => {
@@ -63,27 +56,30 @@ export default function WordRainResults({
     try {
       await quickAddWord({ text: word, source: 'manual' })
       setAddedWords((prev) => ({ ...prev, [word]: true }))
+      setFailedWords((prev) => ({ ...prev, [word]: false }))
     } catch (err) {
+      if (err instanceof DuplicateWordError) {
+        setAddedWords((prev) => ({ ...prev, [word]: true }))
+        setFailedWords((prev) => ({ ...prev, [word]: false }))
+        return
+      }
       console.warn('[WordRainResults] Error adding word to bank:', err)
-      // Even if already saved or duplicate, mark as saved in UI
-      setAddedWords((prev) => ({ ...prev, [word]: true }))
+      setFailedWords((prev) => ({ ...prev, [word]: true }))
     }
   }
 
   const handleSaveAllToBank = async () => {
     if (!user || isAddingAll) return
     setIsAddingAll(true)
-    for (const item of savedWords) {
-      if (!addedWords[item.word]) {
-        try {
-          await quickAddWord({ text: item.word, source: 'manual' })
-          setAddedWords((prev) => ({ ...prev, [item.word]: true }))
-        } catch {
-          setAddedWords((prev) => ({ ...prev, [item.word]: true }))
+    try {
+      for (const item of savedWords) {
+        if (!addedWords[item.word]) {
+          await handleSaveToBank(item.word)
         }
       }
+    } finally {
+      setIsAddingAll(false)
     }
-    setIsAddingAll(false)
   }
 
   return (
@@ -171,9 +167,14 @@ export default function WordRainResults({
                     {item.ipa}
                   </span>
                 )}
+                {failedWords[item.word] && (
+                  <span className="text-caption text-error" role="status">
+                    No se pudo guardar; toca para reintentar
+                  </span>
+                )}
                 <button
                   type="button"
-                  onClick={() => playSpeech(item.word)}
+                  onClick={() => playSpeech(item.word, 0.9)}
                   className="text-fg-subtle hover:text-primary transition-colors focus-ring"
                   title={`Escuchar ${item.word}`}
                   aria-label={`Escuchar ${item.word}`}
@@ -186,8 +187,8 @@ export default function WordRainResults({
                     onClick={() => handleSaveToBank(item.word)}
                     disabled={isSaved}
                     className="text-fg-subtle hover:text-primary transition-colors focus-ring ml-0.5"
-                    title={isSaved ? 'Guardada en vocabulario' : 'Añadir a mi vocabulario'}
-                    aria-label={isSaved ? 'Guardada en vocabulario' : 'Añadir a mi vocabulario'}
+                    title={isSaved ? 'Guardada en vocabulario' : failedWords[item.word] ? 'Reintentar guardar en vocabulario' : 'Añadir a mi vocabulario'}
+                    aria-label={isSaved ? 'Guardada en vocabulario' : failedWords[item.word] ? 'Reintentar guardar en vocabulario' : 'Añadir a mi vocabulario'}
                   >
                     {isSaved ? (
                       <Check size={12} className="text-success" />

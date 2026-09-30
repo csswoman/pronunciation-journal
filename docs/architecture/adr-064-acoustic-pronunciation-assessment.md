@@ -1,6 +1,6 @@
 # ADR 064: Acoustic pronunciation assessment — validate before shipping
 
-- **Status**: Steps 1-3 executed; Step 4 vendor research done, then re-run as a real formant-based benchmark against speechocean762 — **NO-SHIP for all 4 vowel contrasts** (see Decision); Steps 5-6 not applicable.
+- **Status**: Steps 1-3 executed; Step 4 vendor research done, then re-run as a real formant-based benchmark against speechocean762 — **NO-SHIP for all 4 vowel contrasts** (see Decision); Steps 5-6 not applicable. Reopened 2026-09-25 by plan 038 with a fourth candidate (on-device phoneme CTC) and benchmarked against L2-ARCTIC's Spanish-L1 speakers — **NO-SHIP again**: 1 of the 4 phonemes the gate required passed (see Decision).
 - **Plan**: `plans/064-validate-acoustic-pronunciation-assessment.md`
 - **Depends on**: plan 063 (`docs/architecture/exercises.md` row "3 — Future acoustic analysis")
 
@@ -178,6 +178,75 @@ production decision — all out of scope for this spike per the STOP conditions.
   Known limitation: cannot measure stress/rhythm/intonation/segmental quality directly, only
   whether STT recognized the words.
 
+### Candidate 4 — On-device phoneme CTC (plan 038, phase B)
+
+Unlike Candidate 1, a phoneme-CTC model needs no separate forced aligner: the CTC frames *are*
+the alignment. Unlike Candidate 2, nothing leaves the device. Verified 2026-09-25 against the
+Hugging Face API, not from memory.
+
+**1. Model ID** — `onnx-community/wav2vec2-lv-60-espeak-cv-ft-ONNX`, an ONNX conversion of
+`facebook/wav2vec2-lv-60-espeak-cv-ft` (wav2vec2-large fine-tuned on Common Voice to emit
+espeak/IPA phoneme labels). Consumed from `@huggingface/transformers` via
+`pipeline('automatic-speech-recognition', ...)` with audio resampled to 16 kHz.
+
+**2. License** — Apache 2.0 (`license:apache-2.0` in the model metadata). Permissive; no
+commercial restriction, unlike the benchmark corpus below.
+
+**3. Size per variant** — from `GET /api/models/...?blobs=true`:
+
+| Variant | Size |
+|---|---|
+| `model.onnx` (fp32) | 1264.0 MB |
+| `model_fp16.onnx` | 632.3 MB |
+| `model_int8` / `model_quantized` / `model_uint8` | 317.7 MB |
+| `model_q4.onnx` | 241.7 MB |
+| `model_bnb4.onnx` | 222.8 MB |
+| `model_q4f16.onnx` | **196.9 MB** |
+
+The smallest quantized variant is 196.9 MB, under the plan's 400 MB STOP condition, so the
+"look for a base-sized alternative" branch of step B1 does not trigger. 197 MB is still a
+deliberate, one-time, explicitly-consented download — never automatic (phase C, step 1).
+
+**4. Output phoneme inventory** — 392 tokens in `vocab.json`, plus `<pad>` / `<s>` / `</s>` /
+`<unk>`. The model is multilingual, so most of that inventory is irrelevant here (Mandarin
+tone-marked tokens like `iɛ5`, palatalized Slavic tokens like `nʲ`, aspirated `tʰ`). The English
+subset is standard espeak IPA: `ɑː æ ʌ ə ɔː aʊ aɪ b tʃ d ð ɛ ɜː eɪ f ɡ h ɪ iː dʒ k l m n ŋ oʊ ɔɪ
+p ɹ s ʃ t θ ʊ uː v w j z ʒ`, plus allophones the app would fold in (`ɾ` flap, `ɚ`, `r`, `ɑ`, `ɔ`,
+`ɜ`, bare `e o a i u`).
+
+**5. Correspondence to L2-ARCTIC's ARPAbet inventory** — L2-ARCTIC annotates in ARPAbet only (the
+"phones" tier; IPA appears just in free-text annotator comments). All 39 ARPAbet phones plus the
+`AH0`/schwa split map onto tokens that exist in this vocabulary — checked programmatically, zero
+missing. Every phoneme on the plan's Spanish-L1 priority list is covered: /v/ /b/ /ʃ/ /θ/ /ð/ /z/
+/ɪ/ /iː/ /æ/ /ʌ/ /h/ /dʒ/ /ŋ/. Initial epenthesis ("e-school") is representable as an inserted
+`e`/`ə` token before `s`, which the alignment classifies as an addition. So the STOP condition
+"annotations cannot be mapped without losing the priority contrasts" does **not** trigger.
+
+**Open risks, not yet measured.** (a) The mapping is many-to-one in both directions (`ɾ`→`T`/`D`,
+`ɚ`/`ɜː`→`ER`, `ɑ`/`ɑː`→`AA`); folding rules change the error counts, so they must be fixed and
+committed before measuring. (b) The transformers.js ASR pipeline returns a phoneme string;
+per-token timestamps need `return_timestamps` on a CTC head, and the confidence the plan asks for
+(mean posterior over the span) is not exposed by the high-level pipeline. (c) Published MDD
+systems *purpose-trained* on L2-ARCTIC report F1 ≈ 0.60 to 0.72 ([59.52%](https://arxiv.org/html/2606.05569v1),
+[69.60%](https://arxiv.org/html/2511.20107), [71.77%](https://arxiv.org/html/2604.22133) — figures
+are the authors' own, rephrased for licensing compliance). A generic, untuned model should be
+expected below that range, which is exactly why plan 038's gate is per-phoneme and weights
+precision over recall.
+
+**Benchmark corpus — blocked on owner action.** L2-ARCTIC is CC BY-NC 4.0, and both distribution
+routes require a human to accept terms:
+
+- The PSI Lab page gates the download behind a reCAPTCHA form asking for **name, email and
+  affiliation**, then mails a Google Drive link. Submitting a person's contact details and
+  accepting a license on their behalf is not an agent's call.
+- The `KoelLabs/L2Arctic` mirror on Hugging Face (same CC BY-NC 4.0, parquet with IPA
+  annotations) is **gated**: an unauthenticated fetch returns HTTP 401, so it needs an account
+  that has accepted the terms plus a token.
+
+The 4 Spanish-L1 speakers are EBVS (M), ERMS (M), MBMPS (F), NJS (F), with 150 manually annotated
+utterances each — 600 total, which is what the per-phoneme gate (≥30 annotated human errors per
+phoneme) would be measured on.
+
 ### Why no live benchmark ran
 Running Step 4's quantitative comparison (agreement with labeled targets, false positive/negative
 rate by subgroup, abstention rate, p50/p95 latency, per-minute cost) requires: (a) a labeled,
@@ -226,9 +295,41 @@ window-placement error are conflated in these numbers) or sourcing a corpus with
 Until such a follow-up plan ships a passing benchmark, this app must not claim acoustic
 pronunciation assessment anywhere in product copy.
 
+**Plan 038 phase B decision (2026-09-25), on-device phoneme CTC: NO-SHIP.** The benchmark ran for
+real against L2-ARCTIC's manually annotated subset, all four Spanish-L1 speakers — 600 utterances,
+20,050 expected phonemes, 3,151 annotated human errors. Against the gate pre-registered before the
+corpus was downloaded (flagged-error precision ≥ 0.80, false alarm ≤ 5%, ≥ 30 annotated errors per
+phoneme, ≥ 4 phonemes passing):
+
+- **Overall: 35.2% precision on flagged errors, 10.0% false alarm, 28.7% recall.** About two of
+  every three corrections the model would offer are wrong.
+- **Exactly one phoneme passes: /z/** (96.8% precision, 1.3% false alarm on 502 annotated errors),
+  and only at 12.2% recall — trustworthy but mostly silent.
+- **/ð/ is the pre-registration story.** It passed at 85.7% on the first two speakers and came in at
+  **79.5%** with all four: under the line by half a point. The threshold was fixed beforehand, so it
+  fails, and that is the right answer.
+- The Spanish-L1 priority contrasts fail hardest: /ɪ/ 35.2%, /iː/ 14.6%, /v/ 54.2%, /h/ 28.2%.
+  /θ/ reaches 78.9% precision but flags 28.6% of correct productions.
+- **Latency is not the blocker**: p50 1151 ms, p95 2248 ms on CPU, inside the 3 s budget. Abstention
+  1.1%, so the espeak→ARPAbet folding covered the inventory — this measured the model, not a mapping
+  gap.
+
+One passing phoneme against a gate of four means **phase C does not open** and no production surface
+gains a per-sound verdict. The earlier NO-SHIP therefore stands, now for a second, independent
+approach. Plan 038 phase A only removed unearned claims; it added no signal. Full per-phoneme table,
+caveats and reproduction steps: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
+
+Two paths remain for a future plan, neither opened here: **fine-tune** a phoneme model on L2-ARCTIC
+(what the F1 ≈ 0.60–0.72 published systems do), or a **vendor** such as Azure AI Speech
+Pronunciation Assessment, which sends user audio to a third party and needs the explicit owner
+approval this ADR requires. Note that L2-ARCTIC is CC BY-NC 4.0: fine-tuning on it constrains the
+result to non-commercial use.
+
 ## Links
 
 - Plan: `plans/064-validate-acoustic-pronunciation-assessment.md`
+- Plan 038 (candidate 4): `plans/038-elsa-style-phoneme-feedback-on-device.md`
+- **Phoneme-CTC verdict and full per-phoneme results**: `lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`
 - Prior deferral: `docs/architecture/exercises.md` (row "3 — Future acoustic analysis")
 - Honest-signal contract: `lib/pronunciation/spoken-attempt.ts`
 - Evaluator contract: `lib/pronunciation/acoustic-evaluator.ts`

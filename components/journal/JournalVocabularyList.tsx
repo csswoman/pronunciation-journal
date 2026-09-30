@@ -2,6 +2,7 @@
 
 import { Check } from '@/components/icons'
 import { cn } from '@/lib/cn'
+import Badge from '@/components/ui/Badge'
 import type { ResolvedSeedWord } from '@/lib/journal/scaffold-resolver'
 import { normalizeHintTokens } from '@/lib/journal/writing-hints/seed-progress'
 
@@ -56,6 +57,9 @@ export function JournalVocabularyList({
                   />
                 )}
                 {word.text}
+                {word.provenance === 'dueReview' ? (
+                  <Badge label="En tu repaso" variant="warning" size="sm" />
+                ) : null}
               </span>
             </li>
           )

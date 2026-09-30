@@ -1,12 +1,7 @@
-// Planned structure:
-// <WeeklyConsistencyCard>
-//   <ProgressCardHeader />
-//   <DayCell /> × 7
-//   resumen "x de 7 días"
+'use client'
 
-import { CalendarCheck } from '@/components/icons'
 import { cn } from '@/lib/cn'
-import { ProgressCard, ProgressCardHeader } from '@/components/progress/ProgressCard'
+import PastelCard from '@/components/layout/PastelCard'
 import type { ConsistencyHeatLevel } from '@/lib/progress/queries'
 
 interface Props {
@@ -17,10 +12,10 @@ interface Props {
 }
 
 const HEAT_CLASS: Record<ConsistencyHeatLevel, string> = {
-  0: 'bg-surface-sunken',
-  1: 'bg-[color-mix(in_oklch,var(--primary)_35%,var(--surface-sunken))]',
-  2: 'bg-[color-mix(in_oklch,var(--primary)_65%,var(--surface-sunken))]',
-  3: 'bg-primary',
+  0: 'border-2 border-dashed border-ink/20 bg-transparent',
+  1: 'bg-ink/30 border border-transparent',
+  2: 'bg-ink/65 border border-transparent',
+  3: 'bg-ink border border-transparent',
 }
 
 /** Etiqueta de cada columna: hoy es la última, hacia atrás los 6 anteriores. */
@@ -36,40 +31,39 @@ function weekdayInitials(): string[] {
 
 export default function WeeklyConsistencyCard({ heatmap7, completedDays7, rate7 }: Props) {
   const initials = weekdayInitials()
-  const hasData = heatmap7.some((level) => level > 0)
 
   return (
-    <ProgressCard>
-      <ProgressCardHeader icon={<CalendarCheck size={16} />} title="Tu semana" />
+    <PastelCard tone="lilac" className="flex flex-col gap-4 p-5 sm:p-6 motion-reduce:shadow-none">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-sans text-caption font-bold uppercase tracking-wider text-ink-muted">
+          Tu semana
+        </span>
+        <span className="inline-flex items-center rounded-full border border-ink/15 bg-ink/10 px-3 py-1 font-sans text-caption font-bold tabular-nums text-ink">
+          {completedDays7} de 7 días
+        </span>
+      </div>
 
       <div
-        className="grid grid-cols-7 gap-1.5"
+        className="grid grid-cols-7 gap-2"
         role="img"
         aria-label={`Últimos 7 días: ${completedDays7} días practicados, ${rate7}% de la semana.`}
       >
         {heatmap7.map((level, i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
+          <div key={i} className="flex flex-col items-center gap-1.5">
             <span
-              className={cn('aspect-square w-full rounded-xs', HEAT_CLASS[level])}
+              className={cn('aspect-square w-full rounded-full transition-colors', HEAT_CLASS[level])}
               aria-hidden
             />
-            <span className="font-caption text-fg-subtle" aria-hidden>
+            <span className="font-sans text-caption font-bold text-ink-secondary" aria-hidden>
               {initials[i]}
             </span>
           </div>
         ))}
       </div>
 
-      <p className="text-body-sm text-fg-muted">
-        {hasData ? (
-          <>
-            <b className="font-semibold text-fg">{completedDays7}</b> de 7 días · {rate7}% de la
-            semana
-          </>
-        ) : (
-          'Aún no hay práctica esta semana. Empieza hoy y verás la fila llenarse.'
-        )}
+      <p className="font-body-sm text-ink-secondary">
+        El tono indica cuánto practicaste ese día.
       </p>
-    </ProgressCard>
+    </PastelCard>
   )
 }

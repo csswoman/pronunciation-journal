@@ -6,6 +6,7 @@ import {
   LEGACY_ROLEPLAY_SCENARIOS,
 } from '@/lib/ai-practice/missions/registry'
 import type { LegacyRoleplayScenario } from '@/lib/ai-practice/missions/types'
+import { type ErrorPatternId, isErrorPatternId } from '@/lib/exercises/error-patterns'
 
 // Shared pedagogical fields (see lib/exercise/design.ts).
 // Optional so legacy tool calls keep working; when present they flow into
@@ -67,6 +68,8 @@ export type TurnCorrection = {
   corrected: string;
   rule: string;
   kind: CorrectionKind;
+  /** Set only when kind is "error" and the model provided a recognised id. */
+  errorPattern?: ErrorPatternId;
 };
 
 export type TurnSaveable = {
@@ -238,11 +241,17 @@ function parseTurnCorrection(val: unknown): TurnCorrection | undefined {
     // worth showing.
     return undefined;
   }
+  const kind: CorrectionKind = o.kind === "unnatural" ? "unnatural" : "error";
+  // Accept errorPattern only for real errors and only when the id is in the
+  // closed taxonomy — hallucinated ids are silently dropped.
+  const errorPattern =
+    kind === "error" && isErrorPatternId(o.errorPattern) ? o.errorPattern : undefined;
   return {
     original: o.original,
     corrected: o.corrected,
     rule: o.rule,
-    kind: o.kind === "unnatural" ? "unnatural" : "error",
+    kind,
+    errorPattern,
   };
 }
 

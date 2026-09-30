@@ -1,10 +1,15 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AI_QUOTA_EXHAUSTED_MESSAGE } from '@/lib/degradation/messages'
+import { refreshLearningStateFromRemote } from '@/lib/ai-practice/queries'
 import {
   correctJournalEntry,
   JournalCorrectionError,
 } from '@/lib/journal/correct-client'
+
+vi.mock('@/lib/ai-practice/queries', () => ({
+  refreshLearningStateFromRemote: vi.fn().mockResolvedValue(undefined),
+}))
 
 const JOURNAL_AI_UNAVAILABLE_MESSAGE =
   'No pudimos revisar tu página en este momento. Tu texto sigue guardado — puedes intentarlo de nuevo en unos minutos.'
@@ -14,6 +19,7 @@ const input = { entryId: '11111111-1111-4111-8111-111111111111', content: 'Yeste
 describe('correctJournalEntry', () => {
   beforeEach(() => {
     vi.unstubAllGlobals()
+    vi.mocked(refreshLearningStateFromRemote).mockClear()
   })
 
   it('fails fast and offline without hitting the network', async () => {
@@ -78,5 +84,6 @@ describe('correctJournalEntry', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => result }))
 
     await expect(correctJournalEntry(input)).resolves.toEqual(result)
+    expect(refreshLearningStateFromRemote).toHaveBeenCalledOnce()
   })
 })

@@ -27,7 +27,6 @@ interface Props {
 }
 
 export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirstExercise }: Props) {
-  if (toolCall.status === "error") return null;
 
   const topic = (toolCall.args as { topic?: string }).topic ?? "unknown";
 
@@ -35,6 +34,7 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
   const shownAtRef   = useRef(0);
   const answeredRef  = useRef(false);
   const attemptsRef  = useRef(0);
+  const firstResultRef = useRef(toolCall.result);
 
   // ── exercise_shown + abandonment timer ───────────────────────────────────
   useEffect(() => {
@@ -81,7 +81,14 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
   // ── handlers ─────────────────────────────────────────────────────────────
 
   function handleAnswer(result: ExerciseResult) {
-    onAnswer(toolCall.id, result);
+    const observed = {
+      ...result,
+      attemptId: `coach:${toolCall.id}`,
+      latencyMs: shownAtRef.current ? Date.now() - shownAtRef.current : undefined,
+      firstTryFailed: firstResultRef.current?.correct === false || !result.correct || result.firstTryFailed,
+    };
+    firstResultRef.current ??= observed;
+    onAnswer(toolCall.id, observed);
   }
 
   function handleNext() {
@@ -96,6 +103,7 @@ export default function ToolWidget({ toolCall, onAnswer, onNext, onRetry, onFirs
   }
 
   // ── render ───────────────────────────────────────────────────────────────
+  if (toolCall.status === "error") return null;
 
   switch (toolCall.name) {
     case "render_multiple_choice":

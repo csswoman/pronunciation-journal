@@ -13,15 +13,14 @@ import { speak } from '@/lib/phoneme-practice/tts'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
-import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
-import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
+import { useSelfListening } from '@/hooks/useSelfListening'
 import { getFeedbackMessage } from '@/lib/pronunciation/scoring'
 import { PracticeExerciseCard } from '@/components/practice/session/PracticeActionBar'
 import { SpeakSkipActions } from './SpeakSkipActions'
 import { SpeakMicPanel } from './SpeakMicPanel'
 import { SpeakScoredPanel } from './SpeakScoredPanel'
 import { micErrorMessage } from './mic-error-message'
-import { playUiCue } from '@/lib/ui-sounds/cues'
+import { useSpeakEvaluation } from './useSpeakEvaluation'
 import { selectSentence } from '@/lib/essential-words/sentence-variants'
 import { displayEnglishText } from '@/lib/essential-words/word-display'
 import { buildSpeakOutcome } from './useSpeakOutcome'
@@ -29,7 +28,6 @@ import { ExercisePhaseLabel } from './ExercisePhaseLabel'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import type { AttemptOutcome } from '@/lib/essential-words/attempt-grade'
 import type { EssentialWord } from '@/lib/essential-words/types'
-import type { WordResult } from '@/lib/types'
 
 interface Props {
   entry: EssentialWord
@@ -43,12 +41,6 @@ interface Props {
   repetitions?: number
 }
 
-interface Scored {
-  score: number
-  wordResults: WordResult[]
-  transcript: string
-}
-
 export function SpeakReviewCard({
   entry,
   levelLabel,
@@ -59,12 +51,22 @@ export function SpeakReviewCard({
   onMaster,
   repetitions = 0,
 }: Props) {
-  const { getStream, release } = useSharedMicStream()
+  const { getStream: openMic, release } = useSharedMicStream()
+  const {
+    audioUrl: userAudioUrl,
+    begin: beginSelfListening,
+    end: endSelfListening,
+    clear: clearSelfListening,
+  } = useSelfListening()
+  // Graba en cuanto el micro se abre, sea quien lo pida (aquí o el adaptador STT).
+  const getStream = useCallback(async () => {
+    const stream = await openMic()
+    beginSelfListening(stream)
+    return stream
+  }, [openMic, beginSelfListening])
   const { state, result, error: speechError, isSupported, start, stop, abort, reset } =
     useSpeechInput({ prefer: 'auto', getStream })
 
-  const [scored, setScored] = useState<Scored | null>(null)
-  const [isScoring, setIsScoring] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [micError, setMicError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -74,58 +76,31 @@ export function SpeakReviewCard({
 
   const { sentence, sentence_ipa } = selectSentence(entry, repetitions)
 
+  const { scored, isScoring, clear: clearScore } = useSpeakEvaluation({
+    sentence,
+    result,
+    isDone: state === 'done',
+    onAbstain: setMicError,
+    onSettled: release,
+  })
+
   useEffect(() => {
     submitted.current = false
     startedAtRef.current = Date.now()
-    setScored(null)
+    clearScore()
     setMicError(null)
     setSubmitError(null)
     setShowSoundDetail(false)
     abort()
     release()
+    clearSelfListening()
     reset()
-  }, [entry.rank, abort, release, reset])
-
-  useEffect(() => {
-    if (state !== 'done' || !result || isScoring || scored) return
-    setIsScoring(true)
-    defaultEvaluationEngine
-      .evaluate({
-        exercise: { domain: 'pronunciation', mode: 'speak' },
-        expected: sentence,
-        actual: {
-          kind: 'speech',
-          transcript: result.transcript,
-          confidence: result.confidence,
-          source: result.source,
-        },
-      })
-      .then((evalResult) => {
-        // Abstención: sin evidencia suficiente no se muestra una nota inventada.
-        if (evalResult.scorable === false) {
-          setMicError(evalResult.feedback.explanation)
-          return
-        }
-
-        const score = evalResult.score ?? 0
-        setScored({
-          score,
-          wordResults: getEvaluationWordResults(evalResult),
-          transcript: result.transcript,
-        })
-        if (score >= 85) playUiCue('correct')
-        else if (score >= 60) playUiCue('reveal')
-        else playUiCue('wrong')
-      })
-      .finally(() => {
-        setIsScoring(false)
-        release()
-      })
-  }, [state, result, isScoring, scored, sentence, release])
+  }, [entry.rank, abort, release, clearSelfListening, clearScore, reset])
 
   const handleMicToggle = useCallback(async () => {
     if (state === 'listening') {
       setMicError(null)
+      endSelfListening()
       await stop()
       return
     }
@@ -140,7 +115,7 @@ export function SpeakReviewCard({
       setMicError(msg)
       release()
     }
-  }, [state, stop, abort, reset, getStream, start, release])
+  }, [state, stop, abort, reset, getStream, start, release, endSelfListening])
 
   const handleContinue = () => {
     if (!scored || submitted.current) return
@@ -175,12 +150,13 @@ export function SpeakReviewCard({
   useEnterToContinue(Boolean(scored && !isSubmitting), handleContinue)
 
   const handleRetry = () => {
-    setScored(null)
+    clearScore()
     setMicError(null)
     setSubmitError(null)
     setShowSoundDetail(false)
     abort()
     release()
+    clearSelfListening()
     reset()
   }
 
@@ -237,6 +213,8 @@ export function SpeakReviewCard({
           score={scored.score}
           feedbackMessage={feedback?.message ?? null}
           wordResults={scored.wordResults}
+          modelText={sentence}
+          userAudioUrl={userAudioUrl}
           showSoundDetail={showSoundDetail}
           isSubmitting={isSubmitting}
           submitError={submitError}

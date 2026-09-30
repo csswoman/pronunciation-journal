@@ -20,6 +20,8 @@ Fecha: 2026-07-01
 | Lexicon practice session | `sessionStorage` temporal por categoria | Temporal, recreable desde API |
 | Word of Day | `sessionStorage` cache diario | Temporal, recreable desde API/Gemini |
 | Jobs de enriquecimiento | `word_enrichment_jobs` | Supabase |
+| Enunciados vistos por el AI Coach | Dexie `coachSeenItems` | Solo dispositivo; no se sincroniza |
+| Caché y banco de correcciones | Dexie `gradedAnswers`; sin sesión, caché en memoria del componente | Solo dispositivo y cuenta; no se sincroniza |
 
 ## Reglas
 
@@ -40,7 +42,9 @@ Fecha: 2026-07-01
 
 1. Aplicar cambios locales optimistas solo cuando la pantalla pueda mostrar pendiente/error.
 2. Encolar operación con `enqueue()` si la escritura remota puede fallar por conectividad.
-3. Al reconectar, `sync-manager` procesa en lotes y marca errores permanentes.
+3. Al reconectar, `sync-manager` procesa en lotes y marca errores permanentes. Los reintentos agotados quedan como
+   `failureKind: 'exhausted'` y se reencolan de forma acotada al reconectar; ver
+   [Recuperación de respuestas y fallos del outbox](answer-sync-recovery.md).
 4. Después de flush, refrescar datos desde Supabase para evitar divergencias.
 5. Si hay conflicto, gana Supabase salvo que exista una regla explícita de merge.
 
@@ -89,6 +93,48 @@ en Supabase, igual que en el resto de la app.
 
 Esto se rastrea como deuda tecnica activa; no debe bloquearse nuevas features del coach
 hasta que este resuelto.
+
+## Paquetes offline por nivel CEFR (Plan 057)
+
+Un paquete guarda en un dispositivo lo necesario para estudiar un nivel sin
+conexión. Los niveles son A1–C1; no hay paquete C2 (un alumno C2 ve el de C1,
+etiquetado). El nivel sugerido viene de `getEffectiveLearnerLevelForViewer`.
+Si la lectura falla (`unknown`), el alumno elige; nunca se asume A1.
+
+| Recurso | Tipo | Dónde vive | Cómo se abre sin conexión |
+|---|---|---|---|
+| Essential Words del nivel | requerido | CacheStorage `offline-pack-<nivel>-<versión>-<uuid>` | Hub `/offline` → Estudiar → `EssentialWordsSession` con `pinnedLevels`; `fetchEssentialWordsForLevel` cae al pack solo si la red falla |
+| Decks de gramática de la ruta del nivel | requerido | misma caché | Hub → lista del paquete → `OfflineStudyDeck` (lectura directa de la caché, sin SW) |
+| Audios de esos decks (`/sounds/*.ogg`) | requerido | misma caché | Ruta SW `OfflineDownloadsFirst` (`app/sw-runtime-caching.ts`) |
+| Snapshot del manifiesto | interno | misma caché, clave `/offline-packs/manifest.json` | `listPackLessons` |
+| Hasta 100 ejercicios del Coach | opcional | Dexie `contentBankCache` (compartido) | Flujos existentes del Coach |
+
+**Recibo**: Dexie `offlineResourcePacks`, una fila por nivel. Solo `ready`
+promete disponibilidad. El recibo se escribe una sola vez al final (`ready`, o
+`failed` si no había un `ready` previo). Un fallo o una cancelación nunca
+reemplazan un paquete `ready` anterior. La caché vieja se borra solo después de
+que el recibo nuevo quedó `ready`.
+
+**Reparación**: al abrir el hub, `repairOrphanedReceipts` marca `stale` todo
+recibo `ready` cuya caché perdió una URL requerida.
+
+**Versiones**: `OFFLINE_PACK_CONTENT_VERSION` (`lib/offline/pack-types.ts`) se
+sube a mano cuando cambia un recurso requerido. Tras regenerar
+(`pnpm offline-packs:generate && pnpm validate:offline-packs`), los paquetes
+viejos siguen `ready` hasta que el alumno pulse Actualizar.
+
+**Precache**: `/offline-packs/` está excluido de Serwist (`next.config.mjs`).
+Los paquetes solo entran a CacheStorage por descarga explícita.
+
+**Propiedad del Coach**: quitar un paquete borra solo su caché y su recibo;
+nunca `downloadedLessons`, progreso ni `contentBankCache`. Las filas Coach no
+registran su origen, así que el set Coach suelto las gestiona en exclusiva.
+Quitar el set suelto sí borra las filas de ese nivel, aunque vinieran de un
+paquete.
+
+**Necesita internet**: la descarga, Gemini/correcciones con IA, auth y sync.
+La voz sintética depende del navegador y no forma parte del paquete. El
+progreso hecho offline lo registran los escritores existentes y entra al outbox.
 
 ## Limitaciones Actuales
 

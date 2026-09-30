@@ -34,7 +34,7 @@ export default defineConfig({
     // DOM declare `// @vitest-environment jsdom` at the top of the file.
     environment: "node",
     include: ["**/__tests__/**/*.test.{ts,tsx}"],
-    exclude: [".claude/**", "node_modules/**", "**/*.integration.test.{ts,tsx}"],
+    exclude: [".claude/**", ".pnpm-store/**", "node_modules/**", "tmp/**", "**/*.integration.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
     // Cap forks to prevent worker startup timeouts. On Windows and high-core machines,
     // unbounded parallelism spawns dozens of Node processes simultaneously, saturating I/O
@@ -66,6 +66,7 @@ export default defineConfig({
       },
       exclude: [
         "node_modules/**",
+        ".pnpm-store/**",
         ".next/**",
         "**/*.config.{ts,js,mjs}",
         "**/types/**",
@@ -80,6 +81,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "."),
+      "server-only": path.resolve(__dirname, "node_modules/server-only/empty.js"),
     },
   },
 });

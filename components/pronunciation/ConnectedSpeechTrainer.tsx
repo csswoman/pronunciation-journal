@@ -2,37 +2,48 @@
 
 // Planned structure:
 // <ConnectedSpeechTrainer>
-//   <ConnectedSpeechModeSelector />
-//   <ConnectedSpeechCategoryPills />
-//   <ConnectedSpeechProgress />
-//   <AcousticUnpackingCard | ConnectedSpeechPhraseCard>
+//   <ConnectedSpeechHeaderNav />
+//   <TrainerWorkspaceGrid>
+//     <LeftColumn: UnpackingCard | VoiceCard />
+//     <RightColumn: FeedbackPlaceholder | PedagogicalCard | VoiceChecklist | VoiceFeedback />
+//   </TrainerWorkspaceGrid>
+//   <ConnectedSpeechFooter />
 // </ConnectedSpeechTrainer>
 
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { CONNECTED_SPEECH_DATA } from "@/lib/pronunciation/connected-speech-data";
 import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { useAttemptPlayback } from "@/hooks/useAttemptPlayback";
+import { useRecordConnectedSpeechVoiceAttempt } from "@/hooks/useRecordConnectedSpeechVoiceAttempt";
 import { recordConnectedSpeechAttempt } from "@/lib/sounds/queries";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
 import {
-  ConnectedSpeechCategoryPills,
-  ConnectedSpeechPhraseCard,
+  ConnectedSpeechHeaderNav,
+  ConnectedSpeechFeedbackPlaceholder,
+  getPhraseOptions,
 } from "./ConnectedSpeechParts";
-import { AcousticUnpackingCard } from "./AcousticUnpackingCard";
-import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft } from "@/components/icons";
-import { cn } from "@/lib/cn";
+import { ConnectedSpeechSetup } from "./ConnectedSpeechSetup";
+import { ConnectedSpeechUnpackingCard } from "./ConnectedSpeechUnpackingCard";
+import { ConnectedSpeechVoiceCard } from "./ConnectedSpeechVoiceCard";
+import { ConnectedSpeechFooter } from "./ConnectedSpeechFooter";
+import { ConnectedSpeechPedagogicalCard } from "./ConnectedSpeechPedagogicalCard";
+import { ConnectedSpeechVoiceChecklist } from "./ConnectedSpeechVoiceChecklist";
+import { ConnectedSpeechVoiceFeedback } from "./ConnectedSpeechVoiceFeedback";
 
 export function ConnectedSpeechTrainer() {
   const auth = useAuthOptional();
   const user = auth?.user ?? null;
+
+  const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [trainerMode, setTrainerMode] = useState<"unpacking" | "production">("production");
+  const [trainerMode, setTrainerMode] = useState<"unpacking" | "production">("unpacking");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [isPlayingSlow, setIsPlayingSlow] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  const recordedAttemptRef = useRef<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [isRevealed, setIsRevealed] = useState(false);
 
   const filteredPhrases = useMemo(() => {
     if (activeCategory === "all") return CONNECTED_SPEECH_DATA;
@@ -43,67 +54,66 @@ export function ConnectedSpeechTrainer() {
   const safeIndex = selectedIndex >= totalPhrases ? 0 : selectedIndex;
   const currentPhrase = filteredPhrases[safeIndex] ?? CONNECTED_SPEECH_DATA[0];
 
-  const {
-    status,
-    result: speechResult,
-    userAudioUrl,
-    isSupported,
-    start,
-    stop,
-    reset,
-  } = useSpeechRecognition();
+  const { status, result: speechResult, userAudioUrl, errorCode, isSupported, start, stop, reset } =
+    useSpeechRecognition();
+  const { playAttempt, stopAttempt, hasAttempt } = useAttemptPlayback(userAudioUrl);
 
   useEffect(() => {
     cancelSpeech();
     setIsPlayingAudio(false);
     setIsPlayingSlow(false);
-    setIsSaved(false);
-    recordedAttemptRef.current = null;
+    setSelectedOption(null);
+    setIsRevealed(false);
     reset();
-  }, [safeIndex, reset]);
+  }, [safeIndex, activeCategory, reset]);
 
-  useEffect(() => {
-    if (status === "done" && speechResult?.transcript && user?.id) {
-      const attemptKey = `${currentPhrase.id}:${speechResult.transcript}`;
-      if (recordedAttemptRef.current === attemptKey) return;
-      recordedAttemptRef.current = attemptKey;
+  useRecordConnectedSpeechVoiceAttempt(
+    user?.id ?? null,
+    currentPhrase,
+    status,
+    speechResult?.transcript,
+  );
 
-      const cleanUser = speechResult.transcript.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
-      const cleanExpected = currentPhrase.phrase.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
-      const isCorrect = cleanUser === cleanExpected || cleanUser.includes(cleanExpected);
+  const playPhrase = useCallback(
+    (rate: number, setPlaying: (playing: boolean) => void) => {
+      stopAttempt();
+      cancelSpeech();
+      setPlaying(true);
+      const done = () => setPlaying(false);
+      speakText(currentPhrase.phrase, { rate, onEnd: done, onError: done });
+    },
+    [currentPhrase.phrase, stopAttempt],
+  );
+  const handlePlayNormal = useCallback(() => playPhrase(1.0, setIsPlayingAudio), [playPhrase]);
+  const handlePlaySlow = useCallback(() => playPhrase(0.65, setIsPlayingSlow), [playPhrase]);
 
-      void recordConnectedSpeechAttempt(user.id, {
-        phraseId: currentPhrase.id,
-        phrase: currentPhrase.phrase,
-        category: currentPhrase.category,
-        transcript: speechResult.transcript,
-        isCorrect,
-        timeMs: 3000,
-      })
-        .then(() => setIsSaved(true))
-        .catch((err) => console.warn("[ConnectedSpeechTrainer] record error", err));
-    }
-  }, [status, speechResult, user?.id, currentPhrase]);
-
-  const handlePlayConnected = useCallback(() => {
+  const handlePlayAttempt = useCallback(() => {
     cancelSpeech();
-    setIsPlayingAudio(true);
-    speakText(currentPhrase.phrase, {
-      rate: 1.0,
-      onEnd: () => setIsPlayingAudio(false),
-      onError: () => setIsPlayingAudio(false),
-    });
-  }, [currentPhrase.phrase]);
+    playAttempt();
+  }, [playAttempt]);
 
-  const handlePlaySlow = useCallback(() => {
-    cancelSpeech();
-    setIsPlayingSlow(true);
-    speakText(currentPhrase.phrase, {
-      rate: 0.65,
-      onEnd: () => setIsPlayingSlow(false),
-      onError: () => setIsPlayingSlow(false),
-    });
-  }, [currentPhrase.phrase]);
+  const handleSelectOption = useCallback(
+    (optionIdx: number) => {
+      if (selectedOption !== null || isRevealed) return;
+      setSelectedOption(optionIdx);
+      setIsRevealed(true);
+
+      const opts = getPhraseOptions(currentPhrase);
+      const chosen = opts[optionIdx];
+      if (user?.id && chosen) {
+        void recordConnectedSpeechAttempt(user.id, {
+          phraseId: currentPhrase.id,
+          phrase: currentPhrase.phrase,
+          category: currentPhrase.category,
+          transcript: chosen.text,
+          isCorrect: chosen.isCorrect,
+          timeMs: 2500,
+        })
+          .catch((err) => console.warn("[ConnectedSpeechTrainer] record error", err));
+      }
+    },
+    [selectedOption, isRevealed, currentPhrase, user?.id],
+  );
 
   const handleNextPhrase = useCallback(() => {
     setSelectedIndex((prev) => (prev + 1) % totalPhrases);
@@ -113,136 +123,122 @@ export function ConnectedSpeechTrainer() {
     setSelectedIndex((prev) => (prev - 1 + totalPhrases) % totalPhrases);
   }, [totalPhrases]);
 
+  const handleCheckAnswer = useCallback(() => {
+    if (selectedOption === null && !isRevealed) {
+      handleSelectOption(0);
+    } else {
+      handleNextPhrase();
+    }
+  }, [selectedOption, isRevealed, handleSelectOption, handleNextPhrase]);
+
   const isListening = status === "listening";
-  const isDone = status === "done";
+  const isDone = status === "done" && !!speechResult;
+  const isAnswered = selectedOption !== null || isRevealed;
+
+  if (!isSessionStarted) {
+    return (
+      <div className="w-full max-w-7xl mx-auto py-2">
+        <ConnectedSpeechSetup
+          activeCategory={activeCategory}
+          trainerMode={trainerMode}
+          phraseCount={totalPhrases}
+          onSelectCategory={(catId) => {
+            setActiveCategory(catId);
+            setSelectedIndex(0);
+          }}
+          onSelectMode={setTrainerMode}
+          onStartSession={() => setIsSessionStarted(true)}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-5 w-full py-2">
-      {/* Mode Selector - Apple HIG Segmented Control */}
-      <div
-        role="tablist"
-        aria-label="Modalidad de entrenamiento"
-        className="inline-flex w-full sm:w-auto p-1 rounded-xl bg-surface-sunken border border-border-subtle gap-1"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={trainerMode === "unpacking"}
-          onClick={() => setTrainerMode("unpacking")}
-          className={cn(
-            "flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-lg text-body-sm font-semibold transition-all focus-ring cursor-pointer",
-            trainerMode === "unpacking"
-              ? "bg-surface-raised text-fg shadow-xs border border-border-default"
-              : "text-fg-muted hover:text-fg hover:bg-surface-raised/40",
-          )}
-        >
-          <span>🎧 Desempaquetado Auditivo (Oído)</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={trainerMode === "production"}
-          onClick={() => setTrainerMode("production")}
-          className={cn(
-            "flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 min-h-[44px] px-4 rounded-lg text-body-sm font-semibold transition-all focus-ring cursor-pointer",
-            trainerMode === "production"
-              ? "bg-surface-raised text-fg shadow-xs border border-border-default"
-              : "text-fg-muted hover:text-fg hover:bg-surface-raised/40",
-          )}
-        >
-          <span>🎤 Producción Oral (Voz)</span>
-        </button>
-      </div>
-
-      <ConnectedSpeechCategoryPills
-        activeCategory={activeCategory}
-        onSelect={(categoryId) => {
-          setActiveCategory(categoryId);
-          setSelectedIndex(0);
-        }}
+    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto py-2 animate-fadeIn">
+      <ConnectedSpeechHeaderNav
+        trainerMode={trainerMode}
+        onSelectMode={setTrainerMode}
+        onBackToSetup={() => setIsSessionStarted(false)}
       />
 
-      {/* Progress and Counter */}
-      <div className="flex items-center justify-between text-caption font-medium text-fg-muted px-1">
-        <span>
-          Frase <strong className="text-fg font-bold">{safeIndex + 1}</strong> de {totalPhrases}
-        </span>
-        <div className="flex items-center gap-1.5" aria-hidden="true">
-          {filteredPhrases.slice(0, Math.min(8, totalPhrases)).map((_, idx) => (
-            <span
-              key={idx}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                idx === safeIndex ? "w-5 bg-primary" : "w-1.5 bg-border-default",
-              )}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start">
+        {/* Left Column */}
+        <div className="lg:col-span-6 w-full min-w-0">
+          {trainerMode === "unpacking" ? (
+            <ConnectedSpeechUnpackingCard
+              phrase={currentPhrase}
+              safeIndex={safeIndex}
+              totalPhrases={totalPhrases}
+              activeCategory={activeCategory}
+              onSelectCategory={(catId) => {
+                setActiveCategory(catId);
+                setSelectedIndex(0);
+              }}
+              isPlayingAudio={isPlayingAudio}
+              isPlayingSlow={isPlayingSlow}
+              selectedOption={selectedOption}
+              isRevealed={isRevealed}
+              onPlayNormal={handlePlayNormal}
+              onPlaySlow={handlePlaySlow}
+              onSelectOption={handleSelectOption}
             />
-          ))}
+          ) : (
+            <ConnectedSpeechVoiceCard
+              phrase={currentPhrase}
+              safeIndex={safeIndex}
+              totalPhrases={totalPhrases}
+              activeCategory={activeCategory}
+              onSelectCategory={(catId) => {
+                setActiveCategory(catId);
+                setSelectedIndex(0);
+              }}
+              isPlayingAudio={isPlayingAudio}
+              isPlayingSlow={isPlayingSlow}
+              status={status}
+              errorCode={errorCode}
+              isSupported={isSupported}
+              hasAttemptAudio={hasAttempt}
+              onPlaySlow={handlePlaySlow}
+              onPlayConnected={handlePlayNormal}
+              onPlayAttempt={handlePlayAttempt}
+              onToggleMic={isListening ? stop : start}
+              onResetRecording={reset}
+            />
+          )}
+        </div>
+
+        {/* Right Column */}
+        <div className="lg:col-span-6 w-full min-w-0">
+          {trainerMode === "unpacking" ? (
+            !isAnswered ? (
+              <ConnectedSpeechFeedbackPlaceholder />
+            ) : (
+              <ConnectedSpeechPedagogicalCard phrase={currentPhrase} />
+            )
+          ) : !isDone ? (
+            <ConnectedSpeechVoiceChecklist phrase={currentPhrase} />
+          ) : (
+            <ConnectedSpeechVoiceFeedback
+              phrase={currentPhrase}
+              transcript={speechResult.transcript}
+              hasAttemptAudio={hasAttempt}
+              onPlayNormal={handlePlayNormal}
+              onPlayAttempt={handlePlayAttempt}
+            />
+          )}
         </div>
       </div>
 
-      {trainerMode === "unpacking" ? (
-        <div className="flex flex-col gap-4">
-          <AcousticUnpackingCard
-            phrase={currentPhrase}
-            isSaved={isSaved}
-            onComplete={(correct) => {
-              if (user?.id) {
-                void recordConnectedSpeechAttempt(user.id, {
-                  phraseId: currentPhrase.id,
-                  phrase: currentPhrase.phrase,
-                  category: currentPhrase.category,
-                  transcript: correct ? currentPhrase.phrase : "unpack_error",
-                  isCorrect: correct,
-                  timeMs: 2500,
-                })
-                  .then(() => setIsSaved(true))
-                  .catch((err) => console.warn("[ConnectedSpeechTrainer] record error", err));
-              }
-            }}
-          />
-
-          <div className="flex items-center justify-between pt-2">
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={handlePrevPhrase}
-              disabled={safeIndex === 0}
-              className="flex items-center gap-1.5"
-            >
-              <ArrowLeft className="size-4" />
-              <span>Anterior</span>
-            </Button>
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={handleNextPhrase}
-              className="flex items-center gap-1.5"
-            >
-              <span>Siguiente frase</span>
-              <ArrowRight className="size-4" />
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <ConnectedSpeechPhraseCard
-          phrase={currentPhrase}
-          isPlayingAudio={isPlayingAudio}
-          isPlayingSlow={isPlayingSlow}
-          isListening={isListening}
-          isDone={isDone}
-          isSupported={isSupported}
-          transcript={speechResult?.transcript}
-          userAudioUrl={userAudioUrl}
-          isSaved={isSaved}
-          onPlaySlow={handlePlaySlow}
-          onPlayConnected={handlePlayConnected}
-          onToggleMic={isListening ? stop : start}
-          onNext={handleNextPhrase}
-          onPrev={handlePrevPhrase}
-          hasPrev={safeIndex > 0}
-        />
-      )}
+      <ConnectedSpeechFooter
+        isAnswered={isAnswered}
+        trainerMode={trainerMode}
+        hasPrev={safeIndex > 0}
+        onPrev={handlePrevPhrase}
+        onNext={handleNextPhrase}
+        onCheckAnswer={handleCheckAnswer}
+        onRevealAnswer={() => setIsRevealed(true)}
+        onSwitchToVoice={() => setTrainerMode("production")}
+      />
     </div>
   );
 }
-

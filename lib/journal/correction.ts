@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { CEFRLevel } from '@/lib/exercises/cefr'
 
 /** Request body for POST /api/gemini/journal-correct. */
 export const journalCorrectRequestSchema = z
@@ -30,6 +31,23 @@ export const journalCorrectionResultSchema = z
   .strict()
 
 export type JournalCorrectionResult = z.infer<typeof journalCorrectionResultSchema>
+
+export function journalCorrectionErrorLimit(level: CEFRLevel): number {
+  if (level === 'A1' || level === 'A2') return 3
+  if (level === 'B1') return 5
+  return 8
+}
+
+/** The model orders errors by impact; persist only the level-appropriate top items. */
+export function limitJournalCorrectionErrors(
+  result: JournalCorrectionResult,
+  level: CEFRLevel,
+): JournalCorrectionResult {
+  const limit = journalCorrectionErrorLimit(level)
+  return result.errors.length > limit
+    ? { ...result, errors: result.errors.slice(0, limit) }
+    : result
+}
 
 /** A topic scheduled as a consequence of reviewing a correction. */
 export const scheduledTopicSchema = z

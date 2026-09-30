@@ -24,7 +24,7 @@ export function RecommendedImmersionCard({ lesson, className = "" }: Recommended
 
   return (
     <div
-      className={`flex w-full max-w-xl flex-col gap-3 rounded-2xl border border-border-default bg-surface-raised p-5 text-left shadow-xs transition-all hover:border-accent/60 ${className}`}
+      className={`flex w-full max-w-xl flex-col gap-3 rounded-2xl border border-border-default bg-white dark:bg-surface-base p-5 text-left shadow-xs transition-all hover:border-accent/60 ${className}`}
     >
       <div className="flex items-center justify-between gap-3">
         <span className="font-kicker text-caption font-semibold uppercase tracking-wider text-accent">

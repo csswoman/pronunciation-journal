@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "I work in...", "value": "trabajo en (sector) · I work in logistics.", "highlights": ["I work in"] },
-            { "key": "I'm with...", "value": "soy de (empresa) · I'm with Acme.", "highlights": ["I'm with"] },
-            { "key": "We help... to...", "value": "ayudamos a... a... · qué hace tu empresa", "highlights": ["We help"] },
-            { "key": "What line of work...?", "value": "¿a qué te dedicas? · devolver", "highlights": ["What line of work"] }
+            {
+              "key": "I work in...",
+              "value": "trabajo en (sector) · I work in logistics.",
+              "highlights": [
+                "I work in"
+              ]
+            },
+            {
+              "key": "I'm with...",
+              "value": "soy de (empresa) · I'm with Acme.",
+              "highlights": [
+                "I'm with"
+              ]
+            },
+            {
+              "key": "We help... to...",
+              "value": "ayudamos a... a... · qué hace tu empresa",
+              "highlights": [
+                "We help"
+              ]
+            },
+            {
+              "key": "What line of work...?",
+              "value": "¿a qué te dedicas? · devolver",
+              "highlights": [
+                "What line of work"
+              ]
+            }
           ]
         }
       ]
@@ -31,10 +55,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "How can I help...?", "value": "¿en qué puedo ayudar?", "highlights": ["How can I help"] },
-            { "key": "Let me look into that", "value": "déjame que lo revise", "highlights": ["look into that"] },
-            { "key": "I'll get back to you", "value": "le responderé · con plazo", "highlights": ["get back to you"] },
-            { "key": "I apologise for...", "value": "le pido disculpas por...", "highlights": ["I apologise for"] }
+            {
+              "key": "How can I help...?",
+              "value": "¿en qué puedo ayudar?",
+              "highlights": [
+                "How can I help"
+              ]
+            },
+            {
+              "key": "Let me look into that",
+              "value": "déjame que lo revise",
+              "highlights": [
+                "look into that"
+              ]
+            },
+            {
+              "key": "I'll get back to you",
+              "value": "le responderé · con plazo",
+              "highlights": [
+                "get back to you"
+              ]
+            },
+            {
+              "key": "I apologise for...",
+              "value": "le pido disculpas por...",
+              "highlights": [
+                "I apologise for"
+              ]
+            }
           ]
         }
       ]
@@ -48,10 +96,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Would you consider...?", "value": "¿consideraría...?", "highlights": ["Would you consider"] },
-            { "key": "If you..., we could...", "value": "si usted..., nosotros podríamos...", "highlights": ["If you", "we could"] },
-            { "key": "Let's meet halfway", "value": "lleguemos a un punto medio", "highlights": ["meet halfway"] },
-            { "key": "That works for us", "value": "eso nos viene bien · cerrar", "highlights": ["That works for us"] }
+            {
+              "key": "Would you consider...?",
+              "value": "¿consideraría...?",
+              "highlights": [
+                "Would you consider"
+              ]
+            },
+            {
+              "key": "If you..., we could...",
+              "value": "si usted..., nosotros podríamos...",
+              "highlights": [
+                "If you",
+                "we could"
+              ]
+            },
+            {
+              "key": "Let's meet halfway",
+              "value": "lleguemos a un punto medio",
+              "highlights": [
+                "meet halfway"
+              ]
+            },
+            {
+              "key": "That works for us",
+              "value": "eso nos viene bien · cerrar",
+              "highlights": [
+                "That works for us"
+              ]
+            }
           ]
         }
       ],
@@ -69,10 +142,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "We're on track", "value": "vamos según lo previsto", "highlights": ["on track"] },
-            { "key": "We're slightly behind", "value": "vamos un poco retrasados", "highlights": ["behind"] },
-            { "key": "We're ahead of schedule", "value": "vamos adelantados", "highlights": ["ahead of schedule"] },
-            { "key": "The next step is...", "value": "el siguiente paso es...", "highlights": ["The next step is"] }
+            {
+              "key": "We're on track",
+              "value": "vamos según lo previsto",
+              "highlights": [
+                "on track"
+              ]
+            },
+            {
+              "key": "We're slightly behind",
+              "value": "vamos un poco retrasados",
+              "highlights": [
+                "behind"
+              ]
+            },
+            {
+              "key": "We're ahead of schedule",
+              "value": "vamos adelantados",
+              "highlights": [
+                "ahead of schedule"
+              ]
+            },
+            {
+              "key": "The next step is...",
+              "value": "el siguiente paso es...",
+              "highlights": [
+                "The next step is"
+              ]
+            }
           ]
         }
       ]
@@ -86,10 +183,24 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "bad", "text": "We can't finish on time." },
-            { "variant": "good", "text": "I'm afraid there may be a slight delay. Here's our plan.", "note": "suaviza + solución" },
-            { "variant": "bad", "text": "That's not my problem." },
-            { "variant": "good", "text": "Let me see what I can do.", "note": "muestra disposición" }
+            {
+              "variant": "bad",
+              "text": "We can't finish on time."
+            },
+            {
+              "variant": "good",
+              "text": "I'm afraid there may be a slight delay. Here's our plan.",
+              "note": "suaviza + solución"
+            },
+            {
+              "variant": "bad",
+              "text": "That's not my problem."
+            },
+            {
+              "variant": "good",
+              "text": "Let me see what I can do.",
+              "note": "muestra disposición"
+            }
           ]
         }
       ]
@@ -103,9 +214,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "\"Interesting\"", "value": "a veces = no muy convencido", "highlights": ["Interesting"] },
-            { "key": "\"With all due respect\"", "value": "= estoy en total desacuerdo", "highlights": ["With all due respect"] },
-            { "key": "\"I'll bear it in mind\"", "value": "= probablemente no lo haré", "highlights": ["bear it in mind"] }
+            {
+              "key": "\"Interesting\"",
+              "value": "a veces = no muy convencido",
+              "highlights": [
+                "Interesting"
+              ]
+            },
+            {
+              "key": "\"With all due respect\"",
+              "value": "= estoy en total desacuerdo",
+              "highlights": [
+                "With all due respect"
+              ]
+            },
+            {
+              "key": "\"I'll bear it in mind\"",
+              "value": "= probablemente no lo haré",
+              "highlights": [
+                "bear it in mind"
+              ]
+            }
           ]
         }
       ],
@@ -113,6 +242,35 @@
         "label": "Consejo:",
         "body": "ante la duda, sé más educado e indirecto de lo que serías en español. Casi nunca sobra."
       }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which phrase is most appropriate to use when you need to investigate a customer's request before giving an answer?",
+      "options": [
+        "Let me look into that.",
+        "I'll bear it in mind."
+      ],
+      "answer": 0,
+      "explain": "La primera opción indica que vas a investigar el problema, mientras que la segunda suele significar que no harás nada al respecto."
+    },
+    {
+      "q": "If you are negotiating and want to propose a compromise, which phrase should you use?",
+      "options": [
+        "Let's meet halfway.",
+        "We're on track."
+      ],
+      "answer": 0,
+      "explain": "La expresión 'Let's meet halfway' es ideal para proponer un punto medio durante una negociación."
+    },
+    {
+      "q": "In a British business context, what does it often mean when someone says your idea is 'interesting'?",
+      "options": [
+        "They are very excited about your idea.",
+        "They are not convinced by your idea."
+      ],
+      "answer": 1,
+      "explain": "En el inglés de negocios, a menudo se usa 'interesting' como una forma indirecta de expresar falta de entusiasmo o desacuerdo."
     }
   ]
 }

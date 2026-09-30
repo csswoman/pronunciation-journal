@@ -126,7 +126,7 @@ export function ReorderWordsExercise({ exercise, onResult }: Props) {
   function handleCheck() {
     if (locked || !isComplete(board)) return
     const userAnswer = answerText(board)
-    const isCorrect = gradeReorder(userAnswer, exercise.sentence)
+    const isCorrect = gradeReorder(userAnswer, exercise.sentence, exercise.answerSpec)
     setState(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) playCorrect()
     else playWrong()

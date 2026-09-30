@@ -14,10 +14,31 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "malware", "value": "software malicioso · virus, worm, ransomware" },
-            { "key": "phishing", "value": "engaño para robar datos", "highlights": ["phishing"] },
-            { "key": "breach", "value": "data breach = filtración de datos", "highlights": ["breach"] },
-            { "key": "exploit", "value": "aprovechar una vulnerabilidad", "highlights": ["exploit"] }
+            {
+              "key": "malware",
+              "value": "software malicioso · virus, worm, ransomware"
+            },
+            {
+              "key": "phishing",
+              "value": "engaño para robar datos",
+              "highlights": [
+                "phishing"
+              ]
+            },
+            {
+              "key": "breach",
+              "value": "data breach = filtración de datos",
+              "highlights": [
+                "breach"
+              ]
+            },
+            {
+              "key": "exploit",
+              "value": "aprovechar una vulnerabilidad",
+              "highlights": [
+                "exploit"
+              ]
+            }
           ]
         }
       ]
@@ -31,10 +52,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "firewall", "value": "barrera de red", "highlights": ["firewall"] },
-            { "key": "encryption", "value": "cifrado · encrypt / decrypt", "highlights": ["encryption"] },
-            { "key": "authentication", "value": "two-factor authentication (2FA)", "highlights": ["authentication"] },
-            { "key": "patch", "value": "actualización que corrige fallos", "highlights": ["patch"] }
+            {
+              "key": "firewall",
+              "value": "barrera de red",
+              "highlights": [
+                "firewall"
+              ]
+            },
+            {
+              "key": "encryption",
+              "value": "cifrado · encrypt / decrypt",
+              "highlights": [
+                "encryption"
+              ]
+            },
+            {
+              "key": "authentication",
+              "value": "two-factor authentication (2FA)",
+              "highlights": [
+                "authentication"
+              ]
+            },
+            {
+              "key": "patch",
+              "value": "actualización que corrige fallos",
+              "highlights": [
+                "patch"
+              ]
+            }
           ]
         }
       ]
@@ -48,10 +93,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "detect / prevent", "value": "detect a threat · prevent an attack", "highlights": ["detect", "prevent"] },
-            { "key": "patch / update", "value": "patch a vulnerability", "highlights": ["patch"] },
-            { "key": "back up", "value": "hacer copia de seguridad", "highlights": ["back up"] },
-            { "key": "log in / out", "value": "iniciar / cerrar sesión", "highlights": ["log in"] }
+            {
+              "key": "detect / prevent",
+              "value": "detect a threat · prevent an attack",
+              "highlights": [
+                "detect",
+                "prevent"
+              ]
+            },
+            {
+              "key": "patch / update",
+              "value": "patch a vulnerability",
+              "highlights": [
+                "patch"
+              ]
+            },
+            {
+              "key": "back up",
+              "value": "hacer copia de seguridad",
+              "highlights": [
+                "back up"
+              ]
+            },
+            {
+              "key": "log in / out",
+              "value": "iniciar / cerrar sesión",
+              "highlights": [
+                "log in"
+              ]
+            }
           ]
         }
       ]
@@ -65,10 +135,26 @@
         {
           "type": "pairs",
           "lines": [
-            { "variant": "good", "text": "We've detected suspicious activity.", "note": "presente perfecto" },
-            { "variant": "good", "text": "The system may have been compromised.", "note": "deducción cauta" },
-            { "variant": "good", "text": "Please reset your password immediately.", "note": "instrucción" },
-            { "variant": "good", "text": "We're investigating the breach.", "note": "estado actual" }
+            {
+              "variant": "good",
+              "text": "We've detected suspicious activity.",
+              "note": "presente perfecto"
+            },
+            {
+              "variant": "good",
+              "text": "The system may have been compromised.",
+              "note": "deducción cauta"
+            },
+            {
+              "variant": "good",
+              "text": "Please reset your password immediately.",
+              "note": "instrucción"
+            },
+            {
+              "variant": "good",
+              "text": "We're investigating the breach.",
+              "note": "estado actual"
+            }
           ]
         }
       ]
@@ -82,9 +168,27 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Presente", "value": "Data is encrypted at rest.", "highlights": ["is encrypted"] },
-            { "key": "Perfecto", "value": "The flaw has been patched.", "highlights": ["has been patched"] },
-            { "key": "Modal pasivo", "value": "Access should be restricted.", "highlights": ["should be restricted"] }
+            {
+              "key": "Presente",
+              "value": "Data is encrypted at rest.",
+              "highlights": [
+                "is encrypted"
+              ]
+            },
+            {
+              "key": "Perfecto",
+              "value": "The flaw has been patched.",
+              "highlights": [
+                "has been patched"
+              ]
+            },
+            {
+              "key": "Modal pasivo",
+              "value": "Access should be restricted.",
+              "highlights": [
+                "should be restricted"
+              ]
+            }
           ]
         }
       ]
@@ -98,12 +202,59 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "Recomendar", "value": "You should use a strong password.", "highlights": ["should"] },
-            { "key": "Advertir", "value": "Never share your credentials.", "highlights": ["Never share"] },
-            { "key": "Sugerir", "value": "It's best to enable 2FA.", "highlights": ["It's best to"] }
+            {
+              "key": "Recomendar",
+              "value": "You should use a strong password.",
+              "highlights": [
+                "should"
+              ]
+            },
+            {
+              "key": "Advertir",
+              "value": "Never share your credentials.",
+              "highlights": [
+                "Never share"
+              ]
+            },
+            {
+              "key": "Sugerir",
+              "value": "It's best to enable 2FA.",
+              "highlights": [
+                "It's best to"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which term describes a deceptive attempt to steal sensitive data from users?",
+      "options": [
+        "phishing",
+        "patching"
+      ],
+      "answer": 0,
+      "explain": "El phishing es la técnica específica de engaño para obtener información confidencial, mientras que el patching se refiere a corregir vulnerabilidades."
+    },
+    {
+      "q": "Complete the sentence using the passive voice: 'The critical security vulnerability ___ yesterday.'",
+      "options": [
+        "has been patched",
+        "is patched"
+      ],
+      "answer": 0,
+      "explain": "Usamos el presente perfecto pasivo ('has been patched') para indicar una acción completada recientemente que tiene relevancia en el presente."
+    },
+    {
+      "q": "Which modal verb is best for giving a strong security recommendation to a team?",
+      "options": [
+        "You should use a strong password",
+        "You might use a strong password"
+      ],
+      "answer": 0,
+      "explain": "En ciberseguridad, 'should' es el modal adecuado para dar recomendaciones claras y necesarias sobre mejores prácticas."
     }
   ]
 }

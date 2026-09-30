@@ -41,7 +41,10 @@ describe('getProgressProjections', () => {
     const answerHistorySelect = vi.fn().mockReturnThis()
     const answerHistoryEq = vi.fn().mockReturnThis()
     const answerHistoryGte = vi.fn().mockReturnThis()
-    const answerHistoryNot = vi.fn().mockResolvedValue({ data: [], error: null })
+    const answerHistoryLte = vi.fn().mockReturnThis()
+    const answerHistoryNot = vi.fn().mockReturnThis()
+    const answerHistoryOrder = vi.fn().mockReturnThis()
+    const answerHistoryRange = vi.fn().mockResolvedValue({ data: [], error: null })
 
     const from = vi.fn((table: string) => {
       if (table === 'answer_history') {
@@ -49,7 +52,10 @@ describe('getProgressProjections', () => {
           select: answerHistorySelect,
           eq: answerHistoryEq,
           gte: answerHistoryGte,
+          lte: answerHistoryLte,
           not: answerHistoryNot,
+          order: answerHistoryOrder,
+          range: answerHistoryRange,
         }
       }
       throw new Error(`getProgressProjections should not query table "${table}" directly anymore`)
@@ -62,6 +68,8 @@ describe('getProgressProjections', () => {
     expect(rpc).toHaveBeenCalledWith('get_activity_totals')
     expect(rpc).toHaveBeenCalledWith('get_lesson_completion_total')
     expect(answerHistoryGte).toHaveBeenCalled() // bounded window applied
+    expect(answerHistoryOrder).toHaveBeenCalledWith('answered_at', { ascending: true })
+    expect(answerHistoryOrder).toHaveBeenCalledWith('id', { ascending: true })
     expect(result.activity).toEqual({ sessions: 3, exercises: 12, durationMs: 45000, activeDays: 2 })
     expect(result.coverage.completed).toBe(4)
   })

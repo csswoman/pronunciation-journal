@@ -172,7 +172,7 @@ export default function CoursePathMobileLevelSelect({
           {electiveTracks && electiveTracks.length > 0 && (
             <Link
               key="electivas"
-              href="/courses?level=electivas"
+              href="/courses?level=opcionales"
               onClick={() => setIsOpen(false)}
               aria-current={isElectiveActive ? "page" : undefined}
               className={cn(

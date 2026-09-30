@@ -32,6 +32,7 @@ export const EXERCISE_SKILL_MATRIX = {
   sentence_transformation: ['grammar'],
   translation_es_en: ['vocabulary', 'grammar'],
   cs_shadow_phrase: ['speaking', 'pronunciation'],
+  personalization: ['grammar', 'writing'],
 } as const satisfies Record<ExerciseSlug, readonly SkillTag[]>
 
 export type ExerciseSkillMatrix = typeof EXERCISE_SKILL_MATRIX
@@ -55,6 +56,10 @@ const SKILL_TAGS = new Set<SkillTag>([
   'writing',
 ])
 
+export function isSkillTag(value: unknown): value is SkillTag {
+  return typeof value === 'string' && SKILL_TAGS.has(value as SkillTag)
+}
+
 const LISTENING_ESSENTIAL_WORD_MODES = new Set([
   'dictation_word', 'dictation_sentence', 'listening_cloze_sentence', 'recognize_audio',
 ])
@@ -77,6 +82,8 @@ export function taskSkillForExercise(
     case 'dictation':
     case 'sentence_dictation':
       return 'listening'
+    case 'personalization':
+      return 'grammar'
     default:
       break
   }

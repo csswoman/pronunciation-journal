@@ -256,27 +256,27 @@ describe('flushOutbox', () => {
     )
   })
 
-  it('derives onConflict for user_learning_state when the producer omitted it', async () => {
-    const upsert = vi.fn().mockResolvedValue({ error: null })
+  it('merges user_learning_state snapshots through the recurrence-aware RPC', async () => {
+    mocks.mockSupabaseRpc.mockResolvedValue({ error: null })
     const entry = {
       id: 12,
       table: 'user_learning_state',
       operation: 'upsert',
-      payload: { user_id: 'u1', state: { foo: 'bar' } },
+      payload: { user_id: 'u1', state: { userId: 'u1', updatedAt: '2026-09-22T00:00:00.000Z', errorRecurrence: { entries: [] } }, updated_at: '2026-09-22T00:00:00.000Z' },
       status: 'pending',
       retryCount: 0,
       createdAt: new Date().toISOString(),
     }
 
     setupFlush([entry])
-    mocks.mockSupabaseFrom.mockReturnValue({ upsert })
 
     await flushOutbox('user-1')
 
-    expect(upsert).toHaveBeenCalledWith(
-      { user_id: 'u1', state: { foo: 'bar' } },
-      { onConflict: 'user_id' },
-    )
+    expect(mocks.mockSupabaseRpc).toHaveBeenCalledWith('merge_user_learning_state_snapshot', {
+      p_user_id: 'u1',
+      p_state: entry.payload.state,
+      p_updated_at: '2026-09-22T00:00:00.000Z',
+    })
   })
 
   it('uses an id conflict target for idempotent answer-history writes', async () => {

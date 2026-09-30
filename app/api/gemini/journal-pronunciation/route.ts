@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from '@/lib/api/guards'
 import { callGeminiJson, parseGeminiJson } from '@/lib/gemini/json-route'
+import { journalPronunciationResponseSchema } from '@/lib/journal/pronunciation-schema'
 import {
   JOURNAL_PRONUNCIATION_SYSTEM_PROMPT,
   buildJournalPronunciationUserPrompt,
@@ -9,21 +10,6 @@ import {
 
 const journalPronunciationRequestSchema = z.object({
   wordOrPhrase: z.string().min(1).max(150),
-})
-
-export const journalPronunciationResponseSchema = z.object({
-  wordOrPhrase: z.string().optional(),
-  ipa: z.string(),
-  syllableStress: z.string(),
-  suggestedReason: z.enum([
-    'difficult_sound',
-    'syllable_stress',
-    'tricky_spelling',
-    'new_word',
-    'other',
-  ]),
-  explanationEs: z.string(),
-  phoneticTrap: z.string().optional(),
 })
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -59,6 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 600,
       },
     },
+    schema: journalPronunciationResponseSchema,
     parse: (raw) =>
       journalPronunciationResponseSchema.parse(
         parseGeminiJson(raw, (json) => json)

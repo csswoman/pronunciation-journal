@@ -2,34 +2,58 @@
 
 import { useRef, useEffect, useState } from 'react'
 import type {
+  WordSearchDifficulty,
   WordSearchMode,
   WordSearchPuzzle,
   WordSearchSource,
 } from '@/lib/exercises/word-search/types'
-import {
-  WORD_SEARCH_PRESETS,
-  CURATED_PUZZLE_ITEMS,
-} from '@/lib/exercises/word-search/presets'
+import type { CefrLevel } from '@/lib/essential-words/types'
 import { loadDictionaryPuzzle } from '@/lib/exercises/word-search/dictionary-loader'
+import { loadEssentialPuzzle } from '@/lib/exercises/word-search/essential-loader'
 import {
-  createWordSearchPuzzle,
+  buildCuratedPuzzle,
+  buildMyWordsPuzzle,
+  requestGeminiPuzzle,
+  type PuzzleBuildOptions,
+} from '@/lib/exercises/word-search/puzzle-builders'
+import {
   MAX_WORD_SEARCH_LENGTH,
   MIN_WORD_SEARCH_ITEMS,
+  WORD_COUNT_BY_DIFFICULTY,
   sanitizeWord,
 } from '@/lib/exercises/word-search/grid-generator'
-import { pickUnrepeatedWords } from '@/lib/exercises/word-search/word-sampling'
+import {
+  getRecentWordSearchWords,
+  saveWordSearchSeenWords,
+} from '@/lib/exercises/word-search/seen-words'
 import { getMyWords } from '@/lib/word-bank/queries'
 import type { WordBankEntry } from '@/lib/word-bank/types'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { isAnonymousUser } from '@/lib/auth/is-anonymous'
 
+type SourceError = Partial<Record<WordSearchSource, string>>
+
+function isPuzzleFriendlyEntry(entry: WordBankEntry): boolean {
+  const clean = sanitizeWord(entry.text)
+  return (
+    clean.length >= 3 &&
+    clean.length <= MAX_WORD_SEARCH_LENGTH &&
+    !entry.text.includes(' ') &&
+    !entry.text.includes('-')
+  )
+}
+
 export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => void) {
   const { user } = useAuth()
   const isGuest = isAnonymousUser(user)
+  const userId = user?.id ?? null
+  // Newest first. Seeded from Dexie so anti-repetition survives reloads.
   const recentWordsRef = useRef<Set<string>>(new Set())
   const [mode, setMode] = useState<WordSearchMode>('classic')
-  const [source, setSource] = useState<WordSearchSource>('dictionary')
-  const [selectedDictId, setSelectedDictId] = useState('frontend-dev')
+  const [difficulty, setDifficulty] = useState<WordSearchDifficulty>('normal')
+  const [source, setSource] = useState<WordSearchSource>('essential')
+  const [essentialLevel, setEssentialLevel] = useState<CefrLevel>('A2')
+  const [selectedDictId, setSelectedDictId] = useState('professional')
   const [selectedPresetId, setSelectedPresetId] = useState('silent-letters')
   const [customTopic, setCustomTopic] = useState('')
   const [customLevel, setCustomLevel] = useState<
@@ -38,12 +62,20 @@ export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => 
 
   const [myWords, setMyWords] = useState<WordBankEntry[]>([])
   const [isLoadingWords, setIsLoadingWords] = useState(!isGuest)
-  const [isLoadingDict, setIsLoadingDict] = useState(false)
-  const [isGeneratingAi, setIsGeneratingAi] = useState(false)
-  const [aiError, setAiError] = useState<string | null>(null)
-  const [dictError, setDictError] = useState<string | null>(null)
-  const [curatedError, setCuratedError] = useState<string | null>(null)
-  const [wordBankError, setWordBankError] = useState<string | null>(null)
+  const [loadingSource, setLoadingSource] = useState<WordSearchSource | null>(null)
+  const [errors, setErrors] = useState<SourceError>({})
+
+  useEffect(() => {
+    let cancelled = false
+    void getRecentWordSearchWords(userId).then((words) => {
+      if (!cancelled) {
+        recentWordsRef.current = new Set([...recentWordsRef.current, ...words])
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
 
   useEffect(() => {
     if (isGuest) {
@@ -54,193 +86,92 @@ export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => 
 
     let cancelled = false
     setIsLoadingWords(true)
-
-    async function loadWords() {
-      try {
-        const words = await getMyWords()
-        if (!cancelled) {
-          setMyWords(
-            words.filter((entry) => {
-              const clean = sanitizeWord(entry.text)
-              return (
-                clean.length >= 3 &&
-                clean.length <= MAX_WORD_SEARCH_LENGTH &&
-                !entry.text.includes(' ') &&
-                !entry.text.includes('-')
-              )
-            }),
-          )
-        }
-      } catch {
-        if (!cancelled) {
-          setMyWords([])
-          setWordBankError('No pudimos cargar tu cuaderno en este momento.')
-        }
-      } finally {
+    getMyWords()
+      .then((words) => {
+        if (!cancelled) setMyWords(words.filter(isPuzzleFriendlyEntry))
+      })
+      .catch(() => {
+        if (cancelled) return
+        setMyWords([])
+        setErrors((current) => ({
+          ...current,
+          word_bank: 'No pudimos cargar tu cuaderno en este momento.',
+        }))
+      })
+      .finally(() => {
         if (!cancelled) setIsLoadingWords(false)
-      }
-    }
-
-    void loadWords()
+      })
     return () => {
       cancelled = true
     }
-  }, [isGuest, user?.id])
+  }, [isGuest, userId])
 
-  const rememberWords = (words: string[]) => {
-    for (const w of words) {
-      const clean = sanitizeWord(w)
-      if (clean) recentWordsRef.current.add(clean)
-    }
-  }
-
-  const handleStartDictionary = async () => {
-    setIsLoadingDict(true)
-    setDictError(null)
+  const startWith = async (
+    target: WordSearchSource,
+    build: (options: PuzzleBuildOptions) => WordSearchPuzzle | Promise<WordSearchPuzzle>,
+  ) => {
+    setLoadingSource(target)
+    setErrors((current) => ({ ...current, [target]: undefined }))
     try {
-      const puzzle = await loadDictionaryPuzzle(selectedDictId, mode, 8, recentWordsRef.current)
-      rememberWords(puzzle.items.map((it) => it.word))
-      onStartPuzzle(puzzle)
-    } catch (error: unknown) {
-      setDictError(
-        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
-      )
-    } finally {
-      setIsLoadingDict(false)
-    }
-  }
-
-  const handleStartCurated = () => {
-    setCuratedError(null)
-    const preset = WORD_SEARCH_PRESETS.find((item) => item.id === selectedPresetId)
-    const rawItems = preset ? CURATED_PUZZLE_ITEMS[preset.id] : undefined
-
-    if (!preset || !rawItems?.length) {
-      setCuratedError('Este tema todavía no tiene contenido preparado.')
-      return
-    }
-
-    const sampledItems = pickUnrepeatedWords(rawItems, 8, recentWordsRef.current)
-
-    try {
-      const puzzle = createWordSearchPuzzle(sampledItems, {
-        title: preset.title,
-        topic: preset.description,
-        source: 'curated',
+      const puzzle = await build({
         mode,
+        difficulty,
+        count: WORD_COUNT_BY_DIFFICULTY[difficulty],
+        recentWords: recentWordsRef.current,
       })
-      rememberWords(puzzle.items.map((it) => it.word))
+      const played = puzzle.items.map((item) => sanitizeWord(item.word))
+      recentWordsRef.current = new Set([...played, ...recentWordsRef.current])
+      void saveWordSearchSeenWords(userId, played)
       onStartPuzzle(puzzle)
     } catch (error: unknown) {
-      setCuratedError(
-        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
-      )
+      setErrors((current) => ({
+        ...current,
+        [target]: error instanceof Error ? error.message : 'No se pudo crear el tablero.',
+      }))
+    } finally {
+      setLoadingSource(null)
     }
   }
+
+  const handleStartEssential = () =>
+    startWith('essential', (options) =>
+      loadEssentialPuzzle(essentialLevel, options.mode, options.count, options.recentWords, options.difficulty),
+    )
+
+  const handleStartDictionary = () =>
+    startWith('dictionary', (options) =>
+      loadDictionaryPuzzle(selectedDictId, options.mode, options.count, options.recentWords, options.difficulty),
+    )
+
+  const handleStartCurated = () =>
+    startWith('curated', (options) => buildCuratedPuzzle(selectedPresetId, options))
 
   const handleStartMyWords = () => {
-    setWordBankError(null)
-    if (myWords.length < MIN_WORD_SEARCH_ITEMS) return
-
-    const pool = myWords.map((entry) => ({ ...entry, word: entry.text }))
-    const sampled = pickUnrepeatedWords(pool, 8, recentWordsRef.current)
-
-    const items = sampled.map((entry, index) => ({
-      id: `my-${entry.id || index}`,
-      word: entry.text,
-      displayWord: entry.text,
-      ipa: entry.ipa,
-      clue:
-        entry.meaning ||
-        entry.translation ||
-        `Palabra de tu cuaderno: ${entry.text}`,
-      meaningEs: entry.translation || entry.meaning,
-      exampleSentence: entry.example,
-    }))
-
-    try {
-      const puzzle = createWordSearchPuzzle(items, {
-        title: 'Mis palabras',
-        topic: 'Vocabulario de tu cuaderno personal',
-        source: 'word_bank',
-        mode,
-      })
-      rememberWords(puzzle.items.map((it) => it.word))
-      onStartPuzzle(puzzle)
-    } catch (error: unknown) {
-      setWordBankError(
-        error instanceof Error ? error.message : 'No se pudo crear el tablero.',
-      )
-    }
+    if (myWords.length < MIN_WORD_SEARCH_ITEMS) return Promise.resolve()
+    return startWith('word_bank', (options) => buildMyWordsPuzzle(myWords, options))
   }
 
-  const handleStartGemini = async () => {
-    const topic = customTopic.trim() || 'Vocabulario útil en inglés'
-    setIsGeneratingAi(true)
-    setAiError(null)
-
-    try {
-      const response = await fetch('/api/gemini/word-search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic,
+  const handleStartGemini = () =>
+    startWith('gemini', (options) =>
+      requestGeminiPuzzle(
+        {
+          topic: customTopic.trim() || 'Vocabulario útil en inglés',
           level: customLevel,
-          count: 8,
-          knownWords: myWords.slice(0, 10).map((entry) => entry.text),
-          excludeWords: Array.from(recentWordsRef.current).slice(0, 25),
-        }),
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.error || `Error ${response.status}`)
-      }
-
-      const data = await response.json()
-      const items = data.words.map(
-        (
-          word: {
-            word: string
-            ipa?: string
-            clue: string
-            meaningEs: string
-            exampleSentence: string
-          },
-          index: number,
-        ) => ({
-          id: `ai-${index}`,
-          word: word.word,
-          displayWord: word.word.toLowerCase(),
-          ipa: word.ipa,
-          clue: word.clue,
-          meaningEs: word.meaningEs,
-          exampleSentence: word.exampleSentence,
-        }),
-      )
-
-      const puzzle = createWordSearchPuzzle(items, {
-        title: data.topicTitle || topic,
-        topic,
-        source: 'gemini',
-        mode,
-      })
-      rememberWords(puzzle.items.map((it) => it.word))
-      onStartPuzzle(puzzle)
-    } catch (error: unknown) {
-      setAiError(
-        error instanceof Error ? error.message : 'No se pudo conectar con la IA.',
-      )
-    } finally {
-      setIsGeneratingAi(false)
-    }
-  }
+          knownWords: myWords.map((entry) => entry.text),
+        },
+        options,
+      ),
+    )
 
   return {
     mode,
     setMode,
+    difficulty,
+    setDifficulty,
     source,
     setSource,
+    essentialLevel,
+    setEssentialLevel,
     selectedDictId,
     setSelectedDictId,
     selectedPresetId,
@@ -251,12 +182,9 @@ export function useWordSearchSetup(onStartPuzzle: (puzzle: WordSearchPuzzle) => 
     setCustomLevel,
     myWords,
     isLoadingWords,
-    isLoadingDict,
-    isGeneratingAi,
-    aiError,
-    dictError,
-    curatedError,
-    wordBankError,
+    loadingSource,
+    errors,
+    handleStartEssential,
     handleStartDictionary,
     handleStartCurated,
     handleStartMyWords,

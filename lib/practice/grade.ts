@@ -11,6 +11,8 @@ export function answerToGrade(
     status?: PracticeResultStatus
     responseTimeMs?: number
     firstTryFailed?: boolean
+    hintsUsed?: number
+    responseTimeKnown?: boolean
     userAnswer?: string
   }
 ): number | null {
@@ -28,13 +30,15 @@ export function answerToGrade(
     'spoken_production',
   ])
   if (scoreSlugs.has(answer.slug) && answer.score != null) {
-    return accuracyToQuality(answer.score)
+    const grade = accuracyToQuality(answer.score)
+    return answer.firstTryFailed ? Math.min(grade, 1) : grade
   }
 
   if (answer.isCorrect === false) return 1
 
   // If the first attempt failed, the item required a retry to get right: grade as Again (1).
   if (answer.firstTryFailed) return 1
+  if (answer.responseTimeKnown === false) return 3
 
   // Use the initial response latency (excluding feedback read / retry duration) for speed rating.
   const latencyMs = answer.responseTimeMs ?? answer.timeMs

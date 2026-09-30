@@ -99,9 +99,22 @@ export default function WordRainSession() {
     if (!user?.id || hasRecordedActivityRef.current) return
     hasRecordedActivityRef.current = true
     const startedAt = gameStartedAtRef.current ?? Date.now()
-    void recordGameActivity(user.id, 'word_rain', Date.now() - startedAt, gameId)
+    void recordGameActivity(
+      user.id,
+      'word_rain',
+      Date.now() - startedAt,
+      gameId,
+      undefined,
+      { hits: savedWords.length, misses: missedCount, slug: 'dictation' },
+    )
       .catch((err) => console.warn('[WordRainSession] activity record failed', err))
-  }, [user?.id])
+  }, [user?.id, savedWords.length, missedCount])
+
+  useEffect(() => {
+    if (status === 'game_over' || status === 'victory') {
+      recordFinishedGame(`word-rain:${selectedLevel}`)
+    }
+  }, [recordFinishedGame, selectedLevel, status])
 
   const handleLifeLost = useCallback(() => {
     setStreak(0)
@@ -110,16 +123,14 @@ export default function WordRainSession() {
       const nextLives = prev - 1
       if (nextLives <= 0) {
         setStatus('game_over')
-        recordFinishedGame(`word-rain:${selectedLevel}`)
       }
       return Math.max(0, nextLives)
     })
-  }, [recordFinishedGame, selectedLevel])
+  }, [])
 
   const handleGameFinished = useCallback((isVictory: boolean) => {
     setStatus(isVictory ? 'victory' : 'game_over')
-    recordFinishedGame(`word-rain:${selectedLevel}`)
-  }, [recordFinishedGame, selectedLevel])
+  }, [])
 
   const currentConfig = DIFFICULTY_BY_LEVEL[selectedLevel] ?? DIFFICULTY_BY_LEVEL.A2
   const totalAttacked = savedWords.length + missedCount
@@ -150,7 +161,7 @@ export default function WordRainSession() {
             </span>
             <h1 className="text-h2 font-bold text-fg">Lluvia de palabras</h1>
             <p className="text-body-sm text-fg-muted text-pretty">
-              Escribe las palabras en inglés antes de que toquen el suelo. Conforme las aciertas, se van guardando en tu lista de vocabulario aprendido.
+              Escribe las palabras en inglés antes de que toquen el suelo. Al terminar, podrás guardar las que acertaste en tu lista de vocabulario.
             </p>
           </div>
 

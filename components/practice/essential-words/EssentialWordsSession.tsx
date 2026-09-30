@@ -19,7 +19,15 @@ import { WordCarousel } from '@/components/practice/session/WordCarousel'
 import { getRoute } from '@/lib/essential-words/routes'
 import { exerciseLevelLabel } from '@/lib/essential-words/level-labels'
 import Button from '@/components/ui/Button'
-export function EssentialWordsSession({ initialStreak = 0 }: { initialStreak?: number } = {}) {
+import type { CefrLevel } from '@/lib/essential-words/types'
+
+interface EssentialWordsSessionProps {
+  initialStreak?: number
+  /** Offline hub: study exactly this downloaded level pack. */
+  pinnedLevels?: CefrLevel[]
+}
+
+export function EssentialWordsSession({ initialStreak = 0, pinnedLevels }: EssentialWordsSessionProps = {}) {
   const {
     phase, currentStepId, current, currentMode, listeningTier, isListeningSkill, focusContrastId, retiredBlankKeys, currentExerciseLevel, audioDistractorPool, stats,
     sessionProgress, sessionPreview, isResume, previewLoading, studyContext, sessionSummary,
@@ -27,7 +35,7 @@ import Button from '@/components/ui/Button'
     startSpeak, beginSession, omitWord, markPronunciationDifficulty, submitGrade, reload, learnMore, archiveWord,
     keepSnooze, masterWord,
     sessionSize, setSessionSize, discardSession, pauseAndPersistSession,
-  } = useEssentialWordsSession()
+  } = useEssentialWordsSession({ pinnedLevels })
   const loadingWords = useLoadingWords()
   const router = useRouter()
   const [loadingSlow, setLoadingSlow] = useState(false)

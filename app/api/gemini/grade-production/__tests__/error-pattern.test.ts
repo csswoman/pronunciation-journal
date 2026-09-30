@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { GRADE_PRODUCTION_SYSTEM_PROMPT } from '@/lib/ai-prompts'
 import { ERROR_PATTERN_IDS } from '@/lib/exercises/error-patterns'
+import { productionGradeResponseSchema } from '@/lib/exercises/production-grade-schema'
+import { z } from 'zod'
 
 describe('grade production prompt: error pattern', () => {
   it('asks for an errorPattern label', () => {
@@ -13,7 +15,9 @@ describe('grade production prompt: error pattern', () => {
     }
   })
 
-  it('declares errorPattern in the JSON shape', () => {
-    expect(GRADE_PRODUCTION_SYSTEM_PROMPT).toContain('"errorPattern"')
+  it('declares errorPattern in the structured response schema', () => {
+    expect(z.toJSONSchema(productionGradeResponseSchema)).toMatchObject({
+      properties: { errorPattern: { type: 'string' } },
+    })
   })
 })

@@ -2,60 +2,134 @@
 
 import { useLiveQuery } from 'dexie-react-hooks'
 import Link from 'next/link'
+import { Check, ChevronRight, Notebook, Pencil } from '@/components/icons'
 import { listLocalJournalEntries } from '@/lib/journal/queries'
-import { JOURNAL_STATUS_CLASS, JOURNAL_STATUS_COPY } from '@/lib/journal/status-copy'
-import { cn } from '@/lib/cn'
 
 /** Reactive local history so past entries survive reload and appear offline. */
 export function JournalHistoryList({
   userId,
   excludeDate,
+  onSelectEntry,
 }: {
   userId: string
   /** Today's entry lives in the editor — keep it out of "past" lists. */
   excludeDate?: string
+  onSelectEntry?: (entryDate: string) => void
 }) {
   const entries = useLiveQuery(() => listLocalJournalEntries(userId), [userId])
   const past = (entries ?? []).filter((entry) => entry.entryDate !== excludeDate)
 
-  if (past.length === 0) return null
+  if (entries === undefined) return null
+
+  if (past.length === 0) {
+    return (
+      <section aria-labelledby="journal-history" className="flex flex-col gap-3 py-2">
+        <div className="flex items-center justify-between gap-3">
+          <span id="journal-history" className="font-kicker text-fg-muted select-none">
+            TU HISTORIAL
+          </span>
+          <span className="inline-flex rounded-full border border-border-default bg-surface-sunken px-3.5 py-1 font-sans text-caption font-semibold text-fg select-none">
+            0 páginas
+          </span>
+        </div>
+        <p className="font-sans text-body-sm text-fg-muted">
+          Todavía no tienes páginas guardadas. Escribe hoy para empezar tu historial.
+        </p>
+      </section>
+    )
+  }
 
   return (
-    <section aria-labelledby="journal-history" className="flex flex-col gap-2">
-      <h2 id="journal-history" className="font-h4 font-semibold text-fg">
-        Tu historial
-      </h2>
-      <ul className="flex flex-col gap-2">
-        {past.map((entry) => (
-          <li
-            key={entry.id}
-            className="rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised transition-colors hover:bg-surface-sunken"
-          >
-            <Link
-              href={`/journal/${entry.entryDate}`}
-              className="focus-ring flex min-h-11 items-center gap-3 px-4 py-3"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="font-body-sm font-medium text-fg">{formatJournalDate(entry.entryDate)}</p>
-                <p className="truncate font-body-sm text-fg-muted">{entry.prompt}</p>
+    <section aria-labelledby="journal-history" className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <span id="journal-history" className="font-kicker text-fg-muted select-none">
+          TU HISTORIAL
+        </span>
+        <span className="inline-flex rounded-full border border-border-default bg-surface-sunken px-3.5 py-1 font-sans text-caption font-semibold text-fg select-none">
+          {past.length} {past.length === 1 ? 'página' : 'páginas'}
+        </span>
+      </div>
+
+      <ul className="flex flex-col gap-3" role="list">
+        {past.map((entry) => {
+          const isReviewed = entry.status === 'corrected' || entry.status === 'submitted'
+          const dateLabel = formatJournalDate(entry.entryDate)
+          const firstLine = entry.content.trim().split('\n')[0] || entry.prompt
+
+          const contentNode = (
+            <>
+              <div className="flex items-center gap-4 min-w-0 flex-1">
+                {/* Icono de libreta en círculo verde */}
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-mint-deep/60 text-ink shadow-2xs">
+                  <Notebook size={22} className="text-ink" aria-hidden />
+                </div>
+
+                {/* Fecha + Frase/Título principal */}
+                <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+                  <span className="font-sans text-caption font-medium text-ink-secondary">
+                    {dateLabel}
+                  </span>
+                  <h3 className="font-heading text-body-md sm:text-body-lg font-bold text-ink truncate leading-snug">
+                    {firstLine}
+                  </h3>
+                </div>
               </div>
-              <span
-                className={cn( 'shrink-0 rounded-full px-2.5 py-0.5 font-body-xs font-medium', JOURNAL_STATUS_CLASS[entry.status], )}
-              >
-                {JOURNAL_STATUS_COPY[entry.status]}
-              </span>
-            </Link>
-          </li>
-        ))}
+
+              {/* Badge Guardada / Borrador + Chevron */}
+              <div className="flex items-center gap-3 shrink-0">
+                {isReviewed ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-mint-deep px-3.5 py-1 font-sans text-caption font-bold text-ink select-none shadow-2xs">
+                    <Check size={14} aria-hidden /> Guardada
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-ink/40 bg-transparent px-3.5 py-1 font-sans text-caption font-bold text-ink select-none">
+                    <Pencil size={14} aria-hidden /> Borrador
+                  </span>
+                )}
+                <ChevronRight
+                  size={18}
+                  className="text-ink-secondary transition-transform group-hover:translate-x-0.5 group-hover:text-ink"
+                  aria-hidden
+                />
+              </div>
+            </>
+          )
+
+          const itemClassName =
+            'focus-ring group flex w-full items-center justify-between gap-4 rounded-2xl bg-mint-soft p-4 sm:p-5 text-left transition-all hover:bg-mint-soft/90 hover:scale-[1.005] shadow-2xs cursor-pointer'
+
+          return (
+            <li key={entry.id}>
+              {onSelectEntry ? (
+                <button
+                  type="button"
+                  onClick={() => onSelectEntry(entry.entryDate)}
+                  className={itemClassName}
+                >
+                  {contentNode}
+                </button>
+              ) : (
+                <Link href={`/journal/${entry.entryDate}`} className={itemClassName}>
+                  {contentNode}
+                </Link>
+              )}
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
 }
 
 function formatJournalDate(entryDate: string): string {
-  return new Intl.DateTimeFormat('es-PE', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(`${entryDate}T12:00:00`))
+  try {
+    const d = new Date(`${entryDate}T12:00:00`)
+    return new Intl.DateTimeFormat('es-PE', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(d)
+  } catch {
+    return entryDate
+  }
 }

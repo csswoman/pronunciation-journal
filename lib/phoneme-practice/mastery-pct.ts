@@ -1,15 +1,7 @@
-import {
-  PHONEME_CONFUSION,
-  contrastKey,
-} from './phoneme-similarity'
-import { canonicalizeSoundIpa } from '@/lib/sounds/inventory'
-import { canonicalizeProgressRows } from '@/lib/sounds/normalization'
-import type { UserContrastProgress } from './types'
-
-/** Days until mastery decays to ~50% without practice. */
+/** Temporal decay parameter (in days). exp(-days/14) has e^-1 at 14d; constant preserved for curve stability (plan 048). */
 export const MASTERY_HALF_LIFE_DAYS = 14
-
 export const MASTERY_DISPLAY_THRESHOLD = 85
+export const MASTERY_MIN_SESSIONS = 10
 
 type ScorableResult = { isCorrect: boolean; score?: number }
 
@@ -23,24 +15,123 @@ export function sessionAccuracyPct(results: ScorableResult[]): number {
   return sum / results.length
 }
 
-/**
- * Sessions needed before mastery_pct can reach 100%.
- * Matches MIN_ATTEMPTS in mastery.ts — keep in sync.
- */
-export const MASTERY_MIN_SESSIONS = 10
+/** Confidence scale factor based on cumulative sessions: sqrt(n / MIN_SESSIONS), clamped to 1.0. */
+export function computeRepScale(totalSessions: number): number {
+  if (!Number.isFinite(totalSessions) || totalSessions <= 0) return 0
+  return Math.sqrt(Math.min(totalSessions, MASTERY_MIN_SESSIONS) / MASTERY_MIN_SESSIONS)
+}
 
 /**
- * EMA with temporal decay, scaled by repetition count.
+ * Returns the number of prior Sound Lab sessions represented by a row.
+ * Rows created before `mastery_session_count` existed use their old attempt
+ * confidence once, while Essential Words-only rows start at zero.
+ */
+export function priorMasterySessionCount(current: {
+  total_attempts: number
+  mastery_session_count?: number | null
+  raw_mastery?: number | null
+  observation_count?: number | null
+}): number {
+  const hasValidCount = Number.isFinite(current.mastery_session_count)
+  const isLegacy = !hasValidCount || (
+    current.mastery_session_count === 0
+    && current.raw_mastery == null
+    && (current.observation_count ?? 0) === 0
+    && current.total_attempts > 0
+  )
+  return isLegacy
+    ? Math.max(0, current.total_attempts)
+    : Math.max(0, current.mastery_session_count ?? 0)
+}
+
+/**
+ * Pure EMA computation with temporal decay (unscaled, [0, 100]).
  *
- * Repetition scaling: mastery grows gradually as sessions accumulate.
- * sqrt(n / MIN_SESSIONS) gives a concave curve so early sessions feel
- * meaningful but the score can't hit 85%+ without enough repetitions.
- *
- * Examples at 80% accuracy:
- *   session 1  → ~25%
- *   session 3  → ~44%
- *   session 5  → ~57%
- *   session 10 → ~80%
+ * Calculates the next raw estimate from previous raw EMA, elapsed time,
+ * and latest session accuracy. Does NOT apply repetition scaling.
+ */
+export function computeNextRawEma(
+  oldRawEma: number | null | undefined,
+  sessionAccuracy: number,
+  lastSeen: string | null,
+  now: Date = new Date(),
+): number {
+  const cleanAccuracy = Number.isFinite(sessionAccuracy)
+    ? Math.min(100, Math.max(0, sessionAccuracy))
+    : 0
+
+  if (oldRawEma == null || !Number.isFinite(oldRawEma) || !lastSeen) {
+    return Math.round(cleanAccuracy)
+  }
+
+  const lastTime = new Date(lastSeen).getTime()
+  if (Number.isNaN(lastTime)) {
+    return Math.round(Math.min(100, Math.max(0, oldRawEma)))
+  }
+
+  const nowTime = now.getTime()
+  const daysSince = Number.isFinite(nowTime)
+    ? Math.max(0, (nowTime - lastTime) / 86_400_000)
+    : 0
+  const decayFactor = Math.exp(-daysSince / MASTERY_HALF_LIFE_DAYS)
+  const sessionWeight = 1 - decayFactor
+
+  const cleanOld = Math.min(100, Math.max(0, oldRawEma))
+  const ema = cleanOld * decayFactor + cleanAccuracy * sessionWeight
+  return Math.round(Math.min(100, Math.max(0, ema)))
+}
+
+/**
+ * Projects a raw EMA (0..100) to presentation mastery % by applying repetition scale once.
+ */
+export function projectMasteryPct(rawEma: number, totalSessions: number): number {
+  if (!Number.isFinite(rawEma) || rawEma <= 0) return 0
+  const repScale = computeRepScale(totalSessions)
+  return Math.round(Math.min(100, Math.max(0, rawEma * repScale)))
+}
+
+export interface NextMasteryState {
+  rawMastery: number
+  masteryPct: number
+}
+
+/**
+ * Computes both the new raw EMA (persisted) and projected presentation mastery (UI).
+ * Handles legacy rows where raw_mastery was not previously recorded.
+ */
+export function computeNextMasteryState(
+  current: {
+    mastery_pct?: number | null
+    raw_mastery?: number | null
+    last_seen?: string | null
+    raw_mastery_updated_at?: string | null
+    observation_count?: number | null
+  },
+  sessionAccuracy: number,
+  totalSessionsAfter: number,
+  now: Date = new Date(),
+): NextMasteryState {
+  const hasRawMastery = current.raw_mastery != null && Number.isFinite(current.raw_mastery)
+  const hasOnlyEssentialWordHistory = !hasRawMastery
+    && (current.observation_count ?? 0) > 0
+    && (current.mastery_pct ?? 0) > 0
+  const priorRaw = hasRawMastery
+    ? current.raw_mastery
+    : !hasOnlyEssentialWordHistory && current.mastery_pct != null && current.mastery_pct > 0
+      ? current.mastery_pct
+      : undefined
+
+  // New rows use the dedicated Sound Lab clock. Legacy rows fall back to
+  // `last_seen` because their historical provenance cannot be reconstructed.
+  const rawClock = current.raw_mastery_updated_at ?? current.last_seen ?? null
+  const rawMastery = computeNextRawEma(priorRaw, sessionAccuracy, rawClock, now)
+  const masteryPct = projectMasteryPct(rawMastery, totalSessionsAfter)
+
+  return { rawMastery, masteryPct }
+}
+
+/**
+ * Backward compatibility helper for single-value updates.
  */
 export function computeNextMasteryPct(
   oldMastery: number,
@@ -48,99 +139,27 @@ export function computeNextMasteryPct(
   lastSeen: string | null,
   totalSessionsAfter: number,
   now: Date = new Date(),
+  oldRawMastery?: number | null,
 ): number {
-  const repScale = Math.sqrt(Math.min(totalSessionsAfter, MASTERY_MIN_SESSIONS) / MASTERY_MIN_SESSIONS)
-
-  if (lastSeen == null && oldMastery <= 0) {
-    return Math.round(Math.min(100, Math.max(0, sessionAccuracy * repScale)))
-  }
-
-  const last = lastSeen ? new Date(lastSeen) : now
-  const daysSince = Math.max(0, (now.getTime() - last.getTime()) / 86_400_000)
-  const decayFactor = Math.exp(-daysSince / MASTERY_HALF_LIFE_DAYS)
-  const sessionWeight = 1 - decayFactor
-
-  const ema = oldMastery * decayFactor + sessionAccuracy * sessionWeight
-  return Math.round(Math.min(100, Math.max(0, ema * repScale)))
+  const state = computeNextMasteryState(
+    {
+      mastery_pct: oldMastery,
+      raw_mastery: oldRawMastery,
+      raw_mastery_updated_at: oldRawMastery != null ? lastSeen : undefined,
+      last_seen: lastSeen,
+    },
+    sessionAccuracy,
+    totalSessionsAfter,
+    now,
+  )
+  return state.masteryPct
 }
 
-/** Strip leading/trailing slashes for display keys. */
-export function normalizeIpaKey(ipa: string): string {
-  return ipa.replace(/^\/+|\/+$/g, '')
-}
-
-/**
- * Sound-level mastery = minimum contrast mastery for configured confusions
- * (weakest link blocks the displayed score).
- */
-export function soundMasteryPct(ipa: string, allProgress: UserContrastProgress[]): number {
-  const canonicalIpa = canonicalizeSoundIpa(ipa)
-  const progress = canonicalizeProgressRows(allProgress)
-  const confusables = PHONEME_CONFUSION[canonicalIpa]
-  const progressMap = new Map(progress.map((p) => [p.contrast_id, p]))
-
-  if (confusables?.length) {
-    const values: number[] = []
-    for (const other of confusables) {
-      const key = contrastKey(canonicalIpa, other)
-      const row = progressMap.get(key)
-      if (row && row.total_attempts > 0) {
-        values.push(row.mastery_pct ?? 0)
-      }
-    }
-    if (values.length > 0) return Math.round(Math.min(...values))
-  }
-
-  const related = progress.filter((p) => p.contrast_id.split('|').includes(canonicalIpa))
-  if (related.length === 0) return 0
-  return Math.round(Math.min(...related.map((p) => p.mastery_pct ?? 0)))
-}
-
-export interface SoundMasteryRow {
-  ipa: string
-  mastery: number
-  totalAttempts: number
-}
-
-/** Rank sounds by lowest dynamic mastery (for Progress / home). */
-export function rankWeakestSounds(
-  progress: UserContrastProgress[],
-  options?: { minAttempts?: number; limit?: number },
-): SoundMasteryRow[] {
-  const canonicalProgress = canonicalizeProgressRows(progress)
-  const minAttempts = options?.minAttempts ?? 5
-  const limit = options?.limit ?? 5
-  const ipas = new Set<string>()
-  for (const p of canonicalProgress) {
-    for (const ipa of p.contrast_id.split('|')) ipas.add(ipa)
-  }
-
-  return [...ipas]
-    .map((ipa) => {
-      const related = canonicalProgress.filter((row) => row.contrast_id.split('|').includes(ipa))
-      const totalAttempts = Math.max(0, ...related.map((r) => r.total_attempts))
-      return {
-        ipa: normalizeIpaKey(ipa),
-        mastery: soundMasteryPct(ipa, canonicalProgress),
-        totalAttempts,
-      }
-    })
-    .filter((r) => r.totalAttempts >= minAttempts && r.mastery > 0)
-    .sort((a, b) => a.mastery - b.mastery)
-    .slice(0, limit)
-}
-
-/** Map IPA (with slashes, e.g. "/iː/") → mastery 0–100 for Sound Lab cards. */
-export function buildSoundMasteryMap(progress: UserContrastProgress[]): Map<string, number> {
-  const canonicalProgress = canonicalizeProgressRows(progress)
-  const map = new Map<string, number>()
-  const ipas = new Set<string>()
-  for (const p of canonicalProgress) {
-    for (const ipa of p.contrast_id.split('|')) ipas.add(ipa)
-  }
-  for (const ipa of ipas) {
-    const mastery = soundMasteryPct(ipa, canonicalProgress)
-    if (mastery > 0) map.set(ipa, mastery)
-  }
-  return map
-}
+export {
+  buildSoundMasteryMap,
+  liveMasteryPct,
+  normalizeIpaKey,
+  rankWeakestSounds,
+  soundMasteryPct,
+  type SoundMasteryRow,
+} from './mastery-read'

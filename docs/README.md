@@ -8,13 +8,28 @@ diseño y planes de producto.
 
 | Documento | Descripción |
 |-----------|-------------|
-| [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, Plan diario, Repaso y Progreso |
+| [Ciclo integrado de aprendizaje](architecture/integrated-learning-loop.md) | Conexión canónica entre contenido, targets, ejercicios, familiaridad declarada, verificaciones, Plan diario, Repaso y Progreso |
 | [Aprendizaje basado en chunks](architecture/chunk-first-learning.md) | Contrato 70/30 para frases, palabras, escucha, habla y dificultad CEFR |
 | [Sistemas SRS](architecture/srs.md) | Repetición espaciada, Baúl SRS (snooze / mastered) y reglas de revisión |
-| [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión y persistencia |
+| [Identidad de intentos y ventana SRS](architecture/practice-attempt-identity.md) | Recibos duraderos, keys UUID, replay de Practice/Coach y protección temporal de las RPC SM-2 del plan 046 |
+| [Cuotas y fallback de IA](architecture/ai-quota-and-fallback.md) | Cadenas gratuitas, cooldown, presupuesto diario y límites por usuario |
+| [AI Coach](architecture/ai-coach.md) | Sets de cinco ejercicios, navegación y resumen locales, y coste de requests |
+| [Banco de contenido pregenerado](architecture/content-bank.md) | Ejercicios pregenerados con la cuota sobrante de IA, servicio banco primero y caché offline |
+| [Inventario de modelos Gemini](ai/model-inventory.md) | IDs habilitados, tier y picos/límites del panel del proyecto |
+| [Evaluación de prompts JSON](ai/prompt-eval.md) | Doce casos fijos, ejecución con cuota acotada y línea base de calidad |
+| [Modelos de voz locales](ai/local-voice-models.md) | Spike de Kokoro TTS (Plan 039, fase A): licencia, tamaños, voces y veredicto de la puerta (no-ship — latencia por palabra en WASM) |
+| [Sistema de ejercicios](architecture/exercises.md) | Tipos de ejercicio, flujo de sesión, persistencia y calificación tolerante de contracciones (Plan 051) |
+| [Juegos de práctica](architecture/games.md) | Motores locales, catálogo, resultados de sesión y conexión de Phoneme Invaders con SRS (Planes 052 y 054) |
+| [Evidencia de evaluación en Practice](architecture/practice-evaluation-evidence.md) | Estados no evaluados, metadatos de respuesta, pistas y precedencia de calificación |
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
+| [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
-| [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
+| [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase, reglas de reconciliación y paquetes offline por nivel CEFR |
+| [Recuperación de respuestas y fallos del outbox](architecture/answer-sync-recovery.md) | Clases de fallo (`permanent`/`exhausted`), recuperación acotada de `answer_history` reparada y runbook del plan 045 |
+| [Feedback de pronunciación](architecture/pronunciation-feedback.md) | Señales honestas (`stt_intelligibility`), priorización y remediación |
+| [Conceptos, atribución y actividad diaria](architecture/concepts-attribution-and-activity.md) | Evidencia de concepto acumulada por intento/contenido, `taskSkill` canónico, checklist diario frente a sesión real y umbrales de racha (Plan 050) |
+| [Estado y maestría de sonidos](architecture/phoneme-mastery-state.md) | Separación de EMA cruda, proyección de presentación y concurrencia transaccional (Plan 048) |
+| [ADR 064 — evaluación acústica](architecture/adr-064-acoustic-pronunciation-assessment.md) | NO-SHIP por dos vías: formantes contra speechocean762 y CTC de fonemas en el dispositivo contra L2-ARCTIC (solo /z/ pasó la puerta, de 4 exigidos). Por qué no hay veredicto por sonido |
 
 ## Despliegue y CI/CD
 
@@ -71,12 +86,32 @@ contexto histórico y no reemplazan esas dos fuentes.
 | [Roadmap chunk-first](pedagogy-plans/README.md#roadmap-chunk-first) | Seis tareas separadas para llevar el contrato pedagógico al producto |
 | [Phoneme redesign plan](phoneme-redesign-plan.md) | Plan de rediseño para la experiencia fonética |
 
+## Planes de implementación
+
+[`plans/README.md`](../plans/README.md) es el índice de planes ejecutables (estado, orden y dependencias).
+La serie 5 (035–042, 2026-09-23) cubre el uso de la IA gratuita, el AI Coach y los ejercicios:
+
+| Plan | Tema |
+|------|------|
+| [035](../plans/035-resilient-free-ai-quotas-and-voice.md) | Cuotas gratuitas de Gemini: modelos Lite primero, cooldown, presupuesto diario, caché |
+| [036](../plans/036-structured-output-and-level-aware-prompts.md) | Salida JSON estructurada y prompts ajustados al nivel CEFR |
+| [037](../plans/037-coach-and-exercises-fewer-faster-ai-calls.md) | AI Coach con sets de ejercicios y corrección local primero |
+| [038](../plans/038-elsa-style-phoneme-feedback-on-device.md) | Feedback por sonido en el dispositivo, validado con L2-ARCTIC |
+| [039](../plans/039-local-multi-voice-tts-and-hvpt.md) | Voces locales (Kokoro) y entrenamiento de percepción con muchas voces |
+| [040](../plans/040-coach-corrections-feed-error-recurrence.md) | Las correcciones del AI Coach entran a la cola de errores repetidos |
+| [041](../plans/041-pregenerated-content-bank-from-leftover-quota.md) | Banco de ejercicios pregenerados con la cuota diaria que sobra |
+| [042](../plans/042-report-wrong-ai-feedback.md) | Botón "Esta corrección está mal" y casos de evaluación reales |
+
+Estos documentos conservan el alcance de cada plan. El estado actual, el orden y las dependencias se mantienen
+en [`plans/README.md`](../plans/README.md), para distinguir los planes pendientes de los ya aplicados.
+
 ## Especificaciones y planes
 
 Documentos de diseño e implementación generados en flujos de trabajo asistidos:
 
 - [`superpowers/specs/`](superpowers/specs/) para especificaciones funcionales
 - [`superpowers/plans/`](superpowers/plans/) para planes de implementación
+- [Known Words Triage](plans/2026-09-27-known-words-triage.md) para la declaración de familiaridad y su verificación diferida
 
 ## Notas de uso
 

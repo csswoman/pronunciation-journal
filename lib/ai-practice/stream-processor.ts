@@ -12,6 +12,7 @@ export interface StreamState {
   parts: ContentPart[];
   calls: Map<string, ToolCall>;
   argsAccum: Map<string, string>;
+  widgetIds: Map<string, string>;
 }
 
 export interface ActionHandlers {
@@ -24,7 +25,7 @@ export interface ActionHandlers {
 }
 
 export function makeStreamState(): StreamState {
-  return { parts: [], calls: new Map(), argsAccum: new Map() };
+  return { parts: [], calls: new Map(), argsAccum: new Map(), widgetIds: new Map() };
 }
 
 export function processChunk(
@@ -32,6 +33,15 @@ export function processChunk(
   state: StreamState,
   handlers: ActionHandlers,
 ): "flush" | "no-flush" | "done" | "done-truncated" | { error: string } {
+  // Transport IDs may be time-based and repeat. Each rendered widget is a new
+  // interaction; the generated ID is persisted with the model message.
+  if (chunk.type === 'tool_call_start') {
+    state.widgetIds.delete(chunk.id);
+    if (isValidToolName(chunk.name) && isExerciseTool(chunk.name)) state.widgetIds.set(chunk.id, crypto.randomUUID());
+  }
+  if ('id' in chunk && state.widgetIds.has(chunk.id)) {
+    chunk = { ...chunk, id: state.widgetIds.get(chunk.id)! };
+  }
   switch (chunk.type) {
     case "text_delta": {
       const last = state.parts[state.parts.length - 1];

@@ -248,6 +248,7 @@ async function loadCourse(
   if (!activeLevel) return null
 
   const view = deriveLevelView(activeLevel, completedKeys)
+  if (view.progressPercent === null) return null
 
   const currentUnit = view.units.find((u) => u.status === 'active') ?? null
   const currentLesson =

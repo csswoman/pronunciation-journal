@@ -23,9 +23,15 @@ export type SyncTable =
   | 'immersion_lesson_progress'
   | 'content_srs'
   | 'ed_cluster_attempts'
+  | 'ai_feedback_reports'
 
 /** RPC functions that can be queued for sync via an 'rpc' operation entry. */
-export type SyncRpc = 'apply_word_bank_rating_event' | 'apply_topic_srs_rating_event' | 'apply_essential_word_contrast_observation'
+export type SyncRpc =
+  | 'apply_word_bank_rating_event'
+  | 'apply_topic_srs_rating_event'
+  | 'apply_essential_word_contrast_observation'
+  | 'merge_user_learning_state_snapshot'
+  | 'apply_contrast_session_result'
 
 /**
  * DML operations supported, plus 'rpc' — an outbox entry whose `payload` is
@@ -83,6 +89,14 @@ export interface SyncOutboxEntry {
   nextRetryAt?: string
   /** Number of failed attempts */
   retryCount: number
+  /**
+   * Why a `failed` entry stopped (plan 045): `permanent` = the server rejected
+   * it (RLS, CHECK, invalid payload…); `exhausted` = transient retries ran
+   * out. Absent on entries parked before plan 045.
+   */
+  failureKind?: 'permanent' | 'exhausted'
+  /** Times a bounded recovery requeued this failed entry (plan 045). */
+  recoveryCount?: number
   /** Human-readable reason for the last failure */
   errorMessage?: string
   /** Structured remote error code; used only for deterministic recovery. */

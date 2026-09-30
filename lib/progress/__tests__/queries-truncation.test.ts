@@ -6,7 +6,10 @@ type Row = Record<string, unknown>
 
 const callLog = vi.hoisted(() => ({
   limits: [] as number[],
+  ranges: [] as Array<{ from: number; to: number }>,
+  orders: [] as Array<{ column: string; ascending?: boolean }>,
   gte: [] as Array<{ column: string; value: string }>,
+  lte: [] as Array<{ column: string; value: string }>,
   tables: [] as string[],
 }))
 
@@ -16,6 +19,7 @@ const fixtures = vi.hoisted(() => ({
   contrasts: [] as Row[],
   wordBank: [] as Row[],
   learningItems: [] as Row[],
+  errors: {} as Record<string, unknown>,
 }))
 
 function daysAgo(n: number): string {
@@ -35,6 +39,8 @@ function makeChain(table: string) {
   const state = {
     gteColumn: null as string | null,
     gteValue: null as string | null,
+    lteColumn: null as string | null,
+    lteValue: null as string | null,
     limitN: null as number | null,
     head: false,
   }
@@ -47,13 +53,19 @@ function makeChain(table: string) {
         return typeof raw === 'string' && raw >= state.gteValue!
       })
     }
+    if (state.lteColumn && state.lteValue) {
+      data = data.filter((row) => {
+        const raw = row[state.lteColumn!]
+        return typeof raw === 'string' && raw <= state.lteValue!
+      })
+    }
     if (state.limitN != null) {
       data = data.slice(0, state.limitN)
     }
     if (state.head) {
       return Promise.resolve({ data: null, count: data.length, error: null })
     }
-    return Promise.resolve({ data, count: data.length, error: null })
+    return Promise.resolve({ data, count: data.length, error: fixtures.errors[table] ?? null })
   }
 
   const chain: Record<string, unknown> = {
@@ -64,7 +76,10 @@ function makeChain(table: string) {
     eq: () => chain,
     gt: () => chain,
     not: () => chain,
-    order: () => chain,
+    order: (column: string, options?: { ascending?: boolean }) => {
+      callLog.orders.push({ column, ascending: options?.ascending })
+      return chain
+    },
     gte: (column: string, value: string) => {
       state.gteColumn = column
       state.gteValue = value
@@ -74,6 +89,17 @@ function makeChain(table: string) {
     limit: (n: number) => {
       state.limitN = n
       callLog.limits.push(n)
+      return chain
+    },
+    lte: (column: string, value: string) => {
+      state.lteColumn = column
+      state.lteValue = value
+      callLog.lte.push({ column, value })
+      return chain
+    },
+    range: (from: number, to: number) => {
+      callLog.ranges.push({ from, to })
+      rows = rows.slice(from, to + 1)
       return chain
     },
     then: (resolveFn: (value: unknown) => unknown, rejectFn?: (reason: unknown) => unknown) =>
@@ -112,13 +138,17 @@ import {
 describe('progress query truncation (oversized histories)', () => {
   beforeEach(() => {
     callLog.limits.length = 0
+    callLog.ranges.length = 0
+    callLog.orders.length = 0
     callLog.gte.length = 0
+    callLog.lte.length = 0
     callLog.tables.length = 0
     fixtures.sessions = []
     fixtures.answers = []
     fixtures.contrasts = []
     fixtures.wordBank = []
     fixtures.learningItems = []
+    fixtures.errors = {}
   })
 
   it('keeps only RECENT_ACTIVITY_SESSION_LIMIT sessions when more than 30 exist', async () => {
@@ -173,6 +203,14 @@ describe('progress query truncation (oversized histories)', () => {
     // Only answers inside the window survive the mock gte filter → 2 completed days.
     expect(stats.completedDays30).toBe(2)
     expect(stats.heatmap30.filter((level) => level > 0)).toHaveLength(2)
+  })
+
+  it('does not let a manual checklist alone create an active learning day', async () => {
+    fixtures.sessions = [{ source: 'daily_plan', exercises_total: 0, completed_at: daysAgo(0) }]
+    const stats = await getDailyCompletionStats('user-1')
+    expect(stats.activeDays7).toBe(0)
+    expect(stats.planActivityDays7).toBe(1)
+    expect(stats.completedDays7).toBe(0)
   })
 
   it('counts a zero-exercise daily-plan session as plan activity, not plan completion', async () => {
@@ -232,4 +270,5 @@ describe('progress query truncation (oversized histories)', () => {
     expect(callLog.tables).toContain('learning_items')
     expect(profile.essentialWords).toEqual({ studied: 1, due: 1 })
   })
+
 })

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { biasWordsByChunkAnchors } from '../chunk-word-bridge'
 import type { LearningChunk } from '@/lib/chunk-of-day/types'
 import type { WordBankEntry } from '@/lib/word-bank/types'
+import { LEARNING_CHUNKS } from '@/lib/chunk-of-day/catalog'
 
 function word(id: string): WordBankEntry {
   return { id, text: id, ipa: null } as WordBankEntry
@@ -33,4 +34,15 @@ describe('biasWordsByChunkAnchors', () => {
     const words = [word('core1k:go'), word('core1k:help')]
     expect(biasWordsByChunkAnchors(words, [chunk(['c1k:day'])])).toEqual(words)
   })
+
+  it('biases review words using real A2 and B1 chunks from LEARNING_CHUNKS', () => {
+    const chunkA2 = LEARNING_CHUNKS.find((c) => c.id === '094-no-problem-at-all')!
+    const chunkB1 = LEARNING_CHUNKS.find((c) => c.id === '048-that-s-a-good-point')!
+    expect(chunkA2).toBeDefined()
+    expect(chunkB1).toBeDefined()
+    const words = [word('c1k:water'), word('c1k:point'), word('c1k:problem')]
+    const biased = biasWordsByChunkAnchors(words, [chunkA2, chunkB1])
+    expect(biased.map((w) => w.id)).toEqual(['c1k:point', 'c1k:problem', 'c1k:water'])
+  })
 })
+

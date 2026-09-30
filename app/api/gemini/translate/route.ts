@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSameOrigin, requireUser, checkLayeredRateLimit, validateBody } from "@/lib/api/guards";
-import { callGeminiJson } from "@/lib/gemini/json-route";
+import { callGeminiJson, parseGeminiJson } from "@/lib/gemini/json-route";
 import { MESSAGE_TRANSLATION_SYSTEM_PROMPT, buildMessageTranslationPrompt } from "@/lib/ai-prompts";
+import {
+  buildAiResponseCacheKey,
+  getAiResponseCache,
+  normalizeAiCacheText,
+  setAiResponseCache,
+} from "@/lib/ai-usage/response-cache";
+import { recordSharedCacheHit } from "@/lib/ai-usage/budget";
 
 const RequestSchema = z.object({
   text: z.string().min(1).max(2000),
@@ -31,8 +38,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data, error } = await validateBody(request, RequestSchema);
   if (error) return error as NextResponse;
 
+  const feature = "/api/gemini/translate";
+  const cacheKey = buildAiResponseCacheKey(feature, normalizeAiCacheText(data.text));
+  const cached = ResponseSchema.safeParse(await getAiResponseCache<unknown>(feature, cacheKey));
+  if (cached.success) {
+    void recordSharedCacheHit(feature);
+    return NextResponse.json(cached.data);
+  }
+
   const result = await callGeminiJson({
-    endpoint: "/api/gemini/translate",
+    endpoint: feature,
     userId: user.id,
     params: {
       contents: buildMessageTranslationPrompt(data.text),
@@ -43,17 +58,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         maxOutputTokens: 500,
       },
     },
-    parse: (raw) => {
-      try {
-        const json = JSON.parse(raw.replace(/^```json\s*|\s*```$/g, "").trim());
-        return ResponseSchema.parse(json);
-      } catch {
-        return { translation: raw.trim() };
-      }
-    },
+    schema: ResponseSchema,
+    parse: (raw) => parseGeminiJson(raw, (json) => ResponseSchema.parse(json)),
     failureMessage: "No se pudo obtener la traducción en este momento",
   });
 
   if (result.response) return result.response;
+  void setAiResponseCache(feature, cacheKey, result.data);
   return NextResponse.json(result.data);
 }

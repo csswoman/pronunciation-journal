@@ -16,7 +16,7 @@ export function getCoreUnits(level: CoursePathLevel): CoursePathUnit[] {
 }
 
 export function getCoreLessons(level: CoursePathLevel): CoursePathLesson[] {
-  return getCoreUnits(level).flatMap((u) => u.lessons);
+  return getCoreUnits(level).flatMap((u) => u.lessons).filter((lesson) => !lesson.isOptional);
 }
 
 export function flattenLessons(level: CoursePathLevel): CoursePathLesson[] {
@@ -33,7 +33,7 @@ export interface DerivedUnitView {
 
 export interface DerivedLevelView {
   level: CoursePathLevel;
-  progressPercent: number;
+  progressPercent: number | null;
   completedCoreLessons: number;
   totalCoreLessons: number;
   completedUnits: number;
@@ -108,7 +108,7 @@ export function deriveLevelView(
   ).length;
   const progressPercent =
     totalCoreLessons === 0
-      ? 0
+      ? null
       : Math.round((completedCoreLessons / totalCoreLessons) * 100);
   const completedUnits = units.filter((u) => u.status === "done").length;
 

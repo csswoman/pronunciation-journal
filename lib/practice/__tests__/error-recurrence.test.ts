@@ -3,7 +3,9 @@ import {
   recordErrorPattern,
   duePatterns,
   markPatternRehearsed,
+  retractErrorPattern,
   RECURRENCE_INTERVALS_DAYS,
+  mergeErrorRecurrenceQueues,
   type ErrorRecurrenceQueue,
 } from '@/lib/practice/error-recurrence'
 
@@ -82,6 +84,18 @@ describe('markPatternRehearsed', () => {
     q = markPatternRehearsed(q, 'word_order', true, T0 + 4 * DAY)  // stage 2
     q = markPatternRehearsed(q, 'word_order', true, T0 + 11 * DAY) // retired
     expect(q.entries).toHaveLength(0)
+    expect(q.removedAtByPattern?.word_order).toBe(T0 + 11 * DAY)
+  })
+
+  it('clears a retirement tombstone when the pattern fails again', () => {
+    let q = recordErrorPattern(empty, 'word_order', T0)
+    q = markPatternRehearsed(q, 'word_order', true, T0 + DAY)
+    q = markPatternRehearsed(q, 'word_order', true, T0 + 4 * DAY)
+    q = markPatternRehearsed(q, 'word_order', true, T0 + 11 * DAY)
+
+    q = recordErrorPattern(q, 'word_order', T0 + 12 * DAY)
+    expect(q.removedAtByPattern?.word_order).toBeUndefined()
+    expect(q.entries[0]?.lastFailedAt).toBe(T0 + 12 * DAY)
   })
 
   it('sends the pattern back to stage 0 on failure', () => {
@@ -93,5 +107,82 @@ describe('markPatternRehearsed', () => {
 
   it('ignores a pattern that is not queued', () => {
     expect(markPatternRehearsed(empty, 'word_order', true, T0)).toEqual(empty)
+  })
+})
+
+describe('mergeErrorRecurrenceQueues', () => {
+  it('keeps a server event when a newer device snapshot omits it', () => {
+    const server = recordErrorPattern(empty, 'article_use', T0)
+    const merged = mergeErrorRecurrenceQueues(empty, server, false)
+    expect(merged.entries).toEqual(server.entries)
+  })
+
+  it('keeps a server event when an old outbox snapshot arrives later', () => {
+    const server = recordErrorPattern(empty, 'article_use', T0 + DAY)
+    const delayed = recordErrorPattern(empty, 'word_order', T0)
+    const merged = mergeErrorRecurrenceQueues(delayed, server, false)
+    expect(merged.entries.map((entry) => entry.patternId).sort()).toEqual(['article_use', 'word_order'])
+  })
+
+  it('uses a repair tombstone instead of resurrecting a completed entry', () => {
+    const retired = markPatternRehearsed(
+      markPatternRehearsed(
+        markPatternRehearsed(recordErrorPattern(empty, 'article_use', T0), 'article_use', true, T0 + DAY),
+        'article_use', true, T0 + 4 * DAY,
+      ),
+      'article_use', true, T0 + 11 * DAY,
+    )
+    const stale = recordErrorPattern(empty, 'article_use', T0)
+    expect(mergeErrorRecurrenceQueues(stale, retired, false).entries).toEqual([])
+  })
+
+  it('keeps a partial retraction over a stale copy when the remote snapshot wins the tie', () => {
+    const oneFailure = recordErrorPattern(empty, 'word_order', T0)
+    const twoFailures = recordErrorPattern(oneFailure, 'word_order', T0 + DAY)
+    const retracted = retractErrorPattern(twoFailures, 'word_order', T0 + 2 * DAY)
+
+    const merged = mergeErrorRecurrenceQueues(retracted, twoFailures, true)
+
+    expect(merged.entries[0]?.failCount).toBe(1)
+    expect(merged.entries[0]?.revisionAt).toBe(T0 + 2 * DAY)
+  })
+})
+
+describe('retractErrorPattern', () => {
+  it('decrements failCount from 2 to 1 and keeps the entry in queue', () => {
+    let q = recordErrorPattern(empty, 'word_order', T0)
+    q = recordErrorPattern(q, 'word_order', T0 + DAY)
+    expect(q.entries[0]!.failCount).toBe(2)
+
+    const retracted = retractErrorPattern(q, 'word_order', T0 + 2 * DAY)
+    expect(retracted.entries).toHaveLength(1)
+    expect(retracted.entries[0]!.patternId).toBe('word_order')
+    expect(retracted.entries[0]!.failCount).toBe(1)
+    expect(retracted.removedAtByPattern?.word_order).toBeUndefined()
+  })
+
+  it('removes entry and writes a tombstone when failCount drops from 1 to 0', () => {
+    const q = recordErrorPattern(empty, 'word_order', T0)
+    expect(q.entries[0]!.failCount).toBe(1)
+
+    const retracted = retractErrorPattern(q, 'word_order', T0 + 2 * DAY)
+    expect(retracted.entries).toHaveLength(0)
+    expect(retracted.removedAtByPattern?.word_order).toBe(T0 + 2 * DAY)
+  })
+
+  it('ensures an older remote copy does not resurrect the retracted pattern', () => {
+    const remoteStale = recordErrorPattern(empty, 'word_order', T0)
+    const local = recordErrorPattern(empty, 'word_order', T0)
+    const localRetracted = retractErrorPattern(local, 'word_order', T0 + DAY)
+
+    const merged = mergeErrorRecurrenceQueues(localRetracted, remoteStale, false)
+    expect(merged.entries).toEqual([])
+    expect(merged.removedAtByPattern?.word_order).toBe(T0 + DAY)
+  })
+
+  it('returns queue unchanged if pattern is not in queue', () => {
+    const q = recordErrorPattern(empty, 'word_order', T0)
+    const retracted = retractErrorPattern(q, 'article_use', T0 + DAY)
+    expect(retracted).toBe(q)
   })
 })

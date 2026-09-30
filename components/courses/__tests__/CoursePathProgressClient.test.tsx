@@ -63,15 +63,15 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
       expect(screen.getByText("Comenzar")).toBeInTheDocument();
     });
   });
 
   it("shows resume and review suggestions from Dexie progress", async () => {
     bulkGet.mockResolvedValue([
-      { lessonSlug: "1" },
-      { lessonSlug: "2" },
+      { courseSlug: "a1", lessonSlug: "1" },
+      { courseSlug: "a1", lessonSlug: "2" },
       null,
       null,
       null,
@@ -82,7 +82,7 @@ describe("CoursePathProgressClient", () => {
     render(<CoursePathProgressClient level={COURSE_PATH_CURRICULUM.levels[0]} />);
 
     await waitFor(() => {
-      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
       expect(screen.getAllByText("Continuar").length).toBeGreaterThan(0);
       expect(screen.getByText("Repasa lo que ya aprendiste")).toBeInTheDocument();
       expect(screen.queryByText("Tu lección actual")).not.toBeInTheDocument();
@@ -91,8 +91,8 @@ describe("CoursePathProgressClient", () => {
 
   it("keeps thematic sections collapsible and moves completed lessons into the final disclosure", async () => {
     bulkGet.mockResolvedValue([
-      { lessonSlug: "1" },
-      { lessonSlug: "2" },
+      { courseSlug: "a1", lessonSlug: "1" },
+      { courseSlug: "a1", lessonSlug: "2" },
       null,
       null,
       null,
@@ -122,7 +122,7 @@ describe("CoursePathProgressClient", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent("No hemos podido leer tu progreso en este dispositivo");
       expect(screen.getByRole("button", { name: "Reintentar" })).toBeInTheDocument();
-      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
     });
   });
 
@@ -163,8 +163,8 @@ describe("CoursePathProgressClient", () => {
     };
 
     bulkGet.mockResolvedValue([
-      { lessonSlug: "1" },
-      { lessonSlug: "2" },
+      { courseSlug: "a1", lessonSlug: "1" },
+      { courseSlug: "a1", lessonSlug: "2" },
       null,
       null,
     ]);
@@ -189,7 +189,7 @@ describe("CoursePathProgressClient", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("A1 · FUNDAMENTOS")).toBeInTheDocument();
+      expect(screen.getByText("Fundamentos A1")).toBeInTheDocument();
     });
 
     expect(container.querySelector(".course-path__client-aside")).not.toBeInTheDocument();

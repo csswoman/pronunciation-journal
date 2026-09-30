@@ -1,6 +1,12 @@
 "use client";
 
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
+import {
+  attachPeakAnalyser,
+  isSilentCapture,
+  trackPeak,
+  type PeakTracker,
+} from "@/lib/speech/signal-quality";
 import type { SpeechInputAdapter, SpeechInputResult } from "../types";
 
 export class GeminiAdapter implements SpeechInputAdapter {
@@ -9,6 +15,8 @@ export class GeminiAdapter implements SpeechInputAdapter {
   private mimeType: string = 'audio/webm';
   private aborted = false;
   private inFlight: AbortController | null = null;
+  private peakTracker: PeakTracker = trackPeak();
+  private stopPeakAnalyser: (() => void) | null = null;
 
   constructor(
     private getStream: () => Promise<MediaStream>,
@@ -30,6 +38,9 @@ export class GeminiAdapter implements SpeechInputAdapter {
       : 'audio/wav';
 
     this.aborted = false;
+    this.peakTracker.reset();
+    this.stopPeakAnalyser?.();
+    this.stopPeakAnalyser = attachPeakAnalyser(stream, this.peakTracker);
     this.recorder = new MediaRecorder(stream, { mimeType: this.mimeType });
     this.recorder.ondataavailable = (e) => {
       if (e.data.size > 0) this.chunks.push(e.data);
@@ -42,12 +53,20 @@ export class GeminiAdapter implements SpeechInputAdapter {
       if (!this.recorder) return reject(new Error('Recorder not started'));
 
       this.recorder.onstop = async () => {
+        const measuredSignal = this.stopPeakAnalyser !== null;
+        this.stopPeakAnalyser?.();
+        this.stopPeakAnalyser = null;
+
         // abort() stops the recorder, which fires this handler — bail before
         // spending a transcription request the caller no longer wants.
         if (this.aborted) {
           return reject(new Error(publicAiErrorMessage(undefined, 'cancelled')));
         }
         try {
+          if (measuredSignal && isSilentCapture(this.peakTracker.peak())) {
+            return reject(new Error('no-speech'));
+          }
+
           const blob = new Blob(this.chunks, { type: this.mimeType });
           const audioDataUrl = await blobToBase64(blob);
 
@@ -57,7 +76,7 @@ export class GeminiAdapter implements SpeechInputAdapter {
           // latest) server-side, so allow a generous budget before giving up.
           const timeoutId = window.setTimeout(
             () => controller.abort(new DOMException('Transcription timed out', 'TimeoutError')),
-            30000
+            50_000
           );
 
           let res: Response;
@@ -81,8 +100,12 @@ export class GeminiAdapter implements SpeechInputAdapter {
           }
 
           const data = await res.json();
+          const transcript = String(data.transcript ?? '').trim();
+          if (!transcript) {
+            return reject(new Error('no-speech'));
+          }
           resolve({
-            transcript: String(data.transcript ?? '').trim(),
+            transcript,
             source: 'gemini',
           });
         } catch (err) {
@@ -117,6 +140,8 @@ export class GeminiAdapter implements SpeechInputAdapter {
     this.aborted = true;
     this.inFlight?.abort();
     this.inFlight = null;
+    this.stopPeakAnalyser?.();
+    this.stopPeakAnalyser = null;
     try {
       this.recorder?.stop();
     } catch {

@@ -33,12 +33,18 @@ import {
   getCellFromPoint,
 } from './grid-helpers'
 
+import type { WordSearchItem } from '@/lib/exercises/word-search/types'
+import WordFoundBanner from './WordFoundBanner'
+
 interface Props {
   grid: string[][]
   placements: WordPlacement[]
   foundWordIds: Set<string>
-  activeWordId: string | null
+  /** Cells to spotlight: an inspected found word or the letters revealed by a hint. */
+  highlightedCells: CellCoordinate[]
   onSelectPath: (path: CellCoordinate[]) => WordSelectionResult
+  lastFoundItem?: WordSearchItem | null
+  onDismissLastFound?: () => void
 }
 
 interface PathFeedback {
@@ -50,8 +56,10 @@ export default function WordSearchGrid({
   grid,
   placements,
   foundWordIds,
-  activeWordId,
+  highlightedCells,
   onSelectPath,
+  lastFoundItem,
+  onDismissLastFound,
 }: Props) {
   const size = grid.length
   const [pointerStart, setPointerStart] = useState<CellCoordinate | null>(null)
@@ -83,15 +91,10 @@ export default function WordSearchGrid({
     return map
   }, [placements, foundWordIds])
 
-  const activeWordCellSet = useMemo(() => {
-    const cells = new Set<string>()
-    if (!activeWordId) return cells
-    const placement = placements.find((item) => item.wordId === activeWordId)
-    for (const coordinate of placement?.path ?? []) {
-      cells.add(coordinateKey(coordinate))
-    }
-    return cells
-  }, [activeWordId, placements])
+  const activeWordCellSet = useMemo(
+    () => new Set(highlightedCells.map(coordinateKey)),
+    [highlightedCells],
+  )
 
   const selectedCellSet = useMemo(() => {
     const cells = new Set(pointerPath.map(coordinateKey))
@@ -248,13 +251,13 @@ export default function WordSearchGrid({
   const gridMaxWidth = size <= 9 ? '32rem' : '34rem'
 
   return (
-    <section className="flex w-full flex-col gap-3" aria-labelledby="word-search-board-title">
-      <div className="flex flex-col gap-1">
-        <h2 id="word-search-board-title" className="text-h4 font-bold text-fg">
-          Tablero
+    <section className="flex w-full min-w-0 flex-col justify-between gap-4 rounded-3xl border border-border-subtle bg-surface-raised p-5 sm:p-6 shadow-sm" aria-labelledby="word-search-board-title">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-border-subtle/40">
+        <h2 id="word-search-board-title" className="font-mono text-caption font-bold uppercase tracking-wider text-fg-subtle">
+          TABLERO
         </h2>
-        <p id="word-search-board-help" className="max-w-prose text-pretty text-body-sm text-fg-muted">
-          Arrastra sobre una palabra o toca su primera y última letra. Usa las flechas para navegar con el teclado.
+        <p id="word-search-board-help" className="text-caption text-fg-subtle">
+          arrastra sobre la palabra o toca su primera y última letra
         </p>
       </div>
 
@@ -265,7 +268,7 @@ export default function WordSearchGrid({
         aria-describedby="word-search-board-help"
         aria-rowcount={size}
         aria-colcount={size}
-        className="grid w-full select-none gap-1 self-center rounded-2xl border border-border-subtle bg-surface-sunken p-2 shadow-xs sm:gap-1.5 sm:p-3"
+        className="grid w-full select-none gap-1.5 self-center rounded-2xl border border-border-subtle/80 bg-surface-sunken/80 p-3 shadow-inner sm:gap-2 sm:p-4"
         style={{
           gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
           touchAction: 'none',
@@ -329,6 +332,10 @@ export default function WordSearchGrid({
           </div>
         ))}
       </div>
+
+      {lastFoundItem && onDismissLastFound ? (
+        <WordFoundBanner item={lastFoundItem} onDismiss={onDismissLastFound} />
+      ) : null}
 
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         {interactionMessage}

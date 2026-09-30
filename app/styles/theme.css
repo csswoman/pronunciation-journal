@@ -142,6 +142,7 @@
      the display-word/display-ipa pair were defined but never exposed. */
   --text-label:  var(--text-size-label);
   --text-kicker: var(--text-size-kicker);
+  --text-kicker-lg: var(--text-size-kicker-lg);
   --text-tiny:   var(--text-size-tiny);
   --text-display-word: var(--text-size-display-word);
   --text-display-ipa:  var(--text-size-display-ipa);

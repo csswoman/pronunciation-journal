@@ -89,7 +89,7 @@ export function SessionDone({
           <StatBlock
             stats={[
               { label: 'Aprendidas hoy', value: stats.newToday },
-              { label: 'Repasadas', value: Math.max(0, practiced - stats.newToday) },
+              { label: 'Repasadas', value: sessionSummary?.reviewed ?? 0 },
               {
                 label: 'Sin fallos',
                 value: Math.max(0, practiced - (strugglingWords?.length ?? 0)),

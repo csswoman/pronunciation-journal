@@ -61,6 +61,7 @@ export function getDeckBySlug(slug: string): GrammarStudyDeckData | null {
   // have to keep `index` in sync by hand.
   return {
     meta: result.data.meta ?? DEFAULT_META,
+    taskSkill: result.data.taskSkill,
     topicId: theoryTopicForDeck(slug),
     sounds: result.data.sounds,
     pronunciationTargetIds: authoredTargetIds.map(targetId),

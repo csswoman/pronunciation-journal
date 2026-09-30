@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import { SendHorizonal } from "@/components/icons";
+import { Mic, SendHorizonal } from "@/components/icons";
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/cn";
 
@@ -125,15 +125,23 @@ export default function CustomPromptPanel({
           placeholder={placeholder}
           disabled={isDisabled}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-body-sm leading-relaxed focus:outline-none max-h-40 py-1 text-fg placeholder:text-fg-subtle"
+          className="flex-1 resize-none bg-transparent text-body-sm leading-relaxed focus:outline-none max-h-40 py-1.5 px-1 text-fg placeholder:text-fg-subtle"
         />
+
+        <button
+          type="button"
+          aria-label="Grabar audio"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full text-fg-muted hover:bg-surface-sunken hover:text-fg transition-colors cursor-pointer"
+        >
+          <Mic size={18} strokeWidth={2} />
+        </button>
 
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!hasText || isDisabled}
           aria-label="Enviar"
-          className="flex h-[36px] w-[36px] flex-shrink-0 items-center justify-center rounded-full border-none bg-primary text-white shadow-xs transition-transform duration-150 hover:scale-105 active:scale-95 disabled:bg-surface-sunken disabled:text-fg-subtle disabled:opacity-40 disabled:hover:scale-100 cursor-pointer"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full border-none bg-primary text-white shadow-xs transition-transform duration-150 hover:scale-105 active:scale-95 disabled:bg-surface-sunken disabled:text-fg-subtle disabled:opacity-40 disabled:hover:scale-100 cursor-pointer"
         >
           {isDisabled
             ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />

@@ -1,7 +1,6 @@
 import { AuthInput } from "@/components/auth/AuthInput";
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthGoogleButton } from "@/components/auth/AuthGoogleButton";
-import { AuthGuestButton } from "@/components/auth/AuthGuestButton";
 import { SocialDivider } from "@/components/auth/SocialDivider";
 
 interface RegisterFormProps {
@@ -14,7 +13,7 @@ interface RegisterFormProps {
   pending: boolean;
   onSubmit: (e: React.FormEvent) => void;
   onGoogle: () => void;
-  onGuest: () => void;
+  onGuest?: () => void;
   showGuest?: boolean;
   submitLabel?: string;
   googleLabel?: string;
@@ -30,14 +29,15 @@ export function RegisterForm({
   pending,
   onSubmit,
   onGoogle,
-  onGuest,
-  showGuest = true,
   submitLabel = "Crear cuenta",
   googleLabel,
 }: RegisterFormProps) {
   return (
     <form onSubmit={onSubmit} className="flex flex-col">
-      <div className="flex flex-col gap-3">
+      <AuthGoogleButton onClick={onGoogle} pending={pending} label={googleLabel} />
+      <SocialDivider label="o con tu correo" />
+
+      <div className="flex flex-col gap-4">
         <AuthInput
           type="text"
           label="Nombre"
@@ -70,14 +70,7 @@ export function RegisterForm({
       <div className="mt-6">
         <AuthButton label={submitLabel} pending={pending} />
       </div>
-
-      <div className="mt-8">
-        <SocialDivider />
-        <div className="mt-4 flex flex-col gap-2.5">
-          <AuthGoogleButton onClick={onGoogle} pending={pending} label={googleLabel} />
-          {showGuest ? <AuthGuestButton onClick={onGuest} pending={pending} /> : null}
-        </div>
-      </div>
     </form>
   );
 }
+

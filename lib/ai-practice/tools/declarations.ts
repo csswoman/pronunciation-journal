@@ -1,6 +1,8 @@
 // Gemini function-calling declarations — the contract we send to the model.
 // Kept apart from registry.ts, which validates what comes back.
 
+import { ERROR_PATTERN_IDS } from "@/lib/exercises/error-patterns";
+
 export const TOOL_DECLARATIONS = [
   {
     name: "render_multiple_choice",
@@ -143,6 +145,11 @@ export const TOOL_DECLARATIONS = [
             corrected: { type: "string", description: "The fixed or more natural wording." },
             rule:      { type: "string", description: "One short sentence in SPANISH explaining why." },
             kind:      { type: "string", enum: ["error", "unnatural"] },
+            errorPattern: {
+              type: "string",
+              enum: [...ERROR_PATTERN_IDS],
+              description: "Only when kind is \"error\": the single error type that best describes this mistake. Omit for \"unnatural\".",
+            },
           },
           required: ["original", "corrected", "rule", "kind"],
         },

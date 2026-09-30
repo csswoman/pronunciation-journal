@@ -22,6 +22,7 @@ import { resolveRecommendedMode, type RecommendedResult } from '@/lib/practice/p
 import { emptyPracticeHubData, type PracticeHubData } from '@/lib/practice/hub-data-types'
 import PracticeHubHeader, { type PracticeFilter } from './PracticeHubHeader'
 import PracticeOptionsGrid from './PracticeOptionsGrid'
+import NewChunkInvitation from '@/components/daily/NewChunkInvitation'
 
 interface Props {
   fromDaily: boolean
@@ -144,12 +145,14 @@ export default function PracticeHubClient({ fromDaily, serverData }: Props) {
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />
+      <NewChunkInvitation userId={user?.id ?? null} />
       <div className="flex flex-col gap-5">
         {activityUnavailable && (
           <p role="status" className="font-caption text-fg-muted">
             No pudimos cargar tu actividad reciente. Aún puedes empezar esta práctica o elegir otra.
           </p>
         )}
+        <h2 className="text-h3 text-fg">Elige qué practicar</h2>
         <PracticeOptionsGrid
           activeFilter={activeFilter}
           recommendation={recommendation}

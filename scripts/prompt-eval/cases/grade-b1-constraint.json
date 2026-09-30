@@ -1,0 +1,1 @@
+{"id":"grade-b1-constraint","kind":"grade","input":{"targetItem":"visit","taskPrompt":"Describe a completed visit in the past.","production":"I visit my aunt every Sunday.","modality":"written","level":"B1","constraintCheck":"Use the past simple for a completed visit."},"checks":{"correct":false,"constraintMet":false}}

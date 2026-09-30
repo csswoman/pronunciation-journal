@@ -1,6 +1,9 @@
 export const AI_UNAVAILABLE_MESSAGE =
   "La función de IA no está disponible ahora mismo. Suele ser algo puntual: inténtalo de nuevo en un momento.";
 
+export const AI_TRANSCRIPTION_TIMEOUT_MESSAGE =
+  "La transcripción tardó demasiado. Comprueba tu conexión y vuelve a grabar una frase corta.";
+
 export const AI_COACH_TURN_FAILED_MESSAGE =
   "El coach no pudo preparar tu práctica esta vez. Suele ser algo puntual de la conexión o del servicio: vuelve a intentarlo.";
 
@@ -45,6 +48,16 @@ export const AI_QUOTA_EXHAUSTED_MESSAGE =
 export const AI_COACH_RATE_LIMITED_MESSAGE =
   "Enviaste varios mensajes muy seguidos. Espera unos segundos y vuelve a intentarlo — tu conversación sigue aquí.";
 
+export function aiDailyLimitMessage(resetAt: Date): string {
+  const resetTime = new Intl.DateTimeFormat("es-PE", {
+    timeZone: "America/Los_Angeles",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(resetAt);
+  return `Alcanzaste el límite diario de solicitudes de IA. Se restablece a las ${resetTime}, hora del Pacífico.`;
+}
+
 export function publicAiErrorMessage(
   status?: number,
   message = "",
@@ -53,8 +66,19 @@ export function publicAiErrorMessage(
   if (status === 401) {
     return AI_SESSION_REQUIRED_MESSAGE;
   }
+  if (status === 504) {
+    return AI_TRANSCRIPTION_TIMEOUT_MESSAGE;
+  }
   if (status === 429 || isQuotaLikeError(message)) {
     return AI_QUOTA_EXHAUSTED_MESSAGE;
+  }
+  if (
+    message === AI_UNAVAILABLE_MESSAGE ||
+    message === AI_TRANSCRIPTION_TIMEOUT_MESSAGE ||
+    message === AI_SESSION_REQUIRED_MESSAGE ||
+    message === AI_QUOTA_EXHAUSTED_MESSAGE
+  ) {
+    return message;
   }
   return fallback;
 }

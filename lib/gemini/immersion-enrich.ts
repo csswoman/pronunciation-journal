@@ -35,6 +35,6 @@ export async function enrichImmersionLesson(
       },
     },
     parseImmersionEnrichment,
-    { shouldRetry },
+    { shouldRetry, feature: 'immersion-enrich' },
   )
 }

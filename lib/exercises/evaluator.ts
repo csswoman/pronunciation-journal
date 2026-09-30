@@ -9,6 +9,7 @@
 import type { ExerciseDesign, EvaluationResult, AnswerCategory } from "./design";
 import type { ExerciseMode } from "./taxonomy";
 import { CEFRLevel, normalizeCEFR, cefrDistance, cefrToNumber } from "./cefr";
+import { areContractionEquivalent } from "./contractions";
 
 /**
  * Normalize answer for comparison:
@@ -111,24 +112,28 @@ export function evaluateExercise(
   }
 
   // 1. Exact match
-  if (normalized === expectedNormalized) {
+  if (normalized === expectedNormalized || areContractionEquivalent(userAnswer, design.correctAnswer)) {
     return correctResult(userAnswer, design, "Exact match", userLevel);
   }
 
   // 2. Check acceptable variants
   if (design.acceptableAlternatives) {
     const match = design.acceptableAlternatives.find(
-      alt => normalizeAnswer(alt.value) === normalized
+      alt =>
+        normalizeAnswer(alt.value) === normalized ||
+        areContractionEquivalent(userAnswer, alt.value)
     );
     if (match) {
-      return correctResult(userAnswer, design, match.reason);
+      return correctResult(userAnswer, design, match.reason, userLevel);
     }
   }
 
   // 3. Check common wrong answers (critical for pedagogy)
   if (design.commonWrongAnswers) {
     const match = design.commonWrongAnswers.find(
-      cwa => normalizeAnswer(cwa.value) === normalized
+      cwa =>
+        normalizeAnswer(cwa.value) === normalized ||
+        areContractionEquivalent(userAnswer, cwa.value)
     );
     if (match) {
       return wrongResult(userAnswer, design, match.feedback, "valid_but_wrong");

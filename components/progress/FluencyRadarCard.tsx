@@ -1,28 +1,18 @@
 import Link from "next/link"
 import { Radar } from "@/components/icons"
 
-import { cn } from '@/lib/cn'
-import type { FluencyScores, SkillKey } from '@/lib/progress/fluency-scores'
+import type { FluencyScores, SkillKey, SkillScore } from '@/lib/progress/fluency-scores'
 import { SKILL_KEYS } from '@/lib/progress/fluency-scores'
 
+import { FluencyDimensionList, SKILL_ORDER } from './FluencyDimensionList'
 import { ProgressCard, ProgressCardHeader } from './ProgressCard'
 
-export type { FluencyScores, SkillKey }
+export type { FluencyScores, SkillKey, SkillScore }
 
 interface Props {
   scores?: FluencyScores | null
   comparisonLabel?: string
 }
-
-const SKILL_ORDER: { key: SkillKey; label: string; source: string; href: string }[] = [
-  { key: 'pronunciation', label: 'Pronunciación', source: 'Sound Lab: fonemas evaluados', href: '/practice' },
-  { key: 'grammar', label: 'Gramática', source: 'Decks: patrones estructurales', href: '/practice/decks' },
-  { key: 'vocabulary', label: 'Vocabulario', source: 'Diccionario: retención activa', href: '/words' },
-  { key: 'listening', label: 'Escucha', source: 'Práctica diaria: percepción y dictado', href: '/daily' },
-  { key: 'speaking', label: 'Habla', source: 'Práctica diaria: producción oral', href: '/daily' },
-  { key: 'reading', label: 'Lectura', source: 'Cursos: comprensión de textos', href: '/courses' },
-  { key: 'writing', label: 'Escritura', source: 'Práctica diaria: producción escrita', href: '/daily' },
-]
 
 const SIZE = 380
 const CENTER = SIZE / 2
@@ -37,17 +27,23 @@ function polarPoint(index: number, total: number, ratio: number) {
   }
 }
 
+/** Extract the numeric value for the radar polygon after evidence is complete. */
+function scoreValue(s: SkillScore): number {
+  return s.score ?? 0
+}
+
 function RadarChart({ scores }: { scores: FluencyScores }) {
   const total = SKILL_ORDER.length
-  const points = SKILL_ORDER.map((s, i) => polarPoint(i, total, scores[s.key] / 100))
+  const points = SKILL_ORDER.map((s, i) => polarPoint(i, total, scoreValue(scores[s.key]) / 100))
   const polygon = points.map((p) => `${p.x},${p.y}`).join(' ')
+  const hasCompleteScores = SKILL_ORDER.every((s) => scores[s.key].score != null)
 
   return (
     <svg
       viewBox={`0 0 ${SIZE} ${SIZE}`}
       className="w-full max-w-[380px]"
       role="img"
-      aria-label="Gráfico de radar del balance de habilidades en 6 dimensiones"
+      aria-label={`Gráfico de radar del balance de habilidades en ${total} dimensiones`}
     >
       {RINGS.map((ratio, i) => {
         const ring = SKILL_ORDER.map((_, j) => {
@@ -80,20 +76,24 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
         )
       })}
 
-      <polygon
-        points={polygon}
-        fill="color-mix(in oklch, var(--primary) 22%, transparent)"
-        stroke="var(--primary)"
-        strokeWidth={2}
-        strokeLinejoin="round"
-      />
+      {hasCompleteScores ? (
+        <polygon
+          points={polygon}
+          fill="color-mix(in oklch, var(--primary) 22%, transparent)"
+          stroke="var(--primary)"
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+      ) : null}
 
       {SKILL_ORDER.map((s, i) => {
         const p = points[i]
         const labelPos = polarPoint(i, total, 1.18)
         return (
           <g key={s.key}>
-            <circle cx={p.x} cy={p.y} r={3.5} fill="var(--primary)" />
+            {scores[s.key].score != null ? (
+              <circle cx={p.x} cy={p.y} r={3.5} fill="var(--primary)" />
+            ) : null}
             <text
               x={labelPos.x}
               y={labelPos.y}
@@ -111,75 +111,6 @@ function RadarChart({ scores }: { scores: FluencyScores }) {
         )
       })}
     </svg>
-  )
-}
-
-function DimensionList({ scores }: { scores: FluencyScores }) {
-  const values = SKILL_ORDER.map((s) => scores[s.key])
-  const max = Math.max(...values)
-  const min = Math.min(...values)
-  const best = SKILL_ORDER.find((s) => scores[s.key] === max)!
-  const worst = SKILL_ORDER.find((s) => scores[s.key] === min)!
-
-  return (
-    <div className="flex flex-col gap-2.5">
-      {/* 2-column compact grid for the 6 skills */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {SKILL_ORDER.map((s) => {
-          const val = scores[s.key]
-          const isBest = val === max && max > 0
-          const isWorst = val === min && min < max
-          return (
-            <Link
-              key={s.key}
-              href={s.href}
-              className={cn(
-                'group flex min-h-[44px] items-center justify-between gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2 transition-colors hover:bg-surface-raised focus-ring',
-                isBest && 'border-[color-mix(in_oklch,var(--success)_40%,transparent)]',
-                isWorst && 'border-[color-mix(in_oklch,var(--warning)_40%,transparent)]',
-              )}
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1 text-body-sm font-semibold text-fg">
-                  <span className="truncate">{s.label}</span>
-                  <span className="text-caption font-normal text-fg-subtle opacity-60 transition-transform group-hover:translate-x-0.5">
-                    →
-                  </span>
-                </div>
-                <div className="truncate text-tiny text-fg-subtle">{s.source}</div>
-              </div>
-              <div
-                className={cn(
-                  'shrink-0 text-body-md font-bold tabular-nums text-primary',
-                  isBest && 'text-success',
-                  isWorst && 'text-warning',
-                )}
-              >
-                {val}
-              </div>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Highlights: Best & Area to reinforce */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <div className="rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--success)_25%,transparent)] bg-success-soft/70 px-3 py-2 text-caption text-success">
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-body-sm font-bold text-success-value">{best.label}</span>
-            <span className="font-semibold text-success-value">{max}/100</span>
-          </div>
-          <p className="mt-0.5 text-tiny opacity-90">Tu dimensión más consolidada.</p>
-        </div>
-        <div className="rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--warning)_25%,transparent)] bg-warning-soft/70 px-3 py-2 text-caption text-warning">
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-body-sm font-bold text-warning-value">{worst.label}</span>
-            <span className="font-semibold text-warning-value">{min}/100</span>
-          </div>
-          <p className="mt-0.5 text-tiny opacity-90">Prioridad recomendada para tu práctica.</p>
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -231,14 +162,17 @@ function EmptyRadar() {
 
 export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
   const isEmpty =
-    !scores || SKILL_KEYS.every((s) => !scores[s] || scores[s] <= 0)
+    !scores || SKILL_KEYS.every((s) => {
+      const sk = scores[s]
+      return !sk || (sk.score == null && sk.evidenceCount <= 0)
+    })
 
   return (
     <ProgressCard className="gap-5">
       <div className="flex items-start justify-between gap-3">
         <ProgressCardHeader
           icon={<Radar size={16} />}
-          eyebrow="6 dimensiones"
+          eyebrow={`${SKILL_ORDER.length} dimensiones`}
           title="Balance de skills"
         />
         {!isEmpty && comparisonLabel ? (
@@ -278,7 +212,7 @@ export function FluencyRadarCard({ scores, comparisonLabel }: Props) {
             <RadarChart scores={scores!} />
           </div>
           <div className="flex-1 min-w-0">
-            <DimensionList scores={scores!} />
+            <FluencyDimensionList scores={scores!} />
           </div>
         </div>
       )}

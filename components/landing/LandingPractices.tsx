@@ -1,56 +1,59 @@
 // Planned structure:
 // <LandingPractices>
-//   <LandingSectionHeading />
-//   <PracticeCard /> ×4      — one per way of practising
-import { getIllustration } from "@/lib/illustrations/registry";
-import { LandingSection, LandingSectionHeading } from "@/components/landing/LandingSection";
-import { LANDING_PRACTICES, type LandingPractice } from "@/lib/landing/content";
+//   Asymmetric Section Header (Kicker, Bricolage Title, Description)
+//   Asymmetric 2x2 Bento Grid:
+//     Row 1: PracticeCardPhonetics (Coral) + PracticeCardSpeaking (Lilac)
+//     Row 2: PracticeCardMemory (Mint) + PracticeCardDailyPlan (Butter)
+//   PracticeExerciseBar (8 exercise modes + IA note)
+import { PracticeCardPhonetics } from "@/components/landing/practices/PracticeCardPhonetics";
+import { PracticeCardSpeaking } from "@/components/landing/practices/PracticeCardSpeaking";
+import { PracticeCardMemory } from "@/components/landing/practices/PracticeCardMemory";
+import { PracticeCardDailyPlan } from "@/components/landing/practices/PracticeCardDailyPlan";
+import { PracticeExerciseBar } from "@/components/landing/practices/PracticeExerciseBar";
 
 export function LandingPractices() {
   return (
-    <LandingSection id="practicas" tone="sunken">
-      <LandingSectionHeading
-        kicker="Qué incluye"
-        title="Cuatro formas de practicar. Un solo perfil."
-        lead="Cada una produce una señal distinta sobre cómo hablas. Todas alimentan la misma cola de repaso, así que nada se practica dos veces por accidente."
-      />
-
-      <div className="mt-[var(--space-10)] grid gap-[var(--space-4)] sm:grid-cols-2">
-        {LANDING_PRACTICES.map((practice) => (
-          <PracticeCard key={practice.title} practice={practice} />
-        ))}
+    <section id="que-incluye" aria-labelledby="practices-title" className="w-full">
+      {/* Asymmetric Section Header */}
+      <div className="flex flex-col gap-4">
+        <span className="font-mono text-xs font-semibold tracking-widest text-[var(--text-tertiary)] uppercase">
+          Qué incluye
+        </span>
+        <h2
+          id="practices-title"
+          className="text-balance font-display text-3xl font-extrabold tracking-tight text-[var(--text-strong)] sm:text-4xl lg:text-5xl lg:leading-[1.1]"
+        >
+          Cuatro pilares. Un solo perfil de tu voz.
+        </h2>
+        <p className="max-w-[65ch] text-pretty text-sm text-[var(--text-secondary)] sm:text-base leading-relaxed">
+          Oyes lo que el español no te enseñó a oír, lo dices en voz alta, la
+          app recuerda cada detalle y cada mañana te arma el plan.
+        </p>
       </div>
-    </LandingSection>
-  );
-}
 
-function PracticeCard({ practice }: { practice: LandingPractice }) {
-  const Illustration = getIllustration(practice.illustration);
+      {/* Asymmetric 2x2 Bento Grid */}
+      <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-12 sm:mt-12 sm:gap-6">
+        {/* Row 1 */}
+        <div className="lg:col-span-7">
+          <PracticeCardPhonetics />
+        </div>
+        <div className="lg:col-span-5">
+          <PracticeCardSpeaking />
+        </div>
 
-  return (
-    <article className="flex flex-col gap-[var(--space-3)] rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[var(--surface-raised)] p-[var(--space-6)]">
-      {/* Registry art is monochrome currentColor and has no intrinsic size:
-          cap the box and let object-contain preserve each icon's own ratio. */}
-      <Illustration
-        aria-hidden
-        className="h-14 w-14 object-contain object-left text-[var(--accent-1)]"
-      />
-      <h3 className="font-[var(--font-h3)] text-[var(--text-primary)]">
-        {practice.title}
-      </h3>
-      <p className="font-[var(--font-body-sm)] text-[var(--text-secondary)] text-pretty">
-        {practice.description}
-      </p>
-      <ul className="mt-auto flex flex-wrap gap-[var(--space-2)] pt-[var(--space-2)]">
-        {practice.tags.map((tag) => (
-          <li
-            key={tag}
-            className="rounded-[var(--radius-full)] bg-[var(--surface-sunken)] px-[var(--space-3)] py-[var(--space-1)] font-[var(--font-tiny)] text-[var(--text-tertiary)]"
-          >
-            {tag}
-          </li>
-        ))}
-      </ul>
-    </article>
+        {/* Row 2 */}
+        <div className="lg:col-span-5">
+          <PracticeCardMemory />
+        </div>
+        <div className="lg:col-span-7">
+          <PracticeCardDailyPlan />
+        </div>
+      </div>
+
+      {/* 8 Exercise Modes Horizontal Bar */}
+      <div className="mt-6 sm:mt-8">
+        <PracticeExerciseBar />
+      </div>
+    </section>
   );
 }

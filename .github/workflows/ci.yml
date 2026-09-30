@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main, develop, "feature/**"]
+    branches: [main, dev, "feature/**"]
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
 
 permissions:
   contents: read
@@ -191,8 +191,11 @@ jobs:
     steps:
       - name: Check workflow status
         run: |
-          if [ "${{ needs.lint-and-test.result }}" != "success" ]; then
-            echo "❌ Lint/Test failed"
+          if [ "${{ needs.lint-and-test.result }}" != "success" ] || \
+             [ "${{ needs.security-audit.result }}" != "success" ] || \
+             [ "${{ needs.build.result }}" != "success" ] || \
+             [ "${{ needs.accessibility-audit.result }}" != "success" ]; then
+            echo "❌ CI Pipeline failed"
             exit 1
           fi
           echo "✅ CI Pipeline passed"

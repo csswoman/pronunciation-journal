@@ -125,3 +125,51 @@ describe("extractTurnConcept", () => {
     expect(extractTurnConcept(calls)).toBeNull();
   });
 });
+
+// ─── pickCorrectionToRecord ───────────────────────────────────────────────────
+
+import { pickCorrectionToRecord } from "../correction";
+import type { ErrorPatternId } from "@/lib/exercises/error-patterns";
+
+describe("pickCorrectionToRecord", () => {
+  it("returns the errorPattern when kind is error and not yet recorded", () => {
+    expect(
+      pickCorrectionToRecord(
+        { original: "a", corrected: "b", rule: "r", kind: "error", errorPattern: "spelling" },
+        new Set(),
+      ),
+    ).toBe("spelling");
+  });
+
+  it("returns undefined when the pattern was already recorded", () => {
+    const recorded = new Set<ErrorPatternId>(["spelling"]);
+    expect(
+      pickCorrectionToRecord(
+        { original: "a", corrected: "b", rule: "r", kind: "error", errorPattern: "spelling" },
+        recorded,
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when kind is 'unnatural'", () => {
+    expect(
+      pickCorrectionToRecord(
+        { original: "a", corrected: "b", rule: "r", kind: "unnatural", errorPattern: "spelling" as ErrorPatternId },
+        new Set(),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when errorPattern is absent", () => {
+    expect(
+      pickCorrectionToRecord(
+        { original: "a", corrected: "b", rule: "r", kind: "error" },
+        new Set(),
+      ),
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when correction is null", () => {
+    expect(pickCorrectionToRecord(null, new Set())).toBeUndefined();
+  });
+});

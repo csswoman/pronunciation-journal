@@ -16,6 +16,7 @@ const NAME_TO_KEY: Record<string, IllustrationKey> = {
   "pupil reading aloud": "domainReading",
   "writing in a notebook": "domainWriting",
   "teaching a friend": "journalLanguageBook",
+  "professional english": "categoryProfessional",
   celebrating: "stateCompletado",
 };
 
@@ -31,11 +32,11 @@ export function KoboyoSlot({
     return (
       <div
         className={cn(
-          "flex h-56 w-56 items-center justify-center sm:h-64 sm:w-64",
+          "flex h-56 w-56 items-center justify-center sm:h-64 sm:w-64 text-[var(--text-primary)]",
           className
         )}
       >
-        <Illustration className="h-48 w-auto text-[var(--text-primary)] transition-transform hover:scale-105 duration-300" />
+        <Illustration className="h-48 w-auto text-current transition-transform hover:scale-105 duration-300" />
       </div>
     );
   }
@@ -44,11 +45,11 @@ export function KoboyoSlot({
     return (
       <div
         className={cn(
-          "flex h-32 w-full items-center justify-center",
+          "flex h-32 w-full items-center justify-center text-[var(--text-primary)]",
           className
         )}
       >
-        <Illustration className="h-28 w-auto text-[var(--text-primary)]" />
+        <Illustration className="h-28 w-auto text-current" />
       </div>
     );
   }
@@ -56,11 +57,11 @@ export function KoboyoSlot({
   return (
     <div
       className={cn(
-        "flex h-28 w-full items-center justify-center",
+        "flex h-28 w-full items-center justify-center text-[var(--text-primary)]",
         className
       )}
     >
-      <Illustration className="h-24 w-auto text-[var(--text-primary)]" />
+      <Illustration className="h-24 w-auto text-current" />
     </div>
   );
 }

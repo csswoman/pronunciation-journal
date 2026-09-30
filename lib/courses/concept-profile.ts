@@ -13,7 +13,23 @@ export interface AssessmentConcept {
   goal?: string;
 }
 
+/** One evaluated answer kept as concept evidence (plan 050). */
+export interface ConceptEvidenceItem {
+  /** Authored task dimension. Unattributed legacy evidence stays separate. */
+  taskSkill?: import('@/lib/progress/activity-types').SkillTag;
+  /** Unique attempt identity: replays of the same attempt count once. */
+  attemptId: string;
+  /** Question/content identity: repeating one item is one piece of evidence. */
+  contentId: string;
+  correct: boolean;
+  /** ISO timestamp of the answer; the latest answer per content wins. */
+  at: string;
+}
+
 export interface ConceptSignal {
+  masteryBySkill?: Partial<Record<import('@/lib/progress/activity-types').SkillTag, {
+    correct: number; total: number; status: 'mastered' | 'review';
+  }>>;
   lessonSlug: string;
   level: CefrLevelId;
   title: string;
@@ -25,6 +41,11 @@ export interface ConceptSignal {
   /** When set, Daily study_deck ignores this review signal until due. */
   verificationDueAt?: string;
   source?: ConceptSignalSource;
+  /**
+   * Bounded exercise evidence behind `correct`/`total`. When present, those
+   * counts and `status` are derived from it (see lib/progress/concept-evidence).
+   */
+  evidence?: ConceptEvidenceItem[];
 }
 
 export function deriveConceptSignal(
@@ -33,11 +54,10 @@ export function deriveConceptSignal(
   evidence: { correct: number; total: number },
   assessedAt: string,
 ): ConceptSignal {
-  const hasPerfectEvidence = evidence.total > 0 && evidence.correct === evidence.total;
-  // Quiz evidence wins over a humble self-rating: perfect answers → mastered
-  // even if the learner marked the topic as unknown before the questions.
-  const status: ConceptStatus = hasPerfectEvidence
-    ? "mastered"
+  // Placement aggregates do not carry distinct content/attempt identities.
+  // Keep their result without asserting the mastery reserved for practice evidence.
+  const status: ConceptStatus = evidence.correct > 0
+    ? "review"
     : selfRating === "unknown"
       ? "learn"
       : "review";

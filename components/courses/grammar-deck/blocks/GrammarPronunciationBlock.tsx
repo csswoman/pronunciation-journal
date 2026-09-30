@@ -35,12 +35,12 @@ export default function GrammarPronunciationBlock({ sound, focus, examples, note
       <ul className="grammar-pron__list">
         {examples.map((ex, i) => (
           <li key={i} className="grammar-pron__item">
-            <SpeakButton text={ex.text} size="md" />
             <span className="grammar-pron__text">
               <span className="grammar-pron__phrase">{ex.text}</span>
-              {ex.ipa && <span className="grammar-pron__ipa">{ex.ipa}</span>}
+              {ex.ipa && <span className="grammar-pron__ipa font-ipa">{ex.ipa}</span>}
               {ex.es && <span className="grammar-pron__es">{ex.es}</span>}
             </span>
+            <SpeakButton text={ex.text} size="sm" className="ml-auto flex-shrink-0" label={`Escuchar ${ex.text}`} />
           </li>
         ))}
       </ul>

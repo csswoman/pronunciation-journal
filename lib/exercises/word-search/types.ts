@@ -1,5 +1,6 @@
-export type WordSearchMode = 'classic' | 'clues'
-export type WordSearchSource = 'word_bank' | 'gemini' | 'curated' | 'dictionary'
+export type WordSearchMode = 'classic' | 'clues' | 'listen'
+export type WordSearchSource = 'word_bank' | 'gemini' | 'curated' | 'dictionary' | 'essential'
+export type WordSearchDifficulty = 'easy' | 'normal' | 'hard'
 export type WordSelectionResult = 'found' | 'already-found' | 'invalid'
 
 export interface WordSearchItem {

@@ -22,6 +22,9 @@ export interface UserPreferencesData {
   full_name?: string;
   avatar_url?: string;
   interests?: Interest[];
+  app_language?: string;
+  learning_target?: string;
+  daily_goal?: string;
 }
 
 export function useUserPreferences() {
@@ -30,6 +33,35 @@ export function useUserPreferences() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [learnerLevel, setLearnerLevel] = useState<LearnerLevelResolution | null>(null);
+  const [appLanguage, setAppLanguageState] = useState<string>("Español");
+  const [learningTarget, setLearningTargetState] = useState<string>("Inglés · acento americano");
+  const [dailyGoal, setDailyGoalState] = useState<string>("10 min");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("ej_app_language");
+      if (savedLang) setAppLanguageState(savedLang);
+      const savedTarget = localStorage.getItem("ej_learning_target");
+      if (savedTarget) setLearningTargetState(savedTarget);
+      const savedGoal = localStorage.getItem("ej_daily_goal");
+      if (savedGoal) setDailyGoalState(savedGoal);
+    }
+  }, []);
+
+  const setAppLanguage = useCallback((lang: string) => {
+    setAppLanguageState(lang);
+    if (typeof window !== "undefined") localStorage.setItem("ej_app_language", lang);
+  }, []);
+
+  const setLearningTarget = useCallback((target: string) => {
+    setLearningTargetState(target);
+    if (typeof window !== "undefined") localStorage.setItem("ej_learning_target", target);
+  }, []);
+
+  const setDailyGoal = useCallback((goal: string) => {
+    setDailyGoalState(goal);
+    if (typeof window !== "undefined") localStorage.setItem("ej_daily_goal", goal);
+  }, []);
 
   const loadPreferences = useCallback(async () => {
     if (!user) return;
@@ -153,6 +185,12 @@ export function useUserPreferences() {
     learnerLevel,
     loading,
     error,
+    appLanguage,
+    learningTarget,
+    dailyGoal,
+    setAppLanguage,
+    setLearningTarget,
+    setDailyGoal,
     updateFullName,
     updateAvatar,
     updatePassword,

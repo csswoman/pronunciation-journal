@@ -6,10 +6,11 @@
 //   stage body + footer + coverage
 // </AssessmentClientShell>
 
-import type { Dispatch, SetStateAction } from "react";
-import type { AssessmentQuestion } from "@/lib/courses/assessment";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import type { ClientAssessmentQuestion } from "@/lib/courses/assessment";
 import type { AssessmentConcept, ConceptSelfRating } from "@/lib/courses/concept-profile";
 import type { CefrLevelId } from "@/lib/courses/types";
+import type { AssessmentCoverageLevel } from "./AssessmentChrome";
 import {
   AssessmentCoverage,
   AssessmentFooter,
@@ -29,6 +30,7 @@ interface AssessmentClientShellProps {
     showingInventory: boolean;
     progressValue: number;
     progressTotal: number;
+    questionTotal: number;
   };
   prompt: {
     selfReportedLevel: CefrLevelId | "unsure" | "full" | null;
@@ -36,23 +38,28 @@ interface AssessmentClientShellProps {
     sectionConcepts: AssessmentConcept[];
     selfRatings: Record<string, ConceptSelfRating>;
     setSelfRatings: Dispatch<SetStateAction<Record<string, ConceptSelfRating>>>;
-    currentQuestion: AssessmentQuestion | undefined;
+    currentQuestion: ClientAssessmentQuestion | undefined;
     questionIndex: number;
     answers: Record<string, number>;
     setAnswers: Dispatch<SetStateAction<Record<string, number>>>;
+    audioReadyQuestionId: string | null;
+    onAudioReadyChange: (questionId: string, ready: boolean) => void;
   };
   footer: {
     status?: string;
+    statusRole?: "status" | "alert";
     primaryLabel: string;
     primaryDisabled: boolean;
+    secondaryDisabled: boolean;
     onBack: () => void;
     onPrimary: () => void;
   };
   coverage: {
-    placementLevels: CefrLevelId[];
+    levels: AssessmentCoverageLevel[];
     placementStartIndex: number;
     sectionIndex: number;
   };
+  oralContent?: ReactNode;
 }
 
 export function AssessmentClientShell({
@@ -60,6 +67,7 @@ export function AssessmentClientShell({
   prompt,
   footer,
   coverage,
+  oralContent,
 }: AssessmentClientShellProps) {
   const { showingLevelPrompt, showingInventory, mode } = chrome;
 
@@ -85,7 +93,7 @@ export function AssessmentClientShell({
           }
         >
           <div className="assessment-main">
-            {showingLevelPrompt ? (
+            {oralContent ?? (showingLevelPrompt ? (
               <AssessmentLevelPrompt
                 value={prompt.selfReportedLevel}
                 onChange={prompt.setSelfReportedLevel}
@@ -102,9 +110,11 @@ export function AssessmentClientShell({
               <AssessmentQuestionView
                 question={prompt.currentQuestion}
                 index={prompt.questionIndex}
+                total={chrome.questionTotal}
                 answer={
                   prompt.currentQuestion ? prompt.answers[prompt.currentQuestion.id] : undefined
                 }
+                audioReadyQuestionId={prompt.audioReadyQuestionId}
                 onAnswer={(optionIndex) =>
                   prompt.currentQuestion &&
                   prompt.setAnswers((current) => ({
@@ -112,24 +122,30 @@ export function AssessmentClientShell({
                     [prompt.currentQuestion!.id]: optionIndex,
                   }))
                 }
+                onAudioReadyChange={prompt.onAudioReadyChange}
+              />
+            ))}
+
+            {!oralContent && (
+              <AssessmentFooter
+                status={footer.status}
+                statusRole={footer.statusRole}
+                showBack={!showingLevelPrompt && !showingInventory}
+                backLabel={prompt.questionIndex > 0 ? "Anterior" : "Volver a temas"}
+                primaryLabel={footer.primaryLabel}
+                primaryDisabled={footer.primaryDisabled}
+                secondaryDisabled={footer.secondaryDisabled}
+                onBack={footer.onBack}
+                onPrimary={footer.onPrimary}
               />
             )}
-
-            <AssessmentFooter
-              status={footer.status}
-              showBack={!showingLevelPrompt && !showingInventory}
-              backLabel={prompt.questionIndex > 0 ? "Anterior" : "Volver a temas"}
-              primaryLabel={footer.primaryLabel}
-              primaryDisabled={footer.primaryDisabled}
-              onBack={footer.onBack}
-              onPrimary={footer.onPrimary}
-            />
           </div>
           {mode === "placement" && !showingLevelPrompt && (
             <AssessmentCoverage
-              levels={coverage.placementLevels}
+              levels={coverage.levels}
               placementStartIndex={coverage.placementStartIndex}
               sectionIndex={coverage.sectionIndex}
+              showingInventory={showingInventory}
             />
           )}
         </div>

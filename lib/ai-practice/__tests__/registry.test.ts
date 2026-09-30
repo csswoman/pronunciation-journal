@@ -316,3 +316,36 @@ describe("parseToolArgs: render_session_summary", () => {
     expect(isExerciseTool("render_session_summary")).toBe(true);
   });
 });
+
+describe("parseToolArgs: annotate_turn — errorPattern", () => {
+  const base = { original: "I have 25 years", corrected: "I am 25 years old", rule: "Edad en inglés" };
+
+  it("preserves a valid errorPattern when kind is 'error'", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { ...base, kind: "error", errorPattern: "tense_present_for_past" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction?.errorPattern).toBe("tense_present_for_past");
+  });
+
+  it("drops an invented errorPattern id", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { ...base, kind: "error", errorPattern: "made_up_id" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction?.errorPattern).toBeUndefined();
+  });
+
+  it("drops errorPattern when kind is 'unnatural'", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { ...base, kind: "unnatural", errorPattern: "spelling" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction?.errorPattern).toBeUndefined();
+  });
+
+  it("correction is still valid when errorPattern is absent", () => {
+    const args = parseToolArgs("annotate_turn", {
+      correction: { ...base, kind: "error" },
+    }) as AnnotateTurnArgs;
+    expect(args.correction).toBeDefined();
+    expect(args.correction?.errorPattern).toBeUndefined();
+  });
+});

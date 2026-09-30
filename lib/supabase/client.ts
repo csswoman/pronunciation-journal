@@ -30,9 +30,53 @@ function createFreshBrowserClient(): SupabaseClient<Database> {
   if (!url || !key) {
     throw new Error("Faltan NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY.");
   }
+  const localFetch = createLocalSupabaseFetch(url);
   return createBrowserClient<Database>(url, key, {
     isSingleton: false,
+    ...(localFetch ? { global: { fetch: localFetch } } : {}),
   });
+}
+
+function createLocalSupabaseFetch(supabaseUrl: string): typeof fetch | null {
+  if (process.env.NODE_ENV !== "development") return null;
+
+  let upstreamOrigin: string;
+  try {
+    const parsed = new URL(supabaseUrl);
+    const isLoopback =
+      parsed.protocol === "http:" &&
+      (parsed.hostname === "localhost" ||
+        parsed.hostname === "127.0.0.1" ||
+        parsed.hostname === "[::1]");
+    if (!isLoopback) return null;
+    upstreamOrigin = parsed.origin;
+  } catch {
+    return null;
+  }
+
+  const browserOrigin = window.location.origin;
+  const browserFetch = globalThis.fetch.bind(globalThis);
+  return (input, init) => {
+    const requestUrl = input instanceof Request ? input.url : String(input);
+    let parsedRequestUrl: URL;
+    try {
+      parsedRequestUrl = new URL(requestUrl);
+    } catch {
+      return browserFetch(input, init);
+    }
+
+    if (parsedRequestUrl.origin !== upstreamOrigin) {
+      return browserFetch(input, init);
+    }
+
+    const browserRequestUrl = new URL(
+      `/__supabase-local${parsedRequestUrl.pathname}${parsedRequestUrl.search}`,
+      browserOrigin,
+    );
+    const proxiedRequest =
+      input instanceof Request ? new Request(browserRequestUrl, input) : browserRequestUrl;
+    return browserFetch(proxiedRequest, init);
+  };
 }
 
 /**

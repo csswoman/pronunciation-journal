@@ -38,6 +38,8 @@ export interface HomeDailyCardProps {
   needsPronunciation?: boolean
   onStartStep?: (step: DailyStep) => void
   planState?: ReturnType<typeof useDailyPlan>
+  collapseFutureSteps?: boolean
+  showTitle?: boolean
 }
 
 function isReviewEntryStep(step: DailyStep | undefined): boolean {
@@ -59,6 +61,8 @@ function HomeDailyCardView({
   needsPronunciation = false,
   onStartStep,
   planState,
+  collapseFutureSteps = true,
+  showTitle = false,
 }: HomeDailyCardProps & { planState: ReturnType<typeof useDailyPlan> }) {
   const { user } = useAuth()
   const { status, steps, getStepStatus, completedCount, allDone, arc, load } = planState
@@ -145,11 +149,11 @@ function HomeDailyCardView({
       allDone={allDone}
       onStartStep={handleStartStep}
       onRetry={() => void load()}
-      collapseFutureSteps
+      collapseFutureSteps={collapseFutureSteps}
       reviewDue={reviewDue}
       isNewLearner={isNewLearner}
       demoteEntryHighlight={demoteEntryHighlight}
-      showTitle={false}
+      showTitle={showTitle}
       primaryAction={primaryAction}
       hideThreadHints
       customEmptyState={customEmptyState}

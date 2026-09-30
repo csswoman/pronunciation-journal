@@ -4,6 +4,8 @@ import type { Database } from '@/lib/supabase/types'
 import { applyJournalFeedback } from '@/lib/journal/apply-feedback'
 import type { JournalCorrectionResult } from '@/lib/journal/correction'
 
+vi.mock('server-only', () => ({}))
+
 interface TopicRow {
   topic: string
   interval_days: number
@@ -11,9 +13,8 @@ interface TopicRow {
 }
 
 interface MockState {
-  journalUpdatePayload: Record<string, unknown> | null
+  correctionRpcArgs: Record<string, unknown> | null
   topicRpcArgs: Record<string, unknown>[]
-  userLearningStatePayload?: unknown
 }
 
 function createSupabaseMock(opts: {
@@ -21,41 +22,18 @@ function createSupabaseMock(opts: {
   topicRow?: (topic: string) => TopicRow | null
 }): { client: SupabaseClient<Database>; state: MockState } {
   const state: MockState = {
-    journalUpdatePayload: null,
+    correctionRpcArgs: null,
     topicRpcArgs: [],
   }
 
-  const from = vi.fn((table: string) => {
-    if (table === 'user_learning_state') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
-      const builder: any = {
-        select: () => builder,
-        eq: () => builder,
-        maybeSingle: async () => ({ data: null, error: null }),
-        upsert: async (payload: unknown) => {
-          state.userLearningStatePayload = payload
-          return { error: null }
-        },
-      }
-      return builder
-    }
-
-    if (table !== 'journal_entries') throw new Error(`unexpected table ${table}`)
-
-    return {
-      update(payload: Record<string, unknown>) {
-        state.journalUpdatePayload = payload
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test double
-        const builder: any = {
-          eq: () => builder,
-          select: async () => opts.journalUpdate,
-        }
-        return builder
-      },
-    }
-  })
+  const from = vi.fn(() => { throw new Error('correction persistence must use the atomic RPC') })
 
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
+    if (name === 'apply_journal_correction') {
+      state.correctionRpcArgs = args
+      if (opts.journalUpdate.error) return { data: null, error: opts.journalUpdate.error }
+      return { data: { applied: Boolean(opts.journalUpdate.data?.length), state: null }, error: null }
+    }
     expect(name).toBe('apply_topic_srs_rating_event')
     state.topicRpcArgs.push(args)
     const existing = opts.topicRow?.(String(args.p_topic))
@@ -96,7 +74,10 @@ describe('applyJournalFeedback', () => {
       topicId: 'grammar:past simple',
       intervalDays: 1,
     })
-    expect(state.journalUpdatePayload).toMatchObject({ status: 'corrected', corrected_content: 'Yesterday I went to work.' })
+    expect(state.correctionRpcArgs).toMatchObject({
+      p_user_id: 'u1', p_entry_id: 'e1', p_corrected_content: 'Yesterday I went to work.',
+      p_pattern_ids: ['tense_present_for_past'],
+    })
     expect(state.topicRpcArgs).toHaveLength(1)
     expect(state.topicRpcArgs[0]).toMatchObject({ p_user_id: 'u1', p_topic: 'grammar:past simple', p_grade: 2 })
   })
@@ -179,15 +160,17 @@ describe('applyJournalFeedback', () => {
     warn.mockRestore()
   })
 
-  it('does not add newWords to the word bank or write topic_srs directly, but updates errorRecurrence in user_learning_state', async () => {
+  it('persists correction and mapped patterns through one atomic RPC', async () => {
     const { client, state } = createSupabaseMock({ journalUpdate: { data: [{ id: 'e1' }], error: null } })
     await applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection })
 
-    expect((client.from as unknown as { mock: { calls: string[][] } }).mock.calls.map((c) => c[0])).toEqual([
-      'journal_entries',
-      'user_learning_state',
-    ])
+    expect(state.correctionRpcArgs).toBeDefined()
     expect(state.topicRpcArgs).toHaveLength(1)
-    expect(state.userLearningStatePayload).toBeDefined()
+  })
+
+  it('propagates atomic persistence failures so the route cannot report success', async () => {
+    const { client } = createSupabaseMock({ journalUpdate: { data: null, error: new Error('transaction failed') } })
+    await expect(applyJournalFeedback(client, { userId: 'u1', entryId: 'e1', correction: baseCorrection }))
+      .rejects.toThrow('transaction failed')
   })
 })

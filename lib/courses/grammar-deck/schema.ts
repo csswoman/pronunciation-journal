@@ -8,6 +8,10 @@
 // ./types.ts (GrammarStudyDeckData and friends).
 
 import { z } from "zod";
+import { TaskSkillSchema } from "@/lib/content/task-skill-schema";
+import { GrammarDrillSchema } from "./drill-schema";
+export { GrammarDrillSchema } from "./drill-schema";
+export type { GrammarDrill } from "./drill-schema";
 
 const GrammarDeckMetaSchema = z.object({
   eyebrow: z.string(),
@@ -40,6 +44,7 @@ const GrammarRuleRowSchema = z.object({
   value: z.string(),
   highlights: z.array(z.string()).optional(),
   hint: z.string().optional(),
+  ipa: z.string().optional(),
 });
 
 const Cell = z.string();
@@ -71,6 +76,12 @@ const GrammarCardBlockSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+const GrammarMeetingQuoteSchema = z.object({
+  kicker: z.string().optional(),
+  quote: z.string(),
+  translation: z.string(),
+});
+
 const GrammarStudyCardSchema = z.object({
   id: z.string().min(1),
   // `index` is assigned by the loader from array position; optional in JSON.
@@ -81,6 +92,7 @@ const GrammarStudyCardSchema = z.object({
   lede: z.string(),
   blocks: z.array(GrammarCardBlockSchema).min(1),
   tip: z.object({ label: z.string(), body: z.string() }).optional(),
+  meetingQuote: GrammarMeetingQuoteSchema.optional(),
 });
 
 const GrammarRelatedSchema = z.object({
@@ -90,6 +102,7 @@ const GrammarRelatedSchema = z.object({
 });
 
 const GrammarQuizQuestionSchema = z.object({
+  taskSkill: TaskSkillSchema.optional(),
   q: z.string().min(1),
   options: z.array(z.string()).min(2),
   /** 0-based index of the correct option. */
@@ -99,6 +112,7 @@ const GrammarQuizQuestionSchema = z.object({
 
 /** A grammar deck file. `meta` is optional; the loader fills a default. */
 export const GrammarStudyDeckSchema = z.object({
+  taskSkill: TaskSkillSchema.optional(),
   meta: GrammarDeckMetaSchema.optional(),
   isGenerated: z.boolean().optional(),
   /** Target IPA sounds for the Sound Lab handoff (e.g. ["θ","ð","ə"]). @deprecated prefer `pronunciationTargetIds`. */
@@ -109,8 +123,12 @@ export const GrammarStudyDeckSchema = z.object({
   related: z.array(GrammarRelatedSchema).optional(),
   /** Optional 1–5 question self-check shown before the done screen. */
   quiz: z.array(GrammarQuizQuestionSchema).max(5).optional(),
+  /** Optional practice drill with tolerant grading (Plan 043). */
+  drill: GrammarDrillSchema.optional(),
   // Exactly 6 cards per lesson — the "aprendizaje correcto" rule.
   cards: z.array(GrammarStudyCardSchema).min(1).max(6),
-});
+}).refine((deck) => !deck.taskSkill || (deck.quiz ?? []).every(
+  (question) => !question.taskSkill || question.taskSkill === deck.taskSkill,
+), { message: 'Mixed-skill quizzes must attribute each question without a deck-wide taskSkill.' });
 
 export type GrammarStudyDeckFile = z.infer<typeof GrammarStudyDeckSchema>;

@@ -4,6 +4,11 @@ import type { User } from "@supabase/supabase-js";
 import { tryGetSupabaseAdminClient } from "@/lib/supabase/service-role";
 import { SECURE_HEADERS } from "@/lib/api/headers";
 import { logServerError } from "@/lib/api/logging";
+import { aiDailyLimitMessage } from "@/lib/degradation/messages";
+import { getNextPacificMidnight, getPacificDateKey } from "@/lib/api/pacific-time";
+import { withOperationTimeout } from "@/lib/api/timeout";
+
+const RATE_LIMIT_RPC_TIMEOUT_MS = 800;
 
 export type RateLimitResult =
   | { limited: false; error: null }
@@ -95,6 +100,11 @@ type ConsumeResult =
   | { allowed: true; retryAfter: 0 }
   | { allowed: false; retryAfter: number; misconfigured?: boolean };
 
+type RateLimitRpcResult = {
+  allowed: boolean;
+  retry_after_seconds?: number;
+};
+
 async function consumeKey(
   key: string,
   max: number,
@@ -114,11 +124,29 @@ async function consumeKey(
     return consumeMemory(key, max, windowMs);
   }
 
-  const { data, error } = await supabase.rpc("consume_rate_limit", {
-    p_key: key,
-    p_max: max,
-    p_window_ms: windowMs,
-  });
+  let rpcResult: {
+    data: RateLimitRpcResult | RateLimitRpcResult[] | null;
+    error: { message?: string } | null;
+  };
+  try {
+    rpcResult = await withOperationTimeout(
+      supabase.rpc("consume_rate_limit", {
+        p_key: key,
+        p_max: max,
+        p_window_ms: windowMs,
+      }) as unknown as PromiseLike<typeof rpcResult>,
+      RATE_LIMIT_RPC_TIMEOUT_MS,
+      "Rate limit check",
+    );
+  } catch (error) {
+    logServerError("Rate limit database check timed out", error, {
+      endpoint: "rate-limit",
+      operation: "consume",
+    });
+    if (isProd) return { allowed: false, retryAfter: 60, misconfigured: true };
+    return consumeMemory(key, max, windowMs);
+  }
+  const { data, error } = rpcResult;
 
   if (error) {
     logServerError("Rate limit database check failed", error, {
@@ -166,6 +194,53 @@ function consumeMemory(key: string, max: number, windowMs: number): ConsumeResul
   return { allowed: true, retryAfter: 0 };
 }
 
+function positiveEnvLimit(name: string, fallback: number): number {
+  const value = Number.parseInt(process.env[name] ?? "", 10);
+  return Number.isSafeInteger(value) && value > 0 ? value : fallback;
+}
+
+function isGeminiEndpoint(endpoint: string): boolean {
+  return endpoint === "/api/gemini" || endpoint.startsWith("/api/gemini/");
+}
+
+function dailyLimitResponse(resetAt: Date, retryAfter: number): NextResponse {
+  return NextResponse.json(
+    {
+      error: aiDailyLimitMessage(resetAt),
+      code: "AI_DAILY_LIMIT",
+      retryable: true,
+      retryAfterSeconds: retryAfter,
+      resetAt: resetAt.toISOString(),
+    },
+    {
+      status: 429,
+      headers: { ...SECURE_HEADERS, "Retry-After": String(Math.max(1, retryAfter)) },
+    },
+  );
+}
+
+/** Daily AI allowance shared across model-backed endpoints for one user. */
+export async function checkDailyAiUserLimit(user: User, endpoint: string): Promise<RateLimitResult> {
+  const now = new Date();
+  const resetAt = getNextPacificMidnight(now);
+  const retryAfter = Math.max(1, Math.ceil((resetAt.getTime() - now.getTime()) / 1000));
+  const isAnon = isAnonymousUser(user);
+  const dailyLimit = isAnon
+    ? positiveEnvLimit("GEMINI_DAILY_LIMIT_ANONYMOUS", 15)
+    : positiveEnvLimit("GEMINI_DAILY_LIMIT_PER_USER", 150);
+  const dailyKey = `gemini:user:daily:${getPacificDateKey(now)}:${user.id}`;
+  const dailyCheck = await consumeKey(dailyKey, dailyLimit, 86_400_000);
+  if (!dailyCheck.allowed) {
+    logServerError("Daily AI user allowance reached", new Error("Daily AI request limit"), {
+      endpoint,
+      userId: user.id,
+      status: 429,
+    }, "warn");
+    return { limited: true, error: dailyLimitResponse(resetAt, retryAfter) };
+  }
+  return { limited: false, error: null };
+}
+
 /**
  * A 429 from *our own* throttle, not the provider's. The `retryable` flag and
  * `retryAfterSeconds` let the client recover in place (wait, retry the same
@@ -205,7 +280,18 @@ export async function checkLayeredRateLimit({
   // 1. IP-level limit across sessions (blocks anonymous session rotation)
   const ipMax = isAnon ? maxAnonymous * 2 : maxPermanent * 2;
   const ipKey = `gemini:ip:${endpoint}:${ipHashed}`;
-  const ipCheck = await consumeKey(ipKey, ipMax, windowMs);
+  const userMax = isAnon ? maxAnonymous : maxPermanent;
+  const userKey = `gemini:user:${endpoint}:${user.id}`;
+  const anonIpKey = `gemini:ip_anon:${ipHashed}`;
+  const dailyPromise = isGeminiEndpoint(endpoint)
+    ? checkDailyAiUserLimit(user, endpoint)
+    : Promise.resolve<RateLimitResult>({ limited: false, error: null });
+  const [ipCheck, anonIpCheck, userCheck, dailyCheck] = await Promise.all([
+    consumeKey(ipKey, ipMax, windowMs),
+    isAnon ? consumeKey(anonIpKey, 6, windowMs) : Promise.resolve<ConsumeResult>({ allowed: true, retryAfter: 0 }),
+    consumeKey(userKey, userMax, windowMs),
+    dailyPromise,
+  ]);
   if (!ipCheck.allowed) {
     if (ipCheck.misconfigured) {
       return {
@@ -224,8 +310,6 @@ export async function checkLayeredRateLimit({
 
   // 2. IP-level cumulative anonymous cap
   if (isAnon) {
-    const anonIpKey = `gemini:ip_anon:${ipHashed}`;
-    const anonIpCheck = await consumeKey(anonIpKey, 6, windowMs);
     if (!anonIpCheck.allowed) {
       return throttled(
         "Guest quota exceeded for this network. Please create an account or wait.",
@@ -235,9 +319,6 @@ export async function checkLayeredRateLimit({
   }
 
   // 3. User-level limit (per user, per endpoint)
-  const userMax = isAnon ? maxAnonymous : maxPermanent;
-  const userKey = `gemini:user:${endpoint}:${user.id}`;
-  const userCheck = await consumeKey(userKey, userMax, windowMs);
   if (!userCheck.allowed) {
     if (userCheck.misconfigured) {
       return {
@@ -250,6 +331,10 @@ export async function checkLayeredRateLimit({
     }
     return throttled("Too many requests. Please wait before retrying.", userCheck.retryAfter);
   }
+
+  // Apply a project-protecting daily allowance across all Gemini endpoints,
+  // but keep unrelated AI-adjacent routes (such as words/preview) untouched.
+  if (dailyCheck.limited) return dailyCheck;
 
   // 4. Global emergency limit. It is deliberately last so a client already
   // blocked by a narrower quota cannot consume capacity for every other user.

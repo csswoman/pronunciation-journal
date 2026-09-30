@@ -2,16 +2,24 @@
 
 // Planned structure:
 // <SprintProgress>
-//   <DaysCounter />
-//   <ProgressBar />
+//   <PastelCard tone="lilac">
+//     <HeaderWithIllustration>
+//       <TextSummaryAndPill />
+//       <KoboyoCleanIllustration />
+//     </HeaderWithIllustration>
+//     <ProgressBarTrackAndFill />
+//     <SubtextFooter />
+//   </PastelCard>
 // </SprintProgress>
 
 import React from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import PastelCard from '@/components/layout/PastelCard'
 import { db } from '@/lib/db'
 import type { FocusSprint } from '@/lib/focus/types'
 import { daysRemaining } from '@/lib/focus/sprint-lifecycle'
 import { sprintTotalDays, sprintDayAt, practicedDays } from '@/lib/focus/practice-progress'
+import { getIllustration } from '@/lib/illustrations/registry'
 
 interface SprintProgressProps {
   sprint: FocusSprint
@@ -26,7 +34,6 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
   const daysPracticedCount = practicedDays(currentSprint.practice)
 
   const progressPct = Math.min(100, Math.round((daysPracticedCount / totalDays) * 100))
-
   const currentDay = sprintDayAt(currentSprint) ?? 1
   const currentDayData = currentSprint.practice?.days?.find((d) => d.day === currentDay)
   const hasStartedFormatToday = (currentDayData?.startedContentIds.length ?? 0) > 0
@@ -40,30 +47,49 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
     }
   }
 
-  return (
-    <div className="p-4 rounded-xl bg-[var(--surface-raised)] border border-[var(--border-default)] mb-6">
-      <div className="flex items-center justify-between gap-4 mb-2">
-        <span className="text-body-sm font-semibold text-[var(--text-primary)]">
-          {statusText}
-        </span>
-        <span className="text-body-sm font-bold text-[var(--primary)]">
-          {daysLeft === 0 ? 'Último día' : `${daysLeft} días restantes`}
-        </span>
-      </div>
+  const Illustration = getIllustration('domainProgress')
 
-      <div
-        role="progressbar"
-        aria-valuenow={progressPct}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label="Progreso del sprint"
-        className="w-full h-2 rounded-full bg-[var(--surface-sunken)] overflow-hidden"
-      >
-        <div
-          className="h-full bg-[var(--primary)] transition-[width] duration-300 rounded-full"
-          style={{ width: `${progressPct}%` }}
+  return (
+    <PastelCard tone="lilac" className="relative rounded-3xl p-6 shadow-xs flex flex-col gap-4 overflow-hidden mb-8 text-left">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+            PROGRESO DEL SPRINT
+          </span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+              Día {currentDay} de {totalDays}
+            </h2>
+            <span className="rounded-full bg-white/80 border border-black/10 px-3.5 py-1 text-tiny font-bold text-ink shadow-xs">
+              {daysLeft === 0 ? 'Último día' : `${daysLeft} días restantes`}
+            </span>
+          </div>
+        </div>
+
+        <Illustration
+          className="h-20 sm:h-24 w-auto text-ink opacity-80 shrink-0 pointer-events-none"
+          aria-hidden="true"
         />
       </div>
-    </div>
+
+      <div className="flex flex-col gap-1.5">
+        <div
+          role="progressbar"
+          aria-valuenow={progressPct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Progreso del sprint"
+          className="w-full h-3 rounded-full bg-black/10 overflow-hidden"
+        >
+          <div
+            className="h-full bg-text transition-all duration-500 rounded-full"
+            style={{ width: `${Math.max(5, progressPct)}%` }}
+          />
+        </div>
+        <p className="text-tiny font-medium text-ink-secondary mt-0.5">
+          {statusText}
+        </p>
+      </div>
+    </PastelCard>
   )
 }

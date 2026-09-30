@@ -27,7 +27,7 @@ export default function GuestSaveProgressBanner({
   if (variant === "inline") {
     return (
       <p
-        className={cn("font-body-sm text-pretty text-fg-muted", className)}
+        className={cn("ts-caption text-pretty text-fg-muted", className)}
         data-variant="inline"
       >
         Exploras sin cuenta permanente.{" "}
@@ -53,7 +53,7 @@ export default function GuestSaveProgressBanner({
     return (
       <section
         className={cn(
-          "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border-subtle bg-surface-raised px-3 py-2.5 font-body-sm text-fg-muted",
+          "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-border-subtle bg-surface-raised px-3 py-2.5 ts-caption text-fg-muted",
           className,
         )}
         aria-label="Guardar progreso"
@@ -98,7 +98,7 @@ export default function GuestSaveProgressBanner({
             "text-balance text-fg",
             emphasized
               ? "font-heading text-h3 font-bold tracking-tight"
-              : "font-label font-semibold",
+              : "ts-row-title",
           )}
         >
           {emphasized
@@ -108,7 +108,7 @@ export default function GuestSaveProgressBanner({
         <p
           className={cn(
             "max-w-[60ch] text-pretty text-fg-muted",
-            emphasized ? "font-body" : "font-body-sm",
+            emphasized ? "ts-body" : "ts-caption",
           )}
         >
           {emphasized
@@ -128,7 +128,7 @@ export default function GuestSaveProgressBanner({
         <Link
           href="/login?intent=save&mode=register"
           className={cn(
-            "focus-ring inline-flex items-center justify-center rounded-md font-label transition-colors",
+            "focus-ring inline-flex items-center justify-center rounded-md ts-button transition-colors",
             emphasized
               ? "min-h-12 px-5 bg-primary text-on-primary hover:bg-primary-hover"
               : "min-h-11 px-4 border border-border-default bg-surface text-fg hover:bg-surface-sunken",
@@ -139,7 +139,7 @@ export default function GuestSaveProgressBanner({
         <Link
           href="/login?intent=save"
           className={cn(
-            "focus-ring inline-flex items-center justify-center rounded-md border border-border-subtle bg-transparent font-label text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg",
+            "focus-ring inline-flex items-center justify-center rounded-md border border-border-subtle bg-transparent ts-button text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg",
             emphasized ? "min-h-12 px-5" : "min-h-11 px-4",
           )}
         >

@@ -10,6 +10,8 @@ export interface CompleteReaderInput {
   passageId: string
   correct: boolean
   context: ReaderCompletionContext
+  /** Exact Daily step completed by this passage, when launched from Daily. */
+  dailyStepId?: string
 }
 
 /** Persists the answer and activity telemetry for a completed Reader passage. */
@@ -18,6 +20,7 @@ export async function completeReader({
   passageId,
   correct,
   context,
+  dailyStepId,
 }: CompleteReaderInput): Promise<void> {
   const result = {
     exerciseId: `reader:${passageId}`,
@@ -36,6 +39,8 @@ export async function completeReader({
     practiceContext: context,
     source: 'practice',
     sessionResult: buildSessionResult([result]),
+    explicitReconciledStepIds: dailyStepId ? [dailyStepId] : undefined,
   })
-  await flushOutbox()
+  // Without a user id flushOutbox is a no-op (plan 050 step 7).
+  await flushOutbox(userId)
 }

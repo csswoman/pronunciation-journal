@@ -1,9 +1,5 @@
 'use client'
 
-// Planned structure:
-// <SpokenLine>
-//   <Word /> — un span por palabra, resaltado si es la que suena
-
 import { cn } from '@/lib/cn'
 import { splitSpokenWords } from '@/lib/speech/word-timings'
 
@@ -13,13 +9,6 @@ interface Props {
   activeIndex: number | null
 }
 
-/**
- * La linea del coach, palabra a palabra, con la actual resaltada.
- *
- * Seguir el texto mientras se escucha es justo lo que se practica aqui: la
- * frase tiene que seguir leyendose como una frase, asi que el resaltado usa
- * fondo y peso, nunca reflow (nada de cambiar tamano o fuente).
- */
 export function SpokenLine({ text, activeIndex }: Props) {
   const words = splitSpokenWords(text)
 
@@ -32,8 +21,10 @@ export function SpokenLine({ text, activeIndex }: Props) {
             <span
               data-active={isActive ? 'true' : 'false'}
               className={cn(
-                'rounded-sm transition-colors duration-(--transition-fast) motion-reduce:transition-none',
-                isActive && 'bg-primary-soft px-0.5 font-semibold text-fg',
+                'inline-block rounded-lg transition-colors duration-150 motion-reduce:transition-none',
+                isActive
+                  ? 'bg-[var(--butter,#fef08a)] text-[var(--ink,#1c1917)] px-2 py-0.5 font-extrabold shadow-2xs'
+                  : 'text-fg',
               )}
             >
               {word}

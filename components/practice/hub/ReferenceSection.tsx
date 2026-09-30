@@ -8,7 +8,7 @@
 // </ReferenceSection>
 
 import Link from 'next/link'
-import { Search, ArrowRight, BookOpen, Layers } from '@/components/icons'
+import { Search, ArrowRight, BookOpen, Ear, Layers } from '@/components/icons'
 import { setLastPracticeMode } from '@/lib/practice/last-practice-mode'
 
 export default function ReferenceSection() {
@@ -67,6 +67,14 @@ export default function ReferenceSection() {
           >
             <BookOpen size={14} className="text-fg-subtle shrink-0" aria-hidden="true" />
             <span className="truncate">Guardadas</span>
+          </Link>
+          <Link
+            href="/practice/ed-drills"
+            onClick={() => void setLastPracticeMode('ed-drills')}
+            className="flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-sunken/50 px-3 py-2 text-caption font-semibold text-fg-muted transition-colors hover:bg-surface-sunken hover:text-fg focus-ring"
+          >
+            <Ear size={14} className="text-fg-subtle shrink-0" aria-hidden="true" />
+            <span className="truncate">Drills de -ed</span>
           </Link>
         </div>
       </div>

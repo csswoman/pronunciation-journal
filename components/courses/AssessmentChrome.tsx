@@ -1,6 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { Check } from "@/components/icons";
+import Badge from "@/components/ui/Badge";
+import { PillButton } from "@/components/ui/PillButton";
+import { ASSESSMENT_ORAL_PILOT_LEVELS } from "@/lib/courses/assessment-oral-shared";
 import type { CefrLevelId } from "@/lib/courses/types";
 
 // Planned structure:
@@ -9,15 +13,15 @@ import type { CefrLevelId } from "@/lib/courses/types";
 // <AssessmentCoverage />
 // <AssessmentFooter />
 
-export function AssessmentProgress({ value, total, label }: { value: number; total: number; label: string }) {
+export function AssessmentProgress({ value, total, label, unit }: { value: number; total: number; label: string; unit: string }) {
   return (
     <div className="assessment-progress-status">
       <div className="assessment-progress-copy" aria-live="polite">
-        <strong>{value}</strong>
-        <span>de {total}</span>
+        <strong>{value} de {total}</strong>
+        <span>{unit}</span>
       </div>
-      <div className="assessment-progress" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={value} aria-label={label}>
-        <span style={{ transform: `scaleX(${total ? value / total : 0})` }} />
+      <div className="assessment-progress" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={Math.min(value, total)} aria-label={label}>
+        <span style={{ transform: `scaleX(${total ? Math.min(Math.max(value / total, 0), 1) : 0})` }} />
       </div>
     </div>
   );
@@ -42,6 +46,10 @@ export function AssessmentHeader({
   progressValue: number;
   progressTotal: number;
 }) {
+  const includesOralTask = mode === "checkpoint"
+    && Boolean(userId)
+    && ASSESSMENT_ORAL_PILOT_LEVELS.some((level) => level.toUpperCase() === checkpointLabel);
+
   return (
     <header className="assessment-header">
       <Link href={userId ? "/courses" : "/login"} className="assessment-back">
@@ -61,31 +69,89 @@ export function AssessmentHeader({
               ? "Es una referencia inicial, no una nota. Si no estás seguro, empezaremos desde A1 y dejaremos que tus respuestas orienten el resultado."
               : showingInventory
               ? "Sé sincero: después comprobaremos estas ideas con preguntas. Tu respuesta solo ayuda a ordenar el plan."
+              : mode === "checkpoint" && includesOralTask
+                ? "Responde sin traductor y completa la tarea oral."
               : "Responde sin traductor. El resultado adapta tus ejercicios, pero no limita lo que puedes explorar."}
           </p>
         </div>
         {mode === "checkpoint" || (mode === "placement" && !showingLevelPrompt) ? (
-          <AssessmentProgress value={progressValue} total={progressTotal} label={showingInventory ? "Temas valorados" : "Preguntas respondidas"} />
+          <AssessmentProgress
+            value={progressValue}
+            total={progressTotal}
+            label={showingInventory ? "Temas valorados" : includesOralTask ? "Preguntas y tarea oral" : "Preguntas respondidas"}
+            unit={showingInventory ? "temas" : includesOralTask ? "pasos" : "respondidas"}
+          />
         ) : null}
       </div>
     </header>
   );
 }
 
-export function AssessmentCoverage({ placementStartIndex, sectionIndex, levels }: { placementStartIndex: number; sectionIndex: number; levels: CefrLevelId[] }) {
+export interface AssessmentCoverageLevel {
+  level: CefrLevelId;
+  answeredQuestionCount: number;
+  questionCount: number;
+  ratedTopicCount: number;
+  topicCount: number;
+}
+
+const LEVEL_NAMES: Record<CefrLevelId, string> = {
+  a1: "Principiante",
+  a2: "Básico",
+  b1: "Intermedio",
+  b2: "Intermedio alto",
+  c1: "Avanzado",
+  c2: "Maestría",
+};
+
+export function AssessmentCoverage({
+  placementStartIndex,
+  sectionIndex,
+  levels,
+  showingInventory,
+}: {
+  placementStartIndex: number;
+  sectionIndex: number;
+  levels: AssessmentCoverageLevel[];
+  showingInventory: boolean;
+}) {
   return (
     <aside className="assessment-coverage" aria-label="Cobertura de la evaluación">
-      <p className="assessment-coverage-kicker">Cobertura de la evaluación</p>
+      <h2 className="assessment-coverage-kicker">Cobertura de la evaluación</h2>
       <div className="assessment-coverage-list">
-        {levels.map((level, index) => {
+        {levels.map((item, index) => {
+          const { level } = item;
           const reached = index >= placementStartIndex && index < sectionIndex;
           const current = index === sectionIndex;
+          const skipped = index < placementStartIndex;
+          const className = reached
+            ? "assessment-coverage-item assessment-coverage-item--complete"
+            : current
+              ? "assessment-coverage-item assessment-coverage-item--current"
+              : skipped
+                ? "assessment-coverage-item assessment-coverage-item--skipped"
+                : "assessment-coverage-item";
+          const detail = reached
+            ? `Evaluado · ${item.answeredQuestionCount} de ${item.questionCount} preguntas`
+            : current && showingInventory
+              ? `${item.ratedTopicCount} de ${item.topicCount} temas`
+              : current
+                ? `${item.answeredQuestionCount} de ${item.questionCount} preguntas`
+                : skipped
+                  ? "No necesario por ahora"
+                  : "Pendiente";
+
           return (
-            <div key={level} className={reached ? "assessment-coverage-item assessment-coverage-item--complete" : current ? "assessment-coverage-item assessment-coverage-item--current" : "assessment-coverage-item"}>
-              <span aria-hidden>{reached ? "✓" : current ? "•" : "○"}</span>
+            <div key={level} className={className} aria-current={current ? "step" : undefined}>
+              <span className="assessment-coverage-step" aria-hidden>
+                {reached ? <Check size={16} /> : level.toUpperCase()}
+              </span>
               <div>
-                <strong>{current ? `En curso · ${level.toUpperCase()}` : level.toUpperCase()}</strong>
-                <small>{reached ? "Completado" : current ? "Responde este bloque" : index < placementStartIndex ? "No necesario por ahora" : "Pendiente"}</small>
+                <div className="assessment-coverage-heading">
+                  <strong>{level.toUpperCase()} · {LEVEL_NAMES[level]}</strong>
+                  {current && <Badge label="En curso" variant="default" />}
+                </div>
+                <small>{detail}</small>
               </div>
             </div>
           );
@@ -98,27 +164,49 @@ export function AssessmentCoverage({ placementStartIndex, sectionIndex, levels }
 
 export function AssessmentFooter({
   status,
+  statusRole,
   showBack,
   backLabel,
   primaryLabel,
   primaryDisabled,
+  secondaryDisabled,
   onBack,
   onPrimary,
 }: {
   status?: string;
+  statusRole?: "status" | "alert";
   showBack: boolean;
   backLabel?: string;
   primaryLabel: string;
   primaryDisabled: boolean;
+  secondaryDisabled: boolean;
   onBack: () => void;
   onPrimary: () => void;
 }) {
   return (
     <footer className="assessment-footer">
-      {status ? <p>{status}</p> : <span aria-hidden />}
+      {status ? <p role={statusRole}>{status}</p> : <span aria-hidden />}
       <div className="assessment-footer-actions">
-        {showBack && <button type="button" className="assessment-secondary-action" onClick={onBack}>{backLabel}</button>}
-        <button type="button" disabled={primaryDisabled} onClick={onPrimary}>{primaryLabel}</button>
+        {showBack && (
+          <PillButton
+            variant="outline"
+            className="assessment-footer-action assessment-secondary-action"
+            disabled={secondaryDisabled}
+            onClick={onBack}
+          >
+            {backLabel}
+          </PillButton>
+        )}
+        <PillButton
+          variant="primary"
+          className="assessment-footer-action assessment-footer-action--primary"
+          disabled={primaryDisabled}
+          icon={<span aria-hidden>→</span>}
+          iconPosition="right"
+          onClick={onPrimary}
+        >
+          {primaryLabel}
+        </PillButton>
       </div>
     </footer>
   );

@@ -2,9 +2,9 @@ overrides:
   browserslist: "^4.28.8"
   postcss: "8.5.25"
   protobufjs: "7.6.5"
-  undici: "7.29.0"
+  undici: "^7.29.1"
   vite: "8.0.16"
-  brace-expansion: "5.0.9"
+  brace-expansion: "^5.0.12"
   "js-yaml@4": "^4.3.2"
   "nanoid@3": "3.3.18"
   # Prevent orphaned top-level @supabase/* copies (e.g. 2.102.x) from
@@ -22,6 +22,13 @@ allowBuilds:
   '@google/genai': true
   canvas: true
   esbuild: true
+  # onnxruntime-node llega vía kokoro-js (Plan 039) y @huggingface/transformers
+  # (benchmark del plan 038, ver decision-phoneme-ctc.md). Su postinstall solo
+  # compila un binario nativo de CPU para Node; Kokoro corre 100% en el
+  # navegador via WASM (lib/speech/kokoro/kokoro-worker.ts), así que no hace
+  # falta ese binario. Déjalo en `false` a menos que se ejecute Kokoro desde
+  # un script de Node.
+  onnxruntime-node: false
   protobufjs: true
   sharp: true
   unrs-resolver: true

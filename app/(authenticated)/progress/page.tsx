@@ -1,40 +1,39 @@
-import Link from "next/link";
 import { getSupabaseServerUser } from "@/lib/supabase/session";
 import { getProgressPageData } from "@/lib/progress/queries";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import PageLayout from "@/components/layout/PageLayout";
-import PageHeader from "@/components/layout/PageHeader";
-import Button from "@/components/ui/Button";
 import { GuestBanner } from "@/components/layout/stats/GuestBanner";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
-import { StreakCard } from "@/components/progress/StreakCard";
-import { DailyCompletionRate } from "@/components/progress/DailyCompletionRate";
-import { AccuracyTrend } from "@/components/progress/AccuracyTrend";
-import { FluencyRadarCard } from "@/components/progress/FluencyRadarCard";
-import { CanSayNowCard } from "@/components/progress/CanSayNowCard";
-import { SkillProfileCard } from "@/components/progress/SkillProfileCard";
-import { ThisWeekCard } from "@/components/progress/ThisWeekCard";
-import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
-import { ProgressProjectionCards } from "@/components/progress/ProgressProjectionCards";
+import { HabitHeroCard } from "@/components/progress/HabitHeroCard";
+import { SkillsBalanceCard } from "@/components/progress/SkillsBalanceCard";
+import { AccuracyGaugeCard } from "@/components/progress/AccuracyGaugeCard";
+import { AccumulatedPracticeCard } from "@/components/progress/AccumulatedPracticeCard";
+import { WhereToFocusSection } from "@/components/progress/WhereToFocusSection";
 import { LevelConceptsProgressCard } from "@/components/progress/LevelConceptsProgressCard";
-import { ProgressActivationBanner } from "@/components/progress/ProgressActivationBanner";
+import { ActivityHistoryCard } from "@/components/progress/ActivityHistoryCard";
+import { CanSayNowCard } from "@/components/progress/CanSayNowCard";
 import { ImmersionProgressCard } from "@/components/progress/ImmersionProgressCard";
 import { buildCanSayNow } from "@/lib/progress/can-say-now";
-
-const progressHeader = (
-  <PageHeader
-    kicker="Seguimiento"
-    title="Progreso"
-    subtitle="Racha, consistencia y perfil de habilidades a partir de lo que practicas."
-  />
-);
+import type { CefrLevelId } from "@/lib/courses/types";
 
 export default async function ProgressPage() {
   const user = await getSupabaseServerUser();
 
   if (!user) {
     return (
-      <PageLayout archetype="dashboard" hero={progressHeader}>
+      <PageLayout
+        archetype="dashboard"
+        hero={
+          <div className="flex flex-col gap-1">
+            <span className="font-kicker font-semibold text-xs uppercase tracking-wider text-fg-subtle">
+              SEGUIMIENTO
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-fg">
+              Progreso
+            </h1>
+          </div>
+        }
+      >
         <GuestBanner />
       </PageLayout>
     );
@@ -43,79 +42,84 @@ export default async function ProgressPage() {
   const data = await getProgressPageData(user.id);
   const isGuest = isAnonymousUser(user);
 
+  const heroHeader = (
+    <div className="flex flex-col gap-1 pb-2">
+      <span className="font-kicker font-semibold text-xs uppercase tracking-wider text-fg-subtle">
+        SEGUIMIENTO
+      </span>
+      <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-fg leading-tight">
+        Progreso
+      </h1>
+      <p className="text-sm font-normal text-fg-muted">
+        Racha, consistencia y perfil de habilidades a partir de lo que practicas.
+      </p>
+    </div>
+  );
+
   return (
-    <PageLayout archetype="dashboard" hero={progressHeader}>
-      <div className="flex flex-col gap-[var(--layout-section-gap)]">
+    <PageLayout archetype="dashboard" hero={heroHeader}>
+      <div className="flex flex-col gap-6 sm:gap-8">
         {isGuest ? <GuestSaveProgressBanner variant="emphasized" /> : null}
 
-        <ProgressActivationBanner hasSessions={data.recentSessions.length > 0 || data.streak.currentStreak > 0} />
-
-        {/* Action bar / status */}
-        <div className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="font-kicker font-semibold text-fg-subtle">Plan diario</span>
-            <p className="text-body-sm font-medium text-fg">
-              {data.streak.completedToday
-                ? "Plan diario completado hoy. Puedes seguir practicando para acelerar tu avance."
-                : "Aún no has iniciado tu plan de hoy. Dedica unos minutos para mantener tu racha activa."}
-            </p>
+        {data.dataErrors.length > 0 ? (
+          <div
+            role="status"
+            className="flex flex-col gap-1 rounded-[var(--radius-md)] border border-warning/30 bg-warning-soft/60 px-4 py-3 text-caption text-warning"
+          >
+            <span className="font-semibold">
+              No pudimos cargar algunas secciones ahora mismo, no significa que falte actividad:
+            </span>
+            <span>{data.dataErrors.join(' · ')}</span>
           </div>
-          <Link href="/daily" className="w-full sm:w-auto shrink-0">
-            <Button variant="primary" size="lg" fullWidth className="sm:w-auto">
-              {data.streak.completedToday ? "Continuar practicando" : "Iniciar plan de hoy"}
-            </Button>
-          </Link>
+        ) : null}
+
+        {/* 1. Habit Hero Card (Plan Diario, Racha, Consistencia) */}
+        <HabitHeroCard
+          streak={data.streak}
+          dailyCompletion={data.dailyCompletion}
+          weeklySummary={data.weeklySummary}
+        />
+
+        {/* 2. Skills Balance + Accuracy & Accumulated Practice */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6 sm:gap-8 items-stretch">
+          <SkillsBalanceCard
+            scores={data.fluencyProfile.scores}
+            comparisonLabel={data.fluencyProfile.comparisonLabel}
+          />
+
+          <div className="flex flex-col gap-6 justify-between">
+            <AccuracyGaugeCard stats={data.accuracy} />
+            <AccumulatedPracticeCard data={data.projections} />
+          </div>
         </div>
 
-        {/* Hábito: racha · consistencia · esta semana */}
-        <section className="flex flex-col gap-3" aria-label="Hábito y consistencia">
-          <div className="flex flex-col gap-0.5">
-            <span className="font-kicker font-semibold text-fg-subtle">Hábito</span>
-            <h2 className="text-base font-semibold text-fg">Consistencia y racha</h2>
-          </div>
-          <div className="dashboard-grid-3">
-            <StreakCard streak={data.streak} />
-            <DailyCompletionRate stats={data.dailyCompletion} />
-            <ThisWeekCard stats={data.weeklySummary} />
-          </div>
-        </section>
-
-        {/* Calidad y balance de skills */}
-        <section className="flex flex-col gap-3" aria-label="Calidad y balance de habilidades">
-          <div className="flex flex-col gap-0.5">
-            <span className="font-kicker font-semibold text-fg-subtle">Habilidades</span>
-            <h2 className="text-base font-semibold text-fg">Calidad y balance</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-start">
-            <AccuracyTrend stats={data.accuracy} />
-            <FluencyRadarCard
-              scores={data.fluencyProfile.scores}
-              comparisonLabel={data.fluencyProfile.comparisonLabel}
-            />
-          </div>
-        </section>
-
-        {/* Detalle por dominio */}
-        <SkillProfileCard data={data.skillProfile} coach={data.coachInsights} learnerLevel={data.learnerLevel} />
-
-        <ImmersionProgressCard data={data.domains.immersion} />
-
-        {/* Gramática por temas */}
-        <LevelConceptsProgressCard
-          topics={data.domains.topics}
-          completedRoute={data.domains.completedRoute}
-          initialLevel={data.learnerLevel.level.toLowerCase() as import("@/lib/courses/types").CefrLevelId}
+        {/* 3. Dónde Enfocar (Sound Lab, Diccionario, Coach) */}
+        <WhereToFocusSection
+          data={data.skillProfile}
+          coach={data.coachInsights}
+          learnerLevel={data.learnerLevel}
         />
 
-        {/* Producción oral demostrada */}
-        <CanSayNowCard
-          data={buildCanSayNow({ attempts: data.canSayAttempts })}
-          latency={data.speechLatency}
-        />
+        {/* 4. Producción oral + Inmersión */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+          <CanSayNowCard
+            data={buildCanSayNow({ attempts: data.canSayAttempts })}
+            latency={data.speechLatency}
+          />
 
-        {/* Práctica vs dominio + historial */}
-        <ProgressProjectionCards data={data.projections} />
-        <ActivityHistoryCard sessions={data.recentSessions} />
+          <ImmersionProgressCard data={data.domains.immersion} />
+        </div>
+
+        {/* 5. Dominio por Temas + Práctica Reciente */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+          <LevelConceptsProgressCard
+            topics={data.domains.topics}
+            completedRoute={data.domains.completedRoute}
+            initialLevel={data.learnerLevel.level.toLowerCase() as CefrLevelId}
+          />
+
+          <ActivityHistoryCard sessions={data.recentSessions} />
+        </div>
       </div>
     </PageLayout>
   );

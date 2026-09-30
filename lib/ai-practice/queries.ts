@@ -2,6 +2,7 @@ import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { enqueue } from '@/lib/sync/sync-manager'
 import { db } from '@/lib/db'
 import type { UserLearningState } from './learning-state'
+import { mergeErrorRecurrenceQueues } from '@/lib/practice/error-recurrence'
 
 /**
  * Fetch the learning state stored remotely for the given user.
@@ -57,8 +58,24 @@ export async function hydrateFromRemote(userId: string): Promise<void> {
   const remoteTime = new Date(remote.updatedAt).getTime()
   const localTime = local ? new Date(local.updatedAt).getTime() : 0
 
-  if (remoteTime > localTime) {
-    await db.learningState.put({ userId, state: remote, updatedAt: remote.updatedAt })
+  const base = remoteTime > localTime ? remote : local?.state ?? remote
+  const recurrence = mergeErrorRecurrenceQueues(
+    local?.state.errorRecurrence,
+    remote.errorRecurrence,
+    remoteTime > localTime,
+  )
+  const state = { ...base, errorRecurrence: recurrence }
+  await db.learningState.put({ userId, state, updatedAt: state.updatedAt })
+}
+
+/** Refresh the signed-in learner snapshot after an online server mutation. */
+export async function refreshLearningStateFromRemote(): Promise<void> {
+  try {
+    const supabase = getSupabaseBrowserClient()
+    const { data, error } = await supabase.auth.getUser()
+    if (!error && data.user) await hydrateFromRemote(data.user.id)
+  } catch {
+    // The next authenticated hydration retries if this refresh cannot complete.
   }
 }
 

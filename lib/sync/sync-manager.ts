@@ -30,8 +30,8 @@ import {
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-/** Max retries before an entry is permanently marked `failed` */
-const MAX_RETRIES = 3
+/** Max retries before an entry is marked `failed` (`failureKind: 'exhausted'`) */
+export const MAX_RETRIES = 3
 
 /** Entries processed per flush pass (prevents oversized batch requests) */
 const FLUSH_BATCH_SIZE = 30
@@ -53,6 +53,7 @@ const UPSERT_CONFLICT_COLUMNS: Partial<Record<SyncTable, string>> = {
   immersion_lesson_progress: 'user_id,lesson_id',
   content_srs: 'user_id,namespace,content_id',
   ed_cluster_attempts: 'id',
+  ai_feedback_reports: 'id',
 }
 
 /**
@@ -78,6 +79,7 @@ const TABLES_WITH_CLIENT_GENERATED_ID_IDEMPOTENCY: ReadonlySet<SyncTable> = new 
   'attempt_logs',
   'srs_review_events',
   'ed_cluster_attempts',
+  'ai_feedback_reports',
 ])
 
 let flushInFlight: Promise<SyncFlushResult> | null = null
@@ -91,7 +93,8 @@ export { resolveOnConflict }
 
 /**
  * Determine whether a Supabase error should be retried or treated as permanent.
- * RLS violations (code 42501) and check-constraint errors (23514) are permanent.
+ * RLS violations (code 42501) and check-constraint errors (23514) are permanent,
+ * as are invalid payloads (22P02 bad text representation, 23502 not-null).
  *
  * `23505` (unique_violation) is intentionally NOT in `permanentCodes` — see
  * `classifyUniqueViolationAsIdempotentSuccess` below for why it needs
@@ -102,7 +105,7 @@ export { resolveOnConflict }
  * function alone no longer makes that call.
  */
 export function isPermanentError(message: string, code?: string): boolean {
-  const permanentCodes = ['42501', '23514', '23503', 'PGRST204', 'PGRST205', '42P01']
+  const permanentCodes = ['42501', '23514', '23503', '22P02', '23502', 'PGRST204', 'PGRST205', '42P01']
   if (code && permanentCodes.includes(code)) return true
   // Supabase REST errors come as strings; check for common keywords
   return (
@@ -207,8 +210,11 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
     }
 
     const retryCount = entry.retryCount + 1
-    const permanent =
-      isPermanentError(message, code) || code === '23505' || retryCount >= MAX_RETRIES
+    const rejected = isPermanentError(message, code) || code === '23505'
+    // Running out of transient retries parks the entry too, but as `exhausted`
+    // so `exhausted-recovery.ts` can requeue it after reconnection.
+    const exhausted = !rejected && retryCount >= MAX_RETRIES
+    const permanent = rejected || exhausted
     const attemptedAt = now()
     return {
       synced: false,
@@ -221,6 +227,7 @@ async function attemptRemoteEntry(entry: SyncOutboxEntry): Promise<RemoteEntryRe
         ? { hint: (err as { hint: string }).hint }
         : {}),
       permanent,
+      exhausted,
       retryCount,
       attemptedAt,
       nextRetryAt: permanent ? undefined : getNextRetryAt(retryCount, attemptedAt),
@@ -260,6 +267,16 @@ async function flushEntry(entry: SyncOutboxEntry): Promise<void> {
       break
     }
     case 'upsert': {
+      if (entry.table === 'user_learning_state') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generated Supabase types predate the learning-state merge RPC.
+        const res = await supabase.rpc('merge_user_learning_state_snapshot' as any, {
+          p_user_id: String(payload.user_id),
+          p_state: payload.state as Record<string, unknown>,
+          p_updated_at: String(payload.updated_at),
+        })
+        error = res.error
+        break
+      }
       const res = await supabase.from(table).upsert(payload as never, onConflict ? { onConflict } : undefined)
       error = res.error
       break
@@ -344,7 +361,9 @@ function entityKeyFor(entry: SyncOutboxEntry): string {
     const payload = entry.payload as Record<string, unknown>
     const identifier = typeof payload.p_word_id === 'string'
       ? payload.p_word_id
-      : `${String(payload.p_user_id ?? '')}:${String(payload.p_topic ?? '')}`
+      : typeof payload.p_contrast_id === 'string'
+        ? `${String(payload.p_user_id ?? entry.userId)}:${payload.p_contrast_id}`
+        : `${String(payload.p_user_id ?? '')}:${String(payload.p_topic ?? '')}`
     return `rpc:${entry.rpcName}:${identifier}`
   }
 

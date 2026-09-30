@@ -107,4 +107,20 @@ describe('buildCoursePracticeSession', () => {
     const result = await buildCoursePracticeSession({ deckSlug: 'a1-test', cefrLevel: 'A1' })
     expect(result.length).toBeLessThanOrEqual(10)
   })
+
+  it('places drill exercises first when drill is provided', async () => {
+    const drill = {
+      level: 'A1' as const,
+      reviewed: true,
+      transform: [
+        { source: 'I am happy.', instruction: 'Usa contracción', accept: ["I'm happy."] },
+      ],
+    }
+    const result = await buildCoursePracticeSession({ deckSlug: 'a1-test', cefrLevel: 'A1', drill })
+    expect(result.length).toBeGreaterThan(0)
+    expect(result[0].payload.kind).toBe('generic')
+    if (result[0].payload.kind === 'generic') {
+      expect(result[0].payload.data.type).toBe('sentence_transformation')
+    }
+  })
 })

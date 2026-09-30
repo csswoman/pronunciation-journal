@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, ChevronRight, MicVocal } from "@/components/icons";
 import PastelCard from "@/components/layout/PastelCard";
+import { cn } from "@/lib/cn";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -126,25 +127,25 @@ export default function CoursePathAsideProgress({
       <Link href="/courses/pronunciation" className="block no-underline group">
         <PastelCard tone="coral" className="p-6 sm:p-7 rounded-[2rem] flex items-center justify-between gap-4 transition-transform group-hover:translate-x-0.5 shadow-xs">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 flex items-center justify-center shrink-0 shadow-xs" aria-hidden="true">
+            <div className="size-11 rounded-full bg-ink text-paper flex items-center justify-center shrink-0 shadow-2xs" aria-hidden="true">
               <MicVocal size={20} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-fg leading-snug font-display">Pronunciación</h3>
-              <p className="text-body-sm text-fg/80 font-sans">
+              <h3 className="text-lg font-bold text-ink leading-snug font-display">Pronunciación</h3>
+              <p className="text-body-sm text-ink-secondary font-sans">
                 {favoritesCount === null
                   ? "Sin datos de palabras guardadas."
                   : `${favoritesCount} ${favoritesCount === 1 ? "palabra guardada" : "palabras guardadas"} para practicar`}
               </p>
             </div>
           </div>
-          <ChevronRight size={20} className="text-fg/60 group-hover:text-fg transition-colors shrink-0" aria-hidden />
+          <ChevronRight size={20} className="text-ink-secondary group-hover:text-ink transition-colors shrink-0" aria-hidden />
         </PastelCard>
       </Link>
 
       {/* 2. Tu progreso en A1 */}
       <PastelCard tone="lilac" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-5 shadow-xs">
-        <h3 className="text-lg font-bold text-fg font-display">Tu progreso en {level.spineLabel}</h3>
+        <h3 className="text-lg font-bold text-ink font-display">Tu progreso en {level.spineLabel}</h3>
         <div className="flex items-center gap-6">
           {/* Circular Progress Ring */}
           <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
@@ -156,7 +157,7 @@ export default function CoursePathAsideProgress({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="12"
-                className="text-black/15 dark:text-white/20"
+                className="text-ink/15"
               />
               <circle
                 cx="50"
@@ -168,73 +169,82 @@ export default function CoursePathAsideProgress({
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                className="text-fg transition-all duration-500"
+                className="text-ink transition-all duration-500"
               />
             </svg>
             {/* Top start dot indicator */}
-            <div className="absolute top-1 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-neutral-900 dark:bg-white border-2 border-purple-200 dark:border-purple-900" aria-hidden="true" />
-            <span className="absolute text-xl font-bold text-fg font-display">{percent}%</span>
+            <div className="absolute top-1 left-1/2 -translate-x-1/2 size-3.5 rounded-full bg-ink border-2 border-paper" aria-hidden="true" />
+            <span className="absolute text-xl font-bold text-ink font-display">{percent}%</span>
           </div>
 
           <div className="flex flex-col justify-center">
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-extrabold text-fg font-display tracking-tight">
+              <span className="text-4xl sm:text-5xl font-extrabold text-ink font-display tracking-tight">
                 {completedCount}
               </span>
-              <span className="text-lg sm:text-xl font-bold text-fg font-display">
+              <span className="text-lg sm:text-xl font-bold text-ink font-display">
                 de {totalCount}
               </span>
             </div>
-            <span className="text-body-sm text-fg/80 font-sans mt-1">lecciones completadas</span>
+            <span className="text-body-sm text-ink-secondary font-sans mt-1">lecciones completadas</span>
           </div>
         </div>
       </PastelCard>
 
       {showCheckpoint && (
         <PastelCard tone="butter" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-4 shadow-xs">
-        <div>
-          <span className="bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-bold tracking-wider uppercase px-3.5 py-1 rounded-full inline-block font-display">
-            Siguiente hito
-          </span>
-        </div>
+          <div>
+            <span className="inline-block rounded-full bg-ink/12 px-3 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-ink">
+              Siguiente hito
+            </span>
+          </div>
 
-        <h4 className="text-2xl sm:text-3xl font-bold tracking-tight text-fg leading-tight font-display text-balance">
-          {isNavigatingOwnLevel
-            ? `Checkpoint · ${level.title}`
-            : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
-        </h4>
+          <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight font-display text-balance">
+            {isNavigatingOwnLevel
+              ? `Checkpoint · ${level.title}`
+              : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
+          </h4>
 
-        {/* Milestone Progress Bar */}
-        <div className="h-3.5 w-full rounded-full bg-black/10 dark:bg-white/15 overflow-hidden p-0.5 border border-black/10">
+          {/* Milestone Progress Bar */}
           <div
-            className="h-full rounded-full bg-neutral-900 dark:bg-white transition-all duration-300"
-            style={{ width: `${percent}%` }}
-          />
-        </div>
-
-        <p className="text-body-sm text-fg/80 font-sans">
-          {remainingLessons === 0
-            ? "¡Nivel completado! Listo para evaluación."
-            : `Te faltan ${remainingLessons} lecciones para el checkpoint.`}
-        </p>
-
-        <div>
-          <Link
-            href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
-            className="bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 rounded-full px-6 py-3 text-sm font-bold inline-flex items-center gap-2.5 transition-colors no-underline shadow-xs font-display"
+            className="h-3 w-full rounded-full bg-ink/15 overflow-hidden p-0.5"
+            role="progressbar"
+            aria-valuenow={percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Progreso hacia el checkpoint"
           >
-            <span>Ir al Checkpoint</span>
-            <ArrowRight size={16} aria-hidden />
-          </Link>
-        </div>
+            <div
+              className="h-full rounded-full bg-ink transition-all duration-300"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+
+          <p className="text-body-sm text-ink-secondary font-sans">
+            {remainingLessons === 0
+              ? "¡Nivel completado! Listo para evaluación."
+              : `Te faltan ${remainingLessons} lecciones para el checkpoint.`}
+          </p>
+
+          <div>
+            <Link
+              href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
+              className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 font-label text-body-sm font-semibold text-paper transition-all hover:bg-ink-secondary no-underline shadow-xs font-sans"
+            >
+              <span>Ir al Checkpoint</span>
+              <ArrowRight size={16} aria-hidden />
+            </Link>
+          </div>
         </PastelCard>
       )}
 
       {/* 4. Esta semana */}
       <PastelCard tone="mint" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-4 font-sans shadow-xs">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-fg font-display">Esta semana</h3>
-          <span className="text-lg font-bold text-fg font-display">{activeDaysMap === null ? "Sin datos" : `${activeDaysCount} ${activeDaysCount === 1 ? "día" : "días"}`}</span>
+          <h3 className="text-lg font-bold text-ink font-display">Esta semana</h3>
+          <span className="text-lg font-bold text-ink font-display">
+            {activeDaysMap === null ? "Sin datos" : `${activeDaysCount} ${activeDaysCount === 1 ? "día" : "días"}`}
+          </span>
         </div>
 
         <div className="flex items-center justify-between gap-1 pt-1">
@@ -243,15 +253,16 @@ export default function CoursePathAsideProgress({
             return (
               <div key={idx} className="flex flex-col items-center gap-1.5">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                  className={cn(
+                    "size-7 rounded-full flex items-center justify-center transition-colors",
                     isActive
-                      ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                      : "border-2 border-dashed border-current/30 text-fg/40"
-                  }`}
+                      ? "bg-ink text-paper"
+                      : "border-2 border-dashed border-ink/25 text-ink/40"
+                  )}
                 >
                   {isActive && <Check size={14} strokeWidth={2.5} aria-hidden />}
                 </div>
-                <span className="text-caption font-bold text-fg/70 font-display">{day}</span>
+                <span className="text-caption font-bold text-ink-muted font-display">{day}</span>
               </div>
             );
           })}

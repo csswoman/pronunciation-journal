@@ -216,9 +216,14 @@ export default function DailyPlanCard({
             {listPrefix && <div className="-mt-1 mb-2">{listPrefix}</div>}
             <div className="flex flex-col gap-3">
               {greeting && <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>}
-              <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-h3 font-bold text-fg">Tu sesión de hoy</h2>
-                <span className="font-body-sm tabular-nums text-fg-muted">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col">
+                  <span className="font-sans text-caption font-bold uppercase tracking-wider text-fg-muted">
+                    El plan
+                  </span>
+                  <h2 className="text-h2 font-extrabold text-fg">Tu sesión de hoy</h2>
+                </div>
+                <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 font-caption font-semibold tabular-nums text-fg-muted">
                   {steps.length} {steps.length === 1 ? 'actividad' : 'actividades'} · {remainingMinutes > 0 ? remainingMinutes : 12} min
                 </span>
               </div>
@@ -239,6 +244,19 @@ export default function DailyPlanCard({
               collapseFutureSteps={collapseFutureSteps}
               hideThreadHints={hideThreadHints}
             />
+            {/* Strip de palabras del día */}
+            <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl bg-surface-sunken/60 px-4 py-3 text-caption text-fg-muted">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-semibold text-fg">Palabras que te tocan hoy:</span>
+                <span className="rounded-md bg-surface-raised px-2 py-0.5 font-mono text-tiny font-medium text-fg shadow-2xs">asynchronous</span>
+                <span className="rounded-md bg-surface-raised px-2 py-0.5 font-mono text-tiny font-medium text-fg shadow-2xs">bundle</span>
+                <span className="rounded-md bg-surface-raised px-2 py-0.5 font-mono text-tiny font-medium text-fg shadow-2xs">deploy</span>
+              </div>
+              <span className="font-medium text-fg-muted">
+                +3 más <span className="font-semibold text-fg">Palabras esenciales 2 / 1000</span>
+              </span>
+            </div>
+
             {primaryAction && actionLabel && (
               <Link
                 href={primaryAction.href}

@@ -1,16 +1,114 @@
 # Planes de implementación
 
-Tres series. La primera (001–004, peso y carga) está cerrada. La segunda
+Siete series. La primera (001–004, peso y carga) está cerrada. La segunda
 (005–019) sale de la auditoría pedagógica del 2026-09-18 sobre `c869029c`:
 cómo se evalúa y avanza el nivel, si el contenido está conectado al ciclo de
 evidencia, y qué ve el usuario que no proviene de datos reales. La tercera
 (020–027) sale de la auditoría de cableado del 2026-09-22 sobre `eb4cb5d3`.
+La cuarta (028–034) sale de la auditoría de conexión pedagógica del 2026-09-22
+sobre `87636eca`: reparar bucles sueltos (diario → habla), resiliencia offline,
+expansión del content graph a niveles A2/B1, descubrimiento de superficies y
+evaluación de escucha y habla en checkpoints. Sus planes 029–034 se revisaron
+contra las rutas reales antes de ejecutarse.
+La quinta (035–043) prioriza el uso sostenible de modelos gratuitos: cuotas por
+proyecto, prompts con salida estructurada, un AI Coach y ejercicios que llaman
+menos a la IA, voces locales para entrenar el oído con muchas voces, y feedback
+de pronunciación por sonido que se calcula en el dispositivo. La sexta
+(044–054) cubre evaluación, persistencia, progreso honesto y juegos. La séptima
+(055–057) separa la carga conectada de los recursos descargables por nivel.
 
 Cada ejecutor: lee el plan completo antes de empezar, respeta sus STOP
 conditions y actualiza su fila al terminar. Los planes nuevos usan ramas
 `codex/NNN-slug` desde `dev` solo si el operador pide crear una rama; no hacen
 commit ni push sin instrucción explícita. Las ramas `advisor/*` de la serie 2
 son históricas.
+
+## Serie 7 — cliente ligero y paquetes offline por nivel (2026-09-28)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 055 | Presupuestar JavaScript descargado en navegaciones reales | P0 | M | — | TODO |
+| 056 | Cargar cada runtime cliente solo cuando se necesita | P1 | M | 055 | DONE |
+| 057 | Descargar un paquete offline del nivel real del usuario | P1 | L | 056 | IN PROGRESS |
+
+Orden recomendado: **055 → 056 → 057**. Detalle, decisiones y descartes en
+[`series-7-light-client-and-level-packs.md`](series-7-light-client-and-level-packs.md).
+
+## Fuera de serie
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| [058](058-deploy-and-backfill-content-bank.md) | Desplegar y poblar el banco de contenido pregenerado | P1 | S | Plan 041 | TODO |
+
+Plan 041 (banco de contenido) está implementado en `dev` desde 2026-09-25 pero
+nunca se desplegó a `main`: no hay proyecto Vercel enlazado, el workflow de
+GitHub Actions no está en `main` y `content_bank_items` tiene 0 filas en
+producción (verificado por SQL 2026-09-29). 058 lo despliega y lo puebla.
+
+## Serie 5 — uso gratuito y resiliencia de IA (2026-09-23)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 035 | Aprovechar la IA gratuita sin agotar el servicio (fases A/B/C) | P1 | M | — | IN PROGRESS (fases A–C en código; migraciones pendientes de aplicar y validar) |
+| 036 | Salida estructurada y prompts ajustados al nivel | P2 | M | 035 fase A | DONE (20 rutas JSON; eval 11/12 frente a 8/12; 5313 tests) |
+| 037 | AI Coach y ejercicios más rápidos, variados y con menos llamadas a IA | P1 | L | 035 fase A | DONE (fases A, B y C) |
+| 038 | Feedback de pronunciación por sonido (estilo ELSA) sin cuota de IA | P2 | L | fase A: —; fases B/C: 039 fase A | DONE (fase A + B, no-ship): la puerta exigía 4 fonemas y solo pasó /z/; sin fase C |
+| 039 | Voces locales (Kokoro) y entrenamiento de percepción con muchas voces (HVPT) | P1 | L | — | DONE (no-ship): fase A no pasó la puerta — Kokoro `q8`/WASM mide ~3–4 s por palabra suelta (límite ≤1,5 s); sin fases B/C |
+| 040 | Las correcciones del AI Coach alimentan la cola de errores repetidos | P1 | S | — | DONE (commit `724f3c9f`) |
+| 041 | Banco de ejercicios pregenerados con la cuota diaria que sobra | P2 | M–L | 035 fase B, 037 fases A/B1 | DONE (migración `content_bank_items` aplicada en remoto + fix de RLS/grants heredados; tests del alcance del plan en verde) |
+| 042 | Botón "Esta corrección está mal" y casos de evaluación reales | P2 | S–M | 036, 040 | DONE (migración `ai_feedback_reports` aplicada en remoto; RLS verificado sin hallazgos propios) |
+| 043 | Drills de gramática A1–C1 (4 técnicas) con corrección tolerante y local | P1 | L | — (comparte pieza con 037 C1) | DONE (calificador tolerante answer-match, 26 structure-checks, 5 pilotos A1-C1 revisados, script CLI y generador con Zod superRefine) |
+
+Orden recomendado: **040 → 035 fase A → 037 fase A → 039 → 035 fase B → 037 fases B/C → 041 → 036 → 042**.
+040 va primero porque es pequeño, no gasta requests y no depende de nada.
+043 puede ir en cualquier momento: no gasta requests y su fase A es el paso 3 de 037 C1 (hacerla antes ahorra trabajo a 037).
+038 salió del orden: la fase A ya está en producción y la fase B cerró en no-ship, así que no queda nada suyo por hacer.
+039 también salió del orden: su fase A (único trabajo hecho) cerró en no-ship el 2026-09-25 — Kokoro
+`q8`/WASM no llega a latencia interactiva por palabra. Ver `docs/ai/local-voice-models.md`. HVPT sigue
+sin voces variadas más allá de las de `speechSynthesis` del navegador.
+Cada plan de la serie 5 termina con un **paso de documentación** (README, `CLAUDE.md`,
+`ENGINEERING_STANDARDS.md`, `docs/architecture/`, `docs/README.md`): una fase no está DONE hasta actualizar
+lo que cambió. 038 fase B ya corrió su benchmark contra L2-ARCTIC (hablantes de español) y **no pasó la puerta**:
+la fase C queda cerrada y 039 ya no tiene que preparar nada para ella. Resultados por fonema en
+`lib/pronunciation/acoustic/benchmark/decision-phoneme-ctc.md`.
+
+### Backlog propuesto (sin plan todavía)
+
+Ideas investigadas el 2026-09-23; todas gratis y sin cuota de Gemini. Convertir en plan cuando se pida.
+
+| Idea | Recurso | Nota |
+|---|---|---|
+| Dictados (escuchar → escribir) corregidos en local | Kokoro (039) + oraciones de Tatoeba (CC BY 2.0 FR) o chunks propios; `lib/exercises/diff-words.ts` | El audio de Tatoeba tiene licencia por grabación, a menudo no comercial: usar Kokoro |
+| Shadowing con curva de entonación (tú vs. modelo), sin nota | `lib/speech/pitch-detector.ts` + Kokoro | Solo visual hasta tener un benchmark de entonación |
+| Modo voz del Coach por turnos, sin Live API | Reconocimiento del navegador → Whisper tiny.en en el navegador (transformers.js) como respaldo → Gemini texto → Kokoro | Whisper sustituye a Gemini Transcribe (~25 RPD) como fallback; depende de 037 y 039 |
+| Revisión gramatical en vivo mientras se escribe en el Diario | LanguageTool (API pública gratis: 20 req/min, 75k caracteres/min; o instalarlo en tu propio servidor) | Gemini queda para naturalidad y explicaciones al guardar |
+| Formas flexionadas e IPA US/UK para corregir en local | Kaikki.org (Wiktionary en JSON, CC BY-SA) | Mejora `matchesAcceptedAnswer` del Plan 037 (`went` ≈ `go`) |
+
+035 se revisó el 2026-09-23: se recortaron Live, embeddings, Gemma, selector de voz
+y reservas de TPM (diferidos). La elegibilidad gratuita de cada modelo se verifica
+al ejecutar.
+
+## Serie 4 — bucle pedagógico y progresión oral conectada (2026-09-22, `87636eca`)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 028 | Conectar restricciones de reparación del Diario a la práctica oral del Plan Diario | P1 | S | — | DONE (restricciones propagadas y priorizadas; 143 tests del Plan Diario pasan) |
+| 029 | Persistir sin pérdidas la reincidencia de errores del Diario | P1 | L | — | DONE (RPC transaccional + migración aplicada en Supabase remoto el 2026-09-23) |
+| 030 | Mejorar el descubrimiento de Reader, Chunks y Drills | P2 | S | — | DONE (verificación visual diferida por indicación del usuario; estilos se cambiarán después) |
+| 031 | Writing Nudges: Palabras de repaso como sugerencia activa en el Diario | P2 | M | 028, 029 | DONE (vocabulario opcional y origen de repaso verificado) |
+| 032 | Expandir anclas del content graph de chunks para niveles A2 y B1 | P2 | M | — | DONE (116 chunks: 36 A1, 50 A2, 30 B1) |
+| 033 | Evaluar comprensión auditiva en todos los checkpoints de nivel | P2 | L | — | DONE (18 audios, scoring y feedback por nivel implementados; suite de 7 archivos pasa al 100%) |
+| 034 | Incorporar evidencia oral verificable en checkpoints | P2 | L | 033 | IN PROGRESS (piloto personal A1/A2; falta confirmar una ejecución del checkpoint oral; B1–C2 diferidos) |
+
+Orden recomendado: **028 → 029 → 033 → 034** para cerrar el bucle de reparación
+y hacer que la promoción exija escucha y habla verificables. **030 y 031** pueden
+programarse después según prioridad de producto; 031 depende de 028 y 029.
+032 ya cubre 36 A1, 50 A2 y 30 B1 (116 chunks) en el trabajo local, conectando 80 expresiones intermedias al vocabulario y pronunciación.
+Reader ya figura en el hub de práctica; 030 añadió Lectura a Aprender y Escalera
+de -ed a los accesos rápidos, manteniendo el único acceso existente a Chunks.
+Sus tests, type-check y lint pasan; por indicación del usuario, la verificación
+visual se difiere hasta el próximo trabajo de estilos. 029 se rediseñó porque la corrección del Diario
+corre en el servidor y no puede escribir en Dexie directamente.
 
 ## Serie 3 — plan diario y evidencia evaluable (2026-09-22, `eb4cb5d3`)
 
@@ -23,7 +121,7 @@ son históricas.
 | 024 | Focus registra actividad y respuestas evaluadas | P1 | L | 021, 022 | DONE |
 | 025 | El quiz de inmersión registra respuestas y su paso exacto | P2 | M | 021, 022 | DONE |
 | 026 | Las habilidades dependen de la tarea evaluada | P2 | M | 021, 024 | DONE |
-| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | IN PROGRESS |
+| 027 | Tests runtime verifican las salidas declaradas | P2 | M | 022–026 | DONE (2026-09-23; 10 superficies con escritores reales; hallazgo: quiz de cursos no es replay-safe) |
 
 Orden recomendado: **021 → 020 → 022 → 023 → 024 → 025 → 026 → 027**.
 020 puede ejecutarse en paralelo con 021. 023–025 pueden ejecutarse por separado
@@ -112,3 +210,62 @@ Estados: TODO | IN PROGRESS | DONE | BLOCKED (motivo) | REJECTED (motivo).
 
 Descartados en la serie 1: subir `bundle-budget.json` sin medición de
 navegación; excluir chunks por hash (inestable con Turbopack).
+
+
+# Serie 6 — evaluación, persistencia y progreso honesto
+
+Planes preparados el 2026-09-26 con skill improve, contra el checkout 70d98322. Continúan la numeración 001–043. Se consultó el índice vigente; no se modificó código ni se aplicaron migraciones.
+
+La auditoría original se conserva en [audit-source.md](audit-source.md). Sus datos remotos son evidencia aportada por el usuario, no comprobación remota de esta preparación. Los extractos de los planes se contrastaron localmente; los casos aún deben reproducirse.
+
+## Orden y estado
+| Plan | Título | Prioridad | Esfuerzo | Dependencia | Estado |
+|---|---|---|---|---|---|
+| [044](044-preserve-evaluation-evidence.md) | Conservar el estado y la calidad real de cada respuesta | P0 | M | — | DONE (local): 80 tests, types/lint, compilación y smoke online invitado OK; timeout resuelto fuera del sandbox; offline dispensado; penalización de pistas pendiente de producto |
+| [045](045-recover-answer-sync.md) | Recuperar respuestas rechazadas y fallos transitorios de sincronización | P0 | M | 044 para validar elegibilidad; 046 fase A antes de reemitir efectos SRS | DONE (sin commit): 15 tests focalizados + 99 regresión sync, types/lint/migrations/hard-rules OK; migración `20260926230000` aplicada y verificada en remoto; 6 respuestas `essential-words` y 1 Connected Speech con UUID persistidas en navegador. Rechazadas antiguas ya no estaban en el outbox (irrecuperables) |
+| [046](046-attempt-identity-and-spaced-srs.md) | Hacer idempotentes los intentos y evitar avances SRS por repetición inmediata | P0 | L | 044; coordinar queries.ts con 045 y 050 | DONE: fase A 30 tests focalizados + browser; fase B aplicada en remoto, historial/schema lint verificados y arnés SQL local verde (duplicado, concurrencia, 50 intentos, lapse y tiempos offline). Sin backfill; deuda de rebuild de `reader_passages` cerrada con migración reconciliadora y reset limpio verde |
+| [047](047-honest-progress-metrics.md) | Calcular métricas completas y distinguir actividad, precisión y evidencia | P1 | L | 044; 045 para cobertura real de Essential Words; 046 para replay | IN PROGRESS (Fase A y candidata local de Fase B: elegibilidad, grade 0, paginación; SkillScore con umbral 5 contenidos, dedup 3 recientes, sin volumen; falta aprobación de fórmula y runtime navegador) |
+| [048](048-sound-mastery-state.md) | Separar EMA y presentación de maestría de sonidos sin perder actualizaciones | P1 | L | 046 fase A para identidad de eventos | TODO |
+| [049](049-truthful-progress-ui.md) | Mostrar datos reales, estados vacíos y etiquetas fieles | P1 | M | — para fallbacks; 047 para nuevos estados de evidencia | DONE (local): 30 tests focalizados verdes, types/lint/tokens OK, 0 datos ficticios (53/8, 29/23, 2/2800, 0:42), writing + dimensiones dinámicas y etiquetas honestas |
+| [050](050-concepts-attribution-and-activity.md) | Separar evidencia de conceptos, finalización y actividad diaria | P1 | L | 044 y 046; coordinar métricas con 047 | DONE: decisiones implementadas; 78/78 tests focalizados, types/lint/auditorías/build verdes. PWA Chromium verifica reload offline, reconexión y aislamiento sin sesión. SQL local con rollback y migraciones 030000/040000 aplicadas/verificadas en remoto con autorización; cinco versiones reconciliadas. Cuatro migraciones ajenas pendientes. Sin despliegue de app ni commit. |
+| [051](051-consistent-local-contractions.md) | Corregir contracciones equivalentes sin aceptar respuestas incorrectas | P2 | M | —; respetar Plan 043 y coordinar con 044 | DONE: equivalencia segura compartida por Practice y Coach; 37 pruebas focalizadas, type-check y lint en verde; sin cambios SQL. |
+| [052](052-practice-games-expansion.md) | Ampliar /practice/games con 5 juegos (Phoneme Invaders, Weak Form Catcher, Chunk Duel, Memory Match, Falsos Amigos) | P2 | L | — (fase 0 antes de cada juego) | DONE (5 juegos funcionales offline, enrutados, con tests de motor y Bricolage en títulos) |
+| [053](053-practice-games-progress-integration.md) | Phoneme Invaders prioriza contrastes débiles del usuario, más contenido + validador en Weak Form Catcher, niveles CEFR en Falsos Amigos, Memory Match con vocabulario aleatorio por nivel y pronunciación al descubrir pareja | P2 | M | 052 | TODO |
+| [054](054-practice-games-honesty-and-progress.md) | Word Rain deja de prometer guardado falso, juegos dejan de reportar `results: []` (0 XP), export real de `minimal_pairs` desde Supabase, alerta si falta contenido en deploy, Phoneme Invaders alimenta el repaso real de contrastes | P1/P2 | L | 052; Fase E depende de Fase A de este mismo plan | DONE funcional: código, tests y aceptación autenticada A–E; siete juegos guardan sesiones con resultados; fallo de guardado visible; SRS de /iː/\|/ɪ/ pasó de 9 a 15 intentos y de 25% a 0%; logs verificados; las pruebas rojas previas de D/E no quedaron registradas; cinco commits de código en dev. |
+
+Orden sugerido: **044 → 046 A → 045 → 046 B → 047 A → 048 → 047 B → 050**.
+049 puede empezar de forma independiente por los fallbacks y consumir después los estados de 047. 051 es independiente. No editar queries.ts en paralelo en 044/046/047/050; sync-manager.ts pertenece a 045.
+
+Cada corrección incluye caracterización roja y arreglo verde en la misma entrega. No crear un gran commit de tests rojos ni ejecutar automáticamente los 943 archivos citados en el informe.
+
+## Cobertura de la auditoría
+- P0 Essential Words y Connected Speech: 045.
+- P0 autoevaluación/errores y P1 pistas: 044.
+- P0 espaciado; P1 idempotencia, Coach y reintentos fonemas: 046.
+- P1 habilidad inflada; P2 denominador, errores y paginación; P3 precisión parcial: 047.
+- P1 maestría de sonidos; riesgo de escritores incompatibles: 048.
+- P1 cifras inventadas y todas las etiquetas de H: 049.
+- P1 conceptos/completion; P2 atribución, daily duplicado, rachas; inconsistencias UTC/curso y seguimiento P3: 050.
+- P2 contracciones y equivalencia en Coach: 051.
+
+## Decisiones de producto explícitamente pendientes
+Se pueden preparar tests, alternativas y código aislado sin activar estas políticas:
+- Pistas: límites 3/1; reconocimiento/MC con máximo 4; crédito parcial por typo.
+- Guarda de vencimiento, semántica de eventos offline y reparación de dominio histórico.
+- Fórmula de habilidades, ventana, deduplicación de evidencia y mínimo suficiente.
+- Estado EMA histórico, curva de decaimiento y compatibilidad de clientes.
+
+La creación de planes no autoriza ejecución, commit, db push, backfill ni borrado. La autorización remota se solicita al terminar la preparación local revisable.
+
+## Matices y propuestas descartadas
+- Dos pestañas con el mismo contenido no son automáticamente el mismo intento. Evitar doble aplicación de un evento y evitar falso espaciado son problemas distintos.
+- No convertir el ejemplo «una respuesta <40%» o vocabulario «35» en oráculo de tests: requieren una fórmula aceptada.
+- No exigir monotonía absoluta a una métrica con olvido temporal.
+- Completar un mazo al recorrerlo es un contrato ya admitido por Plan 006; revisar etiquetas y dominio, sin eliminar completion a ciegas.
+- No duplicar planes 020–027: conservar sus contratos y caracterizar regresiones.
+- No hay reconstrucción fiable de respuestas históricas solo desde sesiones.
+- No se revisaron los doce motores completos, no se ejecutaron suites ni se accedió a Dexie de un navegador o Supabase en esta preparación.
+
+## Cierre
+Estados por fase: TODO / IN PROGRESS / DONE / BLOCKED / REJECTED con evidencia.
+Un fix local con despliegue pendiente no cierra una incidencia remota. El ejecutor debe actualizar el índice del repositorio y conservar los resultados de validación.

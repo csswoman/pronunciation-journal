@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('server-only', () => ({}))
 
-import { GeneratedScriptSchema } from '../generate-script/route'
+import { GeneratedScriptSchema } from '@/lib/gemini/generation-schemas'
 
 describe('GeneratedScriptSchema', () => {
   it('acepta un guión bien formado', () => {

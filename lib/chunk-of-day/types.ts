@@ -17,6 +17,12 @@ export type Example =
   | { kind: "sentence"; en: string; es: string }
   | { kind: "dialogue"; turns: DialogueTurn[] };
 
+/** Optional content track. Absent/`"general"` chunks show to everyone; `"tech"`
+ * chunks (software engineer / product designer register) only surface for
+ * learners whose interests include `technology` or `work` — see
+ * lib/chunk-of-day/queries.ts::filterChunksForInterests. */
+export type ChunkTrack = "general" | "tech";
+
 export interface ChunkItem {
   id: string;
   chunk: string;
@@ -24,6 +30,7 @@ export interface ChunkItem {
   meaning: string;
   example: string;
   example_translation?: string;
+  track?: ChunkTrack;
   /**
    * Optional structured two-turn dialogue for this phrase. When present the card
    * renders it instead of the flat `example` string. Populate this in

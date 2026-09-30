@@ -172,7 +172,7 @@ export async function buildDailyPlan(userId: string): Promise<DailyPlan> {
     completedLessonIds,
     aiState,
     savedOrFamiliarWordIds: dailyWordSelection.savedOrFamiliarIds,
-    wordIndex,
+    wordIndex, repairConstraints,
   })
 
   const miniLessonStep = buildMiniLessonStep(weakTopic, completedLessonIds)

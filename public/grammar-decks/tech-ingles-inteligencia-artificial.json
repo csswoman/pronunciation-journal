@@ -14,10 +14,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "training", "value": "entrenamiento · train a model", "highlights": ["training"] },
-            { "key": "dataset", "value": "conjunto de datos", "highlights": ["dataset"] },
-            { "key": "model", "value": "modelo · a language model", "highlights": ["model"] },
-            { "key": "inference", "value": "inferencia · run inference", "highlights": ["inference"] }
+            {
+              "key": "training",
+              "value": "entrenamiento · train a model",
+              "highlights": [
+                "training"
+              ]
+            },
+            {
+              "key": "dataset",
+              "value": "conjunto de datos",
+              "highlights": [
+                "dataset"
+              ]
+            },
+            {
+              "key": "model",
+              "value": "modelo · a language model",
+              "highlights": [
+                "model"
+              ]
+            },
+            {
+              "key": "inference",
+              "value": "inferencia · run inference",
+              "highlights": [
+                "inference"
+              ]
+            }
           ]
         }
       ]
@@ -31,10 +55,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "supervised learning", "value": "aprendizaje supervisado", "highlights": ["supervised learning"] },
-            { "key": "fine-tuning", "value": "ajuste fino de un modelo", "highlights": ["fine-tuning"] },
-            { "key": "overfitting", "value": "sobreajuste", "highlights": ["overfitting"] },
-            { "key": "weights / parameters", "value": "pesos / parámetros", "highlights": ["weights", "parameters"] }
+            {
+              "key": "supervised learning",
+              "value": "aprendizaje supervisado",
+              "highlights": [
+                "supervised learning"
+              ]
+            },
+            {
+              "key": "fine-tuning",
+              "value": "ajuste fino de un modelo",
+              "highlights": [
+                "fine-tuning"
+              ]
+            },
+            {
+              "key": "overfitting",
+              "value": "sobreajuste",
+              "highlights": [
+                "overfitting"
+              ]
+            },
+            {
+              "key": "weights / parameters",
+              "value": "pesos / parámetros",
+              "highlights": [
+                "weights",
+                "parameters"
+              ]
+            }
           ]
         }
       ]
@@ -48,10 +97,35 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "train a model", "value": "entrenar (no \"educate\")", "highlights": ["train a model"] },
-            { "key": "deploy a model", "value": "poner en producción", "highlights": ["deploy"] },
-            { "key": "fine-tune", "value": "ajustar con datos propios", "highlights": ["fine-tune"] },
-            { "key": "evaluate / benchmark", "value": "evaluar / comparar rendimiento", "highlights": ["evaluate", "benchmark"] }
+            {
+              "key": "train a model",
+              "value": "entrenar (no \"educate\")",
+              "highlights": [
+                "train a model"
+              ]
+            },
+            {
+              "key": "deploy a model",
+              "value": "poner en producción",
+              "highlights": [
+                "deploy"
+              ]
+            },
+            {
+              "key": "fine-tune",
+              "value": "ajustar con datos propios",
+              "highlights": [
+                "fine-tune"
+              ]
+            },
+            {
+              "key": "evaluate / benchmark",
+              "value": "evaluar / comparar rendimiento",
+              "highlights": [
+                "evaluate",
+                "benchmark"
+              ]
+            }
           ]
         }
       ]
@@ -65,10 +139,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "is capable of -ing", "value": "es capaz de · capable of generating text", "highlights": ["capable of"] },
-            { "key": "is designed to", "value": "está diseñado para · designed to detect fraud", "highlights": ["designed to"] },
-            { "key": "tends to", "value": "tiende a · it tends to hallucinate", "highlights": ["tends to"] },
-            { "key": "struggles with", "value": "le cuesta · struggles with maths", "highlights": ["struggles with"] }
+            {
+              "key": "is capable of -ing",
+              "value": "es capaz de · capable of generating text",
+              "highlights": [
+                "capable of"
+              ]
+            },
+            {
+              "key": "is designed to",
+              "value": "está diseñado para · designed to detect fraud",
+              "highlights": [
+                "designed to"
+              ]
+            },
+            {
+              "key": "tends to",
+              "value": "tiende a · it tends to hallucinate",
+              "highlights": [
+                "tends to"
+              ]
+            },
+            {
+              "key": "struggles with",
+              "value": "le cuesta · struggles with maths",
+              "highlights": [
+                "struggles with"
+              ]
+            }
           ]
         }
       ]
@@ -82,10 +180,34 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "bias", "value": "sesgo · the model has a bias", "highlights": ["bias"] },
-            { "key": "accountability", "value": "responsabilidad", "highlights": ["accountability"] },
-            { "key": "to raise concerns", "value": "plantear preocupaciones", "highlights": ["raise concerns"] },
-            { "key": "safeguards", "value": "salvaguardas / medidas de seguridad", "highlights": ["safeguards"] }
+            {
+              "key": "bias",
+              "value": "sesgo · the model has a bias",
+              "highlights": [
+                "bias"
+              ]
+            },
+            {
+              "key": "accountability",
+              "value": "responsabilidad",
+              "highlights": [
+                "accountability"
+              ]
+            },
+            {
+              "key": "to raise concerns",
+              "value": "plantear preocupaciones",
+              "highlights": [
+                "raise concerns"
+              ]
+            },
+            {
+              "key": "safeguards",
+              "value": "salvaguardas / medidas de seguridad",
+              "highlights": [
+                "safeguards"
+              ]
+            }
           ]
         }
       ],
@@ -103,13 +225,66 @@
         {
           "type": "rules",
           "rows": [
-            { "key": "AI", "value": "se deletrea · \"ei-ai\"", "highlights": ["ei-ai"] },
-            { "key": "GPU", "value": "se deletrea · \"yi-pi-iu\"", "highlights": ["yi-pi-iu"] },
-            { "key": "algorithm", "value": "/ˈælɡərɪðəm/ → \"álgorizm\"", "highlights": ["álgorizm"] },
-            { "key": "neural", "value": "/ˈnjʊrəl/ → \"niúral\"", "highlights": ["niúral"] }
+            {
+              "key": "AI",
+              "value": "se deletrea · \"ei-ai\"",
+              "highlights": [
+                "ei-ai"
+              ]
+            },
+            {
+              "key": "GPU",
+              "value": "se deletrea · \"yi-pi-iu\"",
+              "highlights": [
+                "yi-pi-iu"
+              ]
+            },
+            {
+              "key": "algorithm",
+              "value": "/ˈælɡərɪðəm/ → \"álgorizm\"",
+              "highlights": [
+                "álgorizm"
+              ]
+            },
+            {
+              "key": "neural",
+              "value": "/ˈnjʊrəl/ → \"niúral\"",
+              "highlights": [
+                "niúral"
+              ]
+            }
           ]
         }
       ]
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Which verb is the correct collocation to use when you want to put a model into a production environment?",
+      "options": [
+        "deploy a model",
+        "educate a model"
+      ],
+      "answer": 0,
+      "explain": "En el contexto técnico, 'deploy' es el término correcto para poner un modelo en producción; nunca usamos 'educate' para referirnos a sistemas de IA."
+    },
+    {
+      "q": "Complete the sentence: 'The new language model ___ generating creative content, but it often struggles with complex calculations.'",
+      "options": [
+        "is capable of",
+        "is designed to"
+      ],
+      "answer": 0,
+      "explain": "Usamos la estructura 'is capable of + -ing' para describir las habilidades o capacidades de un modelo."
+    },
+    {
+      "q": "¿Cómo se pronuncia correctamente la sigla 'GPU' en una reunión técnica?",
+      "options": [
+        "Como una sola palabra: 'gupu'",
+        "Deletreando cada letra: 'yi-pi-iu'"
+      ],
+      "answer": 1,
+      "explain": "En inglés técnico, las siglas como GPU se deletrean individualmente para asegurar una comunicación clara y profesional."
     }
   ]
 }

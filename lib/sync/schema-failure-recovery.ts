@@ -1,12 +1,18 @@
 import { db } from "@/lib/db";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { SyncOutboxEntry } from "./types";
+import { recoverRepairedAnswerFailures, type AnswerRecoveryResult } from "./answer-recovery";
+import { recoverExhaustedEntries } from "./exhausted-recovery";
+import { getSyncFailureDiagnostics, type SyncFailureDiagnostics } from "./sync-diagnostics";
 
 declare global {
   interface Window {
     __syncRecovery?: {
       recoverResolvedSchemaFailures: () => Promise<SchemaFailureRecoveryResult>;
       getUncodedFailedBundleGap: () => Promise<UncodedFailedBundleGap>;
+      recoverRepairedAnswerFailures: () => Promise<AnswerRecoveryResult>;
+      recoverExhaustedEntries: () => Promise<{ requeued: number }>;
+      getSyncFailureDiagnostics: () => Promise<SyncFailureDiagnostics>;
     };
   }
 }
@@ -142,5 +148,8 @@ export function exposeSyncRecoveryDevTools(userId: string): void {
   window.__syncRecovery = {
     recoverResolvedSchemaFailures: () => recoverResolvedSchemaFailures(userId),
     getUncodedFailedBundleGap: () => getUncodedFailedBundleGap(userId),
+    recoverRepairedAnswerFailures: () => recoverRepairedAnswerFailures(userId),
+    recoverExhaustedEntries: () => recoverExhaustedEntries(userId),
+    getSyncFailureDiagnostics: () => getSyncFailureDiagnostics(userId),
   };
 }

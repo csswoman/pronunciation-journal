@@ -97,6 +97,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       contents: prompt,
       config: { systemInstruction: DECK_SUGGEST_SYSTEM_PROMPT, responseMimeType: "application/json" },
     },
+    schema: DeckSuggestResponseSchema,
     parse: (text) => parseGeminiJson(text, (json) => DeckSuggestResponseSchema.parse(json)),
     failureMessage: "Failed to generate deck suggestions",
   });

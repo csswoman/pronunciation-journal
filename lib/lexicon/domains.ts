@@ -36,7 +36,7 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
   {
     id: "design",
     name: "Diseño",
-    description: "Lenguaje de UX, UI y sistemas de diseño.",
+    description: "El lenguaje de UX, UI y sistemas de diseño.",
     color: "#6B9FC4",
     icon: "✦",
     categoryIds: ["ux-design", "design-systems"],
@@ -45,10 +45,10 @@ export const LEXICON_DOMAINS: LexiconDomain[] = [
   {
     id: "professional",
     name: "Profesional",
-    description: "Inglés laboral, entrevistas y redacción técnica.",
+    description: "Aquí no basta reconocerlas: hay que usarlas al hablar y escribir.",
     color: "#C4846B",
     icon: "◈",
-    categoryIds: ["professional", "technical-writing", "personal-interview"],
+    categoryIds: ["personal-interview", "professional", "technical-writing"],
     studyMode: "productive",
   },
   {

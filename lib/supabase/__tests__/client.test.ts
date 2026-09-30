@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const createBrowserClient = vi.hoisted(() =>
-  vi.fn((url: string, key: string, options?: { isSingleton?: boolean }) => ({
+  vi.fn((
+    url: string,
+    key: string,
+    options?: { isSingleton?: boolean; global?: { fetch?: typeof fetch } },
+  ) => ({
     __url: url,
     __key: key,
     __options: options,
@@ -16,6 +20,7 @@ vi.mock("@supabase/ssr", () => ({
 describe("getSupabaseBrowserClient", () => {
   const originalEnv = process.env;
   const originalWindow = globalThis.window;
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
     vi.resetModules();
@@ -28,12 +33,13 @@ describe("getSupabaseBrowserClient", () => {
     // Browser-only guard in client.ts
     Object.defineProperty(globalThis, "window", {
       configurable: true,
-      value: {},
+      value: { location: { origin: "http://localhost:3000" } },
     });
   });
 
   afterEach(() => {
     process.env = originalEnv;
+    globalThis.fetch = originalFetch;
     Object.defineProperty(globalThis, "window", {
       configurable: true,
       value: originalWindow,
@@ -76,5 +82,25 @@ describe("getSupabaseBrowserClient", () => {
     const second = getSupabaseBrowserClient();
     expect(second).toBe(first);
     expect(createBrowserClient).toHaveBeenCalledTimes(1);
+  });
+
+  it("routes local Supabase browser requests through the dev server", async () => {
+    process.env = {
+      ...process.env,
+      NODE_ENV: "development",
+      NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321",
+    };
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 200 }));
+    globalThis.fetch = fetchMock;
+    const { getSupabaseBrowserClient } = await import("../client");
+    getSupabaseBrowserClient();
+
+    const options = createBrowserClient.mock.calls[0][2];
+    await options?.global?.fetch?.("http://127.0.0.1:54321/auth/v1/health");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      new URL("http://localhost:3000/__supabase-local/auth/v1/health"),
+      undefined,
+    );
   });
 });

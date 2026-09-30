@@ -1,4 +1,4 @@
-import { fetchEssentialWords } from "@/lib/essential-words/client";
+import { fetchEssentialWords, fetchEssentialWordsForLevel } from "@/lib/essential-words/client";
 import { buildSessionQueue, matchesFilter, type EssentialWordQueueItem } from "@/lib/essential-words/queue";
 import {
   essentialWordId,
@@ -8,6 +8,7 @@ import {
   type EssentialWord,
 } from "@/lib/essential-words/types";
 import { getEssentialWordsIntroducedToday } from "@/lib/db";
+import { getEssentialWordLearnerSignals } from "./learner-state-queries";
 import { prepareEssentialWordsSrsEntries } from "@/lib/essential-words/prepare-srs";
 import { getEssentialWordsDueTomorrowCount } from "@/lib/essential-words/due-tomorrow";
 import { phaseForEssentialWordItem, type EssentialWordsPhase } from "@/lib/essential-words/session-model";
@@ -32,6 +33,28 @@ export interface LoadedEssentialWordsQueue {
   initialPhase: EssentialWordsPhase;
 }
 
+/**
+ * Loads the dataset for `loadEssentialWordsQueue`. Tries the normal network
+ * path first (`fetchEssentialWords()`, unchanged — this is the same call
+ * every existing caller already relies on). Only falls back to the
+ * offline-pack adapter (Plan 057, Step 4) when that throws AND the caller
+ * asked for exactly one level: packs are single-level, so there's no
+ * sensible pack to fall back to when `levels` is null/empty (whole catalog)
+ * or names more than one level — mixing two levels' packs together, or
+ * guessing which of several requested levels to serve, is out of scope here,
+ * so those cases simply keep today's behavior and re-throw.
+ */
+async function loadWordsForQueue(levels?: readonly CefrLevel[] | null): Promise<EssentialWord[]> {
+  try {
+    return await fetchEssentialWords();
+  } catch (err) {
+    if (!levels || levels.length !== 1) {
+      throw err;
+    }
+    return fetchEssentialWordsForLevel(levels[0]);
+  }
+}
+
 export async function loadEssentialWordsQueue(
   levels?: readonly CefrLevel[] | null,
   pos?: readonly EssentialWordPos[] | null,
@@ -39,10 +62,11 @@ export async function loadEssentialWordsQueue(
   options?: { maxNewWords?: number },
 ): Promise<LoadedEssentialWordsQueue> {
   const maxNewWords = options?.maxNewWords ?? GUIDED_SESSION_NEW_CARDS;
-  const [words, introducedToday, dueTomorrow] = await Promise.all([
-    fetchEssentialWords(),
+  const [words, introducedToday, dueTomorrow, knownClaims] = await Promise.all([
+    loadWordsForQueue(levels),
     getEssentialWordsIntroducedToday(userId),
     getEssentialWordsDueTomorrowCount(userId),
+    getEssentialWordLearnerSignals(userId),
   ]);
 
   const now = new Date();
@@ -56,11 +80,16 @@ export async function loadEssentialWordsQueue(
     newPerDay: introducedToday.length + maxNewWords,
     levels,
     pos,
+    knownClaims,
   }).map((item) => ({
     ...item,
     fromSnooze: activatedWordIds.includes(essentialWordId(item.entry.word)),
   }));
-  const seenIds = new Set(srsEntries.map((entry) => entry.wordId));
+  const seenIds = new Set([
+    ...srsEntries.map((entry) => entry.wordId),
+    ...knownClaims.filter((claim) => claim.familiarity === "self-declared")
+      .map((claim) => claim.wordId),
+  ]);
 
   const hasFilter = (levels && levels.length > 0) || (pos && pos.length > 0);
   const scopedWords = words.filter((w) => matchesFilter(w, levels, pos));

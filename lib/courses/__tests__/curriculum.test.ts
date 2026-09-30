@@ -35,9 +35,19 @@ describe("course curriculum coverage", () => {
 
   it("builds a checkpoint with deterministic fallback and threshold", () => {
     expect(buildAssessment("checkpoint", "b1")).toEqual([
-      expect.objectContaining({ level: "b1", passThreshold: 5, fallbackLevel: "a2" }),
+      expect.objectContaining({ level: "b1", passThreshold: 12, fallbackLevel: "a2" }),
     ]);
   });
+
+  it.each(["a1", "a2", "b1", "b2", "c1", "c2"] as CefrLevelId[])(
+    "requires both the total threshold and listening evidence for %s",
+    (level) => {
+      const contract = LEVEL_ASSESSMENT_CONTRACTS[level];
+      expect(contract.questionCount).toBe(14);
+      expect(contract.listeningQuestionCount).toBe(6);
+      expect(contract.minimumListeningCorrect).toBe(level === "a1" ? 3 : 4);
+    },
+  );
 
   it("keeps C1+ as an advanced band inside the C1 contract", () => {
     const c1 = COURSE_PATH_CURRICULUM.levels.find((level) => level.id === "c1");

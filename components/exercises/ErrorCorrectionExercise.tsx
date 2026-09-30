@@ -4,12 +4,22 @@
 // <ErrorCorrectionExercise>
 //   <SentencePrompt />
 //   <CorrectedInput />
-//   <SubmitButton />
+//   <ActionButtons />
+//     <AlreadyCorrectButton />
+//     <SubmitButton />
+//   <SelfAssessSection />
 // </ErrorCorrectionExercise>
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
+import { useAuthOptional } from '@/components/auth/AuthProvider'
+import { matchAnswer, normalize, specFromErrorCorrection } from '@/lib/exercises/answer-match'
+import { feedbackFromVerdict } from '@/lib/exercises/answer-feedback'
+import { useDrillAttempts } from '@/hooks/useDrillAttempts'
+import { saveAcceptedAnswer, useAcceptedAnswers } from '@/hooks/useAcceptedAnswers'
+import { SelfAssessPrompt } from './SelfAssessPrompt'
 import type { ErrorCorrectionExercise as Exercise } from '@/lib/exercises/types'
+import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
 export function ErrorCorrectionExercise({
@@ -17,27 +27,154 @@ export function ErrorCorrectionExercise({
   onResult,
 }: {
   exercise: Exercise
-  onResult: (correct: boolean, answer: string, timeMs: number, extras?: { feedback?: PedagogicalFeedback }) => void
+  onResult: (correct: boolean, answer: string, timeMs: number, extras?: GenericRenderExtras) => void
 }) {
   const [answer, setAnswer] = useState('')
   const [done, setDone] = useState(false)
+  const [feedback, setFeedback] = useState<PedagogicalFeedback | null>(null)
+  const [showSelfAssess, setShowSelfAssess] = useState(false)
+  const startedAt = useRef(Date.now())
+
+  const auth = useAuthOptional()
+  const userId = auth?.user?.id ?? 'anon'
+  const extraAccepted = useAcceptedAnswers(exercise.id, userId)
+  const attempts = useDrillAttempts({ level: exercise.level })
+
+  const showAlreadyCorrectBtn =
+    !done &&
+    !showSelfAssess &&
+    (exercise.alreadyCorrect === true ||
+      (Boolean(exercise.level) && exercise.level !== 'A1' && exercise.sourceRef?.source === 'grammar_deck'))
+
+  const handleAlreadyCorrect = () => {
+    if (done) return
+    const timeMs = Date.now() - startedAt.current
+    if (exercise.alreadyCorrect) {
+      setDone(true)
+      onResult(true, exercise.sentence, timeMs, {
+        score: 100,
+        feedback: {
+          immediate: '¡Correcto! Esta oración ya era correcta.',
+          canRetry: false,
+        },
+        firstTryFailed: attempts.firstTryFailed,
+      })
+    } else {
+      const { revealed } = attempts.recordFailure()
+      if (revealed) {
+        setShowSelfAssess(true)
+      } else {
+        setFeedback({
+          immediate: 'Esta oración sí tiene un error. Intenta encontrarlo y corregirlo.',
+          canRetry: true,
+        })
+      }
+    }
+  }
 
   const submit = () => {
-    if (!answer.trim() || done) return
-    const normalize = (value: string) =>
-      value.trim().toLowerCase().replace(/[.?!]+$/, '').replace(/\s+/g, ' ')
-    const correct = normalize(answer) === normalize(exercise.correctSentence)
+    const production = answer.trim()
+    if (!production || done) return
+    const timeMs = Date.now() - startedAt.current
+
+    if (exercise.alreadyCorrect) {
+      const matchesOriginal = normalize(production) === normalize(exercise.sentence)
+      if (matchesOriginal) {
+        setDone(true)
+        onResult(true, production, timeMs, {
+          score: 100,
+          feedback: {
+            immediate: '¡Correcto! La oración ya era correcta.',
+            canRetry: false,
+          },
+          firstTryFailed: attempts.firstTryFailed,
+        })
+        return
+      }
+    }
+
+    const spec = exercise.answerSpec ?? specFromErrorCorrection(exercise)
+    const maxTypos = exercise.level === 'B2' || exercise.level === 'C1' ? 1 : 2
+    const verdict = matchAnswer(production, spec, { maxTypos, extraAccepted })
+
+    if (verdict.kind === 'exact' || verdict.kind === 'variant' || verdict.kind === 'typo') {
+      setDone(true)
+      const fb = feedbackFromVerdict(verdict, {
+        canonical: exercise.correctSentence,
+        explanation: exercise.explanation,
+      })
+      setFeedback(fb)
+      onResult(true, production, timeMs, {
+        score: verdict.score,
+        feedback: fb,
+        firstTryFailed: attempts.firstTryFailed,
+      })
+      return
+    }
+
+    if (
+      verdict.kind === 'contraction_mismatch' ||
+      verdict.kind === 'missing_required' ||
+      verdict.kind === 'known_wrong'
+    ) {
+      const fb = feedbackFromVerdict(verdict, {
+        canonical: exercise.correctSentence,
+        explanation: exercise.explanation,
+      })
+      setFeedback(fb)
+      return
+    }
+
+    const { revealed } = attempts.recordFailure()
+    const fb = feedbackFromVerdict(verdict, {
+      canonical: exercise.correctSentence,
+      explanation: exercise.explanation,
+    })
+    setFeedback(fb)
+
+    if (revealed) {
+      setShowSelfAssess(true)
+    }
+  }
+
+  const handleSelfMistake = () => {
     setDone(true)
-    onResult(correct, answer, 0, {
-      feedback: {
-        immediate: correct
-          ? 'Encontraste y corregiste el error.'
-          : 'Esa no es la corrección. Compara tu versión con la correcta.',
+    setShowSelfAssess(false)
+    const timeMs = Date.now() - startedAt.current
+    onResult(false, answer.trim(), timeMs, {
+      score: 0,
+      resultStatus: 'answered',
+      feedback: feedback ?? {
+        immediate: 'Esa no es la corrección. Compara tu versión con la correcta.',
         correction: exercise.correctSentence,
         explanation: exercise.explanation,
-        canRetry: !correct,
-        errorCode: correct ? undefined : 'form_error',
+        canRetry: false,
       },
+      firstTryFailed: true,
+    })
+  }
+
+  const handleSelfApprove = async () => {
+    setDone(true)
+    setShowSelfAssess(false)
+    const production = answer.trim()
+    const timeMs = Date.now() - startedAt.current
+    await saveAcceptedAnswer({
+      userId,
+      exerciseKey: exercise.id,
+      answer: production,
+      canonical: exercise.correctSentence,
+    })
+    onResult(true, production, timeMs, {
+      score: 70,
+      resultStatus: 'unscored',
+      feedback: {
+        immediate: '¡Respuesta aceptada por ti!',
+        correction: exercise.correctSentence,
+        explanation: exercise.explanation,
+        canRetry: false,
+      },
+      firstTryFailed: attempts.firstTryFailed,
     })
   }
 
@@ -45,7 +182,7 @@ export function ErrorCorrectionExercise({
     <div className="flex flex-col gap-6 w-full">
       <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6 text-center">
         <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
-          Oración con error
+          Oración a revisar
         </span>
         <p className="mt-2 text-h3 font-medium leading-relaxed text-fg sm:text-h2">
           {exercise.sentence}
@@ -66,24 +203,53 @@ export function ErrorCorrectionExercise({
               submit()
             }
           }}
-          disabled={done}
+          disabled={done || showSelfAssess}
           placeholder="Escribe la corrección aquí…"
           aria-label="Oración corregida"
           className="min-h-13 rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg focus-ring placeholder:text-fg-subtle"
         />
       </div>
 
-      {!done && (
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={submit}
-          disabled={!answer.trim()}
-        >
-          Comprobar
-        </Button>
+      {feedback?.immediate && !done && !showSelfAssess ? (
+        <p role="alert" className="text-body-sm text-error">
+          {feedback.immediate}
+        </p>
+      ) : null}
+
+      {showSelfAssess && (
+        <SelfAssessPrompt
+          canonicalAnswer={exercise.correctSentence}
+          userAnswer={answer.trim()}
+          onMistake={handleSelfMistake}
+          onSelfApprove={handleSelfApprove}
+        />
+      )}
+
+      {!done && !showSelfAssess && (
+        <div className="flex flex-col gap-3 sm:flex-row">
+          {showAlreadyCorrectBtn && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              className="sm:w-1/2"
+              onClick={handleAlreadyCorrect}
+            >
+              Está correcta
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            fullWidth={!showAlreadyCorrectBtn}
+            className={showAlreadyCorrectBtn ? 'sm:w-1/2' : undefined}
+            onClick={submit}
+            disabled={!answer.trim()}
+          >
+            Comprobar
+          </Button>
+        </div>
       )}
     </div>
   )

@@ -1,4 +1,5 @@
 import type { DailyStep, ExerciseResult, PracticeContext, SessionResult } from '@/lib/practice/types'
+import { isEvaluatedPracticeAnswer } from '@/lib/practice/evaluation-status'
 
 const MIN_PHONEME_ANSWERS = 3
 const OBJECTIVE_OVERLAP_RATIO = 0.4
@@ -13,10 +14,6 @@ const EXERCISE_RECONCILABLE_KINDS = new Set<DailyStep['kind']>([
   'chunk_review',
   'ed_cluster_drill',
 ])
-
-function isEvaluable(result: ExerciseResult): boolean {
-  return result.status === 'answered' || (result.status === undefined && result.userAnswer !== 'skip')
-}
 
 /** A source row is the canonical target; legacy content ids are only comparable without provenance. */
 function objectiveIdentity(item: { contentId: string; sourceRef?: { source: string; id: string } }): string | null {
@@ -75,7 +72,7 @@ export function reconcileDailySteps(
 ): string[] {
   if (practiceContext === 'daily' || result.results.length === 0) return []
 
-  const evaluatedResults = result.results.filter(isEvaluable)
+  const evaluatedResults = result.results.filter(isEvaluatedPracticeAnswer)
   if (evaluatedResults.length === 0) return []
   const resolved = new Set<string>()
 

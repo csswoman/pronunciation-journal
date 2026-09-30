@@ -8,11 +8,11 @@
 //   <SubmitButton />
 // </TranslationEsEnExercise>
 
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
-import { gradeProduction } from '@/lib/exercises/grade-production-client'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
-import { isExactTranslation } from '@/lib/exercises/translation'
+import { translationAnswers } from '@/lib/exercises/translation'
 import type { TranslationEsEnExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
 
@@ -24,40 +24,32 @@ export function TranslationEsEnExercise({
   onResult: (correct: boolean, answer: string, timeMs: number, extras?: GenericRenderExtras) => void
 }) {
   const [answer, setAnswer] = useState('')
-  const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
+  const acceptedAnswers = useMemo(() => translationAnswers(exercise), [exercise])
+  const grading = useProductionGrading({
+    exerciseKey: exercise.id,
+    acceptedAnswers,
+    fixedReference: true,
+    offlineMessage: `Sin conexión. Referencia: ${exercise.referenceEn}`,
+  })
+  const loading = grading.grading
 
   async function submit() {
     const text = answer.trim()
     if (!text || loading || done) return
-    if (isExactTranslation(exercise, text)) {
-      setDone(true)
-      return onResult(true, text, Date.now() - startedAt.current, { score: 100 })
-    }
-    if (!navigator.onLine) {
-      return setError(`Sin conexión. Referencia: ${exercise.referenceEn}`)
-    }
-    setLoading(true)
-    setError(null)
-    try {
-      const grade = await gradeProduction({
-        targetItem: exercise.referenceEn,
-        taskPrompt: `Translate from Spanish to English: ${exercise.sourceEs}`,
-        production: text,
-        modality: 'written',
-      })
-      setDone(true)
-      onResult(grade.correct, text, Date.now() - startedAt.current, {
-        score: grade.score,
-        feedback: pedagogicalFeedbackFromProductionGrade(grade),
-      })
-    } catch {
-      setError('No se pudo corregir. Inténtalo de nuevo.')
-    } finally {
-      setLoading(false)
-    }
+    const grade = await grading.grade({
+      targetItem: exercise.referenceEn,
+      taskPrompt: `Translate from Spanish to English: ${exercise.sourceEs}`,
+      production: text,
+      modality: 'written',
+    })
+    if (!grade) return
+    setDone(true)
+    onResult(grade.correct, text, Date.now() - startedAt.current, {
+      score: grade.score,
+      feedback: pedagogicalFeedbackFromProductionGrade(grade),
+    })
   }
 
   return (
@@ -92,9 +84,9 @@ export function TranslationEsEnExercise({
         />
       </div>
 
-      {error ? (
+      {grading.error ? (
         <p role="alert" className="text-body-sm text-error">
-          {error}
+          {grading.error}
         </p>
       ) : null}
 

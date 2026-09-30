@@ -9,6 +9,7 @@ Fecha: 2026-07-01
 - `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY` y credenciales de despliegue.
 - Audio de usuario, transcripciones, prompts y respuestas Gemini.
 - Jobs durables como `word_enrichment_jobs` y caches de STT/deck suggestions.
+- Tabla `ai_feedback_reports`: datos personales, RLS por usuario, sin acceso de otros usuarios.
 
 ## Controles Actuales
 
@@ -20,7 +21,13 @@ Fecha: 2026-07-01
 - Grants: `anon` no conserva grants heredados amplios sobre tablas, secuencias o funciones del schema `public`.
 - Secretos: `pnpm scan:secrets` corre en CI y puede ejecutarse localmente antes de commit.
 - Service role: uso server-only para rate limit RPC, caches compartidas y trabajos de backend.
-- Headers/CSP: definidos globalmente en `next.config.mjs`.
+- Headers: definidos globalmente en `next.config.mjs`. La CSP se genera por request con nonce en
+  `proxy.ts` (`connect-src`, `script-src`, `worker-src`); cualquier dominio o permiso nuevo se añade ahí.
+  Plan 039 (spike, no-ship): `script-src` suma `'wasm-unsafe-eval'` (solo compila WebAssembly, no habilita
+  `eval()` de JS) y `connect-src` suma `https://huggingface.co`/`https://*.hf.co` para la descarga bajo
+  demanda del modelo Kokoro TTS; los `.wasm` de ONNX Runtime se sirven desde `public/wasm/` (same-origin),
+  así que `worker-src` sigue en `'self'`. Ver `docs/ai/local-voice-models.md` para el veredicto (no pasó
+  la puerta de latencia — no se activa nada en producción).
 
 ## Riesgos y Owners
 

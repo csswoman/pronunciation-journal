@@ -54,7 +54,7 @@ practice session, nothing interrupts it.
 | Auth & cloud data | Supabase (Postgres + RLS on every table) |
 | Offline / local state | Dexie (IndexedDB) with a background sync outbox |
 | Client state | Zustand (ephemeral UI only) |
-| AI | Google Gemini via server-only API routes, with a model fallback chain |
+| AI | Google Gemini Free Tier via server routes, with Lite-first fallback, daily model and user budgets |
 | Spaced repetition | `ts-fsrs` (FSRS) client-side |
 | Testing | Vitest + Testing Library; Playwright for a11y |
 | Delivery | PWA (Serwist) with offline fallback |
@@ -64,6 +64,7 @@ practice session, nothing interrupts it.
 - **Strict layering.** UI never touches Supabase directly — all data access goes
   through `lib/*/queries.ts`. No AI prompt strings live in components; they're all
   in `lib/ai-prompts.ts`. Pages route and compose only, no business logic.
+- **Content bank from leftover quota.** Practice content is pregenerated using nightly unused free AI quota into a system-wide bank, allowing the AI Coach to serve 5-exercise sets instantly with 0 live API requests and offline caching ([docs/architecture/content-bank.md](docs/architecture/content-bank.md)).
 - **Offline-first sync.** Practice writes go through a Dexie `syncOutbox` with
   retryable delivery to Supabase, which stays the source of truth after reconnect.
 - **One learning loop, honest signals.** Each user action contributes only the
@@ -73,9 +74,11 @@ practice session, nothing interrupts it.
 - **Guardrails as code.** ESLint rules and audit scripts enforce the hard rules
   above (`pnpm audit:hard-rules`), plus RLS coverage checks, migration safety
   checks, secret scanning, and design-token linting.
-- **Security.** Global security headers including CSP in `next.config.mjs`;
+- **Security.** Global security headers in `next.config.mjs` and a per-request
+  nonce-based CSP in `proxy.ts`;
   `service_role` never reaches the client; per-user scoping on caches; API cost
-  controls via a Supabase rate-limit RPC.
+  controls via Supabase rate-limit and daily model-reservation RPCs; Gemini
+  endpoints also enforce daily per-user request caps.
 
 ### Repository layout
 

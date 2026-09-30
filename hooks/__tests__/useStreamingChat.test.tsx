@@ -175,6 +175,18 @@ describe('useStreamingChat failed sends', () => {
 })
 
 describe('useStreamingChat session finalization', () => {
+  it('replaying a restored widget preserves its failure and adds no second tool result', () => {
+    const { result } = makeHook()
+    const original = { correct: false, topic: 'grammar:present simple', gradedBy: 'client' as const }
+    act(() => result.current.loadMessages([{
+      role: 'model', contentParts: [{ type: 'tool_call', callId: 'restored' }], timestamp: '2026-09-26T00:00:00Z',
+      toolCalls: new Map([['restored', { id: 'restored', name: 'render_fill_blank', args: {}, status: 'answered', result: original }]]),
+    }]))
+    act(() => result.current.answerToolCall('restored', { ...original, correct: true }))
+    expect(result.current.messages).toHaveLength(1)
+    const model = result.current.messages[0]
+    expect(model.role === 'model' && model.toolCalls.get('restored')?.result?.correct).toBe(false)
+  })
   it('aborts an active stream when the hook unmounts', async () => {
     let capturedSignal: AbortSignal | undefined
     vi.stubGlobal('fetch', vi.fn((_url, init) => {
@@ -234,6 +246,7 @@ describe('useStreamingChat session finalization', () => {
       {
         toolName: 'exercise_result',
         result: {
+          attemptId: 'coach:call-1',
           correct: true,
           topic: 'present simple',
           gradedBy: 'client',

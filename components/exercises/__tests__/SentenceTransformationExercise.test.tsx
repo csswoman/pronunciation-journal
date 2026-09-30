@@ -10,8 +10,9 @@ const gradingMocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/exercises/grade-production-client', () => ({
   gradeProduction: gradingMocks.gradeProduction,
+  isOnline: () => navigator.onLine,
   ProductionGradeError: class ProductionGradeError extends Error {
-    constructor(message: string) {
+    constructor(message: string, readonly code?: string) {
       super(message)
       this.name = 'ProductionGradeError'
     }
@@ -42,7 +43,7 @@ describe('SentenceTransformationExercise', () => {
     expect(screen.getByPlaceholderText('Escribe la nueva oración…')).toBeInTheDocument()
   })
 
-  it('immediately validates exact match without calling gradeProduction and hides submit button', () => {
+  it('validates an exact match locally without calling gradeProduction and hides submit button', async () => {
     const onResult = vi.fn()
     render(<SentenceTransformationExercise exercise={exercise} onResult={onResult} />)
 
@@ -52,19 +53,21 @@ describe('SentenceTransformationExercise', () => {
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })
     fireEvent.click(submitBtn)
 
-    expect(gradingMocks.gradeProduction).not.toHaveBeenCalled()
-    expect(onResult).toHaveBeenCalledWith(
-      true,
-      'she is not well enough to work',
-      expect.any(Number),
-      expect.objectContaining({
-        score: 100,
-        feedback: expect.objectContaining({
-          immediate: '¡Correcto!',
-          expectedAnswer: 'She is not well enough to work.',
+    await waitFor(() => {
+      expect(onResult).toHaveBeenCalledWith(
+        true,
+        'she is not well enough to work',
+        expect.any(Number),
+        expect.objectContaining({
+          score: 100,
+          feedback: expect.objectContaining({
+            immediate: '¡Correcto!',
+            expectedAnswer: 'She is not well enough to work.',
+          }),
         }),
-      }),
-    )
+      )
+    })
+    expect(gradingMocks.gradeProduction).not.toHaveBeenCalled()
 
     expect(screen.queryByRole('button', { name: 'Comprobar' })).not.toBeInTheDocument()
     expect(textarea).toBeDisabled()
@@ -119,7 +122,7 @@ describe('SentenceTransformationExercise', () => {
     expect(textarea).toBeDisabled()
   })
 
-  it('shows error when offline and not matching reference answer', () => {
+  it('shows error when offline and not matching reference answer', async () => {
     Object.defineProperty(navigator, 'onLine', { value: false, configurable: true })
     const onResult = vi.fn()
 
@@ -131,7 +134,10 @@ describe('SentenceTransformationExercise', () => {
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })
     fireEvent.click(submitBtn)
 
-    expect(screen.getByRole('alert')).toHaveTextContent('Sin conexión. Respuesta de referencia: She is not well enough to work.')
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Sin conexión. Respuesta de referencia: She is not well enough to work.')
+    })
+    expect(gradingMocks.gradeProduction).not.toHaveBeenCalled()
     expect(onResult).not.toHaveBeenCalled()
     expect(screen.getByRole('button', { name: 'Comprobar' })).toBeInTheDocument()
   })

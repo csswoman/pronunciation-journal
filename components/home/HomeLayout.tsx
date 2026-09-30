@@ -15,13 +15,12 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useDailyPlan, type ConceptLesson } from "@/hooks/useDailyPlan";
 import { useDailySessionRunner } from "@/hooks/useDailySessionRunner";
 import type { DailyStreakResult } from "@/lib/daily/streak-core";
-import type { DailyGoalProgress, HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { DailyGoalProgress, WeakestPhonemeHome } from "@/lib/home/constants";
 import type { PrimaryAction } from "@/lib/home/primary-action";
 import type { VocabularyProgressSeed } from "@/lib/vocabulary/server-progress";
 import type { MiniLesson } from "@/lib/content/schemas";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
-import type { CheckpointReadiness } from "@/lib/home/checkpoint-readiness";
 
 const DailyStepSession = dynamic(
   () => import('@/components/daily/DailyStepSession'),
@@ -47,10 +46,8 @@ interface HomeLayoutProps {
   secondaryLesson?: MiniLesson | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
-  checkpointReadiness?: CheckpointReadiness | null;
   primaryAction: PrimaryAction;
   previewWords?: Array<{ text: string }>;
-  immersionSummary?: HomeImmersionSummary | null;
 }
 
 export default function HomeLayout({
@@ -62,10 +59,8 @@ export default function HomeLayout({
   weakestPhoneme = null,
   placementState,
   pronunciationDiagnosticState,
-  checkpointReadiness = null,
   primaryAction,
   previewWords = [],
-  immersionSummary = null,
 }: HomeLayoutProps) {
   const { user } = useAuth()
   const dailyPlan = useDailyPlan({
@@ -127,10 +122,8 @@ export default function HomeLayout({
       soundsDueCount={soundsDueCount}
       streak={currentStreak}
       previewWords={previewWords}
-      immersionSummary={immersionSummary}
       placementState={placementState}
       pronunciationDiagnosticState={pronunciationDiagnosticState}
-      checkpointReadiness={checkpointReadiness}
       onStartStep={runner.startStep}
       planState={dailyPlan}
     />

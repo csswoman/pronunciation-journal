@@ -19,7 +19,7 @@ import { join, extname, relative } from "path";
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
 
 const SCAN_EXTENSIONS = new Set([".tsx", ".ts", ".jsx", ".js"]);
-const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".claude"]);
+const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".claude", "tmp", ".agents"]);
 
 /**
  * Directories/files allowed to import @google/genai or call generateContent
@@ -29,6 +29,7 @@ const GENAI_ALLOWLIST_PREFIXES = [
   "lib/ai-prompts.ts",
   "lib/gemini/",
   "lib/word-bank/gemini.ts",
+  "lib/content-bank/generate.ts",
   "app/api/gemini/",
   "scripts/",
 ];

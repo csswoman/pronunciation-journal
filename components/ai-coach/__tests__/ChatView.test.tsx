@@ -39,6 +39,15 @@ function model(parts: AIMessage["role"] extends "model" ? never : string): AIMes
 }
 
 describe("ChatView message visibility", () => {
+  it("shows the first streamed text while the response is still arriving", () => {
+    render(<ChatView {...baseProps} isStreaming messages={[
+      { role: "user", content: "Hello", timestamp: "u1" },
+      model("The first words"),
+    ]} />);
+    expect(screen.getByText("The first words")).toBeInTheDocument();
+    expect(screen.queryByTestId("typing")).not.toBeInTheDocument();
+  });
+
   it("hides an empty model bubble stranded in the middle of the list", () => {
     const messages: AIMessage[] = [
       { role: "user", content: "hidden starter", hidden: true, timestamp: "t" },

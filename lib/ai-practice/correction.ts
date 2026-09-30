@@ -1,5 +1,6 @@
 import type { ToolCall } from "./types";
 import type { AnnotateTurnArgs, TurnConcept, TurnCorrection, TurnSaveable } from "./tools/registry";
+import type { ErrorPatternId } from "@/lib/exercises/error-patterns";
 
 /**
  * Pulls the correction out of a model turn's annotate_turn call.
@@ -33,7 +34,7 @@ export function extractTurnSaveables(
   return [];
 }
 
-/** Companion to extractTurnCorrection: the concept the coach flagged as worth keeping. */
+/** Companion to extractTurnConcept: the concept the coach flagged as worth keeping. */
 export function extractTurnConcept(
   toolCalls: Map<string, ToolCall>,
 ): TurnConcept | null {
@@ -44,4 +45,23 @@ export function extractTurnConcept(
     if (args?.concept) return args.concept;
   }
   return null;
+}
+
+/**
+ * Returns the errorPattern from a correction if it should be registered in the
+ * error-recurrence queue. Returns undefined when:
+ * - correction is null or kind is not "error"
+ * - errorPattern is absent (model didn't tag it)
+ * - the pattern was already recorded this session (alreadyRecorded)
+ *
+ * Callers own the `alreadyRecorded` set and must add the returned id to it.
+ */
+export function pickCorrectionToRecord(
+  correction: TurnCorrection | null,
+  alreadyRecorded: Set<ErrorPatternId>,
+): ErrorPatternId | undefined {
+  if (!correction || correction.kind !== "error") return undefined;
+  const { errorPattern } = correction;
+  if (!errorPattern || alreadyRecorded.has(errorPattern)) return undefined;
+  return errorPattern;
 }

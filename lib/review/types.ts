@@ -1,5 +1,5 @@
 import type { SoundDueHome } from '@/lib/home/constants'
-import type { WordBankEntry } from '@/lib/word-bank/types'
+import type { WordBankEntry, WordMasteryStats } from '@/lib/word-bank/types'
 
 export interface FailedSentenceItem {
   contentId: string
@@ -61,7 +61,12 @@ export interface ReviewQueueCounts {
   /** Items counted but practiced on their own surface (Essential Words, Inmersión); Repaso only links to them. */
   elsewhere: number
   total: number
+  /** Words, topics or sounds whose next review has been overdue for more than 7 days. */
+  overdueOneWeek?: number
 }
+
+/** Real count of items scheduled for each of the next N days (index 0 = today + overdue). */
+export type ReviewForecastCounts = number[]
 
 export type ReviewHubCounts = ReviewQueueCounts
 
@@ -95,6 +100,10 @@ export interface ReviewHubSummary {
   nothingDue: boolean
   /** At least one step can be built for "Iniciar repaso completo". */
   canStartReview: boolean
+  /** Real word_bank srs_status distribution — powers the mastery banner. */
+  wordMastery?: WordMasteryStats
+  /** Real count of items due each of the next 7 days (index 0 = today). */
+  forecast?: ReviewForecastCounts
 }
 
 export type SrsHistoryDomain = 'words' | 'sounds' | 'sentences' | 'topics'

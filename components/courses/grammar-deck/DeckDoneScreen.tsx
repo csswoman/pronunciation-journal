@@ -58,7 +58,7 @@ export function DeckDoneScreen({
 
   return (
     <section
-      className="grammar-deck__done flex w-full flex-col gap-6 rounded-2xl border border-border-subtle bg-surface-raised p-6 text-center shadow-md md:p-8"
+      className="grammar-deck__done flex w-full flex-col gap-6 rounded-2xl border border-border-subtle bg-white dark:bg-surface-base p-6 text-center shadow-md md:p-8"
       aria-live="polite"
     >
       {/* 1. Hero section + Quiz score */}
@@ -89,7 +89,7 @@ export function DeckDoneScreen({
         {/* Quiz score badge right under completion hero */}
         {quizScore && (
           <div className="mt-1 inline-flex items-center justify-center gap-2.5 rounded-full border border-success/30 bg-success-soft/60 px-5 py-1.5 shadow-xs">
-            <span className="font-mono text-body font-bold tabular-nums text-success">
+            <span className="text-body font-bold tabular-nums text-success">
               {quizScore.correct}/{quizScore.total}
             </span>
             <span className="text-body-sm font-medium text-fg">
@@ -110,7 +110,7 @@ export function DeckDoneScreen({
 
       {/* 3. Sentence practice button (only shown if exercises are available) */}
       {lessonId && !practiceError && (
-        <div className="w-full max-w-xl self-center">
+        <div className="w-full max-w-xl self-center flex flex-col items-center">
           <button
             type="button"
             className="flex w-full items-center justify-between gap-4 rounded-xl bg-cta-bg px-6 py-3.5 text-body-sm font-semibold text-cta-fg shadow-sm transition-all hover:bg-cta-bg/90 hover:-translate-y-0.5 active:scale-[0.99] disabled:opacity-55"
@@ -127,6 +127,11 @@ export function DeckDoneScreen({
             </span>
             <ArrowRight size={18} className="shrink-0" aria-hidden />
           </button>
+          {deck.drill && deck.drill.reviewed === false && (
+            <p className="mt-2 text-caption text-fg-muted">
+              Ejercicios nuevos
+            </p>
+          )}
         </div>
       )}
 
@@ -145,7 +150,7 @@ export function DeckDoneScreen({
           </span>
           <Link
             href={`/practice/decks/${nextLesson.slug}`}
-            className="group flex items-center justify-between gap-4 rounded-xl border border-border-default bg-surface-raised p-4 text-body-sm font-medium text-fg shadow-xs transition-all hover:border-accent hover:bg-surface-sunken hover:-translate-y-0.5"
+            className="group flex items-center justify-between gap-4 rounded-xl border border-border-default bg-white dark:bg-surface-base p-4 text-body-sm font-medium text-fg shadow-xs transition-all hover:border-accent hover:bg-surface-sunken hover:-translate-y-0.5"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-white">
@@ -178,7 +183,7 @@ export function DeckDoneScreen({
         )}
         <button
           type="button"
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-border-default bg-surface-raised px-5 py-2.5 text-body-sm font-semibold text-fg-muted transition-all hover:border-accent hover:text-fg hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-border-default bg-white dark:bg-surface-base px-5 py-2.5 text-body-sm font-semibold text-fg-muted transition-all hover:border-accent hover:text-fg hover:-translate-y-0.5"
           onClick={onRestart}
         >
           <RotateCcw size={16} className="shrink-0" aria-hidden />

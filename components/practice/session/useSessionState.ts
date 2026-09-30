@@ -3,15 +3,14 @@
 // Hook that owns all mutable session state and callbacks for PracticeSession.
 // PracticeSession imports this and stays purely compositional.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { buildSession } from '@/lib/practice/engine'
 import { savePracticeAnswer } from '@/lib/practice/queries'
 import { buildSessionResult } from '@/lib/practice/session-result'
-import { recordActivitySession } from '@/lib/progress/activity-hub'
 import { gradeEssentialWord } from '@/lib/essential-words/grade'
 import { flushOutbox } from '@/lib/sync/sync-manager'
-import { createSession, deleteSession, updateSessionProgress } from '@/lib/practice/session-store'
+import { createSession, updateSessionProgress } from '@/lib/practice/session-store'
 import type { ExerciseResult, PracticeConfig } from '@/lib/practice/types'
 import { useVoiceRotation } from '@/hooks/useVoiceRotation'
 import { playUiCue } from '@/lib/ui-sounds/cues'
@@ -22,11 +21,13 @@ import {
 } from './session-state-helpers'
 import { useSessionPersistenceRestore, useSessionTimers } from './useSessionPersistence'
 
+import { useSessionCompletion } from './useSessionCompletion'
+
 export { buildSessionResult } from '@/lib/practice/session-result'
 
 export function useSessionState(config: PracticeConfig) {
   const { user } = useAuth()
-  const { context, onSessionComplete, onExit, persistence } = config
+  const { context, onExit, persistence } = config
 
   const {
     ready,
@@ -38,6 +39,7 @@ export function useSessionState(config: PracticeConfig) {
     setResults,
     phase,
     setPhase,
+    sessionIdRef,
   } = useSessionPersistenceRestore(config, persistence)
 
   const [lastFeedback, setLastFeedback] = useState<boolean | null>(null)
@@ -72,29 +74,7 @@ export function useSessionState(config: PracticeConfig) {
     void drainOutbox(user.id)
   }, [user, drainOutbox])
 
-  useEffect(() => {
-    if (phase !== 'complete' || completedRef.current) return
-    completedRef.current = true
-    const sessionResult = buildSessionResult(results)
-    onSessionComplete(sessionResult)
-    if (user) {
-      setProgressSaveStatus((prev) => (prev === 'error' ? prev : 'saving'))
-      void (async () => {
-        try {
-          await recordActivitySession(user.id, { practiceContext: context, sessionResult })
-          await drainOutbox(user.id)
-        } catch (err) {
-          console.error('[PracticeSession] recordActivitySession failed', err)
-          setProgressSaveStatus('error')
-        }
-      })()
-    }
-    if (persistence) {
-      void deleteSession(persistence.userId, persistence.soundId).catch((err) => {
-        console.error('[PracticeSession] deleteSession failed', err)
-      })
-    }
-  }, [phase, results, onSessionComplete, persistence, user, context, drainOutbox])
+  useSessionCompletion({ phase, results, config, user, completedRef, sessionIdRef, drainOutbox, setProgressSaveStatus })
 
   const handleSubmit = useCallback(
     async (
@@ -108,19 +88,24 @@ export function useSessionState(config: PracticeConfig) {
       const totalInteractionMs = Date.now() - startTimeRef.current
       const responseTimeMs = extras?.responseTimeMs ?? totalInteractionMs
 
+      const attemptId = `${sessionIdRef.current}:${currentIndex}:${current.id}`
+      const previous = results.find((entry) => entry.attemptId === attemptId)
       const result = buildExerciseResult({
         current,
         isCorrect,
         userAnswer,
         timeMs: responseTimeMs,
         context,
+        attemptId,
         extras: {
           ...extras,
+          attemptId,
           responseTimeMs,
           totalInteractionMs,
+          firstTryFailed: previous ? !previous.isCorrect || previous.firstTryFailed : extras?.firstTryFailed,
         },
       })
-      if (user) {
+      if (user && !previous) {
         try {
           await savePracticeAnswer(user.id, result)
         } catch (err) {
@@ -129,20 +114,23 @@ export function useSessionState(config: PracticeConfig) {
         }
       }
       const isAnswered = result.status === 'answered' || (result.status === undefined && result.userAnswer !== 'skip')
-      if (result.sourceRef?.source === 'core1k' && isAnswered) {
+      if (!previous && result.sourceRef?.source === 'core1k' && isAnswered) {
         const word = result.sourceRef.id.replace(/^c1k:/, '')
         const gradeVal = result.isCorrect ? (result.firstTryFailed ? 3 : 4) : 2
         void gradeEssentialWord(word, gradeVal, {}, user?.id).catch((err) => {
           console.error('[PracticeSession] gradeEssentialWord failed', err)
         })
       }
-      const nextResults = [...results, result]
+      const nextResults = previous ? results : [...results, result]
       const nextIndex = currentIndex + 1
       setResults(nextResults)
       setLastFeedback(isCorrect)
       if (current.payload.kind === 'phoneme') playUiCue(isCorrect ? 'correct' : 'wrong')
       try {
         if (!isCorrect && current.payload.kind === 'phoneme' && userAnswer !== 'skip') {
+          if (persistence) await updateSessionProgress(persistence.userId, persistence.soundId, {
+            currentIndex, answers: nextResults, phase: 'hints',
+          })
           setPhase('hints')
           return
         }
@@ -151,6 +139,7 @@ export function useSessionState(config: PracticeConfig) {
           void updateSessionProgress(persistence.userId, persistence.soundId, {
             currentIndex: nextIndex,
             answers: nextResults,
+            phase: 'exercising',
           }).catch((err) => {
             console.error('[PracticeSession] updateSessionProgress failed', err)
           })
@@ -183,6 +172,7 @@ export function useSessionState(config: PracticeConfig) {
       setResults,
       setCurrentIndex,
       setPhase,
+      sessionIdRef,
     ],
   )
 
@@ -194,18 +184,22 @@ export function useSessionState(config: PracticeConfig) {
 
   const handleHintContinue = useCallback(() => {
     const nextIndex = currentIndex + 1
+    if (persistence) void updateSessionProgress(persistence.userId, persistence.soundId, {
+      currentIndex: nextIndex, answers: results, phase: 'exercising',
+    }).catch(() => setProgressSaveStatus('error'))
     if (nextIndex >= exercises.length) finish(results)
     else {
       setCurrentIndex(nextIndex)
       setLastFeedback(null)
       setPhase('exercising')
     }
-  }, [currentIndex, exercises.length, finish, results, setCurrentIndex, setPhase])
+  }, [currentIndex, exercises.length, finish, results, setCurrentIndex, setPhase, persistence])
 
   const handlePracticeAgain = useCallback(() => {
     clearFeedbackTimer()
     const fresh = buildSession(config)
     completedRef.current = false
+    sessionIdRef.current = crypto.randomUUID()
     setProgressSaveStatus('idle')
     setExercises(fresh)
     setCurrentIndex(0)
@@ -217,6 +211,7 @@ export function useSessionState(config: PracticeConfig) {
         userId: persistence.userId,
         soundId: persistence.soundId,
         exercises: fresh,
+        sessionId: sessionIdRef.current,
       }).catch((err) => {
         console.error('[PracticeSession] createSession (restart) failed', err)
       })
@@ -229,6 +224,7 @@ export function useSessionState(config: PracticeConfig) {
     setCurrentIndex,
     setResults,
     setPhase,
+    sessionIdRef,
   ])
 
   const sessionResult = useMemo(() => buildSessionResult(results), [results])

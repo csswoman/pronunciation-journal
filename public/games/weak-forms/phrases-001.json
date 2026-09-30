@@ -1,0 +1,22 @@
+[
+  { "id": "wf-1", "reduced": "whaddya want", "full": "what do you want", "accept": ["what do you want", "what d'you want"], "ipa": "/wʌdʒə wɑːnt/", "ruleEs": "'what do you' se contrae oralmente a /wʌdʒə/", "cefr": "A1" },
+  { "id": "wf-2", "reduced": "gonna go", "full": "going to go", "ipa": "/ɡənə ɡoʊ/", "ruleEs": "'going to' delante de un verbo se reduce a 'gonna' /ɡənə/", "cefr": "A1" },
+  { "id": "wf-3", "reduced": "wanna see", "full": "want to see", "ipa": "/wɑːnə siː/", "ruleEs": "'want to' se une relajado como 'wanna' /wɑːnə/", "cefr": "A1" },
+  { "id": "wf-4", "reduced": "gotta run", "full": "got to run", "ipa": "/ɡɑːtə rʌn/", "ruleEs": "'got to' se convierte en 'gotta' /ɡɑːtə/", "cefr": "A1" },
+  { "id": "wf-5", "reduced": "lemme know", "full": "let me know", "ipa": "/lemɪ noʊ/", "ruleEs": "'let me' pierde la /t/ y suena como 'lemme'", "cefr": "A1" },
+  { "id": "wf-6", "reduced": "dunno why", "full": "do not know why", "accept": ["dont know why", "don't know why"], "ipa": "/dənoʊ waɪ/", "ruleEs": "'don't know' se reduce rápidamente a 'dunno'", "cefr": "A2" },
+  { "id": "wf-7", "reduced": "kinda cool", "full": "kind of cool", "ipa": "/kaɪndə kuːl/", "ruleEs": "'kind of' se pronuncia /kaɪndə/ antes de adjetivos", "cefr": "A2" },
+  { "id": "wf-8", "reduced": "sorta late", "full": "sort of late", "ipa": "/sɔːrtə leɪt/", "ruleEs": "'sort of' se abrevía a /sɔːrtə/", "cefr": "A2" },
+  { "id": "wf-9", "reduced": "didja see", "full": "did you see", "ipa": "/dɪdʒə siː/", "ruleEs": "'did you' se fusiona en /dɪdʒə/", "cefr": "A2" },
+  { "id": "wf-10", "reduced": "gimme that", "full": "give me that", "ipa": "/ɡɪmɪ ðæt/", "ruleEs": "'give me' se contrae oralmente a 'gimme'", "cefr": "A1" },
+  { "id": "wf-11", "reduced": "cup of tea", "full": "cup of tea", "ipa": "/kʌp ə tiː/", "ruleEs": "'of' pierde la /v/ débil y suena solo /ə/", "cefr": "A1" },
+  { "id": "wf-12", "reduced": "fish and chips", "full": "fish and chips", "ipa": "/fɪʃ ən tʃɪps/", "ruleEs": "'and' reduce la vocal y elimina la /d/ final /ən/", "cefr": "A1" },
+  { "id": "wf-13", "reduced": "outta here", "full": "out of here", "ipa": "/aʊtə hɪr/", "ruleEs": "'out of' se convierte en 'outta' /aʊtə/", "cefr": "A2" },
+  { "id": "wf-14", "reduced": "shoulda told me", "full": "should have told me", "accept": ["should've told me"], "ipa": "/ʃʊdə toʊld miː/", "ruleEs": "'should have' se reduce a 'shoulda' /ʃʊdə/", "cefr": "B1" },
+  { "id": "wf-15", "reduced": "woulda done it", "full": "would have done it", "accept": ["would've done it"], "ipa": "/wʊdə dʌn ɪt/", "ruleEs": "'would have' suena como 'woulda' /wʊdə/", "cefr": "B1" },
+  { "id": "wf-16", "reduced": "coulda been", "full": "could have been", "accept": ["could've been"], "ipa": "/kʊdə bɪn/", "ruleEs": "'could have' se reduce a 'coulda' /kʊdə/", "cefr": "B1" },
+  { "id": "wf-17", "reduced": "musta left", "full": "must have left", "accept": ["must've left"], "ipa": "/mʌstə left/", "ruleEs": "'must have' se apaga en /mʌstə/", "cefr": "B1" },
+  { "id": "wf-18", "reduced": "lotta people", "full": "lot of people", "ipa": "/lɑːtə piːpəl/", "ruleEs": "'lot of' se fusiona en 'lotta' /lɑːtə/", "cefr": "A2" },
+  { "id": "wf-19", "reduced": "c'mon now", "full": "come on now", "ipa": "/kəmɑːn naʊ/", "ruleEs": "'come on' pierde la primera vocal y suena /kəmɑːn/", "cefr": "A1" },
+  { "id": "wf-20", "reduced": "how's it going", "full": "how is it going", "accept": ["hows it going"], "ipa": "/haʊz ɪt ɡoʊɪŋ/", "ruleEs": "'how is' se contrae a 'how's'", "cefr": "A1" }
+]
