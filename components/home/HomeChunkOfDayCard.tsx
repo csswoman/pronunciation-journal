@@ -118,35 +118,37 @@ export default function HomeChunkOfDayCard() {
       )}
 
       {chunk && !loading && (
-        <div className="animate-state-in relative z-1 flex flex-col gap-3" key={chunk.id}>
+        <div className="animate-state-in relative z-1 flex flex-col gap-3.5" key={chunk.id}>
           {/* Grupo de título y pronunciación */}
-          <div className="flex items-start justify-between gap-3">
-            <span
-              className={cn(
-                "font-heading font-extrabold text-ink leading-[1.2] break-words tracking-tight",
-                getHeroScale(chunk.chunk)
-              )}
-            >
-              <OpenEndedText value={chunk.chunk} />
-            </span>
-            <button
-              type="button"
-              onClick={() => speakText(chunk.chunk)}
-              className="shrink-0 rounded-full bg-ink p-3 text-paper hover:scale-105 active:scale-95 transition-transform cursor-pointer focus-ring shadow-sm"
-              aria-label={`Escuchar pronunciación de ${chunk.chunk}`}
-            >
-              <Volume2 size={18} aria-hidden />
-            </button>
-          </div>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-start justify-between gap-3">
+              <span
+                className={cn(
+                  "font-heading font-extrabold text-ink leading-[1.2] break-words tracking-tight",
+                  getHeroScale(chunk.chunk)
+                )}
+              >
+                <OpenEndedText value={chunk.chunk} />
+              </span>
+              <button
+                type="button"
+                onClick={() => speakText(chunk.chunk)}
+                className="shrink-0 rounded-full bg-ink p-3 text-paper hover:scale-105 active:scale-95 transition-transform cursor-pointer focus-ring shadow-sm"
+                aria-label={`Escuchar pronunciación de ${chunk.chunk}`}
+              >
+                <Volume2 size={18} aria-hidden />
+              </button>
+            </div>
 
-          {chunk.ipa ? (
-            <span
-              className="ts-ipa-md font-ipa text-ink-secondary -mt-1"
-              lang="en-fonipa"
-            >
-              {formatIpaDisplay(chunk.ipa)}
-            </span>
-          ) : null}
+            {chunk.ipa ? (
+              <span
+                className="ts-ipa-md font-ipa text-ink-secondary"
+                lang="en-fonipa"
+              >
+                {formatIpaDisplay(chunk.ipa)}
+              </span>
+            ) : null}
+          </div>
 
           {/* Traducción de la frase */}
           <p className="ts-body-lg-strong text-ink">
