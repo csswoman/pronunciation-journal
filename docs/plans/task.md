@@ -1,10 +1,10 @@
-# Known Words Triage
+# Aplicar escala tipográfica .ts-* en Home (http://localhost:3000/)
 
-| # | Paso | Estado |
-|---|------|--------|
-| 1 | Task 1: Core Logic & DB Helpers (triage-deck, triage-recheck, patchRecheck, scheduleEssentialWordRecheck) | ✅ |
-| 2 | Task 2: Swipe Gesture Pure Logic & Hook (swipe-direction & useSwipeCard) | ✅ |
-| 3 | Task 3: Triage Orchestration Hook (useKnownWordsTriage) | ✅ |
-| 4 | Task 4: UI Components (TriageCard, TriageActionHints, TriageDeck, TriageLevelPicker, TriageSummary, KnownWordsTriage) | ✅ |
-| 5 | Task 5: Route & SessionReady Entry Point | ✅ |
-| 6 | Task 6: End-to-end Verification (types, lint, design-tokens, audit:hard-rules, unit tests) | ✅ |
+| # | Componente / Área | Estado |
+|---|-------------------|--------|
+| 1 | `HomeHeader.tsx` & `HomePageHeader.tsx` | ✅ Completado |
+| 2 | `HomeDailyCard.tsx` (`HomeHeroCard`, `HeroTermExample`, `HomeHeroStepList`, `HomePrimaryAction`, `HomePlanRationale`, `HomeReviewBanner`) | ✅ Completado |
+| 3 | `HomeRightSidebar.tsx` (`HomeWordOfDayCard`, `HomeChunkOfDayCard`) | ✅ Completado |
+| 4 | `HomeStatsRow.tsx` (`HomeEssentialWordsBody`, `HomeJournalCard`, `WeakSoundCard`, etc.) | ✅ Completado |
+| 5 | Prompts / Modales (`HomePlacementPrompt`, `HomePronunciationPrompt`, `HomeActivationStrip`, `GuestSaveProgressBanner`, `HomePlanDone`, `HomeWelcomeTourModal`, `OnboardingStep1Welcome`) | ✅ Completado |
+| 6 | Verificación (`pnpm type-check`, `pnpm lint`, `pnpm lint:design-tokens`, `pnpm audit:hard-rules`, `pnpm vitest`, HTTP server check) | ✅ Completado |

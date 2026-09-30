@@ -24,7 +24,7 @@ diseño y planes de producto.
 | [Progress telemetry](architecture/progress.md) | Contrato de sesiones, answers y almacenamiento de actividad |
 | [Métricas honestas de progreso](architecture/honest-progress-metrics.md) | Denominadores evaluables, paginación, disponibilidad y puerta pendiente para la fórmula de habilidades |
 | [Performance](architecture/performance.md) | Baseline, presupuestos, reglas y método de medición |
-| [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase y reglas de reconciliación |
+| [Offline y sync](architecture/offline-sync.md) | Persistencia local, outbox, Supabase, reglas de reconciliación y paquetes offline por nivel CEFR |
 | [Recuperación de respuestas y fallos del outbox](architecture/answer-sync-recovery.md) | Clases de fallo (`permanent`/`exhausted`), recuperación acotada de `answer_history` reparada y runbook del plan 045 |
 | [Feedback de pronunciación](architecture/pronunciation-feedback.md) | Señales honestas (`stt_intelligibility`), priorización y remediación |
 | [Conceptos, atribución y actividad diaria](architecture/concepts-attribution-and-activity.md) | Evidencia de concepto acumulada por intento/contenido, `taskSkill` canónico, checklist diario frente a sesión real y umbrales de racha (Plan 050) |

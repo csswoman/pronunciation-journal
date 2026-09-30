@@ -1,6 +1,6 @@
 # Planes de implementación
 
-Cinco series. La primera (001–004, peso y carga) está cerrada. La segunda
+Siete series. La primera (001–004, peso y carga) está cerrada. La segunda
 (005–019) sale de la auditoría pedagógica del 2026-09-18 sobre `c869029c`:
 cómo se evalúa y avanza el nivel, si el contenido está conectado al ciclo de
 evidencia, y qué ve el usuario que no proviene de datos reales. La tercera
@@ -10,16 +10,40 @@ sobre `87636eca`: reparar bucles sueltos (diario → habla), resiliencia offline
 expansión del content graph a niveles A2/B1, descubrimiento de superficies y
 evaluación de escucha y habla en checkpoints. Sus planes 029–034 se revisaron
 contra las rutas reales antes de ejecutarse.
-La quinta (035–042) prioriza el uso sostenible de modelos gratuitos: cuotas por
+La quinta (035–043) prioriza el uso sostenible de modelos gratuitos: cuotas por
 proyecto, prompts con salida estructurada, un AI Coach y ejercicios que llaman
 menos a la IA, voces locales para entrenar el oído con muchas voces, y feedback
-de pronunciación por sonido que se calcula en el dispositivo.
+de pronunciación por sonido que se calcula en el dispositivo. La sexta
+(044–054) cubre evaluación, persistencia, progreso honesto y juegos. La séptima
+(055–057) separa la carga conectada de los recursos descargables por nivel.
 
 Cada ejecutor: lee el plan completo antes de empezar, respeta sus STOP
 conditions y actualiza su fila al terminar. Los planes nuevos usan ramas
 `codex/NNN-slug` desde `dev` solo si el operador pide crear una rama; no hacen
 commit ni push sin instrucción explícita. Las ramas `advisor/*` de la serie 2
 son históricas.
+
+## Serie 7 — cliente ligero y paquetes offline por nivel (2026-09-28)
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| 055 | Presupuestar JavaScript descargado en navegaciones reales | P0 | M | — | TODO |
+| 056 | Cargar cada runtime cliente solo cuando se necesita | P1 | M | 055 | DONE |
+| 057 | Descargar un paquete offline del nivel real del usuario | P1 | L | 056 | IN PROGRESS |
+
+Orden recomendado: **055 → 056 → 057**. Detalle, decisiones y descartes en
+[`series-7-light-client-and-level-packs.md`](series-7-light-client-and-level-packs.md).
+
+## Fuera de serie
+
+| Plan | Título | Prioridad | Esfuerzo | Depende de | Estado |
+|---|---|---|---|---|---|
+| [058](058-deploy-and-backfill-content-bank.md) | Desplegar y poblar el banco de contenido pregenerado | P1 | S | Plan 041 | TODO |
+
+Plan 041 (banco de contenido) está implementado en `dev` desde 2026-09-25 pero
+nunca se desplegó a `main`: no hay proyecto Vercel enlazado, el workflow de
+GitHub Actions no está en `main` y `content_bank_items` tiene 0 filas en
+producción (verificado por SQL 2026-09-29). 058 lo despliega y lo puebla.
 
 ## Serie 5 — uso gratuito y resiliencia de IA (2026-09-23)
 
