@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { CHUNKS_OF_THE_DAY } from '../data'
+import { TECH_CHUNKS } from '../data-tech'
 import { LEARNING_CHUNKS } from '../catalog'
 import { validateChunkContentGraph } from '../content-graph'
 import type { ChunkContentGraphEntry } from '../types'
 import { buildChunkExercises } from '../exercises'
+
+const CANONICAL_CHUNK_COUNT = CHUNKS_OF_THE_DAY.length + TECH_CHUNKS.length
 
 const PLACEHOLDER = /\{([a-z][a-z0-9_]*)\}/g
 const CEFR = new Set(['A1', 'A2', 'B1', 'B2', 'C1'])
@@ -16,8 +19,8 @@ function normalize(text: string): string {
 
 describe('chunk learning catalog', () => {
   it('has one metadata record for every canonical chunk', () => {
-    expect(LEARNING_CHUNKS).toHaveLength(CHUNKS_OF_THE_DAY.length)
-    expect(new Set(LEARNING_CHUNKS.map((chunk) => chunk.id)).size).toBe(CHUNKS_OF_THE_DAY.length)
+    expect(LEARNING_CHUNKS).toHaveLength(CANONICAL_CHUNK_COUNT)
+    expect(new Set(LEARNING_CHUNKS.map((chunk) => chunk.id)).size).toBe(CANONICAL_CHUNK_COUNT)
   })
 
   it('keeps templates and slots internally consistent', () => {
