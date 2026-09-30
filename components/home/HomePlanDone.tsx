@@ -62,8 +62,8 @@ export default function HomePlanDone({ stepCount, arc, streak = null }: Props) {
         <div className="animate-step-done grid h-12 w-12 place-items-center rounded-full bg-accent-2-soft text-accent-2">
           <Flame size={24} aria-hidden />
         </div>
-        <p className="font-label font-semibold text-fg">¡Plan completo!</p>
-        <p className="font-body-sm max-w-xs text-pretty text-fg-muted">
+        <p className="ts-row-title text-fg">¡Plan completo!</p>
+        <p className="ts-body max-w-xs text-pretty text-fg-muted">
           Terminaste los {stepCount} pasos de hoy.
           {streakText ? (
             <>
@@ -82,8 +82,8 @@ export default function HomePlanDone({ stepCount, arc, streak = null }: Props) {
         className="focus-ring group flex items-center gap-3 rounded-xl border border-border-subtle bg-primary-soft/40 px-4 py-3.5 transition-colors hover:bg-primary-soft"
       >
         <div className="min-w-0 flex-1 text-left">
-          <p className="font-label text-fg">{rec.headline}</p>
-          <p className="font-caption mt-0.5 text-pretty text-fg-muted">{rec.subtext}</p>
+          <p className="ts-row-title text-fg">{rec.headline}</p>
+          <p className="ts-caption mt-0.5 text-pretty text-fg-muted">{rec.subtext}</p>
         </div>
         <ArrowRight
           size={18}

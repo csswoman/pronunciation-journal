@@ -15,7 +15,6 @@ import HomeHeader from "@/components/home/HomeHeader";
 import HomeStatsRow from "@/components/home/HomeStatsRow";
 import HomeExtraExercisesAccordion from "@/components/home/HomeExtraExercisesAccordion";
 import HomeRightSidebar from "@/components/home/HomeRightSidebar";
-import NewChunkInvitation from "@/components/daily/NewChunkInvitation";
 import HomeReviewBanner from "@/components/home/HomeReviewBanner";
 import HomePlanRationale from "@/components/home/HomePlanRationale";
 import HomePlanDone from "@/components/home/HomePlanDone";
@@ -24,7 +23,7 @@ import HomePronunciationPrompt from "@/components/home/HomePronunciationPrompt";
 import HomeActivationStrip from "@/components/home/HomeActivationStrip";
 import GuestSaveProgressBanner from "@/components/home/GuestSaveProgressBanner";
 import type { ConceptLesson, DailyStep, useDailyPlan } from "@/hooks/useDailyPlan";
-import type { HomeImmersionSummary, WeakestPhonemeHome } from "@/lib/home/constants";
+import type { WeakestPhonemeHome } from "@/lib/home/constants";
 import type { HomePlacementState } from "@/lib/home/placement-state";
 import type { HomePronunciationDiagnosticState } from "@/lib/home/pronunciation-diagnostic-state";
 import type { PrimaryAction } from "@/lib/home/primary-action";
@@ -55,7 +54,6 @@ export interface HomeCommandGridProps {
   soundsDueCount?: number;
   streak?: number | null;
   previewWords?: Array<{ text: string }>;
-  immersionSummary?: HomeImmersionSummary | null;
   placementState: HomePlacementState;
   pronunciationDiagnosticState: HomePronunciationDiagnosticState;
   onStartStep?: (step: DailyStep) => void;
@@ -74,7 +72,6 @@ export default function HomeCommandGrid({
   pronunciationDiagnosticState,
   onStartStep,
   planState,
-  immersionSummary = null,
 }: HomeCommandGridProps) {
   const { user } = useAuth();
   const isGuest = isAnonymousUser(user);
@@ -114,8 +111,6 @@ export default function HomeCommandGrid({
   const showPostPlan = showPlanExtras && allDone;
   const activePlanSession = showPlanExtras && !allDone;
 
-  const isDayOneLearner = isNewLearner && (streak ?? 0) === 0;
-  const showImmersionCard = !isDayOneLearner || allDone;
 
   const showSetupPair =
     planSettled &&
@@ -179,8 +174,6 @@ export default function HomeCommandGrid({
             />
           </div>
 
-          {user && !showPostPlan ? <NewChunkInvitation userId={user.id} /> : null}
-
           {showGuestSaveStrip ? <GuestSaveProgressBanner variant="footer" /> : null}
 
           {showPostPlan ? (
@@ -205,8 +198,7 @@ export default function HomeCommandGrid({
           {/* Fila secundaria: Palabras esenciales + Registro de inmersión */}
           <HomeStatsRow
             profileLevel={profileLevel}
-            showImmersionCard={showImmersionCard}
-            immersionSummary={immersionSummary}
+            userId={user?.id ?? null}
           />
 
           {/* Acordeón de Ejercicios extra: desbloqueado al completar el plan */}

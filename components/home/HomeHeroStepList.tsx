@@ -61,7 +61,7 @@ export default function HomeHeroStepList({
           const stepNumber = (
             <span
               className={cn(
-                "flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-sm font-bold select-none transition-colors",
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-full ts-row-number select-none transition-colors",
                 isCurrent
                   ? "bg-paper text-accent"
                   : isDone
@@ -79,15 +79,15 @@ export default function HomeHeroStepList({
                 {stepNumber}
 
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className={cn("truncate font-semibold text-ink", isDone && "line-through opacity-75")}>
+                  <span className={cn("truncate ts-row-title text-ink", isDone && "line-through opacity-75")}>
                     {localizeDailyStepTitle(step.title)}
                   </span>
                   {isCurrent ? (
-                    <span className="truncate font-caption font-medium text-ink">
+                    <span className="truncate ts-caption font-medium text-ink">
                       Paso actual · {step.subtitle ? localizeDailyStepSubtitle(step.subtitle) : "Por aquí empiezas hoy"}
                     </span>
                   ) : step.subtitle ? (
-                    <span className="truncate font-caption font-normal text-ink-secondary">
+                    <span className="truncate ts-caption text-ink-secondary">
                       {localizeDailyStepSubtitle(step.subtitle)}
                     </span>
                   ) : null}
@@ -96,7 +96,7 @@ export default function HomeHeroStepList({
 
               <div className="flex items-center gap-3 shrink-0">
                 {isDone ? (
-                  <span className="inline-flex items-center gap-1 font-caption text-success font-semibold select-none">
+                  <span className="inline-flex items-center gap-1 ts-caption text-success font-semibold select-none">
                     <Check size={14} aria-hidden /> Hecho
                   </span>
                 ) : (
@@ -105,7 +105,7 @@ export default function HomeHeroStepList({
                     {step.id === "journal_entry" || step.href === "/journal" ? (
                       <Badge label="Opcional" variant="neutral" size="sm" />
                     ) : null}
-                    <span className="font-caption tabular-nums text-ink-secondary select-none">
+                    <span className="ts-caption tabular-nums text-ink-secondary select-none">
                       {step.estMinutes} min
                     </span>
                     <ArrowRight
@@ -157,14 +157,14 @@ export default function HomeHeroStepList({
         {isExpanded ? (
           <li className="flex items-center justify-between gap-3.5 rounded-xl border border-dashed border-border-subtle bg-transparent px-3.5 py-2.5 text-body-sm text-ink-secondary transition-colors">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-              <span className="bg-ink/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-sm font-semibold text-ink-secondary select-none">
+              <span className="bg-ink/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ts-row-number text-ink-secondary select-none">
                 {steps.length + 1}
               </span>
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="truncate font-medium text-ink-secondary">
+                <span className="truncate ts-row-title text-ink-secondary">
                   Ejercicios extra
                 </span>
-                <span className="truncate font-caption text-ink-secondary">
+                <span className="truncate ts-caption text-ink-secondary">
                   Se desbloquean al completar tu sesión de hoy
                 </span>
               </div>
@@ -178,7 +178,7 @@ export default function HomeHeroStepList({
 
       {/* Afinar la ruta contextual dentro del plan del día (solo al expandir) */}
       {isExpanded && (needsPlacement || needsPronunciation) ? (
-        <div className="pastel-card-chip mt-1 rounded-xl px-3.5 py-2.5 text-caption text-ink-secondary">
+        <div className="pastel-card-chip mt-1 rounded-xl px-3.5 py-2.5 ts-caption text-ink-secondary">
           <span>¿El nivel no se ajusta a ti? </span>
           {needsPlacement ? (
             <Link

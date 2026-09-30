@@ -32,7 +32,7 @@ export default function HomeHeader({ streakDays = 0, onOpenTour }: HomeHeaderPro
   return (
     <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="font-body-sm text-fg-muted">{greetingText}</span>
+        <span className="ts-greeting text-fg-muted">{greetingText}</span>
         <h1 className="font-heading text-h1 font-bold text-fg">Tu sesión de hoy</h1>
       </div>
 
@@ -53,10 +53,10 @@ export default function HomeHeader({ streakDays = 0, onOpenTour }: HomeHeaderPro
         {streakDays > 0 ? (
           <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-mint px-3 py-1.5">
             <Flame size={16} className="text-ink" aria-hidden />
-            <span className="font-sans text-body-sm font-bold tabular-nums text-ink">
+            <span className="ts-stat text-ink">
               {streakDays}
             </span>
-            <span className="font-body-sm text-ink-secondary">
+            <span className="ts-caption text-ink-secondary">
               {streakDays === 1 ? "día de racha" : "días de racha"}
             </span>
           </div>

@@ -94,13 +94,13 @@ export default function HomeChunkOfDayCard() {
       {/* Header: Frase del día + Categoría */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center justify-center shrink-0 rounded-full bg-ink px-4 py-1.5 text-paper">
-          <span id="chunk-of-day-heading" className="whitespace-nowrap font-sans text-caption font-bold tracking-tight text-paper">
+          <span id="chunk-of-day-heading" className="whitespace-nowrap ts-badge text-paper">
             Frase del día
           </span>
         </div>
         {categoryLabel ? (
           <span
-            className="pastel-card-chip truncate max-w-[62%] rounded-full px-3.5 py-1.5 font-sans text-caption font-medium text-ink-muted lowercase whitespace-nowrap"
+            className="pastel-card-chip truncate max-w-[62%] rounded-full px-3.5 py-1.5 ts-chip text-ink-secondary lowercase whitespace-nowrap"
             title={categoryLabel}
           >
             {categoryLabel}
@@ -141,7 +141,7 @@ export default function HomeChunkOfDayCard() {
 
           {chunk.ipa ? (
             <span
-              className="font-ipa text-body-md font-bold text-ink-secondary tracking-wide -mt-1"
+              className="ts-ipa-md font-ipa text-ink-secondary -mt-1"
               lang="en-fonipa"
             >
               {formatIpaDisplay(chunk.ipa)}
@@ -149,7 +149,7 @@ export default function HomeChunkOfDayCard() {
           ) : null}
 
           {/* Traducción de la frase */}
-          <p className="font-body-md text-ink font-semibold leading-relaxed">
+          <p className="ts-body-lg-strong text-ink">
             <OpenEndedText value={chunk.meaning} />
           </p>
 
@@ -169,7 +169,7 @@ export default function HomeChunkOfDayCard() {
           aria-label={label}
           aria-pressed={saveState === "saved"}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2 font-sans text-body-sm font-bold text-ink transition-all cursor-pointer",
+            "focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2 ts-pill text-ink transition-all cursor-pointer",
             saveState === "saved"
               ? "bg-ink text-paper border-ink cursor-default"
               : "bg-transparent text-ink hover:bg-ink hover:text-paper",
@@ -199,7 +199,7 @@ export default function HomeChunkOfDayCard() {
             )}
             aria-hidden
           />
-          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 font-sans text-caption font-semibold whitespace-nowrap shadow-xs">
+          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 ts-caption font-semibold whitespace-nowrap shadow-xs">
             Otra frase
           </span>
         </button>

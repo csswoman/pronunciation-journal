@@ -7,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
+  register: false,
   disable: process.env.NODE_ENV !== "production",
   // The root layout is dynamic for CSP nonces, so /offline is not discovered
   // as a static page. It is a public shell; proxy deliberately skips auth here.
@@ -16,6 +17,10 @@ const withSerwist = withSerwistInit({
     /^\/api\/gemini\//,
     /^\/api\/auth\//,
     /^\/practice\/sounds\//,
+    // Downloadable CEFR resource packs (Plan 057) must only enter
+    // CacheStorage via an explicit, user-triggered download — never via
+    // Serwist's default precache of public/.
+    /^\/offline-packs\//,
   ],
 });
 

@@ -276,6 +276,46 @@ html[data-theme="dark"], .dark {
   --text-size-tiny: 0.75rem;
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
+
+  /* ── 10. Escala tipográfica extendida (.ts-*, ver utilities.css) ─────────
+     Bricolage 800 / Figtree / Noto Sans 500. Hand-maintained, no tokens.json
+     equivalent — namespaced --ts- to avoid colliding with the shorter names
+     already in section 9 (caption, label, kicker, ...), which many
+     components depend on with different values. */
+  --ts-display-hero-size: 64px;      --ts-display-hero-leading: 62px;      --ts-display-hero-tracking: -0.03em;
+  --ts-display-numeral-size: 52px;   --ts-display-numeral-leading: 50px;   --ts-display-numeral-tracking: -0.03em;
+  --ts-display-size: 46px;           --ts-display-leading: 48px;           --ts-display-tracking: -0.02em;
+  --ts-headline-xl-size: 40px;       --ts-headline-xl-leading: 41px;       --ts-headline-xl-tracking: -0.025em;
+  --ts-headline-size: 36px;          --ts-headline-leading: 37px;          --ts-headline-tracking: -0.025em;
+  --ts-numeral-unit-size: 20px;      --ts-numeral-unit-leading: 24px;
+  --ts-flashcard-word-size: 19px;    --ts-flashcard-word-leading: 22px;
+
+  --ts-body-xl-size: 19px;           --ts-body-xl-leading: 27px;
+  --ts-body-xl-strong-size: 19px;    --ts-body-xl-strong-leading: 27px;
+  --ts-body-lg-strong-size: 18px;    --ts-body-lg-strong-leading: 26px;
+  --ts-body-lg-size: 17px;           --ts-body-lg-leading: 26px;
+  --ts-body-lg-meta-size: 17px;      --ts-body-lg-meta-leading: 26px;
+  --ts-greeting-size: 17px;          --ts-greeting-leading: 24px;
+  --ts-button-lg-size: 17px;         --ts-button-lg-leading: 22px;
+  --ts-row-title-size: 16px;         --ts-row-title-leading: 22px;
+  --ts-row-number-size: 16px;        --ts-row-number-leading: 16px;
+  --ts-body-size: 15px;              --ts-body-leading: 22px;
+  --ts-body-translation-size: 15px;  --ts-body-translation-leading: 23px;
+  --ts-label-strong-size: 15px;      --ts-label-strong-leading: 22px;
+  --ts-button-size: 15px;            --ts-button-leading: 20px;
+  --ts-stat-size: 15px;              --ts-stat-leading: 20px;
+  --ts-caption-size: 14px;           --ts-caption-leading: 20px;
+  --ts-chip-size: 14px;              --ts-chip-leading: 20px;
+  --ts-pill-size: 14px;              --ts-pill-leading: 18px;
+  --ts-label-size: 13px;             --ts-label-leading: 16px;             --ts-label-tracking: 0.08em;
+  --ts-badge-size: 13px;             --ts-badge-leading: 18px;
+  --ts-kicker-size: 12px;            --ts-kicker-leading: 16px;            --ts-kicker-tracking: 0.14em;
+
+  --ts-ipa-lg-size: 20px;            --ts-ipa-lg-leading: 28px;
+  --ts-ipa-md-size: 18px;            --ts-ipa-md-leading: 26px;
+  --ts-ipa-sm-size: 17px;            --ts-ipa-sm-leading: 24px;
+  --ts-ipa-xs-size: 13px;            --ts-ipa-xs-leading: 18px;
+  --ts-ipa-tracking: 0.01em;
 }
 
 /* Accent attributes */

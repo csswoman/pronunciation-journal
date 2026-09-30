@@ -29,10 +29,13 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
       ? example.en
       : example.turns.map((t) => t.en).join(" ");
 
+  const hasSpanish =
+    example.kind === "dialogue" || Boolean(example.es);
+
   return (
-    <div className="pastel-card-inset rounded-2xl p-4 flex flex-col gap-2.5 mt-1">
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-kicker uppercase tracking-wider text-secondary">
+    <div className="pastel-card-inset rounded-2xl p-4 flex flex-col gap-2 mt-1">
+      <div className="flex items-center justify-between gap-2 mb-0.5">
+        <span className="font-kicker text-[12px] uppercase tracking-wider text-ink-secondary font-bold">
           EJEMPLO
         </span>
         <ListenButton
@@ -44,15 +47,15 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
       </div>
 
       {example.kind === "sentence" ? (
-        <p className="font-body-md text-ink font-medium leading-relaxed whitespace-pre-line">
+        <p className="ts-body text-ink whitespace-pre-line">
           {example.en}
         </p>
       ) : (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
           {example.turns.map((turn, i) => (
             <p
               key={i}
-              className="font-body-md text-ink font-medium leading-relaxed whitespace-pre-line"
+              className="ts-body text-ink whitespace-pre-line"
             >
               — {turn.en}
             </p>
@@ -60,21 +63,25 @@ export function HeroTermExample({ example }: HeroTermExampleProps) {
         </div>
       )}
 
+      {hasSpanish && (
+        <div className="my-1.5 border-t border-ink/10" aria-hidden="true" />
+      )}
+
       {example.kind === "dialogue" ? (
-        <div className="flex flex-col gap-1 pt-1">
+        <div className="flex flex-col gap-1.5">
           {example.turns.map((turn, i) => (
             <p
               key={i}
-              className="font-body-sm text-ink-muted font-medium leading-normal whitespace-pre-line"
+              className="ts-body-translation text-ink-secondary whitespace-pre-line"
             >
               — {turn.es}
             </p>
           ))}
         </div>
       ) : example.es ? (
-        <p className="font-body-sm text-ink-muted font-medium leading-normal whitespace-pre-line">
+        <p className="ts-body-translation text-ink-secondary whitespace-pre-line">
           {example.es.startsWith("Traducción:") ? null : (
-            <span className="text-ink-muted font-normal">Traducción: </span>
+            <span className="text-ink-secondary font-normal">— </span>
           )}
           {example.es.replace(/^Traducción:\s*/, "")}
         </p>

@@ -18,7 +18,7 @@ import { join, extname, relative } from "path";
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
 
 const SCAN_EXTENSIONS = new Set([".tsx", ".ts", ".jsx", ".js"]);
-const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".claude", "scripts"]);
+const SKIP_DIRS = new Set(["node_modules", ".next", "out", "build", ".git", ".claude", "scripts", "tmp"]);
 
 /**
  * Arbitrary text sizes that are documented in DESIGN_SYSTEM.md §7.4 as
@@ -134,7 +134,7 @@ const RAW_COLOR_ALLOWLIST = new Set([
 // (`prop: someVar`, `prop: segment.total`) all indicate the object is
 // computed rather than a pure literal.
 const RUNTIME_COMPUTED_HINTS =
-  /\$\{|var\(--|\.\.\.|=>|\?|:\s*[a-zA-Z_]\w*(?:\??\.[a-zA-Z_]\w*)*\s*[,}]/;
+  /\$\{|var\(--|\.\.\.|=>|\?|:\s*[a-zA-Z_]\w*(?:\??\.[a-zA-Z_]\w*)*\s*[\(,}]/;
 
 // --- File walker -------------------------------------------------------------
 

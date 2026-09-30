@@ -3,6 +3,7 @@ import "./markdown.css";
 import { Bricolage_Grotesque, Figtree, Noto_Sans } from "next/font/google";
 import { connection } from "next/server";
 import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-init-script";
+import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
 
 // Body + UI — Figtree
 const figtree = Figtree({
@@ -76,6 +77,7 @@ export default async function RootLayout({
         className={`${fontVars} bg-surface-base text-fg`}
         suppressHydrationWarning
       >
+        <ServiceWorkerRegistration />
         {children}
       </body>
     </html>

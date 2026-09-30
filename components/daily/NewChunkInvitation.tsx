@@ -1,15 +1,24 @@
 'use client'
 
 // <NewChunkInvitation>
-//   <InvitationHeader />
-//   <AuthoredChunkPreview />
-//   <FocusedPracticeLink />
+//   <PastelCard tone="mint">
+//     <InvitationHeader />
+//     <ChunkMainInfo />
+//     <ExampleCard />
+//     <LearnCTA />
+//   </PastelCard>
+// </NewChunkInvitation>
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import type { LearningChunk } from '@/lib/chunk-of-day/types'
+import PastelCard from '@/components/layout/PastelCard'
+import { Volume2, ArrowRight } from '@/components/icons'
+import { speakText } from '@/lib/speech/synthesis'
+import { chunkExample, type LearningChunk } from '@/lib/chunk-of-day/types'
 
-interface Props { userId: string | null }
+interface Props {
+  userId: string | null
+}
 
 type Suggestion =
   | { status: 'loading' }
@@ -40,42 +49,142 @@ export default function NewChunkInvitation({ userId }: Props) {
       }
     }
     void load()
-    return () => { active = false }
+    return () => {
+      active = false
+    }
   }, [userId])
 
   if (suggestion.status === 'loading') {
     return (
-      <section aria-label="Descubrir una expresión" aria-busy="true" className="rounded-[var(--radius-md)] border border-border-default bg-surface-raised p-[var(--layout-card-pad)]">
-        <p className="font-kicker text-fg-muted">PARA DESCUBRIR</p>
-        <p className="mt-2 text-body-sm text-fg-muted">Buscando una expresión para ti…</p>
-      </section>
+      <PastelCard tone="mint" className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+            Para descubrir
+          </span>
+        </div>
+        <p className="text-body-sm text-fg-muted">Buscando una expresión para ti…</p>
+      </PastelCard>
     )
   }
+
   const chunk = suggestion.status === 'ready' ? suggestion.chunk : null
 
+  if (!chunk) {
+    return (
+      <PastelCard tone="mint" className="flex flex-col items-start gap-3">
+        <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+          Para descubrir
+        </span>
+        <h2 className="text-h3 text-fg">Explora algo nuevo</h2>
+        <p className="text-body-sm text-fg-muted">
+          {suggestion.status === 'unavailable'
+            ? 'No pudimos comprobar qué expresión te corresponde.'
+            : 'No encontramos otra expresión disponible para tu nivel.'}
+        </p>
+        <Link
+          className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-body-sm font-bold text-paper hover:bg-ink/90 active:scale-[0.98]"
+          href="/courses"
+        >
+          <span>Explorar la Ruta</span>
+          <ArrowRight size={16} aria-hidden />
+        </Link>
+      </PastelCard>
+    )
+  }
+
+  const textToSpeak = chunk.contentGraph?.text ?? chunk.chunk
+  const ex = chunkExample(chunk)
+  const exampleEn =
+    ex?.kind === 'sentence'
+      ? ex.en
+      : ex?.kind === 'dialogue'
+        ? ex.turns[0]?.en
+        : chunk.example
+  const exampleEs =
+    ex?.kind === 'sentence'
+      ? ex.es
+      : ex?.kind === 'dialogue'
+        ? ex.turns[0]?.es
+        : chunk.example_translation
+  const tagOrCategory =
+    chunk.tag || chunk.category || chunk.learning?.communicativeFunction || 'planes y futuro'
+
   return (
-    <section aria-label="Descubrir una expresión" className="rounded-[var(--radius-md)] border border-border-default bg-surface-raised p-[var(--layout-card-pad)]">
-      <p className="font-kicker text-fg-muted">PARA DESCUBRIR</p>
-      {chunk ? (
-        <>
-          <h2 className="mt-2 text-h3 text-fg" lang="en">{chunk.contentGraph?.text ?? chunk.chunk}</h2>
-          <p className="mt-1 text-body-sm text-fg-muted">{chunk.meaning}</p>
-          <p className="mt-2 text-caption text-fg-muted">Escúchala y úsala en contexto. La práctica registra tus respuestas.</p>
-          <Link className="focus-ring mt-4 inline-flex min-h-11 items-center font-label text-primary hover:underline" href={`/practice/chunks?chunk=${encodeURIComponent(chunk.id)}`}>
-            Aprender esta expresión
-          </Link>
-        </>
-      ) : (
-        <>
-          <h2 className="mt-2 text-h3 text-fg">Explora algo nuevo</h2>
-          <p className="mt-1 text-body-sm text-fg-muted">
-            {suggestion.status === 'unavailable' ? 'No pudimos comprobar qué expresión te corresponde.' : 'No encontramos otra expresión disponible para tu nivel.'}
+    <PastelCard tone="mint" className="flex flex-col items-start gap-4">
+      {/* Header pills */}
+      <div className="flex w-full items-center justify-between gap-2">
+        <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+          Para descubrir
+        </span>
+        {tagOrCategory && (
+          <span className="rounded-full bg-ink/10 px-3.5 py-1.5 text-xs font-medium text-ink">
+            {tagOrCategory}
+          </span>
+        )}
+      </div>
+
+      {/* Title + Audio trigger */}
+      <div className="flex w-full items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-fg sm:text-4xl" lang="en">
+            {textToSpeak}
+          </h2>
+          {chunk.ipa && (
+            <p className="font-ipa text-body-md text-fg-muted">
+              {chunk.ipa}
+            </p>
+          )}
+          <p className="text-body-md font-bold text-fg">
+            {chunk.meaning}
           </p>
-          <Link className="focus-ring mt-4 inline-flex min-h-11 items-center font-label text-primary hover:underline" href="/courses">
-            Explorar la Ruta
-          </Link>
-        </>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => speakText(textToSpeak)}
+          aria-label={`Escuchar ${textToSpeak}`}
+          className="focus-ring flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ink text-paper shadow-xs transition-transform hover:bg-ink/90 active:scale-95"
+        >
+          <Volume2 size={20} aria-hidden />
+        </button>
+      </div>
+
+      {/* Example Card */}
+      {exampleEn && (
+        <div className="w-full rounded-2xl bg-white/60 p-4 dark:bg-black/20 sm:p-5">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="font-kicker text-xs uppercase tracking-wider text-fg-muted">
+              EJEMPLO
+            </span>
+            <button
+              type="button"
+              onClick={() => speakText(exampleEn)}
+              aria-label="Escuchar ejemplo"
+              className="focus-ring flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ink/10 text-fg transition-colors hover:bg-ink/20 active:scale-95"
+            >
+              <Volume2 size={14} aria-hidden />
+            </button>
+          </div>
+          <p className="text-body-md font-medium text-fg" lang="en">
+            {exampleEn}
+          </p>
+          {exampleEs && (
+            <p className="mt-1 text-body-sm text-fg-muted">
+              {exampleEs}
+            </p>
+          )}
+        </div>
       )}
-    </section>
+
+      {/* Bottom CTA */}
+      <Link
+        className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-body-sm font-bold text-paper transition-transform hover:bg-ink/90 active:scale-[0.98]"
+        href={`/practice/chunks?chunk=${encodeURIComponent(chunk.id)}`}
+      >
+        <span>Aprender esta expresión</span>
+        <ArrowRight size={16} aria-hidden />
+      </Link>
+    </PastelCard>
   )
 }
+

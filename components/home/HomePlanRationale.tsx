@@ -34,7 +34,7 @@ export default function HomePlanRationale({ ready, ...signals }: HomePlanRationa
         className="focus-ring flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-surface-raised"
       >
         <Sparkles size={16} className="shrink-0 text-primary" aria-hidden />
-        <span className="min-w-0 flex-1 font-body-sm text-pretty text-fg-muted">
+        <span className="min-w-0 flex-1 ts-body text-pretty text-fg-muted">
           Por qué este plan
         </span>
         <ChevronDown
@@ -45,9 +45,9 @@ export default function HomePlanRationale({ ready, ...signals }: HomePlanRationa
       </button>
       {open ? (
         <div className="border-t border-border-subtle px-3 py-2">
-          <p className="font-body-sm text-pretty text-fg">{rationale.headline}</p>
+          <p className="ts-body text-pretty text-fg">{rationale.headline}</p>
           {rationale.detail ? (
-            <p className="mt-1 font-body-sm text-pretty text-fg-muted">{rationale.detail}</p>
+            <p className="mt-1 ts-caption text-pretty text-fg-muted">{rationale.detail}</p>
           ) : null}
         </div>
       ) : null}

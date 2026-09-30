@@ -44,14 +44,14 @@ function FormattedDefinition({ definition }: { definition: string }) {
     const spanish = parts[0];
     const english = parts.slice(1).join(" — ");
     return (
-      <p className="font-body-md leading-relaxed">
+      <p className="ts-body-lg-strong">
         <span className="font-bold text-ink">{spanish}</span>
         <span className="text-ink-secondary font-normal"> — {english}</span>
       </p>
     );
   }
   return (
-    <p className="font-body-md text-ink font-semibold leading-relaxed">
+    <p className="ts-body-lg-strong text-ink">
       {definition}
     </p>
   );
@@ -139,20 +139,20 @@ export default function HomeWordOfDayCard({
       {/* Header: Palabra del día + Categoría gramatical o vínculo con la sesión */}
       <div className="relative z-1 flex items-center justify-between gap-2 min-w-0">
         <div className="flex items-center justify-center shrink-0 rounded-full bg-ink px-4 py-1.5 text-paper">
-          <span id="word-of-day-heading" className="whitespace-nowrap font-sans text-caption font-bold tracking-tight text-paper">
+          <span id="word-of-day-heading" className="whitespace-nowrap ts-badge text-paper">
             Palabra del día
           </span>
         </div>
         {inSessionToday ? (
           <span
-            className="truncate max-w-[62%] rounded-full bg-ink px-3.5 py-1.5 font-sans text-caption font-medium text-paper whitespace-nowrap"
+            className="truncate max-w-[62%] rounded-full bg-ink px-3.5 py-1.5 ts-badge text-paper whitespace-nowrap"
             title="Aparece en tu sesión de hoy"
           >
             En tu sesión de hoy
           </span>
         ) : posLabel ? (
           <span
-            className="pastel-card-chip truncate max-w-[62%] rounded-full px-3.5 py-1.5 font-sans text-caption font-medium text-ink-muted lowercase whitespace-nowrap"
+            className="pastel-card-chip truncate max-w-[62%] rounded-full px-3.5 py-1.5 ts-chip text-ink-secondary lowercase whitespace-nowrap"
             title={posLabel}
           >
             {posLabel}
@@ -202,7 +202,7 @@ export default function HomeWordOfDayCard({
 
           {word.ipa ? (
             <span
-              className="font-ipa text-body-md font-bold text-ink-secondary tracking-wide -mt-1"
+              className="ts-ipa-lg font-ipa text-ink-secondary -mt-1"
               lang="en-fonipa"
             >
               {formatIpaDisplay(word.ipa)}
@@ -231,7 +231,7 @@ export default function HomeWordOfDayCard({
           aria-label={label}
           aria-pressed={saveState === "saved"}
           className={cn(
-            "focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2 font-sans text-body-sm font-bold text-ink transition-all cursor-pointer",
+            "focus-ring inline-flex min-h-10 items-center justify-center gap-2 rounded-full border-2 border-ink px-5 py-2 ts-pill text-ink transition-all cursor-pointer",
             saveState === "saved"
               ? "bg-ink text-paper border-ink cursor-default"
               : "bg-transparent text-ink hover:bg-ink hover:text-paper",
@@ -261,7 +261,7 @@ export default function HomeWordOfDayCard({
             )}
             aria-hidden
           />
-          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 font-sans text-caption font-semibold whitespace-nowrap shadow-xs">
+          <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 rounded-full bg-ink/15 text-ink px-3 py-1 ts-caption font-semibold whitespace-nowrap shadow-xs">
             Otra palabra
           </span>
         </button>

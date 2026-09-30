@@ -54,12 +54,12 @@ export default function HomeReviewBanner({
   return (
     <div className="flex flex-col gap-3 pb-4 mb-4 border-b border-border-subtle sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex flex-col gap-0.5">
-        <p className="font-label font-semibold text-fg">Te toca repasar</p>
+        <p className="ts-row-title text-fg">Te toca repasar</p>
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Link
           href={href}
-          className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md bg-primary px-5 font-label text-on-primary transition-colors hover:bg-primary-hover"
+          className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-md bg-primary px-5 ts-button text-on-primary transition-colors hover:bg-primary-hover"
         >
           {label}
           <ArrowRight size={16} aria-hidden />
@@ -67,7 +67,7 @@ export default function HomeReviewBanner({
         {secondary ? (
           <Link
             href={secondary.href}
-            className="focus-ring inline-flex min-h-10 items-center font-body-sm text-fg-muted underline-offset-2 hover:text-fg hover:underline"
+            className="focus-ring inline-flex min-h-10 items-center ts-caption text-fg-muted underline-offset-2 hover:text-fg hover:underline"
           >
             {secondary.label}
           </Link>

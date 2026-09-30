@@ -144,7 +144,7 @@ export default function HomeHeroCard({
 
             {/* Subtítulo y Metadatos de la actividad hero */}
             {!allDone && (stepSubtitle || metaText || currentStepMinutes) ? (
-              <p className="font-body-sm text-ink-secondary text-pretty">
+              <p className="ts-body-lg-meta text-ink-secondary text-pretty">
                 {[
                   stepSubtitle,
                   metaText,
@@ -165,7 +165,7 @@ export default function HomeHeroCard({
                 {isReadingConcept ? (
                   <Link
                     href={currentStep.href!}
-                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
+                    className="focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center ts-button-lg text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
@@ -174,7 +174,7 @@ export default function HomeHeroCard({
                   <button
                     type="button"
                     onClick={handleStartCurrentStep}
-                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center font-label text-body font-semibold text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
+                    className="press-feedback focus-ring inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent py-3.5 px-7 text-center ts-button-lg text-on-accent shadow-sm transition-colors hover:bg-primary-hover sm:w-auto"
                   >
                     <span>{ctaLabel}</span>
                     <ArrowRight size={18} aria-hidden />
@@ -214,7 +214,7 @@ export default function HomeHeroCard({
                     type="button"
                     onClick={() => setShowSecondarySteps((prev) => !prev)}
                     aria-expanded={showSecondarySteps}
-                    className="press-feedback focus-ring inline-flex items-center gap-1.5 text-left font-body-sm font-medium text-ink-secondary transition-colors hover:text-ink"
+                    className="press-feedback focus-ring inline-flex items-center gap-1.5 text-left ts-caption text-ink-secondary transition-colors hover:text-ink"
                   >
                     <span>
                       {showSecondarySteps
@@ -233,7 +233,7 @@ export default function HomeHeroCard({
                 {primaryActionHref ? (
                   <Link
                     href={primaryActionHref}
-                    className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 font-label text-body-sm font-semibold text-paper transition-colors hover:bg-ink-secondary"
+                    className="focus-ring inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 ts-pill text-paper transition-colors hover:bg-ink-secondary"
                   >
                     Ver el día completo
                     <ArrowRight size={16} aria-hidden />

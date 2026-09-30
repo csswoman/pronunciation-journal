@@ -15,7 +15,7 @@ export default function HomePronunciationPrompt({
     <Link
       href="/assessment/pronunciation"
       prefetch={false}
-      className="focus-ring inline-flex min-h-10 items-center gap-1.5 font-body-sm text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
+      className="focus-ring inline-flex min-h-10 items-center gap-1.5 ts-caption text-fg-muted underline-offset-2 transition-colors hover:text-fg hover:underline"
     >
       Hacer diagnóstico oral
       <ArrowRight size={16} aria-hidden />
@@ -25,10 +25,10 @@ export default function HomePronunciationPrompt({
   if (compact) {
     return (
       <section className="flex h-full flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-raised px-4 py-3" aria-labelledby="pronunciation-prompt-compact-title">
-        <h2 id="pronunciation-prompt-compact-title" className="font-label text-fg">
+        <h2 id="pronunciation-prompt-compact-title" className="ts-row-title text-fg">
           Evalúa tu pronunciación
         </h2>
-        <p className="font-caption line-clamp-2 text-fg-muted">
+        <p className="ts-caption line-clamp-2 text-fg-muted">
           Graba tu voz para ver qué sonidos necesitas reforzar.
         </p>
         {cta}
@@ -42,10 +42,10 @@ export default function HomePronunciationPrompt({
       aria-labelledby="pronunciation-prompt-title"
     >
       <div className="min-w-0 flex flex-col gap-0.5">
-        <h2 id="pronunciation-prompt-title" className="font-label font-semibold text-fg">
+        <h2 id="pronunciation-prompt-title" className="ts-row-title text-fg">
           Mira cómo suena tu pronunciación
         </h2>
-        <p className="font-body-sm max-w-[60ch] text-fg-muted">
+        <p className="ts-body max-w-[60ch] text-fg-muted">
           Graba unas frases y te marcamos los sonidos a reforzar.
         </p>
       </div>

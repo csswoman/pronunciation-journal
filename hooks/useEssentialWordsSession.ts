@@ -102,8 +102,22 @@ function countsFromPreview(preview: EssentialWordsSessionPreview): EssentialWord
   };
 }
 
-export function useEssentialWordsSession() {
+export interface EssentialWordsSessionOptions {
+  /**
+   * Fixes the session to these CEFR levels (the offline hub opens a
+   * downloaded level pack this way). Skips level seeding and ignores a saved
+   * draft for other levels, which could not load without connection.
+   */
+  pinnedLevels?: CefrLevel[];
+}
+
+function sameLevels(a: readonly CefrLevel[] | null, b: readonly CefrLevel[]): boolean {
+  return a !== null && a.length === b.length && a.every((level) => b.includes(level));
+}
+
+export function useEssentialWordsSession(options: EssentialWordsSessionOptions = {}) {
   const { user } = useAuth();
+  const pinnedLevelsRef = useRef<CefrLevel[] | null>(options.pinnedLevels ?? null);
   const [phase, setPhase] = useState<EssentialWordsPhase>("loading");
   const phaseRef = useRef<EssentialWordsPhase>(phase);
   phaseRef.current = phase;
@@ -145,8 +159,8 @@ export function useEssentialWordsSession() {
   const seenIdsRef = useRef<Set<string>>(new Set());
   // Active filter (null = all). Ephemeral, session-scoped. `routeId` is the
   // themed-route preset that drove the current level+pos, when any.
-  const [levels, setLevelsState] = useState<CefrLevel[] | null>(null);
-  const levelsRef = useRef<CefrLevel[] | null>(null);
+  const [levels, setLevelsState] = useState<CefrLevel[] | null>(options.pinnedLevels ?? null);
+  const levelsRef = useRef<CefrLevel[] | null>(options.pinnedLevels ?? null);
   const [pos, setPosState] = useState<EssentialWordPos[] | null>(null);
   const posRef = useRef<EssentialWordPos[] | null>(null);
   const [activeRouteId, setActiveRouteId] = useState<string | null>(null);
@@ -282,7 +296,9 @@ export function useEssentialWordsSession() {
       }
     }, 150);
     try {
-    const storedDraft = user?.id ? await loadEssentialWordsSessionDraft(user.id) : null;
+    const savedDraft = user?.id ? await loadEssentialWordsSessionDraft(user.id) : null;
+    const pinned = pinnedLevelsRef.current;
+    const storedDraft = savedDraft && (!pinned || sameLevels(savedDraft.levels, pinned)) ? savedDraft : null;
     if (storedDraft) {
       sessionSizeRef.current = storedDraft.sizeId;
       levelsRef.current = storedDraft.levels;
@@ -430,7 +446,10 @@ export function useEssentialWordsSession() {
           const { getEffectiveLearnerLevelForViewer } = await import("@/lib/learner-level/client-queries");
           const { isAnonymousUser } = await import("@/lib/auth/is-anonymous");
           const viewerUserId = isAnonymousUser(user) ? null : user?.id ?? null;
-          const level = (await getEffectiveLearnerLevelForViewer(viewerUserId)).level;
+          const resolution = await getEffectiveLearnerLevelForViewer(viewerUserId);
+          // A failed read (e.g. offline) is `unknown`: keep the filter open
+          // instead of silently seeding its placeholder A1.
+          const level = resolution.source === "unknown" ? null : resolution.level;
           const catalogLevel = level === "C2" ? "C1" : level;
           if (!cancelled && catalogLevel) {
             levelsRef.current = [catalogLevel];
@@ -498,6 +517,7 @@ export function useEssentialWordsSession() {
       summary: {
         practiced: results.length,
         correct: results.filter((result) => result.isCorrect).length,
+        reviewed: reviewedWordIdsRef.current.size,
       },
       activeElapsedMs: activeElapsedMsRef.current + activeSegmentMs,
       createdAt: draftMetaRef.current.createdAt,

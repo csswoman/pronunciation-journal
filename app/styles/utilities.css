@@ -172,8 +172,11 @@
 .font-caption  { font: var(--font-caption); }
 .font-label    { font: var(--font-label); }
 .font-kicker {
-  font: var(--font-kicker);
-  letter-spacing: 0.06em;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--text-size-kicker, 0.75rem);
+  line-height: 1.33;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-secondary);
 }
@@ -225,6 +228,213 @@
   word-spacing: 0.2em;
   line-height: 1.7;
   color: var(--text-secondary);
+}
+
+/* ── Extended typography scale (.ts-*) ──────────────────────────────────────
+   Sizes/leading/tracking come from --ts-* tokens in tokens.css §10. Display
+   group is always Bricolage 800; text group is Figtree at the weight named
+   in each class; IPA group is Noto Sans 500 with the shared 0.01em tracking. */
+.ts-display-hero {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-display-hero-size);
+  line-height: var(--ts-display-hero-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-display-hero-tracking);
+}
+.ts-display-numeral {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-display-numeral-size);
+  line-height: var(--ts-display-numeral-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-display-numeral-tracking);
+}
+.ts-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-display-size);
+  line-height: var(--ts-display-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-display-tracking);
+}
+.ts-headline-xl {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-headline-xl-size);
+  line-height: var(--ts-headline-xl-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-headline-xl-tracking);
+}
+.ts-headline {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-headline-size);
+  line-height: var(--ts-headline-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-headline-tracking);
+}
+.ts-numeral-unit {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-numeral-unit-size);
+  line-height: var(--ts-numeral-unit-leading);
+  font-weight: 800;
+}
+.ts-flashcard-word {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-flashcard-word-size);
+  line-height: var(--ts-flashcard-word-leading);
+  font-weight: 800;
+}
+
+.ts-body-xl {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-xl-size);
+  line-height: var(--ts-body-xl-leading);
+  font-weight: 500;
+}
+.ts-body-xl-strong {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-xl-strong-size);
+  line-height: var(--ts-body-xl-strong-leading);
+  font-weight: 700;
+}
+.ts-body-lg-strong {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-lg-strong-size);
+  line-height: var(--ts-body-lg-strong-leading);
+  font-weight: 700;
+}
+.ts-body-lg {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-lg-size);
+  line-height: var(--ts-body-lg-leading);
+  font-weight: 600;
+}
+.ts-body-lg-meta {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-lg-meta-size);
+  line-height: var(--ts-body-lg-meta-leading);
+  font-weight: 500;
+}
+.ts-greeting {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-greeting-size);
+  line-height: var(--ts-greeting-leading);
+  font-weight: 600;
+}
+.ts-button-lg {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-button-lg-size);
+  line-height: var(--ts-button-lg-leading);
+  font-weight: 700;
+}
+.ts-row-title {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-row-title-size);
+  line-height: var(--ts-row-title-leading);
+  font-weight: 700;
+}
+.ts-row-number {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-row-number-size);
+  line-height: var(--ts-row-number-leading);
+  font-weight: 800;
+}
+.ts-body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-size);
+  line-height: var(--ts-body-leading);
+  font-weight: 500;
+}
+.ts-body-translation {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-body-translation-size);
+  line-height: var(--ts-body-translation-leading);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.ts-label-strong {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-label-strong-size);
+  line-height: var(--ts-label-strong-leading);
+  font-weight: 600;
+}
+.ts-button {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-button-size);
+  line-height: var(--ts-button-leading);
+  font-weight: 700;
+}
+.ts-stat {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-stat-size);
+  line-height: var(--ts-stat-leading);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.ts-caption {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-caption-size);
+  line-height: var(--ts-caption-leading);
+  font-weight: 500;
+}
+.ts-chip {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-chip-size);
+  line-height: var(--ts-chip-leading);
+  font-weight: 600;
+}
+.ts-pill {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-pill-size);
+  line-height: var(--ts-pill-leading);
+  font-weight: 700;
+}
+.ts-label {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-label-size);
+  line-height: var(--ts-label-leading);
+  font-weight: 700;
+  letter-spacing: var(--ts-label-tracking);
+}
+.ts-badge {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-badge-size);
+  line-height: var(--ts-badge-leading);
+  font-weight: 700;
+}
+.ts-kicker {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--ts-kicker-size);
+  line-height: var(--ts-kicker-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.ts-ipa-lg {
+  font-family: var(--font-ipa), sans-serif;
+  font-size: var(--ts-ipa-lg-size);
+  line-height: var(--ts-ipa-lg-leading);
+  font-weight: 500;
+  letter-spacing: var(--ts-ipa-tracking);
+}
+.ts-ipa-md {
+  font-family: var(--font-ipa), sans-serif;
+  font-size: var(--ts-ipa-md-size);
+  line-height: var(--ts-ipa-md-leading);
+  font-weight: 500;
+  letter-spacing: var(--ts-ipa-tracking);
+}
+.ts-ipa-sm {
+  font-family: var(--font-ipa), sans-serif;
+  font-size: var(--ts-ipa-sm-size);
+  line-height: var(--ts-ipa-sm-leading);
+  font-weight: 500;
+  letter-spacing: var(--ts-ipa-tracking);
+}
+.ts-ipa-xs {
+  font-family: var(--font-ipa), sans-serif;
+  font-size: var(--ts-ipa-xs-size);
+  line-height: var(--ts-ipa-xs-leading);
+  font-weight: 500;
+  letter-spacing: var(--ts-ipa-tracking);
 }
 
 /* ── Text colors ─────────────────────────────────────────────────────────── */

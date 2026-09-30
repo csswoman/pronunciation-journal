@@ -53,6 +53,20 @@ export async function proxy(request: NextRequest) {
     return response;
   };
 
+  const pathname = request.nextUrl.pathname.replace(/\/$/, "");
+  if (
+    process.env.NODE_ENV !== "development" &&
+    (pathname === "/test" || pathname === "/dev/sounds")
+  ) {
+    return new NextResponse("Not Found", {
+      status: 404,
+      headers: {
+        "Content-Security-Policy": contentSecurityPolicy,
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
+  }
+
   // The precached shell must never refresh auth or serialize account data.
   if (request.nextUrl.pathname === "/offline" || !isSupabaseConfigured()) {
     return nextResponse();
