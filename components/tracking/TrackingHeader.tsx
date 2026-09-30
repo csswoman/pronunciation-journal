@@ -14,6 +14,8 @@ interface TrackingHeaderProps {
   dueCount: number;
   onOpenAdd: () => void;
   onStartReview: () => void;
+  onPreloadAdd?: () => void;
+  onPreloadReview?: () => void;
   canReview: boolean;
 }
 
@@ -22,6 +24,8 @@ export function TrackingHeader({
   dueCount,
   onOpenAdd,
   onStartReview,
+  onPreloadAdd,
+  onPreloadReview,
   canReview,
 }: TrackingHeaderProps) {
   const subtitle = `${totalCount} guardados${dueCount > 0 ? ` · ${dueCount} ${dueCount === 1 ? "vence" : "vencen"} hoy` : ""}`;
@@ -44,6 +48,8 @@ export function TrackingHeader({
         <button
           type="button"
           onClick={onOpenAdd}
+          onMouseEnter={onPreloadAdd}
+          onFocus={onPreloadAdd}
           className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-border-subtle bg-surface-raised px-4 text-body-sm font-semibold text-fg shadow-xs transition-colors hover:bg-surface-sunken active:scale-95"
         >
           <Plus size={16} aria-hidden />
@@ -55,6 +61,8 @@ export function TrackingHeader({
 
         <Button
           onClick={onStartReview}
+          onMouseEnter={onPreloadReview}
+          onFocus={onPreloadReview}
           disabled={!canReview}
           className="rounded-full shadow-xs"
           icon={<ArrowRight size={16} aria-hidden />}

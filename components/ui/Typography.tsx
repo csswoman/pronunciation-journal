@@ -24,3 +24,8 @@ export function H4<T extends ElementType = "h4">({ as, className, ...props }: He
   const Tag = (as ?? "h4") as ElementType;
   return <Tag className={["font-heading text-h4 text-balance text-fg", className].filter(Boolean).join(" ")} {...props} />;
 }
+
+export function Kicker<T extends ElementType = "span">({ as, className, ...props }: HeadingProps<T>) {
+  const Tag = (as ?? "span") as ElementType;
+  return <Tag className={["font-kicker block", className].filter(Boolean).join(" ")} {...props} />;
+}

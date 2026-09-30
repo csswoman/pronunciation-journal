@@ -11,6 +11,7 @@
 //         <ProfileIdentityCard />
 //         <ProfileAppearanceCard />
 //         <ProfileStudyCard />
+//         <ProfileOfflineCard />
 //       </MainColumn>
 //       <SecurityColumn>
 //         <ProfileAccountCard />
@@ -21,6 +22,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { useAuth } from "@/components/auth/AuthProvider";
 import PageLayout from "@/components/layout/PageLayout";
@@ -31,13 +34,19 @@ import ProfileAppearanceCard from "@/components/profile/ProfileAppearanceCard";
 import ProfileStudyCard from "@/components/profile/ProfileStudyCard";
 import ProfilePageSkeleton from "@/components/profile/ProfilePageSkeleton";
 import ProfileToast from "@/components/profile/ProfileToast";
+import { OfflineLoadingState } from "@/components/offline/OfflineLoadingState";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { readGuestStudyLevel, saveGuestStudyLevel } from "@/lib/preferences/guest-study-level";
 import { exportUserVocabulary } from "@/lib/users/export-vocabulary";
 import type { CefrLevel } from "@/lib/essential-words/types";
 
+const ProfileOfflineCard = dynamic(() => import("@/components/profile/ProfileOfflineCard"), {
+  loading: () => <OfflineLoadingState message="Preparando tus descargas…" />,
+});
+
 export default function ProfileSettings() {
   const { user } = useAuth();
+  const router = useRouter();
   const {
     preferences,
     learnerLevel,
@@ -178,6 +187,11 @@ export default function ProfileSettings() {
                 setDailyGoal(goal);
                 showToast("Objetivo diario actualizado");
               }}
+            />
+
+            <ProfileOfflineCard
+              onStudyLesson={(lesson) => router.push(`/courses/study/${lesson.lessonNumber}?level=${lesson.trackId}`)}
+              onStudyWords={() => router.push("/practice/essential-words")}
             />
           </div>
 

@@ -4,6 +4,15 @@ import { describe, expect, it, vi } from "vitest";
 import ProfileSettings from "../ProfileSettings";
 
 const updateCefrLevel = vi.fn().mockResolvedValue(undefined);
+const routerPush = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: routerPush }),
+}));
+
+vi.mock("@/components/profile/ProfileOfflineCard", () => ({
+  default: () => null,
+}));
 
 vi.mock("@/components/auth/AuthProvider", () => ({
   useAuth: () => ({

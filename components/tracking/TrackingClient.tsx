@@ -8,32 +8,31 @@
 //   <Modals: QuickAdd + PhraseCapture + EditWord + EditPhrase + DeleteWord + DeleteExplanation />
 // </TrackingClient>
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import PageLayout from "@/components/layout/PageLayout";
 import { useTracking } from "@/hooks/useTracking";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { normalizeCEFR } from "@/lib/exercises/cefr";
-import { QuickAddModal } from "@/components/vocabulary/words/QuickAddModal";
-import { TrackingEmptyState } from "./TrackingEmptyState";
-import { TrackingHeader } from "./TrackingHeader";
-import { TrackingToolbar, type FilterCounts, type SortMode } from "./TrackingToolbar";
-import { TrackingListView } from "./TrackingListView";
-import { TrackingGridView } from "./TrackingGridView";
-import { PhraseCaptureModal } from "./PhraseCaptureModal";
-import { EditWordModal } from "./EditWordModal";
-import { EditPhraseModal } from "./EditPhraseModal";
-import { DeleteWordDialog } from "./DeleteWordDialog";
-import { DeleteExplanationDialog } from "./DeleteExplanationDialog";
-import { saveTrackedItem, removeTrackedItem, updateTrackedItem } from "@/lib/tracking/queries";
-import { buildTrackingReviewQueue, type TrackingReviewSource } from "@/lib/tracking/review-queue";
-import PracticeSession from "@/components/practice/PracticeSession";
-import { WordCarousel } from "@/components/practice/session/WordCarousel";
-import { FALLBACK_WORDS } from "@/hooks/loading-words-data";
+import { TrackingControls } from "./TrackingControls";
+import type { FilterCounts, SortMode } from "./TrackingToolbar";
+import { TrackingEntries } from "./TrackingEntries";
+import { TrackingModalLayer, preloadTrackingWordCapture } from "./TrackingModalLayer";
+import { buildTrackingReviewQueue } from "@/lib/tracking/review-queue";
 import type { PracticeExercise } from "@/lib/practice/types";
-import type { TrackedItem, TrackingFilter } from "@/lib/tracking/types";
-import type { WordBankEntry } from "@/lib/word-bank/types";
+import type { TrackingFilter } from "@/lib/tracking/types";
+import { useTrackingModalState } from "./useTrackingModalState";
 
 const PAGE_SIZE = 10;
+const loadTrackingReviewRunner = () => import("./TrackingReviewRunner");
+const TrackingReviewRunner = dynamic(
+  () => loadTrackingReviewRunner().then((module) => module.default),
+  { loading: () => <p role="status" className="sr-only">Preparando el repaso…</p> },
+);
+
+function preloadTrackingReviewRunner() {
+  void loadTrackingReviewRunner();
+}
 
 interface TrackingClientProps {
   embed?: boolean;
@@ -43,41 +42,19 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
   const { reviewSources, loading, userId, words, addWord, removeWord, updateWord } = useTracking();
   const { learnerLevel } = useUserPreferences();
   const reviewLevel = learnerLevel ? normalizeCEFR(learnerLevel.level) : undefined;
+  const { state: modalState, actions: modalActions } = useTrackingModalState({
+    words,
+    userId,
+    addWord,
+    removeWord,
+    updateWord,
+  });
   const [filter, setFilter] = useState<TrackingFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("due");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [currentPage, setCurrentPage] = useState(1);
-  const [phrase, setPhrase] = useState("");
-  const [phraseContext, setPhraseContext] = useState("");
-  const [showWordModal, setShowWordModal] = useState(false);
-  const [showPhraseModal, setShowPhraseModal] = useState(false);
-  const [editingWord, setEditingWord] = useState<WordBankEntry | null>(null);
-  const [editingTrackedItem, setEditingTrackedItem] = useState<TrackedItem | null>(null);
-  const [deletingWord, setDeletingWord] = useState<WordBankEntry | null>(null);
-  const [deletingExplanation, setDeletingExplanation] = useState<TrackingReviewSource | null>(null);
   const [activeExercises, setActiveExercises] = useState<PracticeExercise[] | null>(null);
-
-  const editExistingWord = useCallback((wordId: string) => {
-    const existing = words.find((w) => w.id === wordId);
-    if (!existing) return;
-    setShowWordModal(false);
-    setEditingWord(existing);
-  }, [words]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (showWordModal || showPhraseModal || e.ctrlKey || e.metaKey || e.altKey) return;
-      const target = e.target as HTMLElement | null;
-      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
-      if (e.key === "n" || e.key === "N") {
-        e.preventDefault();
-        setShowWordModal(true);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [showPhraseModal, showWordModal]);
 
   const counts: FilterCounts = useMemo(() => ({
     all: reviewSources.length,
@@ -145,27 +122,6 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
     setActiveExercises(reviewQueue.exercises);
   }
 
-  async function addPhrase() {
-    const text = phrase.trim();
-    if (!userId || !text) return;
-    const context = phraseContext.trim();
-    await saveTrackedItem({ userId, kind: "phrase", ref: text.toLowerCase(), title: text, payload: { text, ...(context ? { context } : {}) } });
-    setPhrase("");
-    setPhraseContext("");
-    setShowPhraseModal(false);
-  }
-
-  async function deleteExplanation(source: TrackingReviewSource) {
-    if (!userId || !("trackedItem" in source)) return;
-    await removeTrackedItem(userId, source.trackedItem.kind, source.trackedItem.ref);
-    setDeletingExplanation(null);
-  }
-
-  async function handleUpdateTrackedItem(id: string, updates: { title?: string | null; payload?: Record<string, unknown> }) {
-    if (!userId) return;
-    await updateTrackedItem({ id, userId, title: updates.title, payload: updates.payload });
-  }
-
   const hasCategoryItems =
     filter === "all"
       ? reviewSources.length > 0
@@ -173,92 +129,56 @@ export default function TrackingClient({ embed = false }: TrackingClientProps) {
         ? reviewSources.some((s) => s.item.fromCoach)
         : reviewSources.some((s) => s.item.kind === filter);
 
+  const entriesData = {
+    loading,
+    hasCategoryItems,
+    filter,
+    filteredSources,
+    displayedSources,
+    searchQuery,
+    viewMode,
+  };
+  const entriesActions = {
+    onLoadMore: () => setCurrentPage((page) => page + 1),
+    onEditWord: modalActions.onEditWord,
+    onDeleteWord: modalActions.onDeleteWord,
+    onDeleteExplanation: modalActions.onDeleteExplanationRequest,
+    onEditPhrase: modalActions.onEditPhrase,
+    onResetSearch: () => setSearchQuery(""),
+  };
+
   const content = (
     <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 py-4 sm:py-6">
-      <TrackingHeader
-        totalCount={counts.all}
-        dueCount={counts.all > 0 ? availableReviewCount : 0}
-        onOpenAdd={() => setShowWordModal(true)}
-        onStartReview={startReview}
-        canReview={canReview}
-      />
-
-      <TrackingToolbar
-        filter={filter}
-        onFilterChange={setFilter}
+      <TrackingControls
         counts={counts}
+        dueCount={counts.all > 0 ? availableReviewCount : 0}
+        canReview={canReview}
+        filter={filter}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
         sortMode={sortMode}
-        onSortChange={setSortMode}
         viewMode={viewMode}
-        onViewModeChange={setViewMode}
+        handlers={{
+          onOpenAdd: modalActions.onOpenWordModal,
+          onStartReview: startReview,
+          onPreloadAdd: preloadTrackingWordCapture,
+          onPreloadReview: preloadTrackingReviewRunner,
+          onFilterChange: setFilter,
+          onSearchChange: setSearchQuery,
+          onSortChange: setSortMode,
+          onViewModeChange: setViewMode,
+        }}
       />
-
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <WordCarousel words={FALLBACK_WORDS} />
-        </div>
-      ) : !hasCategoryItems ? (
-        <TrackingEmptyState filter={filter} />
-      ) : filteredSources.length === 0 ? (
-        <div className="rounded-3xl border border-border-subtle bg-surface-raised p-8 text-center">
-          <p className="text-body-sm text-fg-muted">No se encontraron resultados para “{searchQuery}”.</p>
-          <button
-            type="button"
-            onClick={() => setSearchQuery("")}
-            className="focus-ring mt-3 inline-flex items-center text-caption font-semibold text-primary hover:underline"
-          >
-            Restablecer búsqueda
-          </button>
-        </div>
-      ) : viewMode === "list" ? (
-        <TrackingListView
-          sources={displayedSources}
-          totalCount={filteredSources.length}
-          showingCount={displayedSources.length}
-          hasMore={displayedSources.length < filteredSources.length}
-          onLoadMore={() => setCurrentPage((p) => p + 1)}
-          onEditWord={setEditingWord}
-          onDeleteWord={setDeletingWord}
-          onDeleteExplanation={setDeletingExplanation}
-          onEditPhrase={(s) => "trackedItem" in s && setEditingTrackedItem(s.trackedItem)}
-          onDeletePhrase={setDeletingExplanation}
-        />
-      ) : (
-        <TrackingGridView
-          sources={displayedSources}
-          totalCount={filteredSources.length}
-          showingCount={displayedSources.length}
-          hasMore={displayedSources.length < filteredSources.length}
-          onLoadMore={() => setCurrentPage((p) => p + 1)}
-          onEditWord={setEditingWord}
-          onDeleteWord={setDeletingWord}
-          onDeleteExplanation={setDeletingExplanation}
-          onEditPhrase={(s) => "trackedItem" in s && setEditingTrackedItem(s.trackedItem)}
-          onDeletePhrase={setDeletingExplanation}
-        />
-      )}
-
-      <QuickAddModal open={showWordModal} onClose={() => setShowWordModal(false)} onSubmit={addWord} onEditExisting={editExistingWord} contextLabel="TRACKING" />
-      <PhraseCaptureModal open={showPhraseModal} value={phrase} onChange={setPhrase} context={phraseContext} onContextChange={setPhraseContext} onClose={() => setShowPhraseModal(false)} onSubmit={() => void addPhrase()} />
-      <EditWordModal word={editingWord} onClose={() => setEditingWord(null)} onSubmit={updateWord} />
-      <EditPhraseModal trackedItem={editingTrackedItem} onClose={() => setEditingTrackedItem(null)} onSubmit={handleUpdateTrackedItem} />
-      <DeleteWordDialog word={deletingWord} onClose={() => setDeletingWord(null)} onConfirm={removeWord} />
-      <DeleteExplanationDialog source={deletingExplanation} onClose={() => setDeletingExplanation(null)} onConfirm={deleteExplanation} />
+      <TrackingEntries data={entriesData} actions={entriesActions} />
+      <TrackingModalLayer state={modalState} actions={modalActions} />
     </div>
   );
 
   if (activeExercises && activeExercises.length > 0) {
     return (
       <PageLayout archetype="session">
-        <PracticeSession
-          context="review"
+        <TrackingReviewRunner
           exercises={activeExercises}
-          sessionLength={activeExercises.length}
-          sessionLabel="Contenido guardado"
-          onSessionComplete={() => setActiveExercises(null)}
-          onExit={() => setActiveExercises(null)}
+          onFinish={() => setActiveExercises(null)}
         />
       </PageLayout>
     );
