@@ -27,6 +27,8 @@ create unique index if not exists assessment_oral_attempts_audio_replay_idx
 
 alter table public.assessment_oral_attempts enable row level security;
 
+drop policy if exists "assessment_oral_attempts_select_own" on public.assessment_oral_attempts;
+
 create policy "assessment_oral_attempts_select_own"
   on public.assessment_oral_attempts for select
   using (auth.uid() = user_id);
