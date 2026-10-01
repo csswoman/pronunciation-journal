@@ -44,7 +44,7 @@ export function NotebookWritingPaper({
             onKeyDown={onKeyDown}
             rows={6}
             placeholder={placeholder}
-            className="notebook-ruled-paper relative z-10 w-full resize-y bg-transparent p-0 font-sans text-base text-ink placeholder:font-sans placeholder:text-ink-muted/70 focus:outline-none"
+            className="notebook-ruled-paper relative z-10 w-full resize-y bg-transparent p-0 ts-body text-ink placeholder:ts-body placeholder:text-ink-muted/70 focus:outline-none"
           />
         </div>
       </div>

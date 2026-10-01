@@ -137,7 +137,7 @@ function ShellHeader({
             {eyebrow}
           </span>
         )}
-        <h2 className="text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
+        <h2 className="font-display text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
           {title}
         </h2>
         {description && (
@@ -160,7 +160,7 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
     <button
       type="button"
       onClick={onSkip}
-      className="self-center py-2 text-center text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg focus-ring rounded-md px-3 cursor-pointer"
+      className="self-center py-2 text-center text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg focus-ring rounded-full px-4 cursor-pointer"
     >
       Omitir este ejercicio
     </button>
@@ -169,8 +169,8 @@ function SkipButton({ onSkip }: { onSkip: () => void }) {
 
 function HintChip({ word, meaning }: { word: string; meaning?: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-md bg-surface-sunken px-3 py-2 text-body-sm">
-      <span className="font-semibold text-fg">{word}</span>
+    <div className="flex items-center gap-2 rounded-xl bg-surface-sunken px-3.5 py-2 text-body-sm">
+      <span className="font-display font-bold text-fg">{word}</span>
       {meaning && (
         <>
           <span className="text-fg-subtle">·</span>
@@ -182,20 +182,29 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
 }
 
 const SEVERITY_STYLES = {
-  correct: { box: 'border-success-border bg-success-soft', title: 'text-success', icon: '✓' },
-  // Amber, not red: the learner produced the right material in the wrong
-  // arrangement. Red here reads as "everything is wrong" and contradicts a
-  // message that opens with "you have all the words".
-  partial: { box: 'border-warning-border bg-warning-soft', title: 'text-warning-value', icon: '!' },
-  error: { box: 'border-error-border bg-error-soft', title: 'text-error', icon: '✗' },
+  correct: {
+    box: 'border-mint/40 bg-mint-soft text-ink dark:bg-mint/25 dark:border-mint/50 dark:text-fg',
+    title: 'text-ink dark:text-fg',
+    iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
+    icon: '✓',
+  },
+  partial: {
+    box: 'border-butter/40 bg-butter-soft text-ink dark:bg-butter/25 dark:border-butter/50 dark:text-fg',
+    title: 'text-ink dark:text-fg',
+    iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
+    icon: '!',
+  },
+  error: {
+    box: 'border-coral/40 bg-coral-soft text-ink dark:bg-coral/25 dark:border-coral/50 dark:text-fg',
+    title: 'text-ink dark:text-fg',
+    iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
+    icon: '✕',
+  },
 } as const
 
 function FeedbackBanner({ result }: { result: ExerciseResult }) {
   const { isCorrect, feedback } = result
-  // Sin `immediate` el banner sólo puede nombrar el resultado; la respuesta
-  // esperada se muestra justo debajo, así que no prometemos un reintento que
-  // este shell no siempre ofrece.
-  const status = feedback?.immediate ?? (isCorrect ? '¡Muy bien!' : 'No es correcto. Revisa la respuesta esperada.')
+  const status = feedback?.immediate ?? (isCorrect ? '¡Correcto!' : 'No es correcto')
   const expected = feedback?.correction ?? feedback?.expectedAnswer
   const isIpa = expected ? expected.includes('/') : false
   const severity = feedbackSeverity(isCorrect, feedback?.errorCode)
@@ -204,35 +213,42 @@ function FeedbackBanner({ result }: { result: ExerciseResult }) {
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 rounded-lg border px-4 py-4 text-body-sm transition-all',
+        'flex flex-col gap-3.5 rounded-2xl border p-5 text-body-sm shadow-xs transition-all animate-in fade-in slide-in-from-bottom-2 duration-200',
         styles.box,
       )}
     >
-      {/* Only the heading carries the state colour: tinting the whole box
-          turns every supporting line into part of the alarm. */}
-      <p className={cn('flex items-center gap-2.5 font-semibold', styles.title)}>
-        <span aria-hidden>{styles.icon}</span>
-        <span>{status}</span>
-      </p>
-      {/* The correct answer leads: it is what the learner needs most, and
-          burying it under the explanation makes the box read as a wall. */}
+      <div className="flex items-center gap-3">
+        <span
+          className={cn(
+            'flex size-7 shrink-0 items-center justify-center rounded-full font-bold text-xs shadow-xs',
+            styles.iconBg,
+          )}
+          aria-hidden
+        >
+          {styles.icon}
+        </span>
+        <h3 className={cn('font-display text-lg font-bold leading-tight', styles.title)}>
+          {status}
+        </h3>
+      </div>
+
       {!isCorrect && expected && (
-        <p className="leading-relaxed text-fg">
+        <p className="leading-relaxed">
           <span className="font-semibold">Respuesta esperada: </span>
-          <span className={cn(isIpa && 'font-ipa font-medium')}>{expected}</span>
+          <span className={cn('font-bold', isIpa && 'font-ipa font-medium')}>{expected}</span>
         </p>
       )}
       {feedback?.explanation && (
-        <p className="leading-relaxed text-fg">{feedback.explanation}</p>
+        <p className="leading-relaxed opacity-90">{feedback.explanation}</p>
       )}
       {!isCorrect && feedback?.example && feedback.example !== expected && (
-        <p className="leading-relaxed text-fg-muted">
-          <span className="font-semibold text-fg">Ejemplo: </span>
+        <p className="leading-relaxed opacity-80">
+          <span className="font-semibold">Ejemplo: </span>
           <span>{feedback.example}</span>
         </p>
       )}
       {!isCorrect && feedback?.tip && (
-        <p className="leading-relaxed text-fg-subtle">
+        <p className="leading-relaxed opacity-80">
           <span className="font-semibold">Pista: </span>
           <span>{feedback.tip}</span>
         </p>

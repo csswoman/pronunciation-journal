@@ -46,7 +46,7 @@ describe('ReaderCatalog', () => {
       />
     )
 
-    expect(screen.getByText('Crea una lectura personalizada')).toBeInTheDocument()
+    expect(screen.getByText('Crea una historia a tu medida')).toBeInTheDocument()
     expect(screen.getByText(/2 historias guardadas/i)).toBeInTheDocument()
     expect(screen.getByText('Coffee Shop Adventure')).toBeInTheDocument()
     expect(screen.getByText('Space Exploration')).toBeInTheDocument()
@@ -74,8 +74,8 @@ describe('ReaderCatalog', () => {
     expect(screen.queryByText('Coffee Shop Adventure')).not.toBeInTheDocument()
     expect(screen.getByText('Space Exploration')).toBeInTheDocument()
 
-    // Click back to TODOS
-    await user.click(screen.getByRole('button', { name: 'TODOS' }))
+    // Click back to Todas
+    await user.click(screen.getByRole('button', { name: /Todas|TODOS/i }))
     expect(screen.getByText('Coffee Shop Adventure')).toBeInTheDocument()
     expect(screen.getByText('Space Exploration')).toBeInTheDocument()
   })

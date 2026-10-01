@@ -53,14 +53,14 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
     <PastelCard tone="lilac" className="relative rounded-3xl p-6 shadow-xs flex flex-col gap-4 overflow-hidden mb-8 text-left">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1.5 min-w-0">
-          <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+          <span className="ts-kicker text-ink-muted">
             PROGRESO DEL SPRINT
           </span>
           <div className="flex items-center gap-3 flex-wrap">
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+            <h2 className="ts-headline-xl text-ink">
               Día {currentDay} de {totalDays}
             </h2>
-            <span className="rounded-full bg-white/80 border border-black/10 px-3.5 py-1 text-tiny font-bold text-ink shadow-xs">
+            <span className="rounded-full bg-white/80 border border-black/10 px-3.5 py-1 ts-chip text-ink shadow-xs">
               {daysLeft === 0 ? 'Último día' : `${daysLeft} días restantes`}
             </span>
           </div>
@@ -86,7 +86,7 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
             style={{ width: `${Math.max(5, progressPct)}%` }}
           />
         </div>
-        <p className="text-tiny font-medium text-ink-secondary mt-0.5">
+        <p className="ts-caption text-ink-secondary mt-0.5">
           {statusText}
         </p>
       </div>

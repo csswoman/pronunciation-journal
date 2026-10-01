@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen, within } from '@testing-library/react'
-import { contrastTargetId, phonemeTargetId } from '@/lib/pronunciation/targets/registry'
+import { cleanup, render, screen } from '@testing-library/react'
+import { phonemeTargetId } from '@/lib/pronunciation/targets/registry'
 import type { PathEvidenceBundle } from '@/lib/pronunciation/path/load-evidence'
 import { PronunciationPathPage } from '../PronunciationPathPage'
 
@@ -13,7 +13,6 @@ vi.mock('@/lib/pronunciation/path/load-evidence', async (importOriginal) => {
   }
 })
 
-const TH = contrastTargetId('/θ/', '/ð/')
 const SCHWA = phonemeTargetId('/ə/')
 
 afterEach(() => cleanup())
@@ -33,10 +32,9 @@ describe('PronunciationPathPage', () => {
     render(
       <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
     )
-    const next = screen.getByRole('region', { name: /qué practicar ahora/i })
-    expect(next).toHaveTextContent(/los dos sonidos th/i)
-    expect(next).toHaveTextContent(/siguiente paso:/i)
-    expect(within(next).getByRole('link', { name: /practicar en sound lab/i })).toBeInTheDocument()
+    expect(screen.getByText(/qué toca ahora/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /practicar · 5 min/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /escuchar el par/i })).toBeInTheDocument()
   })
 
   it('prefers a diagnostic priority target', () => {
@@ -46,93 +44,18 @@ describe('PronunciationPathPage', () => {
         copyEnabled
       />
     )
-    const next = screen.getByRole('region', { name: /qué practicar ahora/i })
-    expect(next).toHaveTextContent(/vocal relajada/i)
-    expect(next).toHaveTextContent(/según tu diagnóstico/i)
+    expect(screen.getByRole('heading', { name: /vocal relajada/i })).toBeInTheDocument()
   })
 
-  it('uses neutral copy when the path copy flag is off', () => {
-    render(
-      <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled={false} />
-    )
-    expect(screen.getByRole('region', { name: /^siguiente práctica$/i })).toBeInTheDocument()
-    expect(screen.queryByText(/según tu diagnóstico|prioridad|accuracy|nivel de pronunciación/i)).not.toBeInTheDocument()
-  })
-
-  it('keeps a single focus card when recommendation matches the active unit', () => {
-    render(
-      <PronunciationPathPage
-        evidenceOverride={emptyEvidence()}
-        initialTargetId={TH}
-        copyEnabled
-      />
-    )
-    const next = screen.getByRole('region', { name: /qué practicar ahora/i })
-    expect(next).toHaveTextContent(/los dos sonidos th/i)
-    expect(screen.queryByRole('region', { name: /unidad activa/i })).not.toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /practicar en sound lab/i })).toHaveLength(1)
-  })
-
-  it('shows explore detail when ?stage= diverges from the recommendation', () => {
-    render(
-      <PronunciationPathPage
-        evidenceOverride={emptyEvidence()}
-        initialStage="intonation-transfer"
-        copyEnabled
-      />
-    )
-    const unitRegion = screen.getByRole('region', { name: /unidad activa/i })
-    expect(unitRegion).toHaveTextContent(/pregunta|entonación|rising|sube/i)
-    expect(within(unitRegion).getByRole('link', { name: /volver a/i })).toBeInTheDocument()
-    expect(within(unitRegion).queryByText(/unidad seleccionada/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('region', { name: /tu siguiente práctica/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^5\.\s*entonación$/i })).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    )
-  })
-
-  it('keeps a single primary practice CTA when recommendation matches the active unit', () => {
+  it('renders progress card with 19 segmented bars', () => {
     render(
       <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
     )
-    expect(screen.getAllByRole('link', { name: /practicar en sound lab/i })).toHaveLength(1)
+    expect(screen.getByText(/tu avance en la ruta/i)).toBeInTheDocument()
+    expect(screen.getByText(/de 19 unidades/i)).toBeInTheDocument()
   })
 
-  it('shows a loading card with aria-busy while evidence hydrates', () => {
-    render(<PronunciationPathPage copyEnabled />)
-    const loading = screen.getByRole('region', { name: /cargando tu siguiente práctica/i })
-    expect(loading).toHaveAttribute('aria-busy', 'true')
-    expect(screen.queryByRole('region', { name: /qué practicar ahora/i })).not.toBeInTheDocument()
-  })
-
-  it('localizes explore unit states in Spanish', () => {
-    render(
-      <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
-    )
-    const explore = screen.getByText(/ver todas las unidades/i).closest('details')
-    expect(explore).toBeTruthy()
-    explore!.setAttribute('open', '')
-    expect(within(explore as HTMLElement).getAllByText(/sin empezar/i).length).toBeGreaterThan(0)
-    expect(within(explore as HTMLElement).queryByText('not_started')).not.toBeInTheDocument()
-  })
-
-  it('keeps stage nav accessible without a visible legend', () => {
-    render(
-      <PronunciationPathPage
-        evidenceOverride={emptyEvidence()}
-        initialStage="intonation-transfer"
-        copyEnabled
-      />
-    )
-    expect(
-      screen.getByRole('navigation', { name: /etapas de la ruta/i })
-    ).toBeInTheDocument()
-    expect(screen.queryByText(/^etapas$/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/borde:\s*siguiente práctica/i)).not.toBeInTheDocument()
-  })
-
-  it('renders sentence-prosody with lesson links and without broken mission launchers', () => {
+  it('renders step navigation accessible with aria-pressed', () => {
     render(
       <PronunciationPathPage
         evidenceOverride={emptyEvidence()}
@@ -140,9 +63,40 @@ describe('PronunciationPathPage', () => {
         copyEnabled
       />
     )
-    const unitRegion = screen.getByRole('region', { name: /unidad activa/i })
-    expect(unitRegion).toHaveTextContent(/palabras fuertes|ritmo/i)
-    expect(within(unitRegion).getByRole('link', { name: /abrir lección/i })).toBeInTheDocument()
-    expect(within(unitRegion).queryByRole('button', { name: /misión/i })).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: /etapas de la ruta/i })
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /3\. ritmo y étnasis|3\. ritmo/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    )
+  })
+
+  it('shows a loading card with aria-busy while evidence hydrates', () => {
+    render(<PronunciationPathPage copyEnabled />)
+    const loading = screen.getByRole('region', { name: /cargando tu siguiente práctica/i })
+    expect(loading).toHaveAttribute('aria-busy', 'true')
+    expect(screen.queryByText(/qué toca ahora/i)).not.toBeInTheDocument()
+  })
+
+  it('renders units list in explore sidebar with titles', () => {
+    render(
+      <PronunciationPathPage evidenceOverride={emptyEvidence()} copyEnabled />
+    )
+    expect(screen.getByText(/unidades del paso 1 · sonidos/i)).toBeInTheDocument()
+    expect(screen.getByText(/19 unidades en 5 pasos/i)).toBeInTheDocument()
+  })
+
+  it('renders step 3 sentence-prosody cleanly without raw string overlap', () => {
+    render(
+      <PronunciationPathPage
+        evidenceOverride={emptyEvidence()}
+        initialStage="sentence-prosody"
+        copyEnabled
+      />
+    )
+    expect(screen.getByText(/unidades del paso 3 · ritmo/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/las palabras fuertes de la frase/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/el ritmo de la frase/i)).toBeInTheDocument()
   })
 })

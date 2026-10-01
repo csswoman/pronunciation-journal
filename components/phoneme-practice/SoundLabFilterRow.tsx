@@ -80,7 +80,7 @@ export function SoundLabFilterRow({
                 onSearchChange("");
               }
             }}
-            className="h-10 w-full rounded-full border border-border bg-surface-sunken py-2 pl-10 pr-9 text-body-sm text-fg placeholder:text-fg-subtle shadow-2xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
+            className="h-10 w-full rounded-full border border-border bg-surface-sunken py-2 pl-10 pr-9 ts-body text-fg placeholder:ts-body placeholder:text-fg-subtle shadow-2xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
             aria-label="Buscar sonidos y palabras de ejemplo"
             autoComplete="off"
             autoCorrect="off"
@@ -105,9 +105,9 @@ export function SoundLabFilterRow({
             type="button"
             onClick={() => handleSelectCategory("impact")}
             className={cn(
-              "px-4 py-1.5 text-body-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+              "px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
               activeCategory === "impact"
-                ? "bg-primary text-on-primary font-semibold shadow-xs"
+                ? "bg-primary text-on-primary shadow-xs"
                 : "text-fg-muted hover:text-fg hover:bg-surface-raised",
             )}
           >
@@ -117,9 +117,9 @@ export function SoundLabFilterRow({
             type="button"
             onClick={() => handleSelectCategory("vowel")}
             className={cn(
-              "px-4 py-1.5 text-body-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+              "px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
               activeCategory === "vowel"
-                ? "bg-primary text-on-primary font-semibold shadow-xs"
+                ? "bg-primary text-on-primary shadow-xs"
                 : "text-fg-muted hover:text-fg hover:bg-surface-raised",
             )}
           >
@@ -129,9 +129,9 @@ export function SoundLabFilterRow({
             type="button"
             onClick={() => handleSelectCategory("consonant")}
             className={cn(
-              "px-4 py-1.5 text-body-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+              "px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
               activeCategory === "consonant"
-                ? "bg-primary text-on-primary font-semibold shadow-xs"
+                ? "bg-primary text-on-primary shadow-xs"
                 : "text-fg-muted hover:text-fg hover:bg-surface-raised",
             )}
           >
@@ -148,7 +148,7 @@ export function SoundLabFilterRow({
           role="switch"
           aria-checked={onlyHard}
           onClick={() => onOnlyHardChange(!onlyHard)}
-          className="inline-flex items-center gap-2.5 text-body-sm font-medium text-fg cursor-pointer select-none"
+          className="inline-flex items-center gap-2.5 ts-body text-fg cursor-pointer select-none"
         >
           <div
             className={cn(
@@ -163,7 +163,7 @@ export function SoundLabFilterRow({
               )}
             />
           </div>
-          <span className="text-body-sm text-fg">Solo difíciles</span>
+          <span className="ts-body text-fg">Solo difíciles</span>
         </button>
 
         {/* Selector de Estado en cápsula */}
@@ -171,7 +171,7 @@ export function SoundLabFilterRow({
           <select
             value={progressFilter}
             onChange={(e) => onProgressFilterChange(e.target.value as SoundLabProgressFilter)}
-            className="h-10 appearance-none rounded-full border border-border bg-surface-sunken pl-4 pr-9 text-body-sm font-medium text-fg shadow-2xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] cursor-pointer"
+            className="h-10 appearance-none rounded-full border border-border bg-surface-sunken pl-4 pr-9 ts-body text-fg shadow-2xs transition-all hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] cursor-pointer"
             aria-label="Filtrar por estado de práctica"
           >
             <option value="all">Estado: todos</option>

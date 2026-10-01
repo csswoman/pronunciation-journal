@@ -99,21 +99,21 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
       {/* Left Input Panel (Mint) */}
       <PastelCard tone="mint" className="rounded-3xl p-6 flex flex-col justify-between gap-5 text-left">
         <div className="flex flex-col gap-4">
-          <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 text-tiny font-extrabold text-white w-fit uppercase tracking-wider">
+          <span className="inline-flex items-center rounded-full bg-ink px-3.5 py-1 ts-kicker text-white w-fit">
             CON TUS PALABRAS
           </span>
 
           <div>
-            <h3 className="font-display text-3xl font-extrabold text-ink tracking-tight">
+            <h3 className="ts-headline text-ink">
               ¿Qué se te traba al hablar?
             </h3>
-            <p className="mt-1 text-body-sm text-ink-secondary">
+            <p className="mt-1 ts-body text-ink-secondary">
               Escríbelo en español, como te salga. Nosotros lo convertimos en un tema.
             </p>
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+            <span className="ts-kicker text-ink-muted">
               O EMPIEZA CON UNO DE ESTOS
             </span>
             <div className="flex flex-wrap gap-2">
@@ -124,7 +124,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
                   onClick={() => handleChipClick(prompt)}
                   disabled={isMatching}
                   className={cn(
-                    'focus-ring rounded-full bg-white/80 border border-black/10 px-3.5 py-1.5 text-tiny font-semibold text-ink transition-all hover:bg-white hover:shadow-xs cursor-pointer',
+                    'focus-ring rounded-full bg-white/80 border border-black/10 px-3.5 py-1.5 ts-chip text-ink transition-all hover:bg-white hover:shadow-xs cursor-pointer',
                     description === prompt && 'bg-ink text-white border-transparent',
                   )}
                 >
@@ -135,7 +135,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
           </div>
 
           <div className="flex flex-col gap-1.5 mt-2">
-            <label htmlFor="freeform-gap-input" className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+            <label htmlFor="freeform-gap-input" className="ts-kicker text-ink-muted">
               Tu descripción
             </label>
             <textarea
@@ -144,37 +144,37 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
               onChange={(e) => setDescription(e.target.value.slice(0, MAX_LENGTH))}
               rows={4}
               placeholder="Ej: cuando hablo de algo que ya pasó me trabo y no sé si decir I did o I have done..."
-              className="focus-ring w-full resize-none rounded-2xl border border-black/10 bg-white/90 p-4 text-body-sm text-ink placeholder:text-ink-muted shadow-xs"
+              className="focus-ring w-full resize-none rounded-2xl border border-black/10 bg-white/90 p-4 ts-body text-ink placeholder:text-ink-muted shadow-xs"
             />
           </div>
         </div>
 
         <div className="flex items-center justify-between gap-3 pt-2">
-          <span className="text-tiny text-ink-muted font-semibold">
+          <span className="ts-stat text-ink-muted">
             {description.length}/{MAX_LENGTH}
           </span>
           <button
             type="button"
             onClick={() => performMatch(description)}
             disabled={!canSubmit}
-            className="focus-ring flex items-center gap-2 rounded-full bg-ink hover:opacity-90 text-white px-6 py-2.5 text-body-sm font-bold shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="focus-ring flex items-center gap-2 rounded-full bg-ink hover:opacity-90 text-white px-6 py-2.5 ts-button shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             <Search className="h-4 w-4 text-white" aria-hidden="true" />
             <span>{isMatching ? 'Buscando...' : 'Buscar mi tema'}</span>
           </button>
         </div>
 
-        {error && <p className="rounded-2xl bg-red-100 p-3 text-tiny text-red-700 font-semibold">{error}</p>}
+        {error && <p className="rounded-2xl bg-red-100 p-3 ts-caption text-red-700 font-semibold">{error}</p>}
       </PastelCard>
 
       {/* Right Understanding Panel (Butter) */}
       <PastelCard tone="butter" className="relative rounded-3xl p-6 flex flex-col justify-between gap-5 text-left overflow-hidden">
         <div className="flex flex-col gap-4">
-          <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+          <span className="ts-kicker text-ink-muted">
             ASÍ LO ENTENDEMOS
           </span>
 
-          <div className="rounded-2xl bg-white/90 p-4 text-body-sm text-ink font-medium shadow-xs italic">
+          <div className="rounded-2xl bg-white/90 p-4 ts-body text-ink shadow-xs italic">
             "{lastQuery}"
           </div>
 
@@ -224,12 +224,12 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
                     >
                       {isSelected && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
                     </div>
-                    <span className="font-display text-xl font-extrabold text-ink tracking-tight">
+                    <span className="ts-row-title text-ink">
                       {label}
                     </span>
                   </div>
 
-                  <span className="text-tiny text-ink-muted font-semibold">
+                  <span className="ts-caption text-ink-muted">
                     {match.rationale}
                   </span>
                 </button>
@@ -239,7 +239,7 @@ export function FreeformGapInput({ selectedIds, onSelect, selectionFull }: Freef
         </div>
 
         <div className="flex items-center justify-between gap-2 mt-4 pt-4 border-t border-black/10">
-          <p className="text-tiny text-ink-secondary font-medium">
+          <p className="ts-caption text-ink-secondary">
             Eliges uno o los dos y tu plan se arma alrededor de ellos.
           </p>
           <Illustration

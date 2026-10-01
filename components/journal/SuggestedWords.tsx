@@ -41,7 +41,7 @@ export function SuggestedWords({ words }: { words: string[] }) {
   return (
     <section aria-labelledby="journal-suggested-words" className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <h3 id="journal-suggested-words" className="font-body-sm font-semibold text-fg">
+        <h3 id="journal-suggested-words" className="ts-label-strong text-fg">
           Palabras sugeridas
         </h3>
         {pendingWords.length >= 2 && (
@@ -56,7 +56,7 @@ export function SuggestedWords({ words }: { words: string[] }) {
           </button>
         )}
       </div>
-      <p className="font-body-sm text-fg-muted">
+      <p className="ts-caption text-fg-muted">
         Guarda solo las que quieras practicar. No se añaden automáticamente.
       </p>
       <ul className="flex flex-wrap gap-2">
@@ -71,7 +71,7 @@ export function SuggestedWords({ words }: { words: string[] }) {
                 disabled={state === 'adding' || added}
                 aria-pressed={added}
                 className={cn(
-                  'focus-ring inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-body-sm transition-colors',
+                  'focus-ring inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 ts-chip transition-colors',
                   added
                     ? 'border-success-border bg-success-soft text-success'
                     : 'border-border-default bg-surface-raised text-fg hover:border-primary',

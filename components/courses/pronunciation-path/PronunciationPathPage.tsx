@@ -2,15 +2,19 @@
 
 // Planned structure:
 // <PronunciationPathPage>
-//   <PronunciationPathNextAction | PronunciationPathLoadingCard />
 //   <PronunciationPathStageNav />
-//   <PronunciationPathActiveUnit />
-//   <PronunciationPathExplore />
+//   <MainTwoColumnGrid>
+//     <LeftColumnStack>
+//       <PronunciationPathNextAction />
+//       <PronunciationPathProgressCard />
+//     </LeftColumnStack>
+//     <RightColumnAside>
+//       <PronunciationPathExplore />
+//     </RightColumnAside>
+//   </MainTwoColumnGrid>
 // </PronunciationPathPage>
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getLearnerTargetCopy } from '@/lib/pronunciation/assessment/learner-copy'
-import { contentHrefForRefs } from '@/lib/pronunciation/path/content-href'
 import { isPronunciationPathCopyEnabled } from '@/lib/pronunciation/path/copy-flag'
 import {
   buildPronunciationPathCurriculum,
@@ -23,13 +27,12 @@ import {
   type PathEvidenceBundle,
 } from '@/lib/pronunciation/path/load-evidence'
 import { recommendNextPathAction } from '@/lib/pronunciation/path/recommend'
-import { targetIdToPronunciationPathRoute } from '@/lib/pronunciation/path/routes'
 import type { PathStageId } from '@/lib/pronunciation/path/types'
 import { deriveUnitLearningState, showNeedsEvidenceBadge } from '@/lib/pronunciation/path/unit-state'
-import { PronunciationPathActiveUnit } from './PronunciationPathActiveUnit'
 import { PronunciationPathExplore } from './PronunciationPathExplore'
 import { PronunciationPathLoadingCard } from './PronunciationPathLoadingCard'
 import { PronunciationPathNextAction } from './PronunciationPathNextAction'
+import { PronunciationPathProgressCard } from './PronunciationPathProgressCard'
 import { PronunciationPathStageNav } from './PronunciationPathStageNav'
 import {
   ctaLabelForHref,
@@ -42,9 +45,7 @@ interface PronunciationPathPageProps {
   userId?: string
   initialTargetId?: string
   initialStage?: string
-  /** Test override — defaults to env flag. */
   copyEnabled?: boolean
-  /** Test override — skip Dexie load. */
   evidenceOverride?: PathEvidenceBundle
 }
 
@@ -148,78 +149,54 @@ export function PronunciationPathPage({
     curriculum.stages[0]!.units[0]!
 
   const activeStageId = activeUnit.stageId
-  const activeState = unitStates.get(activeUnit.targetId) ?? 'not_started'
   const needsEvidence = showNeedsEvidenceBadge(
     evidence.diagnosticByTargetId.get(activeUnit.targetId),
   )
 
-  const nextHref = hrefForUnit(recommendedUnit)
+  const nextHref = hrefForUnit(recommendedUnit ?? activeUnit)
   const nextCtaLabel = ctaLabelForHref(nextHref, Boolean(recommendation.targetId))
-  const recommendationOwnsPrimary =
-    !recommendation.targetId || activeUnit.targetId === recommendation.targetId
-  const recommendedLessonHref = recommendedUnit
-    ? contentHrefForRefs(recommendedUnit.contentRefs)
-    : null
-  const recommendedNeedsEvidence = recommendedUnit
-    ? showNeedsEvidenceBadge(evidence.diagnosticByTargetId.get(recommendedUnit.targetId))
-    : false
-  const recommendedTitle = recommendedUnit
-    ? getLearnerTargetCopy(recommendedUnit.targetId).title
-    : null
-  const recommendedPathHref = recommendedUnit
-    ? targetIdToPronunciationPathRoute(recommendedUnit.targetId)
-    : null
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col layout-section-gap pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
+    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6 pb-[max(5.5rem,env(safe-area-inset-bottom))] lg:pb-4">
       {evidenceReady ? (
-        <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-start">
-          <main className="flex min-w-0 flex-col gap-8">
-            <PronunciationPathStageNav
-              stages={curriculum.stages}
-              activeStageId={activeStageId}
-              unitStates={unitStates}
-              recommendedStageId={evidenceReady ? recommendation.stageId : null}
-              onStageChange={selectStage}
-            />
+        <>
+          <PronunciationPathStageNav
+            stages={curriculum.stages}
+            activeStageId={activeStageId}
+            unitStates={unitStates}
+            recommendedStageId={evidenceReady ? recommendation.stageId : null}
+            onStageChange={selectStage}
+          />
 
-            <div className="flex min-w-0 flex-col gap-4">
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,24rem)] lg:items-start">
+            <main className="flex min-w-0 flex-col gap-6">
               <PronunciationPathNextAction
+                activeUnit={activeUnit}
+                activeStageId={activeStageId}
                 recommendation={recommendation}
                 copyEnabled={copyEnabled}
                 href={nextHref}
                 ctaLabel={nextCtaLabel}
-                mode={recommendationOwnsPrimary ? 'primary' : 'compact'}
-                lessonHref={recommendationOwnsPrimary ? recommendedLessonHref : null}
-                needsEvidence={recommendationOwnsPrimary ? recommendedNeedsEvidence : false}
+                needsEvidence={needsEvidence}
               />
 
-              {evidenceReady && !recommendationOwnsPrimary ? (
-                <PronunciationPathActiveUnit
-                  unit={activeUnit}
-                  state={activeState}
-                  needsEvidence={needsEvidence}
-                  copyEnabled={copyEnabled}
-                  fallbackPracticeHref={
-                    recommendedUnit && recommendedUnit.targetId !== activeUnit.targetId
-                      ? hrefForUnit(recommendedUnit)
-                      : null
-                  }
-                  recommendedTitle={recommendedTitle}
-                  recommendedHref={recommendedPathHref}
-                />
-              ) : null}
-            </div>
-          </main>
+              <PronunciationPathProgressCard
+                unitStates={unitStates}
+                totalUnits={listPathUnitsInOrder().length}
+              />
+            </main>
 
-          <aside className="min-w-0 rounded-lg bg-surface-raised px-4 py-3 ring-1 ring-inset ring-border-subtle lg:sticky lg:top-4">
-            <PronunciationPathExplore
-              stages={curriculum.stages}
-              unitStates={unitStates}
-              activeTargetId={activeUnit.targetId}
-            />
-          </aside>
-        </div>
+            <aside className="min-w-0 lg:sticky lg:top-4">
+              <PronunciationPathExplore
+                stages={curriculum.stages}
+                activeStageId={activeStageId}
+                unitStates={unitStates}
+                activeTargetId={activeUnit.targetId}
+                onSelectStage={selectStage}
+              />
+            </aside>
+          </div>
+        </>
       ) : (
         <PronunciationPathLoadingCard />
       )}

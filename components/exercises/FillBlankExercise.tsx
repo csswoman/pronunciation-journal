@@ -139,28 +139,28 @@ function SentencePrompt({
   const charCount = Math.max(3, answer.length)
 
   return (
-    <div className="rounded-xl border border-border-default bg-surface-sunken/40 p-5 sm:p-6 text-center shadow-xs">
-      <p className="text-h3 font-medium leading-relaxed text-fg sm:text-h2">
-        {parts[0].trimEnd()}
+    <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
+      <p className="font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
+        {parts[0].trimEnd()}{' '}
         <span
           className={cn(
-            'relative inline-flex items-center justify-center mx-1.5 px-3 py-0.5 rounded-lg border transition-all duration-200 align-baseline',
-            !done && 'border-dashed border-border-strong/80 bg-surface-base/60 text-transparent select-none shadow-2xs',
-            done && isCorrect && 'border-success-border bg-success-soft text-success font-bold shadow-2xs',
-            done && !isCorrect && 'border-error-border bg-error-soft text-error font-bold shadow-2xs',
+            'relative inline-flex items-center justify-center mx-1.5 px-3.5 py-0.5 rounded-full transition-all duration-200 align-baseline',
+            !done && 'border-b-2 border-dashed border-fg/40 bg-surface-sunken/60 text-transparent select-none',
+            done && isCorrect && 'bg-mint text-ink font-bold border border-mint-deep/60 shadow-2xs dark:bg-mint/30 dark:text-fg',
+            done && !isCorrect && 'bg-coral text-ink font-bold border border-coral-deep/60 shadow-2xs dark:bg-coral/30 dark:text-fg',
           )}
           style={{ minWidth: `max(4.5rem, calc(${charCount * 0.75}em + 1.5rem))` }}
         >
           {done ? (
-            <span className="animate-in fade-in zoom-in-95 duration-200" aria-live="polite">
+            <span className="animate-in fade-in zoom-in-95 duration-200 font-display font-bold" aria-live="polite">
               {selected}
             </span>
           ) : (
-            <span className="font-mono text-body-sm text-fg-subtle/40 tracking-widest" aria-hidden>
-              &nbsp;
+            <span className="font-mono text-body-sm text-fg-subtle/30 tracking-widest" aria-hidden>
+              ___
             </span>
           )}
-        </span>
+        </span>{' '}
         {parts.slice(1).join('___').trimStart()}
       </p>
     </div>

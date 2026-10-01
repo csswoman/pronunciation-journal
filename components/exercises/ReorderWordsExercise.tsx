@@ -170,16 +170,20 @@ export function ReorderWordsExercise({ exercise, onResult }: Props) {
           variant="primary"
           size="lg"
           fullWidth
+          className="rounded-full font-bold shadow-sm"
           onClick={handleCheck}
           disabled={!canCheck}
         >
-          Comprobar
+          <span>Comprobar</span>
+          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+            Enter
+          </span>
         </Button>
       )}
 
       {state !== 'idle' && (
-        <div className="rounded-xl border border-border-default bg-surface-sunken p-4 text-center text-body-md text-fg-muted">
-          Orden correcto: <strong className="font-semibold text-fg">{exercise.sentence}</strong>
+        <div className="rounded-2xl border border-border-default bg-surface-raised p-4 text-center text-body-md text-fg-muted">
+          Orden correcto: <strong className="font-display font-bold text-fg">{exercise.sentence}</strong>
         </div>
       )}
     </div>

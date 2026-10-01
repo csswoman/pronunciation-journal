@@ -64,7 +64,7 @@ function SelfDiagnosisTile({
     >
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-tight pr-4">
+          <h3 className="ts-headline text-ink leading-tight pr-4">
             {item.statement}
           </h3>
           <div
@@ -80,13 +80,13 @@ function SelfDiagnosisTile({
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white/90 p-4 text-body-sm text-ink-secondary font-medium shadow-xs">
+        <div className="rounded-2xl bg-white/90 p-4 ts-body text-ink-secondary shadow-xs">
           {item.example}
         </div>
       </div>
 
       <div className="flex items-center justify-between gap-2 mt-1">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1 text-tiny font-bold text-ink">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-black/10 px-3 py-1 ts-chip text-ink">
           <span className="h-2 w-2 rounded-full bg-ink" />
           <span>{targetLabel}</span>
         </span>

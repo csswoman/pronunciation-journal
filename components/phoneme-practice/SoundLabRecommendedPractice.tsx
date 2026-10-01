@@ -32,28 +32,28 @@ export function SoundLabRecommendedPractice({ recommendation, onStart }: Props) 
         <div className="flex items-center gap-4 min-w-0 flex-1">
           {/* Circular avatar badge with target IPA */}
           <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full border border-ink/20 bg-surface/30 flex items-center justify-center shrink-0 shadow-2xs">
-            <span className="font-ipa text-xl sm:text-2xl font-bold text-ink">
+            <span className="ts-ipa-lg text-ink">
               {targetSymbol}
             </span>
           </div>
 
           <div className="flex flex-col min-w-0">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-ink-muted">
+            <span className="ts-kicker text-ink-muted">
               TU PRÁCTICA RECOMENDADA
             </span>
             <h2
               id="sound-lab-recommended-title"
-              className="text-xl sm:text-2xl font-extrabold text-ink leading-tight tracking-tight my-0.5"
+              className="ts-headline text-ink my-0.5"
               lang="en"
             >
               {recommendation.phrase}
             </h2>
             {recommendation.ipa ? (
-              <p className="font-ipa text-body-sm text-ink-secondary my-0.5" lang="en-fonipa">
+              <p className="ts-ipa-md text-ink-secondary my-0.5" lang="en-fonipa">
                 {formatIpaDisplay(recommendation.ipa)}
               </p>
             ) : null}
-            <p className="text-body-sm text-ink-muted leading-snug">
+            <p className="ts-body-translation text-ink-muted leading-snug">
               {recommendation.meaning}
               {recommendation.reason ? ` · ${recommendation.reason}` : ""}
             </p>
@@ -75,7 +75,7 @@ export function SoundLabRecommendedPractice({ recommendation, onStart }: Props) 
             variant="primary"
             size="md"
             onClick={onStart}
-            className="bg-ink text-paper hover:bg-ink-secondary rounded-full px-6 py-2.5 font-semibold text-body-sm transition-all shadow-xs cursor-pointer active:scale-95"
+            className="bg-ink text-paper hover:bg-ink-secondary rounded-full px-6 py-2.5 ts-button transition-all shadow-xs cursor-pointer active:scale-95"
           >
             Practicar esta frase
           </Button>

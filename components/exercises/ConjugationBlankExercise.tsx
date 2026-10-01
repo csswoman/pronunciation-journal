@@ -120,10 +120,14 @@ export function ConjugationBlankExercise({
         variant="primary"
         size="lg"
         fullWidth
+        className="rounded-full font-bold shadow-sm"
         disabled={done || !answer.trim()}
         onClick={submit}
       >
-        Comprobar
+        <span>Comprobar</span>
+        <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+          Enter
+        </span>
       </Button>
     </div>
   )
@@ -131,11 +135,11 @@ export function ConjugationBlankExercise({
 
 function SentencePrompt({ sentence, lemma }: { sentence: string; lemma?: string }) {
   return (
-    <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6 text-center">
-      <p className="text-h3 font-medium leading-relaxed text-fg sm:text-h2">{sentence}</p>
+    <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
+      <p className="font-display text-h3 font-bold leading-snug text-fg sm:text-h2">{sentence}</p>
       {lemma ? (
-        <p className="mt-3 text-caption text-fg-muted">
-          Verbo en infinitivo: <strong className="font-mono font-semibold text-primary">{lemma}</strong>
+        <p className="mt-3 text-body-sm text-fg-muted font-medium">
+          Verbo en infinitivo: <strong className="font-display font-bold text-fg">{lemma}</strong>
         </p>
       ) : null}
     </div>
@@ -155,7 +159,7 @@ function AnswerInput({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor="conjugation-input" className="text-body-sm font-medium text-fg-muted">
+      <label htmlFor="conjugation-input" className="text-body-sm font-semibold text-fg">
         Forma verbal conjugada
       </label>
       <input
@@ -170,8 +174,8 @@ function AnswerInput({
           }
         }}
         disabled={done}
-        placeholder="Escribe la forma verbal…"
-        className="min-h-13 rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg focus-ring placeholder:text-fg-subtle"
+        placeholder="Escribe la forma correcta…"
+        className="min-h-14 rounded-2xl border-2 border-primary bg-field px-5 py-3.5 text-body-lg text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
       />
     </div>
   )

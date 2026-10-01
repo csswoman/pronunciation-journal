@@ -168,7 +168,7 @@ export default function IPAChart({ lessons = [] }: IPAChartProps) {
         />
       </div>
 
-      <SpanishSpeakersGrid onSelect={handleSelectFromAnywhere} />
+      <SpanishSpeakersGrid onSelect={handleSelectFromAnywhere} exploredSymbols={exploredSymbols} />
 
       <details className="ipa-chart__secondary-disclosure">
         <summary>

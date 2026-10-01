@@ -106,7 +106,7 @@ export function CurriculumBrowser({
       <div className="flex flex-col sm:flex-row items-start gap-6">
         <aside className="w-full sm:w-64 shrink-0 flex flex-col gap-4 rounded-3xl border border-border-default bg-surface-raised p-4 shadow-xs">
           <div className="flex flex-col gap-2">
-            <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle px-2">
+            <span className="ts-kicker text-fg-subtle px-2">
               CATEGORÍAS
             </span>
             <div className="flex flex-col gap-1">
@@ -118,7 +118,7 @@ export function CurriculumBrowser({
                     type="button"
                     onClick={() => setSelectedCategory(cat.id)}
                     className={cn(
-                      'focus-ring flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-body-sm font-semibold transition-all text-left cursor-pointer',
+                      'focus-ring flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 ts-row-title transition-all text-left cursor-pointer',
                       isActive
                         ? 'bg-primary text-white shadow-xs'
                         : 'text-fg-muted hover:bg-surface-sunken hover:text-fg',
@@ -133,7 +133,7 @@ export function CurriculumBrowser({
           </div>
 
           <div className="flex flex-col gap-2 pt-3 border-t border-border-subtle">
-            <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle px-2">
+            <span className="ts-kicker text-fg-subtle px-2">
               NIVEL
             </span>
             <div className="flex flex-wrap gap-1.5 p-1 rounded-2xl bg-surface-sunken">
@@ -145,7 +145,7 @@ export function CurriculumBrowser({
                     type="button"
                     onClick={() => setSelectedLevel(lvl)}
                     className={cn(
-                      'focus-ring flex-1 rounded-xl px-3 py-1.5 text-tiny font-bold transition-all text-center cursor-pointer',
+                      'focus-ring flex-1 rounded-xl px-3 py-1.5 ts-chip transition-all text-center cursor-pointer',
                       isActive
                         ? 'bg-cta-bg text-cta-fg shadow-xs'
                         : 'text-fg-muted hover:text-fg hover:bg-surface-raised',
@@ -161,19 +161,19 @@ export function CurriculumBrowser({
 
         <main className="flex-1 w-full flex flex-col gap-4">
           <div>
-            <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+            <span className="ts-kicker text-fg-subtle">
               GRAMÁTICA
             </span>
-            <h3 className="font-display text-3xl sm:text-4xl font-extrabold text-fg tracking-tight">
+            <h3 className="ts-headline-xl text-fg">
               {activeCategoryLabel}
             </h3>
-            <p className="text-body-sm text-fg-muted mt-0.5">
+            <p className="ts-body text-fg-muted mt-0.5">
               {activeCategoryDesc}
             </p>
           </div>
 
           {filteredGaps.length === 0 ? (
-            <p className="py-8 text-center text-body-sm text-fg-muted rounded-3xl border border-dashed border-border-default p-6">
+            <p className="py-8 text-center ts-body text-fg-muted rounded-3xl border border-dashed border-border-default p-6">
               Ningún tema coincide con los filtros aplicados. Pruebe seleccionando otros niveles o categorías.
             </p>
           ) : (
@@ -202,7 +202,7 @@ export function CurriculumBrowser({
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <span className="inline-flex items-center rounded-full bg-black/10 px-2.5 py-0.5 text-tiny font-extrabold text-ink">
+                      <span className="inline-flex items-center rounded-full bg-black/10 px-2.5 py-0.5 ts-badge text-ink">
                         {gap.level.toUpperCase()}
                       </span>
                       <div
@@ -218,23 +218,23 @@ export function CurriculumBrowser({
                       </div>
                     </div>
 
-                    <h4 className="font-display text-2xl font-extrabold text-ink tracking-tight">
+                    <h4 className="ts-headline text-ink">
                       {gap.label}
                     </h4>
 
                     {meta.wrong && meta.right ? (
-                      <div className="flex flex-col gap-1 rounded-2xl bg-white/90 p-3.5 text-tiny text-ink shadow-xs">
+                      <div className="flex flex-col gap-1 rounded-2xl bg-white/90 p-3.5 ts-body text-ink shadow-xs">
                         <div className="flex items-center gap-1.5 text-red-600">
                           <span className="font-bold">✕</span>
                           <span className="line-through decoration-1 opacity-80">{meta.wrong}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-emerald-800 font-semibold">
+                        <div className="flex items-center gap-1.5 text-emerald-800 ts-label-strong">
                           <span className="font-bold">✓</span>
                           <span>{meta.right}</span>
                         </div>
                       </div>
                     ) : meta.right ? (
-                      <div className="rounded-2xl bg-white/90 p-3.5 text-tiny text-ink font-medium shadow-xs">
+                      <div className="rounded-2xl bg-white/90 p-3.5 ts-body text-ink shadow-xs">
                         {meta.right}
                       </div>
                     ) : null}

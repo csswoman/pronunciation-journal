@@ -79,12 +79,12 @@ export function NotebookTodayPromptHeader({
         <div className="flex flex-col gap-2 min-w-0 flex-1">
           <h2
             id="today-page-heading"
-            className="font-heading text-h2 sm:text-h1 font-extrabold text-ink leading-tight text-balance"
+            className="ts-headline text-ink text-balance"
           >
             {promptEn}
           </h2>
 
-          <p className="font-sans text-body-md font-medium text-ink-secondary leading-normal">
+          <p className="ts-body-translation text-ink-secondary">
             {promptEs}
           </p>
         </div>

@@ -48,7 +48,7 @@ export function NotebookPastGrid({ pastPages, onViewAll, onSelectEntry }: Notebo
         <div className="flex items-center gap-2.5">
           <h2
             id="past-pages-heading"
-            className="font-heading text-h2 font-extrabold text-fg"
+            className="ts-headline text-fg"
           >
             Páginas anteriores
           </h2>
@@ -84,14 +84,14 @@ export function NotebookPastGrid({ pastPages, onViewAll, onSelectEntry }: Notebo
                     <span className="font-mono text-[10px] font-bold tracking-wider uppercase leading-none">
                       {month}
                     </span>
-                    <span className="font-heading text-body-md font-extrabold leading-tight">
+                    <span className="ts-row-number">
                       {day}
                     </span>
                   </div>
 
                   {/* Título y metadatos */}
                   <div className="flex flex-col min-w-0 flex-1 gap-0.5">
-                    <p className="font-sans text-body-sm font-bold text-fg truncate">
+                    <p className="ts-row-title text-fg truncate">
                       {page.firstLine}
                     </p>
                     <span className="font-sans text-caption text-fg-muted">
@@ -146,10 +146,10 @@ export function NotebookPastGrid({ pastPages, onViewAll, onSelectEntry }: Notebo
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
               <div className="flex flex-col items-center justify-center rounded-lg bg-mint text-ink px-3 py-2 shrink-0 w-12 text-center select-none shadow-2xs">
                 <span className="font-mono text-[10px] font-bold tracking-wider uppercase leading-none">SEP</span>
-                <span className="font-heading text-body-md font-extrabold leading-tight">16</span>
+                <span className="ts-row-number">16</span>
               </div>
               <div className="flex flex-col min-w-0 flex-1 gap-0.5">
-                <p className="font-sans text-body-sm font-bold text-fg truncate">
+                <p className="ts-row-title text-fg truncate">
                   Yesterday I talked with my coworker about the n...
                 </p>
                 <span className="font-sans text-caption text-fg-muted">

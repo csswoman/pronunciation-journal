@@ -18,6 +18,7 @@ interface Props {
   className?: string
   showLegend?: boolean
   showAudio?: boolean
+  compactHeader?: boolean
   defaultMode?: 'rhythm' | 'plain'
   onWordClick?: (word: string) => void
 }
@@ -27,6 +28,7 @@ export function RhythmicSentenceDisplay({
   className,
   showLegend = true,
   showAudio = true,
+  compactHeader = false,
   defaultMode = 'rhythm',
   onWordClick,
 }: Props) {
@@ -53,40 +55,51 @@ export function RhythmicSentenceDisplay({
         className,
       )}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle/60 pb-2">
-        <div className="flex items-center gap-2">
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-soft text-primary text-xs" aria-hidden="true">
-            <Sparkles className="h-3 w-3" />
+      {compactHeader ? (
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-1">
+          <span className="font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-fg">
+            EL COMPÁS
           </span>
-          <span className="font-caption text-xs font-semibold text-fg-muted uppercase tracking-wider">
-            Ritmo del inglés (Stress-timed)
+          <span className="font-mono text-xs sm:text-sm text-fg-muted font-medium">
+            grande = pulso fuerte · pequeña = forma débil
           </span>
         </div>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle/60 pb-2">
+          <div className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-soft text-primary text-xs" aria-hidden="true">
+              <Sparkles className="h-3 w-3" />
+            </span>
+            <span className="font-caption text-xs font-semibold text-fg-muted uppercase tracking-wider">
+              Ritmo del inglés (Stress-timed)
+            </span>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setMode((m) => (m === 'rhythm' ? 'plain' : 'rhythm'))}
-            className="text-caption font-medium text-primary hover:underline cursor-pointer focus-ring px-1.5 py-0.5 rounded"
-            aria-pressed={mode === 'rhythm'}
-          >
-            {mode === 'rhythm' ? 'Ocultar compás' : 'Ver compás'}
-          </button>
-
-          {showAudio && (
+          <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={handlePlay}
-              disabled={isPlaying}
-              className="inline-flex items-center gap-1 rounded-md border border-border-default bg-surface px-2 py-1 text-caption font-medium text-fg hover:border-primary focus-ring cursor-pointer"
-              aria-label="Escuchar ritmo de la oración"
+              onClick={() => setMode((m) => (m === 'rhythm' ? 'plain' : 'rhythm'))}
+              className="text-caption font-medium text-primary hover:underline cursor-pointer focus-ring px-1.5 py-0.5 rounded"
+              aria-pressed={mode === 'rhythm'}
             >
-              <Volume2 className="h-3.5 w-3.5 text-primary" />
-              <span>Escuchar ritmo</span>
+              {mode === 'rhythm' ? 'Ocultar compás' : 'Ver compás'}
             </button>
-          )}
+
+            {showAudio && (
+              <button
+                type="button"
+                onClick={handlePlay}
+                disabled={isPlaying}
+                className="inline-flex items-center gap-1 rounded-md border border-border-default bg-surface px-2 py-1 text-caption font-medium text-fg hover:border-primary focus-ring cursor-pointer"
+                aria-label="Escuchar ritmo de la oración"
+              >
+                <Volume2 className="h-3.5 w-3.5 text-primary" />
+                <span>Escuchar ritmo</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div
         className="flex flex-wrap items-start gap-x-3 gap-y-2 py-2 font-sans text-fg"
@@ -104,7 +117,7 @@ export function RhythmicSentenceDisplay({
 
       {showLegend && mode === 'rhythm' && (
         <p id={legendId} className="m-0 text-caption text-fg-muted leading-relaxed pt-1">
-          <span className="font-semibold text-primary">● Pulso:</span> Las palabras destacadas sostienen el compás rítmico; las atenuadas son formas débiles que se comprimen rápido entre cada pulso.
+          <span className="ts-label-strong text-primary">● Pulso:</span> Las palabras destacadas sostienen el compás rítmico; las atenuadas son formas débiles que se comprimen rápido entre cada pulso.
         </p>
       )}
     </section>
@@ -143,17 +156,17 @@ function RhythmicTokenItem({
         className={cn(
           'transition-all text-pretty',
           isContent
-            ? 'font-bold text-h3 sm:text-h2 text-fg tracking-tight'
+            ? 'ts-headline text-fg'
             : isRhythmMode
-              ? 'font-normal text-body sm:text-h4 text-fg-muted'
-              : 'font-normal text-body sm:text-h4 text-fg',
+              ? 'ts-body-lg text-fg-muted'
+              : 'ts-body-lg text-fg',
         )}
       >
         {token.raw}
       </span>
       {isRhythmMode && token.weakIpa && (
         <span
-          className="font-ipa text-caption sm:text-body-sm text-fg-subtle select-none leading-none mt-1"
+          className="ts-ipa-md text-fg-subtle select-none leading-none mt-1"
           aria-label={`Forma débil /${token.weakIpa}/`}
         >
           /{token.weakIpa}/

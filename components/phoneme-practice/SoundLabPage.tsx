@@ -173,7 +173,7 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
                 onTabChange={selectTab}
                 onOpenIPA={openIPA}
               />
-              {heroLesson.lesson ? (
+              {heroLesson.lesson && isSoundsView ? (
                 <Button
                   variant="primary"
                   size="md"

@@ -114,7 +114,7 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   return (
     <div className="layout-stack-loose w-full items-center">
       <div className="flex flex-col items-center gap-2">
-        <p className="m-0 max-w-xs text-center text-body-lg font-medium text-fg">
+        <p className="m-0 max-w-md text-center font-display text-h2 font-bold leading-snug text-fg">
           {exercise.phrase}
         </p>
         {exercise.phraseIpa ? (

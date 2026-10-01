@@ -54,17 +54,17 @@ export function TranslationEsEnExercise({
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6 text-center">
+      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
         <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
           Oración en español
         </span>
-        <p className="mt-2 text-h3 font-medium leading-relaxed text-fg sm:text-h2">
+        <p className="mt-2 font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
           {exercise.sourceEs}
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="translation-input" className="text-body-sm font-medium text-fg-muted">
+        <label htmlFor="translation-input" className="text-body-sm font-semibold text-fg">
           Tu traducción al inglés
         </label>
         <textarea
@@ -79,13 +79,13 @@ export function TranslationEsEnExercise({
           }}
           rows={3}
           disabled={loading || done}
-          placeholder="Tradúcelo al inglés…"
-          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-subtle disabled:opacity-60 disabled:cursor-not-allowed"
+          placeholder="Escribe la forma correcta…"
+          className="w-full resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
         />
       </div>
 
       {grading.error ? (
-        <p role="alert" className="text-body-sm text-error">
+        <p role="alert" className="text-body-sm text-error font-medium">
           {grading.error}
         </p>
       ) : null}
@@ -95,10 +95,14 @@ export function TranslationEsEnExercise({
           variant="primary"
           size="lg"
           fullWidth
+          className="rounded-full font-bold shadow-sm"
           disabled={!answer.trim() || loading}
           onClick={() => void submit()}
         >
-          {loading ? 'Corrigiendo…' : 'Comprobar'}
+          <span>{loading ? 'Corrigiendo…' : 'Comprobar'}</span>
+          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+            Enter
+          </span>
         </Button>
       )}
     </div>

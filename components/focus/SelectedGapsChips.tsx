@@ -21,7 +21,7 @@ export function SelectedGapsChips({ gaps, onRemove, onEdit }: SelectedGapsChipsP
 
   return (
     <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-2xl border border-border-default bg-surface-raised p-4 shadow-xs">
-      <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+      <span className="ts-kicker text-fg-subtle">
         Focos seleccionados ({gaps.length}/2):
       </span>
       {gaps.map((gap) => (
@@ -29,7 +29,7 @@ export function SelectedGapsChips({ gaps, onRemove, onEdit }: SelectedGapsChipsP
           key={gap.targetId}
           type="button"
           onClick={() => onRemove(gap)}
-          className="focus-ring inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-cta-bg px-3.5 py-1 text-body-sm font-semibold text-cta-fg shadow-xs transition-opacity hover:opacity-90"
+          className="focus-ring inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-cta-bg px-3.5 py-1 ts-chip text-cta-fg shadow-xs transition-opacity hover:opacity-90"
           title={`Quitar ${gap.label}`}
         >
           <span>{gap.label}</span>
@@ -40,7 +40,7 @@ export function SelectedGapsChips({ gaps, onRemove, onEdit }: SelectedGapsChipsP
         <button
           type="button"
           onClick={onEdit}
-          className="focus-ring ml-auto cursor-pointer text-tiny font-semibold text-primary underline hover:opacity-80"
+          className="focus-ring ml-auto cursor-pointer ts-button text-primary underline hover:opacity-80"
         >
           Cambiar focos
         </button>

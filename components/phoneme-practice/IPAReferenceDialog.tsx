@@ -4,35 +4,33 @@
 // <IPAReferenceDialog>
 //   <backdrop>
 //     <dialog>
-//       <header /> (title + close button)
-//       <IPAChart />
+//       <IPAModalContent />
 //     </dialog>
 //   </backdrop>
 // </IPAReferenceDialog>
 
-import { X } from "@/components/icons";
-import IPAChart from "@/components/ipa/IPAChart";
+import { IPAModalContent } from "@/components/ipa/IPAModalContent";
 import { useDialogFocus } from "@/hooks/useDialogFocus";
 import type { Lesson } from "@/lib/types";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  lessons: Lesson[];
+  lessons?: Lesson[];
 }
 
-export function IPAReferenceDialog({ open, onClose, lessons }: Props) {
+export function IPAReferenceDialog({ open, onClose }: Props) {
   const { dialogRef } = useDialogFocus<HTMLDivElement>(
     open,
     onClose,
-    '[aria-label="Cerrar tabla IPA"]',
+    '[aria-label="Cerrar tabla IPA"]'
   );
 
   if (!open) return null;
 
   return (
     <div
-      className="sound-lab__ipa-backdrop"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
@@ -40,28 +38,13 @@ export function IPAReferenceDialog({ open, onClose, lessons }: Props) {
     >
       <div
         ref={dialogRef}
-        className="sound-lab__ipa-dialog"
+        className="w-full max-w-4xl bg-surface-raised border border-border-subtle rounded-3xl shadow-xl overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-labelledby="ipa-reference-dialog-title"
         tabIndex={-1}
       >
-        <div className="sound-lab__ipa-dialog-header">
-          <h2 id="ipa-reference-dialog-title" className="font-h4 text-fg">
-            Tabla IPA
-          </h2>
-          <button
-            type="button"
-            className="sound-lab__ipa-dialog-close"
-            onClick={onClose}
-            aria-label="Cerrar tabla IPA"
-          >
-            <X size={18} aria-hidden />
-          </button>
-        </div>
-        <div className="sound-lab__ipa-dialog-body">
-          <IPAChart lessons={lessons} />
-        </div>
+        <IPAModalContent onClose={onClose} />
       </div>
     </div>
   );

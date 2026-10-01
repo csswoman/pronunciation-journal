@@ -82,7 +82,7 @@ export default function CoursePathLessonRow({
           {lesson.state === "done" ? (
             <Check size={12} strokeWidth={2.5} aria-hidden />
           ) : (
-            <span>{formattedNum}</span>
+            <span className="ts-row-number">{formattedNum}</span>
           )}
         </div>
         {!isLast && <div className="course-path__spine-line" />}
@@ -90,7 +90,7 @@ export default function CoursePathLessonRow({
 
       <div className="course-path__lesson-main">
         <div className="course-path__lesson-title-row">
-          <Link href={href} className="course-path__lt course-path__lt--link" title={lesson.title}>
+          <Link href={href} className="course-path__lt course-path__lt--link ts-row-title" title={lesson.title}>
             {lesson.title}
           </Link>
           <span className={cn("course-path__tag", tagInfo.className)}>

@@ -11,7 +11,7 @@ export function NotebookStarterChips({ chips, onInsert }: NotebookStarterChipsPr
           key={chip}
           type="button"
           onClick={() => onInsert(chip)}
-          className="focus-ring inline-flex h-10.5 items-center rounded-full border-[1.5px] border-ink bg-paper px-4.5 font-sans text-body-sm font-semibold text-ink transition-all duration-150 hover:bg-paper/90 hover:scale-[1.02] active:scale-[0.98] shadow-2xs cursor-pointer select-none"
+          className="focus-ring inline-flex h-10.5 items-center rounded-full border-[1.5px] border-ink bg-paper px-4.5 ts-chip text-ink transition-all duration-150 hover:bg-paper/90 hover:scale-[1.02] active:scale-[0.98] shadow-2xs cursor-pointer select-none"
         >
           {chip}
         </button>

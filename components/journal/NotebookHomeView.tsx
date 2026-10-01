@@ -95,10 +95,10 @@ export function NotebookHomeView({
             <span className="font-kicker text-kicker sm:text-kicker-lg select-none">
               CUADERNO DE INGLÉS
             </span>
-            <h1 className="font-heading text-h1 sm:text-display font-extrabold text-fg leading-none tracking-tight">
+            <h1 className="ts-headline text-fg">
               Tu cuaderno
             </h1>
-            <p className="font-sans text-body-sm sm:text-body-md text-fg-muted mt-1">
+            <p className="ts-body text-fg-muted mt-1">
               Una página al día. Tú escribes, la revisión te enseña.
             </p>
           </div>
@@ -106,7 +106,7 @@ export function NotebookHomeView({
           <button
             type="button"
             onClick={() => setIsHistoryModalOpen(true)}
-            className="focus-ring inline-flex items-center gap-2 rounded-full border border-border-default bg-surface-raised px-4 py-2 font-label text-body-sm font-semibold text-fg hover:bg-surface-sunken transition-all shadow-2xs select-none shrink-0"
+            className="focus-ring inline-flex items-center gap-2 rounded-full border border-border-default bg-surface-raised px-4 py-2 ts-button text-fg hover:bg-surface-sunken transition-all shadow-2xs select-none shrink-0"
           >
             <CalendarDays size={16} aria-hidden />
             <span>Páginas anteriores</span>

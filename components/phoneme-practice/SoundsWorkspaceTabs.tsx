@@ -31,9 +31,9 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
               type="button"
               role="tab"
               className={cn(
-                "inline-flex items-center justify-center px-4 py-1.5 text-body-sm font-medium rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+                "inline-flex items-center justify-center px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
                 isActive
-                  ? "bg-primary text-on-primary font-semibold shadow-xs"
+                  ? "bg-primary text-on-primary shadow-xs"
                   : "text-fg-muted hover:text-fg hover:bg-surface-raised",
               )}
               aria-selected={isActive}
@@ -47,7 +47,7 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
         <button
           type="button"
           onClick={onOpenIPA}
-          className="inline-flex items-center justify-center px-4 py-1.5 text-body-sm font-medium text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
+          className="inline-flex items-center justify-center px-4 py-1.5 ts-pill text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
           aria-label="Abrir tabla IPA de referencia"
           title="Tabla IPA"
         >

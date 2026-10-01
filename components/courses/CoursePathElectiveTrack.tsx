@@ -83,8 +83,8 @@ export default function CoursePathElectiveTrack({
           )}
         </div>
         <div className="course-path__rinfo">
-          <div className="course-path__rt font-heading font-bold text-fg">{level.title}</div>
-          <div className="course-path__rm text-body-sm text-fg-muted flex items-center flex-wrap gap-2">
+          <div className="course-path__rt ts-row-title text-fg">{level.title}</div>
+          <div className="course-path__rm ts-caption text-fg-muted flex items-center flex-wrap gap-2">
             <span>{totalCourses} lecciones</span>
             {level.hours && <span>· {level.hours}</span>}
             <CoursePathPriorityCount count={nPriority} className="course-path__rm-star" />

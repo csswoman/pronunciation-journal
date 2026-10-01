@@ -797,6 +797,10 @@
   color: var(--on-accent);
 }
 
+.pastel-card .bg-ink {
+  color: var(--paper);
+}
+
 .pastel-card[data-tone="sky"] {
   --card: var(--ej-sky);
   --card-deep: var(--ej-sky-deep);

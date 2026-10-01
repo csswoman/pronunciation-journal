@@ -52,7 +52,7 @@ export function FocusContentCard({ content, sprintId }: FocusContentCardProps) {
           <span className="text-xl" role="img" aria-label={meta.label}>
             {meta.icon}
           </span>
-          <h4 className="text-body font-semibold text-[var(--text-primary)]">
+          <h4 className="ts-row-title text-[var(--text-primary)]">
             {meta.label}
           </h4>
         </div>
@@ -63,11 +63,11 @@ export function FocusContentCard({ content, sprintId }: FocusContentCardProps) {
         </div>
       </div>
 
-      <p className="text-body-sm text-[var(--text-secondary)] mb-4">
+      <p className="ts-body text-[var(--text-secondary)] mb-4">
         {meta.description}
       </p>
 
-      <div className="text-tiny font-medium text-[var(--primary)] flex items-center gap-1">
+      <div className="ts-button text-[var(--primary)] flex items-center gap-1">
         Practicar ahora →
       </div>
     </Link>

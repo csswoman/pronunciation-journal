@@ -146,7 +146,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'w-full min-h-28 resize-none rounded-[var(--radius-sm)] border border-border-default bg-surface-sunken px-4 py-3 text-body-md text-fg placeholder:text-fg-placeholder focus-ring',
+                'w-full min-h-28 resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg text-fg placeholder:text-fg-muted focus-ring shadow-xs',
                 'transition-colors duration-150 ease-out-quart disabled:cursor-not-allowed disabled:opacity-50',
                 error && 'border-error-border',
               )}
@@ -175,6 +175,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
               variant="primary"
               size="lg"
               fullWidth
+              className="rounded-full font-bold shadow-sm"
               onClick={() => void handleSubmit()}
               disabled={!text.trim() || grading || !online}
             >

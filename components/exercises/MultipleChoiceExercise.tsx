@@ -52,7 +52,7 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <p className="text-body-lg font-medium text-fg leading-snug">
+      <p className="font-display text-h3 font-bold text-fg leading-snug sm:text-h2">
         {exercise.question}
       </p>
 
@@ -70,11 +70,11 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
         correctId={exercise.answerIndex}
         state={state}
         onSelect={handleSelect}
-        indicatorType="radio"
+        indicatorType="number"
       />
 
       {(state === 'wrong' || (state === 'idle' && hintCount > 0)) && exercise.explanation && (
-        <p className="text-body-sm px-4 py-3 rounded-xl bg-primary-soft text-fg-muted">
+        <p className="text-body-sm px-4 py-3 rounded-2xl bg-surface-sunken border border-border-subtle text-fg-muted">
           {exercise.explanation}
         </p>
       )}

@@ -27,11 +27,13 @@ import {
 import { speakText, cancelSpeech } from "@/lib/speech/synthesis";
 import { recordIntonationAttempt } from "@/lib/sounds/queries";
 import { useAuthOptional } from "@/components/auth/AuthProvider";
-import Button from "@/components/ui/Button";
-import { Mic, ArrowRight, ArrowLeft } from "@/components/icons";
+import { Mic, ArrowRight } from "@/components/icons";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 import { hasAudibleAudio, NO_AUDIO_CAPTURED_MESSAGE } from "@/lib/speech/audio-thresholds";
 import { ACOUSTIC_CAPTURE } from "@/lib/speech/capture-profiles";
+import { cn } from "@/lib/cn";
+
+import PastelCard from "@/components/layout/PastelCard";
 
 export function IntonationTrainer() {
   const auth = useAuthOptional();
@@ -92,8 +94,6 @@ export function IntonationTrainer() {
       setAssessment(null);
       setIsSaved(false);
 
-      // Perfil acústico: el análisis de tono mide la señal cruda, y la
-      // supresión de ruido y el control de ganancia la alterarían.
       const stream = await navigator.mediaDevices.getUserMedia(ACOUSTIC_CAPTURE);
 
       audioChunksRef.current = [];
@@ -167,15 +167,18 @@ export function IntonationTrainer() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] gap-6 items-start w-full py-2">
-      <div
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,20rem)] gap-4 items-start w-full py-0">
+      <PastelCard
         id="intonation-trainer-content"
-        className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-5 sm:p-7 shadow-xs w-full min-w-0 order-2 lg:order-1"
+        tone="sky"
+        className="flex flex-col gap-3.5 rounded-3xl p-4 sm:p-6 w-full min-w-0 order-2 lg:order-1 shadow-xs border-0"
       >
         <IntonationSentenceHeader
           sentence={currentSentence}
           onPlay={handlePlayReference}
           isPlaying={isPlayingAudio}
+          currentIndex={selectedPatternIndex + 1}
+          totalCount={INTONATION_PATTERNS.length}
         />
 
         <IntonationGraph
@@ -189,56 +192,50 @@ export function IntonationTrainer() {
         )}
 
         {micError && (
-          <div className="rounded-xl border border-error/40 bg-error-soft p-3 text-body-sm text-error" role="alert">
+          <div className="rounded-xl border border-error/40 bg-error-soft p-3 ts-caption text-error" role="alert">
             {micError}
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-border-subtle">
-          <Button
-            type="button"
-            variant={isRecording ? "error" : "primary"}
-            size="lg"
-            onClick={isRecording ? stopRecording : startRecording}
-            className="w-full sm:w-auto min-w-[200px]"
-          >
-            <Mic size={18} className={isRecording ? "animate-pulse" : ""} />
-            {isRecording ? "Detener grabación" : "Grabar mi entonación"}
-          </Button>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-            <span className="font-mono text-xs text-fg-muted font-medium">
-              {selectedPatternIndex + 1} de {INTONATION_PATTERNS.length}
-            </span>
-
-            <div className="flex items-center gap-2">
-              {selectedPatternIndex > 0 && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="md"
-                  onClick={() => setSelectedPatternIndex((prev) => prev - 1)}
-                  aria-label="Oración anterior"
-                >
-                  <ArrowLeft size={16} />
-                </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 mt-0.5">
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              className={cn(
+                "rounded-full px-5.5 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2.5 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all",
+                isRecording
+                  ? "bg-error text-white animate-pulse"
+                  : "bg-primary text-on-primary hover:bg-primary/90",
               )}
+            >
+              <Mic size={20} />
+              <span>{isRecording ? "Detener grabación" : "Grabar mi entonación"}</span>
+            </button>
 
-              <Button
+            {userPitchPoints.length > 0 && !isRecording && (
+              <button
                 type="button"
-                variant="secondary"
-                size="md"
-                onClick={() => {
-                  setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
-                }}
+                onClick={handlePlayReference}
+                className="rounded-full px-5 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2 cursor-pointer bg-surface border border-border-default text-fg hover:bg-surface-sunken transition-all"
               >
-                Siguiente oración
-                <ArrowRight size={16} />
-              </Button>
-            </div>
+                <span>Escuchar mi grabación</span>
+              </button>
+            )}
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
+            }}
+            className="rounded-full px-6 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2.5 cursor-pointer shadow-xs active:scale-95 transition-all bg-ink text-paper hover:bg-ink-secondary ml-auto"
+          >
+            <span>Siguiente oración</span>
+            <ArrowRight size={18} />
+          </button>
         </div>
-      </div>
+      </PastelCard>
 
       <div className="order-1 lg:order-2 w-full">
         <IntonationPatternPills

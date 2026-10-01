@@ -187,6 +187,7 @@ export function ReaderEntry() {
     <>
       <ReaderCatalog
         passages={passages}
+        previewWords={previewWords}
         onSelectPassage={(p) => {
           setSelectedPassage(p)
           setMode('reading')

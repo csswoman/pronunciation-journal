@@ -92,8 +92,8 @@ export function AnswerInput({
       aria-label="Escribe lo que escuchas"
       placeholder="Escribe lo que escuchas…"
       className={cn(
-        'w-full resize-none rounded-xl border bg-surface-sunken/60 px-4 py-3.5 text-body-lg leading-relaxed text-fg transition-colors duration-150 placeholder:text-fg-subtle focus-ring',
-        disabled ? 'cursor-default border-border-subtle text-fg-subtle opacity-70' : 'border-border-default',
+        'w-full resize-none rounded-2xl border-2 bg-field px-5 py-4 text-body-lg leading-relaxed text-fg transition-colors duration-150 placeholder:text-fg-muted focus-ring shadow-xs',
+        disabled ? 'cursor-default border-border-subtle text-fg-subtle opacity-70' : 'border-primary',
       )}
     />
   )
@@ -101,8 +101,11 @@ export function AnswerInput({
 
 export function CheckButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {
   return (
-    <Button type="button" variant="primary" size="lg" fullWidth onClick={onSubmit} disabled={disabled}>
-      Comprobar
+    <Button type="button" variant="primary" size="lg" fullWidth onClick={onSubmit} disabled={disabled} className="rounded-full font-bold shadow-sm">
+      <span>Comprobar</span>
+      <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+        Enter
+      </span>
     </Button>
   )
 }

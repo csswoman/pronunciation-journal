@@ -87,8 +87,8 @@ export default function CoursePathYaPuedesDecirEsto({
             <MessageCircle size={18} />
           </div>
           <div>
-            <h3 className="course-path__ya-puedes-title">Ya puedes decir esto</h3>
-            <p className="course-path__ya-puedes-sub">
+            <h3 className="course-path__ya-puedes-title ts-body-lg-strong">Ya puedes decir esto</h3>
+            <p className="course-path__ya-puedes-sub ts-caption">
               {isUnlocked
                 ? "Frases reales con lo que aprendiste en este módulo."
                 : "Vista previa de lo que podrás decir al completar este módulo."}
@@ -104,7 +104,7 @@ export default function CoursePathYaPuedesDecirEsto({
                 key={scenario.id}
                 type="button"
                 className={cn(
-                  "course-path__ya-puedes-chip",
+                  "course-path__ya-puedes-chip ts-chip",
                   isSelected && "course-path__ya-puedes-chip--active"
                 )}
                 onClick={() => setSelectedId(scenario.id)}
@@ -124,8 +124,8 @@ export default function CoursePathYaPuedesDecirEsto({
           return (
             <div key={phrase} className="course-path__ya-puedes-card">
               <div className="course-path__ya-puedes-card-main">
-                <span className="course-path__ya-puedes-en">{phrase}</span>
-                <span className="course-path__ya-puedes-es">{translation}</span>
+                <span className="course-path__ya-puedes-en ts-body-lg-strong">{phrase}</span>
+                <span className="course-path__ya-puedes-es ts-body-translation">{translation}</span>
               </div>
               <button
                 type="button"
@@ -145,7 +145,7 @@ export default function CoursePathYaPuedesDecirEsto({
       </div>
 
       <footer className="course-path__ya-puedes-foot">
-        <span className="course-path__ya-puedes-foot-link">
+        <span className="course-path__ya-puedes-foot-link ts-caption">
           {currentScenario.phrases.length} frases listas para practicar en este módulo
         </span>
       </footer>

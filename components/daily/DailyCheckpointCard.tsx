@@ -41,7 +41,7 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
               ¡Hito alcanzado!
             </span>
-            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+            <h3 className="font-display text-xl font-extrabold leading-tight text-fg tracking-tight">
               Listo para Checkpoint {nextLevel}
             </h3>
           </div>
@@ -84,7 +84,7 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
               Siguiente hito
             </span>
-            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+            <h3 className="font-display text-xl font-extrabold leading-tight text-fg tracking-tight">
               Rumbo al Checkpoint {nextLevel}
             </h3>
           </div>
@@ -95,7 +95,7 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             <span className="font-sans text-caption font-semibold text-fg-muted">
               Progreso de lecciones
             </span>
-            <span className="font-display text-[20px] font-extrabold text-fg tabular-nums">
+            <span className="font-display text-xl font-extrabold text-fg tabular-nums">
               {readiness.completedRequired}/{readiness.requiredTotal}
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
               Siguiente hito
             </span>
-            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+            <h3 className="font-display text-xl font-extrabold leading-tight text-fg tracking-tight">
               Checkpoint {nextLevel}
             </h3>
           </div>
@@ -177,7 +177,7 @@ export default function DailyCheckpointCard({ readiness }: DailyCheckpointCardPr
             <span className="inline-flex w-fit items-center rounded-full bg-ink px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-paper leading-snug shadow-xs">
               Siguiente hito
             </span>
-            <h3 className="font-display text-[20px] font-extrabold leading-tight text-fg tracking-tight">
+            <h3 className="font-display text-xl font-extrabold leading-tight text-fg tracking-tight">
               Checkpoint {nextLevel}
             </h3>
           </div>

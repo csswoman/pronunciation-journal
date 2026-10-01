@@ -95,13 +95,13 @@ export function FocusSetup({ userId, isAnonymous = false, suggestedGaps, curricu
         {limitNotice && (
           <div
             role="status"
-            className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-warning/30 bg-warning-soft px-4 py-3 text-body-sm text-warning shadow-xs"
+            className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-warning/30 bg-warning-soft px-4 py-3 ts-body text-warning shadow-xs"
           >
             <span>{limitNotice}</span>
             <button
               type="button"
               onClick={() => setLimitNotice(null)}
-              className="cursor-pointer text-tiny font-semibold underline hover:opacity-80"
+              className="cursor-pointer ts-button underline hover:opacity-80"
             >
               Entendido
             </button>

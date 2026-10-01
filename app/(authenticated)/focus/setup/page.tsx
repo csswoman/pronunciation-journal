@@ -9,12 +9,16 @@ import { getActiveSprint } from '@/lib/focus/queries'
 import { isAnonymousUser } from '@/lib/api/rate-limit'
 import type { SprintGap } from '@/lib/focus/types'
 
+import { WordCarousel } from '@/components/practice/session/WordCarousel'
+import { useLoadingWords } from '@/hooks/useLoadingWords'
+
 export default function FocusSetupPage() {
   const router = useRouter()
   const { user, loading } = useAuth()
   const [suggestedGaps, setSuggestedGaps] = useState<GapSuggestion[]>([])
   const [curriculumGaps, setCurriculumGaps] = useState<SprintGap[]>([])
   const [loadingData, setLoadingData] = useState(true)
+  const words = useLoadingWords()
 
   // Si no hay user aún (por ej. offline puro sin auth), usamos un identificador local 'guest-user'
   const effectiveUserId = user?.id ?? 'guest-local-user'
@@ -48,9 +52,7 @@ export default function FocusSetupPage() {
   if (loading || loadingData) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-body-sm text-[var(--text-tertiary)]">
-          Preparando opciones de estudio...
-        </div>
+        <WordCarousel words={words} />
       </div>
     )
   }

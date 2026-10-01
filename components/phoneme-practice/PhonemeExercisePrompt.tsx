@@ -39,7 +39,7 @@ export function PhonemeExercisePrompt({
         </span>
       )}
       {title && (
-        <h2 className="text-h3 font-bold text-fg leading-tight sm:text-h2">
+        <h2 className="font-display text-h3 font-bold text-fg leading-tight sm:text-h2">
           {title}
         </h2>
       )}

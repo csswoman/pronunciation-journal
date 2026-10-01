@@ -74,13 +74,13 @@ export function GapSuggestionCard({
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center rounded-full bg-black/10 px-2.5 py-0.5 text-tiny font-semibold text-ink">
+            <span className="inline-flex items-center rounded-full bg-black/10 px-2.5 py-0.5 ts-badge text-ink">
               {isPhoneme ? 'Sonido' : 'Gramática'}
             </span>
-            <span className="inline-flex items-center rounded-full bg-black/10 px-2 py-0.5 text-tiny font-semibold text-ink">
+            <span className="inline-flex items-center rounded-full bg-black/10 px-2 py-0.5 ts-badge text-ink">
               {suggestion.level.toUpperCase()}
             </span>
-            <span className="text-tiny font-medium text-ink-secondary">
+            <span className="ts-caption text-ink-secondary">
               {SOURCE_LABEL[suggestion.source]}
             </span>
           </div>
@@ -98,10 +98,10 @@ export function GapSuggestionCard({
         </div>
 
         <div>
-          <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-tight">
+          <h3 className="ts-headline-xl text-ink leading-tight">
             {suggestion.label}
           </h3>
-          <p className="mt-1.5 text-body-sm leading-relaxed text-ink-secondary font-normal">
+          <p className="mt-1.5 ts-body leading-relaxed text-ink-secondary">
             {suggestion.reason}
           </p>
         </div>
@@ -110,10 +110,10 @@ export function GapSuggestionCard({
       {hasEvidence ? (
         <div className="rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
           <div className="flex items-baseline justify-between gap-2">
-            <span className="text-tiny font-bold uppercase tracking-wider text-ink-muted">
+            <span className="ts-kicker text-ink-muted">
               TU PRECISIÓN
             </span>
-            <span className="font-display text-2xl font-extrabold text-ink tabular-nums">
+            <span className="ts-headline text-ink">
               {suggestion.accuracy}%
             </span>
           </div>
@@ -124,21 +124,21 @@ export function GapSuggestionCard({
             />
           </div>
           {suggestion.sampleCount ? (
-            <span className="mt-1.5 block text-tiny text-ink-muted font-medium">
+            <span className="mt-1.5 block ts-caption text-ink-muted">
               Basado en {suggestion.sampleCount} intentos
             </span>
           ) : null}
         </div>
       ) : showExample ? (
         <div className="flex flex-col gap-1.5 rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
-          <div className="flex items-center gap-2 text-body-sm text-red-600">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-tiny font-bold">
+          <div className="flex items-center gap-2 ts-body text-red-600">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 ts-badge">
               ✕
             </span>
             <span className="line-through decoration-1 opacity-80">{meta.wrong}</span>
           </div>
-          <div className="flex items-center gap-2 text-body-sm text-emerald-800 font-semibold">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-tiny font-bold">
+          <div className="flex items-center gap-2 ts-label-strong text-emerald-800">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 ts-badge">
               ✓
             </span>
             <span>{meta.right}</span>
@@ -147,14 +147,14 @@ export function GapSuggestionCard({
       ) : suggestion.targetId === 'vowel:/ɪ/' ? (
         <div className="flex items-center justify-between gap-2 rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-black/5 px-3 py-1 font-ipa text-body-sm font-semibold text-ink border border-black/10">
+            <span className="rounded-full bg-black/5 px-3 py-1 ts-ipa-sm text-ink border border-black/10">
               ship /ʃɪp/
             </span>
-            <span className="rounded-full bg-black/5 px-3 py-1 font-ipa text-body-sm font-semibold text-ink border border-black/10">
+            <span className="rounded-full bg-black/5 px-3 py-1 ts-ipa-sm text-ink border border-black/10">
               sheep /ʃi:p/
             </span>
           </div>
-          <span className="text-tiny text-ink-muted font-medium shrink-0">Aún sin medir</span>
+          <span className="ts-caption text-ink-muted shrink-0">Aún sin medir</span>
         </div>
       ) : null}
     </PastelCard>

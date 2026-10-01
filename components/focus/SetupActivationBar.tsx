@@ -48,7 +48,7 @@ export function SetupActivationBar({
   return (
     <div className="pointer-events-none sticky bottom-4 z-30 mt-6 flex flex-col gap-3">
       {errorMessage && (
-        <div className="pointer-events-auto mx-auto w-full max-w-5xl rounded-2xl border border-error-soft bg-error-soft p-3.5 text-body-sm text-error shadow-lg">
+        <div className="pointer-events-auto mx-auto w-full max-w-5xl rounded-2xl border border-error-soft bg-error-soft p-3.5 ts-caption text-error shadow-lg">
           {errorMessage}
         </div>
       )}
@@ -60,18 +60,18 @@ export function SetupActivationBar({
               type="button"
               onClick={onBack}
               disabled={isActivating}
-              className="focus-ring shrink-0 cursor-pointer rounded-full px-2 py-1 text-body-sm font-semibold text-cta-fg/70 hover:text-cta-fg disabled:cursor-not-allowed disabled:opacity-40"
+              className="focus-ring shrink-0 cursor-pointer rounded-full px-2 py-1 ts-button text-cta-fg/70 hover:text-cta-fg disabled:cursor-not-allowed disabled:opacity-40"
             >
               <span aria-hidden="true">← </span>Atrás
             </button>
           )}
-          <span className="flex shrink-0 items-center justify-center rounded-full border border-dashed border-cta-fg/30 px-3.5 py-1 font-display text-body-sm font-extrabold">
+          <span className="flex shrink-0 items-center justify-center rounded-full border border-dashed border-cta-fg/30 px-3.5 py-1 ts-badge">
             {count}/2
           </span>
           <div className="flex min-w-0 items-center gap-2 truncate">
-            <span className="truncate text-body-sm font-semibold">{summary.headline}</span>
+            <span className="truncate ts-row-title">{summary.headline}</span>
             {summary.hint && (
-              <span className="hidden shrink-0 text-tiny font-normal text-cta-fg/60 sm:inline">{summary.hint}</span>
+              <span className="hidden shrink-0 ts-caption text-cta-fg/60 sm:inline">{summary.hint}</span>
             )}
           </div>
         </div>
@@ -80,7 +80,7 @@ export function SetupActivationBar({
           type="button"
           onClick={onPrimary}
           disabled={isDisabled}
-          className="focus-ring flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-cta-fg/20 bg-cta-fg/15 px-6 py-2.5 font-display text-body-sm font-bold text-cta-fg transition-all hover:bg-cta-fg/25 active:bg-cta-fg/30 disabled:cursor-not-allowed disabled:opacity-40"
+          className="focus-ring flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-cta-fg/20 bg-cta-fg/15 px-6 py-2.5 ts-button-lg text-cta-fg transition-all hover:bg-cta-fg/25 active:bg-cta-fg/30 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>{primaryLabel}</span>
           <span aria-hidden="true">→</span>

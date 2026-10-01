@@ -22,9 +22,9 @@ export function SoundLabFocusBanner({ focusTokens, focusSection }: SoundLabFocus
       role="status"
     >
       <Headphones size={14} className="sound-lab__focus-banner-icon shrink-0" aria-hidden />
-      <span className="min-w-0 flex-1 text-body-sm text-fg-muted">
+      <span className="min-w-0 flex-1 ts-body text-fg-muted">
         Enfoque:{" "}
-        <span className="sound-lab__focus-tokens font-ipa">{focusTokens.join(" · ")}</span>
+        <span className="sound-lab__focus-tokens ts-ipa-sm">{focusTokens.join(" · ")}</span>
         {!focusSection && (
           <span className="text-fg-muted">
             . Aún no hay lecciones que coincidan.

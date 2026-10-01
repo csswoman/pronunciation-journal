@@ -31,15 +31,15 @@ export function SkillsRadarPreview({ enabled }: SkillsRadarPreviewProps) {
             <Radar className="h-4 w-4 text-primary" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <span className="block text-body-sm font-semibold text-fg">
+            <span className="block ts-row-title text-fg">
               Tu perfil de fluidez actual
             </span>
-            <span className="block truncate text-tiny text-fg-subtle">
+            <span className="block truncate ts-caption text-fg-subtle">
               {isOpen ? 'Ocultar diagnóstico de 6 áreas' : 'Ver radar de fortalezas y áreas de oportunidad'}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-1 text-tiny font-medium text-primary shrink-0">
+        <div className="flex items-center gap-1 ts-button text-primary shrink-0">
           <span>{isOpen ? 'Ocultar' : 'Ver radar'}</span>
           {isOpen ? (
             <ChevronUp className="h-4 w-4 text-primary" aria-hidden="true" />

@@ -148,7 +148,7 @@ export function JournalPronunciationModal({
 
         {/* Input de palabra + botón analizar */}
         <div className="flex flex-col gap-2">
-          <label htmlFor="pron-word-input" className="font-body-sm font-medium text-fg">
+          <label htmlFor="pron-word-input" className="ts-label-strong text-fg">
             Palabra en inglés
           </label>
           <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export function JournalPronunciationModal({
         {analysis && (
           <div className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken p-3 animate-in fade-in-0 duration-150">
             <div className="flex items-center gap-2">
-              <span className="font-ipa text-base font-semibold text-primary">
+              <span className="ts-ipa-sm text-primary">
                 {analysis.ipa}
               </span>
               <span className="font-caption text-fg-muted">

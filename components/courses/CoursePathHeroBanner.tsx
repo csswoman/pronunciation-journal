@@ -81,10 +81,10 @@ export default function CoursePathHeroBanner({
     >
       <div className="course-path__hero-content">
         <div className="flex items-center gap-2 mb-3">
-          <span className="bg-[var(--ink)] text-white font-bold px-3.5 py-1 rounded-full text-xs tracking-wide">
+          <span className="bg-[var(--ink)] text-white ts-badge px-3.5 py-1 rounded-full">
             {spine}
           </span>
-          <span className="border border-[var(--ink)] text-[var(--ink)] px-3.5 py-1 rounded-full text-xs font-semibold">
+          <span className="border border-[var(--ink)] text-[var(--ink)] ts-badge px-3.5 py-1 rounded-full">
             {category}
           </span>
         </div>

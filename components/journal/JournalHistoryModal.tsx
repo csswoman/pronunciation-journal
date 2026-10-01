@@ -56,11 +56,11 @@ export function JournalHistoryModal({
           <div className="flex flex-col gap-1 min-w-0">
             <h2
               id="journal-history-modal-title"
-              className="font-heading text-h1 font-extrabold text-fg tracking-tight leading-tight"
+              className="ts-headline text-fg"
             >
               Páginas anteriores
             </h2>
-            <p className="font-sans text-body-sm sm:text-body-md text-fg-muted">
+            <p className="ts-body text-fg-muted">
               Todas las páginas que has escrito, con sus correcciones.
             </p>
           </div>

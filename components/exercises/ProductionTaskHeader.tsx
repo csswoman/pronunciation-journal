@@ -36,25 +36,25 @@ export function ProductionTaskHeader({ exercise, title }: Props) {
       {exercise.constraint && (
         <span className="badge-accent self-start">{exercise.constraint.label}</span>
       )}
-      <h2 className="m-0 text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
+      <h2 className="m-0 font-display text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
         {title}
       </h2>
       <p className="m-0 max-w-[65ch] text-body-sm sm:text-body-md leading-relaxed text-pretty text-fg-muted">
         {exercise.taskPrompt}
       </p>
       {hideTargetWord ? (
-        <div className="flex min-w-0 flex-col gap-1 rounded-[var(--radius-md)] border border-dashed border-border-subtle bg-surface-raised/70 p-4">
+        <div className="flex min-w-0 flex-col gap-1 rounded-2xl border border-dashed border-border-subtle bg-surface-raised p-5 shadow-xs">
           <span className="text-body-sm font-medium text-fg-muted">
             Palabra secreta — no la digas
           </span>
-          <span className="text-h3 sm:text-h2 font-bold tracking-[0.3em] text-fg-subtle select-none">
+          <span className="font-display text-h3 sm:text-h2 font-bold tracking-[0.3em] text-fg-subtle select-none">
             {'•'.repeat(exercise.targetItem.length)}
           </span>
         </div>
       ) : (
-        <div className="flex min-w-0 flex-col gap-2.5 rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised/70 p-4">
+        <div className="flex min-w-0 flex-col gap-2.5 rounded-2xl border border-border-subtle bg-surface-raised p-5 shadow-xs">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="min-w-0 text-h3 sm:text-h2 font-bold text-fg tracking-tight">
+            <span className="min-w-0 font-display text-h3 sm:text-h2 font-bold text-fg tracking-tight">
               {exercise.targetItem}
             </span>
             <ListenButton

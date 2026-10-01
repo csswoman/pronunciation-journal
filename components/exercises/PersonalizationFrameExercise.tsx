@@ -112,14 +112,14 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
         <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
           Habla de ti
         </span>
-        <h2 className="text-body-md font-semibold text-fg">Completa la oración</h2>
+        <h2 className="font-display text-h3 font-bold text-fg sm:text-h2">Completa la oración</h2>
         {exercise.hintEs && (
           <p className="text-body-sm text-fg-muted">{exercise.hintEs}</p>
         )}
       </div>
 
-      <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6">
-        <div className="flex flex-wrap items-center gap-2 text-h3 font-medium text-fg sm:text-h2">
+      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
+        <div className="flex flex-wrap items-center justify-center gap-2 font-display text-h3 font-bold text-fg sm:text-h2">
           <span>{prefix}</span>
           <input
             value={value}
@@ -133,7 +133,7 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
             disabled={done || showSelfAssess}
             aria-label="Espacio a completar"
             placeholder={exercise.slot === 'number' ? 'ej. 25' : '…'}
-            className="min-w-28 max-w-xs rounded-lg border border-border-default bg-surface-raised px-3 py-1.5 text-h3 text-fg focus-ring placeholder:text-fg-subtle sm:text-h2"
+            className="min-w-28 max-w-xs rounded-full border-2 border-primary bg-field px-4 py-1 font-display font-bold text-h3 text-fg focus-ring placeholder:text-fg-muted sm:text-h2 text-center"
           />
           <span>{suffix}</span>
         </div>
@@ -141,12 +141,12 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
 
       {exercise.example && !done && (
         <p className="text-body-sm text-fg-muted">
-          Ejemplo: <span className="italic text-fg">{exercise.example}</span>
+          Ejemplo: <span className="italic text-fg font-medium">{exercise.example}</span>
         </p>
       )}
 
       {issues.length > 0 && !done && !showSelfAssess && (
-        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error">
+        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error font-medium">
           {issues.map((issue, idx) => (
             <p key={idx}>{issue}</p>
           ))}
@@ -154,7 +154,7 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
       )}
 
       {hints.length > 0 && !done && !showSelfAssess && (
-        <div className="flex flex-col gap-1 text-body-sm text-fg-muted">
+        <div className="flex flex-col gap-1 text-body-sm text-fg-muted font-medium">
           {hints.map((hint, idx) => (
             <p key={idx}>💡 {hint}</p>
           ))}
@@ -191,10 +191,14 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
           variant="primary"
           size="lg"
           fullWidth
+          className="rounded-full font-bold shadow-sm"
           onClick={submit}
           disabled={!value.trim()}
         >
-          Comprobar
+          <span>Comprobar</span>
+          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+            Enter
+          </span>
         </Button>
       )}
 

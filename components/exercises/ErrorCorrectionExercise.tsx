@@ -12,6 +12,7 @@
 
 import { useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
+import { cn } from '@/lib/cn'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { matchAnswer, normalize, specFromErrorCorrection } from '@/lib/exercises/answer-match'
 import { feedbackFromVerdict } from '@/lib/exercises/answer-feedback'
@@ -180,17 +181,17 @@ export function ErrorCorrectionExercise({
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6 text-center">
+      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
         <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
           Oración a revisar
         </span>
-        <p className="mt-2 text-h3 font-medium leading-relaxed text-fg sm:text-h2">
+        <p className="mt-2 font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
           {exercise.sentence}
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="error-correction-input" className="text-body-sm font-medium text-fg-muted">
+        <label htmlFor="error-correction-input" className="text-body-sm font-semibold text-fg">
           Escribe la oración corregida
         </label>
         <input
@@ -204,14 +205,14 @@ export function ErrorCorrectionExercise({
             }
           }}
           disabled={done || showSelfAssess}
-          placeholder="Escribe la corrección aquí…"
+          placeholder="Escribe la forma correcta…"
           aria-label="Oración corregida"
-          className="min-h-13 rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg focus-ring placeholder:text-fg-subtle"
+          className="min-h-14 rounded-2xl border-2 border-primary bg-field px-5 py-3.5 text-body-lg text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
         />
       </div>
 
       {feedback?.immediate && !done && !showSelfAssess ? (
-        <p role="alert" className="text-body-sm text-error">
+        <p role="alert" className="text-body-sm text-error font-medium">
           {feedback.immediate}
         </p>
       ) : null}
@@ -232,7 +233,7 @@ export function ErrorCorrectionExercise({
               type="button"
               variant="secondary"
               size="lg"
-              className="sm:w-1/2"
+              className="rounded-full sm:w-1/2 font-medium"
               onClick={handleAlreadyCorrect}
             >
               Está correcta
@@ -243,11 +244,14 @@ export function ErrorCorrectionExercise({
             variant="primary"
             size="lg"
             fullWidth={!showAlreadyCorrectBtn}
-            className={showAlreadyCorrectBtn ? 'sm:w-1/2' : undefined}
+            className={cn('rounded-full font-bold shadow-sm', showAlreadyCorrectBtn ? 'sm:w-1/2' : undefined)}
             onClick={submit}
             disabled={!answer.trim()}
           >
-            Comprobar
+            <span>Comprobar</span>
+            <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+              Enter
+            </span>
           </Button>
         </div>
       )}

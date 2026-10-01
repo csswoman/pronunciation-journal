@@ -35,7 +35,7 @@ export function ThisWeekCard({ stats, showLink = true }: Props) {
       <div className="flex flex-col gap-2.5">
         <div className="grid grid-cols-2 gap-2.5">
           <div className="flex flex-col justify-center rounded-2xl bg-bg-sidebar dark:bg-surface-sunken p-3.5 border border-border-subtle/30">
-            <span className="font-display text-[32px] sm:text-[36px] font-extrabold leading-none text-fg tabular-nums">
+            <span className="font-display text-3xl sm:text-4xl font-extrabold leading-none text-fg tabular-nums">
               {exercises}
             </span>
             <span className="font-sans text-caption font-medium text-fg-muted mt-1.5 truncate">
@@ -44,7 +44,7 @@ export function ThisWeekCard({ stats, showLink = true }: Props) {
           </div>
 
           <div className="flex flex-col justify-center rounded-2xl bg-bg-sidebar dark:bg-surface-sunken p-3.5 border border-border-subtle/30">
-            <span className="font-display text-[32px] sm:text-[36px] font-extrabold leading-none text-fg tabular-nums">
+            <span className="font-display text-3xl sm:text-4xl font-extrabold leading-none text-fg tabular-nums">
               {avgPerDay}
             </span>
             <span className="font-sans text-caption font-medium text-fg-muted mt-1.5 truncate">
@@ -54,7 +54,7 @@ export function ThisWeekCard({ stats, showLink = true }: Props) {
         </div>
 
         <div className="flex items-baseline gap-2 rounded-2xl bg-bg-sidebar dark:bg-surface-sunken p-3.5 border border-border-subtle/30">
-          <span className="font-display text-[28px] sm:text-[32px] font-extrabold leading-none text-fg tabular-nums">
+          <span className="font-display text-2xl sm:text-3xl font-extrabold leading-none text-fg tabular-nums">
             {newWords}
           </span>
           <span className="font-sans text-caption font-medium text-fg-muted truncate">

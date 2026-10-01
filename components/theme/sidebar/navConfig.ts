@@ -14,6 +14,7 @@ import {
   Clapperboard,
   RefreshCw,
   Trophy,
+  Grid2x2,
 } from "@/components/icons";
 import { NavSectionType } from "./NavSection";
 
@@ -74,6 +75,7 @@ export const consultNav: NavSectionType = {
   items: [
     { name: "Diccionario", href: "/words", icon: LibraryBig },
     { name: "Guardadas", href: "/tracking", icon: Bookmark },
+    { name: "Tabla IPA", href: "/ipa", icon: Grid2x2 },
     { name: "Repaso", href: "/practice/review", icon: RefreshCw },
     { name: "Progreso", href: "/progress", icon: TrendingUp },
   ],
