@@ -11,6 +11,17 @@ import { cn } from "@/lib/cn";
 import { getCanonicalSound, SOUND_CLASS_SINGULAR_LABELS } from "@/lib/sounds/inventory";
 import { getSpanishContrast } from "@/lib/sounds/spanish-contrast";
 
+// Planned structure:
+// <SoundLabLessonCard>
+//   <PastelCard>
+//     <CardHeader> (Badge + Top Main Audio Button)
+//     <PhonemeHero> (Bricolage font IPA symbol)
+//     <SoundDescription> (Anchor word + type)
+//     <ProgressSection> (5-segment progress bar + exercise count)
+//     <WordAudioPills> (Example word player pills with black circle play icons)
+//   </PastelCard>
+// </SoundLabLessonCard>
+
 interface Props {
   lesson: Lesson;
   progressPct?: number;
@@ -72,22 +83,22 @@ export function SoundLabLessonCard({
 
   if (isContinuing || isInProgress) {
     badgeLabel = "EN CURSO";
-    badgeClass = "bg-ink text-paper text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider";
+    badgeClass = "bg-ink text-paper text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
   } else if (isToday) {
     badgeLabel = "HOY";
-    badgeClass = "bg-ink text-paper text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider";
+    badgeClass = "bg-ink text-paper text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
   } else if (isDone) {
     badgeLabel = "DOMINADO";
-    badgeClass = "bg-emerald-200 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider";
+    badgeClass = "bg-emerald-300 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
   } else {
     badgeLabel = "Sin practicar";
-    badgeClass = "bg-ink/10 dark:bg-paper/10 text-ink-muted text-[11px] font-semibold px-2.5 py-0.5 rounded-full";
+    badgeClass = "bg-ink/10 dark:bg-paper/10 text-ink-muted text-xs font-bold px-3 py-1 rounded-full";
   }
 
   const content = (
-    <div className="flex flex-col justify-between h-full min-h-[180px]">
+    <div className="flex flex-col justify-between h-full min-h-[170px]">
       {/* Top Bar: Badge + Play sound circle button */}
-      <div className="flex items-center justify-between gap-2 mb-3">
+      <div className="flex items-center justify-between gap-2 mb-2">
         <span className={badgeClass}>{badgeLabel}</span>
 
         <button
@@ -96,7 +107,10 @@ export function SoundLabLessonCard({
             e.stopPropagation();
             if (heroWord) speak(heroWord);
           }}
-          className="h-8 w-8 rounded-full bg-ink text-paper flex items-center justify-center hover:scale-105 active:scale-95 transition-transform cursor-pointer shadow-2xs shrink-0"
+          className={cn(
+            "h-9 w-9 rounded-full bg-ink text-paper flex items-center justify-center hover:scale-105 active:scale-95 transition-transform cursor-pointer shadow-2xs shrink-0",
+            speaking === heroWord && "bg-primary text-on-primary animate-pulse",
+          )}
           aria-label={`Escuchar el sonido ${ipa || title}`}
           title="Escuchar sonido"
         >
@@ -104,15 +118,15 @@ export function SoundLabLessonCard({
         </button>
       </div>
 
-      {/* Main Phoneme Symbol */}
+      {/* Main Phoneme Symbol — Bricolage Grotesque typography */}
       {ipa && (
-        <span className="font-ipa text-4xl sm:text-5xl font-bold tracking-tight text-ink my-1 block group-hover:scale-105 transition-transform origin-left">
+        <span className="font-display font-extrabold text-3xl sm:text-4xl text-ink my-1.5 block group-hover:scale-105 transition-transform origin-left tracking-tight">
           {ipa}
         </span>
       )}
 
       {/* Anchor Word & Sound Type description */}
-      <p className="text-body-sm text-ink-secondary mb-3 font-medium">
+      <p className="text-body font-medium text-ink mb-3">
         {heroWord ? (
           <>
             como en <span className="font-bold text-ink">{heroWord}</span> · {soundTypeLabel}
@@ -123,11 +137,11 @@ export function SoundLabLessonCard({
       </p>
 
       {/* Progress / Status Info */}
-      <div className="mt-auto pt-1 mb-4">
+      <div className="mt-auto pt-1 mb-2">
         {isInProgress ? (
           <div className="flex flex-col gap-1.5">
             {/* 5-segment progress bar */}
-            <div className="flex items-center gap-1 w-full" role="progressbar" aria-valuenow={progressPct || 40} aria-valuemin={0} aria-valuemax={100}>
+            <div className="flex items-center gap-1.5 w-full" role="progressbar" aria-valuenow={progressPct || 40} aria-valuemin={0} aria-valuemax={100}>
               {[1, 2, 3, 4, 5].map((segment) => {
                 const filledCount = Math.max(1, Math.round(((progressPct || 40) / 100) * 5));
                 const isFilled = segment <= filledCount;
@@ -135,27 +149,27 @@ export function SoundLabLessonCard({
                   <div
                     key={segment}
                     className={cn(
-                      "h-1.5 flex-1 rounded-full transition-colors",
+                      "h-2 flex-1 rounded-full transition-colors",
                       isFilled ? "bg-ink" : "bg-ink/20",
                     )}
                   />
                 );
               })}
             </div>
-            <span className="text-caption font-semibold text-ink-muted mt-0.5">
+            <span className="text-body-sm font-medium text-ink-secondary mt-0.5">
               {Math.max(1, Math.round(((progressPct || 40) / 100) * 5))} de 5 ejercicios
             </span>
           </div>
         ) : isDone ? (
-          <span className="text-caption font-semibold text-ink-muted">
+          <span className="text-body-sm font-medium text-ink-secondary">
             5 de 5 · repaso en 4 días
           </span>
         ) : isToday ? (
-          <span className="text-caption font-semibold text-ink-muted">
+          <span className="text-body-sm font-medium text-ink-secondary">
             El sonido del plan de hoy
           </span>
         ) : (
-          <span className="text-caption font-semibold text-ink-muted">
+          <span className="text-body-sm font-medium text-ink-secondary">
             5 ejercicios · 3 min
           </span>
         )}
@@ -194,7 +208,7 @@ export function SoundLabLessonCard({
         {/* Bottom Example Word Audio Pills */}
         {examples.length > 0 && (
           <div
-            className="flex flex-wrap items-center gap-2 pt-3 border-t border-ink/15 mt-2"
+            className="flex flex-wrap items-center gap-2 pt-2 mt-1"
             role="group"
             aria-label={`Escuchar ejemplos de ${ipa ?? "este sonido"}`}
           >
@@ -207,20 +221,27 @@ export function SoundLabLessonCard({
                   speak(word);
                 }}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border border-ink/20 bg-paper px-3 py-1 text-xs font-semibold text-ink hover:bg-paper/90 active:scale-95 transition-all cursor-pointer shadow-2xs",
-                  speaking === word && "border-primary bg-primary text-on-primary",
+                  "inline-flex items-center gap-2 rounded-full border border-ink bg-paper pl-1 pr-3.5 py-1 text-body-sm font-bold text-ink shadow-2xs hover:bg-paper/90 active:scale-95 transition-all cursor-pointer",
+                  speaking === word && "border-accent bg-paper text-accent",
                 )}
                 aria-label={`Escuchar ${word}`}
                 title={`Escuchar pronunciación de "${word}"`}
               >
-                <Play
-                  size={10}
+                <span
                   className={cn(
-                    "fill-ink text-ink shrink-0",
-                    speaking === word && "fill-on-primary text-on-primary animate-pulse",
+                    "h-6 w-6 rounded-full bg-ink text-paper flex items-center justify-center shrink-0 transition-colors",
+                    speaking === word && "bg-accent text-on-accent animate-pulse",
                   )}
-                  aria-hidden
-                />
+                >
+                  <Play
+                    size={10}
+                    className={cn(
+                      "fill-paper text-paper ml-0.5 shrink-0",
+                      speaking === word && "fill-on-accent text-on-accent",
+                    )}
+                    aria-hidden
+                  />
+                </span>
                 <span className="truncate max-w-[100px]">{word}</span>
               </button>
             ))}
