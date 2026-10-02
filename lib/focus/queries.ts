@@ -132,8 +132,9 @@ export async function saveFocusContent(
   content: FocusContent,
   userId: string,
 ): Promise<void> {
+  const ownedContent: FocusContent = { ...content, userId }
   await db.transaction('rw', [db.focusContent, db.syncOutbox], async () => {
-    await db.focusContent.put(content)
+    await db.focusContent.put(ownedContent)
     await enqueue(userId, 'focus_content', 'insert', {
       id: content.id,
       sprint_id: content.sprintId,
@@ -189,23 +190,21 @@ export async function recordFocusPractice(
   contentId: string,
   action: FocusPracticeAction,
 ): Promise<boolean> {
-  const sprint = await db.focusSprints.get(sprintId)
-  if (!sprint) return false
-  if (sprint.userId && sprint.userId !== userId) return false
+  return db.transaction('rw', [db.focusSprints, db.focusContent, db.syncOutbox], async () => {
+    const sprint = await db.focusSprints.get(sprintId)
+    if (!sprint || (sprint.userId && sprint.userId !== userId)) return false
 
-  const content = await db.focusContent.get(contentId)
-  if (content && content.userId && content.userId !== userId) return false
+    const content = await db.focusContent.get(contentId)
+    if (content && content.userId && content.userId !== userId) return false
 
-  const progress = addFocusPractice(sprint, contentId, action)
-  if (!progress) return false
+    const progress = addFocusPractice(sprint, contentId, action)
+    if (!progress) return false
 
-  await db.transaction('rw', [db.focusSprints, db.syncOutbox], async () => {
     await db.focusSprints.update(sprintId, { practice: progress })
     if (userId !== 'guest-local-user') {
       await enqueue(userId, 'focus_sprints', 'update', { practice_progress: progress }, { id: sprintId })
     }
+    return true
   })
-
-  return true
 }
 

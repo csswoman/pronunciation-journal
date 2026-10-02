@@ -4,7 +4,8 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { FocusContentViewer } from '@/components/focus/FocusContentViewer'
-import { getFocusContentById, getSprintById } from '@/lib/focus/queries'
+import { getFocusContentById } from '@/lib/focus/queries'
+import { checkAndExpireSprint } from '@/lib/focus/sprint-lifecycle'
 import type { FocusContent } from '@/lib/focus/types'
 import { focusContentId } from '@/lib/focus/content-url'
 
@@ -24,8 +25,8 @@ export default function FocusContentPage({ params }: { params: Promise<{ content
       try {
         const row = await getFocusContentById(focusContentId(contentId))
         if (!row) throw new Error('missing content')
-        const sprint = await getSprintById(row.sprintId)
-        if (!sprint || sprint.userId !== userId || (row.userId && row.userId !== userId)) {
+        const sprint = await checkAndExpireSprint(userId)
+        if (!sprint || sprint.id !== row.sprintId || sprint.status !== 'active' || (row.userId && row.userId !== userId)) {
           router.replace('/focus')
           return
         }

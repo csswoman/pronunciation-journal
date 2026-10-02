@@ -21,6 +21,7 @@ import PastelCard, { type PastelTone } from '@/components/layout/PastelCard'
 import { SprintProgress } from './SprintProgress'
 import { saveFocusContent } from '@/lib/focus/queries'
 import { deriveExercisesFromContent } from '@/lib/focus/exercise-builder'
+import { focusContentHref } from '@/lib/focus/content-url'
 import { hardestGapLevel } from '@/lib/focus/types'
 import { getIllustration } from '@/lib/illustrations/registry'
 import {
@@ -181,7 +182,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
             <div className="mt-2">
               {existingContent ? (
                 <Link
-                  href={`/focus/${sprint.id}/${existingContent.kind}/${existingContent.id}`}
+                  href={focusContentHref(existingContent.id)}
                   className="focus-ring inline-flex items-center gap-2 rounded-full bg-text hover:bg-black text-surface ts-button px-6 py-2.5 shadow-md transition-all"
                 >
                   <span>Practicar ahora</span>
@@ -231,7 +232,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
         <div>
           {existingContent ? (
             <Link
-              href={`/focus/${sprint.id}/${existingContent.kind}/${existingContent.id}`}
+              href={focusContentHref(existingContent.id)}
               className="focus-ring inline-flex items-center gap-1.5 rounded-full bg-white/80 hover:bg-white border border-black/10 text-ink ts-button px-4 py-2 shadow-xs transition-all"
             >
               <span>Practicar ahora</span>

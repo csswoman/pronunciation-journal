@@ -4,7 +4,6 @@ import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { FocusHome } from '@/components/focus/FocusHome'
-import { db } from '@/lib/db'
 import { listSprintContent } from '@/lib/focus/queries'
 import { checkAndExpireSprint } from '@/lib/focus/sprint-lifecycle'
 import { isAnonymousUser } from '@/lib/api/rate-limit'
@@ -33,15 +32,14 @@ export default function FocusSprintPage({ params }: FocusSprintPageProps) {
 
     async function loadSprint() {
       try {
-        await checkAndExpireSprint(effectiveUserId)
-        const row = await db.focusSprints.get(sprintId)
-        if (!row) {
+        const active = await checkAndExpireSprint(effectiveUserId)
+        if (!active || active.id !== sprintId || active.status !== 'active') {
           router.replace('/focus/setup')
           return
         }
 
         const contents = await listSprintContent(sprintId)
-        setSprint(row)
+        setSprint(active)
         setContentList(contents)
       } finally {
         setLoadingData(false)
