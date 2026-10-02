@@ -2,9 +2,10 @@
 
 // Planned structure:
 // <FillBlankExercise>
-//   <SentencePrompt />   — sentence with dashed blank (length matches answer)
-//   <OptionGrid />       — clean choice buttons with radio dots
-//   <HintPanel />        — hint text below options (revealed via external button)
+//   <ListenButton />     — optional audio prompt
+//   <SentenceBox />      — sky-pastel sentence container with white blank pill
+//   <OptionGrid />       — list of option buttons with index badges
+//   <HintPanel />        — progressive hint box
 // </FillBlankExercise>
 
 import { useState, useRef, useEffect } from 'react'
@@ -18,7 +19,12 @@ import { speak } from '@/lib/phoneme-practice/tts'
 
 interface Props {
   exercise: FillBlankExerciseType
-  onResult: (isCorrect: boolean, userAnswer: string, timeMs: number, extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> }) => void
+  onResult: (
+    isCorrect: boolean,
+    userAnswer: string,
+    timeMs: number,
+    extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> },
+  ) => void
   hintCount?: number
 }
 
@@ -84,27 +90,37 @@ export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) 
   const parts = exercise.sentence.split('___')
 
   const currentHint = exercise.hints
-    ? hintLevel === 1 ? exercise.hints.level1
-      : hintLevel === 2 ? exercise.hints.level2
-      : hintLevel === 3 ? exercise.hints.level3
+    ? hintLevel === 1
+      ? exercise.hints.level1
+      : hintLevel === 2
+        ? exercise.hints.level2
+        : hintLevel === 3
+          ? exercise.hints.level3
+          : null
+    : hintLevel > 0
+      ? (exercise.hint ?? null)
       : null
-    : hintLevel > 0 ? (exercise.hint ?? null)
-    : null
 
   const maxHintLevel = exercise.hints
-    ? (exercise.hints.level3 ? 3 : 2)
-    : (exercise.hint ? 1 : 0)
+    ? exercise.hints.level3
+      ? 3
+      : 2
+    : exercise.hint
+      ? 1
+      : 0
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {exercise.audioText ? (
+      {exercise.audioText && (
         <ListenButton
           onPlay={() => speak(exercise.audioText!)}
           label="Escuchar la oración"
           aria-label="Escuchar la oración completa antes de completar"
         />
-      ) : null}
-      <SentencePrompt parts={parts} answer={exercise.answer} selected={selected} answerState={state} />
+      )}
+
+      <SentenceBox parts={parts} answer={exercise.answer} selected={selected} answerState={state} />
+
       <OptionGrid
         options={exercise.options}
         answer={exercise.answer}
@@ -112,6 +128,7 @@ export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) 
         answerState={state}
         onPick={handlePick}
       />
+
       {currentHint && (
         <HintPanel
           hint={currentHint}
@@ -123,7 +140,7 @@ export function FillBlankExercise({ exercise, onResult, hintCount = 0 }: Props) 
   )
 }
 
-function SentencePrompt({
+function SentenceBox({
   parts,
   answer,
   selected,
@@ -136,52 +153,58 @@ function SentencePrompt({
 }) {
   const done = answerState !== 'idle'
   const isCorrect = answerState === 'correct'
-  const charCount = Math.max(3, answer.length)
+  const charCount = Math.max(3, (selected || answer).length)
 
   return (
-    <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
-      <p className="font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
-        {parts[0].trimEnd()}{' '}
+    <div className="rounded-2xl border border-sky-deep/30 bg-sky p-8 sm:p-10 text-center shadow-2xs">
+      <p className="font-display text-2xl font-bold leading-relaxed text-ink sm:text-3xl flex items-center justify-center flex-wrap gap-2.5 sm:gap-3">
+        <span>{parts[0].trimEnd()}</span>
         <span
           className={cn(
-            'relative inline-flex items-center justify-center mx-1.5 px-3.5 py-0.5 rounded-full transition-all duration-200 align-baseline',
-            !done && 'border-b-2 border-dashed border-fg/40 bg-surface-sunken/60 text-transparent select-none',
-            done && isCorrect && 'bg-mint text-ink font-bold border border-mint-deep/60 shadow-2xs dark:bg-mint/30 dark:text-fg',
-            done && !isCorrect && 'bg-coral text-ink font-bold border border-coral-deep/60 shadow-2xs dark:bg-coral/30 dark:text-fg',
+            'inline-flex items-center justify-center px-4 py-1.5 rounded-2xl font-display font-bold text-2xl sm:text-3xl transition-all duration-200 align-baseline select-none',
+            selected !== null && !done && 'bg-paper text-ink border-b-4 border-ink dark:bg-paper dark:text-ink',
+            selected === null && !done && 'border-2 border-dashed border-ink/30 bg-paper/70 text-ink-muted/40 font-mono text-xl',
+            done && isCorrect && 'bg-mint text-ink border border-mint-deep/60',
+            done && !isCorrect && 'bg-coral text-ink border border-coral-deep/60',
           )}
           style={{ minWidth: `max(4.5rem, calc(${charCount * 0.75}em + 1.5rem))` }}
         >
-          {done ? (
-            <span className="animate-in fade-in zoom-in-95 duration-200 font-display font-bold" aria-live="polite">
+          {selected !== null ? (
+            <span className="animate-in fade-in zoom-in-95 duration-150" aria-live="polite">
               {selected}
             </span>
           ) : (
-            <span className="font-mono text-body-sm text-fg-subtle/30 tracking-widest" aria-hidden>
+            <span className="font-mono text-lg opacity-40" aria-hidden>
               ___
             </span>
           )}
-        </span>{' '}
-        {parts.slice(1).join('___').trimStart()}
+        </span>
+        <span>{parts.slice(1).join('___').trimStart()}</span>
       </p>
     </div>
   )
 }
 
-interface OptionGridProps {
+function OptionGrid({
+  options,
+  answer,
+  selected,
+  answerState,
+  onPick,
+}: {
   options: string[]
   answer: string
   selected: string | null
   answerState: AnswerState
   onPick: (option: string) => void
-}
-
-function OptionGrid({ options, answer, selected, answerState, onPick }: OptionGridProps) {
+}) {
   return (
     <div className="flex flex-col gap-3">
-      {options.map((option) => (
+      {options.map((option, index) => (
         <OptionButton
           key={option}
           option={option}
+          index={index}
           isAnswer={option === answer}
           isSelected={option === selected}
           answerState={answerState}
@@ -192,15 +215,21 @@ function OptionGrid({ options, answer, selected, answerState, onPick }: OptionGr
   )
 }
 
-interface OptionButtonProps {
+function OptionButton({
+  option,
+  index,
+  isAnswer,
+  isSelected,
+  answerState,
+  onPick,
+}: {
   option: string
+  index: number
   isAnswer: boolean
   isSelected: boolean
   answerState: AnswerState
   onPick: (option: string) => void
-}
-
-function OptionButton({ option, isAnswer, isSelected, answerState, onPick }: OptionButtonProps) {
+}) {
   const done = answerState !== 'idle'
 
   return (
@@ -210,39 +239,28 @@ function OptionButton({ option, isAnswer, isSelected, answerState, onPick }: Opt
       disabled={done}
       aria-label={option}
       className={cn(
-        'group flex w-full min-h-14 items-center justify-between rounded-xl border p-4 transition-all duration-150 select-none text-left focus-ring',
-        !done && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg cursor-pointer',
-        !done && isSelected && 'border-primary bg-primary-soft text-primary shadow-xs font-semibold ring-1 ring-primary/30',
-        done && isAnswer && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold cursor-default',
-        done && isSelected && !isAnswer && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold cursor-default',
-        done && !isAnswer && !isSelected && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
+        'group flex w-full min-h-[52px] items-center justify-between rounded-full border-2 px-4 py-3 text-left transition-all duration-150 select-none focus-ring cursor-pointer',
+        !done && !isSelected && 'border-transparent bg-[color-mix(in_oklch,var(--text)_7%,var(--surface-raised))] text-fg hover:bg-[color-mix(in_oklch,var(--text)_11%,var(--surface-raised))]',
+        !done && isSelected && 'border-primary bg-surface-base text-fg font-semibold dark:bg-surface-raised',
+        done && isAnswer && 'border-2 border-success-border bg-success-soft text-success font-semibold cursor-default dark:bg-mint/20 dark:border-mint',
+        done && isSelected && !isAnswer && 'border-2 border-error-border bg-error-soft text-error font-semibold cursor-default dark:bg-coral/20 dark:border-coral',
+        done && !isAnswer && !isSelected && 'border-border-subtle bg-surface-sunken/30 text-fg-subtle opacity-40 cursor-default',
       )}
     >
       <div className="flex items-center gap-3.5">
-        <div
+        <span
           className={cn(
-            'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
-            !isSelected && !done && 'border-border-strong bg-surface-base',
-            !isSelected && done && !isAnswer && 'border-border-subtle bg-surface-base',
-            !isSelected && done && isAnswer && 'border-success bg-surface-base',
-            isSelected && !done && 'border-primary bg-surface-base',
-            done && isAnswer && 'border-success bg-surface-base',
-            done && isSelected && !isAnswer && 'border-error bg-surface-base',
+            'flex size-8 shrink-0 items-center justify-center rounded-full font-mono text-body-sm font-semibold transition-colors',
+            !isSelected && !done && 'border border-border-strong bg-surface-base text-fg-muted dark:bg-surface-raised',
+            !isSelected && done && !isAnswer && 'border border-border-subtle bg-surface-sunken text-fg-faint',
+            isSelected && !done && 'bg-primary text-on-accent font-bold shadow-xs',
+            done && isAnswer && 'bg-feedback-correct text-on-accent font-bold shadow-xs',
+            done && isSelected && !isAnswer && 'bg-feedback-wrong text-on-accent font-bold shadow-xs',
           )}
           aria-hidden
         >
-          {isSelected && (
-            <div
-              className={cn(
-                'size-2.5 rounded-full transition-transform duration-150',
-                !done && 'bg-primary',
-                done && isAnswer && 'bg-success shadow-xs scale-110',
-                done && !isAnswer && 'bg-error shadow-xs',
-              )}
-            />
-          )}
-        </div>
-
+          {index + 1}
+        </span>
         <span className="text-body-lg font-medium">{option}</span>
         {done && isAnswer && <span className="sr-only"> (respuesta correcta)</span>}
         {done && isSelected && !isAnswer && <span className="sr-only"> (respuesta incorrecta)</span>}
@@ -261,26 +279,18 @@ function OptionButton({ option, isAnswer, isSelected, answerState, onPick }: Opt
   )
 }
 
-function HintPanel({
-  hint,
-  level,
-  maxLevel,
-}: {
-  hint: string
-  level?: number
-  maxLevel?: number
-}) {
+function HintPanel({ hint, level, maxLevel }: { hint: string; level?: number; maxLevel?: number }) {
   return (
     <div className="flex items-start gap-3.5 rounded-xl bg-surface-sunken/80 border border-border-subtle p-4 text-left shadow-xs animate-in fade-in slide-in-from-top-1 duration-200">
       <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-warning/15 text-warning border border-warning/20 mt-0.5">
         <Lightbulb size={18} aria-hidden />
       </div>
       <div className="flex flex-col gap-0.5 min-w-0">
-        {level && maxLevel && maxLevel > 1 ? (
+        {level && maxLevel && maxLevel > 1 && (
           <span className="font-mono text-tiny uppercase tracking-wider font-semibold text-fg-muted">
             Pista {level} de {maxLevel}
           </span>
-        ) : null}
+        )}
         <p className="text-body-sm text-fg leading-relaxed">{hint}</p>
       </div>
     </div>

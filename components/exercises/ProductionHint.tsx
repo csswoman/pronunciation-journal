@@ -50,17 +50,11 @@ export function ProductionHint({ exampleSentence, exerciseId, alwaysVisible = tr
   }
 
   return (
-    <div className="animate-message-in flex flex-col gap-1 rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken px-3 py-2.5">
-      <div className="flex items-center gap-1.5 text-caption font-medium text-fg-subtle">
-        <Lightbulb size={13} aria-hidden />
-        Puedes ayudarte de este ejemplo
-      </div>
-      <p className="m-0 text-body-sm italic leading-relaxed text-fg-secondary">
-        “{exampleSentence}”
+    <div className="animate-message-in flex flex-col gap-0.5 rounded-2xl bg-surface-sunken px-5 py-4">
+      <p className="m-0 text-body-md leading-relaxed text-fg-muted">
+        Por ejemplo: <span className="italic text-fg">“{exampleSentence}”</span>
       </p>
-      <p className="m-0 text-caption text-fg-subtle">
-        No la repitas igual — adáptala con tus propias palabras.
-      </p>
+      <p className="m-0 text-body-sm text-fg-muted">Cámbiala con tus propias palabras.</p>
     </div>
   )
 }

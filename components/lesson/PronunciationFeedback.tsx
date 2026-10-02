@@ -5,7 +5,9 @@
 //   <UnderstandingSection />
 //   <ScoreHero />
 //   <ProgressBar />
-//   <SentenceContinuousFeedback />
+//   <WordFeedbackPanel />       (palabras por color + diagnóstico por palabra)
+//   <SentenceListenButtons />   (frase normal / lenta)
+//   <SelfPlaybackAudioBar />    (comparación nativo vs. mi voz de la frase)
 // </PronunciationFeedback>
 
 import type { WordResult } from "@/lib/types";
@@ -13,8 +15,10 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import { feedbackFromScoringResult } from "@/lib/pronunciation/feedback/from-scoring";
 import { getLearnerTargetCopy } from "@/lib/pronunciation/assessment/learner-copy";
 import { isActionablePronunciationFeedbackCopyEnabled } from "@/lib/pronunciation/feedback/copy-flag";
-import { useSyllableFeedback } from "@/hooks/useSyllableFeedback";
-import { SentenceContinuousFeedback } from "./SentenceContinuousFeedback";
+import { useWordFeedback } from "@/hooks/useWordFeedback";
+import { WordFeedbackPanel } from "@/components/pronunciation-feedback/WordFeedbackPanel";
+import { SentenceListenButtons } from "@/components/pronunciation-feedback/SentenceListenButtons";
+import { SelfPlaybackAudioBar } from "@/components/pronunciation/SelfPlaybackAudioBar";
 
 interface PronunciationFeedbackProps {
   wordResults: WordResult[];
@@ -29,6 +33,8 @@ interface PronunciationFeedbackProps {
    * practice" chips, leaving only the score summary. Defaults to true.
    */
   showPhonemeDetail?: boolean;
+  /** `compact` pliega «Cómo se hace» y oculta la leyenda (espacios reducidos). */
+  variant?: "full" | "compact";
 }
 
 export default function PronunciationFeedback({
@@ -39,6 +45,7 @@ export default function PronunciationFeedback({
   transcript = "",
   userAudioUrl = null,
   showPhonemeDetail = true,
+  variant = "full",
 }: PronunciationFeedbackProps) {
   const actionableFeedback = feedbackFromScoringResult({
     accuracy,
@@ -49,7 +56,11 @@ export default function PronunciationFeedback({
     ? getLearnerTargetCopy(actionableFeedback.priority.targetId)
     : null;
   const feedbackCopyEnabled = isActionablePronunciationFeedbackCopyEnabled();
-  const syllableMap = useSyllableFeedback(wordResults);
+  const words = useWordFeedback(wordResults);
+  const fullSentence = wordResults
+    .map((w) => w.expected || w.got)
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className="w-full animate-fadeIn space-y-4">
@@ -111,13 +122,19 @@ export default function PronunciationFeedback({
         }
       />
 
-      {/* Feedback continuo en una línea de frase con IPA y desglose clicable */}
+      {/* Palabras por color con diagnóstico del sonido fallado */}
       {showPhonemeDetail && (
-        <SentenceContinuousFeedback
-          wordResults={wordResults}
-          syllableMap={syllableMap}
-          userAudioUrl={userAudioUrl}
-        />
+        <>
+          <WordFeedbackPanel words={words} variant={variant} />
+          <SentenceListenButtons sentence={fullSentence} />
+          {userAudioUrl && (
+            <SelfPlaybackAudioBar
+              targetWord={fullSentence}
+              userAudioUrl={userAudioUrl}
+              className="max-w-none"
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import {
 } from '@/lib/exercises/eligibility'
 import type { GenerationResult, SkippedEntry } from '@/lib/exercises/generation'
 import { inferPartOfSpeech } from '@/lib/exercises/infer-pos'
-import { exerciseId, pickWeakest } from '@/lib/exercises/utils'
+import { exerciseId, pickWeakest, weaknessScore } from '@/lib/exercises/utils'
 import { selectConstraints } from '@/lib/exercises/speech-constraints'
 
 /**
@@ -142,6 +142,11 @@ export function generateSpokenProductionFromWordBank(
 
   // Seed from the full eligible pool so a session is stable but different day to day.
   const seed = usable.map((e) => e.id).join('|')
+  // Weakest words first: the cycle below starts at the top, so a short session
+  // practices the SRS-weakest words instead of whichever came first in the pool.
+  // Deterministic (stable sort, no jitter): ties keep the pool order.
+  const now = Date.now()
+  const ranked = [...usable].sort((a, b) => weaknessScore(b, now) - weaknessScore(a, now))
   const constraints = selectConstraints(seed, count, preferredConstraintIds, level)
 
   // The pool feeding this generator is capped upstream (WORD_REVIEW_WORD_COUNT),
@@ -149,7 +154,7 @@ export function generateSpokenProductionFromWordBank(
   // repeat paired with a different constraint. Cycle both lists independently
   // so word/constraint pairings stagger instead of colliding in lockstep.
   for (let i = 0; i < count; i++) {
-    const entry = usable[i % usable.length]!
+    const entry = ranked[i % ranked.length]!
     const constraint = constraints[i % constraints.length]!
 
     exercises.push({

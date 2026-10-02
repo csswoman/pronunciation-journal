@@ -2,19 +2,22 @@
 
 // Planned structure:
 // <TranslationEsEnExercise>
+//   <TaskTitle> + <HintToggle />
 //   <SourceSpanishCard />
+//   <HintExample /> (optional)
 //   <EnglishInputArea />
 //   <ErrorAlert />
-//   <SubmitButton />
+//   <SubmitFooter /> (skip + check)
 // </TranslationEsEnExercise>
 
 import { useMemo, useRef, useState } from 'react'
-import Button from '@/components/ui/Button'
+import { cn } from '@/lib/cn'
 import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
 import { translationAnswers } from '@/lib/exercises/translation'
 import type { TranslationEsEnExercise as Exercise } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
+import { HintToggle, SubmitFooter } from './written-production/WrittenProductionParts'
 
 export function TranslationEsEnExercise({
   exercise,
@@ -25,6 +28,7 @@ export function TranslationEsEnExercise({
 }) {
   const [answer, setAnswer] = useState('')
   const [done, setDone] = useState(false)
+  const [hintOpen, setHintOpen] = useState(false)
   const startedAt = useRef(Date.now())
   const acceptedAnswers = useMemo(() => translationAnswers(exercise), [exercise])
   const grading = useProductionGrading({
@@ -53,18 +57,30 @@ export function TranslationEsEnExercise({
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+    <div className="flex w-full flex-col gap-5 sm:gap-6" aria-busy={loading || undefined}>
+      <div className="relative flex flex-col items-center gap-2 rounded-3xl bg-sky p-6 text-center text-ink sm:p-8">
+        <span className="text-caption font-semibold uppercase tracking-widest text-ink/70">
           Oración en español
         </span>
-        <p className="mt-2 font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
+        <p className="m-0 font-display text-h3 font-bold leading-snug text-balance sm:text-h2">
           {exercise.sourceEs}
         </p>
+        {!done && (
+          <div className="absolute right-3 top-3">
+            <HintToggle open={hintOpen} onToggle={() => setHintOpen((v) => !v)} />
+          </div>
+        )}
       </div>
 
+      {hintOpen && (
+        <p className="m-0 rounded-2xl bg-butter-soft p-4 text-body-sm text-ink">
+          <span className="font-semibold">Ejemplo: </span>
+          <span className="italic">{exercise.referenceEn}</span>
+        </p>
+      )}
+
       <div className="flex flex-col gap-2">
-        <label htmlFor="translation-input" className="text-body-sm font-semibold text-fg">
+        <label htmlFor="translation-input" className="text-body-sm font-bold text-fg">
           Tu traducción al inglés
         </label>
         <textarea
@@ -72,38 +88,39 @@ export function TranslationEsEnExercise({
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={(event) => {
-            if ((event.metaKey || event.ctrlKey || event.key === 'Enter') && !event.shiftKey && answer.trim() && !loading && !done) {
+            if (event.key === 'Enter' && !event.shiftKey && answer.trim() && !loading && !done) {
               event.preventDefault()
               void submit()
             }
           }}
           rows={3}
           disabled={loading || done}
-          placeholder="Escribe la forma correcta…"
-          className="w-full resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
+          placeholder="Escribe la traducción en inglés…"
+          aria-invalid={grading.error ? true : undefined}
+          className={cn(
+            'min-h-36 w-full resize-none rounded-3xl border-2 border-primary bg-surface-sunken px-5 py-4 text-body-lg leading-relaxed text-fg placeholder:text-fg-muted focus-ring',
+            'transition-colors duration-150 ease-out-quart disabled:cursor-not-allowed disabled:opacity-50',
+            grading.error && 'border-error-border',
+          )}
         />
       </div>
 
       {grading.error ? (
-        <p role="alert" className="text-body-sm text-error font-medium">
+        <p
+          role="alert"
+          className="m-0 rounded-md border border-error-border bg-error-soft p-3.5 text-body-sm font-medium text-error"
+        >
           {grading.error}
         </p>
       ) : null}
 
       {!done && (
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="rounded-full font-bold shadow-sm"
+        <SubmitFooter
+          grading={loading}
           disabled={!answer.trim() || loading}
-          onClick={() => void submit()}
-        >
-          <span>{loading ? 'Corrigiendo…' : 'Comprobar'}</span>
-          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
-            Enter
-          </span>
-        </Button>
+          onSubmit={() => void submit()}
+          submitLabel="Comprobar"
+        />
       )}
     </div>
   )

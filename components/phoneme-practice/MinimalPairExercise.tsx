@@ -2,8 +2,10 @@
 
 // Planned structure:
 // <MinimalPairExercise>
-//   <AuditoryDiscriminationBase>
-//     <PhonemePlayButton />
+//   <AuditoryDiscriminationBase optionStyle="card">
+//     <PhonemeStimulusCard>
+//       <PhonemePlayButton />
+//     </PhonemeStimulusCard>
 //     <FeedbackNote />
 //     <CompareAudiosBox />
 //   </AuditoryDiscriminationBase>
@@ -12,6 +14,7 @@
 import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import { PhonemeStimulusCard } from '@/components/phoneme-practice/PhonemeStimulusCard'
 import { AuditoryDiscriminationBase } from '@/components/phoneme-practice/AuditoryDiscriminationBase'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
@@ -53,11 +56,17 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
   const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
 
   const stimulusSlot = playWord ? (
-    <PhonemePlayButton
-      ariaLabel={`Escuchar ${playWord}`}
-      word={playWord}
-      voice={voice}
-      size="lg"
+    <PhonemeStimulusCard
+      button={
+        <PhonemePlayButton
+          ariaLabel={`Escuchar ${playWord}`}
+          word={playWord}
+          voice={voice}
+          size="lg"
+          className="size-18 border-transparent bg-ink text-white shadow-none hover:border-transparent hover:bg-ink hover:text-white"
+        />
+      }
+      caption="Toca para escuchar otra vez"
     />
   ) : null
 
@@ -121,9 +130,10 @@ export function MinimalPairExercise({ exercise, onSubmit, focusUi = false, voice
 
   return (
     <AuditoryDiscriminationBase
-      title="Escucha el audio y elige la palabra"
+      title="Escucha y elige la palabra"
       kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Pares mínimos` : 'Pares mínimos'}
-      hint="Identifica cuál de las dos palabras fue pronunciada"
+      hint="¿Cuál de las dos se pronunció?"
+      optionStyle="card"
       stimulusSlot={stimulusSlot}
       options={exercise.options}
       selectedIds={selected ? [selected] : []}

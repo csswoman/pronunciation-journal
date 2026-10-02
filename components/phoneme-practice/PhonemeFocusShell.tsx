@@ -75,7 +75,7 @@ export function PhonemeFocusShell({
           aria-valuemin={0}
           aria-valuemax={total}
           aria-label={progressLabel ?? `Paso ${current} de ${total}`}
-          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-sunken"
+          className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-border-subtle"
         >
           <div
             className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out-quart"

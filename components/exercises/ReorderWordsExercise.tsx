@@ -150,7 +150,7 @@ export function ReorderWordsExercise({ exercise, onResult }: Props) {
       <DropZone
         zone="answer"
         chips={board.answer}
-        empty="Toca o arrastra las palabras de abajo para colocarlas aquí en orden"
+        empty=""
         variant="placed"
         locked={locked}
         drag={drag}
@@ -163,22 +163,31 @@ export function ReorderWordsExercise({ exercise, onResult }: Props) {
         variant="bank"
         locked={locked}
         drag={drag}
+        emptySlots={board.answer.length}
       />
 
+      <p className="text-center text-body-sm text-fg-muted">
+        Toca o arrastra una palabra para colocarla. Tócala otra vez para quitarla.
+      </p>
+
       {state === 'idle' && (
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="rounded-full font-bold shadow-sm"
-          onClick={handleCheck}
-          disabled={!canCheck}
-        >
-          <span>Comprobar</span>
-          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
-            Enter
+        <div className="flex items-center justify-end gap-4">
+          <span className="text-body-sm text-fg-muted">
+            {board.answer.length} de {exercise.tokens.length} palabras
           </span>
-        </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            className="rounded-full font-bold"
+            onClick={handleCheck}
+            disabled={!canCheck}
+          >
+            <span>Comprobar</span>
+            <span className="hidden rounded-md bg-surface-sunken px-2 py-0.5 font-mono text-tiny font-bold text-fg-muted sm:inline-flex" aria-hidden>
+              Enter
+            </span>
+          </Button>
+        </div>
       )}
 
       {state !== 'idle' && (
@@ -197,9 +206,11 @@ interface DropZoneProps {
   variant: 'bank' | 'placed'
   locked: boolean
   drag: ReturnType<typeof useChipDrag>
+  /** Bank only: slots left behind by words already placed. */
+  emptySlots?: number
 }
 
-function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) {
+function DropZone({ zone, chips, empty, variant, locked, drag, emptySlots = 0 }: DropZoneProps) {
   const isAnswer = zone === 'answer'
   const isDropZoneActive = drag.dropTarget?.zone === zone
   const targetIndex = isDropZoneActive ? drag.dropTarget?.index ?? -1 : -1
@@ -211,11 +222,10 @@ function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) 
       onPointerUp={drag.onPointerUp}
       onPointerCancel={drag.onPointerCancel}
       className={cn(
-        'flex flex-wrap items-center gap-2.5 rounded-2xl p-4 transition-all duration-200',
-        isAnswer && 'min-h-20 border-2 border-dashed',
-        isAnswer && chips.length === 0 && 'border-border-default bg-surface-sunken/30 justify-center',
-        isAnswer && chips.length > 0 && 'border-primary bg-primary-soft/20',
-        !isAnswer && 'justify-center py-2',
+        'flex flex-wrap items-center gap-3 transition-all duration-200',
+        isAnswer && 'min-h-32 rounded-3xl bg-sky p-6 dark:bg-sky-deep/20',
+        isAnswer && chips.length === 0 && 'justify-center',
+        !isAnswer && 'justify-center',
         isDropZoneActive && 'ring-2 ring-primary/50',
         'select-none touch-none',
       )}
@@ -227,7 +237,7 @@ function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) 
       {chips.map((chip, index) => (
         <Fragment key={chip.key}>
           {targetIndex === index && (
-            <div className="h-10 w-12 rounded-xl border-2 border-dashed border-primary bg-primary-soft/40 animate-pulse transition-all shrink-0" />
+            <DropSlot />
           )}
           <ReorderWordChip
             chip={chip}
@@ -241,9 +251,27 @@ function DropZone({ zone, chips, empty, variant, locked, drag }: DropZoneProps) 
           />
         </Fragment>
       ))}
-      {targetIndex >= chips.length && (
-        <div className="h-10 w-12 rounded-xl border-2 border-dashed border-primary bg-primary-soft/40 animate-pulse transition-all shrink-0" />
+      {targetIndex >= chips.length && <DropSlot />}
+      {isAnswer && chips.length > 0 && !locked && targetIndex < 0 && (
+        <DropSlot idle />
       )}
+      {!isAnswer && chips.length > 0 && emptySlots > 0 &&
+        Array.from({ length: emptySlots }, (_, i) => (
+          <div key={i} aria-hidden className="h-17 w-24 shrink-0 rounded-2xl bg-surface-sunken" />
+        ))}
     </div>
+  )
+}
+
+/** Dashed placeholder showing where the next word lands. */
+function DropSlot({ idle = false }: { idle?: boolean }) {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        'h-17 w-32 shrink-0 rounded-2xl border-2 border-dashed border-fg-subtle/60 transition-all',
+        !idle && 'animate-pulse',
+      )}
+    />
   )
 }

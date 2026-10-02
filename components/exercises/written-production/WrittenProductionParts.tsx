@@ -18,8 +18,8 @@ export function HintToggle({ open, onToggle }: { open: boolean; onToggle: () => 
       aria-pressed={open}
       aria-label={open ? 'Ocultar ejemplo' : 'Ver un ejemplo'}
       className={cn(
-        'flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border-none text-ink transition-colors focus-ring',
-        open ? 'bg-butter' : 'bg-surface-sunken hover:bg-butter-soft',
+        'flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border-none transition-colors focus-ring',
+        open ? 'bg-butter text-ink' : 'bg-surface-sunken text-fg hover:bg-butter-soft hover:text-ink',
       )}
     >
       <Lightbulb size={20} aria-hidden />
@@ -47,11 +47,13 @@ export function SubmitFooter({
   disabled,
   onSubmit,
   onSkip,
+  submitLabel = 'Enviar',
 }: {
   grading: boolean
   disabled: boolean
   onSubmit: () => void
   onSkip?: () => void
+  submitLabel?: string
 }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
@@ -75,7 +77,7 @@ export function SubmitFooter({
         onClick={onSubmit}
         disabled={disabled}
       >
-        <span>{grading ? 'Corrigiendo…' : 'Enviar'}</span>
+        <span>{grading ? 'Corrigiendo…' : submitLabel}</span>
         {!grading && (
           <span
             className="hidden rounded-md bg-white/25 px-2 py-0.5 text-tiny font-bold text-on-accent sm:inline-flex"

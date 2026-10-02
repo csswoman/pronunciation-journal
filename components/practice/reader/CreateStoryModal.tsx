@@ -38,6 +38,8 @@ const CEFR_LEVELS: Array<{ value: CEFRLevel; label: string; desc: string }> = [
   { value: 'B2', label: 'B2', desc: 'Intermedio alto' },
 ]
 
+const DEFAULT_TARGET_WORDS = ['would', 'about', 'which', 'there', 'know']
+
 const SUGGESTED_TOPICS = [
   { label: 'Vida cotidiana', prompt: 'Una situación de la vida diaria en la ciudad' },
   { label: 'Viajes', prompt: 'Un viaje emocionante y descubrimiento de lugares' },
@@ -64,7 +66,7 @@ export function CreateStoryModal({
   onSubmit,
   isGenerating,
   initialLevel = 'A1',
-  targetWordsPreview = ['would', 'about', 'which', 'there', 'know'],
+  targetWordsPreview = DEFAULT_TARGET_WORDS,
 }: CreateStoryModalProps) {
   const [level, setLevel] = useState<CEFRLevel>(initialLevel)
   const [customTopic, setCustomTopic] = useState('')
@@ -74,7 +76,7 @@ export function CreateStoryModal({
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const activeWords = words.length > 0 ? words : ['would', 'about', 'which', 'there', 'know']
+  const activeWords = words.length > 0 ? words : DEFAULT_TARGET_WORDS
 
   useEffect(() => {
     if (isOpen) {
@@ -131,7 +133,7 @@ export function CreateStoryModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-xl rounded-[32px] sm:rounded-[36px] border border-border bg-surface p-6 sm:p-8 shadow-2xl space-y-6 relative"
+        className="w-full max-w-xl rounded-4xl border border-border bg-surface p-6 sm:p-8 shadow-2xl space-y-6 relative"
       >
         {/* Header Row */}
         <div className="flex items-start justify-between gap-4">
@@ -179,7 +181,7 @@ export function CreateStoryModal({
                     onClick={() => setLevel(lvl.value)}
                     className={`flex flex-col items-center justify-center py-3 px-2 rounded-2xl border text-center transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#2563eb] bg-[#2563eb] text-white shadow-xs'
+                        ? 'border-primary bg-primary text-white shadow-xs'
                         : 'border-border/60 bg-surface hover:border-black/20 text-fg'
                     }`}
                   >
@@ -208,7 +210,7 @@ export function CreateStoryModal({
               value={customTopic}
               onChange={(e) => setCustomTopic(e.target.value)}
               placeholder="Ej.: un misterio en la biblioteca, comida callejera en Tokio..."
-              className="w-full rounded-2xl border border-[#2563eb] ring-2 ring-[#2563eb]/20 bg-surface px-4 py-3 text-sm text-fg placeholder:text-fg-muted focus-ring shadow-2xs transition-all"
+              className="w-full rounded-2xl border border-primary ring-2 ring-primary/20 bg-surface px-4 py-3 text-sm text-fg placeholder:text-fg-muted focus-ring shadow-2xs transition-all"
             />
 
             <div className="flex flex-wrap gap-2 mt-3">
@@ -247,7 +249,7 @@ export function CreateStoryModal({
                       onClick={() => setSelectedDuration(dur)}
                       className={`flex-1 rounded-full px-3 py-2 text-xs transition-all text-center cursor-pointer ${
                         isSelected
-                          ? 'bg-[#2563eb] text-white font-bold shadow-2xs'
+                          ? 'bg-primary text-white font-bold shadow-2xs'
                           : 'bg-surface-sunken border border-border/50 text-fg hover:bg-surface-raised font-semibold'
                       }`}
                     >
@@ -268,7 +270,7 @@ export function CreateStoryModal({
                   onChange={(e) => setGenerateHdVoice(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-border rounded-full peer peer-checked:bg-[#2563eb] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative shrink-0" />
+                <div className="w-9 h-5 bg-border rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative shrink-0" />
               </label>
             </div>
           </div>

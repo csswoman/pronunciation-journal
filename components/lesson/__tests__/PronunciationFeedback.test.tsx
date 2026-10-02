@@ -1,12 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import PronunciationFeedback from '../PronunciationFeedback'
 import type { WordResult } from '@/lib/types'
 
-const playIpaSoundMock = vi.fn()
 vi.mock('@/lib/pronunciation/ipa-audio', () => ({
-  playIpaSound: (ipa: string) => playIpaSoundMock(ipa),
+  playIpaSound: vi.fn(),
 }))
 
 const speakMock = vi.fn()
@@ -70,7 +69,7 @@ const sampleWordResults: WordResult[] = [
 ]
 
 describe('PronunciationFeedback', () => {
-  it('renderiza la puntuación, feedback y la frase continua', () => {
+  it('renderiza la puntuación, feedback y las palabras de la frase', () => {
     render(
       <PronunciationFeedback
         wordResults={sampleWordResults}
@@ -83,12 +82,12 @@ describe('PronunciationFeedback', () => {
     expect(screen.getByText('60%')).toBeInTheDocument()
     expect(screen.getAllByText(/Bien/).length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('+5 XP')).toBeInTheDocument()
-    expect(screen.getByText("i'm")).toBeInTheDocument()
-    expect(screen.getByText('gonna')).toBeInTheDocument()
-    expect(screen.getByText('later')).toBeInTheDocument()
+    expect(screen.getByLabelText(/i'm: bien/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /gonna:/ })).toBeInTheDocument()
+    expect(screen.getByLabelText(/later: bien/)).toBeInTheDocument()
   })
 
-  it('no muestra los detalles de error desplegados inicialmente', () => {
+  it('abre el diagnóstico de la primera palabra fallada sin pulsar nada', () => {
     render(
       <PronunciationFeedback
         wordResults={sampleWordResults}
@@ -98,13 +97,13 @@ describe('PronunciationFeedback', () => {
       />,
     )
 
-    expect(
-      screen.queryByText(/falta \/g\/ · falta \/ɑ\//i),
-    ).not.toBeInTheDocument()
+    // «gonna» es la única fallada: queda seleccionada y su diagnóstico visible.
+    expect(screen.getByRole('button', { name: /gonna: (casi|no se oyó)/i })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(/en «gonna»/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /escuchar \//i })).toBeInTheDocument()
   })
 
-  it('abre la descripción del error al hacer clic en una palabra con error', () => {
-    speakMock.mockClear()
+  it('las palabras correctas no son interactivas', () => {
     render(
       <PronunciationFeedback
         wordResults={sampleWordResults}
@@ -114,40 +113,22 @@ describe('PronunciationFeedback', () => {
       />,
     )
 
-    const errorWordBtn = screen.getByRole('button', { name: /gonna: error/i })
-    fireEvent.click(errorWordBtn)
-
-    expect(
-      screen.getByText(/falta \/g\/ · falta \/ɑ\/ · \/n\/ → escuchado \/t\/ · \/ʌ\/ → escuchado \/u:\//i),
-    ).toBeInTheDocument()
-    expect(speakMock).toHaveBeenCalledWith('gonna')
-
-    // Al hacer clic nuevamente se cierra
-    fireEvent.click(errorWordBtn)
-    expect(
-      screen.queryByText(/falta \/g\/ · falta \/ɑ\//i),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^later:/i })).not.toBeInTheDocument()
+    expect(screen.getByLabelText(/later: bien/i)).toBeInTheDocument()
   })
 
-  it('abre el detalle del fonema y reproduce audio al hacer clic en un fonema con error en la línea IPA', () => {
-    playIpaSoundMock.mockClear()
+  it('en variante compacta pliega «Cómo se hace» y oculta la leyenda', () => {
     render(
       <PronunciationFeedback
         wordResults={sampleWordResults}
         accuracy={60}
         feedback={{ message: 'Bien', emoji: '👍', color: 'text-warning' }}
         xpEarned={5}
+        variant="compact"
       />,
     )
 
-    // Buscar botón de fonema incorrecto
-    const phonemeBtn = screen.getByRole('button', { name: /fonema \/n\/.*incorrecto/i })
-    fireEvent.click(phonemeBtn)
-
-    expect(playIpaSoundMock).toHaveBeenCalledWith('n')
-    expect(
-      screen.getByText(/Se esperaba \/n\/ pero se reconoció \/t\//i),
-    ).toBeInTheDocument()
+    expect(screen.queryByText('No se oyó', { selector: 'li' })).not.toBeInTheDocument()
   })
 
   it('renders SelfPlaybackAudioBar when userAudioUrl is provided', () => {
@@ -162,7 +143,7 @@ describe('PronunciationFeedback', () => {
     )
 
     expect(screen.getByText('Comparación de Audio')).toBeInTheDocument()
-    expect(screen.getByText('Nativo')).toBeInTheDocument()
+    expect(screen.getAllByText('Nativo').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('Mi voz')).toBeInTheDocument()
   })
 })

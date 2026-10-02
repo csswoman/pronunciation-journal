@@ -205,11 +205,25 @@ export function generatePickSound(
   }
 }
 
-type NormalizedPair = { wordA: string; wordB: string; targetIsA: boolean; synthetic: boolean }
+type NormalizedPair = {
+  wordA: string
+  wordB: string
+  targetIsA: boolean
+  synthetic: boolean
+  ipaA?: string
+  ipaB?: string
+}
 
 function normalizeDbPair(pair: MinimalPair, targetSoundId: number): NormalizedPair {
   const targetIsA = pair.contrast_sound_a_id === targetSoundId
-  return { wordA: pair.word_a, wordB: pair.word_b, targetIsA, synthetic: false }
+  return {
+    wordA: pair.word_a,
+    wordB: pair.word_b,
+    targetIsA,
+    synthetic: false,
+    ipaA: pair.ipa_a ?? undefined,
+    ipaB: pair.ipa_b ?? undefined,
+  }
 }
 
 function normalizeSynthPair(synth: { phonemeA: string; wordA: string; wordB: string }, targetIpa: string): NormalizedPair {
@@ -244,8 +258,8 @@ export function generateMinimalPair(
 
   const chosen = pool[Math.floor(Math.random() * pool.length)]
   const options: Option[] = shuffle([
-    { id: 'a', label: chosen.wordA, isCorrect: chosen.targetIsA },
-    { id: 'b', label: chosen.wordB, isCorrect: !chosen.targetIsA },
+    { id: 'a', label: chosen.wordA, isCorrect: chosen.targetIsA, ipa: chosen.ipaA },
+    { id: 'b', label: chosen.wordB, isCorrect: !chosen.targetIsA, ipa: chosen.ipaB },
   ])
 
   return {

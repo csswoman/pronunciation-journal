@@ -58,6 +58,7 @@ export interface LocalFirstInput {
    * See `grading-attempts.ts`.
    */
   beforeAiCall?: () => void
+  onTiming?: (source: 'local' | 'cache' | 'provider', durationMs: number) => void
 }
 
 export interface GradingPipelineDeps {
@@ -98,23 +99,28 @@ export async function gradeWithLocalFirst(
   input: LocalFirstInput,
   deps: GradingPipelineDeps = dexieGradingDeps,
 ): Promise<ProductionGradeResult> {
+  const startedAt = performance.now()
+  const finish = (result: ProductionGradeResult, source: 'local' | 'cache' | 'provider') => {
+    input.onTiming?.(source, Math.round(performance.now() - startedAt))
+    return result
+  }
   const normalized = normalizeAcceptedAnswer(input.gradeInput.production)
   const reference = input.acceptedAnswers?.[0]
   if (normalized.split(' ').filter(Boolean).length < 2) {
-    return localResult(false, 'Escribe al menos dos palabras para poder revisar la respuesta.', reference)
+    return finish(localResult(false, 'Escribe al menos dos palabras para poder revisar la respuesta.', reference), 'local')
   }
   if (input.sourceSentence && normalized === normalizeAcceptedAnswer(input.sourceSentence)) {
-    return localResult(false, 'No transformaste la oración.', reference)
+    return finish(localResult(false, 'No transformaste la oración.', reference), 'local')
   }
   if (matchesAcceptedAnswer(input.gradeInput.production, input.acceptedAnswers ?? [])) {
-    return localResult(true, '¡Correcto!')
+    return finish(localResult(true, '¡Correcto!'), 'local')
   }
   if (await deps.isAccepted(input.userId, input.exerciseKey, normalized)) {
-    return localResult(true, '¡Correcto!')
+    return finish(localResult(true, '¡Correcto!'), 'cache')
   }
   const key = await cacheKey(input.userId, input.exerciseKey, normalized)
   const cached = await deps.getCached(key)
-  if (cached) return cached
+  if (cached) return finish(cached, 'cache')
 
   input.beforeAiCall?.()
   const result = await deps.gradeProduction(input.gradeInput)
@@ -123,5 +129,5 @@ export async function gradeWithLocalFirst(
     result, createdAt: new Date().toISOString(),
     accepted: input.fixedReference && result.correct && result.score >= 90 ? 1 : 0,
   })
-  return result
+  return finish(result, 'provider')
 }

@@ -2,64 +2,88 @@
 'use client'
 
 // Planned structure:
-// <SoundHowTo>  — collapsible "Cómo se hace" block
-//   <button> toggle trigger
-//   <div> dark surface panel
-//     <h4> hookEs title
-//     <ol> numbered steps
-//     <div> mint tip callout with sparkles icon
+// <SoundHowTo>  — bloque plegable "Cómo se hace"
+//   <button> toggle
+//   <div> panel
+//     <p> título (hook)
+//     <ol> pasos numerados en el color del estado
+//     <div> tip en menta con bombilla
+//     <MinimalPairs>
 
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, Sparkles } from '@/components/icons'
+import { ChevronDown, ChevronUp, Lightbulb } from '@/components/icons'
+import { speak } from '@/lib/phoneme-practice/tts'
+import { cn } from '@/lib/cn'
+import type { WordFeedbackState, WordFix } from '@/lib/pronunciation/feedback/word-feedback'
+import { WORD_TONE } from './word-feedback-tone'
 
 interface Props {
-  /** IPA symbol with slashes, e.g. "/z/" — fallback title when hookEs is null. */
-  ipa: string
-  hookEs: string | null
-  articulationEs: string[]
-  spanishTip: string | null
-  /** Start expanded (used when the score is low). */
+  fix: WordFix
+  state: WordFeedbackState
+  /** Abierto desde el inicio (variante completa); plegado en la compacta. */
   defaultOpen?: boolean
 }
 
-export function SoundHowTo({ ipa, hookEs, articulationEs, spanishTip, defaultOpen = false }: Props) {
+export function SoundHowTo({ fix, state, defaultOpen = false }: Props) {
   const [open, setOpen] = useState(defaultOpen)
+  const pairs = fix.minimalPairs.slice(0, 2)
 
-  if (articulationEs.length === 0 && !spanishTip) return null
+  if (fix.steps.length === 0 && !fix.tip) return null
 
   return (
-    <div className="mt-3">
+    <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-fg-subtle hover:text-fg transition-colors cursor-pointer py-1"
+        className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 text-body-sm font-semibold text-fg-muted transition-colors hover:text-fg focus-ring"
       >
         <span>Cómo se hace</span>
-        {open ? <ChevronUp size={14} aria-hidden /> : <ChevronDown size={14} aria-hidden />}
+        {open ? <ChevronUp size={16} aria-hidden /> : <ChevronDown size={16} aria-hidden />}
       </button>
 
       {open && (
-        <div className="mt-2 flex flex-col gap-3 rounded-2xl bg-surface-sunken border border-border-subtle p-4 shadow-inner">
-          <p className="m-0 text-sm font-bold text-fg">{hookEs ?? ipa}</p>
+        <div className="mt-1 flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-sunken p-4">
+          <p className="m-0 text-body-sm font-bold text-fg">{fix.title ?? fix.ipa}</p>
 
-          {articulationEs.length > 0 && (
-            <ol className="m-0 flex flex-col gap-2 p-0 list-none">
-              {articulationEs.map((step, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-xs text-fg-muted leading-relaxed">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 font-bold text-[11px]">
+          {fix.steps.length > 0 && (
+            <ol className="m-0 flex list-none flex-col gap-2.5 p-0">
+              {fix.steps.map((step, i) => (
+                <li key={i} className="flex items-start gap-3 text-body-sm leading-relaxed text-fg-muted">
+                  <span
+                    className={cn(
+                      'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-caption font-bold text-ink',
+                      WORD_TONE[state].fill,
+                    )}
+                  >
                     {i + 1}
                   </span>
-                  <span className="pt-0.5">{step}</span>
+                  <span>{step}</span>
                 </li>
               ))}
             </ol>
           )}
 
-          {spanishTip && (
-            <div className="mt-1 flex items-start gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs text-emerald-800 dark:text-emerald-200">
-              <Sparkles size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" aria-hidden />
-              <p className="m-0 leading-normal">{spanishTip}</p>
+          {fix.tip && (
+            <div className="flex items-start gap-2.5 rounded-xl bg-mint-soft p-3 text-body-sm text-ink">
+              <Lightbulb size={16} className="mt-0.5 shrink-0" aria-hidden />
+              <p className="m-0 leading-normal">{fix.tip}</p>
+            </div>
+          )}
+
+          {pairs.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-kicker text-fg-subtle">Compara</span>
+              {pairs.flatMap((pair) => [pair.wordA, pair.wordB]).map((word, i) => (
+                <button
+                  key={`${word}-${i}`}
+                  type="button"
+                  onClick={() => speak(word)}
+                  className="min-h-11 cursor-pointer rounded-full border border-border-subtle px-3 text-body-sm text-fg hover:bg-surface-raised focus-ring"
+                >
+                  {word}
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -67,4 +91,3 @@ export function SoundHowTo({ ipa, hookEs, articulationEs, spanishTip, defaultOpe
     </div>
   )
 }
-

@@ -12,7 +12,7 @@ interface Props {
   /** Optional soft label above the title (e.g. "SONIDO /iː/ · PARES MÍNIMOS"). */
   kicker?: string
   title?: ReactNode
-  hint?: string
+  hint?: ReactNode
   centered?: boolean
   spacious?: boolean
 }

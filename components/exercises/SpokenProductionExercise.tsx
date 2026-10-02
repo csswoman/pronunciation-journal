@@ -3,12 +3,15 @@
 // Planned structure:
 // <SpokenProductionExercise>
 //   <ProductionTaskHeader />
+//   <SpokenThinkCountdown /> (rapid_response only)
 //   <SpokenProductionControls />
 //   <SpokenProductionFeedbackActions />
 // </SpokenProductionExercise>
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
+import { HintToggle } from '@/components/exercises/written-production/WrittenProductionParts'
 import { useEnterToContinue } from '@/hooks/useEnterToContinue'
 import { useRecordingElapsed } from '@/hooks/useRecordingElapsed'
 import { useSharedMicStream } from '@/hooks/useSharedMicStream'
@@ -22,6 +25,9 @@ import { rehearsedPatternForConstraint } from '@/lib/exercises/error-patterns'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 import type { SpokenProductionExercise as SpokenProductionExerciseType } from '@/lib/exercises/types'
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
+import { SpokenPhraseSteps } from './SpokenPhraseSteps'
+import { SpokenStarterChips, hasSpokenStarterChips } from './SpokenStarterChips'
+import { SpokenThinkCountdown } from './SpokenThinkCountdown'
 import {
   SpokenProductionControls,
   SpokenProductionFeedbackActions,
@@ -56,6 +62,14 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   })
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
   const [micError, setMicError] = useState<string | null>(null)
+  const [hintOpen, setHintOpen] = useState(false)
+  // "Respuesta rápida": 5 s de preparación antes de que se abra el micrófono.
+  const isRapid = exercise.constraint?.id === 'rapid_response'
+  const isNarration = exercise.constraint?.id === 'past_chain_narrative'
+  const constraintId = exercise.constraint?.id
+  // Rodeo: el ejemplo suele contener la palabra secreta, así que no se ofrece.
+  const isRodeo = constraintId === 'rodeo_circumlocution'
+  const [thinking, setThinking] = useState(isRapid)
   const online = useOnlineStatus()
   // Local-first grading: cached and repeated transcripts never reach the AI,
   // and only two versions per exercise are graded (Plan 037 C2).
@@ -79,11 +93,13 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
   useEffect(() => {
     setGrade(null)
     setMicError(null)
+    setHintOpen(false)
+    setThinking(exercise.constraint?.id === 'rapid_response')
     submitted.current = false
     firstTryFailed.current = false
     startMs.current = Date.now()
     reset()
-  }, [exercise.id, reset])
+  }, [exercise.id, exercise.constraint?.id, reset])
 
   useEffect(() => release, [release])
 
@@ -178,6 +194,11 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
     }
   }, [speechState, stop, reset, getStream, start, release, clearError])
 
+  const handleThinkDone = useCallback(() => {
+    setThinking(false)
+    void handleToggleMic()
+  }, [handleToggleMic])
+
   useEnterToContinue(Boolean(grade && !grading), handleContinue)
 
   const isListening = speechState === 'listening'
@@ -197,7 +218,22 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
       className="flex w-full flex-col items-stretch justify-start gap-4"
       aria-busy={grading || undefined}
     >
-      <ProductionTaskHeader exercise={exercise} title="Di tu oración" />
+      <ProductionTaskHeader
+        exercise={exercise}
+        title="Di tu oración"
+        tone="mint"
+        action={
+          !grade && exercise.exampleSentence && !isRodeo ? (
+            <HintToggle open={hintOpen} onToggle={() => setHintOpen((v) => !v)} />
+          ) : undefined
+        }
+      />
+
+      {isNarration && !grade && <SpokenPhraseSteps />}
+
+      {constraintId && hasSpokenStarterChips(constraintId) && !grade && (
+        <SpokenStarterChips constraintId={constraintId} />
+      )}
 
       {/* Sin micrófono no hay nada que transcribir, pero leer la oración en voz
           alta sigue siendo la práctica: se ofrece el modelo y una salida que no
@@ -211,11 +247,17 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
         />
       )}
 
-      {isSupported && !selfAssess && !grade && (
+      {isSupported && !selfAssess && !grade && thinking && online && (
+        <>
+          <SpokenThinkCountdown seconds={5} onDone={handleThinkDone} onSkip={onSkip} />
+          {hintOpen && (
+            <ProductionHint exampleSentence={exercise.exampleSentence} exerciseId={exercise.id} />
+          )}
+        </>
+      )}
+
+      {isSupported && !selfAssess && !grade && !(thinking && online) && (
         <SpokenProductionControls
-          exampleSentence={exercise.exampleSentence}
-          hintAlwaysVisible={exercise.constraint?.id !== 'rodeo_circumlocution'}
-          exerciseId={exercise.id}
           online={online}
           isListening={isListening}
           isTranscribing={isTranscribing}
@@ -231,7 +273,12 @@ export function SpokenProductionExercise({ exercise, onResult, onSkip }: Props) 
           onToggleMic={handleToggleMic}
           onRetry={handleRetry}
           onSkip={onSkip}
-        />
+          idleHint={isNarration ? 'Di 2 o 3 frases seguidas; toca otra vez para terminar' : undefined}
+        >
+          {hintOpen && (
+            <ProductionHint exampleSentence={exercise.exampleSentence} exerciseId={exercise.id} />
+          )}
+        </SpokenProductionControls>
       )}
 
       {grade && (

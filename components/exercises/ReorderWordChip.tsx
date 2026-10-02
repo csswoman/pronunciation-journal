@@ -43,10 +43,10 @@ export function ReorderWordChip({
           : undefined
       }
       className={cn(
-        'inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-body-md font-medium select-none focus-ring cursor-grab active:cursor-grabbing touch-none transition-colors duration-150 active:scale-[0.96]',
-        !locked && variant === 'bank' && 'border border-border-default bg-surface-sunken/60 text-fg hover:border-primary/60 hover:bg-surface-sunken shadow-xs',
-        !locked && variant === 'placed' && 'border border-primary bg-primary text-on-primary font-semibold shadow-xs hover:bg-primary-hover',
-        locked && 'border border-border-subtle bg-surface-sunken opacity-70 cursor-default text-fg-muted',
+        'inline-flex h-17 items-center justify-center rounded-2xl border border-b-4 px-6 text-body-lg font-semibold select-none focus-ring cursor-grab active:cursor-grabbing touch-none transition-colors duration-150 active:scale-[0.96]',
+        !locked && variant === 'bank' && 'border-border-strong bg-surface-raised text-fg hover:border-primary/60',
+        !locked && variant === 'placed' && 'border-border-default border-b-border-strong bg-surface-raised text-fg hover:border-b-primary/60',
+        locked && 'border-border-subtle bg-surface-raised opacity-70 cursor-default text-fg-muted',
         isDragging && 'pointer-events-none shadow-2xl scale-105 opacity-90 ring-2 ring-primary z-50',
       )}
     >

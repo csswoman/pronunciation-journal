@@ -9,62 +9,82 @@
 // </SentenceDictationControls>
 
 import type { KeyboardEvent, RefObject } from 'react'
-import { Lightbulb, Volume2 } from '@/components/icons'
+import { Lightbulb, Play, Volume2 } from '@/components/icons'
 import { cn } from '@/lib/cn'
 import Button from '@/components/ui/Button'
 import { PillButton } from '@/components/ui/PillButton'
 
 export type DictationAnswerState = 'idle' | 'correct' | 'wrong'
 
+const audioPillClass =
+  'border-2 border-ink bg-transparent font-semibold text-ink hover:bg-ink/10 disabled:opacity-60'
+
 export function AudioButtons({
   isPlaying,
   isPlayingSlow,
+  wordCount,
   onPlay,
   onPlaySlow,
 }: {
   isPlaying: boolean
   isPlayingSlow: boolean
+  wordCount: number
   onPlay: () => void
   onPlaySlow: () => void
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2.5 py-1.5" aria-label="Controles de audio">
-      <PillButton
+    <div
+      className="flex flex-col items-center gap-4 rounded-3xl bg-butter px-4 py-8 text-ink"
+      role="group"
+      aria-label="Controles de audio"
+    >
+      <button
         type="button"
-        variant={isPlaying ? 'primary' : 'outline'}
-        size="md"
-        icon={isPlaying ? <SoundWaveIcon /> : <Volume2 size={18} aria-hidden />}
         onClick={onPlay}
         disabled={isPlaying}
         aria-label={isPlaying ? 'Reproduciendo audio…' : 'Escuchar oración'}
-        className="min-w-[130px]"
+        className="flex size-18 cursor-pointer items-center justify-center rounded-full bg-ink text-butter transition-transform duration-150 hover:scale-105 focus-ring disabled:cursor-default disabled:hover:scale-100"
       >
-        {isPlaying ? 'Escuchando…' : 'Escuchar'}
-      </PillButton>
+        {isPlaying ? <SoundWaveIcon /> : <Play size={32} className="translate-x-0.5 fill-current" aria-hidden />}
+      </button>
 
-      <PillButton
-        type="button"
-        variant={isPlayingSlow ? 'primary' : 'outline'}
-        size="md"
-        icon={<span className="font-mono text-tiny font-bold tracking-tight" aria-hidden>0.5×</span>}
-        onClick={onPlaySlow}
-        disabled={isPlayingSlow}
-        aria-label={isPlayingSlow ? 'Reproduciendo lento…' : 'Escuchar despacio'}
-      >
-        {isPlayingSlow ? 'Lento…' : 'Lento'}
-      </PillButton>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <PillButton
+          type="button"
+          variant="outline"
+          size="md"
+          icon={<Volume2 size={18} aria-hidden />}
+          onClick={onPlay}
+          disabled={isPlaying}
+          aria-label="Escuchar otra vez"
+          className={audioPillClass}
+        >
+          Escuchar otra vez
+        </PillButton>
+        <PillButton
+          type="button"
+          variant="outline"
+          size="md"
+          icon={<span className="font-bold tracking-tight" aria-hidden>0.5×</span>}
+          onClick={onPlaySlow}
+          disabled={isPlayingSlow}
+          aria-label={isPlayingSlow ? 'Reproduciendo lento…' : 'Escuchar despacio'}
+          className={audioPillClass}
+        >
+          Lento
+        </PillButton>
+      </div>
+
+      <WordCountBadge count={wordCount} />
     </div>
   )
 }
 
 export function WordCountBadge({ count }: { count: number }) {
   return (
-    <div className="flex items-center justify-center py-0.5">
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle/80 bg-surface-sunken/80 px-3 py-1 font-mono text-tiny font-medium text-fg-muted">
-        <span className="size-1.5 rounded-full bg-primary/70" aria-hidden />
-        {count} {count === 1 ? 'palabra' : 'palabras'}
-      </span>
-    </div>
+    <span className="inline-flex items-center rounded-full bg-butter-deep/70 px-3 py-1 text-caption font-semibold text-ink">
+      {count} {count === 1 ? 'palabra' : 'palabras'}
+    </span>
   )
 }
 
@@ -72,38 +92,49 @@ export function AnswerInput({
   inputRef,
   value,
   disabled,
+  totalWords,
   onChange,
   onKeyDown,
 }: {
   inputRef: RefObject<HTMLTextAreaElement | null>
   value: string
   disabled: boolean
+  totalWords: number
   onChange: (value: string) => void
   onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void
 }) {
+  const typedWords = value.trim() ? value.trim().split(/\s+/).length : 0
   return (
-    <textarea
-      ref={inputRef}
-      value={value}
-      disabled={disabled}
-      onChange={(event) => onChange(event.target.value)}
-      onKeyDown={onKeyDown}
-      rows={3}
-      aria-label="Escribe lo que escuchas"
-      placeholder="Escribe lo que escuchas…"
-      className={cn(
-        'w-full resize-none rounded-2xl border-2 bg-field px-5 py-4 text-body-lg leading-relaxed text-fg transition-colors duration-150 placeholder:text-fg-muted focus-ring shadow-xs',
-        disabled ? 'cursor-default border-border-subtle text-fg-subtle opacity-70' : 'border-primary',
-      )}
-    />
+    <div className="flex flex-col gap-2">
+      <label htmlFor="dictation-answer" className="text-body-sm font-bold text-text-strong">
+        Lo que escuchas
+      </label>
+      <textarea
+        id="dictation-answer"
+        ref={inputRef}
+        value={value}
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+        onKeyDown={onKeyDown}
+        rows={3}
+        placeholder="Escribe lo que escuchas…"
+        className={cn(
+          'w-full resize-none rounded-2xl border-2 bg-surface-sunken px-5 py-4 text-body-lg leading-relaxed text-fg transition-colors duration-150 placeholder:text-fg-muted focus-ring',
+          disabled ? 'cursor-default border-border-subtle text-fg-subtle opacity-70' : 'border-primary',
+        )}
+      />
+      <p className="text-right text-caption text-fg-muted" aria-live="polite">
+        {typedWords} de {totalWords} {totalWords === 1 ? 'palabra' : 'palabras'}
+      </p>
+    </div>
   )
 }
 
 export function CheckButton({ disabled, onSubmit }: { disabled: boolean; onSubmit: () => void }) {
   return (
-    <Button type="button" variant="primary" size="lg" fullWidth onClick={onSubmit} disabled={disabled} className="rounded-full font-bold shadow-sm">
+    <Button type="button" variant="primary" size="lg" fullWidth onClick={onSubmit} disabled={disabled} className="rounded-full font-bold">
       <span>Comprobar</span>
-      <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+      <span className="hidden rounded-md bg-white/25 px-2 py-0.5 text-tiny font-bold text-on-accent sm:inline-flex" aria-hidden>
         Enter
       </span>
     </Button>

@@ -137,9 +137,11 @@ function ShellHeader({
             {eyebrow}
           </span>
         )}
-        <h2 className="font-display text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
-          {title}
-        </h2>
+        {title && (
+          <h2 className="font-display text-h3 font-bold text-balance text-fg leading-tight sm:text-h2">
+            {title}
+          </h2>
+        )}
         {description && (
           <p className="text-body-sm leading-relaxed text-pretty text-fg-muted">
             {description}
@@ -183,19 +185,19 @@ function HintChip({ word, meaning }: { word: string; meaning?: string }) {
 
 const SEVERITY_STYLES = {
   correct: {
-    box: 'border-mint/40 bg-mint-soft text-ink dark:bg-mint/25 dark:border-mint/50 dark:text-fg',
+    box: 'border-mint-deep/60 bg-mint text-ink dark:bg-mint/25 dark:border-mint/50 dark:text-fg',
     title: 'text-ink dark:text-fg',
     iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
     icon: '✓',
   },
   partial: {
-    box: 'border-butter/40 bg-butter-soft text-ink dark:bg-butter/25 dark:border-butter/50 dark:text-fg',
+    box: 'border-butter-deep/60 bg-butter text-ink dark:bg-butter/25 dark:border-butter/50 dark:text-fg',
     title: 'text-ink dark:text-fg',
     iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
     icon: '!',
   },
   error: {
-    box: 'border-coral/40 bg-coral-soft text-ink dark:bg-coral/25 dark:border-coral/50 dark:text-fg',
+    box: 'border-coral-deep/60 bg-coral text-ink dark:bg-coral/25 dark:border-coral/50 dark:text-fg',
     title: 'text-ink dark:text-fg',
     iconBg: 'bg-ink text-paper dark:bg-paper dark:text-ink',
     icon: '✕',

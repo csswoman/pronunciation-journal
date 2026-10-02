@@ -58,7 +58,15 @@ export function ReaderExercise({
   const [savedWords, setSavedWords] = useState<string[]>(['asynchronous', 'cache'])
 
   const question = passage.questions?.[0]
-  const tokens = useMemo(() => tokenizePassage(passage.passage), [passage.passage])
+  const targetList = passage.targetItems.length > 0 ? passage.targetItems : [
+    'asynchronous', 'cache', 'dependency array', 'declarative', 'bundler', 'bundle', 'derived state', 'custom hook'
+  ]
+  const tokens = useMemo(
+    () => tokenizePassage(passage.passage, targetList),
+    // targetList is derived from passage.targetItems
+     
+    [passage.passage, passage.targetItems],
+  )
   const sentenceGroups = useMemo(() => groupTokensBySentence(tokens), [tokens])
   const activeGroup = useMemo(
     () => sentenceGroups.find((g) => g.sentenceIndex === activeSentenceIdx) ?? null,
@@ -68,10 +76,6 @@ export function ReaderExercise({
     () => (activeGroup ? activeGroup.tokens.map((t) => t.value).join('').trim() : null),
     [activeGroup],
   )
-
-  const targetList = passage.targetItems.length > 0 ? passage.targetItems : [
-    'asynchronous', 'cache', 'dependency array', 'declarative', 'bundler', 'bundle', 'derived state', 'custom hook'
-  ]
 
   async function choose(index: number) {
     if (!question || answered || saving) return
@@ -100,7 +104,7 @@ export function ReaderExercise({
   }
 
   return (
-    <div className={cn('flex flex-col gap-6 w-full max-w-6xl mx-auto', openToken === null ? '' : 'pb-64')}>
+    <div className={cn('flex flex-col gap-6 w-full max-w-7xl mx-auto', openToken === null ? '' : 'pb-64')}>
       {/* Editorial Header */}
       {showHeader && (
         <div className="flex flex-col gap-3 border-b border-border/60 pb-5">
@@ -184,7 +188,8 @@ export function ReaderExercise({
                     }}
                     className={cn(
                       'inline rounded-lg px-1 py-0.5 transition-all duration-200 cursor-pointer',
-                      isActive ? 'bg-primary-soft/50 ring-1 ring-primary/30 font-medium' : 'hover:bg-surface-sunken/60',
+                      'box-decoration-clone',
+                      isActive ? 'bg-sky' : 'hover:bg-surface-sunken/60',
                     )}
                   >
                     {group.tokens.map((token, tokenIdx) => {
@@ -200,6 +205,7 @@ export function ReaderExercise({
                           lookup={token.lookup}
                           context={token.context}
                           online={online}
+                          highlighted={token.highlighted}
                           open={openToken === globalIdx}
                           onOpenChange={(open) => setOpenToken(open ? globalIdx : null)}
                         />

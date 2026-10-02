@@ -12,7 +12,6 @@
 
 import { useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
-import { cn } from '@/lib/cn'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
 import { matchAnswer, normalize, specFromErrorCorrection } from '@/lib/exercises/answer-match'
 import { feedbackFromVerdict } from '@/lib/exercises/answer-feedback'
@@ -180,19 +179,23 @@ export function ErrorCorrectionExercise({
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 sm:p-8 text-center shadow-xs">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+    <div className="flex w-full flex-col gap-6">
+      <p className="m-0 max-w-[65ch] text-body-md leading-relaxed text-pretty text-fg-muted">
+        Hay un error. Escribe la oración completa ya corregida.
+      </p>
+
+      <div className="flex flex-col items-center gap-2 rounded-3xl bg-sky px-8 py-8 text-center text-ink">
+        <span className="text-caption font-bold uppercase tracking-[0.18em] text-ink/80">
           Oración a revisar
         </span>
-        <p className="mt-2 font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
+        <p className="m-0 font-display text-h3 font-bold leading-snug text-balance sm:text-h2">
           {exercise.sentence}
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="error-correction-input" className="text-body-sm font-semibold text-fg">
-          Escribe la oración corregida
+        <label htmlFor="error-correction-input" className="text-body-sm font-bold text-fg">
+          Oración corregida
         </label>
         <input
           id="error-correction-input"
@@ -227,29 +230,31 @@ export function ErrorCorrectionExercise({
       )}
 
       {!done && !showSelfAssess && (
-        <div className="flex flex-col gap-3 sm:flex-row">
-          {showAlreadyCorrectBtn && (
-            <Button
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          {showAlreadyCorrectBtn ? (
+            <button
               type="button"
-              variant="secondary"
-              size="lg"
-              className="rounded-full sm:w-1/2 font-medium"
               onClick={handleAlreadyCorrect}
+              className="min-h-11 cursor-pointer rounded-md border-none bg-transparent px-1 text-body-md font-medium text-fg-muted underline underline-offset-4 transition-colors hover:text-fg focus-ring"
             >
               Está correcta
-            </Button>
+            </button>
+          ) : (
+            <span />
           )}
           <Button
             type="button"
             variant="primary"
             size="lg"
-            fullWidth={!showAlreadyCorrectBtn}
-            className={cn('rounded-full font-bold shadow-sm', showAlreadyCorrectBtn ? 'sm:w-1/2' : undefined)}
+            className="rounded-full px-8 font-bold"
             onClick={submit}
             disabled={!answer.trim()}
           >
             <span>Comprobar</span>
-            <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+            <span
+              className="hidden rounded-md bg-white/25 px-2 py-0.5 text-tiny font-bold text-on-accent sm:inline-flex"
+              aria-hidden
+            >
               Enter
             </span>
           </Button>

@@ -14,7 +14,6 @@ import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButt
 import { ArticulationMouthGuide } from '@/components/pronunciation/ArticulationMouthGuide'
 import Button from '@/components/ui/Button'
 import { playUiCue } from '@/lib/ui-sounds/cues'
-import { cn } from '@/lib/cn'
 
 interface Props {
   ipa: string
@@ -39,7 +38,6 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
 
   return (
     <div className="phoneme-hints flex flex-col gap-3">
-      <LevelDots level={level} />
       <HintContent
         level={level}
         ipa={ipaKey}
@@ -48,64 +46,41 @@ export function ExerciseHints({ ipa, targetWord, onRetry, onContinue, voice }: P
         voice={voice}
       />
 
-      <Button
-        onClick={onRetry}
-        variant="primary"
-        size="lg"
-        fullWidth
-        data-cuelume-press="press"
-        data-cuelume-release="release"
-      >
-        Reintentar
-      </Button>
-
-      <div className="phoneme-hints__secondary flex items-center justify-between pt-1">
-        {hasMoreHints ? (
+      <div className="phoneme-hints__secondary flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <div className="flex items-center gap-4">
+          {hasMoreHints && (
+            <button
+              type="button"
+              onClick={() => {
+                playUiCue('reveal')
+                setLevel((l) => (l + 1) as HintLevel)
+              }}
+              className="phoneme-hints__ghost text-body-sm font-medium text-primary hover:underline"
+            >
+              Otra pista ({level + 1}/{MAX_LEVEL + 1})
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
-              playUiCue('reveal')
-              setLevel((l) => (l + 1) as HintLevel)
+              playUiCue('soft')
+              onContinue()
             }}
-            className="phoneme-hints__ghost text-body-sm font-medium text-primary hover:underline"
+            className="phoneme-hints__ghost text-body-sm font-medium text-fg-muted hover:text-fg"
           >
-            Ver más pistas ({level + 1}/{MAX_LEVEL + 1})
+            Seguir
           </button>
-        ) : (
-          <span className="phoneme-hints__ghost phoneme-hints__ghost--muted font-caption text-fg-muted" aria-hidden>
-            Todas las pistas vistas
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={() => {
-            playUiCue('soft')
-            onContinue()
-          }}
-          className="phoneme-hints__ghost text-body-sm font-medium text-fg-muted hover:text-fg"
+        </div>
+        <Button
+          onClick={onRetry}
+          variant="primary"
+          size="lg"
+          data-cuelume-press="press"
+          data-cuelume-release="release"
         >
-          Seguir
-        </button>
+          Reintentar
+        </Button>
       </div>
-    </div>
-  )
-}
-
-function LevelDots({ level }: { level: HintLevel }) {
-  return (
-    <div
-      className="phoneme-hints__dots flex items-center gap-1.5 justify-center py-1"
-      aria-label={`Pista ${level + 1} de ${MAX_LEVEL + 1}`}
-    >
-      {([0, 1, 2] as HintLevel[]).map((l) => (
-        <span
-          key={l}
-          className={cn(
-            'h-2 w-2 rounded-full transition-colors',
-            l <= level ? 'bg-primary' : 'bg-border-default',
-          )}
-        />
-      ))}
     </div>
   )
 }
@@ -125,7 +100,7 @@ function HintContent({
 }) {
   if (level === 0) {
     return (
-      <div className="phoneme-hints__block flex flex-col items-center gap-2 rounded-xl border border-border-default bg-surface-raised p-4">
+      <div className="phoneme-hints__block flex items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-raised px-4 py-2">
         <p className="font-caption font-semibold uppercase tracking-wider text-fg-muted">Escucha de nuevo</p>
         <PhonemePlayButton
           ariaLabel={`Escuchar ${targetWord ?? ipa}`}
@@ -141,7 +116,7 @@ function HintContent({
 
   if (level === 1) {
     const bare = ipa.replace(/[/[\]]/g, '').trim()
-    const tips = extra?.articulationEs ?? extra?.articulation ?? []
+    const tips = (extra?.articulationEs ?? extra?.articulation ?? []).slice(0, 3)
     return (
       <div className="phoneme-hints__block flex flex-col gap-3">
         <ArticulationMouthGuide symbolOrIpa={ipa} compact />
@@ -167,7 +142,7 @@ function HintContent({
         💡 Consejo para hispanohablantes
       </p>
       <p className="text-body text-fg text-pretty">
-        {(extra?.spanishTipLongEs ?? extra?.spanishTip) ?? 'Sin consejo disponible para este sonido.'}
+        {(extra?.spanishTip ?? extra?.spanishTipLongEs) ?? 'Sin consejo disponible para este sonido.'}
       </p>
     </div>
   )

@@ -3,22 +3,17 @@
 // Planned structure:
 // <MatchPairsExercise>
 //   <MatchPairsBoard />
-//   <CheckButton />
+//   <MatchPairsFooter>  (contador de pares + Comprobar/Enter)
 // </MatchPairsExercise>
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { shuffle } from '@/lib/exercises/utils'
 import { speak } from '@/lib/phoneme-practice/tts'
 import type { MatchPairsExercise as MatchPairsExerciseType } from '@/lib/exercises/types'
 import { buildPedagogicalFeedback } from '@/lib/exercises/feedback'
 import { useUISounds } from '@/hooks/useUISounds'
-import {
-  MatchPairsBoard,
-  type MatchConnection,
-  type MatchResult,
-} from './MatchPairsBoard'
-import { MATCH_DOT_COLORS } from './match-pairs-board-helpers'
+import { MatchPairsBoard, type MatchResult } from './MatchPairsBoard'
 
 interface Props {
   exercise: MatchPairsExerciseType
@@ -29,8 +24,6 @@ interface Props {
     extras?: { feedback?: ReturnType<typeof buildPedagogicalFeedback> },
   ) => void
 }
-
-const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export function MatchPairsExercise({ exercise, onResult }: Props) {
   // Only reshuffle when the exercise identity changes — `exercise.pairs` gets a
@@ -46,18 +39,13 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
   const [matches, setMatches] = useState<Record<string, string>>({})
   const [results, setResults] = useState<MatchResult>({})
   const [submitted, setSubmitted] = useState(false)
-  const [connections, setConnections] = useState<MatchConnection[]>([])
 
-  const boardRef = useRef<HTMLDivElement>(null)
   const leftRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
   const rightRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
   const startMs = useRef(Date.now())
   const { playTap, playCorrect, playWrong } = useUISounds()
 
   const matchedRightIds = new Set(Object.values(matches))
-  const pairColor = (leftId: string) =>
-    MATCH_DOT_COLORS[exercise.pairs.findIndex((p) => p.id === leftId) % MATCH_DOT_COLORS.length]
-
   const unmatch = (leftId: string) =>
     setMatches((prev) => {
       const next = { ...prev }
@@ -136,36 +124,6 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     })
   }
 
-  const recomputeConnections = useCallback(() => {
-    const board = boardRef.current
-    if (!board) return
-    if (typeof window !== 'undefined' && window.innerWidth < 640) {
-      setConnections((prev) => (prev.length > 0 ? [] : prev))
-      return
-    }
-    const boardRect = board.getBoundingClientRect()
-    const next: MatchConnection[] = []
-    for (const [leftId, rightId] of Object.entries(matches)) {
-      const leftEl = leftRefs.current.get(leftId)
-      const rightEl = rightRefs.current.get(rightId)
-      if (!leftEl || !rightEl) continue
-      const lr = leftEl.getBoundingClientRect()
-      const rr = rightEl.getBoundingClientRect()
-      next.push({
-        leftId,
-        rightId,
-        from: { x: lr.right - boardRect.left, y: lr.top + lr.height / 2 - boardRect.top },
-        to: { x: rr.left - boardRect.left, y: rr.top + rr.height / 2 - boardRect.top },
-        state: results[leftId] ?? 'pending',
-      })
-    }
-    setConnections(next)
-  }, [matches, results])
-
-  useIsoLayoutEffect(() => {
-    recomputeConnections()
-  }, [recomputeConnections, rightItems])
-
   useEffect(() => {
     startMs.current = Date.now()
     setSelectedLeft(null)
@@ -173,24 +131,20 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
     setMatches({})
     setResults({})
     setSubmitted(false)
-    setConnections([])
   }, [exercise.id])
 
-  useEffect(() => {
-    const board = boardRef.current
-    if (!board || typeof window === 'undefined') return
-    const ro = new ResizeObserver(() => recomputeConnections())
-    ro.observe(board)
-    window.addEventListener('resize', recomputeConnections)
-    window.addEventListener('scroll', recomputeConnections, true)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', recomputeConnections)
-      window.removeEventListener('scroll', recomputeConnections, true)
-    }
-  }, [recomputeConnections])
-
   const allMatched = exercise.pairs.every((p) => matches[p.id])
+  const matchedCount = Object.keys(matches).length
+
+  useEffect(() => {
+    if (!allMatched || submitted) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Enter') handleCheck()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [allMatched, submitted, matches])
+
   return (
     <div className="flex w-full flex-col gap-6">
       <MatchPairsBoard
@@ -198,30 +152,38 @@ export function MatchPairsExercise({ exercise, onResult }: Props) {
         rightItems={rightItems}
         leftElements={leftRefs.current}
         rightElements={rightRefs.current}
-        boardRef={boardRef}
         selectedLeft={selectedLeft}
         armedRight={armedRight}
         matches={matches}
         results={results}
         submitted={submitted}
-        connections={connections}
-        pairColor={pairColor}
         onLeftClick={handleLeftClick}
         onRightClick={handleRightClick}
       />
 
       {!submitted && (
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={handleCheck}
-          disabled={!allMatched}
-          data-cuelume-press="press"
-          data-cuelume-release="release"
-        >
-          Comprobar
-        </Button>
+        <div className="flex items-center justify-end gap-4">
+          <span className="text-body-sm tabular-nums text-fg-muted" aria-live="polite">
+            {matchedCount} de {exercise.pairs.length} pares
+          </span>
+          <Button
+            variant="primary"
+            size="lg"
+            className="rounded-full font-bold"
+            onClick={handleCheck}
+            disabled={!allMatched}
+            data-cuelume-press="press"
+            data-cuelume-release="release"
+          >
+            <span>Comprobar</span>
+            <span
+              className="hidden rounded-md bg-ink/10 px-2 py-0.5 font-mono text-tiny font-bold sm:inline-flex"
+              aria-hidden
+            >
+              Enter
+            </span>
+          </Button>
+        </div>
       )}
     </div>
   )

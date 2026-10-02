@@ -52,9 +52,14 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <p className="font-display text-h3 font-bold text-fg leading-snug sm:text-h2">
-        {exercise.question}
-      </p>
+      <div className="flex flex-col gap-2 rounded-3xl bg-sky px-8 py-6 text-ink">
+        <span className="text-tiny font-semibold uppercase tracking-widest text-ink/70">
+          Pregunta
+        </span>
+        <p className="m-0 font-display text-h3 font-bold leading-snug text-ink! sm:text-h2">
+          {exercise.question}
+        </p>
+      </div>
 
       {exercise.audioText ? (
         <ListenButton

@@ -143,7 +143,7 @@ export function ReaderAudioPlayer({
             type="button"
             onClick={togglePlay}
             aria-label={isPlaying ? 'Pausar audio' : 'Reproducir audio'}
-            className="size-10 rounded-full bg-[#2563eb] hover:bg-blue-700 text-white flex items-center justify-center shrink-0 shadow-xs transition-transform active:scale-95"
+            className="size-10 rounded-full bg-primary hover:bg-primary-hover text-white flex items-center justify-center shrink-0 shadow-xs transition-transform active:scale-95"
           >
             {isPlaying ? <Pause className="size-4" /> : <Play className="size-4 ml-0.5 fill-current" />}
           </button>
@@ -163,7 +163,7 @@ export function ReaderAudioPlayer({
                   key={idx}
                   className={`h-1.5 flex-1 rounded-full transition-colors ${
                     idx <= currentSentenceIdx
-                      ? 'bg-[#2563eb]'
+                      ? 'bg-primary'
                       : 'bg-border/60'
                   }`}
                 />
@@ -183,7 +183,7 @@ export function ReaderAudioPlayer({
                 onClick={() => handleSpeedChange(rate)}
                 className={`rounded-full px-2.5 py-1 text-xs font-mono font-bold transition-all ${
                   isActive
-                    ? 'bg-[#2563eb] text-white shadow-2xs'
+                    ? 'bg-primary text-white shadow-2xs'
                     : 'text-fg-muted hover:text-fg hover:bg-surface-sunken'
                 }`}
               >
@@ -203,7 +203,7 @@ export function ReaderAudioPlayer({
             onChange={(e) => setIsShadowing(e.target.checked)}
             className="sr-only peer"
           />
-          <div className="w-9 h-5 bg-border rounded-full peer peer-checked:bg-[#2563eb] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative" />
+          <div className="w-9 h-5 bg-border rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative" />
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
             <span className="font-bold text-fg">Modo shadowing</span>
             <span className="text-fg-muted font-normal">Pausa tras cada frase para que la repitas en voz alta</span>

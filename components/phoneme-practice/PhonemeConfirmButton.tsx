@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean
   children?: string
   'aria-label'?: string
+  fullWidth?: boolean
 }
 
 export function PhonemeConfirmButton({
@@ -17,12 +18,13 @@ export function PhonemeConfirmButton({
   disabled = false,
   children = 'Comprobar',
   'aria-label': ariaLabel,
+  fullWidth = true,
 }: Props) {
   return (
     <Button
       variant="primary"
       size="lg"
-      fullWidth
+      fullWidth={fullWidth}
       className="rounded-full font-bold shadow-sm"
       onClick={onClick}
       disabled={disabled}

@@ -128,7 +128,7 @@ describe('LearnerLine — feedback después de hablar', () => {
     captureState.captureState = 'inactive'
   })
 
-  it('colorea cada palabra y muestra puntuación', async () => {
+  it('colorea cada palabra y resume cuántas salieron bien', async () => {
     captureState.status = 'done'
     captureState.transcript = 'I wood like a coffee.'
     captureState.hasRecording = true
@@ -136,8 +136,8 @@ describe('LearnerLine — feedback después de hablar', () => {
     render(<LearnerLine line={line} onLineComplete={vi.fn()} />)
 
     expect(await screen.findByLabelText('I: bien')).toBeInTheDocument()
-    expect(screen.getByLabelText('would: mal')).toBeInTheDocument()
-    expect(await screen.findByText(/60%/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/would: (casi|no se oyó)/)).toBeInTheDocument()
+    expect(await screen.findByText(/palabras bien/)).toBeInTheDocument()
   })
 
   it('explica el fallo anclado a la palabra si hay fallo', async () => {
@@ -215,7 +215,7 @@ describe('LearnerLine — modo práctica sin STT', () => {
 
   // --- Regresiones: no puntuar sin grabación real, y poder reescuchar ---
 
-  it('no evalúa ni muestra puntuación si no hubo grabación real', async () => {
+  it('no evalúa ni muestra resumen si no hubo grabación real', async () => {
     captureState.status = 'done'
     captureState.transcript = 'I would like a coffee'
     captureState.hasRecording = false
@@ -225,10 +225,10 @@ describe('LearnerLine — modo práctica sin STT', () => {
 
     await new Promise((r) => setTimeout(r, 0))
 
-    expect(screen.queryByText(/60%/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/palabras bien/)).not.toBeInTheDocument()
   })
 
-  it('evalúa y muestra la puntuación cuando sí hubo grabación', async () => {
+  it('evalúa y muestra el resumen cuando sí hubo grabación', async () => {
     captureState.status = 'done'
     captureState.transcript = 'I would like a coffee'
     captureState.hasRecording = true
@@ -237,7 +237,7 @@ describe('LearnerLine — modo práctica sin STT', () => {
 
     render(<LearnerLine line={line} onLineComplete={vi.fn()} />)
 
-    expect(await screen.findByText(/60%/)).toBeInTheDocument()
+    expect(await screen.findByText(/palabras bien/)).toBeInTheDocument()
   })
 
   it('ofrece reescuchar la propia voz cuando hay grabación tras puntuar', async () => {
@@ -249,8 +249,8 @@ describe('LearnerLine — modo práctica sin STT', () => {
 
     render(<LearnerLine line={line} onLineComplete={vi.fn()} />)
 
-    await screen.findByText(/60%/)
-    const replay = screen.getByLabelText('Escuchar mi propia voz grabada')
+    await screen.findByText(/palabras bien/)
+    const replay = screen.getByLabelText('Escuchar tu intento')
     expect(replay).not.toBeDisabled()
   })
 

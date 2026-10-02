@@ -16,7 +16,8 @@ import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { gradePersonalization } from '@/lib/exercises/personalization'
 import { checkStructures, STRUCTURE_CHECKS } from '@/lib/exercises/structure-checks'
-import { isOnline, gradeProduction } from '@/lib/exercises/grade-production-client'
+import { isOnline } from '@/lib/exercises/grade-production-client'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { buildPersonalizationTaskPrompt } from '@/lib/ai-prompts'
 import { SelfAssessPrompt } from './SelfAssessPrompt'
 import type { PersonalizationExercise } from '@/lib/exercises/types'
@@ -36,7 +37,8 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
   const [showSelfAssess, setShowSelfAssess] = useState(false)
   const [issues, setIssues] = useState<string[]>([])
   const [hints, setHints] = useState<string[]>([])
-  const [polishing, setPolishing] = useState(false)
+  const polishPipeline = useProductionGrading({ exerciseKey: `${exercise.id}:polish` })
+  const polishing = polishPipeline.grading
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
 
@@ -82,7 +84,7 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
 
   const handlePolish = async () => {
     if (!isOnline() || polishing) return
-    setPolishing(true)
+    setAiSuggestion(null)
     try {
       const firstReq = exercise.requires[0]
       const checker = STRUCTURE_CHECKS[firstReq]
@@ -93,7 +95,7 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
         example: exercise.example,
       })
 
-      const grade = await gradeProduction({
+      const grade = await polishPipeline.grade({
         targetItem,
         taskPrompt,
         production: text.trim(),
@@ -106,15 +108,13 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
       }
     } catch {
       // AI polishing error is non-blocking
-    } finally {
-      setPolishing(false)
     }
   }
 
   return (
     <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-1.5">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+        <span className="w-fit rounded-full bg-primary px-3.5 py-1.5 font-mono text-tiny font-bold uppercase tracking-wider text-on-accent">
           Habla de ti
         </span>
         <h2 className="font-display text-h3 font-bold text-fg sm:text-h2">{exercise.promptEs}</h2>
@@ -233,8 +233,8 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
               {polishing ? 'Revisando con IA…' : 'Pulir con IA'}
             </Button>
           </div>
-          {aiSuggestion && (
-            <p className="text-body-sm text-fg-muted">{aiSuggestion}</p>
+          {(aiSuggestion || polishPipeline.error) && (
+            <p role={polishPipeline.error ? 'alert' : undefined} className="text-body-sm text-fg-muted">{aiSuggestion ?? polishPipeline.error}</p>
           )}
         </div>
       )}

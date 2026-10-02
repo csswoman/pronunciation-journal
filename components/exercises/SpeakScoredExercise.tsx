@@ -15,6 +15,7 @@ import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
 import { getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
+import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import Button from '@/components/ui/Button'
 import { useAuth } from '@/components/auth/AuthProvider'
@@ -147,8 +148,13 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   }, [isNetworkShadowing, isSupported, onSubmit])
 
   return (
-    <div className="layout-stack-loose items-center w-full">
-      <h2 className="m-0 text-center text-h4 text-fg">Di la palabra</h2>
+    <div className="layout-stack-loose w-full">
+      <PhonemeExercisePrompt
+        centered={false}
+        kicker={`Sonido /${exercise.ipa.replace(/^\/|\/$/g, '')}/ · Producción`}
+        title="Di la palabra"
+        hint={`Alarga o marca el sonido resaltado: /${exercise.ipa.replace(/^\/|\/$/g, '')}/.`}
+      />
 
       <WordDisplay
         word={exercise.targetWord}
@@ -158,6 +164,7 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
 
       {!scored && !isShadowing && (
         <SpeakMicButton
+          word={exercise.targetWord}
           isListening={isListening}
           isDone={isDone}
           isScoring={isScoring}

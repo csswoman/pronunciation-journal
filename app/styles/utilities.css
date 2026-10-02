@@ -269,6 +269,13 @@
   font-weight: 800;
   letter-spacing: var(--ts-headline-tracking);
 }
+.ts-card-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: var(--ts-card-title-size);
+  line-height: var(--ts-card-title-leading);
+  font-weight: 800;
+  letter-spacing: var(--ts-card-title-tracking);
+}
 .ts-numeral-unit {
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: var(--ts-numeral-unit-size);
@@ -1114,25 +1121,13 @@
 }
 
 @media (max-width: 767px) {
-  .practice-action-bar__spacer {
-    display: block;
-    height: calc(4.5rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .practice-action-bar:has(.practice-action-bar__content > :nth-child(2))
-    .practice-action-bar__spacer {
-    height: calc(8.5rem + env(safe-area-inset-bottom, 0px));
-  }
-
+  /* Sticky (in-flow) dock: stays reachable without reserving blank space. */
   .practice-action-bar__dock {
-    position: fixed;
-    right: 0;
+    position: sticky;
     bottom: 0;
-    left: 0;
     z-index: 30;
-    border-top: 1px solid var(--border-subtle);
-    background: var(--surface-raised);
-    padding: var(--space-3) var(--layout-page-inline)
+    background: var(--surface-base);
+    padding-block: var(--space-3)
       max(var(--space-3), env(safe-area-inset-bottom, 0px));
   }
 

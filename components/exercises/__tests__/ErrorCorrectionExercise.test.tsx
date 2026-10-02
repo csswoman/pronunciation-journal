@@ -25,7 +25,7 @@ describe('ErrorCorrectionExercise', () => {
     const onResult = vi.fn()
     render(<ErrorCorrectionExercise exercise={baseExercise} onResult={onResult} />)
 
-    const input = screen.getByPlaceholderText('Escribe la corrección aquí…')
+    const input = screen.getByPlaceholderText('Escribe la forma correcta…')
     fireEvent.change(input, { target: { value: "She's a teacher" } })
 
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })
@@ -109,7 +109,7 @@ describe('ErrorCorrectionExercise', () => {
     const onResult = vi.fn()
     render(<ErrorCorrectionExercise exercise={baseExercise} onResult={onResult} />)
 
-    const input = screen.getByPlaceholderText('Escribe la corrección aquí…')
+    const input = screen.getByPlaceholderText('Escribe la forma correcta…')
     fireEvent.change(input, { target: { value: 'She works as a teacher' } })
 
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })

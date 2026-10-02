@@ -64,7 +64,7 @@ export function ReaderCatalog({
   }, [passages, selectedLevel, searchQuery])
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto">
+    <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto">
       {/* Top Bar Navigation & Main Page Header */}
       <div className="flex flex-col gap-4">
         <div>
@@ -164,7 +164,7 @@ export function ReaderCatalog({
                 onClick={() => setSelectedLevel(lvl)}
                 className={`rounded-full px-4 py-1.5 text-sm font-bold transition-all ${
                   isActive
-                    ? 'bg-[#2563eb] text-white shadow-xs'
+                    ? 'bg-primary text-white shadow-xs'
                     : 'bg-surface-raised border border-border/60 text-fg-muted hover:text-fg hover:bg-surface-sunken'
                 }`}
               >

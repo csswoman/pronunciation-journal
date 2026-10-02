@@ -20,6 +20,8 @@ type Props = {
   /** Play IPA sample (bare or /slashed/) */
   ipa?: string
   voice?: SpeechSynthesisVoice
+  /** TTS rate for `word` playback (default 0.9) */
+  rate?: number
   /** Optional visible caption under the icon (usually IPA) */
   caption?: string
   size?: 'md' | 'lg'
@@ -31,6 +33,7 @@ export function PhonemePlayButton({
   word,
   ipa,
   voice,
+  rate = 0.9,
   caption,
   size = 'md',
   className,
@@ -50,7 +53,7 @@ export function PhonemePlayButton({
     if (word) {
       const utt = speak(word, {
         voice,
-        rate: 0.9,
+        rate,
         onStart: () => setPlaying(true),
         onEnd: finish,
         onError: finish,

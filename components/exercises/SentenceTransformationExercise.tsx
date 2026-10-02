@@ -26,6 +26,13 @@ import type { SentenceTransformationExercise as Exercise } from '@/lib/exercises
 import type { GenericRenderExtras } from '@/lib/practice/exercise-renderer/generic-registry'
 import type { PedagogicalFeedback } from '@/lib/practice/types'
 
+// "Rewrite using enough." / "Usa wish" → "enough" / "wish"; null when the format is free text.
+const TARGET_PATTERN = /^(?:rewrite using|reescribe usando|reescríbela usando|usa|use)\s+(.+?)[.:]?$/i
+
+function extractTransformationTarget(instruction: string): string | null {
+  return instruction.trim().match(TARGET_PATTERN)?.[1] ?? null
+}
+
 export function SentenceTransformationExercise({
   exercise,
   onResult,
@@ -55,6 +62,7 @@ export function SentenceTransformationExercise({
   })
   const grading = pipeline.grading
   const canonical = exercise.referenceAnswer ?? acceptedAnswers[0] ?? ''
+  const target = useMemo(() => extractTransformationTarget(exercise.instruction), [exercise.instruction])
 
   async function submit() {
     const production = answer.trim()
@@ -181,18 +189,32 @@ export function SentenceTransformationExercise({
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="rounded-2xl border border-border-default bg-surface-raised/80 p-6 shadow-xs">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+      <div className="flex flex-col gap-2 rounded-3xl bg-sky px-8 py-7 text-ink">
+        <span className="text-caption font-bold uppercase tracking-[0.18em] text-ink/80">
           Oración original
         </span>
-        <p className="mt-1.5 font-display text-h3 font-bold leading-snug text-fg sm:text-h2">
+        <p className="m-0 font-display text-h3 font-bold leading-snug text-balance sm:text-h2">
           {exercise.sourceSentence}
         </p>
       </div>
 
-      <div className="flex flex-col gap-2.5">
-        <label htmlFor="transformation-instruction" className="text-body-sm font-semibold text-fg">
-          Instrucción: <span className="font-normal text-fg-muted">{exercise.instruction}</span>
+      <p className="m-0 flex flex-wrap items-center gap-x-3 gap-y-2 text-body-md leading-relaxed text-fg-muted">
+        {target ? (
+          <>
+            <span className="font-bold text-fg">Reescríbela usando</span>
+            <span className="rounded-full bg-ink px-4 py-1.5 text-body-md font-bold text-on-accent">
+              {target}
+            </span>
+            <span>sin cambiar el significado.</span>
+          </>
+        ) : (
+          exercise.instruction
+        )}
+      </p>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="transformation-instruction" className="text-body-sm font-bold text-fg">
+          Tu oración
         </label>
         <textarea
           id="transformation-instruction"
@@ -213,7 +235,7 @@ export function SentenceTransformationExercise({
           rows={3}
           disabled={grading || done}
           placeholder="Escribe la forma correcta…"
-          className="w-full resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
+          className="min-h-36 w-full resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg leading-relaxed text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed shadow-xs"
         />
       </div>
 
@@ -239,19 +261,20 @@ export function SentenceTransformationExercise({
       )}
 
       {!done && (
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="rounded-full font-bold shadow-sm"
-          onClick={() => void submit()}
-          disabled={!answer.trim() || grading}
-        >
-          <span>{grading ? 'Corrigiendo…' : 'Comprobar'}</span>
-          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
-            Enter
-          </span>
-        </Button>
+        <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
+          <Button
+            variant="primary"
+            size="lg"
+            className="rounded-full px-8 font-bold"
+            onClick={() => void submit()}
+            disabled={!answer.trim() || grading}
+          >
+            <span>{grading ? 'Corrigiendo…' : 'Comprobar'}</span>
+            <span className="hidden rounded-md bg-white/25 px-2 py-0.5 text-tiny font-bold text-on-accent sm:inline-flex" aria-hidden>
+              Enter
+            </span>
+          </Button>
+        </div>
       )}
     </div>
   )
