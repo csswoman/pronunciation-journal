@@ -18,6 +18,11 @@ import { PracticeActionBar, PracticeContinueButton } from '@/components/practice
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
 import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ProductionTaskHeader } from '@/components/exercises/ProductionTaskHeader'
+import {
+  HintToggle,
+  SubmitFooter,
+  TargetChip,
+} from '@/components/exercises/written-production/WrittenProductionParts'
 import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { pedagogicalFeedbackFromProductionGrade } from '@/lib/exercises/feedback'
@@ -40,6 +45,7 @@ interface Props {
 export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props) {
   const [text, setText] = useState('')
   const [grade, setGrade] = useState<ProductionGradeResult | null>(null)
+  const [hintOpen, setHintOpen] = useState(false)
   const online = useOnlineStatus()
   const startMs = useRef(Date.now())
   const submitted = useRef(false)
@@ -55,6 +61,7 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
   useEffect(() => {
     setText('')
     setGrade(null)
+    setHintOpen(false)
     submitted.current = false
     firstTryFailed.current = false
     startMs.current = Date.now()
@@ -108,10 +115,21 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
   }, [text, onResult, exercise.exampleSentence])
 
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length
+  // The secret-word constraint must not reveal the target, so no chip there.
+  const showChip = exercise.constraint?.id !== 'rodeo_circumlocution'
+  const includesTarget = text.toLowerCase().includes(exercise.targetItem.toLowerCase())
 
   return (
     <div className="flex w-full flex-col justify-start gap-5 sm:gap-6" aria-busy={grading || undefined}>
-      <ProductionTaskHeader exercise={exercise} title="Escribe tu oración" />
+      <ProductionTaskHeader
+        exercise={exercise}
+        title="Escribe tu oración"
+        action={
+          !grade && exercise.exampleSentence ? (
+            <HintToggle open={hintOpen} onToggle={() => setHintOpen((v) => !v)} />
+          ) : undefined
+        }
+      />
 
       {!online && !grade && (
         <OfflineBanner message="Sin conexión. Puedes autoevaluar tu oración con la solución de ejemplo." />
@@ -120,22 +138,15 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
       {!grade && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <label htmlFor={fieldId} className="text-body-sm font-semibold text-fg">
-                Tu oración
-              </label>
-              {wordCount > 0 && (
-                <span className="font-mono text-tiny text-fg-subtle">
-                  {wordCount} {wordCount === 1 ? 'palabra' : 'palabras'}
-                </span>
-              )}
-            </div>
+            <label htmlFor={fieldId} className="text-body-sm font-bold text-fg">
+              Tu oración
+            </label>
             <textarea
               id={fieldId}
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {
-                if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && text.trim() && !grading) {
+                if (e.key === 'Enter' && !e.shiftKey && text.trim() && !grading) {
                   e.preventDefault()
                   void handleSubmit()
                 }
@@ -146,17 +157,24 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'w-full min-h-28 resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg text-fg placeholder:text-fg-muted focus-ring shadow-xs',
+                'w-full min-h-36 resize-none rounded-3xl border-2 border-primary bg-surface-sunken px-5 py-4 text-body-lg text-fg placeholder:text-fg-muted focus-ring',
                 'transition-colors duration-150 ease-out-quart disabled:cursor-not-allowed disabled:opacity-50',
                 error && 'border-error-border',
               )}
             />
+            <div className="flex items-center justify-between gap-3">
+              {showChip ? <TargetChip target={exercise.targetItem} included={includesTarget} /> : <span />}
+              {wordCount > 0 && (
+                <span className="text-body-sm text-fg-muted">
+                  {wordCount} {wordCount === 1 ? 'palabra' : 'palabras'}
+                </span>
+              )}
+            </div>
           </div>
 
-          <ProductionHint
-            exampleSentence={exercise.exampleSentence}
-            exerciseId={exercise.id}
-          />
+          {hintOpen && (
+            <ProductionHint exampleSentence={exercise.exampleSentence} exerciseId={exercise.id} />
+          )}
 
           {error && (
             <div
@@ -170,39 +188,17 @@ export function WrittenProductionExercise({ exercise, onResult, onSkip }: Props)
             </div>
           )}
 
-          <div className="flex flex-col gap-2.5 pt-1">
-            <Button
-              variant="primary"
-              size="lg"
-              fullWidth
-              className="rounded-full font-bold shadow-sm"
-              onClick={() => void handleSubmit()}
-              disabled={!text.trim() || grading || !online}
-            >
-              {grading ? 'Corrigiendo…' : 'Enviar'}
+          {(!online || error || pipeline.aiBudgetSpent) && text.trim() && (
+            <Button variant="secondary" size="md" fullWidth onClick={handleSelfCheck}>
+              Autoevaluar con ejemplo
             </Button>
-            {(!online || error || pipeline.aiBudgetSpent) && text.trim() && (
-              <Button
-                variant="secondary"
-                size="md"
-                fullWidth
-                onClick={handleSelfCheck}
-              >
-                Autoevaluar con ejemplo
-              </Button>
-            )}
-            {onSkip && (
-              <button
-                type="button"
-                onClick={onSkip}
-                disabled={grading}
-                aria-label="Omitir este ejercicio"
-                className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring rounded-md disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Omitir este ejercicio
-              </button>
-            )}
-          </div>
+          )}
+          <SubmitFooter
+            grading={grading}
+            disabled={!text.trim() || grading || !online}
+            onSubmit={() => void handleSubmit()}
+            onSkip={onSkip}
+          />
         </div>
       )}
 

@@ -15,6 +15,37 @@ export function pick<T>(arr: T[], n: number): T[] {
   return shuffle(arr).slice(0, n)
 }
 
+interface SrsSignals {
+  ease_factor?: number | null
+  interval_days?: number | null
+  next_review_at?: string | null
+}
+
+/**
+ * Higher = needs more practice: overdue for review, low SM-2 ease, short
+ * interval. Entries with no SRS signal score 0 and fall back to jitter.
+ */
+export function weaknessScore(entry: SrsSignals, now = Date.now()): number {
+  const due = entry.next_review_at ? Date.parse(entry.next_review_at) : NaN
+  const overdue = Number.isFinite(due) && due <= now ? 2 : 0
+  const ease = typeof entry.ease_factor === 'number' ? Math.max(0, 2.5 - entry.ease_factor) : 0
+  const interval = typeof entry.interval_days === 'number' ? 1 / (1 + entry.interval_days) : 0
+  return overdue + ease + interval
+}
+
+/**
+ * Picks `n` entries prioritising the weakest words. A small random jitter
+ * keeps sessions from repeating the exact same word every time.
+ */
+export function pickWeakest<T extends SrsSignals>(arr: T[], n: number): T[] {
+  const now = Date.now()
+  return arr
+    .map((entry) => ({ entry, score: weaknessScore(entry, now) + Math.random() * 0.75 }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, n)
+    .map(({ entry }) => entry)
+}
+
 /**
  * Deterministic id for an exercise. Combines type + source + stable fields
  * so the same content always produces the same id (dedup in Dexie / answer_history).

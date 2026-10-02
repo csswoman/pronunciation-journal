@@ -46,8 +46,10 @@ describe('WrittenProductionExercise', () => {
     render(<WrittenProductionExercise exercise={exercise} onResult={vi.fn()} onSkip={vi.fn()} />)
 
     expect(screen.getByText('Escribe tu oración')).toBeInTheDocument()
-    expect(screen.getByText('Use "achieve" in an original sentence.')).toBeInTheDocument()
-    expect(screen.getByText('achieve')).toBeInTheDocument()
+    expect(
+      screen.getByText((_, el) => el?.tagName === 'P' && el.textContent === 'Use "achieve" in an original sentence.'),
+    ).toBeInTheDocument()
+    expect(screen.getAllByText('achieve').length).toBeGreaterThan(0)
     expect(screen.getByText('to succeed in doing something')).toBeInTheDocument()
 
     const listenBtn = screen.getByRole('button', { name: 'Escuchar achieve' })

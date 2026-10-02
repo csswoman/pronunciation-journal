@@ -9,7 +9,7 @@ import {
   type EligibilityReason,
 } from '@/lib/exercises/eligibility'
 import type { GenerationResult, SkippedEntry } from '@/lib/exercises/generation'
-import { exerciseId, pick } from '@/lib/exercises/utils'
+import { exerciseId, pickWeakest } from '@/lib/exercises/utils'
 import { selectConstraints } from '@/lib/exercises/speech-constraints'
 
 /**
@@ -95,7 +95,7 @@ export function generateWrittenProductionFromWordBank(
 
   const exercises: WrittenProductionExercise[] = []
 
-  for (const entry of pick(usable, count)) {
+  for (const entry of pickWeakest(usable, count)) {
     const assessment = assessWordBankEntry(entry, 'written_production')
     if (!assessment.eligible) {
       skipped.push(toSkipped(entry, assessment.reasons))

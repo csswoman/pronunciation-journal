@@ -58,7 +58,8 @@ describe('ProductionTaskHeader', () => {
       />,
     )
 
-    expect(screen.getByText('umbrella')).toBeInTheDocument()
+    // The word shows in the target card and bolded inside the prompt.
+    expect(screen.getAllByText('umbrella').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: /Escuchar umbrella/i })).toBeInTheDocument()
   })
 })
