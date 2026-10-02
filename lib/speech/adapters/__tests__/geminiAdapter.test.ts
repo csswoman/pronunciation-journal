@@ -64,6 +64,10 @@ describe('GeminiAdapter', () => {
 
     await expect(adapter.stop()).rejects.toThrow('no-speech')
     expect(fetch).toHaveBeenCalledOnce()
+    const body = vi.mocked(fetch).mock.calls[0][1]?.body as FormData
+    expect(body).toBeInstanceOf(FormData)
+    expect(body.get('audio')).toBeInstanceOf(Blob)
+    expect(vi.mocked(fetch).mock.calls[0][1]?.headers).toBeUndefined()
   })
 
   it('preserves the public timeout message returned by the server', async () => {
@@ -78,5 +82,35 @@ describe('GeminiAdapter', () => {
     await adapter.start()
 
     await expect(adapter.stop()).rejects.toThrow('La transcripción tardó demasiado')
+  })
+
+  it('preserves an HTTP status so callers do not call a 403 an offline failure', async () => {
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(JSON.stringify({ error: 'Cross-site request blocked' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    )
+    const adapter = new GeminiAdapter(async () => ({}) as MediaStream)
+
+    await adapter.start()
+
+    await expect(adapter.stop()).rejects.toMatchObject({ status: 403 })
+  })
+
+  it('shows the timeout message when the browser deadline aborts a pending request', async () => {
+    vi.useFakeTimers()
+    try {
+      vi.mocked(fetch).mockImplementation((_url, options) => new Promise((_resolve, reject) => {
+        options?.signal?.addEventListener('abort', () => reject(options.signal?.reason))
+      }))
+      const adapter = new GeminiAdapter(async () => ({}) as MediaStream)
+      await adapter.start()
+      const assertion = expect(adapter.stop()).rejects.toThrow('La transcripción tardó demasiado')
+      await vi.advanceTimersByTimeAsync(35_000)
+      await assertion
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

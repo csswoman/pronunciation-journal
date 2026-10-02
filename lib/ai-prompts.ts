@@ -55,6 +55,8 @@ mastery from one answer or from merely showing a correction.`;
 
 // ── Transcription ──
 
+export const SENTENCE_TRANSCRIPTION_PROMPT = 'Transcribe this spoken English sentence exactly as heard. Return ONLY the words, no punctuation, no commentary, no formatting. If unintelligible, return an empty string.'
+
 export function buildTranscriptionPrompt(targetWord?: string): string {
   const target = targetWord ? ` Target word: "${targetWord}".` : ''
   return `Transcribe this short English pronunciation attempt.${target} Return ONLY the recognized words in plain text. If unintelligible, return an empty string.`

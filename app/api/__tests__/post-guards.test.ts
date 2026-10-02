@@ -7,6 +7,8 @@ const API_DIR = path.join(process.cwd(), "app", "api");
 const VALIDATION_EXEMPTIONS = new Set([
   "app/api/assessment/oral/evidence/route.ts",
   "app/api/assessment/results/route.ts",
+  "app/api/gemini/transcribe-sentence/route.ts", // audio body via readTranscriptionAudio
+  "app/api/gemini/transcribe/route.ts", // audio body via readTranscriptionAudio
   "app/api/gemini/word-image/route.ts",
   "app/api/lexicon/[id]/route.ts",
 ]);

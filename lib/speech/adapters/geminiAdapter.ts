@@ -8,6 +8,8 @@ import {
   type PeakTracker,
 } from "@/lib/speech/signal-quality";
 import type { SpeechInputAdapter, SpeechInputResult } from "../types";
+import { transcriptionForm } from '../transcription-request';
+import { TRANSCRIPTION_AUDIO_BITRATE, TRANSCRIPTION_CLIENT_TIMEOUT_MS } from '../recording-config';
 
 export class GeminiAdapter implements SpeechInputAdapter {
   private recorder: MediaRecorder | null = null;
@@ -17,6 +19,7 @@ export class GeminiAdapter implements SpeechInputAdapter {
   private inFlight: AbortController | null = null;
   private peakTracker: PeakTracker = trackPeak();
   private stopPeakAnalyser: (() => void) | null = null;
+  private startedAt = 0;
 
   constructor(
     private getStream: () => Promise<MediaStream>,
@@ -31,17 +34,18 @@ export class GeminiAdapter implements SpeechInputAdapter {
   async start(): Promise<void> {
     const stream = await this.getStream();
     this.chunks = [];
-    this.mimeType = MediaRecorder.isTypeSupported('audio/webm')
-      ? 'audio/webm'
-      : MediaRecorder.isTypeSupported('audio/mp4')
-      ? 'audio/mp4'
-      : 'audio/wav';
+    this.mimeType = ['audio/ogg;codecs=opus', 'audio/webm;codecs=opus', 'audio/webm', 'audio/mp4']
+      .find(type => MediaRecorder.isTypeSupported(type)) ?? '';
 
     this.aborted = false;
     this.peakTracker.reset();
     this.stopPeakAnalyser?.();
     this.stopPeakAnalyser = attachPeakAnalyser(stream, this.peakTracker);
-    this.recorder = new MediaRecorder(stream, { mimeType: this.mimeType });
+    this.recorder = new MediaRecorder(stream, {
+      ...(this.mimeType ? { mimeType: this.mimeType } : {}), audioBitsPerSecond: TRANSCRIPTION_AUDIO_BITRATE,
+    });
+    this.mimeType = this.recorder.mimeType || this.mimeType || 'audio/webm';
+    this.startedAt = Date.now();
     this.recorder.ondataavailable = (e) => {
       if (e.data.size > 0) this.chunks.push(e.data);
     };
@@ -68,24 +72,25 @@ export class GeminiAdapter implements SpeechInputAdapter {
           }
 
           const blob = new Blob(this.chunks, { type: this.mimeType });
-          const audioDataUrl = await blobToBase64(blob);
+          const maxDurationMs = this.endpoint.endsWith('transcribe-sentence') ? 60_000 : 30_000;
+          if (Date.now() - this.startedAt > maxDurationMs) {
+            return reject(new Error('La grabación es demasiado larga. Graba una respuesta más breve e inténtalo otra vez.'));
+          }
 
           const controller = new AbortController();
           this.inFlight = controller;
-          // Gemini transcription runs a fallback chain (flash-lite → flash →
-          // latest) server-side, so allow a generous budget before giving up.
+          // Shared profile includes one fallback plus upload/auth headroom.
           const timeoutId = window.setTimeout(
             () => controller.abort(new DOMException('Transcription timed out', 'TimeoutError')),
-            50_000
+            TRANSCRIPTION_CLIENT_TIMEOUT_MS
           );
 
           let res: Response;
           try {
             res = await fetch(this.endpoint, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
               signal: controller.signal,
-              body: JSON.stringify({ audioDataUrl }),
+              body: transcriptionForm(blob),
             });
           } finally {
             window.clearTimeout(timeoutId);
@@ -159,13 +164,4 @@ export class GeminiAdapter implements SpeechInputAdapter {
     this.recorder = null;
     this.chunks = [];
   }
-}
-
-function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = () => reject(new Error('Failed to read blob'));
-    reader.readAsDataURL(blob);
-  });
 }
