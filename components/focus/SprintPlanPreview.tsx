@@ -13,6 +13,7 @@
 
 import { cn } from '@/lib/cn'
 import PastelCard from '@/components/layout/PastelCard'
+import { PlanDayCarousel } from './PlanDayCarousel'
 import {
   buildSprintPlan,
   type PlanDayAvailability,
@@ -41,9 +42,9 @@ const KIND_STYLE: Record<PlanDayKind, { label: string; stripe: string }> = {
 
 /** Qué le decimos al usuario sobre el origen del contenido de cada día. */
 const AVAILABILITY_LABEL: Record<PlanDayAvailability, { label: string; className: string }> = {
-  on_activate: { label: 'Se crea al activar', className: 'bg-primary text-white' },
-  on_demand: { label: 'Lo generas en el sprint', className: 'bg-black/5 text-ink-secondary' },
-  reuse: { label: 'Con lo que ya generaste', className: 'bg-black/5 text-ink-secondary' },
+  on_activate: { label: 'Al activar', className: 'bg-primary text-white' },
+  on_demand: { label: 'Cuando quieras', className: 'bg-black/5 text-ink-secondary' },
+  reuse: { label: 'Repaso', className: 'bg-black/5 text-ink-secondary' },
 }
 
 /**
@@ -68,10 +69,10 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
             Unos {plan.avgMinutes} min al día (aprox.)
           </span>
         </div>
-        <h3 className="font-display text-h3 font-extrabold text-ink">Así se verá tu sprint</h3>
-        <p className="ts-body text-ink-secondary">
+        <h3 className="ts-card-title text-ink">Así se verá tu sprint</h3>
+        <p className="max-w-3xl ts-body text-ink-secondary">
           Cada día practicas <span className="ts-label-strong text-ink">{plan.focusLabel}</span> de una forma
-          distinta. Al activar se escribe tu mini-historia; el resto lo generas desde tu sprint cuando quieras.
+          distinta. Solo la mini-historia se crea al activar; el resto lo generas tú cuando quieras.
         </p>
       </div>
 
@@ -91,8 +92,8 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
       {plan.hasSoundFocus && (
         <p className="rounded-2xl bg-white/60 px-4 py-3 ts-body text-ink-secondary">
           <span className="ts-label-strong text-ink">Sobre tu foco de sonido:</span> el sprint lo trabaja con
-          lectura, dictado y la canción grabada con tu voz, pero no califica cómo lo pronuncias. Para
-          entrenar el oído a distinguirlo, combina el sprint con el laboratorio de sonidos.
+          lectura, dictado y canción, pero no evalúa tu pronunciación. Para entrenar el oído, combínalo con
+          el laboratorio de sonidos.
         </p>
       )}
 
@@ -105,14 +106,14 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
         ))}
       </ul>
 
-      <ol className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-7">
+      <PlanDayCarousel label="Días del sprint">
         {plan.days.map((day) => (
           <PlanDayCard key={day.day} day={day} />
         ))}
-      </ol>
+      </PlanDayCarousel>
 
       <p className="ts-caption text-ink-secondary">
-        ¿Te saltaste un día? No pierdes nada: tu contenido queda guardado y sigues por donde ibas.
+        ¿Te saltas un día? No pasa nada: tu contenido se guarda y retomas donde lo dejaste.
       </p>
     </PastelCard>
   )
@@ -122,18 +123,18 @@ function PlanDayCard({ day }: { day: SprintPlanDay }) {
   const availability = AVAILABILITY_LABEL[day.availability]
 
   return (
-    <li className="relative flex min-h-40 flex-col justify-between gap-3 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-xs">
+    <li className="relative flex w-56 shrink-0 snap-start flex-col justify-between gap-3 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-xs">
       <div className={cn('absolute inset-x-0 top-0 h-1.5', KIND_STYLE[day.kind].stripe)} aria-hidden="true" />
       <div className="flex flex-col gap-1.5 pt-1">
         <span className="ts-kicker text-ink-muted">Día {day.day}</span>
         <h4 className="ts-row-title leading-tight text-ink">{day.title}</h4>
-        <p className="line-clamp-3 ts-caption text-ink-secondary">{day.detail}</p>
+        <p className="ts-caption text-ink-secondary">{day.detail}</p>
       </div>
-      <div className="flex flex-col items-start gap-1.5 border-t border-black/5 pt-2">
-        <span className={cn('rounded-full px-2 py-0.5 ts-badge leading-tight', availability.className)}>
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-black/5 pt-2.5">
+        <span className={cn('rounded-md px-2 py-0.5 ts-badge leading-tight', availability.className)}>
           {availability.label}
         </span>
-        <span className="ts-caption text-ink-muted">~{day.minutes} min</span>
+        <span className="ts-caption text-ink-muted tabular-nums">~{day.minutes} min</span>
       </div>
     </li>
   )

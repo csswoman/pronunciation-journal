@@ -98,7 +98,7 @@ export function GapSuggestionCard({
         </div>
 
         <div>
-          <h3 className="ts-headline-xl text-ink leading-tight">
+          <h3 className="ts-card-title text-ink">
             {suggestion.label}
           </h3>
           <p className="mt-1.5 ts-body leading-relaxed text-ink-secondary">
@@ -113,19 +113,20 @@ export function GapSuggestionCard({
             <span className="ts-kicker text-ink-muted">
               TU PRECISIÓN
             </span>
-            <span className="ts-headline text-ink">
-              {suggestion.accuracy}%
+            <span className="ts-card-title text-ink tabular-nums">
+              {suggestion.accuracy}
+              <span className="ts-numeral-unit">%</span>
             </span>
           </div>
-          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-black/10">
+          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-black/15 bg-black/5">
             <div
-              className="h-full rounded-full bg-ink transition-all duration-500"
+              className="h-full min-w-1.5 rounded-full bg-ink transition-all duration-500"
               style={{ width: `${Math.max(0, Math.min(100, suggestion.accuracy!))}%` }}
             />
           </div>
           {suggestion.sampleCount ? (
-            <span className="mt-1.5 block ts-caption text-ink-muted">
-              Basado en {suggestion.sampleCount} intentos
+            <span className="mt-2 block ts-caption text-ink-muted">
+              {suggestion.sampleCount} {suggestion.sampleCount === 1 ? 'intento' : 'intentos'} en 30 días
             </span>
           ) : null}
         </div>
@@ -145,14 +146,20 @@ export function GapSuggestionCard({
           </div>
         </div>
       ) : suggestion.targetId === 'vowel:/ɪ/' ? (
-        <div className="flex items-center justify-between gap-2 rounded-2xl bg-white/90 p-4 text-ink shadow-xs">
+        <div className="flex items-center justify-between gap-2 rounded-2xl border border-dashed border-black/40 p-4 text-ink">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-black/5 px-3 py-1 ts-ipa-sm text-ink border border-black/10">
-              ship /ʃɪp/
-            </span>
-            <span className="rounded-full bg-black/5 px-3 py-1 ts-ipa-sm text-ink border border-black/10">
-              sheep /ʃi:p/
-            </span>
+            {[
+              { word: 'ship', ipa: '/ʃɪp/' },
+              { word: 'sheep', ipa: '/ʃiːp/' },
+            ].map(({ word, ipa }) => (
+              <span
+                key={word}
+                className="inline-flex items-baseline gap-1.5 rounded-full bg-white px-3 py-1 text-ink"
+              >
+                <span className="ts-label-strong font-bold">{word}</span>
+                <span className="ts-ipa-xs text-ink-secondary">{ipa}</span>
+              </span>
+            ))}
           </div>
           <span className="ts-caption text-ink-muted shrink-0">Aún sin medir</span>
         </div>

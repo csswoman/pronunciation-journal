@@ -71,26 +71,26 @@ type Activity = {
 const NEW_FORMATS: Activity[] = [
   {
     kind: 'story', availability: 'on_activate', title: 'Mini-historia', minutes: 7,
-    detail: () => 'Lees una historia con tus focos resaltados y haces hasta 5 ejercicios: huecos, ordenar y dictado.',
+    detail: () => 'Lees una historia con tus focos resaltados y haces hasta 5 ejercicios.',
   },
   {
     kind: 'drill', availability: 'on_demand', title: 'Drill de frases', minutes: 10,
-    detail: () => '8 a 10 frases: completas el hueco y después las traduces del español.',
+    detail: () => 'Completas el hueco y traduces entre 8 y 10 frases.',
   },
   {
     kind: 'dialogue', availability: 'on_demand', title: 'Diálogo', minutes: 6,
-    detail: () => 'Lees una conversación cotidiana y ordenas algunas de sus frases.',
+    detail: () => 'Lees una charla cotidiana y ordenas sus frases.',
   },
   {
     kind: 'error_trap', availability: 'on_demand', title: 'Trampa de errores', minutes: 5,
     detail: (example) =>
       example
-        ? `5 frases: encuentras las que tienen error, como "${example.wrong}", y las corriges.`
-        : '5 frases: encuentras las que tienen error y las corriges.',
+        ? `Corriges 5 frases con errores, como "${example.wrong}".`
+        : 'Encuentras y corriges los errores en 5 frases.',
   },
   {
     kind: 'song', availability: 'on_demand', title: 'Canción o rima', minutes: 7,
-    detail: () => 'Completas un dictado de la letra y la cantas con tu micrófono.',
+    detail: () => 'Completas la letra y la cantas con tu micrófono.',
   },
 ]
 
@@ -98,37 +98,37 @@ const NEW_FORMATS: Activity[] = [
 const EXTRA_ROTATION: Activity[] = [
   {
     kind: 'free', availability: 'reuse', title: 'Lo que más te costó', minutes: 6,
-    detail: () => 'Vuelves al formato donde más fallaste y lo repites.',
+    detail: () => 'Repites el formato donde más fallaste.',
   },
   {
     kind: 'dialogue', availability: 'reuse', title: 'Diálogo con el Coach', minutes: 8,
-    detail: () => 'Practicas el diálogo en voz alta con el Coach: él es la persona A y tú la B.',
+    detail: () => 'Practicas el diálogo en voz alta con el Coach.',
   },
   {
-    kind: 'story', availability: 'reuse', title: 'Historia, segunda vuelta', minutes: 6,
+    kind: 'story', availability: 'reuse', title: 'Historia otra vez', minutes: 6,
     detail: () => 'Relees la historia y repites sus ejercicios.',
   },
   {
     kind: 'song', availability: 'reuse', title: 'Canta otra vez', minutes: 5,
-    detail: () => 'Vuelves a grabarte cantando y comparas con tu intento anterior.',
+    detail: () => 'Te grabas otra vez y comparas con tu intento anterior.',
   },
   {
-    kind: 'error_trap', availability: 'reuse', title: 'Trampa, segunda ronda', minutes: 5,
-    detail: () => 'Repites la trampa de errores y compruebas si ya no caes.',
+    kind: 'error_trap', availability: 'reuse', title: 'Trampa otra vez', minutes: 5,
+    detail: () => 'Repites la trampa y compruebas si ya no caes.',
   },
   {
     kind: 'drill', availability: 'reuse', title: 'Drill otra vez', minutes: 10,
-    detail: () => 'Repites el drill; la traducción del español es la parte que más fija.',
+    detail: () => 'Repites el drill; traducir es lo que más fija.',
   },
   {
-    kind: 'free', availability: 'reuse', title: 'Elige tu formato', minutes: 6,
-    detail: () => 'Vuelves al formato que más te sirvió y lo haces otra vez.',
+    kind: 'free', availability: 'reuse', title: 'Tu formato favorito', minutes: 6,
+    detail: () => 'Repites el formato que más te sirvió.',
   },
 ]
 
 const CLOSING: Activity = {
   kind: 'closing', availability: 'reuse', title: 'Último día', minutes: 6,
-  detail: () => 'Terminas lo que te quede pendiente. Mañana podrás elegir focos nuevos.',
+  detail: () => 'Cierras lo pendiente. Después podrás elegir focos nuevos.',
 }
 
 function joinLabels(gaps: SprintGap[]): string {

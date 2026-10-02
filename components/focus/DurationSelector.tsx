@@ -63,7 +63,7 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                 </div>
 
                 <div>
-                  <h4 className="ts-headline text-ink">
+                  <h4 className="ts-card-title text-ink">
                     {opt.label}
                   </h4>
                   <p className="mt-1 ts-caption text-ink-secondary">
@@ -108,7 +108,7 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
               </div>
 
               <div>
-                <h4 className="ts-headline text-fg">
+                <h4 className="ts-card-title text-fg">
                   {opt.label}
                 </h4>
                 <p className="mt-1 ts-caption text-fg-muted">
