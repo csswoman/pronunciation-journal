@@ -6,7 +6,10 @@ import type { SpeechInputResult } from './types'
 export type FallbackOutcome =
   | { kind: 'transcript'; result: SpeechInputResult }
   | { kind: 'no-speech' }
-  | { kind: 'failed' }
+  /** HTTP responses reached the app but the transcription service rejected or failed. */
+  | { kind: 'service-failed' }
+  /** The browser could not reach the app at all (offline, DNS, interrupted request). */
+  | { kind: 'network-failed' }
 
 /**
  * Transcribe con Gemini el audio del stream vivo.
@@ -23,7 +26,17 @@ export async function transcribeWithGemini(stream: MediaStream): Promise<Fallbac
     const transcript = result.transcript.trim()
     if (!transcript) return { kind: 'no-speech' }
     return { kind: 'transcript', result: { ...result, transcript } }
-  } catch {
-    return { kind: 'failed' }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'no-speech') {
+      return { kind: 'no-speech' }
+    }
+
+    // GeminiAdapter preserves an HTTP status. A 403 is therefore a response
+    // from the app/provider, not evidence that the learner is offline.
+    if (typeof (error as { status?: unknown })?.status === 'number') {
+      return { kind: 'service-failed' }
+    }
+
+    return { kind: 'network-failed' }
   }
 }

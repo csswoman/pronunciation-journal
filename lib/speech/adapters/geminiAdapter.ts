@@ -96,7 +96,10 @@ export class GeminiAdapter implements SpeechInputAdapter {
             const d = await res.json().catch(() => ({}));
             // Surface real server failures (auth, rate-limit, 503, etc.) so the
             // UI shows an actionable error instead of a silent empty transcript.
-            throw new Error(publicAiErrorMessage(res.status, d.error));
+            throw Object.assign(
+              new Error(publicAiErrorMessage(res.status, d.error)),
+              { status: res.status },
+            );
           }
 
           const data = await res.json();
@@ -116,6 +119,9 @@ export class GeminiAdapter implements SpeechInputAdapter {
           }
 
           const timedOut = err instanceof DOMException && err.name === 'TimeoutError';
+          const upstreamStatus = typeof (err as { status?: unknown })?.status === 'number'
+            ? (err as { status: number }).status
+            : undefined;
           console.warn(
             `[GeminiAdapter] transcription ${timedOut ? 'timed out' : 'failed'}:`,
             err
@@ -128,7 +134,10 @@ export class GeminiAdapter implements SpeechInputAdapter {
             : err instanceof Error
             ? err.message
             : '';
-          reject(new Error(publicAiErrorMessage(undefined, reason)));
+          reject(Object.assign(
+            new Error(publicAiErrorMessage(timedOut ? 504 : upstreamStatus, reason)),
+            { status: timedOut ? 504 : upstreamStatus },
+          ));
         }
       };
 

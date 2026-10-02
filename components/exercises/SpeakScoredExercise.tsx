@@ -129,7 +129,8 @@ export function SpeakScoredExercise({ exercise, onSubmit }: Props) {
   const isDone = status === 'done'
   const isError = status === 'error'
   const isNetworkShadowing = isError && errorCode === 'network'
-  const isShadowing = !isSupported || isNetworkShadowing || evalFailed
+  const isServiceShadowing = isError && errorCode === 'service'
+  const isShadowing = !isSupported || isNetworkShadowing || isServiceShadowing || evalFailed
   const shadowingReason: UnscoredReason = !isSupported
     ? 'no-mic'
     : isNetworkShadowing

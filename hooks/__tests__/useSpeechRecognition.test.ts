@@ -209,6 +209,22 @@ describe('useSpeechRecognition', () => {
     expect(result.current.errorCode).toBe('network')
   })
 
+  it('classifies an HTTP rejection from transcription as a service failure, not offline', async () => {
+    transcribeMock.mockRejectedValue(Object.assign(new Error('Forbidden'), { status: 403 }))
+    const { result } = renderHook(() => useSpeechRecognition())
+
+    await act(async () => {
+      await result.current.start()
+    })
+
+    await act(async () => {
+      lastRecognition!.onerror?.({ error: 'network' })
+    })
+
+    await waitFor(() => expect(result.current.status).toBe('error'))
+    expect(result.current.errorCode).toBe('service')
+  })
+
   it('does not fall back for a permission denial', async () => {
     const { result } = renderHook(() => useSpeechRecognition())
 

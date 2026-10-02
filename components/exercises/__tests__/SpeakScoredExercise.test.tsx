@@ -91,6 +91,27 @@ describe('SpeakScoredExercise', () => {
     expect(onSubmit).not.toHaveBeenCalledWith(true, expect.anything(), expect.anything())
   })
 
+  it('does not mislabel a rejected transcription service as an internet outage', async () => {
+    speechMocks.useSpeechRecognition.mockReturnValue({
+      status: 'error',
+      result: null,
+      errorCode: 'service',
+      isSupported: true,
+      start: vi.fn(),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    })
+    const onSubmit = vi.fn()
+
+    render(<SpeakScoredExercise exercise={exercise} onSubmit={onSubmit} />)
+
+    expect(screen.getByText(/puntuación por voz no está disponible ahora/i)).toBeInTheDocument()
+    expect(screen.queryByText(/necesita conexión a internet/i)).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /continuar/i }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(false, '', { status: 'evaluator_failed' }))
+  })
+
   it('keeps the no-microphone fallback unscored and completable', async () => {
     speechMocks.useSpeechRecognition.mockReturnValue({
       status: 'idle',
