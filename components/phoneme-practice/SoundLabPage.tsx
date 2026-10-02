@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Play } from "@/components/icons";
+import { ArrowRight } from "@/components/icons";
 import PageLayout from "@/components/layout/PageLayout";
 import PageHeader from "@/components/layout/PageHeader";
 import Button from "@/components/ui/Button";
@@ -81,6 +81,7 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
   }, [searchParams]);
 
   const [groupBy, setGroupBy] = useState<SoundLabGrouping>("impact");
+  const [categoryFilter, setCategoryFilter] = useState<"impact" | "vowel" | "consonant">("impact");
   const [progressFilter, setProgressFilter] = useState<SoundLabProgressFilter>("all");
   const [onlyHard, setOnlyHard] = useState(false);
   const [search, setSearch] = useState("");
@@ -111,11 +112,20 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return allLessons.filter((lesson) => {
+      if (categoryFilter === "vowel") {
+        const ipa = ipaFromLessonTitle(lesson.title);
+        const canonical = ipa ? getCanonicalSound(ipa) : undefined;
+        if (canonical && canonical.type !== "vowel" && canonical.type !== "diphthong") return false;
+      } else if (categoryFilter === "consonant") {
+        const ipa = ipaFromLessonTitle(lesson.title);
+        const canonical = ipa ? getCanonicalSound(ipa) : undefined;
+        if (canonical && canonical.type !== "consonant") return false;
+      }
       if (!matchesProgressFilter(lesson, progressFilter, soundProgressMap)) return false;
       if (onlyHard && !matchesHardFilter(lesson)) return false;
       return lessonMatchesSearch(lesson, q);
     });
-  }, [allLessons, progressFilter, onlyHard, soundProgressMap, search]);
+  }, [allLessons, categoryFilter, progressFilter, onlyHard, soundProgressMap, search]);
 
   const sections = useMemo<LessonSection[]>(() => {
     return buildLessonSections(filtered, groupBy);
@@ -131,6 +141,8 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
   }
 
   function handleClearFilters() {
+    setCategoryFilter("impact");
+    setGroupBy("impact");
     setProgressFilter("all");
     setOnlyHard(false);
     setSearch("");
@@ -149,17 +161,30 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
 
   return (
     <PageLayout archetype="catalog" className="sound-lab min-h-screen">
-      <header className="sound-lab__page-header">
+      <header className="sound-lab__page-header space-y-5">
         <PageHeader
           kicker={header.kicker}
           title={header.title}
           subtitle={header.subtitle}
           actions={
-            <SoundsWorkspaceTabs
-              activeTab={activeTab}
-              onTabChange={selectTab}
-              onOpenIPA={openIPA}
-            />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <SoundsWorkspaceTabs
+                activeTab={activeTab}
+                onTabChange={selectTab}
+                onOpenIPA={openIPA}
+              />
+              {heroLesson.lesson && isSoundsView ? (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleResume}
+                  className="rounded-full px-5 py-2 font-semibold inline-flex items-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all bg-primary text-on-primary"
+                >
+                  <span>{continueCtaLabel(heroLesson.lesson)}</span>
+                  <ArrowRight size={14} className="stroke-[2.5]" aria-hidden />
+                </Button>
+              ) : null}
+            </div>
           }
         />
 
@@ -175,26 +200,15 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
         {isSoundsView ? (
           <SoundLabFilterRow
             groupBy={groupBy}
+            categoryFilter={categoryFilter}
             progressFilter={progressFilter}
             onlyHard={onlyHard}
             search={search}
             onGroupByChange={setGroupBy}
+            onCategoryFilterChange={setCategoryFilter}
             onProgressFilterChange={setProgressFilter}
             onOnlyHardChange={setOnlyHard}
             onSearchChange={setSearch}
-            resumeAction={
-              heroLesson.lesson ? (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={handleResume}
-                  className="rounded-xl px-4 py-2 font-semibold inline-flex items-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all"
-                >
-                  <Play size={13} className="stroke-[2.5]" aria-hidden />
-                  <span>{continueCtaLabel(heroLesson.lesson)}</span>
-                </Button>
-              ) : undefined
-            }
           />
         ) : null}
 

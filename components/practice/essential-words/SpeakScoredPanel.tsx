@@ -1,8 +1,8 @@
 'use client'
 
-import { PhonemeFeedbackTable } from '@/components/lesson/PhonemeFeedbackTable'
 import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
-import { PhonemeDifficultyHeadword } from '@/components/lesson/PhonemeDifficultyHeadword'
+import { WordFeedbackPanel } from '@/components/pronunciation-feedback/WordFeedbackPanel'
+import { useWordFeedback } from '@/hooks/useWordFeedback'
 import { QuietSpeakFeedback } from './QuietSpeakFeedback'
 import { InlineFeedback } from '@/components/practice/session/InlineFeedback'
 import {
@@ -15,10 +15,9 @@ import type { WordResult } from '@/lib/types'
 // Planned structure:
 // <SpeakScoredPanel>
 //   <InlineFeedback + QuietSpeakFeedback />
-//   <PhonemeDifficultyHeadword />   — la palabra con la grafía difícil resaltada
+//   <WordFeedbackPanel compact />   — palabras por color + diagnóstico del sonido
 //   <SelfPlaybackAudioBar />        — tu grabación vs. el modelo
 //   <PracticeActionBar />
-//   <phoneme detail toggle + PhonemeFeedbackTable />
 // </SpeakScoredPanel>
 
 interface SpeakScoredPanelProps {
@@ -29,10 +28,8 @@ interface SpeakScoredPanelProps {
   modelText: string
   /** Grabación del intento, solo en memoria. Null si no se pudo grabar. */
   userAudioUrl: string | null
-  showSoundDetail: boolean
   isSubmitting: boolean
   submitError: string | null
-  onToggleSoundDetail: () => void
   onRetry: () => void
   onContinue: () => void
 }
@@ -43,14 +40,12 @@ export function SpeakScoredPanel({
   wordResults,
   modelText,
   userAudioUrl,
-  showSoundDetail,
   isSubmitting,
   submitError,
-  onToggleSoundDetail,
   onRetry,
   onContinue,
 }: SpeakScoredPanelProps) {
-  const hasPhonemeDetail = wordResults.some((word) => word.phonemes?.alignment?.length)
+  const words = useWordFeedback(wordResults)
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
@@ -58,7 +53,7 @@ export function SpeakScoredPanel({
       {feedbackMessage && (
         <QuietSpeakFeedback accuracy={score} message={feedbackMessage} />
       )}
-      <PhonemeDifficultyHeadword wordResults={wordResults} />
+      <WordFeedbackPanel words={words} variant="compact" />
       <SelfPlaybackAudioBar targetWord={modelText} userAudioUrl={userAudioUrl} />
       <PracticeActionBar>
         <PillButton variant="outline" size="md" className="w-full" onClick={onRetry}>
@@ -73,19 +68,6 @@ export function SpeakScoredPanel({
           Guardar y ver la siguiente
         </PracticeContinueButton>
       </PracticeActionBar>
-      {hasPhonemeDetail && (
-        <div className="flex w-full flex-col items-center gap-3">
-          <button
-            type="button"
-            aria-expanded={showSoundDetail}
-            onClick={onToggleSoundDetail}
-            className="rounded-md px-2 py-1 text-caption font-semibold text-primary transition-colors hover:bg-primary-soft focus-ring"
-          >
-            {showSoundDetail ? 'Ocultar detalle de sonidos' : 'Ver detalle de sonidos'}
-          </button>
-          {showSoundDetail && <PhonemeFeedbackTable wordResults={wordResults} />}
-        </div>
-      )}
       {submitError && <p className="m-0 text-center text-caption text-error">{submitError}</p>}
     </div>
   )

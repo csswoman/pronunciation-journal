@@ -5,6 +5,8 @@ export interface IntonationSentence {
   text: string;
   pattern: "rising" | "falling" | "fall-rise" | "rise-fall";
   patternNameEs: string;
+  shortTitleEs?: string;
+  shortQuote?: string;
   category: "questions" | "statements" | "nuance" | "connected";
   descriptionEs: string;
   targetCurve: TargetPitchPoint[];
@@ -17,8 +19,10 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "Are you ready?",
     pattern: "rising",
     patternNameEs: "Ascendente ↗ (Pregunta Sí/No)",
+    shortTitleEs: "Pregunta sí / no",
+    shortQuote: '"Are you ready?"',
     category: "questions",
-    descriptionEs: "En preguntas de Sí/No en inglés, el tono sube con claridad en la última palabra.",
+    descriptionEs: "En las preguntas de sí o no, el tono sube con claridad en la última palabra.",
     targetCurve: [
       { timePct: 0.1, semitones: -0.5, label: "Are" },
       { timePct: 0.4, semitones: 0.0, label: "you" },
@@ -31,6 +35,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "Do you want some coffee?",
     pattern: "rising",
     patternNameEs: "Ascendente ↗ (Ofrecimiento / Pregunta)",
+    shortTitleEs: "Ofrecimiento",
+    shortQuote: '"Some tea?"',
     category: "questions",
     descriptionEs: "La voz se mantiene moderada al inicio y salta hacia arriba en 'coffee'.",
     targetCurve: [
@@ -46,6 +52,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "Is that really true?",
     pattern: "rising",
     patternNameEs: "Ascendente ↗ (Comprobación / Sorpresa)",
+    shortTitleEs: "Sorpresa",
+    shortQuote: '"He did?"',
     category: "questions",
     descriptionEs: "Sube el tono al final para expresar sorpresa o verificar un hecho.",
     targetCurve: [
@@ -62,6 +70,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "My name is David.",
     pattern: "falling",
     patternNameEs: "Descendente ↘ (Afirmación)",
+    shortTitleEs: "Afirmación",
+    shortQuote: '"I\'m ready."',
     category: "statements",
     descriptionEs: "En declaraciones afirmativas, la voz cae con firmeza al final para transmitir seguridad.",
     targetCurve: [
@@ -76,6 +86,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "Where are you going?",
     pattern: "falling",
     patternNameEs: "Descendente ↘ (Pregunta Wh-)",
+    shortTitleEs: "Pregunta Wh-",
+    shortQuote: '"Where is it?"',
     category: "questions",
     descriptionEs: "¡Curiosidad inglesa! Las preguntas con Where, What, Why, How terminan con entonación descendente ↘.",
     targetCurve: [
@@ -90,6 +102,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "What time is the meeting?",
     pattern: "falling",
     patternNameEs: "Descendente ↘ (Pregunta informativa)",
+    shortTitleEs: "Pregunta informativa",
+    shortQuote: '"What time?"',
     category: "questions",
     descriptionEs: "Empieza alto en 'What time' y cae progresivamente al terminar.",
     targetCurve: [
@@ -106,6 +120,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "Well, I think so...",
     pattern: "fall-rise",
     patternNameEs: "Caída-Subida ↘↗ (Duda / Reserva)",
+    shortTitleEs: "Duda o reserva",
+    shortQuote: '"Maybe..."',
     category: "nuance",
     descriptionEs: "Expresa que no estás 100% seguro o que hay un matiz pendiente: el tono cae y luego sube sutilmente.",
     targetCurve: [
@@ -119,6 +135,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "She's nice, but...",
     pattern: "fall-rise",
     patternNameEs: "Caída-Subida ↘↗ (Contraste implícito)",
+    shortTitleEs: "Contraste implícito",
+    shortQuote: '"She\'s nice..."',
     category: "nuance",
     descriptionEs: "Señala que viene un 'pero' o que hay más información no dicha.",
     targetCurve: [
@@ -134,6 +152,8 @@ export const INTONATION_PATTERNS: IntonationSentence[] = [
     text: "That's incredible!",
     pattern: "rise-fall",
     patternNameEs: "Subida-Caída ↗↘ (Énfasis / Entusiasmo)",
+    shortTitleEs: "Énfasis",
+    shortQuote: '"Incredible!"',
     category: "nuance",
     descriptionEs: "Un pico alto de energía melódica en la sílaba acentuada y una caída rápida.",
     targetCurve: [

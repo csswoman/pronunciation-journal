@@ -14,7 +14,7 @@ export default async function SoundsPage() {
         <div className="page-shell page-shell--catalog sound-lab sound-lab__loading-shell">
           <div className="sound-lab__loading" role="status" aria-live="polite">
             <span className="font-kicker text-fg-subtle">Práctica</span>
-            <p className="text-body-sm text-fg-muted">Cargando el laboratorio de sonidos…</p>
+            <p className="ts-body text-fg-muted">Cargando el laboratorio de sonidos…</p>
           </div>
         </div>
       }

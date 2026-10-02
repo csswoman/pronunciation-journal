@@ -30,7 +30,7 @@ describe('CreateStoryModal', () => {
     )
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Crear nueva historia')).toBeInTheDocument()
+    expect(screen.getByText('Nueva historia')).toBeInTheDocument()
     expect(screen.getByText('water')).toBeInTheDocument()
     expect(screen.getByText('friend')).toBeInTheDocument()
   })

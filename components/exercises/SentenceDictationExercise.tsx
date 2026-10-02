@@ -20,7 +20,6 @@ import {
   CheckButton,
   FeedbackBar,
   HintPanel,
-  WordCountBadge,
   type DictationAnswerState,
 } from './sentence-dictation/SentenceDictationControls'
 
@@ -132,16 +131,16 @@ export function SentenceDictationExercise({ exercise, onResult, hintCount = 0 }:
       <AudioButtons
         isPlaying={isPlaying}
         isPlayingSlow={isPlayingSlow}
+        wordCount={words.length}
         onPlay={() => play()}
         onPlaySlow={() => play(true)}
       />
-
-      <WordCountBadge count={words.length} />
 
       <AnswerInput
         inputRef={inputRef}
         value={input}
         disabled={done}
+        totalWords={words.length}
         onChange={setInput}
         onKeyDown={(event) => {
           if (event.key === 'Enter' && !event.shiftKey) {

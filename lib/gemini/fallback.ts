@@ -1,3 +1,5 @@
+import type { ThinkingConfig, ThinkingLevel } from '@google/genai'
+
 export const BASE_MODELS = [
   // High-volume tasks use models with the largest confirmed free quotas first.
   'gemini-3.1-flash-lite',
@@ -18,14 +20,16 @@ export const PREMIUM_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash-lite'] as c
 
 export const FALLBACK_MODELS: readonly string[] = BASE_MODELS
 
-const THINKING_MODELS = new Set([
-  'gemini-3.5-flash',
-  'gemini-3.7-flash',
-])
-
-/** Disables reasoning tokens for conversational speed on models with thinking enabled by default. */
-export function getFastThinkingConfig(model: string): { thinkingBudget: 0 } | undefined {
-  return THINKING_MODELS.has(model) ? { thinkingBudget: 0 } : undefined
+/** Gemini 3 uses levels, not Gemini 2.5's token budgets. */
+export function getFastThinkingConfig(model: string, effort: 'minimal' | 'low' = 'minimal'): ThinkingConfig | undefined {
+  if (['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'].includes(model)) {
+    return { thinkingLevel: (effort === 'low' ? 'LOW' : 'MINIMAL') as ThinkingLevel }
+  }
+  if (['gemini-3.7-flash', 'gemini-3.8-flash'].includes(model)) {
+    return { thinkingLevel: 'LOW' as ThinkingLevel }
+  }
+  if (model === 'gemini-2.5-flash-lite') return { thinkingBudget: 0 }
+  return undefined
 }
 
 export function getErrorStatus(err: unknown): number | undefined {

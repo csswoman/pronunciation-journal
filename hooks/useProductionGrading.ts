@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuthOptional } from '@/components/auth/AuthProvider'
+import { createResponsiveGradingDeps } from '@/lib/exercises/responsive-grading-cache'
 import {
   isOnline,
   ProductionGradeError,
@@ -67,7 +68,7 @@ export function useProductionGrading(target: ProductionGradingTarget): Productio
   const history = useRef<AttemptHistory>({ lastProduction: null, aiGrades: 0 })
 
   const deps: GradingPipelineDeps = useMemo(
-    () => (userId ? dexieGradingDeps : createMemoryGradingDeps()),
+    () => createResponsiveGradingDeps(userId ? dexieGradingDeps : createMemoryGradingDeps()),
     [userId],
   )
 
@@ -92,6 +93,11 @@ export function useProductionGrading(target: ProductionGradingTarget): Productio
             acceptedAnswers: current.acceptedAnswers,
             sourceSentence: current.sourceSentence,
             fixedReference: current.fixedReference,
+            onTiming: (source, durationMs) => {
+              if (process.env.NODE_ENV === 'development') {
+                console.debug('[Exercise grading timing]', { modality: input.modality, source, durationMs })
+              }
+            },
             beforeAiCall: () => {
               assertAiGradeAllowed(input.production, history.current, isOnline())
               // Counted before the request: a failed call may still have spent

@@ -25,7 +25,7 @@ interface Props {
   speed?: "normal" | "slow";
 }
 
-function LipShapeContent({ guide }: { guide: PhonemeArticulationGuide }) {
+export function LipShapeContent({ guide }: { guide: PhonemeArticulationGuide }) {
   switch (guide.lipShape) {
     case "teeth-on-lip":
       return <FrontalLipsTeethOnLip />;

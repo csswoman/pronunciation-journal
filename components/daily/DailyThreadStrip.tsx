@@ -43,9 +43,9 @@ export function DailyThreadStrip({ hints, embedded = false }: DailyThreadStripPr
               key={hint.word}
               className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-sunken px-2.5 py-1 transition-colors"
             >
-              <span className="font-body-sm font-medium capitalize text-fg">{hint.word}</span>
+              <span className="ts-chip capitalize text-fg">{hint.word}</span>
               {ipa ? (
-                <span className="font-ipa shrink-0 text-caption text-primary">{ipa}</span>
+                <span className="ts-ipa-xs shrink-0 text-primary">{ipa}</span>
               ) : null}
             </li>
           )

@@ -6,10 +6,6 @@ import RecordingControls from "./pronunciation/RecordingControls";
 import CoachPanel from "./pronunciation/CoachPanel";
 import SessionComplete from "./pronunciation/SessionComplete";
 import { LineResult } from "@/components/ai-coach/missions/scripted/LineResult";
-import { useSyllableFeedback } from "@/hooks/useSyllableFeedback";
-import { buildRemediation } from "@/lib/pronunciation/syllable-remediation";
-import { pickPrimaryFix } from "@/lib/pronunciation/pick-primary-fix";
-import { describePhonemeInWord } from "@/lib/pronunciation/phoneme-in-word";
 import { getPhraseMetadata } from "@/lib/ai-coach/phrase-metadata";
 import { usePronunciationCoach } from "./usePronunciationCoach";
 import { Loader2 } from "@/components/icons";
@@ -55,25 +51,7 @@ export default function PronunciationView() {
     wordResults,
   } = usePronunciationCoach();
 
-  const syllableMap = useSyllableFeedback(wordResults);
-
-  // Primera remediación aplicable (igual que en LearnerLine).
-  const primaryFix = wordResults.length > 0 ? pickPrimaryFix(wordResults, syllableMap) : null;
-  const remediation = primaryFix ? buildRemediation(primaryFix.culprit) : null;
-  const fix = (() => {
-    if (!primaryFix) return null;
-    const explanation = describePhonemeInWord(primaryFix.syllableText, primaryFix.culprit);
-    if (!explanation) return null;
-    const phonemeIpa = remediation?.ipa ?? `/${primaryFix.culprit.ipa ?? ""}/`;
-    const status: "incorrect" | "missing" = primaryFix.culprit.status === "missing" ? "missing" : "incorrect";
-    return { explanation, phonemeIpa, status };
-  })();
-
   const meta = getPhraseMetadata(activePhrase);
-
-  const correctCount = wordResults.filter((w) => w.status === "correct").length;
-  const totalCount = wordResults.length;
-  const score = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : hasMistakes ? 60 : 100;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -140,12 +118,7 @@ export default function PronunciationView() {
           {hasAnalysis && wordResults.length > 0 && !analyzing && (
             <div className="w-full">
               <LineResult
-                score={score}
                 wordResults={wordResults}
-                syllableMap={syllableMap}
-                fix={fix}
-                remediation={remediation}
-                targetText={activePhrase}
                 userAudioUrl={null}
                 onRetry={handleMicClick}
                 onContinue={advanceQueue}

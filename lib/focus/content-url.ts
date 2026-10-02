@@ -16,3 +16,8 @@ export function focusContentId(slug: string): string {
     return slug
   }
 }
+
+/** Ruta canónica para cualquier formato de contenido Focus. */
+export function focusContentHref(id: string): string {
+  return `/focus/c/${focusContentSlug(id)}`
+}

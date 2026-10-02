@@ -4,17 +4,16 @@
 // <SpokenProductionControls>
 //   <MicButton />
 //   <MicError />
-//   <ProductionHint />
 //   <ErrorAlert />
 //   <SkipLink />
 // </SpokenProductionControls>
 // <SpokenProductionFeedbackActions />
 
+import type { ReactNode } from 'react'
 import { Loader2, Mic, MicOff } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { PracticeActionBar, PracticeContinueButton } from '@/components/practice/session/PracticeActionBar'
 import { ProductionFeedback } from '@/components/exercises/ProductionFeedback'
-import { ProductionHint } from '@/components/exercises/ProductionHint'
 import { ScrollingWaveform } from '@/components/ai-coach/missions/scripted/ScrollingWaveform'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speak } from '@/lib/phoneme-practice/tts'
@@ -23,9 +22,6 @@ import { cn } from '@/lib/cn'
 import type { ProductionGradeResult } from '@/lib/exercises/production-grade'
 
 export function SpokenProductionControls({
-  exampleSentence,
-  hintAlwaysVisible,
-  exerciseId,
   online,
   isListening,
   isTranscribing,
@@ -41,11 +37,13 @@ export function SpokenProductionControls({
   onToggleMic,
   onRetry,
   onSkip,
+  idleHint,
+  children,
 }: {
-  exampleSentence?: string
-  /** False for exercises the example would spoil (e.g. rodeo_circumlocution). */
-  hintAlwaysVisible?: boolean
-  exerciseId: string
+  /** Subtítulo del micrófono en reposo (p. ej. narración de varias frases). */
+  idleHint?: string
+  /** Shown between the mic area and the skip link (e.g. the example hint). */
+  children?: ReactNode
   online: boolean
   isListening: boolean
   /** Audio capturado, transcripción en vuelo. El micro ya no escucha. */
@@ -85,42 +83,39 @@ export function SpokenProductionControls({
         </p>
       )}
 
-      <div className="flex flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border border-border-subtle bg-surface-raised/50 px-4 py-6 text-center sm:py-8">
-        <button
-          type="button"
-          onClick={hasError && !isListening ? onRetry : onToggleMic}
-          // Durante transcripción/corrección el audio ya está en vuelo: pulsar
-          // aquí reiniciaría la captura y descartaría el intento del estudiante.
-          disabled={isDone || isBusy || !online}
-          aria-label={
-            isListening
-              ? 'Detener grabación'
-              : isBusy
-                ? 'Procesando tu respuesta'
-                : 'Grabar mi voz'
-          }
-          className={cn(
-            'flex h-16 w-16 items-center justify-center rounded-full border-none transition-all duration-200 focus-ring disabled:cursor-not-allowed cursor-pointer',
-            // Grabar es el estado deseado, no una alarma: acento del dominio de
-            // pronunciación en vez del rojo de error. No existe utilidad
-            // `bg-pronunciacion`, así que el token va por valor arbitrario.
-            isListening && 'bg-[var(--c-pronunciacion)] text-on-primary',
-            isBusy && 'bg-[var(--c-pronunciacion)]/70 text-on-primary disabled:opacity-100',
-            !isListening && !isBusy && 'disabled:opacity-40',
-            !isListening && !isBusy && (hasError
-              ? 'border-2 border-warning-border bg-warning-soft text-warning hover:bg-warning-soft/80'
-              : 'bg-[var(--c-pronunciacion)] text-on-primary hover:opacity-90 active:scale-95'
-            ),
-          )}
-        >
-          {isBusy ? (
-            <Loader2 size={26} className="animate-spin" />
-          ) : isListening ? (
-            <MicOff size={26} />
-          ) : (
-            <Mic size={26} />
-          )}
-        </button>
+      <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border bg-surface px-4 py-8 text-center sm:py-10">
+        {/* Anillo neutro alrededor del botón azul, como en el diseño. */}
+        <span className="flex size-[9rem] items-center justify-center rounded-full bg-surface-sunken">
+          <button
+            type="button"
+            onClick={hasError && !isListening ? onRetry : onToggleMic}
+            // Durante transcripción/corrección el audio ya está en vuelo: pulsar
+            // aquí reiniciaría la captura y descartaría el intento del estudiante.
+            disabled={isDone || isBusy || !online}
+            aria-label={
+              isListening
+                ? 'Detener grabación'
+                : isBusy
+                  ? 'Procesando tu respuesta'
+                  : 'Grabar mi voz'
+            }
+            className={cn(
+              'flex size-[7.25rem] cursor-pointer items-center justify-center rounded-full border-none bg-primary text-on-primary transition-all duration-200 focus-ring disabled:cursor-not-allowed',
+              isListening && 'animate-pulse',
+              isBusy && 'opacity-70 disabled:opacity-70',
+              !isListening && !isBusy && 'hover:opacity-90 active:scale-95 disabled:opacity-40',
+              hasError && !isListening && !isBusy && 'ring-4 ring-warning-border',
+            )}
+          >
+            {isBusy ? (
+              <Loader2 size={40} className="animate-spin" />
+            ) : isListening ? (
+              <MicOff size={40} />
+            ) : (
+              <Mic size={40} />
+            )}
+          </button>
+        </span>
 
         {(isListening || isBusy) && (
           <ScrollingWaveform
@@ -153,7 +148,7 @@ export function SpokenProductionControls({
                 ? 'Convirtiendo tu audio en texto. No cierres esta pantalla.'
                 : grading
                   ? 'Comprobando pronunciación, gramática y tiempo verbal'
-                  : 'Di tu oración en inglés con claridad'}
+                  : (idleHint ?? 'Di tu oración en inglés con claridad')}
           </p>
         </div>
 
@@ -168,11 +163,7 @@ export function SpokenProductionControls({
         )}
       </div>
 
-      <ProductionHint
-        exampleSentence={exampleSentence}
-        exerciseId={exerciseId}
-        alwaysVisible={hintAlwaysVisible}
-      />
+      {children}
 
       {onSkip && (
         <button
@@ -180,9 +171,9 @@ export function SpokenProductionControls({
           onClick={onSkip}
           disabled={isBusy || isListening}
           aria-label="Omitir este ejercicio"
-          className="min-h-11 cursor-pointer self-center border-none bg-transparent px-4 text-body-sm font-medium text-fg-subtle transition-colors hover:text-fg-muted focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-11 cursor-pointer self-center rounded-md border-none bg-transparent px-1 text-body-md font-medium text-fg-muted underline underline-offset-4 transition-colors hover:text-fg focus-ring disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Omitir este
+          Omitir este ejercicio
         </button>
       )}
     </div>

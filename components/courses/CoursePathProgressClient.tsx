@@ -118,14 +118,14 @@ export default function CoursePathProgressClient({
             <div className="course-path__head-actions flex items-center gap-4 shrink-0 pt-0 sm:pt-1">
               <Link
                 href="/assessment"
-                className="course-path__text-link font-semibold text-primary hover:underline text-xs sm:text-sm"
+                className="course-path__text-link ts-caption text-primary hover:underline"
                 title="Evaluación diagnóstica inicial para ubicar tu nivel"
               >
                 Test de ubicación
               </Link>
               <Link
                 href={`/assessment?mode=checkpoint&level=${learnerLevelId}`}
-                className="course-path__text-link font-semibold text-primary hover:underline text-xs sm:text-sm"
+                className="course-path__text-link ts-caption text-primary hover:underline"
                 title="Evaluación de salida de tu nivel"
               >
                 {isNavigatingOwnLevel ? "Checkpoint" : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}

@@ -33,7 +33,7 @@ const OPTIONS: OptionDef[] = [
 export function DurationSelector({ value, onChange, disabled = false }: DurationSelectorProps) {
   return (
     <div className="flex flex-col gap-2.5">
-      <span className="text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+      <span className="ts-kicker text-fg-subtle">
         DURACIÓN DEL SPRINT
       </span>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Duración del sprint">
@@ -56,17 +56,17 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                     <div className="h-2 w-2 rounded-full bg-white" />
                   </div>
                   {opt.badge && (
-                    <span className="rounded-full bg-primary px-2.5 py-0.5 text-tiny font-extrabold uppercase tracking-wider text-white">
+                    <span className="rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white">
                       {opt.badge}
                     </span>
                   )}
                 </div>
 
                 <div>
-                  <h4 className="font-display text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+                  <h4 className="ts-card-title text-ink">
                     {opt.label}
                   </h4>
-                  <p className="mt-1 text-tiny font-medium text-ink-secondary">
+                  <p className="mt-1 ts-caption text-ink-secondary">
                     {opt.hint}
                   </p>
                 </div>
@@ -101,17 +101,17 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
               <div className="flex items-start justify-between gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/30 bg-white" />
                 {opt.badge && (
-                  <span className="rounded-full bg-primary px-2.5 py-0.5 text-tiny font-extrabold uppercase tracking-wider text-white">
+                  <span className="rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white">
                     {opt.badge}
                   </span>
                 )}
               </div>
 
               <div>
-                <h4 className="font-display text-2xl sm:text-3xl font-extrabold text-fg tracking-tight">
+                <h4 className="ts-card-title text-fg">
                   {opt.label}
                 </h4>
-                <p className="mt-1 text-tiny font-medium text-fg-muted">
+                <p className="mt-1 ts-caption text-fg-muted">
                   {opt.hint}
                 </p>
               </div>

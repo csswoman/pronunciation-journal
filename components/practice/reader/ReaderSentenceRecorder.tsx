@@ -156,6 +156,7 @@ export function ReaderSentenceRecorder({ sentenceText, onRecorded }: Omit<Props,
             xpEarned={calculateXP(scoring.accuracy)}
             transcript={scoring.transcript}
             userAudioUrl={userAudioUrl}
+            variant="compact"
           />
           <div className="flex justify-end pt-1">
             <Button variant="secondary" size="sm" onClick={handleRetry}>

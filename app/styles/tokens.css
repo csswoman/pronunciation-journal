@@ -164,11 +164,11 @@ html[data-theme="dark"], .dark {
 
   /* ── 4. Feedback (Light theme defaults) ─────────────────────────── */
   --feedback-correct:      oklch(0.50 0.15 150);
-  --feedback-correct-soft: var(--mint-soft);
+  --feedback-correct-soft: oklch(0.90 0.09 152);
   --feedback-wrong:        oklch(0.52 0.20 25);
-  --feedback-wrong-soft:   var(--coral-soft);
+  --feedback-wrong-soft:   oklch(0.89 0.08 25);
   --feedback-hint:         oklch(0.55 0.16 85);
-  --feedback-hint-soft:    var(--butter-soft);
+  --feedback-hint-soft:    oklch(0.92 0.10 90);
 
   --success:         var(--feedback-correct);
   --success-soft:    var(--feedback-correct-soft);
@@ -288,6 +288,7 @@ html[data-theme="dark"], .dark {
   --ts-headline-xl-size: 40px;       --ts-headline-xl-leading: 41px;       --ts-headline-xl-tracking: -0.025em;
   --ts-headline-size: 36px;          --ts-headline-leading: 37px;          --ts-headline-tracking: -0.025em;
   --ts-numeral-unit-size: 20px;      --ts-numeral-unit-leading: 24px;
+  --ts-card-title-size: 26px;        --ts-card-title-leading: 30px;        --ts-card-title-tracking: -0.02em;
   --ts-flashcard-word-size: 19px;    --ts-flashcard-word-leading: 22px;
 
   --ts-body-xl-size: 19px;           --ts-body-xl-leading: 27px;

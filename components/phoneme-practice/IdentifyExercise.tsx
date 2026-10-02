@@ -3,7 +3,9 @@
 // Planned structure:
 // <IdentifyExercise>
 //   <PhonemeExercisePrompt />
-//   <PhonemePlayButton />
+//   <PhonemeStimulusCard>
+//     <PhonemePlayButton />
+//   </PhonemeStimulusCard>
 //   <OptionsGrid />
 //   <PhonemeConfirmButton />
 // </IdentifyExercise>
@@ -13,6 +15,7 @@ import type { Exercise } from '@/lib/phoneme-practice/types'
 import { PhonemeConfirmButton } from '@/components/phoneme-practice/PhonemeConfirmButton'
 import { PhonemeExercisePrompt } from '@/components/phoneme-practice/PhonemeExercisePrompt'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import { PhonemeStimulusCard } from '@/components/phoneme-practice/PhonemeStimulusCard'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 import { cn } from '@/lib/cn'
 
@@ -45,24 +48,32 @@ export function IdentifyExercise({ exercise, onSubmit, voice }: Props) {
   return (
     <div className="flex w-full flex-col gap-6">
       <PhonemeExercisePrompt
-        centered
-        title="Escucha el audio y decide"
+        title="Escucha y decide"
         kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Identificación` : 'Identificación'}
-        hint={`¿La palabra pronunciada contiene el sonido ${ipaDisplay ?? exercise.ipa ?? ''}?`}
+        hint={
+          <>
+            ¿La palabra que suena tiene el sonido{' '}
+            <span className="font-ipa text-ink">{ipaDisplay ?? exercise.ipa ?? ''}</span>?
+          </>
+        }
       />
 
-      <div className="flex justify-center py-2">
-        <PhonemePlayButton
-          ariaLabel={
-            exercise.targetWord
-              ? `Escuchar ${exercise.targetWord}`
-              : 'Escuchar palabra'
-          }
-          word={exercise.targetWord}
-          voice={voice}
-          size="lg"
-        />
-      </div>
+      <PhonemeStimulusCard
+        button={
+          <PhonemePlayButton
+            ariaLabel={
+              exercise.targetWord
+                ? `Escuchar ${exercise.targetWord}`
+                : 'Escuchar palabra'
+            }
+            word={exercise.targetWord}
+            voice={voice}
+            size="lg"
+            className="size-18 border-transparent bg-ink text-white shadow-none hover:border-transparent hover:bg-ink hover:text-white"
+          />
+        }
+        caption="Toca para escuchar"
+      />
 
       <div
         role="radiogroup"
@@ -74,34 +85,33 @@ export function IdentifyExercise({ exercise, onSubmit, voice }: Props) {
           const isSelected = selected === opt.id
 
           return (
-            <div
+            <button
               key={opt.id}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              disabled={submitted}
               onClick={() => handleSelect(opt.id)}
               className={cn(
-                'group flex min-h-14 cursor-pointer items-center justify-center gap-3 rounded-xl border-2 p-4 transition-all duration-150 select-none',
-                !submitted && !isSelected && 'border-border-default bg-surface-sunken/40 hover:border-primary/50 hover:bg-surface-sunken text-fg',
-                !submitted && isSelected && 'border-primary bg-primary-soft text-primary shadow-xs font-semibold ring-1 ring-primary/30',
+                'group flex min-h-28 cursor-pointer items-center justify-center gap-3 rounded-3xl border-2 p-4 transition-all duration-150 select-none focus-ring',
+                !submitted && !isSelected && 'border-transparent bg-surface-sunken text-fg hover:border-border-strong dark:bg-white/10',
+                !submitted && isSelected && 'border-primary bg-primary-soft text-primary font-semibold dark:bg-primary/25',
                 submitted && isCorrect && 'border-success-border bg-success-soft text-success pf-reveal-ok font-semibold',
                 submitted && isSelected && !isCorrect && 'border-error-border bg-error-soft text-error pf-reveal-bad font-semibold',
-                submitted && !isSelected && !isCorrect && 'border-border-subtle bg-surface-raised/40 text-fg-subtle opacity-40 cursor-default',
+                submitted && !isSelected && !isCorrect && 'cursor-default border-transparent bg-surface-sunken text-fg-subtle opacity-40 dark:bg-white/10',
               )}
             >
-              <div
+              <span
                 className={cn(
-                  'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
-                  !isSelected && 'border-border-strong bg-surface-base',
-                  isSelected && !submitted && 'border-primary bg-primary text-on-primary',
-                  submitted && isCorrect && 'border-success bg-success text-on-primary',
-                  submitted && isSelected && !isCorrect && 'border-error bg-error text-on-primary',
+                  'flex size-8 shrink-0 items-center justify-center rounded-full border text-tiny font-semibold',
+                  isSelected ? 'border-current' : 'border-border-strong text-fg-subtle dark:border-white/50 dark:text-fg',
                 )}
                 aria-hidden
               >
-                {isSelected && (
-                  <div className="size-2 rounded-full bg-current" />
-                )}
-              </div>
-              <span className="text-body-lg font-semibold">{opt.label}</span>
-            </div>
+                {opt.label.charAt(0).toUpperCase()}
+              </span>
+              <span className="text-h3 font-bold">{opt.label}</span>
+            </button>
           )
         })}
       </div>

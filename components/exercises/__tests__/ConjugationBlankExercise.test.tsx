@@ -39,7 +39,8 @@ describe('ConjugationBlankExercise', () => {
   it('renders sentence prompt and infinitive lemma', () => {
     render(<ConjugationBlankExercise exercise={sampleExercise} onResult={onResultMock} />)
 
-    expect(screen.getByText('She ___ to work every day.')).toBeInTheDocument()
+    expect(screen.getByText('She')).toBeInTheDocument()
+    expect(screen.getByText('to work every day.')).toBeInTheDocument()
     expect(screen.getByText('go')).toBeInTheDocument()
     expect(screen.getByLabelText('Forma verbal')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Comprobar' })).toBeInTheDocument()

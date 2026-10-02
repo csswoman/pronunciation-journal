@@ -4,6 +4,7 @@ import { publicErrorResponse } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
 import { callWithFallback, getErrorStatus, stripJsonFences, type CallWithFallbackOptions, type GeminiCallParams } from "@/lib/gemini/client";
 import { publicAiErrorMessage } from "@/lib/degradation/messages";
+import { createAiTiming } from './timing';
 
 type GeminiJsonRouteOptions<T> = {
   endpoint: string;
@@ -66,12 +67,16 @@ export async function callGeminiJson<T>({
 }
 
 export async function respondWithGeminiJson<T>(options: GeminiJsonRouteOptions<T>): Promise<NextResponse> {
-  const { data, response } = await callGeminiJson(options);
+  const timing = createAiTiming(options.endpoint);
+  const { data, response } = await timing.measure('provider', () => callGeminiJson(options));
+  const headers = new Headers(options.headers);
+  new Headers(timing.headers(response ? 'error' : 'provider')).forEach((value, key) => headers.set(key, value));
   if (response) {
+    new Headers(headers).forEach((value, key) => response.headers.set(key, value));
     if (options.headers && response.status === 503) {
-      return NextResponse.json({ error: "AI service unavailable" }, { status: 503, headers: options.headers });
+      return NextResponse.json({ error: "AI service unavailable" }, { status: 503, headers });
     }
     return response;
   }
-  return NextResponse.json(data, { headers: options.headers });
+  return NextResponse.json(data, { headers });
 }

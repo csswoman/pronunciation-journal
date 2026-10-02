@@ -20,7 +20,7 @@ function exercise(overrides: Partial<SpokenProductionExercise> = {}): SpokenProd
 }
 
 describe('ProductionTaskHeader', () => {
-  it('hides the target word for the rodeo (circumlocution) constraint', () => {
+  it('shows the secret word without audio for the rodeo (circumlocution) constraint', () => {
     render(
       <ProductionTaskHeader
         exercise={exercise({
@@ -36,9 +36,10 @@ describe('ProductionTaskHeader', () => {
       />,
     )
 
-    expect(screen.queryByText('umbrella')).not.toBeInTheDocument()
-    expect(screen.getByText('Palabra secreta — no la digas')).toBeInTheDocument()
-    // No "listen to the target word" affordance either — that would give it away too.
+    // The learner sees the word so they can describe it, but the prompt paragraph is hidden.
+    expect(screen.getAllByText('umbrella')).toHaveLength(1)
+    expect(screen.getByText('Palabra secreta · no la digas')).toBeInTheDocument()
+    // No "listen to the target word" affordance — hearing it doesn't help the circumlocution.
     expect(screen.queryByRole('button', { name: /Escuchar umbrella/i })).not.toBeInTheDocument()
   })
 
@@ -58,7 +59,8 @@ describe('ProductionTaskHeader', () => {
       />,
     )
 
-    expect(screen.getByText('umbrella')).toBeInTheDocument()
+    // The word shows in the target card and bolded inside the prompt.
+    expect(screen.getAllByText('umbrella').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: /Escuchar umbrella/i })).toBeInTheDocument()
   })
 })

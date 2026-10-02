@@ -1,20 +1,25 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { previewWord, quickAddWord } from '@/lib/word-bank/queries'
-import { speakWord } from '@/lib/word-bank/speech'
-import { X } from '@/components/icons'
-import { cn } from '@/lib/cn'
-import type { WordPreview } from '@/lib/word-bank/types'
-
 // Planned structure:
 // <WordSavePopover>
-//   trigger button
-//   dialog popover
-//     header (word + close button)
-//     content (preview enrichment / chrome instant translation fallback)
-//     actions (save button + listen button)
+//   <WordTriggerButton /> (highlighted key words: lilac fill + underline; other words stay plain)
+//   <PopoverDialog> (dark card)
+//     <HeaderRow> word title + audio button </HeaderRow>
+//     <PhoneticsAndPos /> (/ipa/)
+//     <SpanishTranslation /> + <DefinitionText /> (from the dictionary, never fixed copy)
+//     <LookupStateText /> (loading / not found)
+//     <ActionButtonsRow> Guardar en mi banco · Ver en el diccionario </ActionButtonsRow>
+//     <AlreadySavedText /> · <OfflineNoticeText />
+//   </PopoverDialog>
 // </WordSavePopover>
+
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { previewWord, quickAddWord } from '@/lib/word-bank/queries'
+import { speakWord } from '@/lib/word-bank/speech'
+import { Volume2 } from '@/components/icons'
+import { cn } from '@/lib/cn'
+import type { WordPreview } from '@/lib/word-bank/types'
 
 interface WordSavePopoverProps {
   word: string
@@ -22,43 +27,23 @@ interface WordSavePopoverProps {
   context: string
   online: boolean
   open: boolean
+  highlighted?: boolean
   onOpenChange: (open: boolean) => void
 }
 
-let cachedTranslator: { translate: (text: string) => Promise<string> } | null = null
-
-async function translateWithChrome(text: string): Promise<string | null> {
-  if (typeof window === 'undefined') return null
-  const aiTranslation = (window as unknown as {
-    translation?: {
-      canTranslate?: (opts: { sourceLanguage: string; targetLanguage: string }) => Promise<string>
-      createTranslator?: (opts: { sourceLanguage: string; targetLanguage: string }) => Promise<{
-        translate: (t: string) => Promise<string>
-      }>
-    }
-  }).translation
-
-  if (!aiTranslation?.canTranslate || !aiTranslation?.createTranslator) return null
-
-  try {
-    const status = await aiTranslation.canTranslate({ sourceLanguage: 'en', targetLanguage: 'es' })
-    if (status === 'no') return null
-    if (!cachedTranslator) {
-      cachedTranslator = await aiTranslation.createTranslator({ sourceLanguage: 'en', targetLanguage: 'es' })
-    }
-    return await cachedTranslator.translate(text)
-  } catch {
-    return null
-  }
-}
-
-export function WordSavePopover({ word, lookup, context, online, open, onOpenChange }: WordSavePopoverProps) {
+export function WordSavePopover({
+  word,
+  lookup,
+  context,
+  online,
+  open,
+  highlighted = false,
+  onOpenChange,
+}: WordSavePopoverProps) {
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [preview, setPreview] = useState<WordPreview | null>(null)
-  const [chromeTranslation, setChromeTranslation] = useState<string | null>(null)
-  const [previewStatus, setPreviewStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [lookupFailed, setLookupFailed] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
-
   const popoverRef = useRef<HTMLSpanElement>(null)
 
   function close() {
@@ -69,19 +54,19 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
   useEffect(() => {
     if (!open || preview) return
     let active = true
-    setPreviewStatus('loading')
-
-    // Intento optimista con Chrome Translator API si está disponible en el navegador
-    void translateWithChrome(lookup).then((tr) => {
-      if (active && tr) setChromeTranslation(tr)
-    })
+    setLookupFailed(false)
 
     void previewWord(lookup)
-      .then((result) => { if (active) setPreview(result) })
-      .catch(() => { if (active) setPreviewStatus('error') })
-      .finally(() => { if (active) setPreviewStatus((value) => value === 'error' ? value : 'idle') })
-    return () => { active = false }
-  }, [context, lookup, open, preview])
+      .then((result) => {
+        if (active) setPreview(result)
+      })
+      .catch(() => {
+        if (active) setLookupFailed(true)
+      })
+    return () => {
+      active = false
+    }
+  }, [lookup, open, preview])
 
   useEffect(() => {
     if (!open) return
@@ -107,16 +92,24 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
   }, [open, onOpenChange])
 
   async function save() {
-    if (!online || status === 'saving' || preview?.alreadySaved) return
+    if (!online || !preview || status === 'saving' || preview.alreadySaved) return
     setStatus('saving')
     try {
-      if (!preview) return
-      await quickAddWord({ text: lookup, context, source: 'reader', enrichment: preview.enrichment })
+      await quickAddWord({
+        text: lookup,
+        context,
+        source: 'reader',
+        enrichment: preview.enrichment,
+      })
       setStatus('saved')
     } catch {
       setStatus('error')
     }
   }
+
+  const enrichment = preview?.enrichment
+  const isSaved = status === 'saved' || preview?.alreadySaved
+  const lookupLabel = lookupFailed ? 'No encontramos este significado todavía.' : 'Buscando significado…'
 
   return (
     <span className="relative inline">
@@ -124,8 +117,12 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
         ref={triggerRef}
         type="button"
         className={cn(
-          'rounded px-0.5 text-inherit focus-ring cursor-pointer transition-colors',
-          open ? 'bg-primary-soft text-primary font-medium ring-1 ring-primary/40' : 'hover:bg-primary-soft',
+          'cursor-pointer rounded-md px-1 transition-colors',
+          highlighted
+            ? 'bg-lilac-soft font-semibold text-fg underline decoration-lilac-deep decoration-2 underline-offset-4 hover:bg-lilac/60'
+            : 'hover:bg-surface-sunken',
+          open && 'ring-2 ring-lilac-deep/60',
+          open && !highlighted && 'bg-surface-sunken',
         )}
         aria-label={`Opciones para ${word}`}
         aria-expanded={open}
@@ -133,67 +130,76 @@ export function WordSavePopover({ word, lookup, context, online, open, onOpenCha
       >
         {word}
       </button>
-      {open ? (
+
+      {open && (
         <span
           ref={popoverRef}
           role="dialog"
           aria-label={`Guardar ${word}`}
-          className="fixed inset-x-3 bottom-20 z-40 flex max-h-[calc(100dvh-6rem)] flex-col gap-3.5 overflow-y-auto rounded-2xl border border-border-default bg-surface-raised/95 backdrop-blur-xl p-4 text-body-sm text-fg shadow-xl ring-1 ring-black/5 dark:ring-white/10 sm:absolute sm:left-0 sm:top-full sm:bottom-auto sm:mt-2 sm:w-80 sm:max-h-none sm:rounded-card sm:shadow-lg"
+          className="fixed inset-x-4 bottom-20 z-40 flex flex-col gap-2.5 rounded-3xl border border-paper/10 bg-ink p-5 text-base font-normal text-paper shadow-2xl sm:absolute sm:inset-x-auto sm:left-1/2 sm:bottom-auto sm:top-full sm:mt-2 sm:w-80 sm:-translate-x-1/2"
         >
-          {/* Mobile Sheet Grabber indicator (visible on small screens) */}
-          <span aria-hidden="true" className="mx-auto -mt-1 h-1 w-9 rounded-full bg-border-default sm:hidden" />
-
-          <span className="flex items-start justify-between gap-3 border-b border-border-default/50 pb-2">
-            <div className="flex flex-col">
-              <strong className="text-base font-semibold text-fg tracking-tight">{word}</strong>
-              {context && <span className="text-tiny text-fg-muted/80 truncate max-w-[200px]">{context}</span>}
-            </div>
+          <span className="flex items-center justify-between gap-3">
+            <span className="font-display text-xl font-bold tracking-tight text-paper">{word}</span>
             <button
               type="button"
-              className="-mr-1.5 -mt-1.5 flex size-11 items-center justify-center rounded-full text-fg-muted hover:bg-surface-sunken hover:text-fg focus-ring transition-colors cursor-pointer"
-              onClick={close}
-              aria-label="Cerrar"
-            >
-              <X className="size-4" />
-            </button>
-          </span>
-          {previewStatus === 'loading' && chromeTranslation ? (
-            <span className="flex flex-col gap-0.5">
-              <span className="text-base font-semibold text-fg">{chromeTranslation}</span>
-              <span className="text-tiny text-fg-muted">Traducción instantánea (Chrome AI) · cargando ficha…</span>
-            </span>
-          ) : previewStatus === 'loading' ? (
-            <span role="status" className="text-fg-muted animate-pulse py-1">Buscando significado…</span>
-          ) : null}
-          {previewStatus === 'error' ? <span role="alert" className="text-error">No se pudo cargar el significado. Inténtalo de nuevo.</span> : null}
-          {preview ? (
-            <span className="flex flex-col gap-1">
-              <span className="text-base font-semibold leading-snug text-fg">{preview.enrichment.translation}</span>
-              <span className="text-body-sm leading-relaxed text-fg-muted">{preview.enrichment.meaning}</span>
-              {preview.alreadySaved ? <span className="pt-1 text-caption font-medium text-fg-subtle">En Mis palabras</span> : null}
-            </span>
-          ) : null}
-          <span className="flex flex-wrap items-center gap-2 pt-1">
-            <button
-              type="button"
-              className="min-h-11 min-w-[100px] inline-flex items-center justify-center rounded-full bg-cta-bg px-4 py-2 font-semibold text-caption text-cta-fg shadow-xs hover:bg-cta-bg-hover active:scale-95 transition-all disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-              disabled={!online || !preview || preview.alreadySaved || status === 'saving' || status === 'saved'}
-              onClick={() => void save()}
-            >
-              {status === 'saving' ? 'Guardando…' : status === 'saved' || preview?.alreadySaved ? 'Ya guardada' : 'Guardar'}
-            </button>
-            <button
-              type="button"
-              className="min-h-11 inline-flex items-center gap-1.5 rounded-full border border-border-default bg-surface-base px-3.5 py-2 font-medium text-caption text-fg hover:bg-surface-sunken active:scale-95 transition-all cursor-pointer"
               onClick={() => speakWord(word)}
+              aria-label={`Escuchar ${word}`}
+              className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-lilac text-ink transition-transform hover:bg-lilac-deep active:scale-90"
             >
-              Escuchar
+              <Volume2 className="size-4" />
             </button>
           </span>
-          {!online ? <span role="status" className="text-tiny text-fg-muted">Guardar requiere conexión. Puedes seguir escuchando.</span> : null}
-          {status === 'error' ? <span role="alert" className="text-tiny text-error">No se pudo guardar. Inténtalo de nuevo.</span> : null}
+
+          {enrichment ? (
+            <>
+              {enrichment.ipa && (
+                <span className="font-mono text-xs text-paper/70">{enrichment.ipa}</span>
+              )}
+              {enrichment.translation && (
+                <span className="text-sm font-bold text-paper">{enrichment.translation}</span>
+              )}
+              {enrichment.meaning && (
+                <span className="text-xs leading-relaxed text-paper/80">{enrichment.meaning}</span>
+              )}
+            </>
+          ) : (
+            <span role="status" className="text-xs text-paper/70">{lookupLabel}</span>
+          )}
+
+          {preview?.alreadySaved && (
+            <span className="text-xs font-semibold text-lilac">En Mis palabras</span>
+          )}
+
+          <span className="mt-1 flex items-center gap-2">
+            <button
+              type="button"
+              disabled={!online || !preview || status === 'saving' || !!isSaved}
+              onClick={() => void save()}
+              className="flex-1 cursor-pointer rounded-full bg-paper px-3 py-2 text-center text-xs font-bold text-ink transition-all hover:bg-paper/90 active:scale-95 disabled:cursor-default disabled:opacity-60"
+            >
+              {status === 'saving' ? 'Guardando…' : isSaved ? 'Ya guardada' : 'Guardar en mi banco'}
+            </button>
+            <Link
+              href="/words"
+              className="flex-1 rounded-full bg-paper/10 px-3 py-2 text-center text-xs font-semibold text-paper transition-colors hover:bg-paper/20"
+            >
+              Ver en el diccionario
+            </Link>
+          </span>
+
+          {!online && (
+            <span role="status" className="text-xs text-paper/60">
+              Guardar requiere conexión. Puedes seguir escuchando.
+            </span>
+          )}
+
+          {status === 'error' && (
+            <span role="alert" className="text-xs font-medium text-error">
+              No se pudo guardar. Inténtalo de nuevo.
+            </span>
+          )}
         </span>
-      ) : null}
+      )}
     </span>
   )
 }

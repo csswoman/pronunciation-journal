@@ -131,8 +131,8 @@ export default function CoursePathAsideProgress({
               <MicVocal size={20} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-ink leading-snug font-display">Pronunciación</h3>
-              <p className="text-body-sm text-ink-secondary font-sans">
+              <h3 className="ts-body-lg-strong text-ink leading-snug">Pronunciación</h3>
+              <p className="ts-caption text-ink-secondary">
                 {favoritesCount === null
                   ? "Sin datos de palabras guardadas."
                   : `${favoritesCount} ${favoritesCount === 1 ? "palabra guardada" : "palabras guardadas"} para practicar`}
@@ -145,7 +145,7 @@ export default function CoursePathAsideProgress({
 
       {/* 2. Tu progreso en A1 */}
       <PastelCard tone="lilac" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-5 shadow-xs">
-        <h3 className="text-lg font-bold text-ink font-display">Tu progreso en {level.spineLabel}</h3>
+        <h3 className="ts-body-lg-strong text-ink">Tu progreso en {level.spineLabel}</h3>
         <div className="flex items-center gap-6">
           {/* Circular Progress Ring */}
           <div className="relative w-28 h-28 shrink-0 flex items-center justify-center">
@@ -174,19 +174,19 @@ export default function CoursePathAsideProgress({
             </svg>
             {/* Top start dot indicator */}
             <div className="absolute top-1 left-1/2 -translate-x-1/2 size-3.5 rounded-full bg-ink border-2 border-paper" aria-hidden="true" />
-            <span className="absolute text-xl font-bold text-ink font-display">{percent}%</span>
+            <span className="absolute ts-numeral-unit text-ink">{percent}%</span>
           </div>
 
           <div className="flex flex-col justify-center">
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-extrabold text-ink font-display tracking-tight">
+              <span className="ts-display-numeral text-ink">
                 {completedCount}
               </span>
-              <span className="text-lg sm:text-xl font-bold text-ink font-display">
+              <span className="ts-numeral-unit text-ink">
                 de {totalCount}
               </span>
             </div>
-            <span className="text-body-sm text-ink-secondary font-sans mt-1">lecciones completadas</span>
+            <span className="ts-caption text-ink-secondary mt-1">lecciones completadas</span>
           </div>
         </div>
       </PastelCard>
@@ -194,12 +194,12 @@ export default function CoursePathAsideProgress({
       {showCheckpoint && (
         <PastelCard tone="butter" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-4 shadow-xs">
           <div>
-            <span className="inline-block rounded-full bg-ink/12 px-3 py-1 font-mono text-tiny font-bold uppercase tracking-wider text-ink">
+            <span className="inline-block rounded-full bg-ink/12 px-3 py-1 ts-kicker text-ink">
               Siguiente hito
             </span>
           </div>
 
-          <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink leading-tight font-display text-balance">
+          <h4 className="ts-headline text-ink leading-tight text-balance">
             {isNavigatingOwnLevel
               ? `Checkpoint · ${level.title}`
               : `Checkpoint de tu nivel (${learnerLevelId.toUpperCase()})`}
@@ -220,7 +220,7 @@ export default function CoursePathAsideProgress({
             />
           </div>
 
-          <p className="text-body-sm text-ink-secondary font-sans">
+          <p className="ts-caption text-ink-secondary">
             {remainingLessons === 0
               ? "¡Nivel completado! Listo para evaluación."
               : `Te faltan ${remainingLessons} lecciones para el checkpoint.`}
@@ -241,8 +241,8 @@ export default function CoursePathAsideProgress({
       {/* 4. Esta semana */}
       <PastelCard tone="mint" className="p-6 sm:p-7 rounded-[2rem] flex flex-col gap-4 font-sans shadow-xs">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-ink font-display">Esta semana</h3>
-          <span className="text-lg font-bold text-ink font-display">
+          <h3 className="ts-body-lg-strong text-ink">Esta semana</h3>
+          <span className="ts-body-lg-strong text-ink">
             {activeDaysMap === null ? "Sin datos" : `${activeDaysCount} ${activeDaysCount === 1 ? "día" : "días"}`}
           </span>
         </div>

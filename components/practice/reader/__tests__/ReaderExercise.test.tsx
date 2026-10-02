@@ -63,7 +63,29 @@ describe('ReaderExercise', () => {
     const cat = screen.getByRole('button', { name: 'Opciones para cat' })
     expect(cat).not.toHaveClass('underline')
     fireEvent.click(cat)
-    expect(cat).toHaveClass('bg-primary-soft')
+    expect(cat).toHaveClass('ring-2')
+  })
+
+  it('underlines only target words and renders multi-word targets as one chip', () => {
+    const p = { ...passage, passage: 'She adds a dependency array to the cat.', targetItems: ['dependency array'] }
+    render(<ReaderExercise passage={p} online onComplete={vi.fn()} />)
+    const chip = screen.getByRole('button', { name: 'Opciones para dependency array' })
+    expect(chip).toHaveClass('bg-lilac-soft', 'underline')
+    expect(screen.getByRole('button', { name: 'Opciones para cat' })).not.toHaveClass('bg-lilac-soft')
+  })
+
+  it('paints the sentence being read in sky', () => {
+    const { container } = render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    expect(container.querySelector('.bg-sky')).toBeNull()
+  })
+
+  it('never shows placeholder meaning while the lookup is pending', async () => {
+    const { previewWord } = await import('@/lib/word-bank/queries')
+    vi.mocked(previewWord).mockRejectedValueOnce(new Error('offline'))
+    render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
+    expect(screen.queryByText('asíncrono')).not.toBeInTheDocument()
+    expect(await screen.findByText(/no encontramos este significado/i)).toBeInTheDocument()
   })
 
   it('calls onComplete with correctness when an option is chosen', async () => {
@@ -98,7 +120,7 @@ describe('ReaderExercise', () => {
     render(<ReaderExercise passage={passage} online onComplete={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: 'Opciones para cat' }))
     await waitFor(() => expect(screen.getByText('a group of things held together')).toBeInTheDocument())
-    fireEvent.click(screen.getByRole('button', { name: 'Guardar' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar en mi banco' }))
     await waitFor(() => expect(quickAddWord).toHaveBeenCalledWith({
       text: 'cat', context: 'The cat went home.', source: 'reader', enrichment: expect.objectContaining({ translation: 'conjunto' }),
     }))

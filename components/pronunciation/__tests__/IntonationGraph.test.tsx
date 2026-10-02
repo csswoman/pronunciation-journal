@@ -10,7 +10,7 @@ describe("IntonationGraph", () => {
     render(<IntonationGraph targetCurve={pattern.targetCurve} />);
 
     expect(screen.getByText("Curva objetivo")).toBeInTheDocument();
-    expect(screen.getByText("Tu tono de voz")).toBeInTheDocument();
+    expect(screen.getByText("Tu voz")).toBeInTheDocument();
     expect(screen.getByText("Are")).toBeInTheDocument();
     expect(screen.getByText("dy? ↗")).toBeInTheDocument();
   });

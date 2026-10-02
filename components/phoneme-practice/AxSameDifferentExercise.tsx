@@ -8,7 +8,7 @@
 // </AxSameDifferentExercise>
 
 import { useEffect, useState } from 'react'
-import { Volume2, Play } from '@/components/icons'
+import { Check, Volume2, Play } from '@/components/icons'
 import { speak, speakSequence } from '@/lib/phoneme-practice/tts'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { AuditoryDiscriminationBase } from '@/components/phoneme-practice/AuditoryDiscriminationBase'
@@ -27,6 +27,7 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
   const [selected, setSelected] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [playingIndex, setPlayingIndex] = useState<number | null>(null)
+  const [heard, setHeard] = useState<ReadonlySet<number>>(new Set())
   const stimuli = exercise.stimuli ?? []
   const canConfirm = Boolean(selected) && !submitted
 
@@ -42,6 +43,7 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
     const word = stimuli[index]?.word
     if (!word) return
     setPlayingIndex(index)
+    markHeard(index)
     const utt = speak(word, {
       voice,
       onStart: () => setPlayingIndex(index),
@@ -53,8 +55,13 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
     }
   }
 
+  function markHeard(index: number) {
+    setHeard((prev) => new Set(prev).add(index))
+  }
+
   function handlePlayBoth() {
     setPlayingIndex(null)
+    stimuli.forEach((_, i) => markHeard(i))
     speakSequence(
       stimuli.map((s) => s.word),
       {
@@ -88,62 +95,29 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
         {STIMULUS_LABELS.map((label, i) => {
           const isPlaying = playingIndex === i
           return (
-            <button
+            <div
               key={label}
-              type="button"
-              onClick={() => handlePlay(i)}
-              aria-label={`Escuchar estímulo ${label}`}
-              aria-pressed={isPlaying}
-              className={cn(
-                'relative flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border p-4 transition-all duration-150 focus-ring select-none',
-                isPlaying
-                  ? 'border-primary bg-primary-soft/60 shadow-xs ring-2 ring-primary/30'
-                  : 'border-border-default bg-surface-sunken/50 hover:bg-surface-sunken hover:border-primary/50',
-              )}
+              className="flex flex-col items-center gap-2.5 rounded-3xl bg-lilac px-4 py-6 text-ink"
             >
-              <span
-                className={cn(
-                  'font-mono text-tiny font-bold uppercase tracking-wider transition-colors duration-150',
-                  isPlaying ? 'text-primary' : 'text-fg-subtle',
-                )}
+              <span className="text-display font-extrabold leading-none text-ink!">{label}</span>
+              <button
+                type="button"
+                onClick={() => handlePlay(i)}
+                aria-label={`Escuchar estímulo ${label}`}
+                aria-pressed={isPlaying}
+                className="flex size-14 cursor-pointer items-center justify-center rounded-full bg-ink text-white transition-transform duration-150 select-none focus-ring active:scale-95"
               >
-                Sonido {label}
+                <Volume2 size={24} className={cn(isPlaying && 'animate-pulse')} aria-hidden />
+              </button>
+              <span className="flex h-5 items-center gap-1.5 text-body-sm font-medium text-ink!">
+                {heard.has(i) && (
+                  <>
+                    <Check size={16} aria-hidden />
+                    Escuchado
+                  </>
+                )}
               </span>
-              <div
-                className={cn(
-                  'flex size-11 items-center justify-center rounded-full border transition-all duration-150',
-                  isPlaying
-                    ? 'border-primary bg-primary text-on-primary scale-105 shadow-xs'
-                    : 'border-border-default bg-surface-raised text-fg',
-                )}
-              >
-                <Volume2
-                  size={20}
-                  className={cn(
-                    'transition-transform duration-150',
-                    isPlaying && 'scale-110 animate-pulse',
-                  )}
-                  aria-hidden
-                />
-              </div>
-              <span
-                className={cn(
-                  'text-caption font-medium transition-colors duration-150',
-                  isPlaying ? 'text-primary font-semibold' : 'text-fg-muted',
-                )}
-              >
-                {isPlaying ? 'Reproduciendo...' : 'Reproducir'}
-              </span>
-              <div
-                className={cn(
-                  'h-1 w-8 rounded-full transition-all duration-150',
-                  isPlaying
-                    ? 'bg-primary scale-100 opacity-100'
-                    : 'bg-transparent scale-50 opacity-0',
-                )}
-                aria-hidden
-              />
-            </button>
+            </div>
           )
         })}
       </div>
@@ -153,10 +127,10 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
           type="button"
           onClick={handlePlayBoth}
           aria-label="Escuchar A y luego X en secuencia"
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border-default bg-surface-raised px-4 py-2 text-body-sm font-medium text-fg transition-all duration-150 hover:border-primary hover:text-primary active:scale-95 focus-ring shadow-xs"
+          className="inline-flex h-14 cursor-pointer items-center gap-2 rounded-full border-2 border-border-strong bg-surface-base px-6 text-body-md font-semibold text-fg transition-colors duration-150 hover:border-primary active:scale-95 focus-ring"
         >
-          <Play size={13} fill="currentColor" aria-hidden />
-          <span>Escuchar en secuencia (A → X)</span>
+          <Play size={14} fill="currentColor" aria-hidden />
+          <span>Escuchar en secuencia · A → X</span>
         </button>
       </div>
     </div>
@@ -166,13 +140,14 @@ export function AxSameDifferentExercise({ exercise, onSubmit, voice }: Props) {
     <AuditoryDiscriminationBase
       title="¿Suenan igual o distinto?"
       kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Discriminación AX` : 'Discriminación AX'}
-      hint="Escucha los estímulos A y X, luego determina si son iguales"
+      hint="Escucha A y luego X, y decide si son el mismo sonido."
       stimulusSlot={stimulusSlot}
       options={exercise.options}
       selectedIds={selected ? [selected] : []}
       correctIds={exercise.correctIds}
       submitted={submitted}
       mode="single"
+      optionStyle="choice"
       canConfirm={canConfirm}
       onToggleOption={handleSelect}
       onConfirm={handleConfirm}

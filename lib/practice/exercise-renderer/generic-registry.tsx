@@ -178,12 +178,12 @@ export const GENERIC_REGISTRY: GenericRegistry = {
   cs_shadow_phrase: {
     title: 'Imita la frase',
     noHint: true,
-    render: (exercise: CsShadowPhraseExerciseType, { onResult }) => (
-      <CsShadowPhraseExercise exercise={exercise} onResult={onResult} />
+    render: (exercise: CsShadowPhraseExerciseType, { onResult, onSkip }) => (
+      <CsShadowPhraseExercise exercise={exercise} onResult={onResult} onSkip={onSkip} />
     ),
   },
   personalization: {
-    title: 'Habla de ti',
+    title: '', // el componente dibuja su propio pill + título
     noHint: true,
     render: (exercise: PersonalizationExerciseType, { onResult }) => (
       <PersonalizationExercise exercise={exercise} onResult={onResult} />

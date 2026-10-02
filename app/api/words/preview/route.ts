@@ -3,6 +3,7 @@ import { z } from "zod";
 import { lookupWordWithGemini } from "@/lib/word-bank/gemini";
 import { getCachedWordDefinition, getOrCreateWordDefinition } from "@/lib/word-bank/definition-cache";
 import { findEssentialWord } from "@/lib/essential-words/data";
+import { findLexiconWord } from "@/lib/lexicon/categories";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { checkLayeredRateLimit, createUserScopedClient, publicErrorResponse, requireSameOrigin, requireUser, validateBody } from "@/lib/api/guards";
 import { logServerError } from "@/lib/api/logging";
@@ -65,7 +66,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       });
     }
 
-    // 2. Caché compartida de base de datos
+    // 2. Diccionario temático local de /words — evita la ruta Gemini para
+    // términos destacados que ya están explicados en la aplicación.
+    const localLexicon = findLexiconWord(data.text);
+    if (localLexicon) {
+      return NextResponse.json({
+        enrichment: {
+          meaning: localLexicon.definition,
+          translation: localLexicon.translation ?? "",
+          ipa: localLexicon.ipa ?? "",
+          example: localLexicon.exampleSentence ?? localLexicon.example ?? "",
+          synonyms: [],
+          image_prompt: "",
+        },
+        source: "dictionary",
+        alreadySaved: !!savedWord,
+      });
+    }
+
+    // 3. Caché compartida de base de datos
     const cached = await getCachedWordDefinition(data.text);
     if (cached) {
       return NextResponse.json({ enrichment: cached, source: "dictionary", alreadySaved: !!savedWord });

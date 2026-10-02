@@ -52,9 +52,14 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <p className="text-body-lg font-medium text-fg leading-snug">
-        {exercise.question}
-      </p>
+      <div className="flex flex-col gap-2 rounded-3xl bg-sky px-8 py-6 text-ink">
+        <span className="text-tiny font-semibold uppercase tracking-widest text-ink/70">
+          Pregunta
+        </span>
+        <p className="m-0 font-display text-h3 font-bold leading-snug text-ink! sm:text-h2">
+          {exercise.question}
+        </p>
+      </div>
 
       {exercise.audioText ? (
         <ListenButton
@@ -70,11 +75,11 @@ export function MultipleChoiceExercise({ exercise, onResult, hintCount = 0 }: Pr
         correctId={exercise.answerIndex}
         state={state}
         onSelect={handleSelect}
-        indicatorType="radio"
+        indicatorType="number"
       />
 
       {(state === 'wrong' || (state === 'idle' && hintCount > 0)) && exercise.explanation && (
-        <p className="text-body-sm px-4 py-3 rounded-xl bg-primary-soft text-fg-muted">
+        <p className="text-body-sm px-4 py-3 rounded-2xl bg-surface-sunken border border-border-subtle text-fg-muted">
           {exercise.explanation}
         </p>
       )}

@@ -68,6 +68,8 @@ export interface Option {
   id: string
   label: string
   isCorrect: boolean
+  /** Word-level IPA (without slashes), shown under the label when available. */
+  ipa?: string
 }
 
 /**

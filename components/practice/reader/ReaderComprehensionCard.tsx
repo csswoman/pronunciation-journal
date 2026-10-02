@@ -2,12 +2,23 @@
 
 // Planned structure:
 // <ReaderComprehensionCard>
-//   <KickerAndPrompt />
-//   <OptionsList />
-//   <FeedbackAndRetryAlert />
+//   <PastelCard tone="butter">
+//     <CardHeader>
+//       <COMPRUEBABadge /> (Pill negro)
+//       <QuestionProgressText /> (Pregunta 1 de 3)
+//     </CardHeader>
+//     <QuestionPromptText /> (Bricolage font-display)
+//     <OptionsList>
+//       <OptionItem /> (White rounded pill cards with A, B, C, D circles)
+//     </OptionsList>
+//     <HintText /> (Pista: búscala en la tercera frase.)
+//     <StatusFeedbackText /> (role="status")
+//     <SaveErrorAlert /> (role="alert")
+//   </PastelCard>
 // </ReaderComprehensionCard>
 
 import { cn } from '@/lib/cn'
+import PastelCard from '@/components/layout/PastelCard'
 import Button from '@/components/ui/Button'
 import { Check, X } from '@/components/icons'
 import type { ReaderQuestion } from '@/lib/practice/reader/types'
@@ -19,6 +30,9 @@ interface ReaderComprehensionCardProps {
   saving: boolean
   saveError: boolean
   onChoose: (index: number) => void
+  currentQuestionIdx?: number
+  totalQuestions?: number
+  hintText?: string
 }
 
 export function ReaderComprehensionCard({
@@ -28,18 +42,29 @@ export function ReaderComprehensionCard({
   saving,
   saveError,
   onChoose,
+  currentQuestionIdx = 1,
+  totalQuestions = 3,
+  hintText = 'Pista: búscala en la tercera frase.',
 }: ReaderComprehensionCardProps) {
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border border-border-default bg-surface-raised p-6 sm:p-7 shadow-xs">
-      <div className="flex items-center gap-2">
-        <span className="font-kicker text-caption uppercase tracking-wider text-fg-muted">
-          Comprobación de lectura
+    <PastelCard tone="butter" className="rounded-3xl p-6 shadow-xs flex flex-col gap-4 border border-black/10">
+      {/* Header Row */}
+      <div className="flex items-center justify-between gap-2">
+        <span className="rounded-full bg-ink text-paper px-3.5 py-1 text-xs font-bold uppercase tracking-wider shadow-2xs">
+          COMPRUEBA
+        </span>
+        <span className="text-xs font-mono font-semibold text-fg/75">
+          Pregunta {currentQuestionIdx} de {totalQuestions}
         </span>
       </div>
 
-      <p className="text-h3 font-medium text-fg leading-snug">{question.prompt}</p>
+      {/* Question Prompt with Bricolage Font */}
+      <h3 className="font-display font-bold text-xl sm:text-2xl text-fg leading-snug mt-1">
+        {question.prompt}
+      </h3>
 
-      <div className="grid gap-2.5">
+      {/* Options List */}
+      <div className="grid gap-3 mt-1">
         {question.options.map((opt, i) => {
           const isSelected = selectedIndex === i
           const isCorrect = i === question.correctIndex
@@ -53,37 +78,36 @@ export function ReaderComprehensionCard({
               onClick={() => onChoose(i)}
               disabled={answered || saving}
               className={cn(
-                'group flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-body transition-all duration-150',
+                'group flex items-center justify-between gap-3 rounded-2xl border p-3.5 text-left text-sm font-medium transition-all duration-150 shadow-2xs cursor-pointer',
                 !answered &&
-                  'border-border-default bg-surface-sunken/40 hover:border-border-hover hover:bg-surface-sunken/80 cursor-pointer active:scale-[0.99] focus-ring',
+                  'border-black/10 bg-paper hover:bg-paper/90 hover:border-black/20 text-fg active:scale-[0.99] focus-ring',
                 answered &&
                   isCorrect &&
-                  'border-success bg-success-soft text-fg font-medium ring-1 ring-success/30',
+                  'border-success bg-success-soft text-fg font-bold ring-2 ring-success/40',
                 answered &&
                   isSelected &&
                   !isCorrect &&
-                  'border-error bg-error-soft text-fg font-medium ring-1 ring-error/30',
+                  'border-error bg-error-soft text-fg font-bold ring-2 ring-error/40',
                 answered &&
                   !isSelected &&
                   !isCorrect &&
-                  'border-border-subtle bg-surface-base/40 opacity-60 text-fg-muted',
+                  'border-black/5 bg-paper/60 opacity-60 text-fg/70',
               )}
             >
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'flex size-6 shrink-0 items-center justify-center rounded-full text-tiny font-semibold transition-all duration-150',
-                    !answered &&
-                      'bg-surface-sunken text-fg-muted border border-border-subtle group-hover:border-border-default group-hover:text-fg',
-                    answered && isCorrect && 'bg-success text-white shadow-xs',
-                    answered && isSelected && !isCorrect && 'bg-error text-white shadow-xs',
+                    'flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold transition-colors shadow-2xs',
+                    !answered && 'bg-surface-sunken border border-black/5 text-fg-muted group-hover:text-fg',
+                    answered && isCorrect && 'bg-success text-white',
+                    answered && isSelected && !isCorrect && 'bg-error text-white',
                     answered && !isSelected && !isCorrect && 'bg-surface-sunken text-fg-muted/60',
                   )}
                 >
                   {optionLetter}
                 </span>
-                <span className="leading-snug">{opt}</span>
+                <span className="leading-snug text-fg">{opt}</span>
               </div>
               {answered && isCorrect && <Check className="size-4 shrink-0 text-success" />}
               {answered && isSelected && !isCorrect && <X className="size-4 shrink-0 text-error" />}
@@ -92,11 +116,18 @@ export function ReaderComprehensionCard({
         })}
       </div>
 
+      {/* Hint Text */}
+      {hintText && (
+        <p className="text-xs font-mono text-fg/75 mt-1">
+          {hintText}
+        </p>
+      )}
+
       {answered && (
         <p
           role="status"
           className={cn(
-            'text-body-sm font-medium pt-1',
+            'text-xs font-bold pt-1',
             selectedIndex === question.correctIndex ? 'text-success' : 'text-error',
           )}
         >
@@ -111,7 +142,7 @@ export function ReaderComprehensionCard({
       {saveError && (
         <div
           role="alert"
-          className="flex items-center justify-between gap-2 text-body-sm text-warning bg-warning-soft/30 border border-warning/30 rounded-lg p-3 mt-1"
+          className="flex items-center justify-between gap-2 text-xs text-warning bg-warning-soft/40 border border-warning/40 rounded-xl p-3 mt-1 font-medium"
         >
           <span>
             Your answer is shown here, but progress could not be saved. Try again when the connection
@@ -124,13 +155,13 @@ export function ReaderComprehensionCard({
               size="sm"
               onClick={() => onChoose(selectedIndex)}
               disabled={saving}
-              className="shrink-0"
+              className="shrink-0 text-xs"
             >
               Reintentar
             </Button>
           )}
         </div>
       )}
-    </div>
+    </PastelCard>
   )
 }

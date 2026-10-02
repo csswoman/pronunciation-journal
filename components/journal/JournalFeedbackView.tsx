@@ -38,14 +38,14 @@ export function JournalFeedbackView({
             Revisión completada
           </span>
         </div>
-        <p className="whitespace-pre-wrap font-body text-base leading-relaxed text-fg">
+        <p className="whitespace-pre-wrap ts-body text-fg">
           {correctedContent}
         </p>
       </section>
 
       {originalContent.trim().length > 0 && (
         <details className="group rounded-[var(--radius-md)] border border-border-subtle bg-surface-sunken">
-          <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 font-body-sm font-medium text-fg">
+          <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 ts-body text-fg">
             <ChevronDown
               size={14}
               className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
@@ -53,7 +53,7 @@ export function JournalFeedbackView({
             />
             Ver tu texto original
           </summary>
-          <p className="whitespace-pre-wrap border-t border-border-subtle px-3 py-2.5 font-body-sm text-fg-muted">
+          <p className="whitespace-pre-wrap border-t border-border-subtle px-3 py-2.5 ts-body text-fg-muted">
             {originalContent}
           </p>
         </details>
@@ -63,7 +63,7 @@ export function JournalFeedbackView({
 
       {feedback.errors.length > 0 && (
         <section aria-labelledby="journal-errors" className="flex flex-col gap-2">
-          <h3 id="journal-errors" className="font-body-sm font-semibold text-fg">
+          <h3 id="journal-errors" className="ts-label-strong text-fg">
             {feedback.errors.length === 1
               ? '1 detalle para notar'
               : `${feedback.errors.length} detalles para notar`}
@@ -72,7 +72,7 @@ export function JournalFeedbackView({
             {feedback.errors.map((error, index) => (
               <li key={`${error.quote}-${index}`}>
                 <details className="group rounded-[var(--radius-md)] border border-border-subtle bg-surface-raised transition-colors">
-                  <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 font-body-sm text-fg">
+                  <summary className="focus-ring flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 ts-body text-fg">
                     <ChevronDown
                       size={14}
                       className="shrink-0 text-fg-subtle transition-transform duration-150 group-open:rotate-180"
@@ -87,7 +87,7 @@ export function JournalFeedbackView({
                       <span className="font-medium text-fg">{error.correction}</span>
                     </span>
                   </summary>
-                  <div className="flex flex-col gap-2 border-t border-border-subtle px-3 py-2.5 font-body-sm text-fg-muted">
+                  <div className="flex flex-col gap-2 border-t border-border-subtle px-3 py-2.5 ts-body text-fg-muted">
                     <p className="m-0">
                       {error.explanationEs}
                     </p>
@@ -121,19 +121,19 @@ export function JournalReactiveSummary({ feedback }: { feedback: JournalFeedback
 
   return (
     <section aria-labelledby="journal-reactive-summary" className="flex flex-col gap-3">
-      <h3 id="journal-reactive-summary" className="font-body-sm font-semibold text-fg">
+      <h3 id="journal-reactive-summary" className="ts-label-strong text-fg">
         Después de la revisión
       </h3>
       {hasScheduledTopics ? (
         <section aria-labelledby="journal-scheduled-topics" className="flex flex-col gap-2">
-          <h4 id="journal-scheduled-topics" className="font-body-sm font-semibold text-fg">
+          <h4 id="journal-scheduled-topics" className="ts-label-strong text-fg">
             Reglas programadas
           </h4>
           <ul className="flex flex-col gap-2">
             {feedback.scheduledTopics?.map((topic) => (
               <li
                 key={topic.topicId}
-                className="flex items-baseline justify-between gap-3 rounded-[var(--radius-md)] bg-surface-sunken px-3 py-2.5 font-body-sm"
+                className="flex items-baseline justify-between gap-3 rounded-[var(--radius-md)] bg-surface-sunken px-3 py-2.5 ts-body"
               >
                 <span className="min-w-0 text-fg">{topicLabel(topic.topicId)}</span>
                 <span className="shrink-0 text-fg-muted">{reviewCopy(topic)}</span>

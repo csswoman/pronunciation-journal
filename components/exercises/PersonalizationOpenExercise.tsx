@@ -16,7 +16,8 @@ import { useMemo, useRef, useState } from 'react'
 import Button from '@/components/ui/Button'
 import { gradePersonalization } from '@/lib/exercises/personalization'
 import { checkStructures, STRUCTURE_CHECKS } from '@/lib/exercises/structure-checks'
-import { isOnline, gradeProduction } from '@/lib/exercises/grade-production-client'
+import { isOnline } from '@/lib/exercises/grade-production-client'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { buildPersonalizationTaskPrompt } from '@/lib/ai-prompts'
 import { SelfAssessPrompt } from './SelfAssessPrompt'
 import type { PersonalizationExercise } from '@/lib/exercises/types'
@@ -36,7 +37,8 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
   const [showSelfAssess, setShowSelfAssess] = useState(false)
   const [issues, setIssues] = useState<string[]>([])
   const [hints, setHints] = useState<string[]>([])
-  const [polishing, setPolishing] = useState(false)
+  const polishPipeline = useProductionGrading({ exerciseKey: `${exercise.id}:polish` })
+  const polishing = polishPipeline.grading
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
 
@@ -82,7 +84,7 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
 
   const handlePolish = async () => {
     if (!isOnline() || polishing) return
-    setPolishing(true)
+    setAiSuggestion(null)
     try {
       const firstReq = exercise.requires[0]
       const checker = STRUCTURE_CHECKS[firstReq]
@@ -93,7 +95,7 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
         example: exercise.example,
       })
 
-      const grade = await gradeProduction({
+      const grade = await polishPipeline.grade({
         targetItem,
         taskPrompt,
         production: text.trim(),
@@ -106,18 +108,16 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
       }
     } catch {
       // AI polishing error is non-blocking
-    } finally {
-      setPolishing(false)
     }
   }
 
   return (
     <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-1.5">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+        <span className="w-fit rounded-full bg-primary px-3.5 py-1.5 font-mono text-tiny font-bold uppercase tracking-wider text-on-accent">
           Habla de ti
         </span>
-        <h2 className="text-body-lg font-semibold text-fg sm:text-h3">{exercise.promptEs}</h2>
+        <h2 className="font-display text-h3 font-bold text-fg sm:text-h2">{exercise.promptEs}</h2>
         {exercise.hintEs && (
           <p className="text-body-sm text-fg-muted">{exercise.hintEs}</p>
         )}
@@ -130,10 +130,10 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
         {structureStatuses.map((st) => (
           <span
             key={st.id}
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-tiny font-medium transition-colors ${
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-tiny font-bold transition-colors ${
               st.met
-                ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold'
-                : 'bg-surface-sunken text-fg-muted'
+                ? 'bg-mint text-ink font-bold border border-mint-deep/50 dark:bg-mint/30 dark:text-fg'
+                : 'bg-surface-sunken border border-border-default text-fg-muted'
             }`}
           >
             {st.met ? '✓' : '○'} {st.label}
@@ -147,23 +147,23 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
           onChange={(e) => setText(e.target.value)}
           rows={4}
           disabled={done || showSelfAssess}
-          placeholder="Escribe aquí tu respuesta…"
-          className="w-full resize-none rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg focus-ring placeholder:text-fg-subtle disabled:opacity-60"
+          placeholder="Escribe la forma correcta…"
+          className="w-full resize-none rounded-2xl border-2 border-primary bg-field px-5 py-4 text-body-lg text-fg focus-ring placeholder:text-fg-muted disabled:opacity-60 shadow-xs"
         />
-        <div className="flex items-center justify-between text-tiny text-fg-subtle">
+        <div className="flex items-center justify-between text-tiny text-fg-subtle font-medium">
           <span>
             {wordCount} / {exercise.minWords}–{exercise.maxWords} palabras
           </span>
           {exercise.example && (
             <span>
-              Ejemplo: <span className="italic">{exercise.example}</span>
+              Ejemplo: <span className="italic font-normal">{exercise.example}</span>
             </span>
           )}
         </div>
       </div>
 
       {issues.length > 0 && !done && !showSelfAssess && (
-        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error">
+        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error font-medium">
           {issues.map((issue, idx) => (
             <p key={idx}>{issue}</p>
           ))}
@@ -171,7 +171,7 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
       )}
 
       {hints.length > 0 && !done && !showSelfAssess && (
-        <div className="flex flex-col gap-1 text-body-sm text-fg-muted">
+        <div className="flex flex-col gap-1 text-body-sm text-fg-muted font-medium">
           {hints.map((hint, idx) => (
             <p key={idx}>💡 {hint}</p>
           ))}
@@ -208,10 +208,14 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
           variant="primary"
           size="lg"
           fullWidth
+          className="rounded-full font-bold shadow-sm"
           onClick={submit}
           disabled={!text.trim()}
         >
-          Comprobar
+          <span>Comprobar</span>
+          <span className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md sm:inline-flex" aria-hidden>
+            Enter
+          </span>
         </Button>
       )}
 
@@ -229,8 +233,8 @@ export function PersonalizationOpenExercise({ exercise, onResult }: Props) {
               {polishing ? 'Revisando con IA…' : 'Pulir con IA'}
             </Button>
           </div>
-          {aiSuggestion && (
-            <p className="text-body-sm text-fg-muted">{aiSuggestion}</p>
+          {(aiSuggestion || polishPipeline.error) && (
+            <p role={polishPipeline.error ? 'alert' : undefined} className="text-body-sm text-fg-muted">{aiSuggestion ?? polishPipeline.error}</p>
           )}
         </div>
       )}

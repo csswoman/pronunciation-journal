@@ -110,17 +110,17 @@ interface TongueSpec {
 
 const TONGUE_SPECS: Record<TonguePosition, TongueSpec> = {
   // ── Front vowels: apex forward, height varies ────────────────────────────
-  "high-front": { apexX: 138, apexY: 76, tipX: 170, tipY: 106, label: "Lengua alta al frente", isContact: false },
-  "mid-front": { apexX: 132, apexY: 104, tipX: 168, tipY: 116, label: "Lengua media frontal", isContact: false },
-  "low-front": { apexX: 126, apexY: 124, tipX: 164, tipY: 128, label: "Lengua baja y plana", isContact: false },
+  "high-front": { apexX: 138, apexY: 76, tipX: 170, tipY: 106, label: "Lengua alta, hacia adelante", isContact: false },
+  "mid-front": { apexX: 132, apexY: 104, tipX: 168, tipY: 116, label: "Lengua a media altura, adelante", isContact: false },
+  "low-front": { apexX: 126, apexY: 124, tipX: 164, tipY: 128, label: "Lengua baja y plana, adelante", isContact: false },
 
   // ── Back vowels: apex retracted, height varies ───────────────────────────
-  "high-back": { apexX: 104, apexY: 80, tipX: 156, tipY: 118, label: "Dorso elevado atrás", isContact: false },
-  "mid-back": { apexX: 102, apexY: 100, tipX: 154, tipY: 122, label: "Dorso medio atrás", isContact: false },
-  "low-back": { apexX: 100, apexY: 120, tipX: 152, tipY: 126, label: "Lengua baja y retraída", isContact: false },
+  "high-back": { apexX: 104, apexY: 80, tipX: 156, tipY: 118, label: "Lengua alta, hacia atrás", isContact: false },
+  "mid-back": { apexX: 102, apexY: 100, tipX: 154, tipY: 122, label: "Lengua a media altura, atrás", isContact: false },
+  "low-back": { apexX: 100, apexY: 120, tipX: 152, tipY: 126, label: "Lengua baja, hacia atrás", isContact: false },
 
   // ── Central ──────────────────────────────────────────────────────────────
-  central: { apexX: 118, apexY: 106, tipX: 162, tipY: 120, label: "Lengua relajada al centro", isContact: false },
+  central: { apexX: 118, apexY: 106, tipX: 162, tipY: 120, label: "Lengua relajada en el centro", isContact: false },
 
   // ── Consonantal closures: tip/blade reaches the roof ─────────────────────
   "tip-between-teeth": {
@@ -129,23 +129,23 @@ const TONGUE_SPECS: Record<TonguePosition, TongueSpec> = {
   },
   "tip-on-ridge": {
     apexX: 130, apexY: 90, tipX: 172, tipY: 96, clearance: 1,
-    label: "Contacto en la encía superior", isContact: true, contact: { x: 170, y: 95 },
+    label: "Punta tocando la encía de arriba", isContact: true, contact: { x: 170, y: 95 },
   },
   "blade-on-palate": {
     apexX: 132, apexY: 82, tipX: 166, tipY: 92, clearance: 1,
-    label: "Lámina contra el paladar", isContact: true, contact: { x: 158, y: 84 },
+    label: "Lengua pegada al paladar", isContact: true, contact: { x: 158, y: 84 },
   },
   "back-on-velum": {
     apexX: 104, apexY: 74, tipX: 156, tipY: 118, clearance: 0,
-    label: "Cierre en el paladar blando", isContact: true, contact: { x: 104, y: 76 },
+    label: "Fondo de la lengua toca el paladar", isContact: true, contact: { x: 104, y: 76 },
   },
   "retroflex-curl": {
     apexX: 126, apexY: 100, tipX: 150, tipY: 84,
-    label: "Punta curvada hacia atrás", isContact: false, contact: { x: 147, y: 82 },
+    label: "Punta curvada hacia atrás, sin tocar", isContact: false, contact: { x: 147, y: 82 },
   },
   glottal: {
     apexX: 116, apexY: 110, tipX: 160, tipY: 122,
-    label: "Articulación en la glotis", isContact: true, contact: { x: 56, y: 150 },
+    label: "Sin lengua: el aire sale de la garganta", isContact: true, contact: { x: 56, y: 150 },
   },
 };
 
@@ -157,9 +157,11 @@ export function getTongueGeometry(position: TonguePosition): TongueGeometry {
 
   // The retroflex curl cannot be expressed by the standard apex/tip skeleton:
   // its tip hooks up and back over the blade, so it carries a bespoke outline.
+  // The trailing zero-length curve keeps the same command list (M + 5 C + Z) as
+  // buildTongue, so every shape can be morphed into any other.
   const path =
     position === "retroflex-curl"
-      ? "M 62,142 C 70,126 100,118 122,108 C 138,100 152,92 150,82 C 141,84 133,100 126,114 C 116,130 90,139 62,142 Z"
+      ? "M 62,142 C 70,126 100,118 122,108 C 138,100 152,92 150,82 C 141,84 133,100 126,114 C 116,130 90,139 62,142 C 62,142 62,142 62,142 Z"
       : buildTongue(spec.apexX, spec.apexY, spec.tipX, spec.tipY, clearance);
 
   return {

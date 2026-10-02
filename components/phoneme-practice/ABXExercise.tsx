@@ -67,143 +67,81 @@ export function ABXExercise({ exercise, onSubmit, voice }: Props) {
   const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
 
   const stimulusSlot = (
-    <div className="flex w-full flex-col gap-4">
-      {/* References 1 and 2 */}
-      <div className="grid w-full grid-cols-2 gap-3.5">
-        {[stimA, stimB].map((stim, i) => {
-          const num = i === 0 ? '1' : '2'
-          const isPlaying = playingIndex === i
-          return stim ? (
-            <button
-              key={num}
-              type="button"
-              onClick={() => handlePlay(i)}
-              aria-label={`Escuchar referencia ${num}`}
-              aria-pressed={isPlaying}
-              className={cn(
-                'relative flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border p-4 transition-all duration-150 focus-ring select-none',
-                isPlaying
-                  ? 'border-primary bg-primary-soft/60 shadow-xs ring-2 ring-primary/30'
-                  : 'border-border-default bg-surface-sunken/50 hover:bg-surface-sunken hover:border-primary/50',
-              )}
+    <div className="flex w-full flex-col gap-3.5">
+      <div className="grid w-full grid-cols-1 gap-3.5 sm:grid-cols-2">
+        {[stimA, stimB].map((stim, i) =>
+          stim ? (
+            <div
+              key={i}
+              className="flex items-center gap-4 rounded-2xl bg-surface-sunken px-4 py-3.5 dark:bg-white/10"
             >
               <span
-                className={cn(
-                  'font-mono text-tiny font-bold uppercase tracking-wider transition-colors duration-150',
-                  isPlaying ? 'text-primary' : 'text-fg-subtle',
-                )}
-              >
-                Referencia {num}
-              </span>
-              <div
-                className={cn(
-                  'flex size-11 items-center justify-center rounded-full border transition-all duration-150',
-                  isPlaying
-                    ? 'border-primary bg-primary text-on-primary scale-105 shadow-xs'
-                    : 'border-border-default bg-surface-raised text-fg',
-                )}
-              >
-                <Volume2
-                  size={20}
-                  className={cn(
-                    'transition-transform duration-150',
-                    isPlaying && 'scale-110 animate-pulse',
-                  )}
-                  aria-hidden
-                />
-              </div>
-              {stim.ipa ? (
-                <span className="font-ipa text-body-lg font-semibold text-fg">
-                  {stim.ipa}
-                </span>
-              ) : (
-                <span
-                  className={cn(
-                    'text-caption font-medium transition-colors duration-150',
-                    isPlaying ? 'text-primary font-semibold' : 'text-fg-muted',
-                  )}
-                >
-                  {isPlaying ? 'Reproduciendo...' : 'Escuchar'}
-                </span>
-              )}
-              <div
-                className={cn(
-                  'h-1 w-8 rounded-full transition-all duration-150',
-                  isPlaying
-                    ? 'bg-primary scale-100 opacity-100'
-                    : 'bg-transparent scale-50 opacity-0',
-                )}
+                className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border-default bg-surface-base text-body-md font-bold text-fg"
                 aria-hidden
-              />
-            </button>
-          ) : null
-        })}
+              >
+                {i + 1}
+              </span>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="text-caption font-bold uppercase tracking-widest text-fg-muted">
+                  Referencia
+                </span>
+                {stim.ipa && (
+                  <span className="font-ipa text-title font-semibold text-fg">
+                    /{stim.ipa.replace(/^\/+|\/+$/g, '')}/
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => handlePlay(i)}
+                aria-label={`Escuchar referencia ${i + 1}`}
+                aria-pressed={playingIndex === i}
+                className="flex size-14 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-border-default bg-surface-base text-fg transition-transform duration-150 select-none hover:border-primary focus-ring active:scale-95"
+              >
+                <Volume2 size={22} className={cn(playingIndex === i && 'animate-pulse')} aria-hidden />
+              </button>
+            </div>
+          ) : null,
+        )}
       </div>
 
-      {/* Unknown Target Stimulus (3 / X) */}
-      {stimX && (() => {
-        const isPlaying = playingIndex === 2
-        return (
+      {stimX && (
+        <div className="flex w-full flex-col items-center gap-3 rounded-3xl bg-lilac px-4 py-6 text-center text-ink">
+          <span className="text-caption font-bold uppercase tracking-widest text-ink!">
+            3 · Sonido incógnita
+          </span>
           <button
             type="button"
             onClick={() => handlePlay(2)}
             aria-label="Escuchar sonido incógnita 3"
-            aria-pressed={isPlaying}
-            className={cn(
-              'relative flex w-full cursor-pointer flex-col items-center gap-2.5 rounded-xl border p-5 transition-all duration-150 focus-ring select-none',
-              isPlaying
-                ? 'border-primary bg-primary-soft shadow-xs ring-2 ring-primary/40'
-                : 'border-primary/40 bg-primary-soft/40 hover:bg-primary-soft/60 hover:border-primary',
-            )}
+            aria-pressed={playingIndex === 2}
+            className="flex size-18 cursor-pointer items-center justify-center rounded-full bg-ink text-white transition-transform duration-150 select-none focus-ring active:scale-95"
           >
-            <span className="font-mono text-tiny font-bold uppercase tracking-wider text-primary">
-              3 · Sonido incógnita
-            </span>
-            <div
-              className={cn(
-                'flex size-12 items-center justify-center rounded-full border-2 border-primary bg-primary text-on-primary shadow-sm transition-transform duration-150',
-                isPlaying ? 'scale-110 ring-2 ring-primary/30' : 'active:scale-95',
-              )}
-            >
-              <Volume2
-                size={22}
-                className={cn(
-                  'transition-transform duration-150',
-                  isPlaying && 'animate-pulse',
-                )}
-                aria-hidden
-              />
-            </div>
-            <span
-              className={cn(
-                'text-caption font-medium transition-colors duration-150',
-                isPlaying ? 'text-primary font-semibold' : 'text-fg-muted',
-              )}
-            >
-              {isPlaying ? 'Reproduciendo audio 3...' : 'Toca para escuchar el audio 3'}
-            </span>
-            <div
-              className={cn(
-                'h-1 w-12 rounded-full transition-all duration-150',
-                isPlaying
-                  ? 'bg-primary scale-100 opacity-100'
-                  : 'bg-transparent scale-50 opacity-0',
-              )}
-              aria-hidden
-            />
+            <Volume2 size={28} className={cn(playingIndex === 2 && 'animate-pulse')} aria-hidden />
           </button>
-        )
-      })()}
+          <p className="m-0 text-body-md font-medium text-ink!">
+            {playingIndex === 2 ? 'Reproduciendo…' : 'Toca para escuchar'}
+          </p>
+        </div>
+      )}
     </div>
   )
 
+  const options = exercise.options.map((opt, i) => ({
+    ...opt,
+    label: `Como el ${i + 1}`,
+    ipa: stimuli[i]?.ipa,
+    ariaLabel: `Suena como la referencia ${i + 1}`,
+  }))
+
   return (
     <AuditoryDiscriminationBase
-      title="¿El tercer sonido suena más como el 1 o el 2?"
+      title="¿El sonido 3 se parece al 1 o al 2?"
       kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Discriminación auditiva` : 'Discriminación auditiva'}
-      hint="Escucha los 3 audios y elige a cuál referencia se asemeja la incógnita"
+      hint="Escucha las dos referencias y luego el sonido incógnita."
       stimulusSlot={stimulusSlot}
-      options={exercise.options}
+      options={options}
+      optionStyle="choice"
       selectedIds={selected ? [selected] : []}
       correctIds={exercise.correctIds}
       submitted={submitted}

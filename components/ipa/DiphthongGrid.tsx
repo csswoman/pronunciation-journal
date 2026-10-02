@@ -21,7 +21,7 @@ export default function DiphthongGrid({
   onSelect: (phoneme: PhonemeData) => void;
 }) {
   return (
-    <div className="ipa-chart__chartcard">
+    <div className="ipa-chart__chartcard bg-surface border border-border-subtle rounded-3xl p-5 md:p-7 shadow-xs">
       <div className="ipa-chart__diph-grid">
         {phonemes.map((phoneme) => {
           const glide = DIPHTHONG_GLIDES[phoneme.symbol];

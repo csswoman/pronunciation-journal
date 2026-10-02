@@ -118,10 +118,10 @@ export function JournalPronunciationCard({
             }`}
           >
             <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-              <span className="font-sans text-body-md sm:text-body-lg font-extrabold text-ink truncate">
+              <span className="ts-row-title text-ink truncate">
                 {item.word}
               </span>
-              <span className="font-sans text-body-sm text-ink-secondary truncate">
+              <span className="ts-body-translation text-ink-secondary truncate">
                 {item.meaning}
               </span>
             </div>

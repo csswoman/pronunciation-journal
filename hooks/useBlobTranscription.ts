@@ -4,6 +4,8 @@ import { useCallback, useState } from 'react'
 import { publicAiErrorMessage } from '@/lib/degradation/messages'
 import { scorePronunciation } from '@/lib/pronunciation/scoring'
 import type { WordResult } from '@/lib/types'
+import { transcriptionForm } from '@/lib/speech/transcription-request'
+import { TRANSCRIPTION_CLIENT_TIMEOUT_MS } from '@/lib/speech/recording-config'
 
 export interface TranscriptionScore {
   wordResults: WordResult[]
@@ -22,16 +24,6 @@ interface UseBlobTranscriptionReturn {
 }
 
 const TRANSCRIBE_ENDPOINT = '/api/gemini/transcribe'
-const REQUEST_TIMEOUT_MS = 10_000
-
-function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => resolve(reader.result as string)
-    reader.onerror = () => reject(new Error('Failed to read audio blob'))
-    reader.readAsDataURL(blob)
-  })
-}
 
 /**
  * Transcribe a recorded audio blob via the Gemini endpoint and score it locally.
@@ -52,18 +44,15 @@ export function useBlobTranscription(): UseBlobTranscriptionReturn {
     setError(null)
 
     try {
-      const audioDataUrl = await blobToDataUrl(blob)
-
       const controller = new AbortController()
-      const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+      const timeoutId = window.setTimeout(() => controller.abort(new DOMException('Transcription timed out', 'TimeoutError')), TRANSCRIPTION_CLIENT_TIMEOUT_MS)
 
       let transcript: string
       try {
         const res = await fetch(TRANSCRIBE_ENDPOINT, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           signal: controller.signal,
-          body: JSON.stringify({ audioDataUrl, targetWord }),
+          body: transcriptionForm(blob, targetWord),
         })
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
@@ -75,8 +64,7 @@ export function useBlobTranscription(): UseBlobTranscriptionReturn {
         window.clearTimeout(timeoutId)
       }
 
-      // scorePronunciation handles an empty transcript (produces missing/incorrect
-      // phonemes), so this still yields useful feedback rather than an error.
+      if (!transcript) throw new Error('no-speech')
       const result = await scorePronunciation(transcript, targetWord)
       setScore({
         wordResults: result.wordResults,
@@ -85,7 +73,8 @@ export function useBlobTranscription(): UseBlobTranscriptionReturn {
       })
       setState('done')
     } catch (err) {
-      setError(publicAiErrorMessage(undefined, err instanceof Error ? err.message : ''))
+      const timedOut = err instanceof DOMException && err.name === 'TimeoutError'
+      setError(publicAiErrorMessage(timedOut ? 504 : undefined, err instanceof Error ? err.message : ''))
       setScore(null)
       setState('error')
     }

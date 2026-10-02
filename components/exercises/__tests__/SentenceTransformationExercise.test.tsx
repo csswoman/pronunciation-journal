@@ -34,20 +34,32 @@ describe('SentenceTransformationExercise', () => {
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
-  it('renders source sentence and instruction', () => {
+  it('renders source sentence and instruction with target chip', () => {
     render(<SentenceTransformationExercise exercise={exercise} onResult={vi.fn()} />)
 
     expect(screen.getByText('Oración original')).toBeInTheDocument()
     expect(screen.getByText('She is too tired to work.')).toBeInTheDocument()
-    expect(screen.getByText('Rewrite using enough.')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Escribe la nueva oración…')).toBeInTheDocument()
+    expect(screen.getByText('Reescríbela usando')).toBeInTheDocument()
+    expect(screen.getByText('enough')).toBeInTheDocument()
+    expect(screen.getByText('sin cambiar el significado.')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Escribe la forma correcta…')).toBeInTheDocument()
+  })
+
+  it('renders raw instruction when no target pattern matches', () => {
+    const customExercise: SentenceTransformationExerciseType = {
+      ...exercise,
+      instruction: 'Change the voice to passive.',
+    }
+    render(<SentenceTransformationExercise exercise={customExercise} onResult={vi.fn()} />)
+
+    expect(screen.getByText('Change the voice to passive.')).toBeInTheDocument()
   })
 
   it('validates an exact match locally without calling gradeProduction and hides submit button', async () => {
     const onResult = vi.fn()
     render(<SentenceTransformationExercise exercise={exercise} onResult={onResult} />)
 
-    const textarea = screen.getByPlaceholderText('Escribe la nueva oración…')
+    const textarea = screen.getByPlaceholderText('Escribe la forma correcta…')
     fireEvent.change(textarea, { target: { value: 'she is not well enough to work' } })
 
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })
@@ -87,7 +99,7 @@ describe('SentenceTransformationExercise', () => {
 
     render(<SentenceTransformationExercise exercise={exercise} onResult={onResult} />)
 
-    const textarea = screen.getByPlaceholderText('Escribe la nueva oración…')
+    const textarea = screen.getByPlaceholderText('Escribe la forma correcta…')
     fireEvent.change(textarea, { target: { value: 'she is tired enough to work' } })
 
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })
@@ -128,7 +140,7 @@ describe('SentenceTransformationExercise', () => {
 
     render(<SentenceTransformationExercise exercise={exercise} onResult={onResult} />)
 
-    const textarea = screen.getByPlaceholderText('Escribe la nueva oración…')
+    const textarea = screen.getByPlaceholderText('Escribe la forma correcta…')
     fireEvent.change(textarea, { target: { value: 'she is tired enough' } })
 
     const submitBtn = screen.getByRole('button', { name: 'Comprobar' })

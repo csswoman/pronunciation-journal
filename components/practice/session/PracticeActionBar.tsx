@@ -71,14 +71,17 @@ export function PracticeContinueButton({
       variant="primary"
       size="lg"
       fullWidth
-      className={className}
+      className={cn('rounded-full !rounded-full shadow-sm', className)}
       onClick={onClick}
       disabled={disabled}
       isLoading={isLoading}
     >
-      <span>{children}</span>
+      <span className="font-bold">{children}</span>
       {shortcutLabel ? (
-        <span className="hidden font-mono text-caption opacity-70 sm:inline" aria-hidden="true">
+        <span
+          className="hidden font-mono text-tiny font-bold bg-white/25 text-on-accent px-2 py-0.5 rounded-md inline-flex items-center justify-center sm:inline-flex shadow-2xs"
+          aria-hidden="true"
+        >
           {shortcutLabel}
         </span>
       ) : null}

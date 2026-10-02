@@ -88,7 +88,7 @@ export function JournalEntryViewerModal({
           <button
             type="button"
             onClick={onBackToHistory || onClose}
-            className="focus-ring inline-flex items-center gap-2 rounded-full border border-border-default bg-surface-sunken px-4 py-2 font-sans text-body-sm font-semibold text-fg hover:bg-surface transition-colors cursor-pointer select-none"
+            className="focus-ring inline-flex items-center gap-2 rounded-full border border-border-default bg-surface-sunken px-4 py-2 ts-button text-fg hover:bg-surface transition-colors cursor-pointer select-none"
           >
             <ArrowLeft size={16} aria-hidden />
             <span>Volver al historial</span>
@@ -113,7 +113,7 @@ export function JournalEntryViewerModal({
           />
         ) : (
           <div className="flex flex-col gap-3 py-8 text-center">
-            <p className="font-sans text-body-md text-fg-muted">Cargando entrada...</p>
+            <p className="ts-body text-fg-muted">Cargando entrada...</p>
           </div>
         )}
       </div>
@@ -151,7 +151,7 @@ function ModalEntryContent({
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <h2
           id="journal-entry-viewer-modal-title"
-          className="font-heading text-h1 sm:text-display font-extrabold text-fg tracking-tight leading-tight"
+          className="ts-headline-xl text-fg"
         >
           {formatLongDate(entry.entryDate)}
         </h2>
@@ -173,13 +173,13 @@ function ModalEntryContent({
           )}
         </div>
 
-        <h3 className="font-heading text-body-lg sm:text-h2 font-bold text-ink leading-snug my-1">
+        <h3 className="ts-headline text-ink my-1">
           {entry.prompt}
         </h3>
 
         <div className="flex flex-col gap-1.5">
           <span className="font-kicker text-ink-secondary select-none">LO QUE ESCRIBISTE</span>
-          <div className="rounded-2xl bg-surface-raised p-4 font-sans text-body-md text-ink leading-relaxed whitespace-pre-wrap shadow-2xs">
+          <div className="rounded-2xl bg-surface-raised p-4 ts-body text-ink whitespace-pre-wrap shadow-2xs">
             {displayContent(entry.content) || 'Esta página todavía está vacía.'}
           </div>
         </div>
@@ -240,7 +240,7 @@ function ModalEntryContent({
             onClick={() => onSelectEntry?.(prevEntry.entryDate)}
             className="focus-ring flex flex-col gap-1 rounded-2xl border border-border-default bg-surface-sunken p-4 text-left transition-colors hover:border-border-strong hover:bg-surface-raised cursor-pointer"
           >
-            <span className="font-sans text-body-sm font-bold text-fg flex items-center gap-1.5">
+            <span className="ts-button text-fg flex items-center gap-1.5">
               ← Página anterior
             </span>
             <span className="font-sans text-caption text-fg-muted">
@@ -249,7 +249,7 @@ function ModalEntryContent({
           </button>
         ) : (
           <div className="flex flex-col gap-1 rounded-2xl border border-dashed border-border-default bg-surface-sunken/40 p-4 text-left opacity-60 select-none">
-            <span className="font-sans text-body-sm font-bold text-fg-muted">← Página anterior</span>
+            <span className="ts-button text-fg-muted">← Página anterior</span>
             <span className="font-sans text-caption text-fg-muted">Esta es tu primera página</span>
           </div>
         )}
@@ -260,7 +260,7 @@ function ModalEntryContent({
             onClick={() => onSelectEntry?.(nextEntry.entryDate)}
             className="focus-ring flex flex-col gap-1 rounded-2xl border border-border-default bg-surface-sunken p-4 text-right items-end transition-colors hover:border-border-strong hover:bg-surface-raised cursor-pointer"
           >
-            <span className="font-sans text-body-sm font-bold text-fg flex items-center gap-1.5">
+            <span className="ts-button text-fg flex items-center gap-1.5">
               Página siguiente →
             </span>
             <span className="font-sans text-caption text-fg-muted">
@@ -269,7 +269,7 @@ function ModalEntryContent({
           </button>
         ) : (
           <div className="flex flex-col gap-1 rounded-2xl border border-dashed border-border-default bg-surface-sunken/40 p-4 text-right items-end opacity-60 select-none">
-            <span className="font-sans text-body-sm font-bold text-fg-muted">Página siguiente →</span>
+            <span className="ts-button text-fg-muted">Página siguiente →</span>
             <span className="font-sans text-caption text-fg-muted">Esta es tu página más reciente</span>
           </div>
         )}

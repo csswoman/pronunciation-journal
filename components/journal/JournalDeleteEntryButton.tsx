@@ -50,7 +50,7 @@ export function JournalDeleteEntryButton({
   if (confirming) {
     return (
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-body-sm text-fg-muted">¿Borrar esta página? No se puede deshacer.</span>
+        <span className="ts-caption text-fg-muted">¿Borrar esta página? No se puede deshacer.</span>
         <PillButton
           variant="outline"
           size="sm"

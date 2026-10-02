@@ -45,9 +45,12 @@ describe('Gemini fallback classification', () => {
     expect(PREMIUM_MODELS).toEqual(['gemini-3.8-flash', 'gemini-3.5-flash-lite'])
   })
 
-  it('provides thinkingBudget: 0 only to thinking-enabled models', () => {
-    expect(getFastThinkingConfig('gemini-3.7-flash')).toEqual({ thinkingBudget: 0 })
-    expect(getFastThinkingConfig('gemini-2.5-flash-lite')).toBeUndefined()
-    expect(getFastThinkingConfig('gemini-3.5-flash-lite')).toBeUndefined()
+  it('uses supported reasoning levels for each model family', () => {
+    expect(getFastThinkingConfig('gemini-3.7-flash')).toEqual({ thinkingLevel: 'LOW' })
+    expect(getFastThinkingConfig('gemini-3.8-flash')).toEqual({ thinkingLevel: 'LOW' })
+    expect(getFastThinkingConfig('gemini-2.5-flash-lite')).toEqual({ thinkingBudget: 0 })
+    expect(getFastThinkingConfig('gemini-3.5-flash-lite')).toEqual({ thinkingLevel: 'MINIMAL' })
+    expect(getFastThinkingConfig('gemini-3.1-flash-lite', 'low')).toEqual({ thinkingLevel: 'LOW' })
+    expect(getFastThinkingConfig('unknown')).toBeUndefined()
   })
 })

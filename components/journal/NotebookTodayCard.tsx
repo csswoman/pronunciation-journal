@@ -161,10 +161,10 @@ export function NotebookTodayCard({
               role="tab"
               aria-selected={scaffoldMode === 'guided'}
               onClick={() => setScaffoldMode('guided')}
-              className={`focus-ring inline-flex items-center rounded-full px-4 py-1.5 font-label text-body-sm transition-all duration-150 cursor-pointer ${
+              className={`focus-ring inline-flex items-center rounded-full px-4 py-1.5 ts-pill transition-all duration-150 cursor-pointer ${
                 scaffoldMode === 'guided'
-                  ? 'bg-ink text-paper font-bold shadow-xs'
-                  : 'bg-transparent text-ink font-semibold hover:bg-ink/5'
+                  ? 'bg-ink text-paper shadow-xs'
+                  : 'bg-transparent text-ink hover:bg-ink/5'
               }`}
             >
               Con estructura
@@ -174,10 +174,10 @@ export function NotebookTodayCard({
               role="tab"
               aria-selected={scaffoldMode === 'blank'}
               onClick={() => setScaffoldMode('blank')}
-              className={`focus-ring inline-flex items-center rounded-full px-4 py-1.5 font-label text-body-sm transition-all duration-150 cursor-pointer ${
+              className={`focus-ring inline-flex items-center rounded-full px-4 py-1.5 ts-pill transition-all duration-150 cursor-pointer ${
                 scaffoldMode === 'blank'
-                  ? 'bg-ink text-paper font-bold shadow-xs'
-                  : 'bg-transparent text-ink font-semibold hover:bg-ink/5'
+                  ? 'bg-ink text-paper shadow-xs'
+                  : 'bg-transparent text-ink hover:bg-ink/5'
               }`}
             >
               Página en blanco

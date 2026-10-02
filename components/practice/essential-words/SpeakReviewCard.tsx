@@ -4,7 +4,7 @@
 // <SpeakReviewCard>
 //   <SentencePrompt />
 //   <MicButton | SelfGradeBar />
-//   <InlineFeedback + QuietSpeakFeedback + PhonemeFeedbackTable />
+//   <InlineFeedback + QuietSpeakFeedback + WordFeedbackPanel />
 //   <SpeakSkipActions />
 // </SpeakReviewCard>
 
@@ -70,7 +70,6 @@ export function SpeakReviewCard({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [micError, setMicError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [showSoundDetail, setShowSoundDetail] = useState(false)
   const submitted = useRef(false)
   const startedAtRef = useRef(Date.now())
 
@@ -90,7 +89,6 @@ export function SpeakReviewCard({
     clearScore()
     setMicError(null)
     setSubmitError(null)
-    setShowSoundDetail(false)
     abort()
     release()
     clearSelfListening()
@@ -153,7 +151,6 @@ export function SpeakReviewCard({
     clearScore()
     setMicError(null)
     setSubmitError(null)
-    setShowSoundDetail(false)
     abort()
     release()
     clearSelfListening()
@@ -215,10 +212,8 @@ export function SpeakReviewCard({
           wordResults={scored.wordResults}
           modelText={sentence}
           userAudioUrl={userAudioUrl}
-          showSoundDetail={showSoundDetail}
           isSubmitting={isSubmitting}
           submitError={submitError}
-          onToggleSoundDetail={() => setShowSoundDetail((visible) => !visible)}
           onRetry={handleRetry}
           onContinue={handleContinue}
         />

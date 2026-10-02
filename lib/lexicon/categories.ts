@@ -15,6 +15,11 @@ let indexCache: ReadonlyMap<string, CategoryMeta> | undefined;
 let categoryIdsCache: readonly string[] | undefined;
 let categoriesCache: readonly CategoryMeta[] | undefined;
 const wordsByCategory = new Map<string, readonly WordEntry[]>();
+let wordsByNormalizedLabel: ReadonlyMap<string, WordEntry> | undefined;
+
+function normalizeWordLabel(value: string): string {
+  return value.trim().toLocaleLowerCase("en-US").replace(/\s+/g, " ");
+}
 
 function getIndexedCategories(): ReadonlyMap<string, CategoryMeta> {
   if (!indexCache) {
@@ -71,6 +76,25 @@ export function getCategories(): CategoryMeta[] {
 
 export function getCategoryWords(categoryId: string): WordEntry[] {
   return getCachedCategoryWords(categoryId).slice();
+}
+
+/**
+ * Finds an exact dictionary entry by its learner-facing word or phrase.
+ * The map is built from the same authored files used by `/words`, so Reader
+ * previews can reuse their definitions without asking Gemini.
+ */
+export function findLexiconWord(word: string): WordEntry | null {
+  if (!wordsByNormalizedLabel) {
+    const entries = new Map<string, WordEntry>();
+    for (const categoryId of getCategoryIds()) {
+      for (const entry of getCachedCategoryWords(categoryId)) {
+        const key = normalizeWordLabel(entry.word);
+        if (!entries.has(key)) entries.set(key, entry);
+      }
+    }
+    wordsByNormalizedLabel = entries;
+  }
+  return wordsByNormalizedLabel.get(normalizeWordLabel(word)) ?? null;
 }
 
 /**

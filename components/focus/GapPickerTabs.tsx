@@ -110,7 +110,7 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              'focus-ring rounded-full px-5 py-2 font-display text-body-sm font-semibold transition-all',
+              'focus-ring rounded-full px-5 py-2 ts-chip transition-all',
               tab === t.id
                 ? 'bg-primary text-white shadow-xs'
                 : 'border border-border-subtle bg-surface-raised text-fg-muted hover:border-border-default hover:text-fg shadow-xs',
@@ -122,7 +122,7 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
       </div>
 
       {(tab === 'suggestions' || TAB_HINTS[tab]) && (
-        <p className="mb-4 text-body-sm text-fg-muted">
+        <p className="mb-4 ts-body text-fg-muted">
           {tab === 'suggestions' ? suggestionsIntro(suggestedGaps) : TAB_HINTS[tab]}
         </p>
       )}

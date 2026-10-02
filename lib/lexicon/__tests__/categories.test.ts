@@ -72,4 +72,13 @@ describe("lexicon category cache", () => {
 
     expect(getCategoryWords(categoryId).map((word) => word.id)).toEqual(expectedIds);
   });
+
+  it("finds dictionary entries by normalized learner-facing words", async () => {
+    const { findLexiconWord } = await import("../categories");
+
+    expect(findLexiconWord("  DEPENDENCY   ARRAY ")).toMatchObject({
+      id: "dependency-array",
+      translation: "Arreglo de dependencias",
+    });
+  });
 });

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpeechInput } from '@/hooks/useSpeechInput'
 import type { TranscriptSource } from '@/lib/speech/transcript-quality'
+import { TRANSCRIPTION_AUDIO_BITRATE } from '@/lib/speech/recording-config'
 
 export type LearnerSpeechErrorCode = 'network' | 'not-allowed' | 'no-speech' | 'unknown' | null
 
@@ -123,7 +124,7 @@ export function useLearnerSpeechCapture({
 
     if (typeof window !== 'undefined' && typeof window.MediaRecorder !== 'undefined') {
       try {
-        const recorder = new MediaRecorder(stream)
+        const recorder = new MediaRecorder(stream, { audioBitsPerSecond: TRANSCRIPTION_AUDIO_BITRATE })
         recorder.ondataavailable = (event) => {
           if (event.data && event.data.size > 0) {
             audioChunksRef.current.push(event.data)

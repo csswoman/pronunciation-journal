@@ -10,8 +10,6 @@
 // el contenido del día no crezca hacia abajo. La vista mensual y el detalle
 // completo siguen en /progress.
 
-import Link from 'next/link'
-import { ArrowRight } from '@/components/icons'
 import { ThisWeekCard } from '@/components/progress/ThisWeekCard'
 import WeeklyConsistencyCard from './WeeklyConsistencyCard'
 import DailyCheckpointCard from './DailyCheckpointCard'
@@ -40,14 +38,7 @@ export default function DailyProgressSidebar({ data, checkpointReadiness }: Prop
       {checkpointReadiness ? (
         <DailyCheckpointCard readiness={checkpointReadiness} />
       ) : null}
-
-      <Link
-        href="/progress"
-        className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-start rounded-md px-1 font-label text-body-sm font-semibold text-fg transition-colors hover:text-primary"
-      >
-        Ver progreso completo
-        <ArrowRight size={16} aria-hidden />
-      </Link>
     </aside>
   )
 }
+

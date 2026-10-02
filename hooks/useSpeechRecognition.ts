@@ -20,7 +20,7 @@ import {
 } from '@/lib/speech/web-speech-recognition'
 
 export type SpeechStatus = 'idle' | 'listening' | 'processing' | 'done' | 'error' | 'unsupported'
-export type SpeechErrorCode = 'network' | 'not-allowed' | 'no-speech' | 'unknown'
+export type SpeechErrorCode = 'network' | 'service' | 'not-allowed' | 'no-speech' | 'unknown'
 
 export interface SpeechResult {
   transcript: string
@@ -151,7 +151,13 @@ export function useSpeechRecognition() {
       setErrorCode(null)
       setStatus('done')
     } else {
-      setErrorCode(outcome.kind === 'no-speech' ? 'no-speech' : 'network')
+      setErrorCode(
+        outcome.kind === 'no-speech'
+          ? 'no-speech'
+          : outcome.kind === 'service-failed'
+            ? 'service'
+            : 'network',
+      )
       setStatus('error')
     }
 

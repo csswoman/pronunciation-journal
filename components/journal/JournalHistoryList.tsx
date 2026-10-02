@@ -32,7 +32,7 @@ export function JournalHistoryList({
             0 páginas
           </span>
         </div>
-        <p className="font-sans text-body-sm text-fg-muted">
+        <p className="ts-body text-fg-muted">
           Todavía no tienes páginas guardadas. Escribe hoy para empezar tu historial.
         </p>
       </section>
@@ -69,7 +69,7 @@ export function JournalHistoryList({
                   <span className="font-sans text-caption font-medium text-ink-secondary">
                     {dateLabel}
                   </span>
-                  <h3 className="font-heading text-body-md sm:text-body-lg font-bold text-ink truncate leading-snug">
+                  <h3 className="ts-row-title text-ink truncate">
                     {firstLine}
                   </h3>
                 </div>

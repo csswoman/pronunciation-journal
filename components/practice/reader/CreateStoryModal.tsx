@@ -3,39 +3,52 @@
 // Planned structure:
 // <CreateStoryModal>
 //   <ModalBackdrop />
-//   <ModalContainer>
-//     <ModalHeader />
+//   <ModalDialogCard>
+//     <ModalHeader> (Sparkles circle, Bricolage Title "Nueva historia", Close X) </ModalHeader>
 //     <StoryForm>
-//       <CefrLevelSelector />
-//       <TopicSuggestions />
-//       <TopicCustomInput />
-//       <TargetWordsPreview />
-//       <ErrorBanner />
-//       <ModalActions />
+//       <CefrLevelGrid /> (A1, A2, B1, B2 cards)
+//       <TopicSection>
+//         <TopicInput />
+//         <TopicChipsList /> (Vida cotidiana, Viajes, Trabajo, Tecnología, etc.)
+//       </TopicSection>
+//       <LengthAndVoiceGrid>
+//         <LengthPills /> (~1 min, ~3 min, ~5 min)
+//         <VoiceHdToggleCard /> (Generar voz HD al crear)
+//       </LengthAndVoiceGrid>
+//       <TargetWordsCard> (Lilac pastel card with target word pills + "+ Añadir") </TargetWordsCard>
+//       <ModalFooter>
+//         <EstimatedTimeNotice /> (Tarda unos 15 segundos.)
+//         <ActionButtonsGroup>
+//           <CancelButton />
+//           <SubmitButton /> (✨ Crear historia)
+//         </ActionButtonsGroup>
+//       </ModalFooter>
 //     </StoryForm>
-//   </ModalContainer>
+//   </ModalDialogCard>
 // </CreateStoryModal>
 
 import { useEffect, useRef, useState } from 'react'
-import Button from '@/components/ui/Button'
 import { Sparkles, X } from '@/components/icons'
-import { cefrLevelOptions } from '@/lib/content/cefr-labels'
 import type { CEFRLevel } from '@/lib/exercises/cefr'
 
-/** Story generation is tuned up to B2; names come from the shared CEFR table. */
-const CEFR_LEVELS: Array<{ value: CEFRLevel; label: string; desc: string }> = cefrLevelOptions(
-  'B2',
-).map((option) => ({ value: option.value, label: option.label, desc: option.name }))
+const CEFR_LEVELS: Array<{ value: CEFRLevel; label: string; desc: string }> = [
+  { value: 'A1', label: 'A1', desc: 'Principiante' },
+  { value: 'A2', label: 'A2', desc: 'Básico' },
+  { value: 'B1', label: 'B1', desc: 'Intermedio' },
+  { value: 'B2', label: 'B2', desc: 'Intermedio alto' },
+]
+
+const DEFAULT_TARGET_WORDS = ['would', 'about', 'which', 'there', 'know']
 
 const SUGGESTED_TOPICS = [
-  { label: '☕ Vida cotidiana', prompt: 'Una situación de la vida diaria en la ciudad' },
-  { label: '✈️ Viajes', prompt: 'Un viaje emocionante y descubrimiento de lugares' },
-  { label: '💼 Trabajo', prompt: 'Una conversación o entrevista en el trabajo' },
-  { label: '🚀 Tecnología', prompt: 'Innovación tecnológica y el futuro' },
-  { label: '🕵️ Misterio', prompt: 'Un misterio intrigante por resolver' },
-  { label: '🍳 Cocina', prompt: 'Preparar una cena especial y anécdotas de cocina' },
-  { label: '🌱 Naturaleza', prompt: 'Una caminata en la naturaleza y animales' },
-  { label: '🎨 Cultura y arte', prompt: 'Una visita cultural a un museo o concierto' },
+  { label: 'Vida cotidiana', prompt: 'Una situación de la vida diaria en la ciudad' },
+  { label: 'Viajes', prompt: 'Un viaje emocionante y descubrimiento de lugares' },
+  { label: 'Trabajo', prompt: 'Una conversación o entrevista en el trabajo' },
+  { label: 'Tecnología', prompt: 'Innovación tecnológica y el futuro' },
+  { label: 'Misterio', prompt: 'Un misterio intrigante por resolver' },
+  { label: 'Cocina', prompt: 'Preparar una cena especial y anécdotas de cocina' },
+  { label: 'Naturaleza', prompt: 'Una caminata en la naturaleza y animales' },
+  { label: 'Cultura y arte', prompt: 'Una visita cultural a un museo o concierto' },
 ]
 
 interface CreateStoryModalProps {
@@ -52,22 +65,28 @@ export function CreateStoryModal({
   onClose,
   onSubmit,
   isGenerating,
-  initialLevel = 'B1',
-  targetWordsPreview = [],
+  initialLevel = 'A1',
+  targetWordsPreview = DEFAULT_TARGET_WORDS,
 }: CreateStoryModalProps) {
   const [level, setLevel] = useState<CEFRLevel>(initialLevel)
   const [customTopic, setCustomTopic] = useState('')
+  const [selectedDuration, setSelectedDuration] = useState('~1 min')
+  const [generateHdVoice, setGenerateHdVoice] = useState(true)
+  const [words, setWords] = useState<string[]>(targetWordsPreview)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const activeWords = words.length > 0 ? words : DEFAULT_TARGET_WORDS
 
   useEffect(() => {
     if (isOpen) {
       setLevel(initialLevel)
       setCustomTopic('')
       setError(null)
+      if (targetWordsPreview.length > 0) setWords(targetWordsPreview)
       setTimeout(() => inputRef.current?.focus(), 80)
     }
-  }, [isOpen, initialLevel])
+  }, [isOpen, initialLevel, targetWordsPreview])
 
   useEffect(() => {
     if (!isOpen) return
@@ -82,6 +101,10 @@ export function CreateStoryModal({
   }, [isOpen, isGenerating, onClose])
 
   if (!isOpen) return null
+
+  const handleRemoveWord = (wordToRemove: string) => {
+    setWords((prev) => prev.filter((w) => w !== wordToRemove))
+  }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,7 +124,7 @@ export function CreateStoryModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget && !isGenerating) onClose()
       }}
@@ -110,43 +133,44 @@ export function CreateStoryModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-lg rounded-2xl border border-border-default bg-surface-raised p-6 shadow-xl space-y-5"
+        className="w-full max-w-xl rounded-4xl border border-border bg-surface p-6 sm:p-8 shadow-2xl space-y-6 relative"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-primary-soft text-primary shadow-xs">
-              <Sparkles className="size-5" aria-hidden />
-            </span>
+        {/* Header Row */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="size-12 rounded-full bg-[var(--lilac-soft)] text-fg flex items-center justify-center shrink-0 border border-black/10 shadow-2xs">
+              <Sparkles className="size-6 text-fg" aria-hidden />
+            </div>
             <div>
-              <h2 id={titleId} className="text-body-lg font-bold text-fg">
-                Crear nueva historia
+              <h2 id={titleId} className="font-display font-black text-2xl sm:text-3xl text-fg tracking-tight">
+                Nueva historia
               </h2>
-              <p className="text-caption text-fg-muted">Lectura adaptada con IA y audio nativo</p>
+              <p className="text-body-sm text-fg-muted mt-0.5">Escrita con IA a tu nivel, con voz nativa.</p>
             </div>
           </div>
-          <Button
+
+          <button
+            type="button"
             onClick={onClose}
-            variant="ghost"
-            size="icon"
             disabled={isGenerating}
             aria-label="Cerrar modal"
-            className="text-fg-muted hover:text-fg"
-            icon={<X className="size-5" />}
-          />
+            className="size-9 rounded-full bg-surface-sunken hover:bg-surface-raised border border-border/60 text-fg-muted hover:text-fg flex items-center justify-center cursor-pointer transition-colors shrink-0"
+          >
+            <X className="size-4" />
+          </button>
         </div>
 
         {error && (
-          <div className="rounded-xl border border-danger/30 bg-danger-soft p-3 text-caption text-danger" role="alert">
+          <div className="rounded-2xl border border-danger/30 bg-danger-soft p-3.5 text-xs font-bold text-danger" role="alert">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleFormSubmit} className="space-y-4">
+        <form onSubmit={handleFormSubmit} className="space-y-5">
+          {/* CEFR Level Selection Grid */}
           <div>
-            <label className="block text-caption font-medium text-fg-muted mb-1.5">
-              Nivel de dificultad (MCER)
-            </label>
-            <div className="grid grid-cols-4 gap-2">
+            <label className="block text-sm font-bold text-fg mb-2">Nivel</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {CEFR_LEVELS.map((lvl) => {
                 const isSelected = level === lvl.value
                 return (
@@ -155,14 +179,14 @@ export function CreateStoryModal({
                     type="button"
                     disabled={isGenerating}
                     onClick={() => setLevel(lvl.value)}
-                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl border text-center transition-all ${
+                    className={`flex flex-col items-center justify-center py-3 px-2 rounded-2xl border text-center transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-primary bg-primary text-primary-fg font-semibold shadow-xs'
-                        : 'border-border-default bg-surface-sunken text-fg hover:bg-surface-raised'
+                        ? 'border-primary bg-primary text-white shadow-xs'
+                        : 'border-border/60 bg-surface hover:border-black/20 text-fg'
                     }`}
                   >
-                    <span className="text-body-sm">{lvl.label}</span>
-                    <span className={`text-[10px] ${isSelected ? 'text-primary-fg/80' : 'text-fg-muted'}`}>
+                    <span className="font-display font-black text-lg sm:text-xl leading-tight">{lvl.label}</span>
+                    <span className={`text-xs mt-0.5 ${isSelected ? 'text-white/85 font-medium' : 'text-fg-muted font-normal'}`}>
                       {lvl.desc}
                     </span>
                   </button>
@@ -171,84 +195,143 @@ export function CreateStoryModal({
             </div>
           </div>
 
+          {/* Topic Input & Suggested Preset Chips */}
           <div>
-            <label htmlFor="story-topic" className="block text-caption font-medium text-fg-muted mb-1.5">
-              ¿De qué tema quieres la historia?
+            <label htmlFor="story-topic" className="block text-sm font-bold text-fg mb-2">
+              Tema
             </label>
             <input
               id="story-topic"
               ref={inputRef}
               type="text"
               maxLength={120}
+              aria-label="¿De qué tema quieres la historia?"
               disabled={isGenerating}
               value={customTopic}
               onChange={(e) => setCustomTopic(e.target.value)}
-              placeholder="Ej: Un misterio en la biblioteca, comida callejera en Tokio..."
-              className="w-full rounded-xl border border-border-default bg-surface-sunken px-3.5 py-2 text-body-sm text-fg placeholder:text-fg-muted focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary disabled:opacity-50"
+              placeholder="Ej.: un misterio en la biblioteca, comida callejera en Tokio..."
+              className="w-full rounded-2xl border border-primary ring-2 ring-primary/20 bg-surface px-4 py-3 text-sm text-fg placeholder:text-fg-muted focus-ring shadow-2xs transition-all"
             />
-          </div>
 
-          <div>
-            <span className="block text-[11px] font-medium uppercase tracking-wider text-fg-muted mb-1.5">
-              O elige un tema sugerido:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {SUGGESTED_TOPICS.map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  disabled={isGenerating}
-                  onClick={() => setCustomTopic(item.prompt)}
-                  className={`rounded-full px-2.5 py-1 text-caption transition-all ${
-                    customTopic === item.prompt
-                      ? 'bg-primary-soft text-primary border border-primary/40 font-medium'
-                      : 'bg-surface-sunken text-fg-muted hover:text-fg hover:bg-surface-raised border border-border-subtle'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {SUGGESTED_TOPICS.map((item) => {
+                const isActive = customTopic === item.prompt || customTopic === item.label
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    disabled={isGenerating}
+                    onClick={() => setCustomTopic(item.prompt)}
+                    className={`rounded-full px-4 py-1.5 text-xs transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-ink text-paper font-bold shadow-2xs'
+                        : 'bg-surface-sunken border border-border/50 text-fg hover:bg-surface-raised font-semibold'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                )
+              })}
             </div>
           </div>
 
-          {targetWordsPreview.length > 0 && (
-            <div className="rounded-xl border border-border-subtle bg-surface-sunken/60 p-3">
-              <span className="block text-[11px] font-medium text-fg-muted mb-1.5">
-                Palabras clave que se integrarán en la lectura:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {targetWordsPreview.map((word) => (
-                  <span
-                    key={word}
-                    className="inline-flex items-center rounded-md bg-surface-raised px-2 py-0.5 text-caption font-mono text-primary border border-border-subtle"
-                  >
-                    {word}
-                  </span>
-                ))}
+          {/* Length & Voice Options Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-bold text-fg mb-2">Largo</label>
+              <div className="flex items-center gap-1.5">
+                {['~1 min', '~3 min', '~5 min'].map((dur) => {
+                  const isSelected = selectedDuration === dur
+                  return (
+                    <button
+                      key={dur}
+                      type="button"
+                      onClick={() => setSelectedDuration(dur)}
+                      className={`flex-1 rounded-full px-3 py-2 text-xs transition-all text-center cursor-pointer ${
+                        isSelected
+                          ? 'bg-primary text-white font-bold shadow-2xs'
+                          : 'bg-surface-sunken border border-border/50 text-fg hover:bg-surface-raised font-semibold'
+                      }`}
+                    >
+                      {dur}
+                    </button>
+                  )
+                })}
               </div>
             </div>
-          )}
 
-          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-border-default">
-            <Button
-              type="button"
-              variant="secondary"
-              size="md"
-              disabled={isGenerating}
-              onClick={onClose}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              disabled={isGenerating}
-              className="font-medium"
-            >
-              <Sparkles className="size-4" />
-              <span>{isGenerating ? 'Generando historia...' : 'Crear historia'}</span>
-            </Button>
+            <div>
+              <label className="block text-sm font-bold text-fg mb-2">Voz</label>
+              <label className="flex items-center justify-between rounded-2xl border border-border/60 bg-surface-sunken px-4 py-2 cursor-pointer select-none">
+                <span className="text-xs font-bold text-fg">Generar voz HD al crear</span>
+                <input
+                  type="checkbox"
+                  checked={generateHdVoice}
+                  onChange={(e) => setGenerateHdVoice(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-border rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative shrink-0" />
+              </label>
+            </div>
+          </div>
+
+          {/* Target Words Lilac Card */}
+          <div className="rounded-3xl bg-[var(--lilac-soft)]/70 border border-[var(--lilac-deep)]/40 p-4 sm:p-5 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-fg">Palabras que entrarán en la historia</span>
+              <span className="text-xs font-mono text-fg/75">de tu repaso de hoy</span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 pt-0.5">
+              {activeWords.map((word) => (
+                <span
+                  key={word}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-1 text-xs font-mono font-medium text-fg border border-black/10 shadow-2xs"
+                >
+                  <span>{word}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveWord(word)}
+                    aria-label={`Quitar ${word}`}
+                    className="text-fg-muted hover:text-fg text-xs font-bold"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 rounded-full bg-paper/80 hover:bg-paper border border-black/20 text-fg px-3.5 py-1 text-xs font-mono font-bold transition-colors cursor-pointer shadow-2xs"
+              >
+                + Añadir
+              </button>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <span className="text-xs font-mono text-fg-muted">Tarda unos 15 segundos.</span>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <button
+                type="button"
+                disabled={isGenerating}
+                onClick={onClose}
+                className="rounded-full bg-surface-raised border border-border hover:bg-surface-sunken px-5 py-2.5 text-xs font-bold text-fg transition-colors cursor-pointer"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                disabled={isGenerating}
+                className="rounded-full bg-ink text-paper hover:bg-ink-secondary disabled:opacity-50 px-6 py-3 text-sm font-bold flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-sm cursor-pointer"
+              >
+                <Sparkles className="size-4 text-paper" />
+                <span>{isGenerating ? 'Generando historia...' : 'Crear historia'}</span>
+              </button>
+            </div>
           </div>
         </form>
       </div>

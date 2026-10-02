@@ -164,7 +164,7 @@ export default function DailyPlanCard({
 
         {status === 'error' && (
           <div className="animate-state-in flex flex-col items-center gap-3 py-[var(--layout-section-gap)] text-center">
-            <p className="font-body-sm text-error">No se pudo preparar tu plan.</p>
+            <p className="ts-body text-error">No se pudo preparar tu plan.</p>
             {onRetry ? (
                <Button type="button" variant="primary" size="md" onClick={() => void onRetry()}>
                 Reintentar
@@ -177,14 +177,14 @@ export default function DailyPlanCard({
           customEmptyState ? customEmptyState : (
             <div className="animate-state-in flex flex-col items-center gap-4 py-[var(--layout-section-gap)] text-center">
               <div className="flex flex-col gap-1.5">
-                <p className="font-label font-semibold text-fg">
+                <p className="ts-label-strong text-fg">
                   {reviewDue
                     ? 'Después del repaso, arma tu plan.'
                     : isNewLearner
                       ? 'Aquí verás tu plan del día'
                       : 'Tu plan está vacío hoy.'}
                 </p>
-                <p className="font-body-sm max-w-[36ch] text-pretty text-fg-muted">
+                <p className="ts-body max-w-[36ch] text-pretty text-fg-muted">
                   {isNewLearner && !reviewDue
                     ? 'Cuando practiques sonidos o un curso, aparecen pasos claros para hoy.'
                     : 'Se arma cuando empiezas un curso o practicas sonidos.'}
@@ -215,13 +215,13 @@ export default function DailyPlanCard({
             <PedagogicalContextBanner arc={arc} />
             {listPrefix && <div className="-mt-1 mb-2">{listPrefix}</div>}
             <div className="flex flex-col gap-3">
-              {greeting && <p className="font-body-sm text-fg-muted -mb-1">{greeting}</p>}
+              {greeting && <p className="ts-greeting text-fg-muted -mb-1">{greeting}</p>}
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-col">
-                  <span className="font-sans text-caption font-bold uppercase tracking-wider text-fg-muted">
+                  <span className="ts-kicker text-fg-muted">
                     El plan
                   </span>
-                  <h2 className="text-h2 font-extrabold text-fg">Tu sesión de hoy</h2>
+                  <h2 className="ts-headline text-fg">Tu sesión de hoy</h2>
                 </div>
                 <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-sunken px-3 py-1 font-caption font-semibold tabular-nums text-fg-muted">
                   {steps.length} {steps.length === 1 ? 'actividad' : 'actividades'} · {remainingMinutes > 0 ? remainingMinutes : 12} min
@@ -260,7 +260,7 @@ export default function DailyPlanCard({
             {primaryAction && actionLabel && (
               <Link
                 href={primaryAction.href}
-                className="mt-1 focus-ring flex w-full max-w-xs items-center justify-center rounded-xl bg-cta-bg py-3 px-6 text-center font-label text-body-sm font-semibold text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover"
+                className="mt-1 focus-ring flex w-full max-w-xs items-center justify-center rounded-xl bg-cta-bg py-3 px-6 text-center ts-button text-cta-fg shadow-sm transition-colors hover:bg-cta-bg-hover"
               >
                 {actionLabel}
               </Link>

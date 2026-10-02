@@ -12,8 +12,8 @@ interface Props {
 }
 
 const WIDTH = 600;
-const HEIGHT = 240;
-const PADDING = { top: 30, right: 40, bottom: 50, left: 55 };
+const HEIGHT = 190;
+const PADDING = { top: 20, right: 35, bottom: 40, left: 50 };
 
 /**
  * Catmull-Rom to Cubic Bézier spline smoothing for organic voice pitch contours.
@@ -110,36 +110,38 @@ export function IntonationGraph({
   return (
     <div
       className={cn(
-        "relative flex flex-col rounded-2xl border border-border-default bg-surface-raised p-4 sm:p-5 shadow-xs transition-colors",
+        "relative flex flex-col pastel-card-panel rounded-2xl border border-ink/10 p-4 sm:p-5 shadow-xs transition-colors",
         className,
       )}
     >
       {/* Legend & Recording Status */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-border-subtle/50 text-xs font-medium">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-ink/10 text-xs sm:text-sm font-semibold">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-4 rounded-full border border-dashed border-fg-muted bg-border-strong/50" />
-            <span className="font-caption text-fg-muted">Curva objetivo</span>
+            <span className="font-mono font-bold text-ink-muted tracking-tighter">---</span>
+            <span className="font-mono text-xs sm:text-sm text-ink-secondary font-bold">Curva objetivo</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-            <span className="font-caption text-primary font-semibold">Tu tono de voz</span>
+            <span className="h-3 w-3 rounded-full bg-primary" />
+            <span className="font-mono text-xs sm:text-sm text-ink font-bold">Tu voz</span>
           </div>
         </div>
 
-        {isRecording && (
-          <div className="flex items-center gap-2 text-error font-caption font-semibold">
+        {isRecording ? (
+          <div className="flex items-center gap-2 text-error font-mono text-xs sm:text-sm font-bold">
             <span className="h-2.5 w-2.5 rounded-full bg-error animate-ping" />
             <span>Escuchando tu entonación…</span>
           </div>
+        ) : (
+          <span className="font-mono text-xs sm:text-sm text-ink-secondary font-medium">semitonos sobre tu tono base</span>
         )}
       </div>
 
       {/* Empty state guidance */}
       {!userPath && !isRecording && (
-        <div className="flex items-center justify-center pt-2">
-          <div className="inline-flex items-center gap-2 rounded-full bg-surface-sunken/80 border border-border-subtle px-3.5 py-1 text-xs text-fg-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+        <div className="flex items-center justify-center pt-1.5">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-surface-sunken/80 border border-border-subtle px-3 py-1 text-xs sm:text-sm font-medium text-fg-muted">
+            <span className="h-2 w-2 rounded-full bg-primary" />
             <span>Pulsa &ldquo;Grabar mi entonación&rdquo; y di la oración al compás</span>
           </div>
         </div>
@@ -149,7 +151,7 @@ export function IntonationGraph({
       <div className="relative w-full overflow-hidden pt-1">
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          className="w-full h-auto max-h-68 select-none"
+          className="w-full h-auto max-h-48 sm:max-h-52 select-none"
           role="img"
           aria-labelledby={`${titleId} ${descId}`}
         >
@@ -168,7 +170,7 @@ export function IntonationGraph({
           {[-4, 0, 4].map((semi) => {
             const y = getY(semi);
             const isBase = semi === 0;
-            const label = semi > 0 ? `+${semi} st (Agudo)` : isBase ? "0 st (Tono base)" : `${semi} st (Grave)`;
+            const label = semi > 0 ? `+${semi} st` : isBase ? "base" : `${semi} st`;
             return (
               <g key={semi}>
                 <line
@@ -181,10 +183,10 @@ export function IntonationGraph({
                   strokeDasharray={isBase ? undefined : "4 4"}
                 />
                 <text
-                  x={PADDING.left - 8}
+                  x={PADDING.left - 6}
                   y={y + 4}
                   textAnchor="end"
-                  className={cn("font-mono text-[10px]", isBase ? "fill-fg font-semibold" : "fill-fg-muted")}
+                  className={cn("font-mono text-xs font-bold", isBase ? "fill-ink" : "fill-ink-secondary")}
                 >
                   {label}
                 </text>
@@ -220,7 +222,7 @@ export function IntonationGraph({
                 <circle
                   cx={x}
                   cy={y}
-                  r={point.isNuclearStress ? "6" : "4.5"}
+                  r={point.isNuclearStress ? "5.5" : "4"}
                   className={cn(point.isNuclearStress ? "fill-primary" : "fill-fg-muted", "stroke-surface-raised")}
                   strokeWidth="2.5"
                 />
@@ -230,8 +232,8 @@ export function IntonationGraph({
                     y={HEIGHT - PADDING.bottom + 20}
                     textAnchor="middle"
                     className={cn(
-                      "font-sans select-none",
-                      point.isNuclearStress ? "fill-primary font-bold text-[13px]" : "fill-fg font-medium text-[12px]",
+                      "font-sans select-none text-xs sm:text-sm",
+                      point.isNuclearStress ? "fill-primary font-bold" : "fill-fg font-bold",
                     )}
                   >
                     {point.label}

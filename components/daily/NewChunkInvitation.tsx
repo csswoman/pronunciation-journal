@@ -58,11 +58,11 @@ export default function NewChunkInvitation({ userId }: Props) {
     return (
       <PastelCard tone="mint" className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+          <span className="rounded-full bg-ink px-3.5 py-1.5 ts-badge text-paper">
             Para descubrir
           </span>
         </div>
-        <p className="text-body-sm text-ink-secondary">Buscando una expresión para ti…</p>
+        <p className="ts-body text-ink-secondary">Buscando una expresión para ti…</p>
       </PastelCard>
     )
   }
@@ -72,17 +72,17 @@ export default function NewChunkInvitation({ userId }: Props) {
   if (!chunk) {
     return (
       <PastelCard tone="mint" className="flex flex-col items-start gap-3">
-        <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+        <span className="rounded-full bg-ink px-3.5 py-1.5 ts-badge text-paper">
           Para descubrir
         </span>
-        <h2 className="text-h3 text-ink">Explora algo nuevo</h2>
-        <p className="text-body-sm text-ink-secondary">
+        <h2 className="ts-headline text-ink">Explora algo nuevo</h2>
+        <p className="ts-body text-ink-secondary">
           {suggestion.status === 'unavailable'
             ? 'No pudimos comprobar qué expresión te corresponde.'
             : 'No encontramos otra expresión disponible para tu nivel.'}
         </p>
         <Link
-          className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-body-sm font-bold text-paper hover:bg-ink/90 active:scale-[0.98]"
+          className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 ts-button text-paper hover:bg-ink/90 active:scale-[0.98]"
           href="/courses"
         >
           <span>Explorar la Ruta</span>
@@ -113,11 +113,11 @@ export default function NewChunkInvitation({ userId }: Props) {
     <PastelCard tone="mint" className="flex flex-col items-start gap-4">
       {/* Header pills */}
       <div className="flex w-full items-center justify-between gap-2">
-        <span className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-bold text-paper">
+        <span className="rounded-full bg-ink px-3.5 py-1.5 ts-badge text-paper">
           Para descubrir
         </span>
         {tagOrCategory && (
-          <span className="rounded-full bg-ink/10 px-3.5 py-1.5 text-xs font-medium text-ink">
+          <span className="rounded-full bg-ink/10 px-3.5 py-1.5 ts-chip text-ink">
             {tagOrCategory}
           </span>
         )}
@@ -126,15 +126,15 @@ export default function NewChunkInvitation({ userId }: Props) {
       {/* Title + Audio trigger */}
       <div className="flex w-full items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl" lang="en">
+          <h2 className="ts-headline-xl text-ink" lang="en">
             {textToSpeak}
           </h2>
           {chunk.ipa && (
-            <p className="font-ipa text-body-md text-ink-secondary">
+            <p className="ts-ipa-sm text-ink-secondary">
               {chunk.ipa}
             </p>
           )}
-          <p className="text-body-md font-bold text-ink">
+          <p className="ts-body-xl-strong text-ink">
             {chunk.meaning}
           </p>
         </div>
@@ -165,11 +165,11 @@ export default function NewChunkInvitation({ userId }: Props) {
               <Volume2 size={14} aria-hidden />
             </button>
           </div>
-          <p className="text-body-md font-medium text-ink" lang="en">
+          <p className="ts-body-lg text-ink" lang="en">
             {exampleEn}
           </p>
           {exampleEs && (
-            <p className="mt-1 text-body-sm text-ink-secondary">
+            <p className="mt-1 ts-body-translation">
               {exampleEs}
             </p>
           )}
@@ -178,7 +178,7 @@ export default function NewChunkInvitation({ userId }: Props) {
 
       {/* Bottom CTA */}
       <Link
-        className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-body-sm font-bold text-paper transition-transform hover:bg-ink/90 active:scale-[0.98]"
+        className="focus-ring mt-2 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 ts-button text-paper transition-transform hover:bg-ink/90 active:scale-[0.98]"
         href={`/practice/chunks?chunk=${encodeURIComponent(chunk.id)}`}
       >
         <span>Aprender esta expresión</span>

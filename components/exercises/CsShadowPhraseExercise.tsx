@@ -2,11 +2,7 @@
 
 // Planned structure:
 // <CsShadowPhraseExercise>
-'use client'
-
-// Planned structure:
-// <CsShadowPhraseExercise>
-//   <PhraseHeader />        — phrase + Listen button
+//   <ShadowPhraseCard />    — phrase + IPA + normal/slow listen
 //   <MicButton />           — useSpeechRecognition → transcript
 //   <ShadowingFallback />   — unsupported/failed recognition → honest unscored continue
 //   <PronunciationFeedback /> — score + word/phoneme breakdown
@@ -15,12 +11,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Loader2, Mic, MicOff } from '@/components/icons'
 import Button from '@/components/ui/Button'
-import { ListenButton } from '@/components/ui/ListenButton'
+import { ShadowPhraseCard } from '@/components/exercises/ShadowPhraseCard'
 import PronunciationFeedback from '@/components/lesson/PronunciationFeedback'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { SCORING_UNAVAILABLE_SHADOW_ES } from '@/lib/speech/browser-support-message'
 import { scorePronunciation, getFeedbackMessage, calculateXP } from '@/lib/pronunciation/scoring'
-import { speak } from '@/lib/phoneme-practice/tts'
 import { cn } from '@/lib/cn'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { feedbackFromScoringResult } from '@/lib/pronunciation/feedback/from-scoring'
@@ -38,9 +33,10 @@ interface Props {
     timeMs: number,
     extras?: GenericRenderExtras,
   ) => void
+  onSkip?: () => void
 }
 
-export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
+export function CsShadowPhraseExercise({ exercise, onResult, onSkip }: Props) {
   const { user } = useAuth()
   const { status, result: speechResult, userAudioUrl, errorCode, isSupported, start, stop, reset } =
     useSpeechRecognition()
@@ -112,65 +108,69 @@ export function CsShadowPhraseExercise({ exercise, onResult }: Props) {
   const isBusy = isTranscribing || isScoring
 
   return (
-    <div className="layout-stack-loose w-full items-center">
-      <div className="flex flex-col items-center gap-2">
-        <p className="m-0 max-w-xs text-center text-body-lg font-medium text-fg">
-          {exercise.phrase}
-        </p>
-        {exercise.phraseIpa ? (
-          <p className="font-ipa m-0 max-w-md text-center text-body-md leading-relaxed text-fg-muted">
-            {exercise.phraseIpa}
-          </p>
-        ) : null}
-        <ListenButton onPlay={() => speak(exercise.phrase)} label="Escuchar" />
-      </div>
+    <div className="flex w-full flex-col items-stretch gap-4">
+      <ShadowPhraseCard phrase={exercise.phrase} phraseIpa={exercise.phraseIpa} />
 
       {!scoring && !isShadowing && (
-        <div className="flex flex-col items-center gap-3">
-          <button
-            type="button"
-            onClick={isListening ? stop : start}
-            disabled={isDone || isBusy}
-            aria-label={
-              isListening ? 'Detener grabación' : isBusy ? 'Procesando tu respuesta' : 'Grabar mi voz'
-            }
-            className={cn(
-              'flex h-16 w-16 items-center justify-center rounded-full border-none text-on-primary transition-all duration-200 focus-ring disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
-              // Grabar es el estado deseado, no una alarma: acento del dominio
-              // de pronunciación en vez del rojo de error, igual que en
-              // SpokenProductionControls.
-              isListening && 'bg-[var(--c-pronunciacion)] hover:opacity-90 active:scale-95',
-              isBusy && 'bg-[var(--c-pronunciacion)]/70 disabled:opacity-100',
-              !isListening && !isBusy && 'bg-[var(--c-pronunciacion)] hover:opacity-90 active:scale-95',
-            )}
-          >
-            {isBusy ? (
-              <Loader2 size={26} className="animate-spin" />
-            ) : isListening ? (
-              <MicOff size={26} />
-            ) : (
-              <Mic size={26} />
-            )}
-          </button>
-          <p className="m-0 text-body-md font-semibold text-fg" role="status" aria-live="polite">
-            {isListening
-              ? 'Escuchando… habla en voz alta'
-              : isTranscribing
-                ? 'Escuchando lo que dijiste…'
-                : isScoring
-                  ? 'Analizando tu respuesta…'
-                  : 'Toca para hablar'}
-          </p>
-          <p className="m-0 text-caption text-fg-subtle">
-            {isListening
-              ? 'Toca el botón cuando termines'
-              : isTranscribing
-                ? 'Convirtiendo tu audio en texto. No cierres esta pantalla.'
-                : isScoring
-                  ? 'Comprobando tu pronunciación'
-                  : 'Escucha el modelo y repítelo en inglés'}
-          </p>
-        </div>
+        <>
+          <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border bg-surface px-4 py-8 text-center sm:py-10">
+            {/* Anillo neutro alrededor del botón azul, igual que SpokenProductionControls. */}
+            <span className="flex size-[9rem] items-center justify-center rounded-full bg-surface-sunken">
+              <button
+                type="button"
+                onClick={isListening ? stop : start}
+                disabled={isDone || isBusy}
+                aria-label={
+                  isListening ? 'Detener grabación' : isBusy ? 'Procesando tu respuesta' : 'Grabar mi voz'
+                }
+                className={cn(
+                  'flex size-[7.25rem] cursor-pointer items-center justify-center rounded-full border-none bg-primary text-on-primary transition-all duration-200 focus-ring disabled:cursor-not-allowed',
+                  isListening && 'animate-pulse',
+                  isBusy && 'opacity-70 disabled:opacity-70',
+                  !isListening && !isBusy && 'hover:opacity-90 active:scale-95 disabled:opacity-40',
+                )}
+              >
+                {isBusy ? (
+                  <Loader2 size={40} className="animate-spin" />
+                ) : isListening ? (
+                  <MicOff size={40} />
+                ) : (
+                  <Mic size={40} />
+                )}
+              </button>
+            </span>
+            <div className="flex flex-col items-center gap-0.5">
+              <p className="m-0 text-body-md font-semibold text-fg" role="status" aria-live="polite">
+                {isListening
+                  ? 'Escuchando… habla en voz alta'
+                  : isTranscribing
+                    ? 'Escuchando lo que dijiste…'
+                    : isScoring
+                      ? 'Analizando tu respuesta…'
+                      : 'Toca para hablar'}
+              </p>
+              <p className="m-0 text-caption text-fg-muted">
+                {isListening
+                  ? 'Toca el botón cuando termines'
+                  : isTranscribing
+                    ? 'Convirtiendo tu audio en texto. No cierres esta pantalla.'
+                    : isScoring
+                      ? 'Comprobando tu pronunciación'
+                      : 'Escucha el modelo y repítelo en inglés'}
+              </p>
+            </div>
+          </div>
+          {onSkip && (
+            <button
+              type="button"
+              onClick={onSkip}
+              disabled={isBusy || isListening}
+              className="min-h-11 cursor-pointer self-center rounded-md border-none bg-transparent px-1 text-body-md font-medium text-fg-muted underline underline-offset-4 transition-colors hover:text-fg focus-ring disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Omitir este ejercicio
+            </button>
+          )}
+        </>
       )}
 
       {isShadowing && !scoring && (

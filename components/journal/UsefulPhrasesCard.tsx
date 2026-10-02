@@ -108,10 +108,10 @@ export function UsefulPhrasesCard({
               className="flex items-center justify-between gap-3 rounded-2xl bg-butter-soft p-3.5 shadow-2xs transition-all hover:bg-butter-soft/90"
             >
               <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                <span className="font-sans text-body-md sm:text-body-lg font-extrabold text-ink truncate">
+                <span className="ts-row-title text-ink truncate">
                   {item.phrase}
                 </span>
-                <span className="font-sans text-body-sm text-ink-secondary truncate">
+                <span className="ts-body-translation text-ink-secondary truncate">
                   {item.es}
                 </span>
               </div>

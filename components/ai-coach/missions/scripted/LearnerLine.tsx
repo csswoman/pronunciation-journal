@@ -4,7 +4,7 @@
 // <LearnerLine>
 //   <ShadowingPanel />           (escuchar el modelo antes/después de hablar)
 //   <LearnerSpeechControls />    (captura con osciloscopio real)
-//   <LineResult />               (veredicto + línea coloreada + fix + escucha)
+//   <LineResult />               (palabras por color + diagnóstico + repetir/siguiente)
 //   <SelfPlaybackAudioBar />     (comparación en modo práctica sin STT)
 //   <RetryAndContinue />         (repetir / continuar)
 // </LearnerLine>
@@ -15,11 +15,7 @@ import { useLearnerSpeechCapture } from '@/hooks/useLearnerSpeechCapture'
 import { useVoiceLevel } from '@/hooks/useVoiceLevel'
 import { defaultEvaluationEngine } from '@/lib/exercises/evaluation'
 import { getEvaluationWordResults } from '@/lib/exercises/evaluation/word-results'
-import { useSyllableFeedback } from '@/hooks/useSyllableFeedback'
-import { buildRemediation } from '@/lib/pronunciation/syllable-remediation'
-import { pickPrimaryFix } from '@/lib/pronunciation/pick-primary-fix'
-import { describePhonemeInWord } from '@/lib/pronunciation/phoneme-in-word'
-import { LineResult, type LineResultFix } from './LineResult'
+import { LineResult } from './LineResult'
 import { SelfPlaybackAudioBar } from '@/components/pronunciation/SelfPlaybackAudioBar'
 import Button from '@/components/ui/Button'
 import { ArrowRight } from '@/components/icons'
@@ -48,8 +44,6 @@ export function LearnerLine({ line, missionId, onLineComplete }: Props) {
 
   const [attempt, setAttempt] = useState<LineAttemptResult | null>(null)
   const [isScoring, setIsScoring] = useState(false)
-
-  const syllableMap = useSyllableFeedback(attempt?.wordResults ?? [])
 
   useEffect(() => {
     return release
@@ -94,21 +88,6 @@ export function LearnerLine({ line, missionId, onLineComplete }: Props) {
     attempt,
     line.text,
   ])
-
-  const primaryFix = attempt
-    ? pickPrimaryFix(attempt.wordResults, syllableMap)
-    : null
-
-  const remediation = primaryFix ? buildRemediation(primaryFix.culprit) : null
-
-  const fix: LineResultFix | null = (() => {
-    if (!primaryFix) return null
-    const explanation = describePhonemeInWord(primaryFix.syllableText, primaryFix.culprit)
-    if (!explanation) return null
-    const phonemeIpa = remediation?.ipa ?? `/${primaryFix.culprit.ipa ?? ''}/`
-    const status = primaryFix.culprit.status === 'missing' ? 'missing' : 'incorrect'
-    return { explanation, phonemeIpa, status }
-  })()
 
   const handleRetry = useCallback(() => {
     setAttempt(null)
@@ -171,12 +150,7 @@ export function LearnerLine({ line, missionId, onLineComplete }: Props) {
 
         {attempt && (
           <LineResult
-            score={attempt.score}
             wordResults={attempt.wordResults}
-            syllableMap={syllableMap}
-            fix={fix}
-            remediation={remediation}
-            targetText={line.text}
             userAudioUrl={capture.userAudioUrl}
             onRetry={handleRetry}
             onContinue={() => onLineComplete(attempt)}

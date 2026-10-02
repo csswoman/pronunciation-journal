@@ -37,6 +37,14 @@ export interface PhonemeArticulationGuide {
   jawOpening: JawOpening;
   vocalCordsVibrate: boolean;
   visualCueEs: string;
+  /** Diphthongs only: the posture the mouth glides to after the starting one. */
+  glide?: ArticulationGlide;
+}
+
+export interface ArticulationGlide {
+  tonguePosition: TonguePosition;
+  lipShape: LipShape;
+  jawOpening: JawOpening;
 }
 
 export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = {
@@ -73,12 +81,13 @@ export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = 
     category: "diphthong",
     voicing: "voiced",
     mannerEs: "Diptongo de cierre frontal",
-    placeEs: "De media-frontal a alta",
+    placeEs: "La lengua sube hacia adelante",
     lipShape: "spread",
     tonguePosition: "mid-front",
     jawOpening: "medium",
     vocalCordsVibrate: true,
     visualCueEs: "Deslizamiento: empieza con la boca entreabierta en 'e' y desliza hacia la 'i' tensando los labios.",
+    glide: { tonguePosition: "high-front", lipShape: "spread", jawOpening: "narrow" },
   },
   "/ɛ/": {
     symbol: "/ɛ/",
@@ -194,12 +203,13 @@ export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = 
     category: "diphthong",
     voicing: "voiced",
     mannerEs: "Diptongo de cierre posterior",
-    placeEs: "De media-posterior a redondeada cerrada",
+    placeEs: "Labios que se cierran en círculo",
     lipShape: "rounded",
     tonguePosition: "mid-back",
     jawOpening: "medium",
     vocalCordsVibrate: true,
     visualCueEs: "Empieza en 'o' redondeando los labios y ve cerrando el círculo hacia 'u'.",
+    glide: { tonguePosition: "high-back", lipShape: "rounded", jawOpening: "narrow" },
   },
   "/ɔː/": {
     symbol: "/ɔː/",
@@ -233,12 +243,13 @@ export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = 
     category: "diphthong",
     voicing: "voiced",
     mannerEs: "Diptongo amplio de apertura a cierre",
-    placeEs: "De abierta a cerrada frontal",
+    placeEs: "Boca abierta que se cierra sonriendo",
     lipShape: "spread",
     tonguePosition: "low-front",
     jawOpening: "wide",
     vocalCordsVibrate: true,
     visualCueEs: "Comienza con la mandíbula bien abierta ('a') y ciérrala estirando los labios en una sonrisa ('i').",
+    glide: { tonguePosition: "high-front", lipShape: "spread", jawOpening: "narrow" },
   },
   "/aʊ/": {
     symbol: "/aʊ/",
@@ -246,12 +257,13 @@ export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = 
     category: "diphthong",
     voicing: "voiced",
     mannerEs: "Diptongo amplio de apertura a cierre",
-    placeEs: "De abierta a redondeada posterior",
+    placeEs: "Boca abierta que se cierra en círculo",
     lipShape: "rounded",
     tonguePosition: "low-front",
     jawOpening: "wide",
     vocalCordsVibrate: true,
     visualCueEs: "Comienza con la mandíbula abierta ('a') y ciérrala redondeando los labios ('u').",
+    glide: { tonguePosition: "high-back", lipShape: "rounded", jawOpening: "narrow" },
   },
   "/ɔɪ/": {
     symbol: "/ɔɪ/",
@@ -259,12 +271,13 @@ export const ARTICULATION_GUIDE_MAP: Record<string, PhonemeArticulationGuide> = 
     category: "diphthong",
     voicing: "voiced",
     mannerEs: "Diptongo de cierre frontal",
-    placeEs: "De redondeada posterior a estirada frontal",
+    placeEs: "De labios redondos a sonrisa",
     lipShape: "spread",
     tonguePosition: "mid-back",
     jawOpening: "medium",
     vocalCordsVibrate: true,
     visualCueEs: "Empieza con labios redondeados ('o') y muévelos rápidamente hacia una sonrisa ('i').",
+    glide: { tonguePosition: "high-front", lipShape: "spread", jawOpening: "narrow" },
   },
 
   // --- Consonantes: Fricativas Interdentales y Labiodentales ---

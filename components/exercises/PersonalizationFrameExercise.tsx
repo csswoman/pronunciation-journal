@@ -15,10 +15,12 @@
 // </PersonalizationFrameExercise>
 
 import { useRef, useState } from 'react'
+import { Lightbulb } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { gradePersonalization } from '@/lib/exercises/personalization'
 import { STRUCTURE_CHECKS } from '@/lib/exercises/structure-checks'
-import { isOnline, gradeProduction } from '@/lib/exercises/grade-production-client'
+import { isOnline } from '@/lib/exercises/grade-production-client'
+import { useProductionGrading } from '@/hooks/useProductionGrading'
 import { buildPersonalizationTaskPrompt } from '@/lib/ai-prompts'
 import { SelfAssessPrompt } from './SelfAssessPrompt'
 import type { PersonalizationExercise } from '@/lib/exercises/types'
@@ -38,7 +40,8 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
   const [showSelfAssess, setShowSelfAssess] = useState(false)
   const [issues, setIssues] = useState<string[]>([])
   const [hints, setHints] = useState<string[]>([])
-  const [polishing, setPolishing] = useState(false)
+  const polishPipeline = useProductionGrading({ exerciseKey: `${exercise.id}:polish` })
+  const polishing = polishPipeline.grading
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null)
   const startedAt = useRef(Date.now())
 
@@ -77,7 +80,7 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
 
   const handlePolish = async () => {
     if (!isOnline() || polishing) return
-    setPolishing(true)
+    setAiSuggestion(null)
     try {
       const firstReq = exercise.requires?.[0]
       const checker = firstReq ? STRUCTURE_CHECKS[firstReq] : undefined
@@ -88,7 +91,7 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
         example: exercise.example,
       })
 
-      const grade = await gradeProduction({
+      const grade = await polishPipeline.grade({
         targetItem,
         taskPrompt,
         production: exercise.frame.replace('___', value.trim()),
@@ -101,25 +104,23 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
       }
     } catch {
       // AI polishing error is non-blocking
-    } finally {
-      setPolishing(false)
     }
   }
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-1">
-        <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-subtle">
+      <div className="flex flex-col items-start gap-5">
+        <span className="rounded-full bg-primary px-5 py-2.5 font-mono text-body-sm font-bold uppercase tracking-widest text-on-accent">
           Habla de ti
         </span>
-        <h2 className="text-body-md font-semibold text-fg">Completa la oración</h2>
+        <h2 className="font-display text-h3 font-bold leading-tight text-fg sm:text-h2">Completa la oración</h2>
         {exercise.hintEs && (
-          <p className="text-body-sm text-fg-muted">{exercise.hintEs}</p>
+          <p className="mt-2 text-body-lg text-fg-muted">{exercise.hintEs}</p>
         )}
       </div>
 
-      <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6">
-        <div className="flex flex-wrap items-center gap-2 text-h3 font-medium text-fg sm:text-h2">
+      <div className="rounded-2xl border border-sky-deep/30 bg-sky p-6 text-center shadow-2xs sm:p-10">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-4 font-display text-2xl font-bold leading-relaxed text-ink sm:text-3xl">
           <span>{prefix}</span>
           <input
             value={value}
@@ -133,20 +134,23 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
             disabled={done || showSelfAssess}
             aria-label="Espacio a completar"
             placeholder={exercise.slot === 'number' ? 'ej. 25' : '…'}
-            className="min-w-28 max-w-xs rounded-lg border border-border-default bg-surface-raised px-3 py-1.5 text-h3 text-fg focus-ring placeholder:text-fg-subtle sm:text-h2"
+            className="min-w-28 max-w-xs rounded-2xl border-2 border-ink bg-paper px-5 py-2 text-center font-display text-2xl font-bold text-ink focus-ring placeholder:text-fg-muted disabled:opacity-60 sm:text-3xl"
           />
           <span>{suffix}</span>
         </div>
       </div>
 
       {exercise.example && !done && (
-        <p className="text-body-sm text-fg-muted">
-          Ejemplo: <span className="italic text-fg">{exercise.example}</span>
+        <p className="flex items-center gap-3 rounded-2xl bg-surface-sunken px-5 py-4 text-body-sm text-fg-muted">
+          <Lightbulb size={16} aria-hidden className="shrink-0" />
+          <span>
+            Ejemplo: <span className="italic text-fg">{exercise.example}</span>
+          </span>
         </p>
       )}
 
       {issues.length > 0 && !done && !showSelfAssess && (
-        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error">
+        <div role="alert" className="flex flex-col gap-1 text-body-sm text-error font-medium">
           {issues.map((issue, idx) => (
             <p key={idx}>{issue}</p>
           ))}
@@ -154,7 +158,7 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
       )}
 
       {hints.length > 0 && !done && !showSelfAssess && (
-        <div className="flex flex-col gap-1 text-body-sm text-fg-muted">
+        <div className="flex flex-col gap-1 text-body-sm text-fg-muted font-medium">
           {hints.map((hint, idx) => (
             <p key={idx}>💡 {hint}</p>
           ))}
@@ -186,16 +190,21 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
       )}
 
       {!done && !showSelfAssess && (
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          fullWidth
-          onClick={submit}
-          disabled={!value.trim()}
-        >
-          Comprobar
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            className="rounded-full font-bold"
+            onClick={submit}
+            disabled={!value.trim()}
+          >
+            <span>Comprobar</span>
+            <span className="hidden rounded-md bg-ink/10 px-2 py-0.5 font-mono text-tiny font-bold sm:inline-flex" aria-hidden>
+              Enter
+            </span>
+          </Button>
+        </div>
       )}
 
       {done && isOnline() && (
@@ -212,8 +221,8 @@ export function PersonalizationFrameExercise({ exercise, onResult }: Props) {
               {polishing ? 'Revisando con IA…' : 'Pulir con IA'}
             </Button>
           </div>
-          {aiSuggestion && (
-            <p className="text-body-sm text-fg-muted">{aiSuggestion}</p>
+          {(aiSuggestion || polishPipeline.error) && (
+            <p role={polishPipeline.error ? 'alert' : undefined} className="text-body-sm text-fg-muted">{aiSuggestion ?? polishPipeline.error}</p>
           )}
         </div>
       )}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
+import { TRANSCRIPTION_AUDIO_BITRATE } from '@/lib/speech/recording-config'
 
 export type RecorderState = 'idle' | 'recording' | 'done' | 'error'
 
@@ -20,6 +21,7 @@ interface UseVoiceRecorderReturn {
 }
 
 const RECORDER_MIME_TYPES = [
+  'audio/ogg;codecs=opus',
   'audio/webm;codecs=opus',
   'audio/webm',
   'audio/mp4;codecs=mp4a.40.2',
@@ -66,8 +68,8 @@ export function createAudioRecorder(stream: MediaStream): RecorderInitResult {
 
     try {
       const recorder = mimeType
-        ? new MediaRecorder(stream, { mimeType })
-        : new MediaRecorder(stream)
+        ? new MediaRecorder(stream, { mimeType, audioBitsPerSecond: TRANSCRIPTION_AUDIO_BITRATE })
+        : new MediaRecorder(stream, { audioBitsPerSecond: TRANSCRIPTION_AUDIO_BITRATE })
 
       return {
         supported: true,

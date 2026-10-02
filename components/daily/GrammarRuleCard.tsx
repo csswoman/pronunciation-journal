@@ -22,8 +22,8 @@ export function GrammarRuleCard({ rule, onContinue }: Props) {
     <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-lg border border-border-subtle bg-surface-raised p-[var(--layout-card-pad)] sm:gap-5">
       <div className="flex w-full flex-col items-center gap-1 text-center">
         <span className="font-kicker text-accent">Regla</span>
-        <h2 className="m-0 text-h4 font-semibold text-fg">{rule.title}</h2>
-        {rule.goal && <p className="m-0 text-body-sm text-fg-muted">{rule.goal}</p>}
+        <h2 className="m-0 ts-headline text-fg">{rule.title}</h2>
+        {rule.goal && <p className="m-0 ts-body text-fg-muted">{rule.goal}</p>}
       </div>
 
       <dl className="m-0 flex w-full flex-col gap-2">
@@ -33,7 +33,7 @@ export function GrammarRuleCard({ rule, onContinue }: Props) {
             className="flex items-baseline gap-2 rounded-md bg-surface-sunken px-4 py-3"
           >
             <dt className="font-kicker w-16 shrink-0 text-fg-subtle">{row.key}</dt>
-            <dd className="m-0 text-body-md text-fg">{row.value}</dd>
+            <dd className="m-0 ts-body text-fg">{row.value}</dd>
           </div>
         ))}
       </dl>

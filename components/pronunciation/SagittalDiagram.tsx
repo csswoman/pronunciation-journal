@@ -7,6 +7,7 @@ import type {
 } from "@/lib/pronunciation/articulation-guide-data";
 import { getTongueGeometry } from "@/lib/pronunciation/sagittal-tongue-geometry";
 import { cn } from "@/lib/cn";
+import { SagittalTongueMotion, SagittalTongueStatic } from "./SagittalTongue";
 
 // Planned structure:
 // <SagittalDiagram>
@@ -14,7 +15,7 @@ import { cn } from "@/lib/cn";
 //   <HeadProfile />        — silhouette + oral cavity
 //   <PalateAndTeeth />     — hard palate, velum, incisors
 //   <ReferenceTongue />    — dashed outline of the contrasting sound
-//   <TongueBody />         — active tongue + contact point
+//   <SagittalTongueStatic | SagittalTongueMotion />
 //   <Larynx />             — voicing indicator
 // </SagittalDiagram>
 interface Props {
@@ -23,6 +24,11 @@ interface Props {
   speed?: "normal" | "slow";
   /** Tongue position of the other sound in a contrast, drawn as a dashed ghost. */
   referencePosition?: TonguePosition;
+  /**
+   * Morph the tongue from rest into the posture instead of idling at it.
+   * `replayKey` changes restart the cycle (e.g. when audio starts).
+   */
+  motion?: { replayKey: number };
 }
 
 export function SagittalDiagram({
@@ -30,18 +36,21 @@ export function SagittalDiagram({
   isAnimating = true,
   speed = "normal",
   referencePosition,
+  motion,
 }: Props) {
   const gradientId = useId();
   const tongue = useMemo(
     () => getTongueGeometry(guide.tonguePosition),
     [guide.tonguePosition],
   );
+  // Diphthongs default to showing where the glide ends as the dashed ghost.
+  const ghostPosition = referencePosition ?? guide.glide?.tonguePosition;
   const reference = useMemo(
     () =>
-      referencePosition && referencePosition !== guide.tonguePosition
-        ? getTongueGeometry(referencePosition)
+      ghostPosition && ghostPosition !== guide.tonguePosition
+        ? getTongueGeometry(ghostPosition)
         : null,
-    [referencePosition, guide.tonguePosition],
+    [ghostPosition, guide.tonguePosition],
   );
 
   return (
@@ -132,46 +141,22 @@ export function SagittalDiagram({
         />
       )}
 
-      {/* 9. Cuerpo de la lengua */}
-      <g
-        className={cn(
-          isAnimating && (speed === "slow" ? "animate-tongue-breathe-slow" : "animate-tongue-breathe"),
-        )}
-      >
-        <path
-          d={tongue.path}
-          fill={`url(#${gradientId})`}
-          className="stroke-primary transition-all duration-500 motion-reduce:transition-none"
-          strokeWidth="2.8"
-          strokeLinejoin="round"
+      {/* 9. Cuerpo de la lengua: reposo → postura, o postura fija */}
+      {motion ? (
+        <SagittalTongueMotion
+          guide={guide}
+          gradientId={gradientId}
+          speed={speed}
+          replayKey={motion.replayKey}
         />
-
-        {/* 10. Surco medial: da volumen al dorso */}
-        <path
-          d="M 74,138 Q 104,128 134,133"
-          fill="none"
-          className="stroke-primary/25"
-          strokeWidth="1.5"
-          strokeDasharray="2 3"
+      ) : (
+        <SagittalTongueStatic
+          tongue={tongue}
+          gradientId={gradientId}
+          isAnimating={isAnimating}
+          speed={speed}
         />
-
-        {/* 11. Punto de articulación: sólo pulsa si hay contacto real */}
-        {tongue.isContact && (
-          <circle
-            cx={tongue.contactX}
-            cy={tongue.contactY}
-            r="5.5"
-            className="fill-primary animate-ping opacity-70 motion-reduce:animate-none"
-          />
-        )}
-        <circle
-          cx={tongue.contactX}
-          cy={tongue.contactY}
-          r="4"
-          className="fill-primary stroke-surface-raised transition-all duration-500 motion-reduce:transition-none"
-          strokeWidth="1.5"
-        />
-      </g>
+      )}
 
       {/* 12. Laringe y cuerdas vocales anatómicas */}
       {guide.vocalCordsVibrate ? (

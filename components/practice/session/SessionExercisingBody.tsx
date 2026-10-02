@@ -19,7 +19,8 @@ import { ExerciseRenderer } from './ExerciseRenderer'
 import { InlineFeedback } from './InlineFeedback'
 import { ExitConfirmSheet } from '@/components/exercises/ExitConfirmSheet'
 import type React from 'react'
-import type { PracticeExercise, PracticeSubmitHandler, SessionResult } from '@/lib/practice/types'
+import { PhonemeMissBanner } from '@/components/phoneme-practice/PhonemeMissBanner'
+import type { PhonemePayload, PracticeExercise, PracticeSubmitHandler, SessionResult } from '@/lib/practice/types'
 
 type Phase = 'exercising' | 'feedback' | 'hints' | 'complete'
 
@@ -48,6 +49,11 @@ interface SessionExercisingBodyProps {
   state: SessionExercisingBodyState
   handlers: SessionExercisingBodyHandlers
   lessonFooter?: React.ReactNode
+}
+
+function correctLabelsOf(payload: PhonemePayload): string[] {
+  const correct = new Set(payload.correctIds)
+  return payload.options.filter((o) => correct.has(o.id)).map((o) => o.label)
 }
 
 function buildPartialResult(results: SessionResult['results']): SessionResult {
@@ -93,6 +99,14 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
         <InlineFeedback isCorrect={lastFeedback} />
       )}
 
+      {phase === 'hints' && current?.payload.kind === 'phoneme' && focusUi && (
+        <PhonemeMissBanner
+          correctLabels={correctLabelsOf(current.payload)}
+          onRetry={onRetry}
+          onContinue={onHintContinue}
+        />
+      )}
+
       {phase === 'hints' && current?.payload.kind === 'phoneme' && !focusUi && (
         <ExerciseHints
           ipa={current.payload.ipa}
@@ -125,17 +139,6 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
         }
         footer={
           <>
-            {phase === 'hints' && current?.payload.kind === 'phoneme' && (
-              <div className="w-full">
-                <ExerciseHints
-                  ipa={current.payload.ipa}
-                  targetWord={current.payload.targetWord}
-                  onRetry={onRetry}
-                  onContinue={onHintContinue}
-                  voice={currentVoice}
-                />
-              </div>
-            )}
             {lessonFooter}
             <ExitConfirmSheet
               open={showExitConfirm}
@@ -170,7 +173,7 @@ export function SessionExercisingBody({ state, handlers, lessonFooter }: Session
           aria-valuemin={0}
           aria-valuemax={stepTotal}
           aria-label={`Paso ${stepCurrent} de ${stepTotal}`}
-          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-sunken"
+          className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-border-subtle"
         >
           <div
             className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out-quart"

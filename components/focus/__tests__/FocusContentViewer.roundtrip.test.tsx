@@ -50,7 +50,7 @@ async function answerFocusExercise(focus: FocusContent) {
   await db.focusContent.put(focus)
   render(<FocusContentViewer content={focus} sprintId={SPRINT} />)
   fireEvent.click(screen.getByRole('button', { name: 'Comenzar ejercicios' }))
-  fireEvent.click(await screen.findByRole('button', { name: /^walked$/ }))
+  fireEvent.click(await screen.findByRole('button', { name: /walked$/ }))
   fireEvent.click(await screen.findByRole('button', { name: /continuar/i }))
   await screen.findByText('Práctica terminada')
   await waitFor(async () => expect(await outbox('activity_sessions')).toHaveLength(1))
@@ -108,7 +108,7 @@ describe('FocusContentViewer runtime exit', { timeout: 20_000 }, () => {
     await db.focusContent.put(focus)
     render(<FocusContentViewer content={focus} sprintId={SPRINT} />)
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar ejercicios' }))
-    await screen.findByRole('button', { name: /^walked$/ })
+    await screen.findByRole('button', { name: /walked$/ })
 
     expect(await outbox('answer_history')).toEqual([])
     expect(await outbox('activity_sessions')).toEqual([])

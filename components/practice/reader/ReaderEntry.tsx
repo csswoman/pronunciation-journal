@@ -150,7 +150,7 @@ export function ReaderEntry() {
 
   if (mode === 'reading' && selectedPassage) {
     return (
-      <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+      <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
         <div className="flex items-center justify-between border-b border-border-default pb-4">
           <button
             type="button"
@@ -187,6 +187,7 @@ export function ReaderEntry() {
     <>
       <ReaderCatalog
         passages={passages}
+        previewWords={previewWords}
         onSelectPassage={(p) => {
           setSelectedPassage(p)
           setMode('reading')

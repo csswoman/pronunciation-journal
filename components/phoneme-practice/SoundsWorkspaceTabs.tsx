@@ -1,4 +1,4 @@
-import { LayoutGrid } from "@/components/icons";
+import { cn } from "@/lib/cn";
 
 export type SoundsWorkspaceTab = "sounds" | "minimal-pairs" | "intonation" | "path";
 
@@ -17,9 +17,9 @@ const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
 
 export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props) {
   return (
-    <div className="sound-lab__workspace-row">
+    <div className="sound-lab__workspace-row flex items-center gap-1.5 p-1 rounded-full bg-surface-sunken border border-border">
       <div
-        className="sound-lab__workspace-tabs"
+        className="flex items-center gap-1 overflow-x-auto scrollbar-none"
         role="tablist"
         aria-label="Contenido de pronunciación"
       >
@@ -30,8 +30,12 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
               key={tab.id}
               type="button"
               role="tab"
-              className="sound-lab__workspace-tab"
-              data-active={isActive ? "true" : undefined}
+              className={cn(
+                "inline-flex items-center justify-center px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+                isActive
+                  ? "bg-primary text-on-primary shadow-xs"
+                  : "text-fg-muted hover:text-fg hover:bg-surface-raised",
+              )}
               aria-selected={isActive}
               tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(tab.id)}
@@ -40,17 +44,16 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
             </button>
           );
         })}
+        <button
+          type="button"
+          onClick={onOpenIPA}
+          className="inline-flex items-center justify-center px-4 py-1.5 ts-pill text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
+          aria-label="Abrir tabla IPA de referencia"
+          title="Tabla IPA"
+        >
+          Tabla IPA
+        </button>
       </div>
-      <button
-        type="button"
-        className="sound-lab__ipa-trigger"
-        onClick={onOpenIPA}
-        aria-label="Abrir tabla IPA de referencia"
-        title="Tabla IPA"
-      >
-        <LayoutGrid size={15} aria-hidden />
-        <span className="sound-lab__ipa-trigger-label">Tabla IPA</span>
-      </button>
     </div>
   );
 }

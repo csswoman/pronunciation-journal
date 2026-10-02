@@ -6,7 +6,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 import type { GenerateContentParameters } from "@google/genai";
-import { FALLBACK_MODELS, getErrorStatus, getFastThinkingConfig, shouldTryNextModel } from "./fallback";
+import { FALLBACK_MODELS, getErrorStatus, getFastThinkingConfig, isTimeoutLikeError, shouldTryNextModel } from "./fallback";
 import { filterAvailable, markCooldownFromError } from "./cooldown";
 import { recordModelFailure, recordModelSuccess, reserveModel } from "@/lib/ai-usage/budget";
 
@@ -41,6 +41,9 @@ export interface CallWithFallbackOptions {
   totalTimeoutMs?: number;
   /** Maximum provider calls for an interactive request. */
   maxAttempts?: number;
+  thinking?: 'minimal' | 'low';
+  signal?: AbortSignal;
+  allowEmptyText?: boolean;
   /** Model order for this task. Defaults to the high-throughput chain. */
   models?: readonly string[];
   /** Stable route/feature label used for shared daily quota reservations. */
@@ -81,6 +84,9 @@ export async function callWithFallback<T>(
     models = FALLBACK_MODELS,
     feature = "gemini-unattributed",
     skipBudgetReservation = false,
+    thinking = 'minimal',
+    signal,
+    allowEmptyText = false,
   } = options;
   const ai = new GoogleGenAI({ apiKey });
   let lastError: unknown;
@@ -88,6 +94,7 @@ export async function callWithFallback<T>(
   const deadlineAt = Date.now() + totalTimeoutMs;
 
   for (const model of filterAvailable(models).slice(0, maxAttempts)) {
+    signal?.throwIfAborted();
     const remainingBeforeReservation = deadlineAt - Date.now();
     if (remainingBeforeReservation <= 0) break;
     if (!skipBudgetReservation && !(await reserveModel(model, feature))) {
@@ -99,13 +106,15 @@ export async function callWithFallback<T>(
       const remainingMs = deadlineAt - Date.now();
       if (remainingMs <= 0) break;
       const attemptTimeoutMs = Math.max(1, Math.min(timeoutMs, remainingMs));
-      const abortSignal = AbortSignal.timeout(attemptTimeoutMs);
-      const thinkingConfig = getFastThinkingConfig(model);
+      const abortSignal = signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(attemptTimeoutMs)])
+        : AbortSignal.timeout(attemptTimeoutMs);
+      const thinkingConfig = getFastThinkingConfig(model, thinking);
       const effectiveConfig = thinkingConfig
         ? { ...params.config, thinkingConfig: (params.config as { thinkingConfig?: unknown } | undefined)?.thinkingConfig ?? thinkingConfig }
         : { ...params.config };
 
-      const result = await ai.models.generateContent({
+      const result = await withGeminiTimeout(ai.models.generateContent({
         model,
         ...params,
         config: {
@@ -113,13 +122,14 @@ export async function callWithFallback<T>(
           httpOptions: { ...effectiveConfig?.httpOptions, timeout: attemptTimeoutMs },
           abortSignal,
         },
-      });
-      if (!result.text) throw new Error("Empty response from AI");
-      const parsed = parse(result.text);
+      }), attemptTimeoutMs);
+      if (!result.text && !allowEmptyText) throw new Error("Empty response from AI");
+      const parsed = parse(result.text ?? '');
       void recordModelSuccess(model, feature, Date.now() - startedAt);
       return parsed;
     } catch (err: unknown) {
       lastError = err;
+      signal?.throwIfAborted();
       markCooldownFromError(model, err);
       void recordModelFailure(model, feature, getErrorStatus(err), String((err as { name?: unknown })?.name ?? "error"), Date.now() - startedAt);
       if (Date.now() >= deadlineAt) break;
@@ -132,6 +142,9 @@ export async function callWithFallback<T>(
   }
   if (Date.now() >= deadlineAt) {
     throw Object.assign(new Error(`Gemini request timed out after ${totalTimeoutMs}ms`), { status: 504 });
+  }
+  if (lastError && isTimeoutLikeError(lastError)) {
+    throw Object.assign(new Error('Every model timed out'), { status: 504 });
   }
   throw lastError ?? new Error("All fallback models failed");
 }

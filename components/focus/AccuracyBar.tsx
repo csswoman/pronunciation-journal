@@ -29,8 +29,8 @@ export function AccuracyBar({ label, value, sampleCount, className }: AccuracyBa
   return (
     <div className={cn('flex flex-col gap-1', className)}>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-body-sm text-fg">{label}</span>
-        <span className={cn('text-tiny tabular-nums font-semibold shrink-0', textColor)}>
+        <span className="ts-row-title text-fg">{label}</span>
+        <span className={cn('ts-stat shrink-0', textColor)}>
           {pct}%
         </span>
       </div>
@@ -45,7 +45,7 @@ export function AccuracyBar({ label, value, sampleCount, className }: AccuracyBa
         />
       </div>
       {typeof sampleCount === 'number' && (
-        <span className="text-tiny text-fg-subtle">{sampleCount} intentos en 30 días</span>
+        <span className="ts-caption text-fg-subtle">{sampleCount} intentos en 30 días</span>
       )}
     </div>
   )

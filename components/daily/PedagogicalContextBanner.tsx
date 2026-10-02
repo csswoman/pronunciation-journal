@@ -13,8 +13,8 @@ export function PedagogicalContextBanner({ arc }: Props) {
   if (!diagnosticPrescription && !journalRepairs) return null
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl border border-border-default bg-surface-raised text-body-sm shadow-xs mb-3">
-      <div className="flex items-center gap-1.5 font-semibold text-primary">
+    <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl border border-border-default bg-surface-raised shadow-xs mb-3">
+      <div className="flex items-center gap-1.5 ts-label-strong text-primary">
         <Sparkles className="w-4 h-4 text-primary" aria-hidden="true" />
         <span>Foco personalizado:</span>
       </div>

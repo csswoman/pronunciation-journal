@@ -24,13 +24,13 @@ export function SetupStepIndicator({ step }: SetupStepIndicatorProps) {
           <li key={s.id} className="flex items-center gap-2" aria-current={isCurrent ? 'step' : undefined}>
             <span
               className={cn(
-                'flex h-6 w-6 items-center justify-center rounded-full text-tiny font-extrabold',
+                'flex h-6 w-6 items-center justify-center rounded-full ts-row-number',
                 isCurrent || isDone ? 'bg-cta-bg text-cta-fg' : 'border border-border-default text-fg-subtle',
               )}
             >
               {index + 1}
             </span>
-            <span className={cn('text-body-sm font-semibold', isCurrent ? 'text-fg' : 'text-fg-subtle')}>
+            <span className={cn('ts-label-strong', isCurrent ? 'text-fg' : 'text-fg-subtle')}>
               {s.label}
             </span>
             {index < STEPS.length - 1 && <span className="h-px w-8 bg-border-default" aria-hidden="true" />}

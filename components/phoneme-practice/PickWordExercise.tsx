@@ -11,6 +11,7 @@ import { useState } from 'react'
 import type { Exercise } from '@/lib/phoneme-practice/types'
 import { speak } from '@/lib/phoneme-practice/tts'
 import { PhonemePlayButton } from '@/components/phoneme-practice/PhonemePlayButton'
+import { PhonemeStimulusCard } from '@/components/phoneme-practice/PhonemeStimulusCard'
 import { AuditoryDiscriminationBase } from '@/components/phoneme-practice/AuditoryDiscriminationBase'
 import { playUiCue } from '@/lib/ui-sounds/cues'
 
@@ -54,11 +55,20 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
   const ipaDisplay = rawIpa ? `/${rawIpa}/` : undefined
 
   const stimulusSlot = (
-    <PhonemePlayButton
-      ariaLabel={`Escuchar ${exercise.ipa}`}
-      ipa={exercise.ipa}
-      caption={exercise.ipa}
-      size="lg"
+    <PhonemeStimulusCard
+      button={
+        <PhonemePlayButton
+          ariaLabel={`Escuchar ${exercise.ipa}`}
+          ipa={exercise.ipa}
+          size="lg"
+          className="size-18 border-transparent bg-ink text-white shadow-none hover:border-transparent hover:bg-ink hover:text-white"
+        />
+      }
+      caption={
+        <>
+          Escucha el sonido <span className="font-ipa text-ink!">{ipaDisplay ?? exercise.ipa}</span>
+        </>
+      }
     />
   )
 
@@ -66,7 +76,7 @@ export function PickWordExercise({ exercise, onSubmit }: Props) {
     <AuditoryDiscriminationBase
       title={<>¿Qué palabras llevan el sonido <span className="font-ipa text-primary">{ipaDisplay ?? exercise.ipa}</span>?</>}
       kicker={ipaDisplay ? `Sonido ${ipaDisplay} · Selección múltiple` : 'Selección múltiple'}
-      hint="Puedes seleccionar más de una opción que contenga el fonema"
+      hint="Puede haber más de una."
       stimulusSlot={stimulusSlot}
       options={exercise.options}
       selectedIds={[...selected]}

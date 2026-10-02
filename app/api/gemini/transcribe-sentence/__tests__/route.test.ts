@@ -4,6 +4,12 @@ const mocks = vi.hoisted(() => ({
   validateBody: vi.fn(),
   callWithFallback: vi.fn(),
   from: vi.fn(),
+  afterTasks: [] as Array<() => Promise<void>>,
+}))
+
+vi.mock('next/server', async (importOriginal) => ({
+  ...await importOriginal<typeof import('next/server')>(),
+  after: (task: () => Promise<void>) => mocks.afterTasks.push(task),
 }))
 
 vi.mock('@/lib/api/guards', () => ({
@@ -19,7 +25,8 @@ vi.mock('@/lib/api/guards', () => ({
 
 vi.mock('@/lib/gemini/client', () => ({
   callWithFallback: mocks.callWithFallback,
-  getErrorStatus: () => 500,
+  getErrorStatus: (err: { status?: number }) => err.status ?? 500,
+  withGeminiTimeout: <T>(promise: Promise<T>) => promise,
 }))
 
 vi.mock('@/lib/supabase/server', () => ({
@@ -66,6 +73,7 @@ beforeEach(() => {
   mocks.validateBody.mockReset()
   mocks.callWithFallback.mockReset()
   mocks.from.mockReset()
+  mocks.afterTasks.length = 0
   process.env.GEMINI_API_KEY = 'test'
 })
 
@@ -86,6 +94,9 @@ describe('transcribe-sentence route', () => {
     expect(await first.json()).toEqual({ transcript: 'hello world' })
     expect(await second.json()).toEqual({ transcript: 'hello world', cached: true })
     expect(mocks.callWithFallback).toHaveBeenCalledTimes(1)
+    expect(upsert).not.toHaveBeenCalled()
+    expect(mocks.afterTasks).toHaveLength(1)
+    await mocks.afterTasks[0]()
     expect(upsert).toHaveBeenCalledWith(
       expect.objectContaining({
         user_id: 'u1',
@@ -122,7 +133,7 @@ describe('transcribe-sentence route', () => {
     const res = await POST(reqWith() as never)
     const body = await res.json()
 
-    expect(res.status).toBe(500)
+    expect(res.status).toBe(400)
     expect(body.error).toBe('Failed to transcribe sentence')
     expect(mocks.callWithFallback).not.toHaveBeenCalled()
   })

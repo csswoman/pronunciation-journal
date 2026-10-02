@@ -4,6 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderGenericExercise } from '@/lib/practice/exercise-renderer/generic-registry'
 import type { PersonalizationExercise } from '@/lib/exercises/types'
 
+const aiMocks = vi.hoisted(() => ({ gradeProduction: vi.fn() }))
+vi.mock('@/lib/exercises/grade-production-client', async importOriginal => ({
+  ...await importOriginal<typeof import('@/lib/exercises/grade-production-client')>(),
+  gradeProduction: aiMocks.gradeProduction,
+}))
+
 const frameExercise: PersonalizationExercise = {
   id: 'pers-frame-1',
   type: 'personalization',
@@ -27,6 +33,10 @@ const openExercise: PersonalizationExercise = {
 describe('PersonalizationExercise', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    aiMocks.gradeProduction.mockReset().mockResolvedValue({
+      correct: true, usedTarget: true, grammaticallyCorrect: true, constraintMet: true,
+      score: 100, feedback: 'Tu oración está bien.',
+    })
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
@@ -72,7 +82,7 @@ describe('PersonalizationExercise', () => {
     expect(screen.getByText('¿Qué harías si ganaras la lotería?')).toBeInTheDocument()
     expect(screen.getByText(/second conditional/i)).toBeInTheDocument()
 
-    const textarea = screen.getByPlaceholderText('Escribe aquí tu respuesta…')
+    const textarea = screen.getByRole('textbox')
     fireEvent.change(textarea, {
       target: { value: 'If I won the lottery, I would buy a big house.' },
     })
@@ -114,5 +124,25 @@ describe('PersonalizationExercise', () => {
     })
 
     expect(screen.queryByRole('button', { name: 'Pulir con IA' })).not.toBeInTheDocument()
+  })
+
+  it('serves repeated polishing from the local cache without another AI call', async () => {
+    render(renderGenericExercise(frameExercise, { onResult: vi.fn() }))
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '25' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Comprobar' }))
+    for (let i = 0; i < 2; i++) {
+      fireEvent.click(screen.getByRole('button', { name: 'Pulir con IA' }))
+      await screen.findByText('Tu oración está bien.')
+    }
+    expect(aiMocks.gradeProduction).toHaveBeenCalledOnce()
+  })
+
+  it('shows a recoverable polishing error rather than silently hiding it', async () => {
+    aiMocks.gradeProduction.mockRejectedValueOnce(new Error('provider unavailable'))
+    render(renderGenericExercise(frameExercise, { onResult: vi.fn() }))
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '25' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Comprobar' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Pulir con IA' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('No se pudo corregir')
   })
 })

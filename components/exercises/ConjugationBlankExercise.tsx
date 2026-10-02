@@ -8,7 +8,7 @@
 //   <SubmitButton />
 // </ConjugationBlankExercise>
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Fragment } from 'react'
 import { Lightbulb } from '@/components/icons'
 import Button from '@/components/ui/Button'
 import { useUISounds } from '@/hooks/useUISounds'
@@ -115,27 +115,45 @@ export function ConjugationBlankExercise({
         />
       )}
 
-      <Button
-        type="button"
-        variant="primary"
-        size="lg"
-        fullWidth
-        disabled={done || !answer.trim()}
-        onClick={submit}
-      >
-        Comprobar
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="primary"
+          size="lg"
+          className="rounded-full font-bold"
+          disabled={done || !answer.trim()}
+          onClick={submit}
+        >
+          <span>Comprobar</span>
+          <span className="hidden rounded-md bg-ink/10 px-2 py-0.5 font-mono text-tiny font-bold sm:inline-flex" aria-hidden>
+            Enter
+          </span>
+        </Button>
+      </div>
     </div>
   )
 }
 
 function SentencePrompt({ sentence, lemma }: { sentence: string; lemma?: string }) {
+  const parts = sentence.includes('___') ? sentence.split('___') : [sentence]
   return (
-    <div className="rounded-xl border border-border-default bg-surface-sunken/50 p-5 sm:p-6 text-center">
-      <p className="text-h3 font-medium leading-relaxed text-fg sm:text-h2">{sentence}</p>
+    <div className="flex flex-col items-center gap-4 rounded-2xl border border-sky-deep/30 bg-sky p-8 text-center shadow-2xs sm:p-10">
+      <p className="flex flex-wrap items-baseline justify-center gap-x-2.5 font-display text-2xl font-bold leading-relaxed text-ink sm:text-3xl">
+        {parts.map((part, i) => (
+          <Fragment key={i}>
+            {part.trim() ? <span>{part.trim()}</span> : null}
+            {i < parts.length - 1 ? (
+              <span
+                aria-hidden
+                className="inline-block h-7 w-28 border-b-2 border-dashed border-ink/40 sm:w-32"
+              />
+            ) : null}
+          </Fragment>
+        ))}
+      </p>
       {lemma ? (
-        <p className="mt-3 text-caption text-fg-muted">
-          Verbo en infinitivo: <strong className="font-mono font-semibold text-primary">{lemma}</strong>
+        <p className="rounded-full bg-paper/60 px-4 py-1.5 text-body-sm font-medium text-ink-muted">
+          Verbo en infinitivo: <strong className="ml-1 font-display font-bold text-ink">{lemma}</strong>
         </p>
       ) : null}
     </div>
@@ -155,8 +173,8 @@ function AnswerInput({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor="conjugation-input" className="text-body-sm font-medium text-fg-muted">
-        Forma verbal conjugada
+      <label htmlFor="conjugation-input" className="text-body-sm font-semibold text-fg">
+        Forma conjugada
       </label>
       <input
         id="conjugation-input"
@@ -170,8 +188,8 @@ function AnswerInput({
           }
         }}
         disabled={done}
-        placeholder="Escribe la forma verbal…"
-        className="min-h-13 rounded-xl border border-border-default bg-surface-sunken/60 px-4 py-3 text-body-lg text-fg focus-ring placeholder:text-fg-subtle"
+        placeholder="Escribe la forma correcta…"
+        className="min-h-14 rounded-2xl border-2 border-border-strong bg-surface-sunken px-5 py-3.5 text-body-lg text-fg focus:border-primary focus-ring placeholder:text-fg-muted disabled:opacity-60 disabled:cursor-not-allowed"
       />
     </div>
   )

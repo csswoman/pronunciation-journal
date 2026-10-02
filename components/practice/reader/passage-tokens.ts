@@ -1,6 +1,6 @@
 export type PassageToken =
   | { kind: 'text'; value: string; sentenceIndex: number }
-  | { kind: 'word'; value: string; lookup: string; context: string; emphasized: boolean; sentenceIndex: number }
+  | { kind: 'word'; value: string; lookup: string; context: string; emphasized: boolean; highlighted: boolean; sentenceIndex: number }
 
 export interface SentenceTokenGroup {
   sentenceIndex: number;
@@ -29,13 +29,48 @@ function isEmphasized(text: string, index: number): boolean {
   return openingMarkers % 2 === 1 && text.indexOf('**', index) !== -1
 }
 
-/** Splits a passage without changing its visible whitespace or punctuation. */
-export function tokenizePassage(text: string): PassageToken[] {
+interface WordSpan {
+  index: number
+  value: string
+  highlighted: boolean
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/** Multi-word targets ("dependency array") become one span so they render as a single chip. */
+function phraseSpans(text: string, targets: string[]): WordSpan[] {
+  const phrases = targets.map((t) => t.trim()).filter((t) => /\s/.test(t))
+  return phrases.flatMap((phrase) => {
+    const pattern = new RegExp(`(?<![A-Za-z])${escapeRegExp(phrase).replace(/\s+/g, '\\s+')}(?![A-Za-z])`, 'gi')
+    return [...text.matchAll(pattern)].map((m) => ({ index: m.index ?? 0, value: m[0], highlighted: true }))
+  })
+}
+
+function collectSpans(text: string, targets: string[]): WordSpan[] {
+  const targetSet = new Set(targets.map((t) => t.trim().toLocaleLowerCase('en-US')))
+  const phrases = phraseSpans(text, targets)
+  const words = [...text.matchAll(WORD)]
+    .map((m) => {
+      const index = m.index ?? 0
+      const lookup = m[0].toLocaleLowerCase('en-US').replaceAll('’', "'")
+      return { index, value: m[0], highlighted: isEmphasized(text, index) || targetSet.has(lookup) }
+    })
+    .filter((w) => !phrases.some((p) => w.index >= p.index && w.index < p.index + p.value.length))
+  return [...phrases, ...words].sort((a, b) => a.index - b.index)
+}
+
+/**
+ * Splits a passage without changing its visible whitespace or punctuation.
+ * `targets` are the key words/phrases; they are flagged `highlighted` (as are **bold** words).
+ */
+export function tokenizePassage(text: string, targets: string[] = []): PassageToken[] {
   const tokens: PassageToken[] = []
   let cursor = 0
 
-  for (const match of text.matchAll(WORD)) {
-    const index = match.index ?? 0
+  for (const span of collectSpans(text, targets)) {
+    const { index, value } = span
     if (index > cursor) {
       tokens.push({
         kind: 'text',
@@ -43,13 +78,13 @@ export function tokenizePassage(text: string): PassageToken[] {
         sentenceIndex: sentenceIndexFor(text, cursor),
       })
     }
-    const value = match[0]
     tokens.push({
       kind: 'word',
       value,
-      lookup: value.toLocaleLowerCase('en-US').replaceAll('’', "'"),
+      lookup: value.toLocaleLowerCase('en-US').replaceAll('’', "'").replace(/\s+/g, ' '),
       context: sentenceFor(text, index),
       emphasized: isEmphasized(text, index),
+      highlighted: span.highlighted,
       sentenceIndex: sentenceIndexFor(text, index),
     })
     cursor = index + value.length

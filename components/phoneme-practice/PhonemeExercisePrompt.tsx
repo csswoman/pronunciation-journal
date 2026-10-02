@@ -12,7 +12,7 @@ interface Props {
   /** Optional soft label above the title (e.g. "SONIDO /iː/ · PARES MÍNIMOS"). */
   kicker?: string
   title?: ReactNode
-  hint?: string
+  hint?: ReactNode
   centered?: boolean
   spacious?: boolean
 }
@@ -39,7 +39,7 @@ export function PhonemeExercisePrompt({
         </span>
       )}
       {title && (
-        <h2 className="text-h3 font-bold text-fg leading-tight sm:text-h2">
+        <h2 className="font-display text-h3 font-bold text-fg leading-tight sm:text-h2">
           {title}
         </h2>
       )}

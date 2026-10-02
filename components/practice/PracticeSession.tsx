@@ -116,7 +116,8 @@ export default function PracticeSession(config: PracticeConfig) {
   const progressPct = Math.min(
     100,
     Math.round(
-      (Math.min(currentIndex + (phase === 'feedback' ? 1 : 0), exercises.length) /
+      // Antes de responder la barra ya muestra un tramo pequeño; al responder se completa el paso.
+      (Math.min(currentIndex + (phase === 'feedback' ? 1 : 0.1), exercises.length) /
         Math.max(exercises.length, 1)) *
         100,
     ),

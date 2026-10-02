@@ -54,4 +54,18 @@ describe('recordFocusPractice', () => {
     expect(entry).toMatchObject({ table: 'focus_sprints', operation: 'update', matchKey: { id: sprintId } })
     expect(entry?.payload.practice_progress).toMatchObject({ days: [{ day: 1, answeredExerciseKeys: [`${contentId}:exercise-1`] }] })
   })
+
+  it('fusiona acciones concurrentes sin perder el inicio, respuesta ni cierre', async () => {
+    await Promise.all([
+      recordFocusPractice(userId, sprintId, contentId, { kind: 'started' }),
+      recordFocusPractice(userId, sprintId, contentId, { kind: 'answered', exerciseId: 'exercise-1' }),
+      recordFocusPractice(userId, sprintId, contentId, { kind: 'completed' }),
+    ])
+
+    expect((await db.focusSprints.get(sprintId))?.practice?.days[0]).toMatchObject({
+      startedContentIds: [contentId],
+      answeredExerciseKeys: [`${contentId}:exercise-1`],
+      completedContentIds: [contentId],
+    })
+  })
 })

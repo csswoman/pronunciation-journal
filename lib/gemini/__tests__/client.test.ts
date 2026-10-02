@@ -91,6 +91,39 @@ describe("callWithFallback", () => {
   });
 
   describe("successful generation and parsing", () => {
+    it('uses low reasoning for grading and honors an explicit config override', async () => {
+      await callWithFallback('test', { contents: 'grade' }, text => text, {
+        models: ['gemini-3.1-flash-lite'], thinking: 'low',
+      });
+      expect(mocks.generateContent.mock.calls[0][0].config.thinkingConfig).toEqual({ thinkingLevel: 'LOW' });
+    });
+
+    it('allows an empty transcription without treating silence as a provider failure', async () => {
+      mocks.generateContent.mockResolvedValueOnce({ text: '' });
+      expect(await callWithFallback('test', { contents: 'audio' }, text => text, {
+        allowEmptyText: true, models: ['gemini-3.1-flash-lite'],
+      })).toBe('');
+      expect(mocks.generateContent).toHaveBeenCalledOnce();
+    });
+
+    it('does not reserve or call a provider for an already cancelled request', async () => {
+      const controller = new AbortController();
+      controller.abort();
+      await expect(callWithFallback('test', { contents: 'audio' }, text => text, {
+        signal: controller.signal,
+      })).rejects.toMatchObject({ name: 'AbortError' });
+      expect(mocks.reserveModel).not.toHaveBeenCalled();
+      expect(mocks.generateContent).not.toHaveBeenCalled();
+    });
+
+    it('enforces an attempt deadline even if the SDK promise never settles', async () => {
+      mocks.generateContent.mockImplementationOnce(() => new Promise(() => {}));
+      expect(await callWithFallback('test', { contents: 'audio' }, text => text, {
+        timeoutMs: 10, models: ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite'],
+      })).toBe('ok');
+      expect(mocks.generateContent).toHaveBeenCalledTimes(2);
+    });
+
     it("calls generateContent and records success", async () => {
       mocks.generateContent.mockResolvedValueOnce({ text: '{"ans": 42}' });
 
@@ -121,7 +154,7 @@ describe("callWithFallback", () => {
         expect.objectContaining({
           model: "gemini-3.5-flash",
           config: expect.objectContaining({
-            thinkingConfig: { thinkingBudget: 0 },
+            thinkingConfig: { thinkingLevel: 'MINIMAL' },
           }),
         })
       );

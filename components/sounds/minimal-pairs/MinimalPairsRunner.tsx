@@ -2,6 +2,7 @@
 
 import { TrainerControls } from "./TrainerControls";
 import { WordCard } from "./WordCard";
+import { MinimalPairsWorkspaceCard } from "./MinimalPairsWorkspaceCard";
 import { useMinimalPairsRunner } from "./useMinimalPairsRunner";
 import { ContrastMouthComparison } from "@/components/phoneme-practice/ContrastMouthComparison";
 import { cn } from "@/lib/cn";
@@ -11,8 +12,7 @@ export type { Side, Verdict } from "./useMinimalPairsRunner";
 // Planned structure:
 // <MinimalPairsRunner>
 //   <RunnerNav />
-//   <WordCard A | WordCard B />
-//   <TrainerControls />
+//   <MinimalPairsWorkspaceCard | EmbeddedRunnerView />
 // </MinimalPairsRunner>
 
 export interface MinimalPairsRunnerProps {
@@ -63,7 +63,7 @@ function RunnerNav({
 
   return (
     <div className="sound-detail__pairs-practice-nav">
-      <span className="font-ipa text-h3 font-bold text-fg">
+      <span className="ts-ipa-lg text-fg">
         {contrastLabel ?? phoneme}
       </span>
       <span className="font-kicker tabular-nums text-fg-subtle">
@@ -72,7 +72,6 @@ function RunnerNav({
     </div>
   );
 }
-
 
 export function MinimalPairsRunner({
   initialPhoneme,
@@ -128,10 +127,36 @@ export function MinimalPairsRunner({
     ? `${contrast.phonemeA} vs ${contrast.phonemeB}`
     : null;
 
+  if (!embedded) {
+    return (
+      <MinimalPairsWorkspaceCard
+        phoneme={phoneme}
+        contrast={contrast}
+        pair={pair}
+        pairs={pairs}
+        pairIdx={pairIdx}
+        playingSide={playingSide}
+        quizTarget={quizTarget}
+        verdict={verdict}
+        highlights={highlights}
+        isLastPair={isLastPair}
+        isSlow={isSlow}
+        quizActionsRef={quizActionsRef}
+        playSide={playSide}
+        handleStartQuiz={handleStartQuiz}
+        handleReplayClue={handleReplayClue}
+        handleGuess={handleGuess}
+        handlePlayBoth={handlePlayBoth}
+        goToNextPair={goToNextPair}
+        setIsSlow={setIsSlow}
+      />
+    );
+  }
+
   return (
     <section
       id={embedded ? "sound-detail-minimal-pairs-practice" : undefined}
-      className={embedded ? "sound-detail__pairs-practice" : "sound-lab__minimal-pairs-runner"}
+      className="sound-detail__pairs-practice"
       aria-label={`Pares mínimos para ${phoneme}`}
     >
       <RunnerNav
@@ -144,7 +169,6 @@ export function MinimalPairsRunner({
         onExit={onExit}
       />
 
-      {/* Asistente integrado: ¿Cómo cambia la boca? */}
       {contrast ? (
         <ContrastMouthComparison
           phonemeA={contrast.phonemeA}
@@ -154,10 +178,9 @@ export function MinimalPairsRunner({
 
       {!isDone ? (
         <div className="space-y-4">
-          {/* Tarjetas A/B para escuchar palabras */}
           <div
             key={`${phoneme}-${pairIdx}`}
-            className={`${embedded ? "ipa-chart__mpcards sound-detail__mpcards" : "sound-lab__pair-cards"} animate-fadeIn`}
+            className="ipa-chart__mpcards sound-detail__mpcards animate-fadeIn"
           >
             <WordCard
               word={pair.wordA}
@@ -166,12 +189,12 @@ export function MinimalPairsRunner({
               isPlaying={playingSide === "A"}
               highlight={null}
               selectable={false}
-              compact={embedded}
-              workspace={!embedded}
+              compact={true}
+              workspace={false}
               onPlay={() => playSide("A")}
               onPick={() => playSide("A")}
             />
-            {embedded ? <span className="ipa-chart__mpvs">vs</span> : null}
+            <span className="ipa-chart__mpvs">vs</span>
             <WordCard
               word={pair.wordB}
               symbol={pair.phonemeB}
@@ -179,14 +202,13 @@ export function MinimalPairsRunner({
               isPlaying={playingSide === "B"}
               highlight={null}
               selectable={false}
-              compact={embedded}
-              workspace={!embedded}
+              compact={true}
+              workspace={false}
               onPlay={() => playSide("B")}
               onPick={() => playSide("B")}
             />
           </div>
 
-          {/* Paso de discriminación auditiva: Escucha un audio, ¿cuál dijo? */}
           <div className="rounded-2xl border border-border-default bg-surface-sunken p-4 space-y-3">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <span className="text-body-sm font-semibold text-fg">

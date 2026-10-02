@@ -57,12 +57,12 @@ export default function SessionRecapCard({
         <div className="grid h-16 w-16 place-items-center rounded-full bg-primary-soft text-primary">
           <Flame size={30} />
         </div>
-        <h1 className="text-h2 text-fg">
+        <h1 className="ts-headline text-fg">
           ¡Sesión diaria completada!
         </h1>
 
         {topicParts.length > 0 && (
-          <p className="max-w-sm text-body-sm text-fg-muted">
+          <p className="max-w-sm ts-body text-fg-muted">
             Hoy reforzaste{' '}
             <span className="font-semibold text-fg">
               {topicParts.join(' · ')}
@@ -76,21 +76,21 @@ export default function SessionRecapCard({
             <p className="font-kicker text-fg-subtle">
               Palabras de hoy
             </p>
-            <p className="mt-1 text-body-sm text-fg-muted">
+            <p className="mt-1 ts-body text-fg-muted">
               {words.join(' · ')}
             </p>
           </div>
         )}
 
         {dueTomorrow != null && dueTomorrow > 0 && (
-          <p className="text-body-sm text-fg-muted">
-            <span className="font-semibold text-fg">{dueTomorrow}</span>{' '}
+          <p className="ts-body text-fg-muted">
+            <span className="ts-stat text-fg">{dueTomorrow}</span>{' '}
             {dueTomorrow === 1 ? 'palabra vuelve mañana' : 'palabras vuelven mañana'} por repaso
             espaciado.
           </p>
         )}
 
-        <p className="text-body-sm text-fg-subtle">
+        <p className="ts-body-lg-meta text-fg-subtle">
           {(learned ?? 0) > 0
             ? `${learned} / ${ESSENTIAL_WORD_TARGET} palabras esenciales`
             : `Completaste ${stepCount} pasos`}

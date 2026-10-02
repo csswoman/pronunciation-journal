@@ -88,14 +88,14 @@ export default function CoursePathMobileLevelSelect({
         )}
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          <span className="bg-primary text-on-primary font-bold text-xs px-2.5 py-0.5 rounded-full shrink-0 font-display">
+          <span className="bg-primary text-on-primary ts-badge px-2.5 py-0.5 rounded-full shrink-0">
             {activeLabel}
           </span>
-          <span className="text-sm font-bold text-fg truncate">
+          <span className="ts-row-title text-fg truncate">
             {activeTitle ? activeTitle : `Nivel ${activeLabel}`}
           </span>
           {activeCountStr && (
-            <span className="text-xs text-fg-muted font-medium shrink-0 font-sans">
+            <span className="ts-caption text-fg-muted shrink-0">
               · {activeCountStr}
             </span>
           )}
@@ -147,7 +147,7 @@ export default function CoursePathMobileLevelSelect({
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span
                     className={cn(
-                      "px-2 py-0.5 rounded-full text-xs font-bold shrink-0",
+                      "px-2 py-0.5 rounded-full ts-badge shrink-0",
                       isActive
                         ? "bg-primary text-on-primary"
                         : "bg-surface-sunken text-fg-muted"
@@ -156,10 +156,10 @@ export default function CoursePathMobileLevelSelect({
                     {level.spineLabel}
                   </span>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-bold leading-tight text-fg truncate">
+                    <span className="ts-row-title leading-tight text-fg truncate">
                       {titleWithoutSpine || `Nivel ${level.spineLabel}`}
                     </span>
-                    <span className="text-xs text-fg-muted font-sans leading-tight">
+                    <span className="ts-caption text-fg-muted leading-tight">
                       {completedCount}/{totalCount} completadas
                     </span>
                   </div>
@@ -185,7 +185,7 @@ export default function CoursePathMobileLevelSelect({
               <div className="flex items-center gap-2.5 min-w-0">
                 <span
                   className={cn(
-                    "px-2 py-0.5 rounded-full text-xs font-bold shrink-0",
+                    "px-2 py-0.5 rounded-full ts-badge shrink-0",
                     isElectiveActive
                       ? "bg-primary text-on-primary"
                       : "bg-surface-sunken text-fg-muted"
@@ -194,10 +194,10 @@ export default function CoursePathMobileLevelSelect({
                   Opcionales
                 </span>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-bold leading-tight text-fg truncate">
+                  <span className="ts-row-title leading-tight text-fg truncate">
                     Rutas opcionales
                   </span>
-                  <span className="text-xs text-fg-muted font-sans leading-tight">
+                  <span className="ts-caption text-fg-muted leading-tight">
                     {optionalCompletedCount}/{optionalTotalCount} completadas
                   </span>
                 </div>

@@ -12,8 +12,9 @@ describe("IntonationTrainer", () => {
   it("renders intonation pattern selector and target sentence", () => {
     render(<IntonationTrainer />);
 
-    expect(screen.getAllByText("Ascendente ↗ (Pregunta Sí/No)").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Are you ready\?/i)).toBeInTheDocument();
+    expect(screen.getByText("ASCENDENTE ↗")).toBeInTheDocument();
+    expect(screen.getByText("pregunta sí / no")).toBeInTheDocument();
+    expect(screen.getAllByText(/Are you ready\?/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: /Grabar mi entonación/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Siguiente oración/i })).toBeInTheDocument();
     expect(screen.getByTestId("mock-intonation-graph")).toBeInTheDocument();

@@ -10,15 +10,15 @@ describe("MinimalPairsRunner", () => {
     expect(screen.getByLabelText(/A: sheep/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/B: ship/i)).toBeInTheDocument();
 
-    const speedBtn = screen.getByRole("button", { name: /Cambiar a velocidad lenta/i });
-    expect(speedBtn).toBeInTheDocument();
+    const slowBtn = screen.getByRole("button", { name: "0.7x" });
+    expect(slowBtn).toBeInTheDocument();
 
-    fireEvent.click(speedBtn);
-    expect(screen.getByRole("button", { name: /Velocidad lenta activa/i })).toBeInTheDocument();
+    fireEvent.click(slowBtn);
+    expect(slowBtn).toHaveClass("bg-white");
   });
 
-  it("toggles auto-play loop mode", () => {
-    render(<MinimalPairsRunner initialContrastId="iː-ɪ" />);
+  it("toggles auto-play loop mode in embedded mode", () => {
+    render(<MinimalPairsRunner initialContrastId="iː-ɪ" embedded />);
 
     const loopBtn = screen.getByRole("button", { name: /Activar modo escucha continua/i });
     expect(loopBtn).toBeInTheDocument();

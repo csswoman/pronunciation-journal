@@ -42,14 +42,14 @@ const WORKSPACE_HEADER_COPY: Record<Exclude<SoundsWorkspaceTab, "sounds">, {
     subtitle: "De sonidos a frases reales. Un paso claro a la vez.",
   },
   "minimal-pairs": {
-    kicker: "Práctica · Pares mínimos",
-    title: "Entrenamiento de pares mínimos",
-    subtitle: "Entrena tu oído para distinguir diferencias sutiles entre sonidos similares en inglés.",
+    kicker: "PRÁCTICA · PARES MÍNIMOS",
+    title: "Entrena el oído",
+    subtitle: "Distingue dos sonidos que en español suenan igual.",
   },
   intonation: {
-    kicker: "Práctica · Entonación",
-    title: "Entrenador de entonación",
-    subtitle: "Practica el ritmo, la melodía y el tono natural del inglés hablado.",
+    kicker: "PRÁCTICA · ENTONACIÓN",
+    title: "La música de la frase",
+    subtitle: "Ritmo, melodía y tono natural del inglés hablado.",
   },
 };
 
@@ -135,7 +135,7 @@ export function soundLabHeaderCopy(
 ) {
   if (tab !== "sounds") return WORKSPACE_HEADER_COPY[tab];
   return {
-    kicker: "Práctica",
+    kicker: "PRÁCTICA · PRONUNCIACIÓN",
     title: "Laboratorio de sonidos",
     subtitle: headerStatsLine(inProgressCount, totalCount, groupBy),
   };

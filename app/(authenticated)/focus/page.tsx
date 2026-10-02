@@ -1,14 +1,21 @@
+// Planned structure:
+// <FocusRootPage>
+//   <WordCarousel />
+// </FocusRootPage>
+
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { checkAndExpireSprint } from '@/lib/focus/sprint-lifecycle'
+import { WordCarousel } from '@/components/practice/session/WordCarousel'
+import { useLoadingWords } from '@/hooks/useLoadingWords'
 
 export default function FocusRootPage() {
   const router = useRouter()
   const { user, loading } = useAuth()
-  const [checking, setChecking] = useState(true)
+  const words = useLoadingWords()
 
   useEffect(() => {
     if (loading) return
@@ -25,8 +32,6 @@ export default function FocusRootPage() {
         }
       } catch {
         router.replace('/focus/setup')
-      } finally {
-        setChecking(false)
       }
     }
 
@@ -35,9 +40,8 @@ export default function FocusRootPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <div className="text-body-sm text-[var(--text-tertiary)]">
-        {checking ? 'Cargando Modo Foco...' : ''}
-      </div>
+      <WordCarousel words={words} />
     </div>
   )
 }
+

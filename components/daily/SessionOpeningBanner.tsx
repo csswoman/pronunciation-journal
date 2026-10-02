@@ -38,7 +38,7 @@ export default function SessionOpeningBanner({ arc, learned = 0 }: Props) {
         <div className="flex items-end gap-3">
           {soundIpa ? (
             <p
-              className="font-ipa shrink-0 text-display-ipa font-bold leading-none text-primary"
+              className="ts-ipa-lg shrink-0 text-primary"
               aria-label={`Sonido del día ${soundIpa}`}
             >
               {soundIpa}
@@ -62,7 +62,7 @@ export default function SessionOpeningBanner({ arc, learned = 0 }: Props) {
           <div className="mb-1.5 flex items-baseline justify-between gap-3">
             <p className="font-caption text-fg-muted">Palabras esenciales</p>
             <p className="font-caption tabular-nums text-fg">
-              <span className="font-semibold">{learnedCount}</span>
+              <span className="ts-stat">{learnedCount}</span>
               <span className="text-fg-muted"> / {ESSENTIAL_WORD_TARGET}</span>
             </p>
           </div>
