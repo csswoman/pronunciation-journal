@@ -199,6 +199,8 @@ interface BaseProductionExercise extends BaseGenericExercise {
   targetItem: string
   targetMeaning?: string
   targetIpa?: string
+  /** Part of speech key ("verb", "noun"…), when it can be determined. */
+  targetPos?: string
   /** Optional model sentence (hint only, not copied). */
   exampleSentence?: string
   /**

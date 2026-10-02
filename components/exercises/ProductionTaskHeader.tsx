@@ -3,6 +3,8 @@
 import type { ReactNode } from 'react'
 import { ListenButton } from '@/components/ui/ListenButton'
 import { speak } from '@/lib/phoneme-practice/tts'
+import { formatPartOfSpeech } from '@/lib/word-of-day/format-pos'
+import { stripIPASlashes as stripSlashes } from '@/lib/ai-practice/modes/pronunciation'
 import type { SpokenProductionExercise, WrittenProductionExercise } from '@/lib/exercises/types'
 
 type ProductionExercise = WrittenProductionExercise | SpokenProductionExercise
@@ -46,6 +48,7 @@ export function ProductionTaskHeader({ exercise, title, action }: Props) {
   // it big and bold, plus a "listen to it" button, would hand the learner the
   // exact word they're supposed to describe around.
   const hideTargetWord = exercise.constraint?.id === 'rodeo_circumlocution'
+  const posLabel = formatPartOfSpeech(exercise.targetPos)
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -72,7 +75,7 @@ export function ProductionTaskHeader({ exercise, title, action }: Props) {
         </div>
       ) : (
         <div className="flex min-w-0 flex-col gap-2.5 rounded-3xl bg-coral p-6 text-ink">
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
             <span className="min-w-0 font-display text-h3 sm:text-h2 font-bold tracking-tight">
               {exercise.targetItem}
             </span>
@@ -80,8 +83,17 @@ export function ProductionTaskHeader({ exercise, title, action }: Props) {
               iconOnly
               onPlay={() => speak(exercise.targetItem)}
               aria-label={`Escuchar ${exercise.targetItem}`}
+              className="size-12 border-none bg-ink text-white hover:bg-ink/85 [&_svg]:size-5"
             />
+            {posLabel && (
+              <span className="rounded-full bg-ink/10 px-3 py-1 text-caption font-semibold lowercase text-ink">
+                {posLabel}
+              </span>
+            )}
           </div>
+          {exercise.targetIpa && (
+            <p className="m-0 text-body-md text-ink/80">/{stripSlashes(exercise.targetIpa)}/</p>
+          )}
           {exercise.targetMeaning && (
             <p className="m-0 text-body-sm leading-relaxed text-ink/80 text-pretty">
               <span className="font-medium">Significado: </span>

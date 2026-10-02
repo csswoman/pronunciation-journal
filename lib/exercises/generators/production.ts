@@ -9,6 +9,7 @@ import {
   type EligibilityReason,
 } from '@/lib/exercises/eligibility'
 import type { GenerationResult, SkippedEntry } from '@/lib/exercises/generation'
+import { inferPartOfSpeech } from '@/lib/exercises/infer-pos'
 import { exerciseId, pickWeakest } from '@/lib/exercises/utils'
 import { selectConstraints } from '@/lib/exercises/speech-constraints'
 
@@ -78,6 +79,7 @@ function baseFields(entry: WordBankEntry, learnerLevel?: CEFRLevel) {
     targetItem: entry.text,
     targetMeaning: entry.meaning ?? undefined,
     targetIpa: entry.ipa ?? undefined,
+    targetPos: inferPartOfSpeech(entry.meaning),
     exampleSentence: entry.example ?? undefined,
   }
 }
