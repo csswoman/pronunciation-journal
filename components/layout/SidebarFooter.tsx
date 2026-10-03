@@ -12,6 +12,7 @@ import { LogIn, LogOut, Settings2, User } from "@/components/icons";
 import { useSidebar } from "@/components/theme/sidebar/SidebarContext";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 import { QuickSettingsAccordion } from "@/components/layout/QuickSettingsControls";
+import { GuestProgressCard } from "@/components/layout/GuestProgressCard";
 
 export default function SidebarFooter() {
   const router = useRouter();
@@ -92,34 +93,13 @@ export default function SidebarFooter() {
     <div ref={footerRef} className="relative shrink-0 border-t border-border-subtle p-3 space-y-2">
       {/* Guests: single unified block — status, save-progress CTA and settings gear together */}
       {isGuest && !collapsed && (
-        <div className="rounded-lg border border-border-subtle bg-surface-sunken p-2.5 space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="relative grid size-6 shrink-0 place-items-center overflow-hidden rounded-full bg-surface-raised text-fg-subtle">
-                {avatarUrl ? (
-                  <Image src={avatarUrl} alt="" fill sizes="24px" className="object-cover" />
-                ) : (
-                  <User size={12} aria-hidden />
-                )}
-              </span>
-              <span className="truncate font-caption text-tiny font-semibold text-fg-subtle uppercase tracking-wider">
-                Modo invitado
-              </span>
-            </div>
-            {settingsButton}
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              playUiCue("tap");
-              router.push("/login?intent=save");
-            }}
-            className="focus-ring press-feedback flex w-full items-center justify-center gap-2 rounded-md border border-border-default bg-surface hover:bg-surface-sunken py-1.5 px-3 text-caption font-semibold text-fg transition-all"
-          >
-            <LogIn size={14} aria-hidden />
-            Guardar progreso
-          </button>
-        </div>
+        <GuestProgressCard
+          onSave={() => {
+            playUiCue("tap");
+            router.push("/login?intent=save");
+          }}
+          settingsSlot={settingsButton}
+        />
       )}
 
       {/* Collapsed guest: just the gear */}
@@ -164,8 +144,8 @@ export default function SidebarFooter() {
             role="dialog"
             aria-label="Ajustes rápidos"
             className={cn(
-              "panel-reveal fixed bottom-3 z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-xl border border-border-subtle bg-surface-raised p-4 shadow-xl transition-[left] duration-300 cubic-bezier(0.22,1,0.36,1) motion-reduce:transition-none before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised",
-              collapsed ? "left-[calc(60px+0.75rem)]" : "left-[calc(268px+0.75rem)]",
+              "panel-reveal fixed bottom-3 z-50 w-[min(23rem,calc(100vw-1.5rem))] rounded-[20px] border border-border-subtle bg-surface-raised p-4 shadow-xl transition-[left] duration-300 cubic-bezier(0.22,1,0.36,1) motion-reduce:transition-none before:absolute before:-left-2 before:bottom-5 before:size-4 before:rotate-45 before:border-l before:border-b before:border-border-subtle before:bg-surface-raised",
+              collapsed ? "left-[calc(60px+0.75rem)]" : "left-[calc(296px+0.75rem)]",
             )}
           >
             <div className="flex items-center justify-between gap-3 pb-2">

@@ -5,9 +5,7 @@
 //   <Scrim />                         — tap / Escape to dismiss
 //   <aside role="dialog">
 //     <DrawerHeader />                — brand + close button
-//     <nav>                           — reuses NavSection from the desktop sidebar
-//       <SidebarContext.Provider collapsed={false}>
-//         <NavSection todayNav /> <NavSection learnNav /> …
+//     <BottomNavBento />              — pastel tile grid + compact Consultar list
 //     <DrawerFooter />                — identity row + QuickSettings + sign-out
 //   </aside>
 // </BottomNavDrawer>
@@ -15,20 +13,14 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { LogIn, LogOut, User, X } from "@/components/icons";
+import { LogOut, X } from "@/components/icons";
+import { GuestProgressCard } from "@/components/layout/GuestProgressCard";
 import { Logo } from "@/components/illustrations/Logo";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useUserPreferences } from "@/hooks/useUserPreferences";
 import { isAnonymousUser } from "@/lib/auth/is-anonymous";
 import { QuickSettingsAccordion } from "@/components/layout/QuickSettingsControls";
-import {
-  NavSection,
-  todayNav,
-  learnNav,
-  practiceNav,
-  consultNav,
-} from "@/components/theme/sidebar/index";
-import { SidebarContext } from "@/components/theme/sidebar/SidebarContext";
+import { BottomNavBento } from "@/components/layout/BottomNavBento";
 import { playUiCue } from "@/lib/ui-sounds/cues";
 import { cn } from "@/lib/cn";
 
@@ -100,7 +92,7 @@ export default function BottomNavDrawer({ open, onClose, isActive }: BottomNavDr
     <>
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-(--bg-body)/40 backdrop-blur-sm transition-opacity duration-200",
+          "fixed inset-0 z-40 lg:hidden bg-(--bg)/40 backdrop-blur-sm transition-opacity duration-200",
           "motion-reduce:backdrop-blur-none motion-reduce:transition-none",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
@@ -117,12 +109,12 @@ export default function BottomNavDrawer({ open, onClose, isActive }: BottomNavDr
         aria-label="Menú de navegación"
         tabIndex={-1}
         className={cn(
-          "fixed right-0 top-0 z-50 flex w-[80vw] max-w-90 flex-col",
+          "fixed inset-x-0 top-0 z-50 flex flex-col lg:hidden",
           "bottom-[calc(4.25rem+env(safe-area-inset-bottom))]",
-          "rounded-bl-xl border-b border-l border-line-divider bg-(--surface-translucent) shadow-xl backdrop-blur-md outline-none",
+          "bg-(--bg) outline-none",
           "transition-transform duration-300 cubic-bezier(0.22,1,0.36,1)",
           "motion-reduce:backdrop-blur-none motion-reduce:transition-none",
-          open ? "translate-x-0" : "translate-x-full",
+          open ? "visible translate-y-0" : "invisible translate-y-full",
         )}
       >
         {/* Header */}
@@ -144,36 +136,12 @@ export default function BottomNavDrawer({ open, onClose, isActive }: BottomNavDr
         {/* Scroll region — nav sections and the footer controls scroll together
             so nothing is clipped on short viewports. */}
         <div className="sidebar-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <nav aria-label="Secciones" className="px-3 pb-2">
-            <SidebarContext.Provider value={{ collapsed: false }}>
-              <NavSectionGroup section={todayNav} isActive={isActive} onNavigate={onClose} isFirst />
-              <NavSectionGroup section={learnNav} isActive={isActive} onNavigate={onClose} />
-              <NavSectionGroup section={practiceNav} isActive={isActive} onNavigate={onClose} />
-              <NavSectionGroup section={consultNav} isActive={isActive} onNavigate={onClose} />
-            </SidebarContext.Provider>
-          </nav>
+          <BottomNavBento isActive={isActive} onNavigate={onClose} />
 
           {/* Footer — identity + quick settings + session action */}
           <div className="border-t border-border-subtle p-3 pb-4 space-y-3">
           {isGuest ? (
-            <div className="rounded-lg border border-border-subtle bg-surface-sunken p-2.5 space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-raised text-fg-subtle">
-                  <User size={12} aria-hidden />
-                </span>
-                <span className="font-caption text-tiny font-semibold uppercase tracking-wider text-fg-subtle">
-                  Modo invitado
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={goToLogin}
-                className="press-feedback flex w-full items-center justify-center gap-2 rounded-md border border-border-default bg-surface px-3 py-1.5 text-caption font-semibold text-fg transition-colors hover:bg-surface-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                <LogIn size={14} aria-hidden />
-                Guardar progreso
-              </button>
-            </div>
+            <GuestProgressCard onSave={goToLogin} />
           ) : (
             <button
               type="button"
@@ -216,31 +184,5 @@ export default function BottomNavDrawer({ open, onClose, isActive }: BottomNavDr
         </div>
       </aside>
     </>
-  );
-}
-
-/**
- * Wraps NavSection so a tap on any link (or accordion sub-link) closes the drawer.
- * NavSection itself has no close hook, so we intercept clicks that land on an <a>.
- */
-function NavSectionGroup({
-  section,
-  isActive,
-  onNavigate,
-  isFirst,
-}: {
-  section: Parameters<typeof NavSection>[0]["section"];
-  isActive: (href: string) => boolean;
-  onNavigate: () => void;
-  isFirst?: boolean;
-}) {
-  return (
-    <div
-      onClickCapture={(e) => {
-        if ((e.target as HTMLElement).closest("a")) onNavigate();
-      }}
-    >
-      <NavSection section={section} isActive={isActive} isFirst={isFirst} />
-    </div>
   );
 }

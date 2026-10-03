@@ -1,4 +1,5 @@
 import { NavButton } from "./NavButton";
+import { NavIconPill } from "./NavIconPill";
 import { useSidebar } from "./SidebarContext";
 
 export interface NavSubItem {
@@ -6,10 +7,14 @@ export interface NavSubItem {
   href: string;
 }
 
+/** Pastel family: coral=palabras, butter=sonido/lectura, lilac=mazos/progreso, mint=inmersión/diario. */
+export type NavTone = "sky" | "coral" | "butter" | "lilac" | "mint";
+
 export interface NavItem {
   name: string;
   href: string;
   icon: typeof import("@/components/icons").Home;
+  tone?: NavTone;
   children?: NavSubItem[];
 }
 
@@ -20,17 +25,19 @@ interface NavLinkProps {
 
 export function NavLink({ item, active }: NavLinkProps) {
   const { collapsed } = useSidebar();
-  const IconComponent = item.icon;
 
   return (
     <NavButton active={active} as="link" href={item.href} tooltip={item.name}>
-      <span className="relative flex-shrink-0">
-        <IconComponent className="h-5 w-5" />
-      </span>
+      <NavIconPill icon={item.icon} tone={item.tone} className="relative" />
       {!collapsed && (
-        <span className="relative group-hover:text-fg transition-colors duration-[var(--transition-fast)]">
-          {item.name}
-        </span>
+        <>
+          <span className="relative flex-1 truncate group-hover:text-fg transition-colors duration-[var(--transition-fast)]">
+            {item.name}
+          </span>
+          {active && (
+            <span aria-hidden className="relative size-1.5 shrink-0 rounded-full bg-primary" />
+          )}
+        </>
       )}
     </NavButton>
   );

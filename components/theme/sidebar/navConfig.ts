@@ -23,8 +23,8 @@ export const todayNav: NavSectionType = {
   label: "Hoy",
   items: [
     { name: "Inicio", href: "/", icon: Home },
-    { name: "Sesión de hoy", href: "/daily", icon: CalendarCheck },
-    { name: "Mi diario", href: "/journal", icon: Notebook },
+    { name: "Sesión de hoy", href: "/daily", icon: CalendarCheck, tone: "sky" },
+    { name: "Mi diario", href: "/journal", icon: Notebook, tone: "mint" },
   ],
 };
 
@@ -41,13 +41,13 @@ export const coreNav = todayNav;
 export const learnNav: NavSectionType = {
   label: "Aprender",
   items: [
-    { name: "Ruta", href: "/courses", icon: BookOpen },
-    { name: "Modo Foco", href: "/focus", icon: Radar },
-    { name: "Pronunciación", href: "/practice/sounds", icon: MicVocal },
-    { name: "Vocabulario", href: "/practice/essential-words", icon: Layers },
-    { name: "Lectura", href: "/practice/reader", icon: BookOpen },
-    { name: "Inmersión", href: "/practice/immersion", icon: Clapperboard },
-    { name: "Mini lecciones", href: "/mini-lessons", icon: Sparkles },
+    { name: "Ruta", href: "/courses", icon: BookOpen, tone: "sky" },
+    { name: "Modo Foco", href: "/focus", icon: Radar, tone: "lilac" },
+    { name: "Pronunciación", href: "/practice/sounds", icon: MicVocal, tone: "butter" },
+    { name: "Vocabulario", href: "/practice/essential-words", icon: Layers, tone: "coral" },
+    { name: "Lectura", href: "/practice/reader", icon: BookOpen, tone: "butter" },
+    { name: "Inmersión", href: "/practice/immersion", icon: Clapperboard, tone: "mint" },
+    { name: "Mini lecciones", href: "/mini-lessons", icon: Sparkles, tone: "sky" },
   ],
 };
 
@@ -58,9 +58,9 @@ export const exploreNav = learnNav;
 export const practiceNav: NavSectionType = {
   label: "Practicar",
   items: [
-    { name: "Práctica libre", href: "/practice", icon: Target },
-    { name: "Mazos", href: "/practice/decks", icon: BookOpen },
-    { name: "Juegos", href: "/practice/games", icon: Trophy },
+    { name: "Práctica libre", href: "/practice", icon: Target, tone: "coral" },
+    { name: "Mazos", href: "/practice/decks", icon: BookOpen, tone: "lilac" },
+    { name: "Juegos", href: "/practice/games", icon: Trophy, tone: "butter" },
   ],
 };
 
@@ -73,11 +73,11 @@ export const practiceNav: NavSectionType = {
 export const consultNav: NavSectionType = {
   label: "Consultar",
   items: [
-    { name: "Diccionario", href: "/words", icon: LibraryBig },
-    { name: "Guardadas", href: "/tracking", icon: Bookmark },
-    { name: "Tabla IPA", href: "/ipa", icon: Grid2x2 },
-    { name: "Repaso", href: "/practice/review", icon: RefreshCw },
-    { name: "Progreso", href: "/progress", icon: TrendingUp },
+    { name: "Diccionario", href: "/words", icon: LibraryBig, tone: "coral" },
+    { name: "Guardadas", href: "/tracking", icon: Bookmark, tone: "coral" },
+    { name: "Tabla IPA", href: "/ipa", icon: Grid2x2, tone: "butter" },
+    { name: "Repaso", href: "/practice/review", icon: RefreshCw, tone: "sky" },
+    { name: "Progreso", href: "/progress", icon: TrendingUp, tone: "lilac" },
   ],
 };
 
