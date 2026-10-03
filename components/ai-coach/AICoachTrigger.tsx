@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, X } from "@/components/icons";
+import { MessageCircle, X } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { useAICoachStore } from "@/lib/stores/aiCoachStore";
 
@@ -14,7 +14,7 @@ function TriggerIcon({ isOpen }: { isOpen: boolean }) {
   return isOpen ? (
     <X size={18} strokeWidth={2.25} aria-hidden />
   ) : (
-    <Sparkles size={18} strokeWidth={2} aria-hidden />
+    <MessageCircle size={18} strokeWidth={2} aria-hidden />
   );
 }
 

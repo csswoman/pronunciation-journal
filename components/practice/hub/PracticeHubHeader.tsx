@@ -26,12 +26,12 @@ export default function PracticeHubHeader({
   onFilterChange,
 }: Props) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between pb-2">
+    <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-end sm:justify-between pb-1 sm:pb-2">
       <div className="flex flex-col gap-1">
         <span className="font-mono text-tiny font-bold uppercase tracking-wider text-fg-muted select-none">
           PRACTICAR
         </span>
-        <h1 className="font-heading text-h1 font-extrabold text-fg sm:text-4xl">
+        <h1 className="font-heading text-3xl font-extrabold text-fg sm:text-4xl">
           {fromDaily ? 'Buen trabajo. Sigue así' : 'Práctica libre'}
         </h1>
         <p className="font-sans text-body-sm text-fg-muted">
@@ -42,7 +42,7 @@ export default function PracticeHubHeader({
       </div>
 
       <div
-        className="flex flex-wrap items-center gap-1.5 self-start sm:self-auto"
+        className="-mx-4 flex flex-nowrap items-center gap-1.5 self-stretch overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:self-auto sm:overflow-visible sm:px-0 sm:pb-0"
         role="tablist"
         aria-label="Filtro de categorías de práctica"
       >
@@ -56,7 +56,7 @@ export default function PracticeHubHeader({
               aria-selected={isSelected}
               onClick={() => onFilterChange?.(f.id)}
               className={cn(
-                'focus-ring inline-flex min-h-9 items-center rounded-full px-4 py-1.5 font-sans text-caption font-semibold transition-all select-none',
+                'focus-ring inline-flex min-h-9 shrink-0 items-center rounded-full px-3.5 sm:px-4 py-1.5 font-sans text-caption font-semibold transition-all select-none',
                 isSelected
                   ? 'bg-ink text-paper shadow-xs'
                   : 'border border-border-default bg-surface-sunken text-fg-muted hover:bg-surface-raised hover:text-fg',

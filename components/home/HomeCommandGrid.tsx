@@ -122,14 +122,14 @@ export default function HomeCommandGrid({
     isGuest && planSettled && !showActivation && (completedCount >= 1 || allDone);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-5 sm:gap-8">
       {/* Encabezado: saludo + título + marcador de racha */}
       <HomeHeader streakDays={streak ?? 0} onOpenTour={() => setTourOpen(true)} />
 
       {/* Cuadrícula principal de 2 columnas */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-5.5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-4 sm:gap-5.5 items-start">
         {/* Columna Principal (Izquierda) */}
-        <div className="flex flex-col gap-8 min-w-0">
+        <div className="flex flex-col gap-5 sm:gap-8 min-w-0">
           <div className={showPostPlan ? "hidden" : "contents"}>
             <HomeDailyCard
               conceptLesson={conceptLesson}

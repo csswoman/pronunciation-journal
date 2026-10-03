@@ -46,14 +46,14 @@ export function SetupActivationBar({
   const summary = activationSummary(step, selectedGaps, durationDays)
 
   return (
-    <div className="pointer-events-none sticky bottom-4 z-30 mt-6 flex flex-col gap-3">
+    <div className="pointer-events-none sticky bottom-2 z-30 mt-6 flex flex-col gap-3 lg:bottom-4">
       {errorMessage && (
         <div className="pointer-events-auto mx-auto w-full max-w-5xl rounded-2xl border border-error-soft bg-error-soft p-3.5 ts-caption text-error shadow-lg">
           {errorMessage}
         </div>
       )}
 
-      <div className="pointer-events-auto mx-auto flex w-full max-w-5xl items-center justify-between gap-4 rounded-full border border-cta-fg/10 bg-cta-bg p-3 px-6 text-cta-fg shadow-2xl">
+      <div className="pointer-events-auto mx-auto flex w-full max-w-5xl flex-col gap-3 rounded-3xl border border-cta-fg/10 bg-cta-bg p-3 text-cta-fg shadow-2xl sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:rounded-full sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           {step === 'plan' && (
             <button
@@ -80,7 +80,7 @@ export function SetupActivationBar({
           type="button"
           onClick={onPrimary}
           disabled={isDisabled}
-          className="focus-ring flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-cta-fg/20 bg-cta-fg/15 px-6 py-2.5 ts-button-lg text-cta-fg transition-all hover:bg-cta-fg/25 active:bg-cta-fg/30 disabled:cursor-not-allowed disabled:opacity-40"
+          className="focus-ring flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-cta-fg/20 bg-cta-fg/15 px-6 py-2.5 ts-button-lg text-cta-fg transition-all hover:bg-cta-fg/25 active:bg-cta-fg/30 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span>{primaryLabel}</span>
           <span aria-hidden="true">→</span>

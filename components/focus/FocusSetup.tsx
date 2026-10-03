@@ -80,11 +80,11 @@ export function FocusSetup({ userId, isAnonymous = false, suggestedGaps, curricu
   }
 
   return (
-    <PageLayout archetype="catalog" className="mx-auto max-w-5xl pb-24">
+    <PageLayout archetype="catalog" className="mx-auto max-w-5xl pb-4 lg:pb-24">
       <PageHeader
         kicker="MODO FOCO"
         title={TITLE_BY_STEP[step]}
-        subtitle={setupSubtitle(step, selectedGaps.length, durationDays)}
+        subtitle={step === 'plan' ? setupSubtitle(step, selectedGaps.length, durationDays) : undefined}
       />
       <SetupStepIndicator step={step} />
 

@@ -132,7 +132,7 @@ export default function HomeWordOfDayCard({
   return (
     <PastelCard
       tone="coral"
-      className="relative flex h-full flex-col justify-between gap-5 overflow-hidden motion-reduce:shadow-none"
+      className="relative flex h-full flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 overflow-hidden motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="word-of-day-heading"
     >
@@ -179,8 +179,9 @@ export default function HomeWordOfDayCard({
       )}
 
       {word && !loading && (
-        <div className="animate-state-in relative z-1 flex flex-col gap-3" key={word.word}>
-          {/* Grupo de título y pronunciación */}
+        <div className="animate-state-in relative z-1 flex flex-col gap-4" key={word.word}>
+          {/* Grupo título → IPA → significado (espaciado propio: junto, junto, respiro) */}
+          <div className="flex flex-col">
           <div className="flex items-start justify-between gap-3">
             <span
               className={cn(
@@ -202,7 +203,7 @@ export default function HomeWordOfDayCard({
 
           {word.ipa ? (
             <span
-              className="ts-ipa-lg font-ipa text-ink-secondary -mt-1"
+              className="-mt-2 ts-ipa-md font-ipa text-ink-secondary"
               lang="en-fonipa"
             >
               {formatIpaDisplay(word.ipa)}
@@ -211,8 +212,11 @@ export default function HomeWordOfDayCard({
 
           {/* Significado (definición con formato de resaltado) */}
           {word.definition ? (
-            <FormattedDefinition definition={word.definition} />
+            <div className="mt-3 sm:mt-4">
+              <FormattedDefinition definition={word.definition} />
+            </div>
           ) : null}
+          </div>
 
           {/* Ejemplo estilo card con kicker y audio */}
           {example ? (

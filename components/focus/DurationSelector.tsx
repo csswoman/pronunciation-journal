@@ -36,7 +36,7 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
       <span className="ts-kicker text-fg-subtle">
         DURACIÓN DEL SPRINT
       </span>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Duración del sprint">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4" role="radiogroup" aria-label="Duración del sprint">
         {OPTIONS.map((opt) => {
           const selected = value === opt.days
 
@@ -49,14 +49,14 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                 role="radio"
                 aria-checked={true}
                 tabIndex={0}
-                className="focus-ring relative flex flex-col justify-between gap-4 rounded-3xl p-5 border-2 border-ink shadow-md cursor-pointer transition-all"
+                className="focus-ring relative flex flex-col justify-between gap-2 rounded-2xl p-3 sm:gap-4 sm:rounded-3xl sm:p-5 border-2 border-ink shadow-md cursor-pointer transition-all"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-ink">
                     <div className="h-2 w-2 rounded-full bg-white" />
                   </div>
                   {opt.badge && (
-                    <span className="rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white">
+                    <span className="hidden rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white sm:inline">
                       {opt.badge}
                     </span>
                   )}
@@ -66,12 +66,12 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                   <h4 className="ts-card-title text-ink">
                     {opt.label}
                   </h4>
-                  <p className="mt-1 ts-caption text-ink-secondary">
+                  <p className="mt-1 hidden ts-caption text-ink-secondary sm:block">
                     {opt.hint}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-end gap-1.5 opacity-60">
+                <div className="hidden items-center justify-end gap-1.5 opacity-60 sm:flex">
                   {Array.from({ length: opt.days > 7 ? 6 : opt.days }).map((_, i) => (
                     <span key={i} className="h-2 w-2 rounded-full bg-ink" />
                   ))}
@@ -94,14 +94,14 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                 }
               }}
               className={cn(
-                'focus-ring relative flex flex-col justify-between gap-4 rounded-3xl border border-border-default bg-surface-raised p-5 transition-all cursor-pointer hover:border-border-hover hover:shadow-xs',
+                'focus-ring relative flex flex-col justify-between gap-2 rounded-2xl border border-border-default bg-surface-raised p-3 sm:gap-4 sm:rounded-3xl sm:p-5 transition-all cursor-pointer hover:border-border-hover hover:shadow-xs',
                 disabled && 'cursor-not-allowed opacity-50',
               )}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/30 bg-white" />
                 {opt.badge && (
-                  <span className="rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white">
+                  <span className="hidden rounded-full bg-primary px-2.5 py-0.5 ts-badge text-white sm:inline">
                     {opt.badge}
                   </span>
                 )}
@@ -111,12 +111,12 @@ export function DurationSelector({ value, onChange, disabled = false }: Duration
                 <h4 className="ts-card-title text-fg">
                   {opt.label}
                 </h4>
-                <p className="mt-1 ts-caption text-fg-muted">
+                <p className="mt-1 hidden ts-caption text-fg-muted sm:block">
                   {opt.hint}
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-1.5 opacity-30">
+              <div className="hidden items-center justify-end gap-1.5 opacity-30 sm:flex">
                 {Array.from({ length: opt.days > 7 ? 6 : opt.days }).map((_, i) => (
                   <span key={i} className="h-2 w-2 rounded-full bg-fg" />
                 ))}

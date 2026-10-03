@@ -1215,10 +1215,32 @@
   }
 
   .course-path__hero-title {
-    font-size: var(--text-size-body);
+    font-size: clamp(1.25rem, 5vw, 1.65rem);
+  }
+
+  .course-path__hero-desc {
+    font-size: var(--text-size-body-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  .course-path__hero-progress {
+    max-width: none;
+    margin-bottom: var(--space-3);
   }
 
   .course-path__hero-action-text {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .course-path__hero-banner {
+    padding: var(--space-4);
+    border-radius: 20px;
+  }
+
+  /* Illustration only adds height when stacked; keep the CTA above the fold */
+  .course-path__hero-illustration-box {
     display: none;
   }
 }
@@ -1308,72 +1330,32 @@
 /* Pasteles suaves para iconos */
 .course-path__group-icon-box--lilac,
 .course-path__lvb--lilac {
-  background: var(--lilac-soft);
-  color: var(--text-strong);
+  background: var(--lilac);
+  color: var(--ink);
 }
 
 .course-path__group-icon-box--butter,
 .course-path__lvb--butter {
-  background: var(--butter-soft);
-  color: var(--text-strong);
+  background: var(--butter);
+  color: var(--ink);
 }
 
 .course-path__group-icon-box--mint,
 .course-path__lvb--mint {
-  background: var(--mint-soft);
-  color: var(--text-strong);
+  background: var(--mint);
+  color: var(--ink);
 }
 
 .course-path__group-icon-box--coral,
 .course-path__lvb--coral {
-  background: var(--coral-soft);
-  color: var(--text-strong);
+  background: var(--coral);
+  color: var(--ink);
 }
 
 .course-path__group-icon-box--sky,
 .course-path__lvb--sky {
-  background: var(--sky-soft);
-  color: var(--text-strong);
-}
-
-.dark .course-path__group-icon-box--lilac,
-.dark .course-path__lvb--lilac,
-html[data-theme="dark"] .course-path__group-icon-box--lilac,
-html[data-theme="dark"] .course-path__lvb--lilac {
-  background: color-mix(in oklch, var(--lilac) 20%, var(--surface-raised));
-  color: var(--lilac);
-}
-
-.dark .course-path__group-icon-box--butter,
-.dark .course-path__lvb--butter,
-html[data-theme="dark"] .course-path__group-icon-box--butter,
-html[data-theme="dark"] .course-path__lvb--butter {
-  background: color-mix(in oklch, var(--butter) 20%, var(--surface-raised));
-  color: var(--butter);
-}
-
-.dark .course-path__group-icon-box--mint,
-.dark .course-path__lvb--mint,
-html[data-theme="dark"] .course-path__group-icon-box--mint,
-html[data-theme="dark"] .course-path__lvb--mint {
-  background: color-mix(in oklch, var(--mint) 20%, var(--surface-raised));
-  color: var(--mint);
-}
-
-.dark .course-path__group-icon-box--coral,
-.dark .course-path__lvb--coral,
-html[data-theme="dark"] .course-path__group-icon-box--coral,
-html[data-theme="dark"] .course-path__lvb--coral {
-  background: color-mix(in oklch, var(--coral) 20%, var(--surface-raised));
-  color: var(--coral);
-}
-
-.dark .course-path__group-icon-box--sky,
-.dark .course-path__lvb--sky,
-html[data-theme="dark"] .course-path__group-icon-box--sky,
-html[data-theme="dark"] .course-path__lvb--sky {
-  background: color-mix(in oklch, var(--sky) 20%, var(--surface-raised));
-  color: var(--sky);
+  background: var(--sky);
+  color: var(--ink);
 }
 
 .course-path__lesson-group-heading {
@@ -1659,55 +1641,27 @@ html[data-theme="dark"] .course-path__lvb--sky {
 }
 
 .course-path__tag--concepto {
-  background: var(--sky-soft);
-  color: var(--accent-blue);
-  border-color: color-mix(in oklch, var(--sky-deep) 35%, transparent);
+  background: var(--sky);
+  color: var(--ink);
+  border-color: var(--sky-deep);
 }
 
 .course-path__tag--practica {
-  background: var(--mint-soft);
-  color: var(--accent-emerald);
-  border-color: color-mix(in oklch, var(--mint-deep) 35%, transparent);
+  background: var(--mint);
+  color: var(--ink);
+  border-color: var(--mint-deep);
 }
 
 .course-path__tag--pronunciacion {
-  background: var(--lilac-soft);
-  color: var(--accent-purple);
-  border-color: color-mix(in oklch, var(--lilac-deep) 35%, transparent);
+  background: var(--lilac);
+  color: var(--ink);
+  border-color: var(--lilac-deep);
 }
 
 .course-path__tag--repaso {
-  background: var(--butter-soft);
-  color: var(--accent-amber);
-  border-color: color-mix(in oklch, var(--butter-deep) 40%, transparent);
-}
-
-.dark .course-path__tag--concepto,
-html[data-theme="dark"] .course-path__tag--concepto {
-  background: color-mix(in oklch, var(--sky) 15%, var(--surface-raised));
-  color: var(--sky);
-  border-color: color-mix(in oklch, var(--sky) 25%, transparent);
-}
-
-.dark .course-path__tag--practica,
-html[data-theme="dark"] .course-path__tag--practica {
-  background: color-mix(in oklch, var(--mint) 15%, var(--surface-raised));
-  color: var(--mint);
-  border-color: color-mix(in oklch, var(--mint) 25%, transparent);
-}
-
-.dark .course-path__tag--pronunciacion,
-html[data-theme="dark"] .course-path__tag--pronunciacion {
-  background: color-mix(in oklch, var(--lilac) 15%, var(--surface-raised));
-  color: var(--lilac);
-  border-color: color-mix(in oklch, var(--lilac) 25%, transparent);
-}
-
-.dark .course-path__tag--repaso,
-html[data-theme="dark"] .course-path__tag--repaso {
-  background: color-mix(in oklch, var(--butter) 15%, var(--surface-raised));
-  color: var(--butter);
-  border-color: color-mix(in oklch, var(--butter) 25%, transparent);
+  background: var(--butter);
+  color: var(--ink);
+  border-color: var(--butter-deep);
 }
 
 .course-path__duration {
@@ -3205,11 +3159,16 @@ html[data-theme="dark"] .course-path__tag--repaso {
 }
 
 .course-path__client-aside {
-  position: sticky;
-  top: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+@media (min-width: 1024px) {
+  .course-path__client-aside {
+    position: sticky;
+    top: var(--space-6);
+  }
 }
 
 /* ── "Ya puedes decir esto" Inline Block ────────────────── */
@@ -3235,6 +3194,14 @@ html[data-theme="dark"] .course-path__tag--repaso {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+@media (max-width: 639px) {
+  .course-path__ya-puedes {
+    padding: var(--space-4);
+    gap: var(--space-4);
+    margin-block: var(--space-4);
+  }
 }
 
 .course-path__ya-puedes-title-row {

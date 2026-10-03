@@ -6,12 +6,12 @@
  *
  * - 1 word        → text-3xl
  * - 2 to 3 words  → text-2xl
- * - 4+ words      → text-xl sm:text-2xl
+ * - 4+ words      → text-lg sm:text-2xl
  */
 export function getHeroScale(term: string): string {
   const wordCount = term.trim().split(/\s+/).filter(Boolean).length;
-  if (wordCount <= 1) return "text-3xl";
-  if (wordCount <= 3) return "text-2xl";
-  return "text-xl sm:text-2xl";
+  if (wordCount <= 1) return "text-2xl sm:text-3xl";
+  if (wordCount <= 3) return "text-xl sm:text-2xl";
+  return "text-lg sm:text-2xl";
 }
 

@@ -43,7 +43,7 @@ export default function RecommendedPracticeCard({ recommendation, data = EMPTY_D
   return (
     <PastelCard
       tone="accent"
-      className="group relative flex flex-col justify-between gap-5 p-6 sm:p-7 rounded-3xl overflow-hidden shadow-sm motion-reduce:shadow-none min-h-[220px]"
+      className="group relative flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-7 rounded-3xl overflow-hidden shadow-sm motion-reduce:shadow-none sm:min-h-[220px]"
     >
       <div className="flex flex-col gap-3.5 min-w-0 z-10 max-w-xl">
         {/* Encabezado: Kicker tinta sólida + Badge recomendada contorno */}

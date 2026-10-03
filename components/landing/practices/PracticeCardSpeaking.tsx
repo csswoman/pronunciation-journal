@@ -9,7 +9,7 @@ import { MessageSquareText } from "lucide-react";
 
 export function PracticeCardSpeaking() {
   return (
-    <PastelCard tone="lilac" className="flex flex-col justify-between gap-5 p-6 sm:p-7">
+    <PastelCard tone="lilac" className="flex h-full flex-col justify-between gap-5 p-6 sm:p-7">
       <div>
         {/* Header Icon + Kicker */}
         <div className="flex items-center gap-2">

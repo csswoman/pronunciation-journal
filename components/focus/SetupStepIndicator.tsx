@@ -16,7 +16,7 @@ export function SetupStepIndicator({ step }: SetupStepIndicatorProps) {
   const currentIndex = STEPS.findIndex((s) => s.id === step)
 
   return (
-    <ol className="mb-6 flex items-center gap-3" aria-label={`Paso ${currentIndex + 1} de ${STEPS.length}`}>
+    <ol className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 sm:mb-6" aria-label={`Paso ${currentIndex + 1} de ${STEPS.length}`}>
       {STEPS.map((s, index) => {
         const isCurrent = index === currentIndex
         const isDone = index < currentIndex
@@ -33,7 +33,7 @@ export function SetupStepIndicator({ step }: SetupStepIndicatorProps) {
             <span className={cn('ts-label-strong', isCurrent ? 'text-fg' : 'text-fg-subtle')}>
               {s.label}
             </span>
-            {index < STEPS.length - 1 && <span className="h-px w-8 bg-border-default" aria-hidden="true" />}
+            {index < STEPS.length - 1 && <span className="h-px w-4 bg-border-default sm:w-8" aria-hidden="true" />}
           </li>
         )
       })}

@@ -59,7 +59,7 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
   if (plan.days.length === 0) return null
 
   return (
-    <PastelCard tone="sky" className={cn('flex flex-col gap-5 rounded-3xl p-6 text-left shadow-xs', className)}>
+    <PastelCard tone="sky" className={cn('flex flex-col gap-4 rounded-3xl p-5 text-left sm:gap-5 sm:p-6 shadow-xs', className)}>
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-ink px-4 py-1 ts-kicker text-white">
@@ -70,7 +70,7 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
           </span>
         </div>
         <h3 className="ts-card-title text-ink">Así se verá tu sprint</h3>
-        <p className="max-w-3xl ts-body text-ink-secondary">
+        <p className="hidden max-w-3xl ts-body text-ink-secondary sm:block">
           Cada día practicas <span className="ts-label-strong text-ink">{plan.focusLabel}</span> de una forma
           distinta. Solo la mini-historia se crea al activar; el resto lo generas tú cuando quieras.
         </p>
@@ -90,7 +90,7 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
       )}
 
       {plan.hasSoundFocus && (
-        <p className="rounded-2xl bg-white/60 px-4 py-3 ts-body text-ink-secondary">
+        <p className="hidden rounded-2xl bg-white/60 px-4 py-3 ts-body text-ink-secondary sm:block">
           <span className="ts-label-strong text-ink">Sobre tu foco de sonido:</span> el sprint lo trabaja con
           lectura, dictado y canción, pero no evalúa tu pronunciación. Para entrenar el oído, combínalo con
           el laboratorio de sonidos.
@@ -112,7 +112,7 @@ export function SprintPlanPreview({ gaps, durationDays, className }: SprintPlanP
         ))}
       </PlanDayCarousel>
 
-      <p className="ts-caption text-ink-secondary">
+      <p className="hidden ts-caption text-ink-secondary sm:block">
         ¿Te saltas un día? No pasa nada: tu contenido se guarda y retomas donde lo dejaste.
       </p>
     </PastelCard>

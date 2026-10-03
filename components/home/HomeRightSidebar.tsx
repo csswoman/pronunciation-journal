@@ -19,7 +19,7 @@ export default function HomeRightSidebar({
   return (
     <aside
       aria-label="Contenido diario"
-      className="flex min-w-0 flex-col gap-8 self-start lg:sticky lg:top-[calc(var(--layout-page-block)+0.5rem)]"
+      className="flex min-w-0 flex-col gap-5 sm:gap-8 self-start lg:sticky lg:top-[calc(var(--layout-page-block)+0.5rem)]"
     >
       {/* Frase del día */}
       <HomeChunkOfDayCard />
