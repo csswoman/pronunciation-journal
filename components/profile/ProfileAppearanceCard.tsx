@@ -78,7 +78,7 @@ export default function ProfileAppearanceCard() {
                   title={preset.label}
                   aria-label={`Tema ${preset.label}`}
                   style={{ backgroundColor: preset.hex }}
-                  className={`flex size-9 items-center justify-center rounded-full text-white transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                  className={`flex size-9 items-center justify-center rounded-full ${preset.onInk ? "text-ink" : "text-white"} transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                     isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-surface-raised" : ""
                   }`}
                 >

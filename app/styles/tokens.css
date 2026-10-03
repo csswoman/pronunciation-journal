@@ -122,7 +122,8 @@ html[data-theme="dark"], .dark {
   --ink-secondary: oklch(0.33 0.032 265); /* #2c3445 */
   --ink-muted:     oklch(0.44 0.030 265); /* #4a5263 */
   --paper:         oklch(1 0 0); /* #ffffff */
-  --on-accent:     oklch(1 0 0); /* #ffffff */
+  --on-accent:     oklch(1 0 0); /* #ffffff — default (azul); cada data-accent lo redefine */
+  --on-solid:      oklch(1 0 0); /* #ffffff — texto sobre success/error/warning/info, no cambia con el acento */
 
   /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
   --sky:      oklch(0.86 0.063 259); /* #b9d3fb */
@@ -179,16 +180,16 @@ html[data-theme="dark"], .dark {
   --info:            oklch(0.50 0.15 250);
   --info-soft:       var(--sky-soft);
 
-  /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
-  --accent-red: oklch(0.58 0.215 27); /* #dc2626 */
-  --accent-orange: oklch(0.55 0.174 38); /* #c2410c */
-  --accent-amber: oklch(0.56 0.146 49); /* #b45309 */
-  --accent-green: oklch(0.53 0.137 150); /* #15803d */
-  --accent-emerald: oklch(0.51 0.105 166); /* #047857 */
-  --accent-teal: oklch(0.52 0.094 223); /* #0e7490 */
-  --accent-blue: oklch(0.55 0.215 263); /* #2563eb */
-  --accent-purple: oklch(0.54 0.247 293); /* #7c3aed */
-  --accent-pink: oklch(0.52 0.199 4); /* #be185d */
+  /* ── 5. Acentos (9 tonos vivos; on-accent varía por acento) ─────────────────────────────────────────── */
+  --accent-red: oklch(0.59 0.222 18); /* #e11d48 */
+  --accent-orange: oklch(0.70 0.187 48); /* #f97316 */
+  --accent-amber: oklch(0.77 0.165 70); /* #f59e0b */
+  --accent-green: oklch(0.72 0.192 150); /* #22c55e */
+  --accent-emerald: oklch(0.70 0.149 162); /* #10b981 */
+  --accent-teal: oklch(0.71 0.126 215); /* #06b6d4 */
+  --accent-blue: oklch(0.57 0.210 263); /* #2f6bf0 */
+  --accent-purple: oklch(0.58 0.247 288); /* #7c4dff */
+  --accent-pink: oklch(0.59 0.218 1); /* #db2777 */
 
   /* Default accent = blue */
   --accent:         var(--accent-blue);
@@ -198,7 +199,7 @@ html[data-theme="dark"], .dark {
   --focus-ring:     var(--accent);
 
   /* Derivados del acento (Light theme) */
-  --accent-text:   color-mix(in oklch, var(--accent) 88%, black);
+  --accent-text:   color-mix(in oklch, var(--accent) var(--accent-text-mix, 88%), black);
   --accent-soft:   color-mix(in oklch, var(--accent) 14%, white);
   --accent-border: color-mix(in oklch, var(--accent) 45%, white);
 
@@ -320,12 +321,26 @@ html[data-theme="dark"], .dark {
 }
 
 /* Accent attributes */
-html[data-accent="red"] { --accent: var(--accent-red); }
-html[data-accent="orange"] { --accent: var(--accent-orange); }
-html[data-accent="amber"] { --accent: var(--accent-amber); }
-html[data-accent="green"] { --accent: var(--accent-green); }
-html[data-accent="emerald"] { --accent: var(--accent-emerald); }
-html[data-accent="teal"] { --accent: var(--accent-teal); }
-html[data-accent="blue"] { --accent: var(--accent-blue); }
-html[data-accent="purple"] { --accent: var(--accent-purple); }
-html[data-accent="pink"] { --accent: var(--accent-pink); }
+html[data-accent="red"] { --accent: var(--accent-red); --on-accent: var(--paper); }
+html[data-accent="orange"] { --accent: var(--accent-orange); --on-accent: var(--ink); --accent-text-mix: 78%; }
+html[data-accent="amber"] { --accent: var(--accent-amber); --on-accent: var(--ink); --accent-text-mix: 70%; }
+html[data-accent="green"] { --accent: var(--accent-green); --on-accent: var(--ink); --accent-text-mix: 72%; }
+html[data-accent="emerald"] { --accent: var(--accent-emerald); --on-accent: var(--ink); --accent-text-mix: 74%; }
+html[data-accent="teal"] { --accent: var(--accent-teal); --on-accent: var(--ink); --accent-text-mix: 74%; }
+html[data-accent="blue"] { --accent: var(--accent-blue); --on-accent: var(--paper); }
+html[data-accent="purple"] { --accent: var(--accent-purple); --on-accent: var(--paper); }
+html[data-accent="pink"] { --accent: var(--accent-pink); --on-accent: var(--paper); }
+
+/* Escala de títulos reducida en mobile (< 640px); desktop intacto. */
+@media (max-width: 639px) {
+  :root {
+    --ts-display-hero-size: 44px;    --ts-display-hero-leading: 44px;
+    --ts-display-numeral-size: 40px; --ts-display-numeral-leading: 40px;
+    --ts-display-size: 32px;         --ts-display-leading: 35px;
+    --ts-headline-xl-size: 28px;     --ts-headline-xl-leading: 31px;
+    --ts-headline-size: 25px;        --ts-headline-leading: 28px;
+    --ts-card-title-size: 21px;      --ts-card-title-leading: 25px;
+    --text-size-h1: 1.75rem;
+    --text-size-h2: 1.375rem;
+  }
+}
