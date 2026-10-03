@@ -60,7 +60,7 @@ export default function Sidebar({ className = "" }: SidebarProps) {
       <aside
         className={cn(
           "flex h-full min-h-0 flex-col overflow-hidden bg-surface-raised border-r border-border-subtle transition-[width] duration-300 cubic-bezier(0.22,1,0.36,1) motion-reduce:transition-none",
-          isCollapsed ? "w-[60px]" : "w-[268px]",
+          isCollapsed ? "w-[60px]" : "w-[296px]",
           className
         )}
       >

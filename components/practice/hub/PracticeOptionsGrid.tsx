@@ -49,14 +49,14 @@ export default function PracticeOptionsGrid({
   const showSpeech = activeFilter === 'all' || activeFilter === 'speech'
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       {/* Hero Recommended Banner */}
       <RecommendedPracticeCard recommendation={recommendation} data={hubData.recommended} />
 
       {/* 3-Column Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 items-start">
         {/* Column 1: Vocabulario & Coach */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4 sm:gap-5">
           {showVocab && (
             <VocabularyReviewCard
               dueCount={essentialWordsDueCount}
@@ -69,7 +69,7 @@ export default function PracticeOptionsGrid({
         </div>
 
         {/* Column 2: Sonido & Mazos & Inmersión */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4 sm:gap-5">
           {showSound && <SoundQuizWidget sound={hubData.sound} />}
           {showVocab && <DecksCard data={hubData.decks} />}
           {showSound && (
@@ -81,7 +81,7 @@ export default function PracticeOptionsGrid({
         </div>
 
         {/* Column 3: Lectura & Ruta & Diccionario */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4 sm:gap-5">
           {showVocab && <ReaderCard {...hubData.reader} />}
           {showSpeech && <CourseCard data={hubData.course} />}
           {showVocab && <ReferenceSection />}

@@ -43,7 +43,7 @@ export function WordCard({
       <div
         onClick={selectable ? onPick : onPlay}
         className={cn(
-          "relative flex flex-col justify-between p-4 md:p-5 rounded-2xl transition-all cursor-pointer select-none min-h-[140px]",
+          "relative flex flex-col justify-between p-3 md:p-5 rounded-2xl transition-all cursor-pointer select-none min-h-24 md:min-h-[140px]",
           selected
             ? "bg-white border-2 border-ink shadow-xs"
             : "bg-white/60 border border-black/15 hover:border-black/30 hover:bg-white/75",
@@ -75,7 +75,7 @@ export function WordCard({
               {side}
             </span>
 
-            <span className="font-display font-extrabold text-base md:text-lg text-ink">
+            <span className="font-display font-extrabold text-sm md:text-lg text-ink">
               {symbol}
             </span>
           </div>
@@ -86,7 +86,7 @@ export function WordCard({
               e.stopPropagation();
               onPlay();
             }}
-            className="w-8 h-8 rounded-full bg-butter hover:bg-butter-deep text-ink flex items-center justify-center shadow-xs transition-transform active:scale-90 cursor-pointer shrink-0"
+            className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-butter hover:bg-butter-deep text-ink flex items-center justify-center shadow-xs transition-transform active:scale-90 cursor-pointer shrink-0"
             aria-label={`Escuchar ${word}`}
           >
             {isPlaying ? (
@@ -97,8 +97,8 @@ export function WordCard({
           </button>
         </div>
 
-        <div className="mt-3">
-          <span className="font-display text-2xl md:text-3xl font-extrabold text-ink block tracking-tight">
+        <div className="mt-2 md:mt-3">
+          <span className="font-display text-xl md:text-3xl font-extrabold text-ink block tracking-tight">
             <PhoneticWordHighlight word={word} phonemeOrIpa={symbol} />
           </span>
           {translation ? (

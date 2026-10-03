@@ -70,28 +70,28 @@ const variantStyles: Record<ButtonVariant, string> = {
 
   // Semantic: success green
   success: cn(
-    "bg-[var(--success)] text-[var(--on-primary)]",
+    "bg-[var(--success)] text-[var(--on-solid)]",
     "hover:bg-[var(--success-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: error red
   error: cn(
-    "bg-[var(--error)] text-[var(--on-primary)]",
+    "bg-[var(--error)] text-[var(--on-solid)]",
     "hover:bg-[var(--error-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: warning amber
   warning: cn(
-    "bg-[var(--warning)] text-[var(--on-primary)]",
+    "bg-[var(--warning)] text-[var(--on-solid)]",
     "hover:bg-[var(--warning-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
 
   // Semantic: info blue
   info: cn(
-    "bg-[var(--info)] text-[var(--on-primary)]",
+    "bg-[var(--info)] text-[var(--on-solid)]",
     "hover:bg-[var(--info-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),
@@ -104,7 +104,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "active:translate-y-[-1px]"
   ),
   danger: cn(
-    "bg-[var(--error)] text-[var(--on-primary)]",
+    "bg-[var(--error)] text-[var(--on-solid)]",
     "hover:bg-[var(--error-hover)]",
     "active:translate-y-[-1px] active:shadow-md"
   ),

@@ -142,7 +142,7 @@ export function PracticeCardPhonetics() {
   };
 
   return (
-    <PastelCard tone="coral" className="flex flex-col gap-6 lg:flex-row lg:gap-7 p-6 sm:p-7">
+    <PastelCard tone="coral" className="flex h-full flex-col gap-6 lg:flex-row lg:gap-7 p-6 sm:p-7">
       {/* Left Column: Title, Interactive Tags & Callout */}
       <div className="flex flex-1 flex-col justify-between gap-5">
         <div>
@@ -193,16 +193,18 @@ export function PracticeCardPhonetics() {
           <p className="font-display text-sm font-bold text-white">Por eso no oyes el &quot;to&quot;.</p>
           <p className="mt-1 font-sans text-xs sm:text-sm leading-relaxed text-neutral-300">
             En una frase real se reduce a{" "}
-            <span className="font-ipa font-bold text-amber-300 text-sm sm:text-base px-1">/tə/</span>.
-            Aquí aprendes a no buscarlo.
+            <span className="mx-0.5 inline-block rounded-md bg-amber-300 px-1.5 py-0.5 align-baseline font-ipa text-sm font-bold">
+              /tə/
+            </span>
+            . Aquí aprendes a no buscarlo.
           </p>
         </div>
       </div>
 
       {/* Right Column: Feature Carousel Card */}
-      <div className="flex flex-1 flex-col justify-between rounded-2xl border border-black/10 bg-white/95 p-5 shadow-xs">
+      <div className="flex flex-1 flex-col rounded-2xl border border-black/10 bg-white/95 p-5 shadow-xs">
         {/* Carousel Header Controls */}
-        <div>
+        <div className="flex flex-1 flex-col">
           <div className="flex items-center justify-between gap-2 border-b border-neutral-100 pb-3">
             {/* Title & Badge */}
             <div className="flex flex-wrap items-center gap-2 min-w-0">
@@ -243,12 +245,12 @@ export function PracticeCardPhonetics() {
             {currentFeature.subtitle}
           </p>
 
-          {/* Active Feature Content */}
-          {currentFeature.content}
+          {/* Active Feature Content: grows to fill, content centered */}
+          <div className="flex flex-1 flex-col justify-center">{currentFeature.content}</div>
         </div>
 
         {/* Feature description note */}
-        <div className="border-t border-neutral-100 pt-3 font-sans text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium">
+        <div className="mt-3 border-t border-neutral-100 pt-3 font-sans text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium">
           {currentFeature.description}
         </div>
       </div>

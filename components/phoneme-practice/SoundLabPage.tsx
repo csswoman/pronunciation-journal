@@ -33,10 +33,6 @@ const PronunciationPathPage = dynamic(
   () => import("@/components/courses/pronunciation-path/PronunciationPathPage").then((m) => m.PronunciationPathPage),
   { loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando ruta de pronunciación…</div> },
 );
-const IPAReferenceDialog = dynamic(
-  () => import("./IPAReferenceDialog").then((m) => m.IPAReferenceDialog),
-  { ssr: false },
-);
 import {
   buildLessonSections,
   continueCtaLabel,
@@ -70,10 +66,7 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
     isMinimalPairsView,
     isIntonationView,
     isPathView,
-    isIPAOpen,
     selectTab,
-    openIPA,
-    closeIPA,
   } = useSoundLabWorkspace();
   const focusTokens = useMemo(() => {
     const raw = searchParams.get("focus");
@@ -165,20 +158,18 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
         <PageHeader
           kicker={header.kicker}
           title={header.title}
-          subtitle={header.subtitle}
           actions={
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex w-full flex-col sm:w-auto sm:flex-row items-stretch sm:items-center gap-3">
               <SoundsWorkspaceTabs
                 activeTab={activeTab}
                 onTabChange={selectTab}
-                onOpenIPA={openIPA}
               />
               {heroLesson.lesson && isSoundsView ? (
                 <Button
                   variant="primary"
                   size="md"
                   onClick={handleResume}
-                  className="rounded-full px-5 py-2 font-semibold inline-flex items-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all bg-primary text-on-primary"
+                  className="rounded-full px-5 py-2 font-semibold inline-flex items-center justify-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all bg-primary text-on-primary"
                 >
                   <span>{continueCtaLabel(heroLesson.lesson)}</span>
                   <ArrowRight size={14} className="stroke-[2.5]" aria-hidden />
@@ -258,7 +249,6 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
         />
       ) : null}
 
-      {isIPAOpen && <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />}
     </PageLayout>
   );
 }

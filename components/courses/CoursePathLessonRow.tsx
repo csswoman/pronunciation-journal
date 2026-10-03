@@ -122,12 +122,12 @@ export default function CoursePathLessonRow({
           <div className="course-path__immersion-link mt-1.5 flex items-center">
             <Link
               href={`/practice/immersion/${immersionLesson.slug}`}
-              className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-surface-raised px-2 py-0.5 text-caption font-medium text-fg-muted transition-colors hover:border-accent/40 hover:bg-accent-soft hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-full border border-lilac-deep bg-lilac px-3 py-1 text-body-sm font-semibold text-ink transition-colors hover:bg-lilac-deep"
               title={`Clase en video: ${immersionLesson.title} (${immersionLesson.teacher})`}
             >
-              <Play size={10} className="fill-current text-accent" aria-hidden />
+              <Play size={12} className="fill-current" aria-hidden />
               <span>Video: {immersionLesson.teacher} ({immersionLesson.durationMinutes} min)</span>
-              <span className="font-mono text-[10px] text-accent/80">
+              <span className="font-mono text-caption font-medium opacity-75">
                 {immersionLesson.metadata?.relation === "exact" ? "· canónico" : "· apoyo"}
               </span>
             </Link>

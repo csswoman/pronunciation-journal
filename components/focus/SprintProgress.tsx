@@ -50,7 +50,7 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
   const Illustration = getIllustration('domainProgress')
 
   return (
-    <PastelCard tone="lilac" className="relative rounded-3xl p-6 shadow-xs flex flex-col gap-4 overflow-hidden mb-8 text-left">
+    <PastelCard tone="lilac" className="relative rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col gap-4 overflow-hidden mb-6 sm:mb-8 text-left">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1.5 min-w-0">
           <span className="ts-kicker text-ink-muted">
@@ -67,7 +67,7 @@ export function SprintProgress({ sprint }: SprintProgressProps) {
         </div>
 
         <Illustration
-          className="h-20 sm:h-24 w-auto text-ink opacity-80 shrink-0 pointer-events-none"
+          className="h-16 sm:h-24 w-auto text-ink opacity-80 shrink-0 pointer-events-none"
           aria-hidden="true"
         />
       </div>

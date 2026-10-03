@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight } from "@/components/icons";
 import { NavButton } from "./NavButton";
+import { NavIconPill } from "./NavIconPill";
 import { useSidebar } from "./SidebarContext";
 import type { NavItem } from "./NavLink";
 import { playUiCue } from "@/lib/ui-sounds/cues";
@@ -27,7 +28,6 @@ interface NavAccordionItemProps {
 
 export function NavAccordionItem({ item, isActive }: NavAccordionItemProps) {
   const { collapsed } = useSidebar();
-  const IconComponent = item.icon;
   const children = item.children ?? [];
 
   const isParentActive = isActive(item.href);
@@ -51,9 +51,7 @@ export function NavAccordionItem({ item, isActive }: NavAccordionItemProps) {
         href={item.href}
         tooltip={item.name}
       >
-        <span className="relative flex-shrink-0">
-          <IconComponent className="h-5 w-5" />
-        </span>
+        <NavIconPill icon={item.icon} tone={item.tone} className="relative" />
       </NavButton>
     );
   }
@@ -73,9 +71,7 @@ export function NavAccordionItem({ item, isActive }: NavAccordionItemProps) {
             href={item.href}
             tooltip={item.name}
           >
-            <span className="relative flex-shrink-0">
-              <IconComponent className="h-5 w-5" />
-            </span>
+            <NavIconPill icon={item.icon} tone={item.tone} className="relative" />
             <span className="relative truncate group-hover:text-fg transition-colors duration-[var(--transition-fast)]">
               {item.name}
             </span>

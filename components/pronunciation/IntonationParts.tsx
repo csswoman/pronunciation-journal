@@ -42,12 +42,14 @@ export function IntonationPatternPills({
     return true;
   });
 
-  const displayedPatterns = showAll || activeFilter !== "all" ? filteredPatterns : filteredPatterns.slice(0, 5);
+  const displayedPatterns = showAll
+    ? filteredPatterns
+    : patterns.filter((_, idx) => idx === selectedIndex);
 
   return (
     <aside
       aria-label="Patrones de entonación disponibles"
-      className="flex flex-col gap-3.5 rounded-3xl border border-border-subtle bg-surface p-4 sm:p-5 shadow-xs w-full"
+      className="flex flex-col gap-3 sm:gap-3.5 rounded-3xl border border-border-subtle bg-surface p-3.5 sm:p-5 shadow-xs w-full min-w-0"
     >
       <div className="flex items-center justify-between pb-0.5">
         <span className="font-mono text-xs uppercase tracking-wider text-fg-muted font-bold">
@@ -58,8 +60,8 @@ export function IntonationPatternPills({
         </span>
       </div>
 
-      {/* Filter pills */}
-      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
+      {/* Filter pills (solo expandido) */}
+      <div className={cn("flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5", !showAll && "hidden")}>
         <button
           type="button"
           onClick={() => {
@@ -180,7 +182,7 @@ export function IntonationPatternPills({
                   {titleText}
                 </span>
               </div>
-              <span className="font-mono text-sm text-fg-muted shrink-0 text-right">
+              <span className="hidden sm:inline font-mono text-sm text-fg-muted shrink-0 text-right">
                 {quoteText}
               </span>
             </button>
@@ -193,9 +195,7 @@ export function IntonationPatternPills({
         onClick={() => setShowAll((prev) => !prev)}
         className="w-full py-3 px-5 rounded-full bg-surface-sunken hover:bg-border-subtle text-fg font-bold text-sm sm:text-base transition-colors text-center cursor-pointer mt-1 border border-border-subtle"
       >
-        {showAll || activeFilter !== "all"
-          ? "Ver menos"
-          : `Ver los ${patterns.length} patrones`}
+        {showAll ? "Ver menos" : `Ver los ${patterns.length} patrones`}
       </button>
     </aside>
   );
@@ -271,18 +271,18 @@ export function IntonationSentenceHeader({
   return (
     <div className="flex flex-col gap-3">
       {/* Top Header Bar inside PastelCard */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="bg-ink text-paper font-bold text-xs px-3.5 py-1 rounded-full uppercase tracking-wider shadow-2xs">
+      <div className="flex items-start sm:items-center justify-between gap-2 sm:gap-3">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
+          <span className="bg-ink text-paper font-bold text-xs px-3 sm:px-3.5 py-1 rounded-full uppercase tracking-wider shadow-2xs">
             {patternUpper}
           </span>
-          <span className="pastel-card-chip font-medium text-xs px-3.5 py-1 rounded-full border border-ink/10">
+          <span className="pastel-card-chip font-medium text-xs px-3 sm:px-3.5 py-1 rounded-full border border-ink/10 truncate max-w-full">
             {categoryLabel}
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-sm font-semibold text-ink-secondary">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <span className="font-mono text-xs sm:text-sm font-semibold text-ink-secondary whitespace-nowrap">
             {currentIndex} de {totalCount}
           </span>
           <button
@@ -290,7 +290,7 @@ export function IntonationSentenceHeader({
             onClick={onPlay}
             disabled={isPlaying}
             aria-label={isPlaying ? "Reproduciendo oración" : "Escuchar oración"}
-            className="flex items-center justify-center h-10 w-10 rounded-full bg-ink hover:bg-ink-secondary text-paper transition-all cursor-pointer active:scale-95 shadow-xs disabled:opacity-50"
+            className="flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-ink hover:bg-ink-secondary text-paper transition-all cursor-pointer active:scale-95 shadow-xs disabled:opacity-50"
           >
             <Volume2 className={cn("h-5 w-5", isPlaying && "animate-pulse")} />
           </button>
@@ -299,10 +299,10 @@ export function IntonationSentenceHeader({
 
       {/* Main sentence text & description */}
       <div>
-        <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-ink tracking-tight my-1">
+        <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-ink tracking-tight text-balance my-1">
           &ldquo;{sentence.text}&rdquo;
         </h2>
-        <p className="font-sans text-sm sm:text-base text-ink-secondary font-normal leading-relaxed max-w-2xl mt-1">
+        <p className="font-sans text-caption sm:text-base text-ink-secondary font-normal leading-relaxed max-w-2xl mt-1">
           {sentence.descriptionEs}
         </p>
       </div>
@@ -314,7 +314,7 @@ export function IntonationSentenceHeader({
           showAudio={false}
           compactHeader={true}
           showLegend={false}
-          className="pastel-card-panel rounded-2xl p-4 sm:p-5 border border-ink/10 shadow-xs"
+          className="pastel-card-panel rounded-2xl p-3 sm:p-5 border border-ink/10 shadow-xs"
         />
       </div>
     </div>

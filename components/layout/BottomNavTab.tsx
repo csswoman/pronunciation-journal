@@ -18,12 +18,12 @@ interface BottomNavTabProps {
 const tabClass = (active: boolean) =>
   cn(
     "press-feedback relative flex min-h-11 min-w-[3.25rem] flex-col items-center justify-end gap-0.5 rounded-[var(--radius-sm)] px-2 pb-1 pt-1.5",
-    "text-xxs font-medium leading-tight tracking-wide",
+    "font-sans text-xs font-bold leading-tight",
     "transition-colors duration-[var(--transition-fast)]",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
     active
-      ? "bg-[var(--primary-soft)] text-[var(--primary)]"
-      : "text-fg-subtle hover:bg-[var(--btn-hover-bg)] hover:text-fg",
+      ? "bg-primary-soft text-primary-text"
+      : "text-fg-muted hover:bg-surface-sunken hover:text-fg",
   );
 
 export default function BottomNavTab({
@@ -40,7 +40,7 @@ export default function BottomNavTab({
       <span
         className={cn(
           "flex h-5 w-5 items-center justify-center transition-colors duration-[var(--transition-fast)]",
-          active ? "text-[var(--primary)]" : "text-current",
+          active ? "text-primary-text" : "text-current",
         )}
         aria-hidden
       >

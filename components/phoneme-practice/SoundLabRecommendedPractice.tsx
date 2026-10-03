@@ -24,14 +24,14 @@ export function SoundLabRecommendedPractice({ recommendation, onStart }: Props) 
   const targetSymbol = recommendation.targetIpas[0] || "/ɹ/";
 
   return (
-    <section aria-labelledby="sound-lab-recommended-title" className="w-full">
+    <section aria-labelledby="sound-lab-recommended-title" className="hidden w-full sm:block">
       <PastelCard
         tone="butter"
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-3xl"
       >
-        <div className="flex items-center gap-4 min-w-0 flex-1">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 min-w-0 w-full sm:w-auto flex-1">
           {/* Circular avatar badge with target IPA */}
-          <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full border border-ink/20 bg-surface/30 flex items-center justify-center shrink-0 shadow-2xs">
+          <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border border-ink/20 bg-surface/30 flex items-center justify-center shrink-0 shadow-2xs">
             <span className="ts-ipa-lg text-ink">
               {targetSymbol}
             </span>
@@ -75,7 +75,7 @@ export function SoundLabRecommendedPractice({ recommendation, onStart }: Props) 
             variant="primary"
             size="md"
             onClick={onStart}
-            className="bg-ink text-paper hover:bg-ink-secondary rounded-full px-6 py-2.5 ts-button transition-all shadow-xs cursor-pointer active:scale-95"
+            className="flex-1 sm:flex-none bg-ink text-paper hover:bg-ink-secondary rounded-full px-6 py-2.5 ts-button transition-all shadow-xs cursor-pointer active:scale-95"
           >
             Practicar esta frase
           </Button>

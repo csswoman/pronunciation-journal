@@ -22,6 +22,15 @@ export const OKLCH_BY_HEX: Record<string, string> = {
   "#2f3749": "oklch(0.34 0.034 266)",
   "#4a5263": "oklch(0.44 0.030 265)",
   "#636a78": "oklch(0.52 0.024 264)",
+  "#e11d48": "oklch(0.59 0.222 18)",
+  "#f97316": "oklch(0.70 0.187 48)",
+  "#f59e0b": "oklch(0.77 0.165 70)",
+  "#22c55e": "oklch(0.72 0.192 150)",
+  "#10b981": "oklch(0.70 0.149 162)",
+  "#06b6d4": "oklch(0.71 0.126 215)",
+  "#2f6bf0": "oklch(0.57 0.210 263)",
+  "#7c4dff": "oklch(0.58 0.247 288)",
+  "#db2777": "oklch(0.59 0.218 1)",
   "#7c3aed": "oklch(0.54 0.247 293)",
   "#7c8499": "oklch(0.61 0.033 269)",
   "#86d6b0": "oklch(0.81 0.096 163)",
@@ -178,7 +187,7 @@ export const STATIC_LAYOUT_AND_MOTION = `  /* Default accent = blue */
   --focus-ring:     var(--accent);
 
   /* Derivados del acento (Light theme) */
-  --accent-text:   color-mix(in oklch, var(--accent) 88%, black);
+  --accent-text:   color-mix(in oklch, var(--accent) var(--accent-text-mix, 88%), black);
   --accent-soft:   color-mix(in oklch, var(--accent) 14%, white);
   --accent-border: color-mix(in oklch, var(--accent) 45%, white);
 

@@ -155,11 +155,11 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
         <PastelCard
           key={spec.kind}
           tone={spec.tone}
-          className="col-span-1 md:col-span-2 rounded-3xl p-6 sm:p-7 relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 overflow-hidden text-left shadow-xs"
+          className="col-span-1 md:col-span-2 rounded-3xl p-5 sm:p-7 relative flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 overflow-hidden text-left shadow-xs"
         >
           <div className="flex flex-col gap-3 max-w-lg">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="rounded-full bg-text px-3.5 py-1 ts-kicker text-surface">
+              <span className="rounded-full bg-text px-3.5 py-1 ts-kicker text-white">
                 {existingContent ? 'YA GENERADO' : 'DESTACADO'}
               </span>
               <span className="rounded-full bg-white/80 border border-black/10 px-3 py-1 ts-chip text-ink">
@@ -183,7 +183,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
               {existingContent ? (
                 <Link
                   href={focusContentHref(existingContent.id)}
-                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-text hover:bg-black text-surface ts-button px-6 py-2.5 shadow-md transition-all"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-text hover:bg-black text-white ts-button px-6 py-2.5 shadow-md transition-all"
                 >
                   <span>Practicar ahora</span>
                   <span>→</span>
@@ -193,9 +193,9 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
                   type="button"
                   onClick={() => handleGenerateAsset(spec.kind)}
                   disabled={generatingKind !== null}
-                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-text hover:bg-black text-surface ts-button px-6 py-2.5 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full bg-text hover:bg-black text-white ts-button px-6 py-2.5 shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
-                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin text-surface" /> : <span>+ Generar</span>}
+                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <span>+ Generar</span>}
                 </button>
               )}
             </div>
@@ -213,7 +213,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
       <PastelCard
         key={spec.kind}
         tone={spec.tone}
-        className="rounded-3xl p-6 flex flex-col justify-between gap-4 text-left shadow-xs"
+        className="rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-4 text-left shadow-xs"
       >
         <div className="flex flex-col gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/10 text-ink">
@@ -258,7 +258,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 text-left">
+    <div className="max-w-5xl mx-auto px-4 pt-5 pb-4 text-left sm:pt-8 lg:pb-8">
       {/* Header del Sprint */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -284,7 +284,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
         </p>
 
         {isAnonymous && (
-          <div className="mt-3 p-3.5 rounded-2xl bg-surface-raised border border-border-default flex items-center gap-3 ts-body text-fg-muted shadow-xs">
+          <div className="mt-3 p-3.5 rounded-2xl bg-surface-raised border border-border-default flex items-start gap-3 ts-body text-fg-muted shadow-xs">
             <span>💾</span>
             <span>
               <strong className="text-fg ts-body-lg-strong">Progreso guardado localmente:</strong> Tus ejercicios y notas de este sprint están guardados en este navegador. Para sincronizarlos en la nube, inicia sesión cuando quieras.
@@ -318,7 +318,7 @@ export function FocusHome({ sprint, initialContent, userId, isAnonymous = false 
       )}
 
       {/* Banner de aviso pedagógico al pie */}
-      <div className="mt-8 rounded-full border border-border-default bg-surface-raised p-4 px-6 shadow-xs flex items-center gap-3.5">
+      <div className="mt-8 rounded-3xl border border-border-default bg-surface-raised p-4 shadow-xs flex items-center gap-3.5 sm:rounded-full sm:px-6">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-text text-surface">
           <Sparkles className="h-4 w-4 text-surface" aria-hidden="true" />
         </div>

@@ -123,6 +123,7 @@ html[data-theme="dark"], .dark {
   --ink-muted:     oklch(0.44 0.030 265); /* #4a5263 */
   --paper:         oklch(1 0 0); /* #ffffff */
   --on-accent:     oklch(1 0 0); /* #ffffff */
+  --on-solid:      oklch(1 0 0); /* #ffffff */
 
   /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
   --sky:      oklch(0.86 0.063 259); /* #b9d3fb */
@@ -164,11 +165,11 @@ html[data-theme="dark"], .dark {
 
   /* ── 4. Feedback (Light theme defaults) ─────────────────────────── */
   --feedback-correct:      oklch(0.50 0.15 150);
-  --feedback-correct-soft: oklch(0.90 0.09 152);
+  --feedback-correct-soft: var(--mint-soft);
   --feedback-wrong:        oklch(0.52 0.20 25);
-  --feedback-wrong-soft:   oklch(0.89 0.08 25);
+  --feedback-wrong-soft:   var(--coral-soft);
   --feedback-hint:         oklch(0.55 0.16 85);
-  --feedback-hint-soft:    oklch(0.92 0.10 90);
+  --feedback-hint-soft:    var(--butter-soft);
 
   --success:         var(--feedback-correct);
   --success-soft:    var(--feedback-correct-soft);
@@ -179,16 +180,16 @@ html[data-theme="dark"], .dark {
   --info:            oklch(0.50 0.15 250);
   --info-soft:       var(--sky-soft);
 
-  /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
-  --accent-red: oklch(0.58 0.215 27); /* #dc2626 */
-  --accent-orange: oklch(0.55 0.174 38); /* #c2410c */
-  --accent-amber: oklch(0.56 0.146 49); /* #b45309 */
-  --accent-green: oklch(0.53 0.137 150); /* #15803d */
-  --accent-emerald: oklch(0.51 0.105 166); /* #047857 */
-  --accent-teal: oklch(0.52 0.094 223); /* #0e7490 */
-  --accent-blue: oklch(0.55 0.215 263); /* #2563eb */
+  /* ── 5. Acentos (9 tonos vivos) ─────────────────────────────────────────── */
+  --accent-red: oklch(0.59 0.222 18); /* #e11d48 */
+  --accent-orange: oklch(0.70 0.187 48); /* #f97316 */
+  --accent-amber: oklch(0.77 0.165 70); /* #f59e0b */
+  --accent-green: oklch(0.72 0.192 150); /* #22c55e */
+  --accent-emerald: oklch(0.70 0.149 162); /* #10b981 */
+  --accent-teal: oklch(0.71 0.126 215); /* #06b6d4 */
+  --accent-blue: oklch(0.57 0.210 263); /* #2f6bf0 */
   --accent-purple: oklch(0.54 0.247 293); /* #7c3aed */
-  --accent-pink: oklch(0.52 0.199 4); /* #be185d */
+  --accent-pink: oklch(0.59 0.218 1); /* #db2777 */
 
   /* Default accent = blue */
   --accent:         var(--accent-blue);
@@ -198,7 +199,7 @@ html[data-theme="dark"], .dark {
   --focus-ring:     var(--accent);
 
   /* Derivados del acento (Light theme) */
-  --accent-text:   color-mix(in oklch, var(--accent) 88%, black);
+  --accent-text:   color-mix(in oklch, var(--accent) var(--accent-text-mix, 88%), black);
   --accent-soft:   color-mix(in oklch, var(--accent) 14%, white);
   --accent-border: color-mix(in oklch, var(--accent) 45%, white);
 
@@ -276,56 +277,15 @@ html[data-theme="dark"], .dark {
   --text-size-tiny: 0.75rem;
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
-
-  /* ── 10. Escala tipográfica extendida (.ts-*, ver utilities.css) ─────────
-     Bricolage 800 / Figtree / Noto Sans 500. Hand-maintained, no tokens.json
-     equivalent — namespaced --ts- to avoid colliding with the shorter names
-     already in section 9 (caption, label, kicker, ...), which many
-     components depend on with different values. */
-  --ts-display-hero-size: 64px;      --ts-display-hero-leading: 62px;      --ts-display-hero-tracking: -0.03em;
-  --ts-display-numeral-size: 52px;   --ts-display-numeral-leading: 50px;   --ts-display-numeral-tracking: -0.03em;
-  --ts-display-size: 46px;           --ts-display-leading: 48px;           --ts-display-tracking: -0.02em;
-  --ts-headline-xl-size: 40px;       --ts-headline-xl-leading: 41px;       --ts-headline-xl-tracking: -0.025em;
-  --ts-headline-size: 36px;          --ts-headline-leading: 37px;          --ts-headline-tracking: -0.025em;
-  --ts-numeral-unit-size: 20px;      --ts-numeral-unit-leading: 24px;
-  --ts-card-title-size: 26px;        --ts-card-title-leading: 30px;        --ts-card-title-tracking: -0.02em;
-  --ts-flashcard-word-size: 19px;    --ts-flashcard-word-leading: 22px;
-
-  --ts-body-xl-size: 19px;           --ts-body-xl-leading: 27px;
-  --ts-body-xl-strong-size: 19px;    --ts-body-xl-strong-leading: 27px;
-  --ts-body-lg-strong-size: 18px;    --ts-body-lg-strong-leading: 26px;
-  --ts-body-lg-size: 17px;           --ts-body-lg-leading: 26px;
-  --ts-body-lg-meta-size: 17px;      --ts-body-lg-meta-leading: 26px;
-  --ts-greeting-size: 17px;          --ts-greeting-leading: 24px;
-  --ts-button-lg-size: 17px;         --ts-button-lg-leading: 22px;
-  --ts-row-title-size: 16px;         --ts-row-title-leading: 22px;
-  --ts-row-number-size: 16px;        --ts-row-number-leading: 16px;
-  --ts-body-size: 15px;              --ts-body-leading: 22px;
-  --ts-body-translation-size: 15px;  --ts-body-translation-leading: 23px;
-  --ts-label-strong-size: 15px;      --ts-label-strong-leading: 22px;
-  --ts-button-size: 15px;            --ts-button-leading: 20px;
-  --ts-stat-size: 15px;              --ts-stat-leading: 20px;
-  --ts-caption-size: 14px;           --ts-caption-leading: 20px;
-  --ts-chip-size: 14px;              --ts-chip-leading: 20px;
-  --ts-pill-size: 14px;              --ts-pill-leading: 18px;
-  --ts-label-size: 13px;             --ts-label-leading: 16px;             --ts-label-tracking: 0.08em;
-  --ts-badge-size: 13px;             --ts-badge-leading: 18px;
-  --ts-kicker-size: 12px;            --ts-kicker-leading: 16px;            --ts-kicker-tracking: 0.14em;
-
-  --ts-ipa-lg-size: 20px;            --ts-ipa-lg-leading: 28px;
-  --ts-ipa-md-size: 18px;            --ts-ipa-md-leading: 26px;
-  --ts-ipa-sm-size: 17px;            --ts-ipa-sm-leading: 24px;
-  --ts-ipa-xs-size: 13px;            --ts-ipa-xs-leading: 18px;
-  --ts-ipa-tracking: 0.01em;
 }
 
 /* Accent attributes */
-html[data-accent="red"] { --accent: var(--accent-red); }
-html[data-accent="orange"] { --accent: var(--accent-orange); }
-html[data-accent="amber"] { --accent: var(--accent-amber); }
-html[data-accent="green"] { --accent: var(--accent-green); }
-html[data-accent="emerald"] { --accent: var(--accent-emerald); }
-html[data-accent="teal"] { --accent: var(--accent-teal); }
-html[data-accent="blue"] { --accent: var(--accent-blue); }
-html[data-accent="purple"] { --accent: var(--accent-purple); }
-html[data-accent="pink"] { --accent: var(--accent-pink); }
+html[data-accent="red"] { --accent: var(--accent-red); --on-accent: var(--paper); }
+html[data-accent="orange"] { --accent: var(--accent-orange); --on-accent: var(--ink); --accent-text-mix: 78%; }
+html[data-accent="amber"] { --accent: var(--accent-amber); --on-accent: var(--ink); --accent-text-mix: 70%; }
+html[data-accent="green"] { --accent: var(--accent-green); --on-accent: var(--ink); --accent-text-mix: 72%; }
+html[data-accent="emerald"] { --accent: var(--accent-emerald); --on-accent: var(--ink); --accent-text-mix: 74%; }
+html[data-accent="teal"] { --accent: var(--accent-teal); --on-accent: var(--ink); --accent-text-mix: 74%; }
+html[data-accent="blue"] { --accent: var(--accent-blue); --on-accent: var(--paper); }
+html[data-accent="purple"] { --accent: var(--accent-purple); --on-accent: var(--paper); }
+html[data-accent="pink"] { --accent: var(--accent-pink); --on-accent: var(--paper); }

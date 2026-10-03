@@ -59,7 +59,7 @@ function createIndex(): ContentItem[] {
     title: `${sound.symbol} — ${sound.name}`,
     tags: ["Sound Lab", sound.type, sound.category, ...sound.examples],
     description: sound.description,
-    path: "/practice/sounds?openIPA=1",
+    path: "/ipa",
   }));
 
   const routes = [...COURSE_PATH_CURRICULUM.levels, ...COURSE_PATH_CURRICULUM.electiveTracks]

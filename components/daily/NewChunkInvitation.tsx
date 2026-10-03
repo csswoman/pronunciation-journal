@@ -15,6 +15,9 @@ import PastelCard from '@/components/layout/PastelCard'
 import { Volume2, ArrowRight } from '@/components/icons'
 import { speakText } from '@/lib/speech/synthesis'
 import { chunkExample, type LearningChunk } from '@/lib/chunk-of-day/types'
+import { formatIpaDisplay } from '@/lib/lexicon/format-ipa'
+import { getHeroScale } from '@/lib/home/hero-scale'
+import { cn } from '@/lib/cn'
 
 interface Props {
   userId: string | null
@@ -110,7 +113,7 @@ export default function NewChunkInvitation({ userId }: Props) {
     chunk.tag || chunk.category || chunk.learning?.communicativeFunction || 'planes y futuro'
 
   return (
-    <PastelCard tone="mint" className="flex flex-col items-start gap-4">
+    <PastelCard tone="mint" className="flex flex-col items-start gap-4 p-4 sm:p-6">
       {/* Header pills */}
       <div className="flex w-full items-center justify-between gap-2">
         <span className="rounded-full bg-ink px-3.5 py-1.5 ts-badge text-paper">
@@ -125,16 +128,22 @@ export default function NewChunkInvitation({ userId }: Props) {
 
       {/* Title + Audio trigger */}
       <div className="flex w-full items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <h2 className="ts-headline-xl text-ink" lang="en">
+        <div className="flex min-w-0 flex-col">
+          <h2
+            className={cn(
+              'font-heading font-extrabold text-ink leading-[1.2] break-words tracking-tight',
+              getHeroScale(textToSpeak)
+            )}
+            lang="en"
+          >
             {textToSpeak}
           </h2>
           {chunk.ipa && (
-            <p className="ts-ipa-sm text-ink-secondary">
-              {chunk.ipa}
+            <p className="-mt-2 ts-ipa-md font-ipa text-ink-secondary" lang="en-fonipa">
+              {formatIpaDisplay(chunk.ipa)}
             </p>
           )}
-          <p className="ts-body-xl-strong text-ink">
+          <p className="mt-3 sm:mt-4 ts-body-lg-strong text-ink">
             {chunk.meaning}
           </p>
         </div>

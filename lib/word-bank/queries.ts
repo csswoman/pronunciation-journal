@@ -152,10 +152,14 @@ export { markLexiconWordLearned, markLexiconWordMastered } from "@/lib/word-bank
 /** Minimal word data for loading animations — only text, ipa, status. */
 export async function getReadyWordSummaries(): Promise<{ text: string; ipa: string | null }[]> {
   const supabase = getSupabaseBrowserClient()
+  // Loading screens also render for signed-out visitors; `anon` has no grant on word_bank.
+  const { data: sessionData } = await supabase.auth.getSession()
+  if (!sessionData.session) return []
   const { data, error } = await supabase
     .from(TABLE)
     .select('text, ipa')
     .eq('status', 'ready')
+    .limit(100)
   if (error) throw error
   return (data ?? []) as { text: string; ipa: string | null }[]
 }

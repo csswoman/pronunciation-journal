@@ -46,3 +46,10 @@ minimumReleaseAgeExclude:
   - '@supabase/cli-windows-arm64@2.115.0'
   - '@supabase/cli-windows-x64@2.115.0'
   - supabase@2.115.0
+
+auditConfig:
+  ignoreGhsas:
+    # braces ReDoS (no patched release). Dev-only: reached via
+    # eslint-config-next > fast-glob > micromatch, which only parses our own
+    # static globs. Remove once braces ships a fix.
+    - GHSA-vfj7-8cjw-p6xm

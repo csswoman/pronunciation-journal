@@ -7,6 +7,7 @@
 //   <SelectMobileSheet />
 // </SelectMenu>
 
+import { createPortal } from 'react-dom'
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown, X } from '@/components/icons'
 import { cn } from '@/lib/cn'
@@ -30,6 +31,7 @@ export interface SelectMenuProps<T extends string = string> {
   options?: SelectMenuOption<T>[]
   groups?: SelectMenuGroup<T>[]
   label?: string
+  sheetTitle?: string
   placeholder?: string
   disabled?: boolean
   className?: string
@@ -46,6 +48,7 @@ export function SelectMenu<T extends string = string>({
   options,
   groups,
   label,
+  sheetTitle,
   placeholder = 'Selecciona una opción',
   disabled = false,
   className,
@@ -85,6 +88,7 @@ export function SelectMenu<T extends string = string>({
   useEffect(() => {
     if (!open) return
     const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (!window.matchMedia('(min-width: 640px)').matches) return
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false)
       }
@@ -120,13 +124,13 @@ export function SelectMenu<T extends string = string>({
           'flex w-full min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition-colors',
           'focus-ring cursor-pointer disabled:cursor-not-allowed disabled:opacity-40',
           isSelected
-            ? 'bg-surface-sunken text-fg font-semibold'
+            ? 'bg-accent-soft text-accent-text font-bold ring-1 ring-accent-border'
             : 'text-fg hover:bg-surface-sunken hover:text-fg font-normal',
         )}
       >
         <div className="flex min-w-0 flex-col gap-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-body-sm font-semibold leading-snug text-fg">{opt.label}</span>
+            <span className="text-body-sm font-semibold leading-snug">{opt.label}</span>
             {opt.badge ? (
               <span className="rounded bg-surface-sunken px-1.5 py-0.5 text-tiny font-medium text-fg-muted shrink-0">
                 {opt.badge}
@@ -137,7 +141,7 @@ export function SelectMenu<T extends string = string>({
             <span className="text-caption text-fg-muted font-normal leading-relaxed">{opt.description}</span>
           ) : null}
         </div>
-        {isSelected ? <Check size={16} className="shrink-0 text-primary stroke-[2.5]" aria-hidden /> : null}
+        {isSelected ? <Check size={16} className="shrink-0 text-accent-text stroke-[2.5]" aria-hidden /> : null}
       </button>
     )
   }
@@ -215,8 +219,8 @@ export function SelectMenu<T extends string = string>({
       ) : null}
 
       {/* Mobile Bottom Sheet Modal */}
-      {open ? (
-        <div className="sm:hidden fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
+      {open && typeof document !== 'undefined' ? createPortal(
+        <div className="sm:hidden fixed inset-0 z-[100] flex items-end" role="dialog" aria-modal="true">
           <button
             type="button"
             aria-label="Cerrar opciones"
@@ -234,7 +238,7 @@ export function SelectMenu<T extends string = string>({
           >
             <header className="flex items-center justify-between border-b border-border-subtle pb-3">
               <span className="text-body-md font-semibold text-fg">
-                {label ?? 'Selecciona una opción'}
+                {sheetTitle ?? label ?? 'Selecciona una opción'}
               </span>
               <button
                 type="button"
@@ -249,7 +253,8 @@ export function SelectMenu<T extends string = string>({
               {renderGroupList()}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </div>
   )

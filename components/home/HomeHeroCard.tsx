@@ -112,7 +112,7 @@ export default function HomeHeroCard({
 
   return (
     <section aria-label="Sesión de hoy" className="w-full">
-      <PastelCard tone="sky" className="flex flex-col gap-5 p-6 sm:p-7 motion-reduce:shadow-none">
+      <PastelCard tone="sky" className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-7 motion-reduce:shadow-none">
         {/* Contenido principal superior (Texto + Ilustración a la derecha) */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex flex-col gap-2 min-w-0 flex-1">

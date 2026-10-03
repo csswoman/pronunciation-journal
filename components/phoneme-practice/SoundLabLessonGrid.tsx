@@ -199,7 +199,7 @@ export function SoundLabLessonGrid({
                   </span>
                 )}
                 {section.subtitle ? (
-                  <span className="ts-body-translation text-fg-muted m-0 font-normal">
+                  <span className="hidden sm:inline ts-body-translation text-fg-muted m-0 font-normal">
                     {section.subtitle}
                   </span>
                 ) : null}

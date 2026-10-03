@@ -48,8 +48,8 @@ function AccordionRow({
   return (
     <div
       className={cn(
-        "-mx-2 rounded-lg px-2 transition-colors",
-        open && "bg-surface-sunken/50",
+        "rounded-[20px] border border-transparent px-3 transition-colors",
+        open && "border-border-subtle bg-surface-sunken",
       )}
     >
       <button
@@ -57,37 +57,35 @@ function AccordionRow({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={panelId}
-        className="focus-ring press-feedback flex w-full items-center justify-between gap-3 rounded-lg py-2 text-left"
+        className="focus-ring press-feedback flex w-full items-center justify-between gap-3 rounded-[20px] py-3 text-left"
       >
-        <span className="flex items-center gap-2.5">
-          <Icon
-            size={15}
-            className={cn("shrink-0 transition-colors", open ? "text-primary" : "text-fg-subtle")}
-            aria-hidden
-          />
+        <span className="flex items-center gap-3">
           <span
             className={cn(
-              "font-label text-caption transition-all",
-              open ? "font-semibold text-fg" : "font-normal text-fg-muted",
+              "grid size-10 shrink-0 place-items-center rounded-xl transition-colors",
+              open ? "bg-primary-soft text-primary" : "bg-surface-sunken text-fg-muted",
             )}
           >
+            <Icon size={22} aria-hidden />
+          </span>
+          <span className="font-sans text-[15px] font-bold text-fg transition-all">
             {label}
           </span>
         </span>
         <span className="flex items-center gap-1.5">
-          {!open && <span className="font-caption text-tiny text-fg-subtle">{value}</span>}
+          {!open && <span className="font-caption text-caption text-fg-muted">{value}</span>}
           <ChevronDown
             size={14}
             aria-hidden
             className={cn(
               "shrink-0 transition-transform duration-200",
-              open ? "rotate-180 text-primary" : "text-fg-subtle",
+              open ? "rotate-180 text-primary" : "text-fg-muted",
             )}
           />
         </span>
       </button>
       {open && (
-        <div id={panelId} className="pb-3 pt-0.5">
+        <div id={panelId} className="pb-4 pt-1">
           {children}
         </div>
       )}
@@ -123,7 +121,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
     : `${soundPreference === "all" ? "Todos" : "Ejercicios"} · ${percent}%`;
 
   return (
-    <div className={cn("flex flex-col gap-0.5", className)}>
+    <div className={cn("flex flex-col gap-1.5", className)}>
       <AccordionRow
         icon={Sun}
         label="Apariencia"
@@ -141,13 +139,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 onClick={() => setPreference(value)}
                 aria-pressed={isSelected}
                 className={cn(
-                  "focus-ring flex min-h-14 flex-col items-center justify-center gap-1.5 rounded-lg border font-label text-caption transition-all duration-150",
+                  "focus-ring flex min-h-14 flex-col items-center justify-center gap-1.5 rounded-[20px] border font-sans text-[15px] font-bold transition-all duration-150",
                   isSelected
-                    ? "border-primary bg-primary-soft text-primary font-semibold"
-                    : "border-border-subtle text-fg-subtle hover:border-border-default hover:text-fg",
+                    ? "border-primary bg-primary-soft text-primary"
+                    : "border-border-default text-fg-muted hover:text-fg",
                 )}
               >
-                <OptionIcon size={16} aria-hidden />
+                <OptionIcon size={22} aria-hidden />
                 {label}
               </button>
             );
@@ -163,7 +161,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         onToggle={() => toggle("color")}
       >
         <div className="flex items-center justify-between gap-2 pb-2">
-          <span className="font-caption text-tiny text-fg-subtle">
+          <span className="font-caption text-caption text-fg-muted">
             {colorValue}
             {colorNote && <span className="text-fg-muted"> · {colorNote}</span>}
           </span>
@@ -190,7 +188,12 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 }}
               >
                 {isSelected && (
-                  <Check size={15} className="text-white" aria-hidden strokeWidth={3} />
+                  <Check
+                    size={15}
+                    className={preset.onInk ? "text-ink" : "text-white"}
+                    aria-hidden
+                    strokeWidth={3}
+                  />
                 )}
               </button>
             );
@@ -205,7 +208,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         open={section === "sound"}
         onToggle={() => toggle("sound")}
       >
-        <div className="grid grid-cols-3 gap-1.5 text-caption font-medium">
+        <div className="grid grid-cols-3 gap-1 rounded-full bg-(--bg) p-1">
           {SOUND_OPTIONS.map(({ val, label }) => {
             const active = soundPreference === val;
             return (
@@ -215,10 +218,10 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
                 onClick={() => setSoundPreference(val)}
                 aria-pressed={active}
                 className={cn(
-                  "press-feedback focus-ring min-h-9 rounded-lg border px-2 transition-all duration-150",
+                  "press-feedback focus-ring min-h-11 rounded-full border px-2 font-sans text-[15px] font-bold transition-all duration-150",
                   active
-                    ? "border-primary bg-primary-soft font-semibold text-primary"
-                    : "border-border-subtle text-fg-subtle hover:border-border-default hover:text-fg",
+                    ? "border-primary bg-primary-soft text-primary"
+                    : "border-transparent text-fg-muted hover:text-fg",
                 )}
               >
                 {label}
@@ -228,10 +231,13 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
         </div>
         <div
           className={cn(
-            "mt-3 flex items-center gap-3 transition-opacity duration-150",
+            "mt-3 flex items-center gap-4 transition-opacity duration-150",
             isMuted ? "opacity-35 pointer-events-none" : "opacity-100",
           )}
         >
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-(--bg) text-fg">
+            <Volume2 size={22} aria-hidden />
+          </span>
           <input
             aria-label="Volumen de la app"
             type="range"
@@ -244,7 +250,7 @@ export function QuickSettingsAccordion({ className }: { className?: string } = {
             className="sound-volume-slider min-w-0 flex-1"
             style={{ "--sound-volume": `${percent}%` } as CSSProperties}
           />
-          <span className="w-9 text-right text-tiny tabular-nums text-fg-subtle font-mono">{percent}%</span>
+          <span className="w-12 text-right font-sans text-[15px] font-bold tabular-nums text-fg">{percent}%</span>
         </div>
       </AccordionRow>
     </div>

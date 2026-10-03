@@ -8,7 +8,7 @@ import { CalendarCheck, Check } from "lucide-react";
 
 export function PracticeCardDailyPlan() {
   return (
-    <PastelCard tone="butter" className="flex flex-col gap-5 lg:flex-row lg:gap-6 p-6 sm:p-7">
+    <PastelCard tone="butter" className="flex h-full flex-col gap-5 lg:flex-row lg:gap-6 p-6 sm:p-7">
       {/* Left Column: Overview, Streak & Callout */}
       <div className="flex flex-1 flex-col justify-between gap-4">
         <div>
@@ -91,7 +91,7 @@ export function PracticeCardDailyPlan() {
       </div>
 
       {/* Right Column: "TU PLAN DE HOY" Schedule Card */}
-      <div className="flex flex-1 flex-col justify-between rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xs">
+      <div className="flex flex-1 flex-col rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xs">
         <div className="flex items-center justify-between">
           <span className="font-mono text-xs font-bold tracking-wider uppercase text-neutral-800">
             Tu plan de hoy
@@ -101,7 +101,7 @@ export function PracticeCardDailyPlan() {
           </span>
         </div>
 
-        <div className="mt-3 flex flex-col divide-y divide-neutral-100">
+        <div className="mt-3 flex flex-1 flex-col justify-around divide-y divide-neutral-100">
           {/* Step 1 */}
           <div className="flex items-center gap-2.5 py-2">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-mono text-[11px] font-bold text-emerald-900">

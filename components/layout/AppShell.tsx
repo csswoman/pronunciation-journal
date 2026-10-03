@@ -14,7 +14,7 @@ import { cn } from "@/lib/cn";
 import { useSidebarStore } from "@/lib/stores/sidebarStore";
 
 const Sidebar = dynamic(() => import("./Sidebar"), {
-  loading: () => <div className="hidden lg:block w-[268px] shrink-0" aria-hidden />,
+  loading: () => <div className="hidden lg:block w-[296px] shrink-0" aria-hidden />,
 });
 
 const BottomNav = dynamic(() => import("./BottomNav"), {

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, Menu, Target } from "@/components/icons";
+import { BookOpen, Home, Menu, Target, X } from "@/components/icons";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import AICoachTrigger from "@/components/ai-coach/AICoachTrigger";
@@ -52,7 +52,7 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
       <nav
         aria-label="Navegación principal"
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end border-t border-line-divider bg-card-bg/90 backdrop-blur-md px-1 pt-2",
+          "fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 items-end bg-(--bg) px-1 pt-2",
           "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
           className,
         )}
@@ -94,8 +94,8 @@ export default function BottomNav({ className = "" }: BottomNavProps) {
 
         <div className="flex justify-center">
           <BottomNavTab
-            name="Menú"
-            icon={<Menu className="h-5 w-5" strokeWidth={showMenu ? 2.25 : 1.75} />}
+            name={showMenu ? "Cerrar" : "Menú"}
+            icon={showMenu ? <X className="h-5 w-5" strokeWidth={2.25} /> : <Menu className="h-5 w-5" strokeWidth={1.75} />}
             active={showMenu}
             onClick={toggleMenu}
             ariaExpanded={showMenu}

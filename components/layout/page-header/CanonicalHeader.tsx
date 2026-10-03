@@ -40,8 +40,8 @@ export function CanonicalHeader({
       {chromeKicker ? (
         <span className="font-kicker text-fg-muted">{chromeKicker}</span>
       ) : null}
-      <div className="flex flex-row items-center justify-between gap-layout-stack-tight sm:items-end sm:gap-layout-stack-loose">
-        <div className="layout-stack-tight min-w-0">
+      <div className="flex flex-col items-stretch gap-layout-stack-tight sm:flex-row sm:items-end sm:justify-between sm:gap-layout-stack-loose">
+        <div className="layout-stack-tight min-w-0 sm:flex-1">
           <h1 className={cn("text-balance font-heading font-extrabold text-fg tracking-tight", isCompact ? "text-h3" : "text-h1")}>
             {title}
           </h1>
@@ -52,7 +52,7 @@ export function CanonicalHeader({
           ) : null}
         </div>
         {!hasProgress && (primaryCta || secondaryCta || actions || chromeBadge) ? (
-          <div className="flex shrink-0 flex-wrap items-center gap-layout-stack-tight">
+          <div className="flex min-w-0 max-w-full flex-wrap items-center sm:shrink-0 gap-layout-stack-tight">
             {chromeBadge && !actions && !primaryCta && !secondaryCta ? (
               <span className="rounded-full border border-border-default bg-surface-raised px-4 py-1.5 font-label text-caption font-semibold text-fg shadow-xs">
                 {chromeBadge}

@@ -122,7 +122,7 @@ export function GapPickerTabs({ suggestedGaps, curriculumGaps, selectedGaps, onT
       </div>
 
       {(tab === 'suggestions' || TAB_HINTS[tab]) && (
-        <p className="mb-4 ts-body text-fg-muted">
+        <p className="mb-4 hidden ts-body text-fg-muted sm:block">
           {tab === 'suggestions' ? suggestionsIntro(suggestedGaps) : TAB_HINTS[tab]}
         </p>
       )}

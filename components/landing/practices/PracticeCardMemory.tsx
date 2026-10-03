@@ -8,7 +8,7 @@ import { Brain } from "lucide-react";
 
 export function PracticeCardMemory() {
   return (
-    <PastelCard tone="mint" className="flex flex-col justify-between gap-5 p-6 sm:p-7">
+    <PastelCard tone="mint" className="flex h-full flex-col justify-between gap-5 p-6 sm:p-7">
       <div>
         {/* Header Icon + Kicker */}
         <div className="flex items-center gap-2">

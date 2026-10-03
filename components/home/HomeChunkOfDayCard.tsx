@@ -87,7 +87,7 @@ export default function HomeChunkOfDayCard() {
   return (
     <PastelCard
       tone="butter"
-      className="relative flex min-h-[220px] h-full flex-col justify-between gap-5 overflow-hidden motion-reduce:shadow-none"
+      className="relative p-4 sm:p-6 flex min-h-[220px] h-full flex-col justify-between gap-5 overflow-hidden motion-reduce:shadow-none"
       aria-busy={loading || undefined}
       aria-labelledby="chunk-of-day-heading"
     >
@@ -118,9 +118,9 @@ export default function HomeChunkOfDayCard() {
       )}
 
       {chunk && !loading && (
-        <div className="animate-state-in relative z-1 flex flex-col gap-3.5" key={chunk.id}>
-          {/* Grupo de título y pronunciación */}
-          <div className="flex flex-col gap-1">
+        <div className="animate-state-in relative z-1 flex flex-col gap-4" key={chunk.id}>
+          {/* Grupo título → IPA → significado (espaciado propio: junto, junto, respiro) */}
+          <div className="flex flex-col">
             <div className="flex items-start justify-between gap-3">
               <span
                 className={cn(
@@ -142,18 +142,18 @@ export default function HomeChunkOfDayCard() {
 
             {chunk.ipa ? (
               <span
-                className="ts-ipa-md font-ipa text-ink-secondary"
+                className="-mt-2 ts-ipa-md font-ipa text-ink-secondary"
                 lang="en-fonipa"
               >
                 {formatIpaDisplay(chunk.ipa)}
               </span>
             ) : null}
-          </div>
 
-          {/* Traducción de la frase */}
-          <p className="ts-body-lg-strong text-ink">
-            <OpenEndedText value={chunk.meaning} />
-          </p>
+            {/* Traducción de la frase */}
+            <p className="mt-3 sm:mt-4 ts-body-lg-strong text-ink">
+              <OpenEndedText value={chunk.meaning} />
+            </p>
+          </div>
 
           {/* Ejemplo estilo card con kicker y audio */}
           {example ? (

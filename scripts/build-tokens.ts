@@ -27,6 +27,11 @@ import {
   STATIC_TOKENS_FEEDBACK_AND_MOTION,
 } from "./build-tokens-data";
 
+// Acentos vivos: los claros llevan texto ink (6.5–8.5:1); el resto, blanco (≥4.5:1).
+const ACCENT_ON_INK = new Set(["orange", "amber", "green", "emerald", "teal"]);
+// Mezcla con negro de accent-text en tema claro, para que el acento vivo siga legible como texto.
+const ACCENT_TEXT_MIX: Record<string, number> = { orange: 78, amber: 70, green: 72, emerald: 74, teal: 74 };
+
 const ROOT = process.cwd();
 const TOKENS_JSON_PATH = path.join(ROOT, "docs/design-system/tokens.json");
 const OUTPUT_PATH = path.join(ROOT, "app/styles/tokens.css");
@@ -122,9 +127,11 @@ function main() {
   const accentBlock = ACCENTS.map(
     (a) => `  --accent-${a}: ${oklch(fixedVal(`accent-${a}`))}`
   ).join("\n");
-  const accentAttrBlock = ACCENTS.map(
-    (a) => `html[data-accent="${a}"] { --accent: var(--accent-${a}); }`
-  ).join("\n");
+  const accentAttrBlock = ACCENTS.map((a) => {
+    const onInk = ACCENT_ON_INK.has(a);
+    const mix = ACCENT_TEXT_MIX[a];
+    return `html[data-accent="${a}"] { --accent: var(--accent-${a}); --on-accent: var(--${onInk ? "ink" : "paper"});${mix ? ` --accent-text-mix: ${mix}%;` : ""} }`;
+  }).join("\n");
 
   const spacing = tokens.spacing.tokens
     .map((t) => `  --${t.name}: ${px(t.value)}; /* ${t.usage} */`)
@@ -187,6 +194,7 @@ ${LEGACY_THEME_ALIASES_DARK}
   --ink-muted:     ${oklch(fixedVal("ink-muted"))}
   --paper:         ${oklch(fixedVal("paper"))}
   --on-accent:     ${oklch(fixedVal("on-accent"))}
+  --on-solid:      ${oklch(fixedVal("on-accent"))}
 
   /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
 ${pastelBlocks}
@@ -196,7 +204,7 @@ ${ejAliasBlocks}
 
 ${STATIC_TOKENS_FEEDBACK_AND_MOTION}
 
-  /* ── 5. Acentos (9 tonos 600) ─────────────────────────────────────────── */
+  /* ── 5. Acentos (9 tonos vivos) ─────────────────────────────────────────── */
 ${accentBlock}
 
 ${STATIC_LAYOUT_AND_MOTION}

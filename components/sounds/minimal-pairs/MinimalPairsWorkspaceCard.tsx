@@ -78,7 +78,7 @@ export function MinimalPairsWorkspaceCard({
     : true;
 
   return (
-    <PastelCard tone="butter" className="p-6 md:p-7 space-y-5 rounded-3xl shadow-xs">
+    <PastelCard tone="butter" className="p-3.5 sm:p-6 md:p-7 space-y-3 sm:space-y-5 rounded-3xl shadow-xs">
       {/* 1. Header con indicador PAR X DE Y, fonemas y categoría */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2.5">
@@ -97,7 +97,7 @@ export function MinimalPairsWorkspaceCard({
       {/* 2. Banner de consejo / boca con botón "Ver la boca" */}
       {contrast ? (
         <div className="space-y-3">
-          <div className="bg-white/95 backdrop-blur-xs rounded-2xl p-3 md:p-3.5 border border-black/10 flex items-center justify-between gap-3 shadow-2xs">
+          <div className="bg-white/95 backdrop-blur-xs rounded-2xl p-3 md:p-3.5 border border-black/10 hidden flex-col items-start gap-2.5 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-3 shadow-2xs">
             <p className="ts-body text-ink flex items-center gap-1.5">
               <span aria-hidden>✨</span>
               <span>{contrast.hint}</span>
@@ -123,7 +123,7 @@ export function MinimalPairsWorkspaceCard({
       {/* 3. Tarjetas A y B */}
       <div
         key={`${phoneme}-${pairIdx}`}
-        className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fadeIn"
+        className="grid grid-cols-2 gap-2.5 sm:gap-4 animate-fadeIn"
       >
         <WordCard
           word={pair.wordA}
@@ -166,7 +166,7 @@ export function MinimalPairsWorkspaceCard({
       </div>
 
       {/* 4. Sección ¿CUÁL ESCUCHASTE? */}
-      <div className="space-y-3 pt-1">
+      <div className="space-y-2.5 sm:space-y-3 pt-0 sm:pt-1">
         <div className="flex items-center justify-between gap-2">
           <span className="font-kicker font-bold text-xs tracking-wider text-ink/70 uppercase">
             ¿CUÁL ESCUCHASTE?
@@ -181,13 +181,13 @@ export function MinimalPairsWorkspaceCard({
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <button
             type="button"
             disabled={!quizTarget && verdict === null}
             onClick={() => handleGuess("A")}
             className={cn(
-              "relative flex items-center justify-center gap-2 p-3.5 md:p-4 rounded-2xl ts-body-lg-strong transition-all duration-150 border cursor-pointer select-none",
+              "relative flex items-center justify-center gap-2 p-2.5 md:p-4 rounded-2xl ts-body-lg-strong transition-all duration-150 border cursor-pointer select-none",
               highlights.A === "correct"
                 ? "bg-mint border-black/15 text-ink shadow-2xs font-extrabold"
                 : highlights.A === "wrong"
@@ -205,7 +205,7 @@ export function MinimalPairsWorkspaceCard({
             disabled={!quizTarget && verdict === null}
             onClick={() => handleGuess("B")}
             className={cn(
-              "relative flex items-center justify-center gap-2 p-3.5 md:p-4 rounded-2xl ts-body-lg-strong transition-all duration-150 border cursor-pointer select-none",
+              "relative flex items-center justify-center gap-2 p-2.5 md:p-4 rounded-2xl ts-body-lg-strong transition-all duration-150 border cursor-pointer select-none",
               highlights.B === "correct"
                 ? "bg-mint border-black/15 text-ink shadow-2xs font-extrabold"
                 : highlights.B === "wrong"
@@ -221,8 +221,8 @@ export function MinimalPairsWorkspaceCard({
       </div>
 
       {/* 5. Barra de controles inferior */}
-      <div ref={quizActionsRef} className="flex items-center justify-between gap-3 pt-2 flex-wrap">
-        <div className="flex items-center gap-2">
+      <div ref={quizActionsRef} className="flex flex-col items-stretch gap-2.5 pt-1 sm:pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={handlePlayBoth}
@@ -256,14 +256,14 @@ export function MinimalPairsWorkspaceCard({
           </div>
         </div>
 
-        <span className="ts-stat text-ink/70">
+        <span className="ts-stat text-ink/70 text-center sm:text-left">
           {pairIdx + (verdict === "correct" ? 1 : 0)} de {pairs.length} acertados
         </span>
 
         <button
           type="button"
           onClick={() => goToNextPair(true)}
-          className="bg-primary hover:opacity-95 text-on-primary px-5 py-2 rounded-full ts-button inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer active:scale-95 ml-auto sm:ml-0"
+          className="bg-primary hover:opacity-95 text-on-primary px-5 py-2.5 sm:py-2 rounded-full ts-button inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer active:scale-95 w-full justify-center sm:w-auto"
         >
           <span>{isLastPair ? "Ver resultado" : "Siguiente par"}</span>
           <span className="bg-white/20 text-on-primary px-1.5 py-0.5 rounded text-[10px] uppercase font-mono font-bold">

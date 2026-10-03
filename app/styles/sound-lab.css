@@ -363,14 +363,21 @@
 /* Filter toolbar — quiet controls with a clear result signal. */
 .sound-lab__toolbar {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-3);
   padding: 0;
   background: transparent;
   border: 0;
   box-shadow: none;
   width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .sound-lab__toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .sound-lab__filter-controls {
@@ -1178,8 +1185,15 @@
 /* Lesson grid — responsive columns: 4 columns on desktop matching spec */
 .sound-lab__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 420px) {
+  .sound-lab__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
 }
 
 @media (min-width: 640px) {
