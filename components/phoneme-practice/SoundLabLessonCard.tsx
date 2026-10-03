@@ -83,7 +83,7 @@ export function SoundLabLessonCard({
 
   if (isContinuing || isInProgress) {
     badgeLabel = "EN CURSO";
-    badgeClass = "bg-ink text-paper text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
+    badgeClass = "bg-ink text-paper text-xs font-extrabold px-2.5 sm:px-3 py-1 rounded-full uppercase tracking-wider";
   } else if (isToday) {
     badgeLabel = "HOY";
     badgeClass = "bg-ink text-paper text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider";
@@ -96,7 +96,7 @@ export function SoundLabLessonCard({
   }
 
   const content = (
-    <div className="flex flex-col justify-between h-full min-h-[170px]">
+    <div className="flex flex-col justify-between h-full min-h-[140px] sm:min-h-[170px]">
       {/* Top Bar: Badge + Play sound circle button */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <span className={badgeClass}>{badgeLabel}</span>
@@ -184,7 +184,7 @@ export function SoundLabLessonCard({
     >
       <PastelCard
         tone={tone}
-        className="rounded-3xl p-5 sm:p-6 flex flex-col justify-between h-full border border-ink/10 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all cursor-pointer"
+        className="rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 flex flex-col justify-between h-full border border-ink/10 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all cursor-pointer"
       >
         {onSelect ? (
           <button
@@ -242,7 +242,7 @@ export function SoundLabLessonCard({
                     aria-hidden
                   />
                 </span>
-                <span className="truncate max-w-[100px]">{word}</span>
+                <span className="truncate max-w-[72px] sm:max-w-[100px]">{word}</span>
               </button>
             ))}
           </div>

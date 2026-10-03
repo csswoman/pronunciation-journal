@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { SelectMenu, type SelectMenuOption } from "@/components/ui/SelectMenu";
 
 export type SoundsWorkspaceTab = "sounds" | "minimal-pairs" | "intonation" | "path";
 
@@ -15,45 +16,72 @@ const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
   { id: "path", label: "Ruta" },
 ];
 
+const IPA_OPTION = "ipa";
+
+const mobileOptions: SelectMenuOption[] = [
+  ...tabs.map((tab) => ({ value: tab.id as string, label: tab.label })),
+  { value: IPA_OPTION, label: "Tabla IPA", description: "Referencia de símbolos fonéticos" },
+];
+
 export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props) {
+  function handleSelect(value: string) {
+    if (value === IPA_OPTION) {
+      onOpenIPA();
+      return;
+    }
+    onTabChange(value as SoundsWorkspaceTab);
+  }
+
   return (
-    <div className="sound-lab__workspace-row flex items-center gap-1.5 p-1 rounded-full bg-surface-sunken border border-border">
-      <div
-        className="flex items-center gap-1 overflow-x-auto scrollbar-none"
-        role="tablist"
+    <>
+      <SelectMenu
+        value={activeTab as string}
+        onChange={handleSelect}
+        options={mobileOptions}
+        sheetTitle="Modo de pronunciación"
         aria-label="Contenido de pronunciación"
-      >
-        {tabs.map((tab) => {
-          const isActive = tab.id === activeTab;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              className={cn(
-                "inline-flex items-center justify-center px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
-                isActive
-                  ? "bg-primary text-on-primary shadow-xs"
-                  : "text-fg-muted hover:text-fg hover:bg-surface-raised",
-              )}
-              aria-selected={isActive}
-              tabIndex={isActive ? 0 : -1}
-              onClick={() => onTabChange(tab.id)}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-        <button
-          type="button"
-          onClick={onOpenIPA}
-          className="inline-flex items-center justify-center px-4 py-1.5 ts-pill text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
-          aria-label="Abrir tabla IPA de referencia"
-          title="Tabla IPA"
+        className="sound-lab__workspace-select sm:hidden"
+        triggerClassName="min-h-11 rounded-full px-5 ts-pill font-semibold"
+      />
+
+      <div className="hidden min-w-0 max-w-full items-center gap-1.5 p-1 rounded-full sm:flex sm:w-auto bg-surface-sunken border border-border">
+        <div
+          className="flex items-center gap-1 overflow-x-auto scrollbar-none"
+          role="tablist"
+          aria-label="Contenido de pronunciación"
         >
-          Tabla IPA
-        </button>
+          {tabs.map((tab) => {
+            const isActive = tab.id === activeTab;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                className={cn(
+                  "inline-flex items-center justify-center px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+                  isActive
+                    ? "bg-primary text-on-primary shadow-xs"
+                    : "text-fg-muted hover:text-fg hover:bg-surface-raised",
+                )}
+                aria-selected={isActive}
+                tabIndex={isActive ? 0 : -1}
+                onClick={() => onTabChange(tab.id)}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={onOpenIPA}
+            className="inline-flex items-center justify-center px-4 py-1.5 ts-pill text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
+            aria-label="Abrir tabla IPA de referencia"
+            title="Tabla IPA"
+          >
+            Tabla IPA
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

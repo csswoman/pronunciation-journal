@@ -171,7 +171,7 @@ export function IntonationTrainer() {
       <PastelCard
         id="intonation-trainer-content"
         tone="sky"
-        className="flex flex-col gap-3.5 rounded-3xl p-4 sm:p-6 w-full min-w-0 order-2 lg:order-1 shadow-xs border-0"
+        className="flex flex-col gap-3 sm:gap-3.5 rounded-3xl p-3.5 sm:p-6 w-full min-w-0 order-2 lg:order-1 shadow-xs border-0"
       >
         <IntonationSentenceHeader
           sentence={currentSentence}
@@ -197,13 +197,13 @@ export function IntonationTrainer() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 mt-0.5">
-          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 pt-1 sm:pt-2 mt-0.5">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
             <button
               type="button"
               onClick={isRecording ? stopRecording : startRecording}
               className={cn(
-                "rounded-full px-5.5 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2.5 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all",
+                "rounded-full px-5 py-3 font-bold text-sm sm:text-base inline-flex items-center justify-center gap-2.5 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all",
                 isRecording
                   ? "bg-error text-white animate-pulse"
                   : "bg-primary text-on-primary hover:bg-primary/90",
@@ -217,7 +217,7 @@ export function IntonationTrainer() {
               <button
                 type="button"
                 onClick={handlePlayReference}
-                className="rounded-full px-5 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2 cursor-pointer bg-surface border border-border-default text-fg hover:bg-surface-sunken transition-all"
+                className="rounded-full px-5 py-3 font-bold text-sm sm:text-base inline-flex items-center justify-center gap-2 cursor-pointer bg-surface border border-border-default text-fg hover:bg-surface-sunken transition-all"
               >
                 <span>Escuchar mi grabación</span>
               </button>
@@ -229,7 +229,7 @@ export function IntonationTrainer() {
             onClick={() => {
               setSelectedPatternIndex((prev) => (prev + 1) % INTONATION_PATTERNS.length);
             }}
-            className="rounded-full px-6 py-3 font-bold text-sm sm:text-base inline-flex items-center gap-2.5 cursor-pointer shadow-xs active:scale-95 transition-all bg-ink text-paper hover:bg-ink-secondary ml-auto"
+            className="rounded-full px-6 py-3 font-bold text-sm sm:text-base inline-flex items-center justify-center gap-2.5 cursor-pointer shadow-xs active:scale-95 transition-all bg-ink text-paper hover:bg-ink-secondary sm:ml-auto"
           >
             <span>Siguiente oración</span>
             <ArrowRight size={18} />

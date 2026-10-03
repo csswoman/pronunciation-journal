@@ -165,9 +165,8 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
         <PageHeader
           kicker={header.kicker}
           title={header.title}
-          subtitle={header.subtitle}
           actions={
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex w-full flex-col sm:w-auto sm:flex-row items-stretch sm:items-center gap-3">
               <SoundsWorkspaceTabs
                 activeTab={activeTab}
                 onTabChange={selectTab}
@@ -178,7 +177,7 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
                   variant="primary"
                   size="md"
                   onClick={handleResume}
-                  className="rounded-full px-5 py-2 font-semibold inline-flex items-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all bg-primary text-on-primary"
+                  className="rounded-full px-5 py-2 font-semibold inline-flex items-center justify-center gap-2 cursor-pointer shadow-xs whitespace-nowrap active:scale-95 transition-all bg-primary text-on-primary"
                 >
                   <span>{continueCtaLabel(heroLesson.lesson)}</span>
                   <ArrowRight size={14} className="stroke-[2.5]" aria-hidden />

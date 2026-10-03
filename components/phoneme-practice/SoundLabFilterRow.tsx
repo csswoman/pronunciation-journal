@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, Search, X } from "@/components/icons";
+import { useState } from "react";
+import { ChevronDown, Search, Settings2, X } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import type { SoundLabGrouping, SoundLabProgressFilter } from "./sound-lab-page-helpers";
 
@@ -41,7 +42,9 @@ export function SoundLabFilterRow({
   onSearchChange,
   resumeAction,
 }: Props) {
-  const activeCategory = categoryFilter || (groupBy === "impact" ? "impact" : "impact");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const extraActive = onlyHard || progressFilter !== "all";
+  const activeCategory =categoryFilter || (groupBy === "impact" ? "impact" : "impact");
 
   const handleSelectCategory = (cat: SoundLabCategoryFilter) => {
     if (onCategoryFilterChange) {
@@ -61,9 +64,10 @@ export function SoundLabFilterRow({
       aria-label="Buscar y filtrar sonidos"
     >
       {/* Zona 1: Buscador y Filtros de Categoría */}
-      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:flex-1 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full lg:flex-1 min-w-0">
         {/* Buscador */}
-        <div className="relative w-full sm:w-72 shrink-0">
+        <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
+        <div className="relative min-w-0 flex-1 sm:w-72 sm:flex-none">
           <Search
             size={16}
             className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-subtle"
@@ -98,14 +102,30 @@ export function SoundLabFilterRow({
             </button>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((v) => !v)}
+          aria-expanded={filtersOpen}
+          aria-controls="sound-lab-extra-filters"
+          aria-label="Más filtros"
+          className={cn(
+            "relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border cursor-pointer lg:hidden",
+            filtersOpen || extraActive
+              ? "bg-primary text-on-primary border-primary"
+              : "bg-surface-sunken text-fg-muted",
+          )}
+        >
+          <Settings2 size={16} aria-hidden />
+        </button>
+        </div>
 
         {/* Agrupador en Pills: Por impacto, Vocales, Consonantes */}
-        <div className="flex items-center gap-1 p-1 rounded-full bg-surface-sunken border border-border w-full sm:w-auto overflow-x-auto scrollbar-none">
+        <div className="flex items-center gap-1 p-1 rounded-full bg-surface-sunken border border-border w-full sm:w-auto overflow-x-auto scrollbar-none [&>button]:flex-1 sm:[&>button]:flex-none">
           <button
             type="button"
             onClick={() => handleSelectCategory("impact")}
             className={cn(
-              "px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
+              "px-3 sm:px-4 py-1.5 ts-pill rounded-full transition-all cursor-pointer whitespace-nowrap select-none",
               activeCategory === "impact"
                 ? "bg-primary text-on-primary shadow-xs"
                 : "text-fg-muted hover:text-fg hover:bg-surface-raised",
@@ -141,7 +161,13 @@ export function SoundLabFilterRow({
       </div>
 
       {/* Zona 2: Controles de Solo difíciles y Estado */}
-      <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+      <div
+        id="sound-lab-extra-filters"
+        className={cn(
+          "flex-wrap items-center justify-between gap-3 w-full rounded-2xl border border-border bg-surface-sunken p-3 lg:flex lg:w-auto lg:shrink-0 lg:border-0 lg:bg-transparent lg:p-0 lg:justify-end",
+          filtersOpen ? "flex" : "hidden",
+        )}
+      >
         {/* Toggle Solo difíciles estilo Switch */}
         <button
           type="button"
@@ -167,7 +193,7 @@ export function SoundLabFilterRow({
         </button>
 
         {/* Selector de Estado en cápsula */}
-        <div className="relative shrink-0">
+        <div className="relative min-w-0 max-w-full">
           <select
             value={progressFilter}
             onChange={(e) => onProgressFilterChange(e.target.value as SoundLabProgressFilter)}
