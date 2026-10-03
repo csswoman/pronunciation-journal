@@ -33,10 +33,6 @@ const PronunciationPathPage = dynamic(
   () => import("@/components/courses/pronunciation-path/PronunciationPathPage").then((m) => m.PronunciationPathPage),
   { loading: () => <div className="p-8 text-center text-fg-muted font-caption">Cargando ruta de pronunciación…</div> },
 );
-const IPAReferenceDialog = dynamic(
-  () => import("./IPAReferenceDialog").then((m) => m.IPAReferenceDialog),
-  { ssr: false },
-);
 import {
   buildLessonSections,
   continueCtaLabel,
@@ -70,10 +66,7 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
     isMinimalPairsView,
     isIntonationView,
     isPathView,
-    isIPAOpen,
     selectTab,
-    openIPA,
-    closeIPA,
   } = useSoundLabWorkspace();
   const focusTokens = useMemo(() => {
     const raw = searchParams.get("focus");
@@ -170,7 +163,6 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
               <SoundsWorkspaceTabs
                 activeTab={activeTab}
                 onTabChange={selectTab}
-                onOpenIPA={openIPA}
               />
               {heroLesson.lesson && isSoundsView ? (
                 <Button
@@ -257,7 +249,6 @@ export default function SoundLabPage({ userId, phraseCandidates }: SoundLabPageP
         />
       ) : null}
 
-      {isIPAOpen && <IPAReferenceDialog open={isIPAOpen} onClose={closeIPA} lessons={allLessons} />}
     </PageLayout>
   );
 }

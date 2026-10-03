@@ -6,7 +6,6 @@ export type SoundsWorkspaceTab = "sounds" | "minimal-pairs" | "intonation" | "pa
 interface Props {
   activeTab: SoundsWorkspaceTab;
   onTabChange: (tab: SoundsWorkspaceTab) => void;
-  onOpenIPA: () => void;
 }
 
 const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
@@ -16,19 +15,13 @@ const tabs: Array<{ id: SoundsWorkspaceTab; label: string }> = [
   { id: "path", label: "Ruta" },
 ];
 
-const IPA_OPTION = "ipa";
+const mobileOptions: SelectMenuOption[] = tabs.map((tab) => ({
+  value: tab.id as string,
+  label: tab.label,
+}));
 
-const mobileOptions: SelectMenuOption[] = [
-  ...tabs.map((tab) => ({ value: tab.id as string, label: tab.label })),
-  { value: IPA_OPTION, label: "Tabla IPA", description: "Referencia de símbolos fonéticos" },
-];
-
-export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props) {
+export function SoundsWorkspaceTabs({ activeTab, onTabChange }: Props) {
   function handleSelect(value: string) {
-    if (value === IPA_OPTION) {
-      onOpenIPA();
-      return;
-    }
     onTabChange(value as SoundsWorkspaceTab);
   }
 
@@ -71,15 +64,6 @@ export function SoundsWorkspaceTabs({ activeTab, onTabChange, onOpenIPA }: Props
               </button>
             );
           })}
-          <button
-            type="button"
-            onClick={onOpenIPA}
-            className="inline-flex items-center justify-center px-4 py-1.5 ts-pill text-fg-muted hover:text-fg hover:bg-surface-raised rounded-full transition-all cursor-pointer whitespace-nowrap select-none"
-            aria-label="Abrir tabla IPA de referencia"
-            title="Tabla IPA"
-          >
-            Tabla IPA
-          </button>
         </div>
       </div>
     </>

@@ -8,13 +8,10 @@ interface SoundLabWorkspace {
   isMinimalPairsView: boolean;
   isIntonationView: boolean;
   isPathView: boolean;
-  isIPAOpen: boolean;
   selectTab: (tab: SoundsWorkspaceTab) => void;
-  openIPA: () => void;
-  closeIPA: () => void;
 }
 
-/** Resolves the active workspace tab from `?tab=` and owns the IPA reference dialog's open state. */
+/** Resolves the active workspace tab from `?tab=`. */
 export function useSoundLabWorkspace(): SoundLabWorkspace {
   const searchParams = useSearchParams();
 
@@ -30,9 +27,6 @@ export function useSoundLabWorkspace(): SoundLabWorkspace {
     resolveTab(searchParams.get("tab")),
   );
 
-  const [isIPAOpen, setIsIPAOpen] = useState(() => searchParams.get("openIPA") === "1");
-  const closeIPA = useCallback(() => setIsIPAOpen(false), []);
-  const openIPA = useCallback(() => setIsIPAOpen(true), []);
   const selectTab = useCallback((tab: SoundsWorkspaceTab) => {
     setActiveTab(tab);
 
@@ -58,9 +52,6 @@ export function useSoundLabWorkspace(): SoundLabWorkspace {
     isMinimalPairsView: activeTab === "minimal-pairs",
     isIntonationView: activeTab === "intonation",
     isPathView: activeTab === "path",
-    isIPAOpen,
     selectTab,
-    openIPA,
-    closeIPA,
   };
 }

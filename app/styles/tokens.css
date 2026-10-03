@@ -122,8 +122,8 @@ html[data-theme="dark"], .dark {
   --ink-secondary: oklch(0.33 0.032 265); /* #2c3445 */
   --ink-muted:     oklch(0.44 0.030 265); /* #4a5263 */
   --paper:         oklch(1 0 0); /* #ffffff */
-  --on-accent:     oklch(1 0 0); /* #ffffff — default (azul); cada data-accent lo redefine */
-  --on-solid:      oklch(1 0 0); /* #ffffff — texto sobre success/error/warning/info, no cambia con el acento */
+  --on-accent:     oklch(1 0 0); /* #ffffff */
+  --on-solid:      oklch(1 0 0); /* #ffffff */
 
   /* ── 3. Pastel de contenido (base / deep / soft) ───────────────────────── */
   --sky:      oklch(0.86 0.063 259); /* #b9d3fb */
@@ -165,11 +165,11 @@ html[data-theme="dark"], .dark {
 
   /* ── 4. Feedback (Light theme defaults) ─────────────────────────── */
   --feedback-correct:      oklch(0.50 0.15 150);
-  --feedback-correct-soft: oklch(0.90 0.09 152);
+  --feedback-correct-soft: var(--mint-soft);
   --feedback-wrong:        oklch(0.52 0.20 25);
-  --feedback-wrong-soft:   oklch(0.89 0.08 25);
+  --feedback-wrong-soft:   var(--coral-soft);
   --feedback-hint:         oklch(0.55 0.16 85);
-  --feedback-hint-soft:    oklch(0.92 0.10 90);
+  --feedback-hint-soft:    var(--butter-soft);
 
   --success:         var(--feedback-correct);
   --success-soft:    var(--feedback-correct-soft);
@@ -180,7 +180,7 @@ html[data-theme="dark"], .dark {
   --info:            oklch(0.50 0.15 250);
   --info-soft:       var(--sky-soft);
 
-  /* ── 5. Acentos (9 tonos vivos; on-accent varía por acento) ─────────────────────────────────────────── */
+  /* ── 5. Acentos (9 tonos vivos) ─────────────────────────────────────────── */
   --accent-red: oklch(0.59 0.222 18); /* #e11d48 */
   --accent-orange: oklch(0.70 0.187 48); /* #f97316 */
   --accent-amber: oklch(0.77 0.165 70); /* #f59e0b */
@@ -188,7 +188,7 @@ html[data-theme="dark"], .dark {
   --accent-emerald: oklch(0.70 0.149 162); /* #10b981 */
   --accent-teal: oklch(0.71 0.126 215); /* #06b6d4 */
   --accent-blue: oklch(0.57 0.210 263); /* #2f6bf0 */
-  --accent-purple: oklch(0.58 0.247 288); /* #7c4dff */
+  --accent-purple: oklch(0.54 0.247 293); /* #7c3aed */
   --accent-pink: oklch(0.59 0.218 1); /* #db2777 */
 
   /* Default accent = blue */
@@ -277,47 +277,6 @@ html[data-theme="dark"], .dark {
   --text-size-tiny: 0.75rem;
   --text-size-display-word: 2.25rem;
   --text-size-display-ipa: 2.25rem;
-
-  /* ── 10. Escala tipográfica extendida (.ts-*, ver utilities.css) ─────────
-     Bricolage 800 / Figtree / Noto Sans 500. Hand-maintained, no tokens.json
-     equivalent — namespaced --ts- to avoid colliding with the shorter names
-     already in section 9 (caption, label, kicker, ...), which many
-     components depend on with different values. */
-  --ts-display-hero-size: 64px;      --ts-display-hero-leading: 62px;      --ts-display-hero-tracking: -0.03em;
-  --ts-display-numeral-size: 52px;   --ts-display-numeral-leading: 50px;   --ts-display-numeral-tracking: -0.03em;
-  --ts-display-size: 46px;           --ts-display-leading: 48px;           --ts-display-tracking: -0.02em;
-  --ts-headline-xl-size: 40px;       --ts-headline-xl-leading: 41px;       --ts-headline-xl-tracking: -0.025em;
-  --ts-headline-size: 36px;          --ts-headline-leading: 37px;          --ts-headline-tracking: -0.025em;
-  --ts-numeral-unit-size: 20px;      --ts-numeral-unit-leading: 24px;
-  --ts-card-title-size: 26px;        --ts-card-title-leading: 30px;        --ts-card-title-tracking: -0.02em;
-  --ts-flashcard-word-size: 19px;    --ts-flashcard-word-leading: 22px;
-
-  --ts-body-xl-size: 19px;           --ts-body-xl-leading: 27px;
-  --ts-body-xl-strong-size: 19px;    --ts-body-xl-strong-leading: 27px;
-  --ts-body-lg-strong-size: 18px;    --ts-body-lg-strong-leading: 26px;
-  --ts-body-lg-size: 17px;           --ts-body-lg-leading: 26px;
-  --ts-body-lg-meta-size: 17px;      --ts-body-lg-meta-leading: 26px;
-  --ts-greeting-size: 17px;          --ts-greeting-leading: 24px;
-  --ts-button-lg-size: 17px;         --ts-button-lg-leading: 22px;
-  --ts-row-title-size: 16px;         --ts-row-title-leading: 22px;
-  --ts-row-number-size: 16px;        --ts-row-number-leading: 16px;
-  --ts-body-size: 15px;              --ts-body-leading: 22px;
-  --ts-body-translation-size: 15px;  --ts-body-translation-leading: 23px;
-  --ts-label-strong-size: 15px;      --ts-label-strong-leading: 22px;
-  --ts-button-size: 15px;            --ts-button-leading: 20px;
-  --ts-stat-size: 15px;              --ts-stat-leading: 20px;
-  --ts-caption-size: 14px;           --ts-caption-leading: 20px;
-  --ts-chip-size: 14px;              --ts-chip-leading: 20px;
-  --ts-pill-size: 14px;              --ts-pill-leading: 18px;
-  --ts-label-size: 13px;             --ts-label-leading: 16px;             --ts-label-tracking: 0.08em;
-  --ts-badge-size: 13px;             --ts-badge-leading: 18px;
-  --ts-kicker-size: 12px;            --ts-kicker-leading: 16px;            --ts-kicker-tracking: 0.14em;
-
-  --ts-ipa-lg-size: 20px;            --ts-ipa-lg-leading: 28px;
-  --ts-ipa-md-size: 18px;            --ts-ipa-md-leading: 26px;
-  --ts-ipa-sm-size: 17px;            --ts-ipa-sm-leading: 24px;
-  --ts-ipa-xs-size: 13px;            --ts-ipa-xs-leading: 18px;
-  --ts-ipa-tracking: 0.01em;
 }
 
 /* Accent attributes */
@@ -330,17 +289,3 @@ html[data-accent="teal"] { --accent: var(--accent-teal); --on-accent: var(--ink)
 html[data-accent="blue"] { --accent: var(--accent-blue); --on-accent: var(--paper); }
 html[data-accent="purple"] { --accent: var(--accent-purple); --on-accent: var(--paper); }
 html[data-accent="pink"] { --accent: var(--accent-pink); --on-accent: var(--paper); }
-
-/* Escala de títulos reducida en mobile (< 640px); desktop intacto. */
-@media (max-width: 639px) {
-  :root {
-    --ts-display-hero-size: 44px;    --ts-display-hero-leading: 44px;
-    --ts-display-numeral-size: 40px; --ts-display-numeral-leading: 40px;
-    --ts-display-size: 32px;         --ts-display-leading: 35px;
-    --ts-headline-xl-size: 28px;     --ts-headline-xl-leading: 31px;
-    --ts-headline-size: 25px;        --ts-headline-leading: 28px;
-    --ts-card-title-size: 21px;      --ts-card-title-leading: 25px;
-    --text-size-h1: 1.75rem;
-    --text-size-h2: 1.375rem;
-  }
-}
